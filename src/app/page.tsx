@@ -9,6 +9,7 @@ import { Footer } from "@/components/landing/footer";
 import { CtaBanner } from "@/components/landing/cta-banner";
 import { LP4Teaser } from "@/components/landing/lp4-teaser";
 import { SocialShare } from "@/components/landing/social-share";
+import { CountdownTeaser } from "@/components/landing/countdown-teaser";
 
 export default function Home() {
   return (
@@ -23,6 +24,7 @@ export default function Home() {
         <LP4Teaser />
         <CtaBanner />
         <SocialShare />
+        <CountdownTeaser />
         <Newsletter />
       </main>
       <Footer />
