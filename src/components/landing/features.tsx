@@ -16,21 +16,21 @@ export function Features() {
           <div className="grid gap-1 text-center p-4 rounded-lg transition-all hover:bg-background/50 hover:scale-105 transform -rotate-1">
             <Drama className="h-10 w-10 mx-auto text-primary" />
             <h3 className="text-xl font-bold font-headline">Unvergessliche Charaktere</h3>
-            <p className="text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               Treffen Sie eine Besetzung von Charakteren, die so bizarr sind, dass sie für immer mietfrei in Ihrem Kopf leben werden.
             </p>
           </div>
           <div className="grid gap-1 text-center p-4 rounded-lg transition-all hover:bg-background/50 hover:scale-105 transform rotate-2">
             <BookOpen className="h-10 w-10 mx-auto text-primary" />
             <h3 className="text-xl font-bold font-headline">Fesselnde Handlung</h3>
-            <p className="text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               Eine Handlung mit mehr Drehungen und Wendungen als eine Brezelfabrik. Sie werden das Ende nicht kommen sehen.
             </p>
           </div>
           <div className="grid gap-1 text-center p-4 rounded-lg transition-all hover:bg-background/50 hover:scale-105 transform -rotate-1">
             <Feather className="h-10 w-10 mx-auto text-primary" />
             <h3 className="text-xl font-bold font-headline">Satirisches Genie</h3>
-            <p className="text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               Witzige Kommentare zum modernen Leben, die so scharf sind, dass Sie sich einen Papierschnitt holen könnten.
             </p>
           </div>

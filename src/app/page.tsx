@@ -6,6 +6,7 @@ import { LP2Teaser } from "@/components/landing/lp2-teaser";
 import { Testimonials } from "@/components/landing/testimonials";
 import { Newsletter } from "@/components/landing/newsletter";
 import { Footer } from "@/components/landing/footer";
+import { ExcerptTeaser } from "@/components/landing/excerpt-teaser";
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
         <Hero />
         <Authors />
         <Features />
+        <ExcerptTeaser />
         <LP2Teaser />
         <Testimonials />
         <Newsletter />
