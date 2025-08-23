@@ -7,7 +7,9 @@ export function Header() {
         <a className="flex items-center justify-center" href="#">
           <span className="font-headline font-semibold text-lg">Hallo Welt</span>
         </a>
-        <Button size="sm">Buch kaufen</Button>
+        <a href="https://www.amazon.de/-/de/Hallo-Welt-Erhebliche-Bildungsgang-Lernvollzugsanstalt/dp/B0CVXT9X4J" target="_blank" rel="noopener noreferrer">
+          <Button size="sm">Buch kaufen</Button>
+        </a>
       </div>
     </header>
   );
