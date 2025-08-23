@@ -11,7 +11,7 @@ export function LP2Teaser() {
             <h2 className="text-4xl font-bold font-headline tracking-tighter sm:text-6xl text-balance">
               Gierig auf mehr? Hallo Welt 2 kommt.
             </h2>
-            <p className="max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
+            <p className="max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
               Wir legen noch eine Schippe drauf. Mehr Absurdität. Mehr Chaos. Mehr Sätze, die man dreimal lesen muss. Seien Sie unter den Ersten, die einen exklusiven Blick darauf werfen.
             </p>
           </div>
