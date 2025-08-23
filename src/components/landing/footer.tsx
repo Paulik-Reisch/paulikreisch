@@ -21,6 +21,7 @@ const hw2Links = [
     { href: "/lp-buerokratie-simulator", text: "Bürokratie-Simulator" },
     { href: "/lp-internet-deutschland", text: "Deutsches Internet" },
     { href: "/lp-mietenwahnsinn", text: "Mietenwahnsinn" },
+    { href: "/lp-fussnoten-generator", text: "Fußnoten-Generator" },
 ]
 
 

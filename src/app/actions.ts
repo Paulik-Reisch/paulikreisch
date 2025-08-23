@@ -5,6 +5,7 @@ import {
   generateTestimonial,
 } from "@/ai/flows/generate-testimonial";
 import { continueChapter } from "@/ai/flows/continue-chapter-flow";
+import { generateFootnote } from "@/ai/flows/generate-footnote-flow";
 
 const testimonialSchema = z.object({
   topic: z.string().min(2, { message: "Das Thema muss mindestens 2 Zeichen lang sein." }).max(50),
@@ -67,5 +68,36 @@ export async function continueChapterAction(
   } catch (e) {
     console.error(e);
     return { error: "Kapitel konnte nicht fortgesetzt werden. Der KI sind die Worte ausgegangen." };
+  }
+}
+
+const footnoteSchema = z.object({
+  topic: z.string().min(2, { message: "Das Thema muss mindestens 2 Zeichen lang sein." }).max(50),
+});
+
+export async function createFootnoteAction(
+  prevState: {
+    footnote?: string;
+    error?: string;
+  },
+  formData: FormData
+) {
+  const validatedFields = footnoteSchema.safeParse({
+    topic: formData.get("topic"),
+  });
+
+  if (!validatedFields.success) {
+    const errorMessages = validatedFields.error.errors.map(e => e.message).join('. ');
+    return {
+      error: errorMessages,
+    };
+  }
+
+  try {
+    const result = await generateFootnote(validatedFields.data);
+    return { footnote: result.footnote };
+  } catch (e) {
+    console.error(e);
+    return { error: "Fußnote konnte nicht generiert werden. Die KI hat wohl gerade Schreibkrampf." };
   }
 }
