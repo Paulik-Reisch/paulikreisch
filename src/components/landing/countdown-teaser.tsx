@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Share2, Zap } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const calculateTimeLeft = (targetDate: number) => {
   const difference = targetDate - new Date().getTime();
@@ -25,6 +26,7 @@ export function CountdownTeaser() {
     const initialDuration = (361 * 24 * 60 * 60 + 24 * 60 * 60 + 60 * 60 + 60) * 1000;
     const [targetDate, setTargetDate] = useState(new Date().getTime() + initialDuration);
     const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(targetDate));
+    const [isShaking, setIsShaking] = useState(false);
     const { toast } = useToast();
 
     useEffect(() => {
@@ -43,7 +45,13 @@ export function CountdownTeaser() {
             4 * 24 * 60 * 60 * 1000, // 4 Tage
         ];
         const randomReduction = timeReductions[Math.floor(Math.random() * timeReductions.length)];
-        setTargetDate(prev => prev - randomReduction);
+        
+        setIsShaking(true);
+        setTimeout(() => {
+            setTargetDate(prev => prev - randomReduction);
+            setIsShaking(false);
+        }, 500); // Dauer der Animation
+
         
         const days = Math.floor(randomReduction / (1000 * 60 * 60 * 24));
         const hours = Math.floor((randomReduction / (1000 * 60 * 60)) % 24);
@@ -85,7 +93,7 @@ export function CountdownTeaser() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             {Object.entries(timeLeft).map(([unit, value]) => (
                 <div key={unit} className="p-4 bg-background rounded-lg shadow-md transform hover:scale-110 transition-transform">
-                    <div className="text-5xl font-bold font-mono text-primary animate-pulse">{String(value).padStart(2, '0')}</div>
+                    <div className={cn("text-5xl font-bold font-mono text-primary animate-pulse", { 'animate-shake': isShaking })}>{String(value).padStart(2, '0')}</div>
                     <div className="text-sm font-semibold text-muted-foreground">{unit}</div>
                 </div>
             ))}
