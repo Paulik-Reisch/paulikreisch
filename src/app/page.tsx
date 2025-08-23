@@ -1,5 +1,6 @@
 import { Header } from "@/components/landing/header";
 import { Hero } from "@/components/landing/hero";
+import { TopicLPs } from "@/components/landing/topic-lps";
 import { Authors } from "@/components/landing/authors";
 import { Features } from "@/components/landing/features";
 import { LP2Teaser } from "@/components/landing/lp2-teaser";
@@ -17,6 +18,7 @@ export default function Home() {
       <Header />
       <main className="flex-1">
         <Hero />
+        <TopicLPs />
         <Authors />
         <Features />
         <LP2Teaser />
