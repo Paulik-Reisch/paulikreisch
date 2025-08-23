@@ -1,7 +1,11 @@
+"use client";
+
+import { useState } from 'react';
 import Link from 'next/link';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
+import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 const topics = [
     {
@@ -56,10 +60,12 @@ const topics = [
 ];
 
 export function TopicLPs() {
+  const [activeTopic, setActiveTopic] = useState(topics[0]);
+
   return (
     <section id="topic-lps" className="w-full py-12 md:py-24 lg:py-32 bg-muted/40">
       <div className="container px-4 md:px-6">
-        <div className="flex flex-col items-center justify-center space-y-4 text-center">
+        <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
           <div className="space-y-2">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Was dich interessieren könnte:</h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
@@ -67,30 +73,46 @@ export function TopicLPs() {
             </p>
           </div>
         </div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-12">
-          {topics.map((topic) => (
-            <Link href={topic.link} key={topic.link} className="group">
-                <Card className="h-full overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
-                    <CardHeader className="p-0">
-                         <Image
-                            alt={topic.title}
-                            className="aspect-video w-full object-cover"
-                            height="225"
-                            src={topic.image}
-                            data-ai-hint={topic.aiHint}
-                            width="400"
-                        />
-                    </CardHeader>
-                    <CardContent className="p-6">
-                        <CardTitle className="font-headline text-xl mb-2">{topic.title}</CardTitle>
-                        <CardDescription className="mb-4 text-sm">{topic.description}</CardDescription>
-                        <div className="flex items-center text-primary font-semibold text-sm group-hover:underline">
-                            Mehr erfahren <ArrowRight className="ml-2 h-4 w-4" />
-                        </div>
-                    </CardContent>
-                </Card>
-            </Link>
-          ))}
+        
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+            <div className="flex flex-col gap-2">
+                {topics.map((topic) => (
+                    <Link href={topic.link} key={topic.link} legacyBehavior>
+                        <a 
+                            className={cn(
+                                "p-4 rounded-lg transition-all duration-300",
+                                activeTopic.link === topic.link ? 'bg-card shadow-lg' : 'hover:bg-card/50'
+                            )}
+                            onMouseEnter={() => setActiveTopic(topic)}
+                        >
+                            <h3 className="font-headline text-xl font-bold">{topic.title}</h3>
+                            <p className="text-sm text-muted-foreground">{topic.description}</p>
+                            <div className={cn(
+                                "flex items-center text-primary font-semibold text-sm mt-2 transition-all duration-300",
+                                activeTopic.link === topic.link ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                            )}>
+                                Mehr erfahren <ArrowRight className="ml-2 h-4 w-4" />
+                            </div>
+                        </a>
+                    </Link>
+                ))}
+            </div>
+            <div className="relative h-64 md:h-96 lg:h-full min-h-[300px] lg:min-h-full rounded-xl overflow-hidden shadow-2xl transform lg:group-hover:scale-105 transition-transform duration-500 -rotate-1">
+                 {topics.map((topic) => (
+                    <Image
+                        key={topic.link}
+                        alt={topic.title}
+                        className={cn(
+                            "absolute inset-0 w-full h-full object-cover transition-opacity duration-500",
+                            activeTopic.link === topic.link ? "opacity-100" : "opacity-0"
+                        )}
+                        height="600"
+                        src={topic.image}
+                        data-ai-hint={topic.aiHint}
+                        width="800"
+                    />
+                ))}
+            </div>
         </div>
       </div>
     </section>
