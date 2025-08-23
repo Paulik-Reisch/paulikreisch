@@ -29,9 +29,9 @@ const ideas = [
     icon: BrainCircuit,
     title: "Lehrer-Noten-Simulator",
     description: "Geben Sie Ihren Namen ein und erhalten Sie ein völlig absurdes Schulzeugnis, das Ihre wahren Talente (wie Pausenbrot-Management) würdigt.",
-    link: "#",
+    link: "/lp-lehrer-noten-simulator",
     cta: "Zeugnis erhalten",
-    status: "coming-soon",
+    status: "live",
     book: "Hallo Welt"
   },
   {
