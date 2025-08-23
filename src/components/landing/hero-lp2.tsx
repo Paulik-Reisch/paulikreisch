@@ -1,7 +1,19 @@
+"use client";
+
+import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export function HeroLP2() {
+  const router = useRouter();
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // Hier könnte man die E-Mail-Adresse noch verarbeiten, z.B. an einen Newsletter-Service senden.
+    // Danach wird weitergeleitet.
+    router.push('/excerpt-6');
+  };
+
   return (
     <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
       <div className="container px-4 md:px-6">
@@ -15,7 +27,7 @@ export function HeroLP2() {
             </p>
           </div>
           <div className="w-full max-w-md space-y-2 animate-in fade-in slide-in-from-top-20 duration-1000">
-            <form className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
               <Input
                 className="max-w-lg flex-1"
                 placeholder="Ihre E-Mail-Adresse"
