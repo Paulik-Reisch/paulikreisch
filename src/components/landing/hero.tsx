@@ -8,7 +8,7 @@ export function Hero() {
         <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
           <div className="flex flex-col justify-center space-y-4">
             <div className="space-y-4">
-              <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl xl:text-7xl/none text-balance animate-in fade-in slide-in-from-top-12 duration-1000">
+              <h1 className="font-headline text-3xl sm:text-4xl font-bold tracking-tighter md:text-5xl xl:text-7xl/none text-balance animate-in fade-in slide-in-from-top-12 duration-1000">
                 Ein Buch, das allen Konventionen trotzt. Und gutem Geschmack.
               </h1>
               <p className="max-w-[600px] text-muted-foreground md:text-xl animate-in fade-in slide-in-from-top-16 duration-1000">

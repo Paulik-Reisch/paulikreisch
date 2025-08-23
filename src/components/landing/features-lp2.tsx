@@ -16,21 +16,21 @@ export function FeaturesLP2() {
           <div className="grid gap-1 text-center p-4 rounded-lg transition-all hover:bg-background/50 hover:scale-105 transform -rotate-1">
             <Bomb className="h-10 w-10 mx-auto text-primary" />
             <h3 className="text-xl font-bold font-headline">Explosiveres Chaos</h3>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground text-balance">
               Wir haben die Logik über Bord geworfen. Diesmal gibt es keine Sicherheitsnetze.
             </p>
           </div>
           <div className="grid gap-1 text-center p-4 rounded-lg transition-all hover:bg-background/50 hover:scale-105 transform rotate-2">
             <BrainCircuit className="h-10 w-10 mx-auto text-primary" />
             <h3 className="text-xl font-bold font-headline">Tiefere Verwirrung</h3>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground text-balance">
               Neue philosophische Fragen, auf die niemand eine Antwort hat. Perfekt für schlaflose Nächte.
             </p>
           </div>
           <div className="grid gap-1 text-center p-4 rounded-lg transition-all hover:bg-background/50 hover:scale-105 transform -rotate-1">
             <BookHeart className="h-10 w-10 mx-auto text-primary" />
             <h3 className="text-xl font-bold font-headline">Mehr Herz*</h3>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground text-balance">
               *Herz im Sinne von Sodbrennen. Die Charaktere durchleben noch absurdere emotionale Achterbahnfahrten.
             </p>
           </div>

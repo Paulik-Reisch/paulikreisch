@@ -54,11 +54,11 @@ export function Reviews() {
             </p>
           </div>
         </div>
-        <div className="w-full max-w-4xl mx-auto mt-12">
+        <div className="w-full max-w-xs sm:max-w-xl md:max-w-2xl lg:max-w-4xl mx-auto mt-12">
             <Carousel opts={{ loop: true, align: "start" }} className="w-full">
                  <CarouselContent>
                     {reviews.map((review, index) => (
-                        <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                        <CarouselItem key={index} className="sm:basis-1/2 lg:basis-1/3">
                              <Card className="h-full">
                                 <CardContent className="p-6 flex flex-col justify-between h-full">
                                 <div>
@@ -75,8 +75,8 @@ export function Reviews() {
                         </CarouselItem>
                     ))}
                  </CarouselContent>
-                 <CarouselPrevious className="-left-4 md:-left-12" />
-                 <CarouselNext className="-right-4 md:-right-12" />
+                 <CarouselPrevious className="hidden sm:flex -left-4 md:-left-12" />
+                 <CarouselNext className="hidden sm:flex -right-4 md:-right-12" />
             </Carousel>
         </div>
       </div>

@@ -26,7 +26,7 @@ export function SocialShare() {
               Dein frisch geschriebenes Kapitel ist zu gut, um es für dich zu behalten. Teile es mit der Welt (und sorge für maximale Verwirrung).
             </p>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-4 mt-6">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
             <a 
               href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`} 
               target="_blank" 
@@ -42,7 +42,7 @@ export function SocialShare() {
               rel="noopener noreferrer"
             >
                 <Button size="lg" variant="outline">
-                    <Facebook className="mr-2 h-5 w-5" /> Teilen auf Facebook
+                    <Facebook className="mr-2 h-5 w-5" /> Facebook
                 </Button>
             </a>
             <Button size="lg" variant="outline" onClick={handleCopyToClipboard}>

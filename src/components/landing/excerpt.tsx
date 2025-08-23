@@ -10,8 +10,8 @@ export function Excerpt() {
             </p>
           </div>
         </div>
-        <div className="mx-auto max-w-3xl mt-12 text-left space-y-6 columns-1 md:columns-2 gap-8">
-            <h3 className="text-2xl font-bold font-headline tracking-tight col-span-full">KAPITEL 6: Schlaflos in der Schrottimmobilie - Dachschaden inklusive</h3>
+        <div className="mx-auto max-w-3xl mt-12 text-left space-y-6 md:columns-2 md:gap-8">
+            <h3 className="text-2xl font-bold font-headline tracking-tight md:col-span-full">KAPITEL 6: Schlaflos in der Schrottimmobilie - Dachschaden inklusive</h3>
             <p className="text-muted-foreground leading-relaxed">
                 Wer zieht es nicht vor, statt unter bereits bröckelnden Brücken zu hausieren und zu vagabundieren, lieber ein vernünftiges Dach über dem Kopf sein Eigen nennen zu dürfen?
             </p>

@@ -17,6 +17,13 @@ const calculateTimeLeft = (targetDate: number) => {
       Minuten: Math.floor((difference / 1000 / 60) % 60),
       Sekunden: Math.floor((difference / 1000) % 60),
     };
+  } else {
+    timeLeft = {
+        Tage: 0,
+        Stunden: 0,
+        Minuten: 0,
+        Sekunden: 0,
+    }
   }
 
   return timeLeft;
@@ -83,7 +90,7 @@ export function CountdownTeaser() {
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-6 text-center">
           <div className="space-y-4">
-            <h2 className="text-4xl font-bold font-headline tracking-tighter sm:text-6xl text-balance">
+            <h2 className="text-4xl font-bold font-headline tracking-tighter sm:text-5xl md:text-6xl text-balance">
               Hallo Welt 2 braucht... noch etwas.
             </h2>
             <p className="max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
@@ -93,7 +100,7 @@ export function CountdownTeaser() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             {Object.entries(timeLeft).map(([unit, value]) => (
                 <div key={unit} className="p-4 bg-background rounded-lg shadow-md transform hover:scale-110 transition-transform">
-                    <div className={cn("text-5xl font-bold font-mono text-primary animate-pulse", { 'animate-shake': isShaking })}>{String(value).padStart(2, '0')}</div>
+                    <div className={cn("text-4xl sm:text-5xl font-bold font-mono text-primary animate-pulse", { 'animate-shake': isShaking })}>{String(value).padStart(2, '0')}</div>
                     <div className="text-sm font-semibold text-muted-foreground">{unit}</div>
                 </div>
             ))}

@@ -37,14 +37,14 @@ export function ExcerptsTabs() {
         </div>
         <div className="mx-auto max-w-4xl mt-12">
             <Tabs defaultValue="chapter8" className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="chapter8">Kapitel 8: Treppen-Terror</TabsTrigger>
-                    <TabsTrigger value="chapter15">Kapitel 15: Morgenmuffel</TabsTrigger>
+                <TabsList className="grid w-full grid-cols-1 h-auto sm:grid-cols-2 sm:h-10">
+                    <TabsTrigger value="chapter8" className="h-full py-2 sm:py-1.5 whitespace-normal">Kapitel 8: Treppen-Terror</TabsTrigger>
+                    <TabsTrigger value="chapter15" className="h-full py-2 sm:py-1.5 whitespace-normal">Kapitel 15: Morgenmuffel</TabsTrigger>
                 </TabsList>
-                <TabsContent value="chapter8" className="p-6 border rounded-b-lg">
+                <TabsContent value="chapter8" className="p-4 sm:p-6 border rounded-b-lg">
                    {excerpt1}
                 </TabsContent>
-                <TabsContent value="chapter15" className="p-6 border rounded-b-lg">
+                <TabsContent value="chapter15" className="p-4 sm:p-6 border rounded-b-lg">
                     {excerpt2}
                 </TabsContent>
             </Tabs>
