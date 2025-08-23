@@ -1,0 +1,61 @@
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { FileWarning, WifiOff, Home } from 'lucide-react';
+
+const topics = [
+    {
+        title: "Bürokratie Simulator 3000",
+        description: "Füllen Sie den Antrag auf Beantragung eines Antragsformulars aus. Digital, effizient, zum Verzweifeln.",
+        link: "/lp-buerokratie-simulator",
+        icon: FileWarning,
+    },
+    {
+        title: "Internet in Deutschland",
+        description: "Erleben Sie die Lichtgeschwindigkeit des Neulands. Eine Ode an das Ladesymbol.",
+        link: "/lp-internet-deutschland",
+        icon: WifiOff,
+    },
+    {
+        title: "Der Mietenwahnsinn",
+        description: "10m² für 1.000€. Konfigurieren Sie Ihr Luxus-WG-Zimmer mit unserem Preisrechner.",
+        link: "/lp-mietenwahnsinn",
+        icon: Home,
+    },
+]
+
+export function HW2Teaser() {
+  return (
+    <section id="hw2-teaser" className="w-full py-12 md:py-24 lg:py-32 bg-muted/40">
+      <div className="container px-4 md:px-6">
+        <div className="flex flex-col items-center justify-center space-y-4 text-center">
+          <div className="space-y-2">
+            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Hallo Welt 2: Erneut Hallo, wir müssen reden!</h2>
+            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
+              Die Fortsetzung befasst sich mit den wirklich wichtigen Themen des Lebens. Hier ein kleiner, schmerzhafter Vorgeschmack.
+            </p>
+          </div>
+        </div>
+        <div className="mx-auto grid max-w-5xl items-stretch gap-6 py-12 lg:grid-cols-3 lg:gap-8">
+            {topics.map(topic => (
+                <Link key={topic.link} href={topic.link} legacyBehavior>
+                    <a className="group">
+                        <Card className="h-full transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-xl">
+                            <CardHeader className="items-center text-center">
+                                <div className="p-4 bg-primary/10 rounded-full mb-4">
+                                    <topic.icon className="h-8 w-8 text-primary" />
+                                </div>
+                                <CardTitle className="font-headline">{topic.title}</CardTitle>
+                            </CardHeader>
+                            <CardContent className="text-center">
+                                <CardDescription>{topic.description}</CardDescription>
+                            </CardContent>
+                        </Card>
+                    </a>
+                </Link>
+            ))}
+        </div>
+      </div>
+    </section>
+  );
+}

@@ -11,6 +11,7 @@ import { CtaBanner } from "@/components/landing/cta-banner";
 import { LP4Teaser } from "@/components/landing/lp4-teaser";
 import { SocialShare } from "@/components/landing/social-share";
 import { CountdownTeaser } from "@/components/landing/countdown-teaser";
+import { HW2Teaser } from "@/components/landing/hw2-teaser";
 
 export default function Home() {
   return (
@@ -19,6 +20,7 @@ export default function Home() {
       <main className="flex-1">
         <Hero />
         <TopicLPs />
+        <HW2Teaser />
         <Authors />
         <Features />
         <LP2Teaser />

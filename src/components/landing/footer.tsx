@@ -17,6 +17,12 @@ const topicLinks = [
     { href: "/lp-corona-satire", text: "Corona-Satire" },
 ]
 
+const hw2Links = [
+    { href: "/lp-buerokratie-simulator", text: "Bürokratie-Simulator" },
+    { href: "/lp-internet-deutschland", text: "Deutsches Internet" },
+    { href: "/lp-mietenwahnsinn", text: "Mietenwahnsinn" },
+]
+
 
 export function Footer() {
   return (
@@ -35,6 +41,11 @@ export function Footer() {
                 {link.text}
              </Link>
           ))}
+          {hw2Links.map(link => (
+                <Link key={link.href} href={link.href} className="text-sm font-medium text-primary hover:underline underline-offset-4">
+                    {link.text}
+                </Link>
+            ))}
         </nav>
         <p className="mt-8 text-xs text-muted-foreground">
           © {new Date().getFullYear()} Paulik & Reisch. Alle Rechte vorbehalten. Und einige Falschheiten.
