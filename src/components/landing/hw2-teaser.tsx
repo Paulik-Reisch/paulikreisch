@@ -61,6 +61,16 @@ export function HW2Teaser() {
                 </Card>
             ))}
         </div>
+        <div className="mt-8 text-center space-y-4">
+            <p className="max-w-2xl mx-auto text-muted-foreground md:text-lg text-balance">
+                Viele dieser gesellschaftlichen Missstände und noch mehr Absurditäten häufen sich geradezu im neuen Buch...
+            </p>
+            <Link href="/lp2">
+                <Button size="lg" className="animate-pulse">
+                    Mehr über Hallo Welt 2 erfahren <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+            </Link>
+        </div>
       </div>
     </section>
   );
