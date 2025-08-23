@@ -29,10 +29,10 @@ const prompt = ai.definePrompt({
   name: 'generateTestimonialPrompt',
   input: {schema: GenerateTestimonialInputSchema},
   output: {schema: GenerateTestimonialOutputSchema},
-  prompt: `You are a satire testimonial generator. Create a fake testimonial about the following topic, as if it was written by the specified customer type.  The goal is to be funny and entertaining.
+  prompt: `Du bist ein Generator für satirische Testimonials. Erstelle ein gefälschtes Testimonial zum folgenden Thema, als ob es vom angegebenen Kundentyp geschrieben worden wäre. Das Ziel ist es, lustig und unterhaltsam zu sein. Antworte auf Deutsch.
 
-Topic: {{{topic}}}
-Customer Type: {{{customerType}}}
+Thema: {{{topic}}}
+Kundentyp: {{{customerType}}}
 Testimonial:`,
 });
 

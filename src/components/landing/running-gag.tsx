@@ -3,13 +3,13 @@
 import { useState, useEffect } from 'react';
 
 const gags = [
-    "*Not actually a bestseller.",
-    "†May contain traces of sarcasm.",
-    "‡Results may vary.",
-    "§Side effects include spontaneous laughter.",
-    "¶Batteries not included.",
-    "※ Professional driver on a closed course.",
-    "‖ For entertainment purposes only."
+    "*Nicht wirklich ein Bestseller.",
+    "†Kann Spuren von Sarkasmus enthalten.",
+    "‡Ergebnisse können variieren.",
+    "§Nebenwirkungen können spontanes Lachen beinhalten.",
+    "¶Batterien nicht enthalten.",
+    "※ Professioneller Fahrer auf einer geschlossenen Strecke.",
+    "‖ Nur zu Unterhaltungszwecken."
 ];
 
 export function RunningGagFootnote() {
@@ -29,14 +29,14 @@ export function RunningGagFootnote() {
 
             gagTimeout = setTimeout(() => {
                 setGag(null);
-            }, 4000); // Gag is visible for 4 seconds
+            }, 4000); // Gag ist für 4 Sekunden sichtbar
         };
 
         const interval = setInterval(() => {
             showGag();
-        }, 8000); // New gag every 8 seconds
+        }, 8000); // Neuer Gag alle 8 Sekunden
 
-        // show one on first load after a small delay
+        // Zeige einen beim ersten Laden nach einer kleinen Verzögerung
         const initialTimeout = setTimeout(showGag, 2000);
 
         return () => {

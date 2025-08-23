@@ -7,9 +7,9 @@ export function Authors() {
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Meet the Twisted Minds</h2>
+            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Treffen Sie die verdrehten Köpfe</h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-              Two authors, one questionable sense of humor. They probably wrote this in a basement somewhere.
+              Zwei Autoren, ein fragwürdiger Sinn für Humor. Wahrscheinlich haben sie das irgendwo in einem Keller geschrieben.
             </p>
           </div>
         </div>
@@ -17,7 +17,7 @@ export function Authors() {
           <Card className="transform transition-transform duration-500 hover:scale-105 hover:-rotate-1 -rotate-2">
             <CardHeader className="text-center">
               <Image
-                alt="Author Paulik"
+                alt="Autor Paulik"
                 className="mx-auto mb-4 rounded-full"
                 data-ai-hint="author portrait"
                 height="120"
@@ -29,18 +29,18 @@ export function Authors() {
                 width="120"
               />
               <CardTitle className="font-headline">Paulik</CardTitle>
-              <CardDescription>The one with the glasses.</CardDescription>
+              <CardDescription>Der mit der Brille.</CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Paulik is a master of syntax and satire. His life's ambition is to write a sentence so confusing it wins a Nobel Prize. He's still trying.
+                Paulik ist ein Meister der Syntax und Satire. Sein Lebensziel ist es, einen so verwirrenden Satz zu schreiben, dass er einen Nobelpreis gewinnt. Er versucht es immer noch.
               </p>
             </CardContent>
           </Card>
           <Card className="transform transition-transform duration-500 hover:scale-105 hover:rotate-1 rotate-2">
             <CardHeader className="text-center">
               <Image
-                alt="Author Reisch"
+                alt="Autor Reisch"
                 className="mx-auto mb-4 rounded-full"
                 data-ai-hint="author portrait"
                 height="120"
@@ -52,11 +52,11 @@ export function Authors() {
                 width="120"
               />
               <CardTitle className="font-headline">Reisch</CardTitle>
-              <CardDescription>The one with the questionable haircut.</CardDescription>
+              <CardDescription>Der mit dem fragwürdigen Haarschnitt.</CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Reisch provides the chaos. Fueled by coffee and existential dread, he ensures no plot makes too much sense. He considers it a public service.
+                Reisch sorgt für das Chaos. Angetrieben von Kaffee und existenzieller Angst stellt er sicher, dass keine Handlung zu viel Sinn ergibt. Er betrachtet es als öffentlichen Dienst.
               </p>
             </CardContent>
           </Card>

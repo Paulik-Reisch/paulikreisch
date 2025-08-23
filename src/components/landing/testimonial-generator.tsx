@@ -22,12 +22,12 @@ function SubmitButton() {
       {pending ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Generating...
+          Wird generiert...
         </>
       ) : (
         <>
           <Wand2 className="mr-2 h-4 w-4" />
-          Generate Testimonial
+          Testimonial generieren
         </>
       )}
     </Button>
@@ -42,7 +42,7 @@ export function TestimonialGenerator() {
     if (state.error) {
       toast({
         variant: "destructive",
-        title: "Generation Error",
+        title: "Fehler bei der Generierung",
         description: state.error,
       });
     }
@@ -52,26 +52,26 @@ export function TestimonialGenerator() {
     <Card className="max-w-2xl mx-auto transform -rotate-1 shadow-lg">
       <form action={formAction}>
         <CardHeader>
-          <CardTitle className="font-headline">Testimonial Generator</CardTitle>
+          <CardTitle className="font-headline">Testimonial-Generator</CardTitle>
           <CardDescription>
-            Create your own award-winning*, completely unbiased* review for our book.
+            Erstellen Sie Ihre eigene preisgekrönte*, völlig unvoreingenommene* Bewertung für unser Buch.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="topic">Topic</Label>
-              <Input id="topic" name="topic" placeholder="e.g., 'The meaning of life'" />
+              <Label htmlFor="topic">Thema</Label>
+              <Input id="topic" name="topic" placeholder="z.B. 'Der Sinn des Lebens'" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="customerType">As written by a...</Label>
-              <Input id="customerType" name="customerType" placeholder="e.g., 'grumpy cat'" />
+              <Label htmlFor="customerType">Geschrieben von einem...</Label>
+              <Input id="customerType" name="customerType" placeholder="z.B. 'mürrische Katze'" />
             </div>
           </div>
 
           {state.testimonial && (
             <div className="pt-4 animate-in fade-in">
-              <Label>Generated Masterpiece</Label>
+              <Label>Generiertes Meisterwerk</Label>
               <Card className="bg-muted mt-2">
                 <CardContent className="p-4 flex items-start gap-4">
                     <MessageSquareQuote className="w-6 h-6 text-muted-foreground mt-1 shrink-0" />

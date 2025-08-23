@@ -9,19 +9,19 @@ export function Hero() {
           <div className="flex flex-col justify-center space-y-4">
             <div className="space-y-4">
               <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl xl:text-7xl/none text-balance animate-in fade-in slide-in-from-top-12 duration-1000">
-                A Book That Defies All Conventions. And Good Taste.
+                Ein Buch, das allen Konventionen trotzt. Und gutem Geschmack.
               </h1>
               <p className="max-w-[600px] text-muted-foreground md:text-xl animate-in fade-in slide-in-from-top-16 duration-1000">
-                Welcome to "Hallo Welt". A literary journey so profound, it will make you question everything you thought you knew about books. And reality. And squirrels.
+                Willkommen bei "Hallo Welt". Eine literarische Reise, so tiefgründig, dass Sie alles in Frage stellen werden, was Sie über Bücher zu wissen glaubten. Und die Realität. Und Eichhörnchen.
               </p>
             </div>
             <div className="flex flex-col gap-2 min-[400px]:flex-row animate-in fade-in slide-in-from-top-20 duration-1000">
-              <Button size="lg">Buy Now (You Know You Want To)</Button>
+              <Button size="lg">Jetzt kaufen (Sie wissen, Sie wollen es)</Button>
             </div>
           </div>
           <div className="relative animate-in fade-in zoom-in-50 duration-1000">
              <Image
-                alt="Book Cover"
+                alt="Buchcover"
                 className="mx-auto aspect-square overflow-hidden rounded-xl object-cover sm:w-full lg:order-last transform -rotate-3 transition-transform duration-500 hover:rotate-0 hover:scale-105 shadow-2xl"
                 data-ai-hint="book cover"
                 height="550"
