@@ -1,0 +1,64 @@
+import { Star, MessageSquareQuote } from 'lucide-react';
+import { Card, CardContent } from "@/components/ui/card";
+import { TestimonialGenerator } from "@/components/landing/testimonial-generator";
+
+export function Testimonials() {
+  return (
+    <section id="testimonials" className="w-full py-12 md:py-24 lg:py-32">
+      <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
+        <div className="space-y-3">
+          <h2 className="text-3xl font-bold font-headline tracking-tighter md:text-4xl/tight">
+            Rave Reviews From Our "Fans"
+          </h2>
+          <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
+            Don't just take our word for it. Here's what some definitely real people are saying. Or, generate your own fake review below!
+          </p>
+        </div>
+        <div className="grid w-full grid-cols-1 lg:grid-cols-3 gap-6 pt-8">
+          <Card className="transform transition-transform hover:scale-105 rotate-1">
+            <CardContent className="p-6">
+              <div className="flex mb-2">
+                <Star className="w-5 h-5 fill-primary text-primary" />
+                <Star className="w-5 h-5 fill-primary text-primary" />
+                <Star className="w-5 h-5 fill-primary text-primary" />
+                <Star className="w-5 h-5 fill-primary text-primary" />
+                <Star className="w-5 h-5 fill-muted stroke-muted-foreground" />
+              </div>
+              <p className="text-sm text-left italic">"I laughed, I cried, I questioned my life choices. Mostly the last one."</p>
+              <p className="text-right mt-2 font-semibold">- A Confused Reader</p>
+            </CardContent>
+          </Card>
+          <Card className="transform transition-transform hover:scale-105 -rotate-2">
+            <CardContent className="p-6">
+                <div className="flex mb-2">
+                    <Star className="w-5 h-5 fill-primary text-primary" />
+                    <Star className="w-5 h-5 fill-primary text-primary" />
+                    <Star className="w-5 h-5 fill-primary text-primary" />
+                    <Star className="w-5 h-5 fill-primary text-primary" />
+                    <Star className="w-5 h-5 fill-primary text-primary" />
+                </div>
+              <p className="text-sm text-left italic">"This book is a hazard. I spilled my coffee from laughing too hard."</p>
+              <p className="text-right mt-2 font-semibold">- Victim of Comedy</p>
+            </CardContent>
+          </Card>
+          <Card className="transform transition-transform hover:scale-105 rotate-1">
+            <CardContent className="p-6">
+              <div className="flex mb-2">
+                <Star className="w-5 h-5 fill-primary text-primary" />
+                <Star className="w-5 h-5 fill-primary text-primary" />
+                <Star className="w-5 h-5 fill-muted stroke-muted-foreground" />
+                <Star className="w-5 h-5 fill-muted stroke-muted-foreground" />
+                <Star className="w-5 h-5 fill-muted stroke-muted-foreground" />
+              </div>
+              <p className="text-sm text-left italic">"My cat gives it two paws down. He preferred sleeping on it."</p>
+              <p className="text-right mt-2 font-semibold">- A Pet Owner</p>
+            </CardContent>
+          </Card>
+        </div>
+        <div className="mt-12">
+            <TestimonialGenerator />
+        </div>
+      </div>
+    </section>
+  );
+}

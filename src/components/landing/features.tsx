@@ -1,0 +1,41 @@
+import { BookOpen, Drama, Feather } from "lucide-react";
+
+export function Features() {
+  return (
+    <section id="features" className="w-full py-12 md:py-24 lg:py-32" style={{backgroundColor: 'hsl(var(--color-bg-tan))'}}>
+      <div className="container px-4 md:px-6">
+        <div className="flex flex-col items-center justify-center space-y-4 text-center">
+          <div className="space-y-2">
+            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Why This Book Will Change Your Life*</h2>
+            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
+              (*For better or for worse. No refunds.)
+            </p>
+          </div>
+        </div>
+        <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3 lg:gap-12">
+          <div className="grid gap-1 text-center p-4 rounded-lg transition-all hover:bg-background/50 hover:scale-105 transform -rotate-1">
+            <Drama className="h-10 w-10 mx-auto text-primary" />
+            <h3 className="text-xl font-bold font-headline">Unforgettable Characters</h3>
+            <p className="text-muted-foreground">
+              Meet a cast of characters so bizarre, they'll live rent-free in your head forever.
+            </p>
+          </div>
+          <div className="grid gap-1 text-center p-4 rounded-lg transition-all hover:bg-background/50 hover:scale-105 transform rotate-2">
+            <BookOpen className="h-10 w-10 mx-auto text-primary" />
+            <h3 className="text-xl font-bold font-headline">Page-Turning Plot</h3>
+            <p className="text-muted-foreground">
+              A plot with more twists and turns than a pretzel factory. You won't see the end coming.
+            </p>
+          </div>
+          <div className="grid gap-1 text-center p-4 rounded-lg transition-all hover:bg-background/50 hover:scale-105 transform -rotate-1">
+            <Feather className="h-10 w-10 mx-auto text-primary" />
+            <h3 className="text-xl font-bold font-headline">Satirical Genius</h3>
+            <p className="text-muted-foreground">
+              Witty commentary on modern life that's so sharp, you might get a paper cut.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
