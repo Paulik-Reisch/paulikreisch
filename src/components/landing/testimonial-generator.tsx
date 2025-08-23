@@ -1,6 +1,7 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { createTestimonialAction } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,7 +36,7 @@ function SubmitButton() {
 }
 
 export function TestimonialGenerator() {
-  const [state, formAction] = useFormState(createTestimonialAction, initialState);
+  const [state, formAction] = useActionState(createTestimonialAction, initialState);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -61,11 +62,11 @@ export function TestimonialGenerator() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="topic">Thema</Label>
-              <Input id="topic" name="topic" placeholder="z.B. 'Der Sinn des Lebens'" />
+              <Input id="topic" name="topic" placeholder="z.B. 'Der Sinn des Lebens'" defaultValue="Das Buch 'Hallo Welt'" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="customerType">Geschrieben von einem...</Label>
-              <Input id="customerType" name="customerType" placeholder="z.B. 'mürrische Katze'" />
+              <Input id="customerType" name="customerType" placeholder="z.B. 'mürrische Katze'" defaultValue="Philosoph" />
             </div>
           </div>
 
