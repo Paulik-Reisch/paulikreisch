@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { FileWarning, WifiOff, Home } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { FileWarning, WifiOff, Home, ArrowRight } from 'lucide-react';
 
 const topics = [
     {
@@ -9,18 +9,21 @@ const topics = [
         description: "Füllen Sie den Antrag auf Beantragung eines Antragsformulars aus. Digital, effizient, zum Verzweifeln.",
         link: "/lp-buerokratie-simulator",
         icon: FileWarning,
+        cta: "Zum Antrag",
     },
     {
         title: "Internet in Deutschland",
         description: "Erleben Sie die Lichtgeschwindigkeit des Neulands. Eine Ode an das Ladesymbol.",
         link: "/lp-internet-deutschland",
         icon: WifiOff,
+        cta: "Verbindung herstellen",
     },
     {
         title: "Der Mietenwahnsinn",
         description: "10m² für 1.000€. Konfigurieren Sie Ihr Luxus-WG-Zimmer mit unserem Preisrechner.",
         link: "/lp-mietenwahnsinn",
         icon: Home,
+        cta: "Miete berechnen",
     },
 ]
 
@@ -38,21 +41,24 @@ export function HW2Teaser() {
         </div>
         <div className="mx-auto grid max-w-5xl items-stretch gap-6 py-12 lg:grid-cols-3 lg:gap-8">
             {topics.map(topic => (
-                <Link key={topic.link} href={topic.link} legacyBehavior>
-                    <a className="group">
-                        <Card className="h-full transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-xl">
-                            <CardHeader className="items-center text-center">
-                                <div className="p-4 bg-primary/10 rounded-full mb-4">
-                                    <topic.icon className="h-8 w-8 text-primary" />
-                                </div>
-                                <CardTitle className="font-headline">{topic.title}</CardTitle>
-                            </CardHeader>
-                            <CardContent className="text-center">
-                                <CardDescription>{topic.description}</CardDescription>
-                            </CardContent>
-                        </Card>
-                    </a>
-                </Link>
+                <Card key={topic.link} className="flex flex-col transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+                    <CardHeader className="items-center text-center">
+                        <div className="p-4 bg-primary/10 rounded-full mb-4">
+                            <topic.icon className="h-8 w-8 text-primary" />
+                        </div>
+                        <CardTitle className="font-headline">{topic.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-center flex-grow">
+                        <CardDescription>{topic.description}</CardDescription>
+                    </CardContent>
+                    <CardFooter className="justify-center">
+                         <Link href={topic.link} legacyBehavior>
+                            <Button variant="outline">
+                                {topic.cta} <ArrowRight className="ml-2 h-4 w-4" />
+                            </Button>
+                        </Link>
+                    </CardFooter>
+                </Card>
             ))}
         </div>
       </div>
