@@ -8,6 +8,7 @@ import { continueChapter } from "@/ai/flows/continue-chapter-flow";
 import { generateFootnote } from "@/ai/flows/generate-footnote-flow";
 import { generateReportCard } from "@/ai/flows/generate-report-card-flow";
 import { generateBureaucracyResponse } from "@/ai/flows/generate-bureaucracy-flow";
+import { generateDbExcuse } from "@/ai/flows/generate-db-excuse-flow";
 
 const testimonialSchema = z.object({
   topic: z.string().min(2, { message: "Das Thema muss mindestens 2 Zeichen lang sein." }).max(50),
@@ -159,5 +160,18 @@ export async function createBureaucracyResponseAction(
     } catch (e) {
         console.error(e);
         return { response: null, error: "Antwort konnte nicht erstellt werden. Der zuständige Sachbearbeiter ist im Urlaub." };
+    }
+}
+
+export async function createDbExcuseAction(
+  prevState: any,
+  formData: FormData
+) {
+    try {
+        const result = await generateDbExcuse();
+        return { excuse: result, error: null };
+    } catch (e) {
+        console.error(e);
+        return { excuse: null, error: "Ausrede konnte nicht generiert werden. Der Vorrat an kreativen Katastrophen ist vorübergehend erschöpft." };
     }
 }

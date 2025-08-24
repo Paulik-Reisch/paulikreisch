@@ -38,9 +38,9 @@ const ideas = [
     icon: Train,
     title: "Deutsche Bahn Ausreden-Bot",
     description: "Warum hat Ihr Zug Verspätung? Unser Bot liefert Ihnen die kreativsten und absurdesten Ausreden, direkt aus der Konzernzentrale.",
-    link: "#",
+    link: "/lp-db-ausreden-bot",
     cta: "Ausrede würfeln",
-    status: "coming-soon",
+    status: "live",
     book: "Hallo Welt 2"
   },
   {
@@ -65,9 +65,9 @@ const ideas = [
     icon: Home,
     title: "Mietenwahnsinn-Rechner",
     description: "Was kostet ein 4qm-Zimmer ohne Fenster in Ihrer Stadt? Finden Sie es heraus (und weinen Sie leise).",
-    link: "#",
+    link: "/lp-mietenwahnsinn",
     cta: "Miete berechnen",
-    status: "coming-soon",
+    status: "live",
     book: "Hallo Welt 2"
   },
   {
