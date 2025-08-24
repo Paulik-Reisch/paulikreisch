@@ -20,9 +20,9 @@ const ideas = [
     icon: FileText,
     title: "Bürokratie-Generator",
     description: "Erhalten Sie auf Knopfdruck ein absurd langes und sinnloses Behörden-Antwortschreiben. Effizienz, wie sie im Buche steht.",
-    link: "#",
+    link: "/lp-buerokratie-generator",
     cta: "Antrag generieren",
-    status: "coming-soon",
+    status: "live",
     book: "Hallo Welt 2"
   },
   {

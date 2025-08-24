@@ -23,6 +23,7 @@ const hw2Links = [
     { href: "/lp-mietenwahnsinn", text: "Mietenwahnsinn" },
     { href: "/lp-fussnoten-generator", text: "Fußnoten-Generator" },
     { href: "/lp-lehrer-noten-simulator", text: "Noten-Simulator" },
+    { href: "/lp-buerokratie-generator", text: "Bürokratie-Generator" },
 ]
 
 
