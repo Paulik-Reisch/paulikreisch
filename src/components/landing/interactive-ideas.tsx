@@ -47,9 +47,9 @@ const ideas = [
     icon: Sparkles,
     title: "Satire-Typ-Test",
     description: "Welche Katastrophenfigur aus dem 'Hallo Welt'-Universum sind Sie? Machen Sie den Test und teilen Sie Ihr traumatisches Ergebnis.",
-    link: "#",
+    link: "/lp-satire-typ-test",
     cta: "Test starten",
-    status: "coming-soon",
+    status: "live",
     book: "Hallo Welt"
   },
   {

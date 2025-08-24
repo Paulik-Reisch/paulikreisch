@@ -9,6 +9,7 @@ import { generateFootnote } from "@/ai/flows/generate-footnote-flow";
 import { generateReportCard } from "@/ai/flows/generate-report-card-flow";
 import { generateBureaucracyResponse } from "@/ai/flows/generate-bureaucracy-flow";
 import { generateDbExcuse } from "@/ai/flows/generate-db-excuse-flow";
+import { generateSatireType } from "@/ai/flows/generate-satire-type-flow";
 
 const testimonialSchema = z.object({
   topic: z.string().min(2, { message: "Das Thema muss mindestens 2 Zeichen lang sein." }).max(50),
@@ -173,5 +174,44 @@ export async function createDbExcuseAction(
     } catch (e) {
         console.error(e);
         return { excuse: null, error: "Ausrede konnte nicht generiert werden. Der Vorrat an kreativen Katastrophen ist vorübergehend erschöpft." };
+    }
+}
+
+
+const GenerateSatireTypeInputSchema = z.object({
+    q1: z.string().min(1, "Bitte beantworten Sie alle Fragen."),
+    q2: z.string().min(1, "Bitte beantworten Sie alle Fragen."),
+    q3: z.string().min(1, "Bitte beantworten Sie alle Fragen."),
+    q4: z.string().min(1, "Bitte beantworten Sie alle Fragen."),
+    q5: z.string().min(1, "Bitte beantworten Sie alle Fragen."),
+});
+
+export async function createSatireTypeAction(
+    prevState: any,
+    formData: FormData
+) {
+    const validatedFields = GenerateSatireTypeInputSchema.safeParse({
+        q1: formData.get("q1"),
+        q2: formData.get("q2"),
+        q3: formData.get("q3"),
+        q4: formData.get("q4"),
+        q5: formData.get("q5"),
+    });
+
+    if (!validatedFields.success) {
+        // Find the first error message and return it.
+        const errorMessages = validatedFields.error.errors.map(e => e.message).join('. ');
+        return {
+            result: null,
+            error: errorMessages,
+        };
+    }
+
+    try {
+        const result = await generateSatireType(validatedFields.data);
+        return { result: result, error: null };
+    } catch (e) {
+        console.error(e);
+        return { result: null, error: "Analyse fehlgeschlagen. Der Psychoanalytiker ist gerade in der Kaffeepause." };
     }
 }
