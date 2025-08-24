@@ -83,9 +83,9 @@ const ideas = [
     icon: Clock,
     title: "Beamten-Wartezeiten-Simulator",
     description: "Erleben Sie die beruhigende Wirkung einer endlosen Warteschleife. Ihr Antrag wird geprüft... vielleicht.",
-    link: "#",
+    link: "/lp-beamten-wartezeiten-simulator",
     cta: "Warten starten",
-    status: "coming-soon",
+    status: "live",
     book: "Hallo Welt 2"
   },
   {

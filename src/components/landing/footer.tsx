@@ -26,6 +26,7 @@ const hw2Links = [
     { href: "/lp-buerokratie-generator", text: "Bürokratie-Generator" },
     { href: "/lp-db-ausreden-bot", text: "DB Ausreden-Bot" },
     { href: "/lp-satire-typ-test", text: "Satire-Typ-Test" },
+    { href: "/lp-beamten-wartezeiten-simulator", text: "Wartezeiten-Simulator" },
 ]
 
 
