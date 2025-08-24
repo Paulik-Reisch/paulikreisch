@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Ticket, Loader2, DoorClosed, Armchair, Coffee } from 'lucide-react';
