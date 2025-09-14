@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export function CtaBanner() {
   return (
@@ -12,9 +13,9 @@ export function CtaBanner() {
               <br/><span className="text-xs">*Angebot so real wie unsere Bescheidenheit.</span>
             </p>
           </div>
-          <a href="https://www.amazon.de/-/de/Hallo-Welt-Erhebliche-Bildungsgang-Lernvollzugsanstalt/dp/B0CVXT9X4J" target="_blank" rel="noopener noreferrer">
+          <Link href="/buchhandlung-paulik-reisch">
             <Button size="lg" variant="secondary">Ja, ich will den Rabatt!</Button>
-          </a>
+          </Link>
         </div>
       </div>
     </section>

@@ -5,15 +5,25 @@ import { useToast } from "@/hooks/use-toast";
 
 export function SocialShare() {
   const { toast } = useToast();
-  const shareUrl = "https://www.amazon.de/-/de/Hallo-Welt-Erhebliche-Bildungsgang-Lernvollzugsanstalt/dp/B0CVXT9X4J";
+  const shareUrl = "/buchhandlung-paulik-reisch";
   const shareText = "Ich habe gerade mit der KI ein neues Kapitel für das satirische Meisterwerk 'Hallo Welt' geschrieben! Du musst das ausprobieren und das Buch lesen! #HalloWeltBuch #KI";
 
+  const getFullShareUrl = () => {
+    if (typeof window !== "undefined") {
+      return window.location.origin + shareUrl;
+    }
+    return "";
+  }
+
   const handleCopyToClipboard = () => {
-    navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
-    toast({
-        title: "Kopiert!",
-        description: "Der Text zum Teilen wurde in die Zwischenablage kopiert.",
-    })
+    const fullUrl = getFullShareUrl();
+    if (fullUrl) {
+      navigator.clipboard.writeText(`${shareText} ${fullUrl}`);
+      toast({
+          title: "Kopiert!",
+          description: "Der Text zum Teilen wurde in die Zwischenablage kopiert.",
+      })
+    }
   }
 
   return (
@@ -28,7 +38,7 @@ export function SocialShare() {
           </div>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
             <a 
-              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`} 
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(getFullShareUrl())}`} 
               target="_blank" 
               rel="noopener noreferrer"
             >
@@ -37,7 +47,7 @@ export function SocialShare() {
               </Button>
             </a>
             <a 
-              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`}
+              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(getFullShareUrl())}&quote=${encodeURIComponent(shareText)}`}
               target="_blank"
               rel="noopener noreferrer"
             >

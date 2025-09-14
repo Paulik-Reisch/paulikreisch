@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export function Hero() {
   return (
@@ -16,9 +17,9 @@ export function Hero() {
               </p>
             </div>
             <div className="flex flex-col gap-2 min-[400px]:flex-row animate-in fade-in slide-in-from-top-20 duration-1000">
-              <a href="https://www.amazon.de/-/de/Hallo-Welt-Erhebliche-Bildungsgang-Lernvollzugsanstalt/dp/B0CVXT9X4J" target="_blank" rel="noopener noreferrer">
+              <Link href="/buchhandlung-paulik-reisch">
                 <Button size="lg">Jetzt kaufen (Sie wissen, Sie wollen es)</Button>
-              </a>
+              </Link>
             </div>
           </div>
           <div className="relative animate-in fade-in zoom-in-50 duration-1000">

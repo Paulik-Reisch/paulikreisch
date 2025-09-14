@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export function HeroCoronaSatire() {
   return (
@@ -13,9 +14,9 @@ export function HeroCoronaSatire() {
               Eine satirische Aufarbeitung der Pandemie aus Schülersicht. Von der Kunst des Stäbchen-Tests bis zur Freude über die Quarantäne-Ferien.
             </p>
           </div>
-           <a href="https://www.amazon.de/-/de/Hallo-Welt-Erhebliche-Bildungsgang-Lernvollzugsanstalt/dp/B0CVXT9X4J" target="_blank" rel="noopener noreferrer">
+           <Link href="/buchhandlung-paulik-reisch">
                 <Button size="lg">Das Kapitel zur Krise lesen</Button>
-            </a>
+            </Link>
         </div>
       </div>
     </section>

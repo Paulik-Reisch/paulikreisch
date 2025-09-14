@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { AlarmClockOff } from 'lucide-react';
+import Link from 'next/link';
 
 export function HeroSchulzeitenGenickbruch() {
   return (
@@ -16,11 +17,11 @@ export function HeroSchulzeitenGenickbruch() {
             </p>
             <p className="text-2xl italic font-semibold text-primary">"Wer vor 9 Uhr aufsteht, hat die Kontrolle über sein Leben verloren."</p>
           </div>
-          <a href="https://www.amazon.de/-/de/Hallo-Welt-Erhebliche-Bildungsgang-Lernvollzugsanstalt/dp/B0CVXT9X4J" target="_blank" rel="noopener noreferrer">
+          <Link href="/buchhandlung-paulik-reisch">
             <Button size="lg" variant="secondary">
               Gegen den Wecker rebellieren
             </Button>
-          </a>
+          </Link>
         </div>
       </div>
     </section>

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, TrainFront } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface InitialState {
   excuse: GenerateDbExcuseOutput | null;
@@ -129,9 +130,9 @@ export function DbExcuseGenerator() {
 
         {state.excuse && !isSpinning && (
             <div className="text-center mt-12 animate-in fade-in slide-in-from-bottom-8 duration-500">
-                 <a href="https://www.amazon.de/-/de/Hallo-Welt-Erhebliche-Bildungsgang-Lernvollzugsanstalt/dp/B0CVXT9X4J" target="_blank" rel="noopener noreferrer">
+                 <Link href="/buchhandlung-paulik-reisch">
                     <Button size="lg" variant="secondary">Mehr Katastrophen auf 300 Seiten.</Button>
-                </a>
+                </Link>
             </div>
         )}
       </div>

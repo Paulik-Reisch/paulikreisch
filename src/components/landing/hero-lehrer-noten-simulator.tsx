@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, GraduationCap, School } from "lucide-react";
 import { Badge } from "../ui/badge";
+import Link from "next/link";
 
 interface InitialState {
   reportCard: GenerateReportCardOutput | null;
@@ -139,9 +140,9 @@ export function HeroLehrerNotenSimulator() {
 
         {state.reportCard && (
             <div className="text-center mt-12 animate-in fade-in slide-in-from-bottom-8 duration-500">
-                 <a href="https://www.amazon.de/-/de/Hallo-Welt-Erhebliche-Bildungsgang-Lernvollzugsanstalt/dp/B0CVXT9X4J" target="_blank" rel="noopener noreferrer">
+                 <Link href="/buchhandlung-paulik-reisch">
                     <Button size="lg" variant="secondary">Dein Zeugnis ist lächerlich – das Buch noch mehr.</Button>
-                </a>
+                </Link>
             </div>
         )}
       </div>

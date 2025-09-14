@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2, Send, Sparkles, UserCheck, Twitter, Facebook, Copy } from "lucide-react";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
+import Link from "next/link";
 
 
 interface InitialState {
@@ -115,9 +116,9 @@ function ResultCard({ data }: { data: GenerateSatireTypeOutput }) {
             </CardContent>
              <CardFooter className="flex-col gap-4 text-center">
                 <p className="text-sm text-muted-foreground">Gefällt dir dein Ergebnis? Im Buch findest du noch mehr davon.</p>
-                <a href="https://www.amazon.de/-/de/Hallo-Welt-Erhebliche-Bildungsgang-Lernvollzugsanstalt/dp/B0CVXT9X4J" target="_blank" rel="noopener noreferrer">
+                <Link href="/buchhandlung-paulik-reisch">
                     <Button variant="secondary">Alle Typen im Buch kennenlernen</Button>
-                </a>
+                </Link>
             </CardFooter>
         </Card>
     )

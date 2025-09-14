@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export function HeroMensaTodesfalle() {
   return (
@@ -13,9 +14,9 @@ export function HeroMensaTodesfalle() {
               Wo das Essen mehr einer biologischen Waffe gleicht und jedes Gericht ein Experiment mit ungewissem Ausgang ist. Sind Sie mutig genug?
             </p>
           </div>
-          <a href="https://www.amazon.de/-/de/Hallo-Welt-Erhebliche-Bildungsgang-Lernvollzugsanstalt/dp/B0CVXT9X4J" target="_blank" rel="noopener noreferrer">
+          <Link href="/buchhandlung-paulik-reisch">
             <Button size="lg" variant="secondary" className="animate-pulse">Lies das Menü der Hölle</Button>
-          </a>
+          </Link>
         </div>
       </div>
     </section>

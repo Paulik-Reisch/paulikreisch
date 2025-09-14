@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export function HeroLehrerRoboter() {
   return (
@@ -15,9 +16,9 @@ export function HeroLehrerRoboter() {
                 Ein tiefgründiger Einblick in die Welt der inkompetenten Pädagogen, unmotivierten Beamtenroboter und ihrer unendlichen Liebe zu Kaffeetassen.
               </p>
             </div>
-             <a href="https://www.amazon.de/-/de/Hallo-Welt-Erhebliche-Bildungsgang-Lernvollzugsanstalt/dp/B0CVXT9X4J" target="_blank" rel="noopener noreferrer">
+             <Link href="/buchhandlung-paulik-reisch">
                 <Button size="lg">Kapitel jetzt kaufen</Button>
-            </a>
+            </Link>
           </div>
           <Image
             alt="Lehrer als Beamtenroboter"

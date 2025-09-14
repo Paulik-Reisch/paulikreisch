@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
 
 export function BookShowcase() {
   return (
@@ -25,9 +26,9 @@ export function BookShowcase() {
             <p className="max-w-md mt-6 text-muted-foreground text-balance">
                 Die satirische Abrechnung mit dem Schulsystem, Lehrern als Beamtenrobotern und dem täglichen Wahnsinn des Erwachsenwerdens.
             </p>
-            <a href="https://www.amazon.de/-/de/Hallo-Welt-Erhebliche-Bildungsgang-Lernvollzugsanstalt/dp/B0CVXT9X4J" target="_blank" rel="noopener noreferrer" className="mt-6">
+            <Link href="/buchhandlung-paulik-reisch" className="mt-6">
                 <Button>Band 1 kaufen</Button>
-            </a>
+            </Link>
           </div>
           
           {/* Hallo Welt 2 */}
@@ -47,9 +48,9 @@ export function BookShowcase() {
             <p className="max-w-md mt-6 text-muted-foreground text-balance">
                 Die Fortsetzung, die niemand wollte, aber jeder braucht. Eine Abrechnung mit Bürokratie, dem deutschen Internet und dem Mietenwahnsinn.
             </p>
-             <a href="https://www.amazon.de/-/de/Hallo-Welt-Erhebliche-Bildungsgang-Lernvollzugsanstalt/dp/B0CVXT9X4J" target="_blank" rel="noopener noreferrer" className="mt-6">
+             <Link href="/buchhandlung-paulik-reisch" className="mt-6">
                 <Button>Band 2 kaufen</Button>
-            </a>
+            </Link>
           </div>
 
         </div>

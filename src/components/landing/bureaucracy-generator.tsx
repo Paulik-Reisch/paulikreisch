@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Send, FileText } from "lucide-react";
 import { Badge } from "../ui/badge";
+import Link from "next/link";
 
 interface InitialState {
   response: GenerateBureaucracyOutput | null;
@@ -130,9 +131,9 @@ export function BureaucracyGenerator() {
 
         {state.response && (
             <div className="text-center mt-12 animate-in fade-in slide-in-from-bottom-8 duration-500">
-                 <a href="https://www.amazon.de/-/de/Hallo-Welt-Erhebliche-Bildungsgang-Lernvollzugsanstalt/dp/B0CVXT9X4J" target="_blank" rel="noopener noreferrer">
+                 <Link href="/buchhandlung-paulik-reisch">
                     <Button size="lg" variant="secondary">Noch mehr Amtswahnsinn findest du im Buch.</Button>
-                </a>
+                </Link>
             </div>
         )}
       </div>

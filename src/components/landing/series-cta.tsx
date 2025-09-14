@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export function SeriesCta() {
   return (
@@ -12,12 +13,12 @@ export function SeriesCta() {
             </p>
           </div>
            <div className="flex flex-col sm:flex-row gap-4">
-                 <a href="https://www.amazon.de/-/de/Hallo-Welt-Erhebliche-Bildungsgang-Lernvollzugsanstalt/dp/B0CVXT9X4J" target="_blank" rel="noopener noreferrer">
+                 <Link href="/buchhandlung-paulik-reisch">
                     <Button size="lg" variant="secondary">Band 1 kaufen</Button>
-                </a>
-                 <a href="https://www.amazon.de/-/de/Hallo-Welt-Erhebliche-Bildungsgang-Lernvollzugsanstalt/dp/B0CVXT9X4J" target="_blank" rel="noopener noreferrer">
+                </Link>
+                 <Link href="/buchhandlung-paulik-reisch">
                     <Button size="lg" variant="secondary">Band 2 kaufen</Button>
-                </a>
+                </Link>
             </div>
         </div>
       </div>

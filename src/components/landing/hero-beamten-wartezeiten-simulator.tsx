@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Ticket, Loader2, DoorClosed, Armchair, Coffee } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 const initialMessages = [
     "Ihr Anliegen wird bearbeitet.",
@@ -110,9 +111,9 @@ export function HeroBeamtenWartezeitenSimulator() {
                     </CardContent>
                 </Card>
                  <div className='text-center mt-8'>
-                     <a href="https://www.amazon.de/-/de/Hallo-Welt-Erhebliche-Bildungsgang-Lernvollzugsanstalt/dp/B0CVXT9X4J" target="_blank" rel="noopener noreferrer">
+                     <Link href="/buchhandlung-paulik-reisch">
                         <Button variant="secondary" size="lg">Im Buch geht's schneller (oder auch nicht).</Button>
-                    </a>
+                    </Link>
                 </div>
             </div>
         </section>

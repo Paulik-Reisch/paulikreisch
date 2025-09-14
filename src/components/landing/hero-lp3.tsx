@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
+import Link from 'next/link';
 
 const ConfettiPiece = ({ emoji }: { emoji: string }) => {
   const style = {
@@ -57,9 +58,9 @@ export function HeroLP3() {
                     <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
                         Worauf warten Sie noch? Holen Sie sich Ihre Dosis literarischen Wahnsinns. Sofort.
                     </p>
-                     <a href="https://www.amazon.de/-/de/Hallo-Welt-Erhebliche-Bildungsgang-Lernvollzugsanstalt/dp/B0CVXT9X4J" target="_blank" rel="noopener noreferrer">
+                     <Link href="/buchhandlung-paulik-reisch">
                         <Button size="lg" className="animate-pulse">Jetzt zuschlagen!</Button>
-                    </a>
+                    </Link>
                 </div>
             )}
         </div>
