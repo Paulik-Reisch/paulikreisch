@@ -53,15 +53,6 @@ const ideas = [
     book: "Hallo Welt"
   },
   {
-    icon: Gamepad2,
-    title: "Schulhof-Survival-Game",
-    description: "Weichen Sie dem Mensa-Essen aus, meiden Sie Lehrer und erwischen Sie den Bus. Ein Spiel, das Sie nicht gewinnen können.",
-    link: "#",
-    cta: "Spiel starten",
-    status: "coming-soon",
-    book: "Hallo Welt"
-  },
-  {
     icon: Home,
     title: "Mietenwahnsinn-Rechner",
     description: "Was kostet ein 4qm-Zimmer ohne Fenster in Ihrer Stadt? Finden Sie es heraus (und weinen Sie leise).",
@@ -71,30 +62,12 @@ const ideas = [
     book: "Hallo Welt 2"
   },
   {
-    icon: Dices,
-    title: "Schulzeit-Roulette",
-    description: "Welche Katastrophe trifft Sie heute? Von lebendigem Mensa-Essen bis zu Mathe-Tests ohne Ende.",
-    link: "#",
-    cta: "Katastrophe wählen",
-    status: "coming-soon",
-    book: "Hallo Welt"
-  },
-  {
     icon: Clock,
     title: "Beamten-Wartezeiten-Simulator",
     description: "Erleben Sie die beruhigende Wirkung einer endlosen Warteschleife. Ihr Antrag wird geprüft... vielleicht.",
     link: "/lp-beamten-wartezeiten-simulator",
     cta: "Warten starten",
     status: "live",
-    book: "Hallo Welt 2"
-  },
-  {
-    icon: MessageCircle,
-    title: "KI-Chat mit Max & Philipp",
-    description: "Fragen Sie die Autoren alles, was Sie schon immer wissen wollten. Erwarten Sie keine hilfreichen Antworten.",
-    link: "#",
-    cta: "Chat starten",
-    status: "coming-soon",
     book: "Hallo Welt 2"
   },
   {
