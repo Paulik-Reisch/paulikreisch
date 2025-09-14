@@ -12,7 +12,7 @@ export default function LP4() {
       <main className="flex-1">
         <HeroLP4 />
         <ChapterWriter />
-        <SocialShare />
+        <SocialShare shareUrlPath="/lp4"/>
         <CtaBanner />
       </main>
       <Footer />

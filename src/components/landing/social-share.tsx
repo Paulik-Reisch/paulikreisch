@@ -3,14 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Twitter, Facebook, Copy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-export function SocialShare() {
+export function SocialShare({shareUrlPath = "/buchhandlung-paulik-reisch"}: {shareUrlPath?: string}) {
   const { toast } = useToast();
-  const shareUrl = "/buchhandlung-paulik-reisch";
   const shareText = "Ich habe gerade mit der KI ein neues Kapitel für das satirische Meisterwerk 'Hallo Welt' geschrieben! Du musst das ausprobieren und das Buch lesen! #HalloWeltBuch #KI";
 
   const getFullShareUrl = () => {
     if (typeof window !== "undefined") {
-      return window.location.origin + shareUrl;
+      return window.location.origin + shareUrlPath;
     }
     return "";
   }

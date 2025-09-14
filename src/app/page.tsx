@@ -9,7 +9,7 @@ import { Newsletter } from "@/components/landing/newsletter";
 import { Footer } from "@/components/landing/footer";
 import { CtaBanner } from "@/components/landing/cta-banner";
 import { LP4Teaser } from "@/components/landing/lp4-teaser";
-import { SocialShare } from "@/components/landing/social-share";
+import { RandomTeaser } from "@/components/landing/random-teaser";
 import { CountdownTeaser } from "@/components/landing/countdown-teaser";
 import { HW2Teaser } from "@/components/landing/hw2-teaser";
 
@@ -27,7 +27,7 @@ export default function Home() {
         <Testimonials />
         <LP4Teaser />
         <CtaBanner />
-        <SocialShare />
+        <RandomTeaser />
         <CountdownTeaser />
         <Newsletter />
       </main>
