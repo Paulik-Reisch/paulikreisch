@@ -4,29 +4,29 @@
 
 @layer base {
   :root {
-    --background: 0 0% 98%;
+    --background: 240 60% 99%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: 22 92% 27%;
+    --primary: 220 85% 55%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 21 68% 57%;
+    --secondary: 25 95% 53%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 240 5% 35%;
-    --accent: 42 30% 90%;
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 5% 45%;
+    --accent: 240 5% 90%;
     --accent-foreground: 240 5% 25%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 22 92% 27%;
+    --border: 240 5% 85%;
+    --input: 240 5% 85%;
+    --ring: 220 85% 55%;
     --radius: 0.5rem;
-    --color-bg-tan: 42 30% 90%;
-    --color-bg-light-orange: 21 68% 95%;
-    --color-bg-light-pink: 23 38% 97%;
+    --color-bg-tan: 240 5% 96%;
+    --color-bg-light-orange: 25 95% 95%;
+    --color-bg-light-pink: 340 80% 97%;
   }
 
   .dark {
@@ -36,22 +36,22 @@
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 22 92% 57%;
+    --primary: 220 85% 65%;
     --primary-foreground: 0 0% 9%;
-    --secondary: 21 68% 67%;
+    --secondary: 25 95% 63%;
     --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 42 30% 20%;
+    --muted: 240 4% 15%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 240 4% 12%;
     --accent-foreground: 0 0% 90%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 22 92% 57%;
-    --color-bg-tan: 42 30% 21%;
-    --color-bg-light-orange: 21 68% 35%;
-    --color-bg-light-pink: 23 38% 15%;
+    --border: 240 4% 15%;
+    --input: 240 4% 15%;
+    --ring: 220 85% 65%;
+    --color-bg-tan: 240 4% 12%;
+    --color-bg-light-orange: 25 95% 15%;
+    --color-bg-light-pink: 340 80% 10%;
   }
 }
 
