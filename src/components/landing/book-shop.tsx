@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ShoppingCart, Star, Ticket, Mail, Sparkles, ArrowRight } from "lucide-react";
+import { ShoppingCart, Star, Ticket, Mail, Sparkles, ArrowRight, PenSquare } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
@@ -102,6 +102,29 @@ export function BookShop() {
     }
   }, [isSpinning]);
 
+  const signaturePrice = 70.99;
+  const mailToBody = `Hallo Welt, und hallo liebe Autoren,
+
+ich möchte hiermit eine Sonderbestellung für das Werk "Hallo Welt (1)" mit eurer unverkennbaren Originalsignatur beantragen.
+
+Mit dieser Auftrags-E-Mail bin ich mir bewusst und bestätige die Folgekosten von ${signaturePrice.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })} für Buch, Signatur und den damit verbundenen logistischen Zusatzaufwand.
+Ich bin mir bewusst, dass eine Stornierung nach Absenden dieser E-Mail nicht möglich ist.
+
+Meine Lieferdaten lauten:
+
+[Hier bitte eintragen:
+- Vor- und Nachname
+- Straße und Hausnummer
+- PLZ und Ort
+- Land]
+
+Gez.
+[Ihr Name]
+
+---
+Rechtlicher Hinweis: Mit dem Absenden dieser E-Mail gehen Sie einen verbindlichen Kaufvertrag ein. Die Zahlungsinformationen erhalten Sie in einer separaten Antwort-E-Mail.
+`;
+
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
@@ -138,6 +161,26 @@ export function BookShop() {
                             Jetzt bei Amazon kaufen
                         </Button>
                     </a>
+                    
+                    <Separator className="my-8" />
+                    
+                    <div className="bg-yellow-50/50 border-2 border-yellow-400 rounded-lg p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                            <Sparkles className="w-6 h-6 text-yellow-500"/>
+                            <h3 className="font-headline text-xl font-bold text-yellow-700">Originalsignierte Auflage</h3>
+                        </div>
+                        <p className="text-sm text-yellow-800">Sichern Sie sich ein von den Autoren handsigniertes Exemplar – ein echtes Sammlerstück.</p>
+                        <div className="my-4 text-center text-sm text-yellow-900">
+                           <p>10,99 € <span className="text-xs">(Buch)</span> + 50,00 € <span className="text-xs">(Signatur)</span> + 10,00 € <span className="text-xs">(Logistik)</span></p>
+                           <p className="font-bold text-lg mt-1">Gesamt: {signaturePrice.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</p>
+                        </div>
+                        <a href={`mailto:hallowelt@paulik-reisch.de?subject=Sonderbestellung: Originalsignierte Ausgabe "Hallo Welt 1"&body=${encodeURIComponent(mailToBody)}`}>
+                            <Button size="lg" className="w-full bg-yellow-500 hover:bg-yellow-600 text-yellow-950">
+                                <PenSquare className="mr-2" />
+                                Signierte Ausgabe per E-Mail anfragen
+                            </Button>
+                        </a>
+                    </div>
                 </div>
             </div>
         </Card>
