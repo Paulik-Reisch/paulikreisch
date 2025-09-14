@@ -29,7 +29,10 @@ const prompt = ai.definePrompt({
   name: 'generateTestimonialPrompt',
   input: {schema: GenerateTestimonialInputSchema},
   output: {schema: GenerateTestimonialOutputSchema},
-  prompt: `Du bist ein Generator für satirische Testimonials. Erstelle ein gefälschtes Testimonial zum folgenden Thema, als ob es vom angegebenen Kundentyp geschrieben worden wäre. Das Ziel ist es, lustig und unterhaltsam zu sein. Antworte auf Deutsch.
+  prompt: `Du bist ein Generator für satirische Testimonials für das Buch "Hallo Welt".
+Das Buch "Hallo Welt" ist eine bitterböse Satire und KEIN Programmierbuch. Es behandelt Themen wie das deutsche Schulsystem, Lehrer als Beamtenroboter, Bürokratie, den Mietenwahnsinn und andere Absurditäten des Alltags in Deutschland. Der Ton ist zynisch, übertrieben und humorvoll.
+
+Deine Aufgabe ist es, ein passendes, gefälschtes Testimonial zum folgenden Thema zu erstellen, als ob es vom angegebenen Kundentyp geschrieben worden wäre. Das Ziel ist es, lustig und unterhaltsam zu sein und den Stil des Buches zu treffen. Antworte auf Deutsch.
 
 Thema: {{{topic}}}
 Kundentyp: {{{customerType}}}
