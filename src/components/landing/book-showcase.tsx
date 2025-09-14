@@ -1,0 +1,59 @@
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+export function BookShowcase() {
+  return (
+    <section id="book-showcase" className="w-full py-12 md:py-24 lg:py-32" style={{ backgroundColor: 'hsl(var(--color-bg-light-pink))' }}>
+      <div className="container px-4 md:px-6">
+        <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
+          
+          {/* Hallo Welt 1 */}
+          <div className="flex flex-col items-center text-center">
+            <h2 className="font-headline text-3xl font-bold tracking-tight mb-2">Hallo Welt</h2>
+            <p className="text-muted-foreground text-lg mb-6">Der Anfang allen Übels.</p>
+            <div className="relative transform-gpu transition-transform duration-500 hover:scale-105 hover:-rotate-2">
+                <Image
+                    alt="Buchcover Hallo Welt 1"
+                    className="mx-auto aspect-[3/4] overflow-hidden rounded-xl object-cover shadow-2xl"
+                    data-ai-hint="book cover"
+                    height="400"
+                    src="https://placehold.co/300x400.png"
+                    width="300"
+                />
+            </div>
+            <p className="max-w-md mt-6 text-muted-foreground text-balance">
+                Die satirische Abrechnung mit dem Schulsystem, Lehrern als Beamtenrobotern und dem täglichen Wahnsinn des Erwachsenwerdens.
+            </p>
+            <a href="https://www.amazon.de/-/de/Hallo-Welt-Erhebliche-Bildungsgang-Lernvollzugsanstalt/dp/B0CVXT9X4J" target="_blank" rel="noopener noreferrer" className="mt-6">
+                <Button>Band 1 kaufen</Button>
+            </a>
+          </div>
+          
+          {/* Hallo Welt 2 */}
+          <div className="flex flex-col items-center text-center">
+            <h2 className="font-headline text-3xl font-bold tracking-tight mb-2">Hallo Welt 2</h2>
+            <p className="text-muted-foreground text-lg mb-6">Erneut Hallo, wir müssen reden!</p>
+             <div className="relative transform-gpu transition-transform duration-500 hover:scale-105 hover:rotate-2">
+                <Image
+                    alt="Buchcover Hallo Welt 2"
+                    className="mx-auto aspect-[3/4] overflow-hidden rounded-xl object-cover shadow-2xl"
+                    data-ai-hint="book cover funny"
+                    height="400"
+                    src="https://placehold.co/300x400.png"
+                    width="300"
+                />
+            </div>
+            <p className="max-w-md mt-6 text-muted-foreground text-balance">
+                Die Fortsetzung, die niemand wollte, aber jeder braucht. Eine Abrechnung mit Bürokratie, dem deutschen Internet und dem Mietenwahnsinn.
+            </p>
+             <a href="https://www.amazon.de/-/de/Hallo-Welt-Erhebliche-Bildungsgang-Lernvollzugsanstalt/dp/B0CVXT9X4J" target="_blank" rel="noopener noreferrer" className="mt-6">
+                <Button>Band 2 kaufen</Button>
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  );
+}

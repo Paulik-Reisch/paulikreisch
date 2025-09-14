@@ -5,6 +5,7 @@ const mainLinks = [
     { href: "/lp3", text: "Das Buch ist da!" },
     { href: "/lp4", text: "Schreib mit uns" },
     { href: "/excerpt-6", text: "Exklusiver Leseauszug" },
+    { href: "/lp-series", text: "Die Hallo Welt Saga" },
 ]
 
 const topicLinks = [
