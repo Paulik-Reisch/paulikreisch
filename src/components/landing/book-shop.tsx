@@ -4,11 +4,12 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ShoppingCart, Star, Ticket, Mail, Sparkles } from "lucide-react";
+import { ShoppingCart, Star, Ticket, Mail, Sparkles, ArrowRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import Link from "next/link";
 
 const books = {
   hw1: {
@@ -149,6 +150,9 @@ export function BookShop() {
                     <p className="text-lg text-muted-foreground">{books.hw2.subtitle}</p>
                     <p className="font-semibold text-primary my-4 animate-pulse">Erscheint bald!</p>
                     <p className="text-base leading-relaxed text-balance my-4">{books.hw2.description}</p>
+                    <Link href="/lp2" className="text-sm font-semibold text-primary hover:underline inline-flex items-center group mb-4">
+                        Mehr über Hallo Welt 2 erfahren <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </Link>
                    
                     <div className="my-4 p-4 rounded-lg bg-muted/50 border-l-4 border-primary">
                         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
