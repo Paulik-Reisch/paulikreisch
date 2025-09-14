@@ -24,9 +24,9 @@
     --input: 0 0% 89.8%;
     --ring: 22 92% 27%;
     --radius: 0.5rem;
-    --color-bg-tan: 42 30% 61%;
-    --color-bg-light-orange: 21 68% 75%;
-    --color-bg-light-pink: 23 38% 95%;
+    --color-bg-tan: 42 30% 90%;
+    --color-bg-light-orange: 21 68% 95%;
+    --color-bg-light-pink: 23 38% 97%;
   }
 
   .dark {

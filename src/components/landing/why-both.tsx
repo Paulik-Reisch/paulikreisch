@@ -2,7 +2,7 @@ import { CheckCircle, PlusCircle, SmilePlus } from "lucide-react";
 
 export function WhyBoth() {
   return (
-    <section id="why-both" className="w-full py-12 md:py-24 lg:py-32" style={{backgroundColor: 'hsl(var(--color-bg-tan))'}}>
+    <section id="why-both" className="w-full py-12 md:py-24 lg:py-32 bg-muted/40">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
