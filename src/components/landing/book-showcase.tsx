@@ -12,7 +12,7 @@ export function BookShowcase() {
           {/* Hallo Welt 1 */}
           <div className="flex flex-col items-center text-center">
             <h2 className="font-headline text-3xl font-bold tracking-tight mb-2">Hallo Welt</h2>
-            <p className="text-muted-foreground text-lg mb-6">Der Anfang allen Übels.</p>
+            <p className="text-muted-foreground text-lg mb-6">Erhebliche Kritik am unerhörten Bildungsgang der Lernvollzugsanstalt SK-S</p>
             <div className="relative transform-gpu transition-transform duration-500 hover:scale-105 hover:-rotate-2">
                 <Image
                     alt="Buchcover Hallo Welt 1"
@@ -34,7 +34,7 @@ export function BookShowcase() {
           {/* Hallo Welt 2 */}
           <div className="flex flex-col items-center text-center">
             <h2 className="font-headline text-3xl font-bold tracking-tight mb-2">Hallo Welt 2</h2>
-            <p className="text-muted-foreground text-lg mb-6">Erneut Hallo, wir müssen reden!</p>
+            <p className="text-muted-foreground text-lg mb-6">Wie's Leben funktioniert</p>
              <div className="relative transform-gpu transition-transform duration-500 hover:scale-105 hover:rotate-2">
                 <Image
                     alt="Buchcover Hallo Welt 2"

@@ -15,7 +15,7 @@ const books = {
   hw1: {
     id: 1,
     title: "Hallo Welt",
-    subtitle: "Der Anfang allen Übels.",
+    subtitle: "Erhebliche Kritik am unerhörten Bildungsgang der Lernvollzugsanstalt SK-S",
     price: "10,99 €",
     imageSrc: "https://placehold.co/400x600.png",
     aiHint: "book cover",
@@ -25,7 +25,7 @@ const books = {
   hw2: {
     id: 2,
     title: "Hallo Welt 2",
-    subtitle: "Erneut Hallo, wir müssen reden!",
+    subtitle: "Wie's Leben funktioniert",
     imageSrc: "https://placehold.co/400x600.png",
     aiHint: "book cover funny",
     amazonLink: "https://www.amazon.de/dp/B0D9L4DCMG",
