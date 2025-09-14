@@ -70,10 +70,12 @@ export function BookShop() {
             
             let toastTitle = "Herzlichen Glückwunsch!";
             let toastDescription = `Ihr persönlicher Preis: ${finalPriceFormatted}€! Ein echtes Schnäppchen!`;
+            let showBuyButton = true;
 
             if(parseFloat(finalPrice) > 100) {
                 toastTitle = "Pech gehabt!";
                 toastDescription = `Ihr Preis: ${finalPriceFormatted}€! Vielleicht versuchen Sie es morgen nochmal.`;
+                showBuyButton = false;
             } else if (parseFloat(finalPrice) <= 1) {
                 toastTitle = "JACKPOT!";
                 toastDescription = `Sie zahlen nur ${finalPriceFormatted}€! Das ist quasi geschenkt!`;
@@ -82,11 +84,11 @@ export function BookShop() {
             toast({
                 title: toastTitle,
                 description: toastDescription,
-                action: (
+                action: showBuyButton ? (
                     <a href={books.hw2.amazonLink} target="_blank" rel="noopener noreferrer">
                         <Button>Jetzt kaufen</Button>
                     </a>
-                ),
+                ) : undefined,
             });
         }
     }, intervalDuration);
@@ -105,7 +107,7 @@ export function BookShop() {
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center space-y-4 text-center mb-12">
           <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl">
-            Buchhandlung Paulik &amp; Reisch
+            Offizieller "Hallo Welt" Shop
           </h1>
           <p className="max-w-[700px] text-muted-foreground md:text-xl text-balance">
             Exklusiv, erlesen und garantiert frei von Vernunft. Der einzige Ort, an dem Sie literarische Katastrophen als Meisterwerke kaufen können.
