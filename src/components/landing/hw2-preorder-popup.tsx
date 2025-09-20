@@ -14,7 +14,6 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import { Checkbox } from "../ui/checkbox";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Textarea } from "../ui/textarea";
 
 const COUNTDOWN_SECONDS = (11 * 60) + 32;
@@ -38,8 +37,6 @@ const preorderSchema = z.object({
   country: z.string().default("Deutschland"),
   
   hasSignature: z.boolean().default(false),
-  signaturePlacement: z.enum(["front", "back", "inside"]).optional(),
-  signaturePage: z.string().optional(),
   hasDedication: z.boolean().default(false),
   provideDedication: z.boolean().default(false),
   customDedication: z.string().optional(),
@@ -69,23 +66,8 @@ export function HW2PreorderPopup() {
   });
 
   const watchFields = watch();
-
-  const totalSignaturePrice = useMemo(() => {
-    let total = 0;
-    if (watchFields.hasSignature) {
-        total += PRICES.signature;
-    }
-     if (watchFields.hasDedication) {
-      total += PRICES.dedication;
-    }
-    if (watchFields.hasDedication && watchFields.provideDedication) {
-      total += PRICES.customDedication;
-    }
-    return total;
-  }, [watchFields]);
   
-  const totalBookPrice = PRICES.book;
-  const totalPrice = totalSignaturePrice + totalBookPrice;
+  const totalPrice = 52.99;
 
 
   useEffect(() => {
@@ -129,7 +111,7 @@ export function HW2PreorderPopup() {
 
         <div className="my-8 space-y-6">
             
-            {/* Konfiguration */}
+             {/* Konfiguration */}
             <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
                 <h3 className="text-xl font-headline font-semibold">1. Konfiguration des Unikats</h3>
                 
@@ -256,16 +238,19 @@ export function HW2PreorderPopup() {
                 </div>
                 <Separator />
                 <div className="space-y-1">
-                    <div className="flex justify-between text-destructive font-bold">
-                        <span>Totale Ersparnis:</span>
-                        <span>-63,00€</span>
+                    <div className="flex justify-between items-baseline">
+                        <span className="text-destructive font-bold">Totale Ersparnis:</span>
+                        <div className="flex items-baseline gap-2">
+                             <span className="text-muted-foreground line-through">115,99€</span>
+                             <span className="font-bold text-destructive">-63,00€</span>
+                        </div>
                     </div>
                 </div>
             </div>
             <Separator />
             <div className="flex justify-between font-bold text-xl">
                 <span>Zu bezahlen:</span>
-                <span>52,99€</span>
+                <span>{totalPrice.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</span>
             </div>
         </div>
 
@@ -301,3 +286,5 @@ export function HW2PreorderPopup() {
     </DialogContent>
   );
 }
+
+    
