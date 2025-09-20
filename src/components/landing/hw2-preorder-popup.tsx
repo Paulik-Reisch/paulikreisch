@@ -77,7 +77,7 @@ export function HW2PreorderPopup() {
                 <Timer className="mr-2 h-6 w-6"/>
                 Angebot endet in:
             </div>
-            <div className={cn("font-mono text-5xl font-bold", timeLeft < 60 ? "text-destructive" : "text-foreground")}>
+            <div className={cn("font-mono text-5xl font-bold", timeLeft < 60 && "text-destructive")}>
                 {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
             </div>
         </div>
@@ -191,8 +191,10 @@ export function HW2PreorderPopup() {
             <Separator className="my-4 w-1/2" />
             
             <DialogClose asChild>
-                <a href="https://www.amazon.de/dp/B0D9L4DCMG" target="_blank" rel="noopener noreferrer" className="text-yellow-600 hover:text-yellow-700 font-semibold text-sm underline-offset-4 hover:underline">
-                    Ohne persönliche Signatur fortfahren
+                <a href="https://www.amazon.de/dp/B0D9L4DCMG" target="_blank" rel="noopener noreferrer" className="w-full">
+                   <Button variant="secondary" className="w-full">
+                     Ohne persönliche Signatur fortfahren
+                   </Button>
                 </a>
             </DialogClose>
         </div>

@@ -51,7 +51,7 @@ export function SignatureOrderForm() {
     control,
     watch,
     formState: { errors },
-  } = useForm({
+  } = useForm<OrderFormValues>({
     resolver: zodResolver(orderSchema),
     defaultValues: {
       country: "Deutschland",
