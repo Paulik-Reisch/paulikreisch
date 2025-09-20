@@ -2,6 +2,34 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Badge } from "../ui/badge";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
+
+
+const schimpfwoerter = [
+    { de: "Dummkopf", es: "Gilipollas" },
+    { de: "Arschloch", es: "Capullo / Cabrón" },
+    { de: "Idiot", es: "Idiota" },
+    { de: "Hurensohn", es: "Hijo de puta" },
+    { de: "Scheiße", es: "Mierda" },
+    { de: "Verdammt", es: "Joder" },
+    { de: "Blödmann", es: "Tonto del culo" },
+    { de: "Wichser", es: "Pajero" },
+    { de: "Miststück", es: "Zorra" },
+    { de: "Leck mich am Arsch", es: "Vete a la mierda" },
+    { de: "Vollidiot", es:"Subnormal" },
+    { de: "Penner", es: "Pringado" },
+    { de: "Verpiss dich", es: "Lárgate" },
+    { de: "Halt die Klappe", es: "Cállate la boca" },
+    { de: "Deine Mutter", es: "Tu puta madre" },
+];
+
 
 export function HeroPfeiffer() {
   return (
@@ -33,42 +61,50 @@ export function HeroPfeiffer() {
             In den verrauchten Amtsstuben und schlecht beleuchteten
             Universitätskorridoren flüstert man ihren Namen nur:{" "}
             <span className="font-semibold italic">La Silbadora Pfeiffer</span>.
-            Eine Legende. Ein Phantom. Eine Frau, deren pfeifende Melodien die
-            Gesetze der Physik und der deutschen Gründlichkeit gleichermaßen
-            außer Kraft setzen. Doch was steckt wirklich hinter diesem Mythos?
+            Ein Phantom. Eine Frau, deren pfeifende Melodien die
+            Gesetze der Physik außer Kraft setzen. Doch was steckt wirklich hinter diesem Mythos?
+            Unsere Recherche führt uns zurück in die heiligen Hallen der Lernvollzugsanstalt Siebenkirchen-Seelscheid.
           </p>
           <p>
-            Unsere monatelange Recherche führte uns nicht etwa in die Archive
-            geheimer Gesellschaften, sondern in die Abgründe des menschlichen
-            Alltags – ein Territorium, das die Autoren Paulik & Reisch für ihr
-            neuestes Werk,{" "}
-            <strong className="font-headline">"Hallo Welt 2: Wie das Leben funktioniert"</strong>,
-            kartografiert haben.
+            Die Legende hat einen Namen: Rabea Pfeifer. Im Buch "Hallo Welt" als <strong className="font-headline">R. Pfffer</strong> verewigt, war sie die Spanischlehrerin, die den jungen Autoren den Weg wies. Nicht den Weg zur Grammatik – nein, den Weg zu den wirklich wichtigen Dingen im Leben. Frau Pfeifer, eine Frau, deren Begeisterung für die spanische Sprache nur von ihrer Abneigung gegen Mathematik und funktionierende Technik übertroffen wurde, war eine Institution.
           </p>
-
-          <blockquote>
-            "La Silbadora Pfeiffer ist keine Person", gestand uns einer der
-            Autoren unter Zusicherung vollständiger Anonymität (es war Max),
-            "sie ist ein Zustand. Sie ist das Pfeifen im Walde der Bürokratie,
-            die schrille Melodie einer fehlgeschlagenen Online-Überweisung, der
-            unheilvolle Pfiff, kurz bevor die Kaffeemaschine im Büro explodiert."
+          
+           <blockquote>
+            "Sie sprang mit ollem Enthusiasmus vor die Tafel", erinnert sich einer der Autoren, "und lehrte uns die ersten wirklich nützlichen Wörter. Nicht 'hola', nicht 'gracias'. Sie lehrte uns das, was man braucht, wenn der Bus zu spät kommt oder das Mensaessen wieder nach atomarer Kernschmelze schmeckt."
           </blockquote>
 
           <p>
-            Es stellt sich heraus: Das Phänomen "Pfeiffer" ist die literarische
-            Personifikation all dessen, was in unserer modernen Welt schiefläuft.
-            Und genau darum geht es in "Hallo Welt 2". Das Buch ist eine
-            schonungslose Sezierung des alltäglichen Wahnsinns. Von der digitalen
-            Steinzeit des deutschen Internets über den grotesken Mietenwahnsinn
-            bis hin zur absurden Komplexität eines einfachen Antragsformulars.
+            Es war nach der 8. Klasse, als unsere Helden unter die Fittiche von La Silbadora kamen. Sie lernten, dass Sprache mehr ist als nur Kommunikation. Sie ist eine Waffe. Ein Werkzeug. Eine Kunstform. Insbesondere die Kunstform der gepflegten Beleidigung. Frau Pfeifer vermittelte ihnen die wertvollsten Lektionen ihres Lebens in Form von handverlesenen *palabrotas* – Schimpfwörtern.
+          </p>
+
+            <div className="my-12 not-prose">
+                <h3 className="font-headline text-2xl font-bold text-center mb-4">Grundwortschatz Spanisch nach R. Pfffer</h3>
+                 <Table>
+                    <TableHeader>
+                        <TableRow>
+                        <TableHead className="font-semibold">Deutsches Schimpfwort</TableHead>
+                        <TableHead className="font-semibold">Spanische Übersetzung (für den Notfall)</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {schimpfwoerter.map((wort) => (
+                        <TableRow key={wort.de}>
+                            <TableCell>{wort.de}</TableCell>
+                            <TableCell className="italic">{wort.es}</TableCell>
+                        </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+                <p className="text-xs text-center text-muted-foreground mt-2">*Haftungsausschluss: Die Verwendung dieser Vokabeln erfolgt auf eigene Gefahr. Kann zu blauen Augen oder diplomatischen Krisen führen.</p>
+            </div>
+
+          <p>
+            Dieses Fundament an sprachlicher Gewandtheit ist es, was die Werke von Paulik & Reisch auszeichnet. Und genau darum geht es in <strong className="font-headline">"Hallo Welt 2: Wie's Leben funktioniert"</strong>. Das Buch ist eine schonungslose Sezierung des alltäglichen Wahnsinns, eine Hommage an die Mentoren, die uns nicht lehrten, wie man sich anpasst, sondern wie man zurückpöbelt.
           </p>
           <p>
-            Das Buch pfeift auf Konventionen. Es ist eine Symphonie des
-            Scheiterns, eine Ode an die kleinen und großen Katastrophen, die das
-            Leben so unerträglich lebenswert machen. "La Silbadora Pfeiffer" ist
-            also nicht die Antagonistin. Sie ist die unheilvolle, aber doch
-            irgendwie liebenswerte Hintergrundmusik zu unser aller Existenz.
+            "La Silbadora Pfeiffer" ist also keine Legende. Sie ist die unheilvolle, aber doch irgendwie liebenswerte Hintergrundmusik zu unser aller Existenz.
           </p>
+
           <div className="text-center mt-12 py-12 border-t border-b border-dashed">
             <h2 className="font-headline text-3xl font-bold">Erleben Sie das Pfeifkonzert selbst!</h2>
             <p className="mt-4 text-muted-foreground">
