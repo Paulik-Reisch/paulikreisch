@@ -70,8 +70,8 @@ export function HW2PreorderPopup() {
     });
   };
 
-  const PriceSlasher = ({ value, delay }: { value: number; delay: number }) => (
-    <span style={{ animationDelay: `${delay}ms`}} className="line-through text-muted-foreground/80 animate-in fade-in zoom-in-50 duration-500">
+  const PriceSlasher = ({ value }: { value: number; }) => (
+    <span className="line-through text-muted-foreground/80">
         {value.toFixed(2)}€
     </span>
   );
@@ -100,14 +100,12 @@ export function HW2PreorderPopup() {
             <h3 className="font-headline text-2xl font-semibold">Signierte Sonderausgabe</h3>
             <p className="text-muted-foreground">Nur für die nächsten {minutes} Minuten erhalten Sie ein von den Autoren persönlich signiertes Exemplar zum absoluten Vorzugspreis!</p>
             <div className="text-4xl font-bold space-x-4">
-                {priceStep > 0 && <PriceSlasher value={90} delay={0} />}
-                {priceStep > 1 && <PriceSlasher value={70} delay={700} />}
-                {priceStep > 2 && <PriceSlasher value={50} delay={1400} />}
-                {priceStep > 2 &&
-                    <span style={{animationDelay: '2100ms'}} className="text-primary animate-in fade-in zoom-in-125 duration-500">
-                        nur 35,00€!
-                    </span>
-                }
+                <PriceSlasher value={90} />
+                <PriceSlasher value={70} />
+                <PriceSlasher value={50} />
+                <span className="text-primary">
+                    nur 35,00€!
+                </span>
             </div>
         </div>
         
