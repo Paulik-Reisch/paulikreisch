@@ -15,6 +15,7 @@ export function Footer() {
           <Link href="/datenschutz" className="hover:underline">Datenschutz</Link>
           <Link href="/cookie-richtlinie" className="hover:underline">Cookie-Richtlinie</Link>
           <Link href="/agb" className="hover:underline">AGB</Link>
+          <Link href="/lizenz" className="hover:underline">Lizenz</Link>
         </div>
       </div>
     </footer>
