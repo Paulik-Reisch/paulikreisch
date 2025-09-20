@@ -100,8 +100,19 @@ export function HeroPfeiffer() {
                 <p className="text-xs text-center text-muted-foreground mt-2">*Haftungsausschluss: Die Verwendung dieser Vokabeln erfolgt auf eigene Gefahr. Kann zu blauen Augen oder diplomatischen Krisen führen.</p>
             </div>
 
+            <p>
+                Neueste Berichte aus dem inneren Zirkel der Autorität besagen, dass La Silbadora kürzlich ein Exemplar von "Hallo Welt" in die Hände bekam. Zeugen berichten von einem unkontrollierbaren Lachanfall, der durch die Gänge der Lernvollzugsanstalt hallte. Sie konnte sich nicht mehr halten und stürzte – so die dramatische Schilderung – die berüchtigten Treppen des Schulgebäudes hinab. Wer das Buch gelesen hat, weiß, was das normalerweise zur Folge hat: ein Genickbruch.
+            </p>
+            <p>
+                Doch dann geschah das Wunder: In einer Bewegung, die man nur als übernatürlich beschreiben kann, schnipste La Silbadora im freien Fall mit den Fingern. Wie von Geisterhand materialisierte sich ein Exemplar von <Link href="/buchhandlung-paulik-reisch" className="font-bold underline">"Hallo Welt 1" (das Sie hier kaufen können)</Link> direkt unter ihr und federte den Aufprall ab. Sie landete weich. Ihr Genick blieb intakt.
+            </p>
+            <p>
+                Ende gut, alles gut. Selbst das Buch war nicht zerknickt. Denn das, meine Damen und Herren, ist gedruckte und geschriebene Qualität. Eine Qualität, die Leben rettet.
+            </p>
+
+
           <p>
-            Dieses Fundament an sprachlicher Gewandtheit ist es, was die Werke von Paulik & Reisch auszeichnet. Und genau darum geht es in <strong className="font-headline">"Hallo Welt 2: Wie's Leben funktioniert"</strong>. Das Buch ist eine schonungslose Sezierung des alltäglichen Wahnsinns, eine Hommage an die Mentoren, die uns nicht lehrten, wie man sich anpasst, sondern wie man zurückpöbelt.
+            Dieses Fundament an sprachlicher Gewandtheit und buchstäblicher Widerstandsfähigkeit ist es, was die Werke von Paulik & Reisch auszeichnet. Und genau darum geht es in <strong className="font-headline">"Hallo Welt 2: Wie's Leben funktioniert"</strong>. Das Buch ist eine schonungslose Sezierung des alltäglichen Wahnsinns, eine Hommage an die Mentoren, die uns nicht lehrten, wie man sich anpasst, sondern wie man überlebt – notfalls mit einem Buch als Airbag.
           </p>
           <p>
             "La Silbadora Pfeiffer" ist also keine Legende. Sie ist die unheilvolle, aber doch irgendwie liebenswerte Hintergrundmusik zu unser aller Existenz.
@@ -113,7 +124,7 @@ export function HeroPfeiffer() {
                 "Hallo Welt 2" ist die Anleitung zum Überleben in einer Welt, die den Verstand verloren hat. Oder der schnellste Weg, ihn selbst zu verlieren.
             </p>
             <Link href="/buchhandlung-paulik-reisch" className="mt-6 inline-block">
-                <Button size="lg" className="animate-pulse">Jetzt dem Wahnsinn stellen</Button>
+                <Button size="lg" className="animate-pulse" variant="secondary">Jetzt dem Wahnsinn stellen</Button>
             </Link>
           </div>
         </article>
