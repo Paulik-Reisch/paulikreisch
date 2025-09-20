@@ -14,7 +14,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 
-const COUNTDOWN_SECONDS = 10 * 60; // 10 minutes
+const COUNTDOWN_SECONDS = (11 * 60) + 32; // 11 minutes 32 seconds
 
 const preorderSchema = z.object({
   firstName: z.string().min(1, "Vorname ist ein Pflichtfeld."),
@@ -153,7 +153,7 @@ export function HW2PreorderPopup() {
                 <Separator/>
                  <div className="space-y-1">
                     <div className="flex justify-between">
-                        <span>Produkt 2: "Hallo Welt 2"</span>
+                        <span>Hallo Welt 2</span>
                         <span className="line-through text-muted-foreground">25,99€</span>
                     </div>
                      <div className="flex justify-between text-destructive">
@@ -176,7 +176,7 @@ export function HW2PreorderPopup() {
             <Separator />
             <div className="flex justify-between font-bold text-xl">
                 <span>Zu bezahlen:</span>
-                <span>35,00€</span>
+                <span>52,99€</span>
             </div>
         </div>
 
