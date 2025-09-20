@@ -1,5 +1,6 @@
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
+import Link from "next/link";
 
 export default function DatenschutzPage() {
   return (
@@ -41,12 +42,23 @@ export default function DatenschutzPage() {
 
               <h3 className="text-xl font-bold">Cookies</h3>
               <p className="text-muted-foreground">
-                Unsere Webseite verwendet Cookies. Das sind kleine Textdateien, die Ihr Browser speichert. Sie richten auf Ihrem Rechner keinen Schaden an, außer vielleicht seelischen, wenn Sie merken, dass Sie schon wieder auf einer Webseite mit Cookie-Banner gelandet sind. Wir verwenden sie nur, um uns zu merken, dass Sie das Cookie-Banner bereits weggeklickt haben. Mehr dazu in unserer sensationell spannenden <a href="/cookie-richtlinie" className="underline">Cookie-Richtlinie</a>.
+                Unsere Webseite verwendet Cookies. Das sind kleine Textdateien, die Ihr Browser speichert. Sie richten auf Ihrem Rechner keinen Schaden an, außer vielleicht seelischen, wenn Sie merken, dass Sie schon wieder auf einer Webseite mit Cookie-Banner gelandet sind. Wir verwenden sie nur, um uns zu merken, dass Sie das Cookie-Banner bereits weggeklickt haben. Mehr dazu in unserer sensationell spannenden <Link href="/cookie-richtlinie" className="underline">Cookie-Richtlinie</Link>.
               </p>
 
                <h3 className="text-xl font-bold">Kontaktaufnahme per E-Mail</h3>
               <p className="text-muted-foreground">
                 Wenn Sie uns eine E-Mail schreiben, speichern wir Ihre Nachricht und Ihre E-Mail-Adresse, um Ihnen antworten zu können. Wir versprechen, Ihre Adresse nicht für Spam zu nutzen, es sei denn, wir haben eine wirklich, wirklich gute neue Buchidee. (Kleiner Scherz. DSGVO-konform, natürlich.)
+              </p>
+              
+              <h3 className="text-xl font-bold">Datennutzung für KI-Funktionen</h3>
+              <p className="text-muted-foreground">
+                Diese Webseite bietet interaktive Funktionen (z.B. Testimonial-Generator, Kapitel-Fortsetzung), die auf generativer künstlicher Intelligenz basieren. Wenn Sie diese Funktionen nutzen, werden Ihre Eingaben (z.B. eingegebener Text) an einen externen Dienstanbieter (Google, USA) übermittelt, um eine Antwort zu generieren.
+              </p>
+               <p className="text-muted-foreground">
+                Die Übermittlung dieser Daten ist technisch notwendig, um die Funktion auszuführen. Die Verarbeitung der Daten durch den Anbieter unterliegt dessen Datenschutzbestimmungen. Wir haben keinen Einfluss auf die weitere Verwendung Ihrer Daten durch den Anbieter.
+              </p>
+               <p className="font-semibold text-destructive">
+                Wir weisen Sie ausdrücklich darauf hin, keine sensiblen, vertraulichen oder personenbezogenen Daten in diese Felder einzugeben. Mit der Nutzung der KI-Funktionen stimmen Sie dieser Datenübermittlung gemäß Art. 49 Abs. 1 lit. a DSGVO zu.
               </p>
             </div>
 
