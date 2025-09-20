@@ -47,7 +47,7 @@ type SignatureFormValues = z.infer<typeof signatureSchema>;
 
 const bookPrices = {
     hw1: 10.99,
-    hw2: 25.99,
+    hw2_original: 25.99,
     hw2_preorder: 17.99,
     logistics: 7.99,
     hw1_signature: 50,
@@ -98,7 +98,7 @@ export function SignatureOrderForm({ book }: { book: any }) {
 
         const hw2Price = bookPrices.hw2_preorder;
         const hw2SignaturePrice = bookPrices.hw2_signature_package;
-        const hw2OriginalBookPrice = bookPrices.hw2;
+        const hw2OriginalBookPrice = bookPrices.hw2_original;
         const hw2BookDiscount = hw2OriginalBookPrice - hw2Price;
         
         price += hw2Price + hw2SignaturePrice;
@@ -190,7 +190,7 @@ export function SignatureOrderForm({ book }: { book: any }) {
                 <Sparkles className="h-4 w-4" />
                 <AlertTitle className="font-headline text-xl">KRISE? Sparen Sie jetzt!</AlertTitle>
                 <AlertDescription className="text-primary/90 text-base">
-                    Aktivieren Sie dieses Angebot und sparen Sie <span className="font-bold">80% auf "Hallo Welt 1"</span>, indem Sie "Hallo Welt 2" (inkl. Signatur & Widmung) für nur 52,99€ VORBESTELLEN!
+                    Aktivieren Sie dieses Angebot und sparen Sie <span className="font-bold">80% auf "Hallo Welt 1"</span>, indem Sie "Hallo Welt 2" (inkl. Signatur & Widmung) für nur {bookPrices.hw2_signature_package + bookPrices.hw2_preorder}€ VORBESTELLEN!
                 </AlertDescription>
                  <div className="flex items-center space-x-3 p-2 rounded-md mt-4">
                     <Controller
@@ -329,17 +329,17 @@ export function SignatureOrderForm({ book }: { book: any }) {
                         </div>
                          <div className="flex justify-between pl-4 text-xs">
                             <span>Originalpreis Buch</span>
-                            <span className="line-through text-muted-foreground">{bookPrices.hw2.toFixed(2)} €</span>
+                            <span className="line-through text-muted-foreground">{bookPrices.hw2_original.toFixed(2)} €</span>
                         </div>
                         <div className="flex justify-between pl-4 text-xs text-destructive">
                             <span>Mengenbegrenzter Rabatt (31%)</span>
-                            <span>-{(bookPrices.hw2 - bookPrices.hw2_preorder).toFixed(2)} €</span>
+                            <span>-{(bookPrices.hw2_original - bookPrices.hw2_preorder).toFixed(2)} €</span>
                         </div>
                     </>
                 )}
             </div>
             <Separator />
-            {watchFields.acceptComboDeal && (
+            {watchFields.acceptComboDeal && totalDiscount > 0 && (
                  <div className="space-y-1 text-sm">
                      <div className="flex justify-between items-baseline">
                         <span className="font-bold text-destructive">Totale Ersparnis:</span>
