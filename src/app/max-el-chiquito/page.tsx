@@ -15,7 +15,7 @@ function ChiquitoName() {
   } else if (p === '2') {
     name = 'Philipp';
   } else {
-    name = 'felipe';
+    name = 'nadie es';
   }
 
   return (
@@ -36,3 +36,4 @@ export default function FelipeElChiquitoPage() {
     </div>
   );
 }
+
