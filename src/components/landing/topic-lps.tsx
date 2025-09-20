@@ -77,23 +77,23 @@ export function TopicLPs() {
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
             <div className="flex flex-col gap-2">
                 {topics.map((topic) => (
-                    <Link href={topic.link} key={topic.link} legacyBehavior>
-                        <a 
-                            className={cn(
-                                "p-4 rounded-lg transition-all duration-300",
-                                activeTopic.link === topic.link ? 'bg-card shadow-lg' : 'hover:bg-card/50'
-                            )}
-                            onMouseEnter={() => setActiveTopic(topic)}
-                        >
-                            <h3 className="font-headline text-xl font-bold">{topic.title}</h3>
-                            <p className="text-sm text-muted-foreground">{topic.description}</p>
-                            <div className={cn(
-                                "flex items-center text-primary font-semibold text-sm mt-2 transition-all duration-300",
-                                activeTopic.link === topic.link ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-                            )}>
-                                Mehr erfahren <ArrowRight className="ml-2 h-4 w-4" />
-                            </div>
-                        </a>
+                    <Link
+                        href={topic.link}
+                        key={topic.link}
+                        className={cn(
+                            "p-4 rounded-lg transition-all duration-300",
+                            activeTopic.link === topic.link ? 'bg-card shadow-lg' : 'hover:bg-card/50'
+                        )}
+                        onMouseEnter={() => setActiveTopic(topic)}
+                    >
+                        <h3 className="font-headline text-xl font-bold">{topic.title}</h3>
+                        <p className="text-sm text-muted-foreground">{topic.description}</p>
+                        <div className={cn(
+                            "flex items-center text-primary font-semibold text-sm mt-2 transition-all duration-300",
+                            activeTopic.link === topic.link ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                        )}>
+                            Mehr erfahren <ArrowRight className="ml-2 h-4 w-4" />
+                        </div>
                     </Link>
                 ))}
             </div>
