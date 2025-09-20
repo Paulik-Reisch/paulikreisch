@@ -124,7 +124,7 @@ export function HeroPfeiffer() {
                 "Hallo Welt 2" ist die Anleitung zum Überleben in einer Welt, die den Verstand verloren hat. Oder der schnellste Weg, ihn selbst zu verlieren.
             </p>
             <Link href="/buchhandlung-paulik-reisch" className="mt-6 inline-block">
-                <Button size="lg" className="animate-pulse" variant="secondary">Jetzt dem Wahnsinn stellen</Button>
+                <Button size="lg" className="animate-pulse" variant="default">Jetzt dem Wahnsinn stellen</Button>
             </Link>
           </div>
         </article>
