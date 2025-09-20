@@ -13,21 +13,21 @@ import {
 
 
 const schimpfwoerter = [
-    { de: "Dummkopf", es: "Gilipollas" },
-    { de: "Arschloch", es: "Capullo / Cabrón" },
-    { de: "Idiot", es: "Idiota" },
-    { de: "Hurensohn", es: "Hijo de puta" },
-    { de: "Scheiße", es: "Mierda" },
-    { de: "Verdammt", es: "Joder" },
-    { de: "Blödmann", es: "Tonto del culo" },
-    { de: "Wichser", es: "Pajero" },
-    { de: "Miststück", es: "Zorra" },
-    { de: "Leck mich am Arsch", es: "Vete a la mierda" },
-    { de: "Vollidiot", es:"Subnormal" },
-    { de: "Penner", es: "Pringado" },
-    { de: "Verpiss dich", es: "Lárgate" },
-    { de: "Halt die Klappe", es: "Cállate la boca" },
-    { de: "Deine Mutter", es: "Tu puta madre" },
+    { de: "Dummkopf", es: "Gilipollas", anwendung: "Für Personen, deren Gehirn im Standby-Modus steckt." },
+    { de: "Arschloch", es: "Capullo / Cabrón", anwendung: "Universell einsetzbar für sympathische Mitmenschen." },
+    { de: "Idiot", es: "Idiota", anwendung: "Wenn 'Dummkopf' die Situation untertreibt." },
+    { de: "Hurensohn", es: "Hijo de puta", anwendung: "Fortgeschrittenes Vokabular für den fortgeschrittenen Frust." },
+    { de: "Scheiße", es: "Mierda", anwendung: "Klassiker. Passt immer, wenn etwas nicht nach Plan läuft." },
+    { de: "Verdammt", es: "Joder", anwendung: "Das spanische 'Verdammt' - ein echter Alleskönner." },
+    { de: "Blödmann", es: "Tonto del culo", anwendung: "Für den ganz besonderen Blödmann in Ihrem Leben." },
+    { de: "Wichser", es: "Pajero", anwendung: "Wenn jemand ein selbstverliebtes Ekelpaket ist." },
+    { de: "Miststück", es: "Zorra", anwendung: "Für eine besonders raffinierte weibliche Nervensäge." },
+    { de: "Leck mich am Arsch", es: "Vete a la mierda", anwendung: "Höfliche Aufforderung, sich zu entfernen." },
+    { de: "Vollidiot", es:"Subnormal", anwendung: "Die Steigerung von 'Idiot'. Eskalationsstufe Rot." },
+    { de: "Penner", es: "Pringado", anwendung: "Für den sympathischen Verlierertypen von nebenan." },
+    { de: "Verpiss dich", es: "Lárgate", anwendung: "Wenn nonverbale Hinweise nicht mehr ausreichen." },
+    { de: "Halt die Klappe", es: "Cállate la boca", anwendung: "Die freundliche Bitte um akustische Ruhe." },
+    { de: "Deine Mutter", es: "Tu puta madre", anwendung: "Letztes Mittel. Nur für absolute Notfälle." },
 ];
 
 
@@ -83,7 +83,8 @@ export function HeroPfeiffer() {
                     <TableHeader>
                         <TableRow>
                         <TableHead className="font-semibold">Deutsches Schimpfwort</TableHead>
-                        <TableHead className="font-semibold">Spanische Übersetzung (für den Notfall)</TableHead>
+                        <TableHead className="font-semibold">Spanische Übersetzung</TableHead>
+                        <TableHead className="font-semibold">Anwendungsgebiet</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -91,6 +92,7 @@ export function HeroPfeiffer() {
                         <TableRow key={wort.de}>
                             <TableCell>{wort.de}</TableCell>
                             <TableCell className="italic">{wort.es}</TableCell>
+                             <TableCell className="text-sm text-muted-foreground">{wort.anwendung}</TableCell>
                         </TableRow>
                         ))}
                     </TableBody>
