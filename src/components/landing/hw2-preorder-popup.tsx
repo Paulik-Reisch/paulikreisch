@@ -80,7 +80,6 @@ export function HW2PreorderPopup({ book, children }: { book: any, children: Reac
     const signaturePrice = bookPrices.signature_package;
     const bookPrice = bookPrices.hw2_preorder;
     const originalBookPrice = bookPrices.hw2_original;
-    const bookDiscount = originalBookPrice - bookPrice;
     
     const price = signaturePrice + bookPrice;
     const originalPrice = signaturePrice + originalBookPrice;
@@ -238,7 +237,7 @@ export function HW2PreorderPopup({ book, children }: { book: any, children: Reac
                             <span>-{(bookPrices.hw2_original - bookPrices.hw2_preorder).toFixed(2)} €</span>
                         </div>
                         <div className="flex justify-between font-medium">
-                            <span>Zwischensumme</span>
+                            <span>Zwischensumme Buch</span>
                             <span>{bookPrices.hw2_preorder.toFixed(2)} €</span>
                         </div>
                     </div>
@@ -267,14 +266,6 @@ export function HW2PreorderPopup({ book, children }: { book: any, children: Reac
                         : <><CheckCircle className="mr-2 h-6 w-6" />Jetzt unwiderruflich kostenpflichtig bestellen!</>
                     }
                 </Button>
-
-                <Separator className="my-4 w-2/3" />
-                
-                <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="w-full">
-                    <Button type="button" variant="secondary" className="w-full bg-gradient-to-b from-yellow-400 to-yellow-500 border-yellow-500 text-black hover:from-yellow-400/80 hover:to-yellow-500/90">
-                        Ohne persönliche Signatur fortfahren
-                    </Button>
-                </a>
             </div>
 
             <div className="mt-8 text-xs text-muted-foreground space-y-2 p-4 bg-muted/50 rounded-lg">
@@ -290,3 +281,5 @@ export function HW2PreorderPopup({ book, children }: { book: any, children: Reac
     </Dialog>
   );
 }
+
+    

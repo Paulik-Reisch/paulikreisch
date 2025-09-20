@@ -190,7 +190,7 @@ export function SignatureOrderForm({ book }: { book: any }) {
                 <Sparkles className="h-4 w-4" />
                 <AlertTitle className="font-headline text-xl">KRISE? Sparen Sie jetzt!</AlertTitle>
                 <AlertDescription className="text-primary/90 text-base">
-                    Aktivieren Sie dieses Angebot und sparen Sie <span className="font-bold">80% auf "Hallo Welt 1"</span>, indem Sie "Hallo Welt 2" (inkl. Signatur & Widmung) für nur {bookPrices.hw2_signature_package + bookPrices.hw2_preorder}€ VORBESTELLEN!
+                    Aktivieren Sie dieses Angebot und sparen Sie <span className="font-bold">80% auf "Hallo Welt 1"</span>, indem Sie "Hallo Welt 2" (inkl. Signatur & Widmung) für nur {(bookPrices.hw2_signature_package + bookPrices.hw2_preorder).toFixed(2)}€ VORBESTELLEN!
                 </AlertDescription>
                  <div className="flex items-center space-x-3 p-2 rounded-md mt-4">
                     <Controller
@@ -357,14 +357,14 @@ export function SignatureOrderForm({ book }: { book: any }) {
         </div>
 
         <div className="mt-8 flex flex-col items-center">
-            <Button type="submit" size="lg" className="w-full text-lg h-14" disabled={isSubmitting}>
+             <Button type="submit" size="lg" className="w-full text-lg h-14" disabled={isSubmitting}>
                 {isSubmitting 
                     ? <><Loader2 className="mr-2 h-6 w-6 animate-spin" />Wird geprüft...</>
                     : <><CheckCircle className="mr-2 h-6 w-6" />Jetzt unwiderruflich kostenpflichtig bestellen!</>
                 }
             </Button>
             <Separator className="my-4 w-2/3" />
-             <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="w-full">
+            <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="w-full">
                 <Button type="button" variant="secondary" className="w-full bg-gradient-to-b from-yellow-400 to-yellow-500 border-yellow-500 text-black hover:from-yellow-400/80 hover:to-yellow-500/90">
                     Ohne persönliche Signatur fortfahren
                 </Button>
@@ -382,3 +382,5 @@ export function SignatureOrderForm({ book }: { book: any }) {
     </DialogContent>
   );
 }
+
+    
