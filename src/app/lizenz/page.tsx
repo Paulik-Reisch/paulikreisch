@@ -28,17 +28,29 @@ export default function LizenzPage() {
                 <div>
                     <h2 className="text-2xl font-bold font-headline">Zitiervorschlag</h2>
                     <p className="text-muted-foreground mt-1">
-                        Um das Werk »Hallo Welt 2« von Philipp Paulik und Maximilian Reisch korrekt zu zitieren, empfehlen wir folgende Quellenangabe. Ja, auch Satire will korrekt zitiert werden.
+                        Um unsere Werke korrekt zu zitieren, empfehlen wir folgende Quellenangaben. Ja, auch Satire will korrekt zitiert werden.
                     </p>
                 </div>
               </div>
-              <div className="pl-12">
-                <blockquote className="mt-4 border-l-2 pl-6 italic text-muted-foreground">
-                    Paulik, P. und Reisch, M. (2025) <br/>
-                    1. Auflage – Hallo Welt 2: Wie das Leben funktioniert, [Seitenzahl(en)] <br/>
-                    Verfügbar unter: www.paulik-reisch.de; ISBN 979-8-298-31897-6 <br/>
-                    [Datum des Zugriffs]
-                </blockquote>
+              <div className="pl-12 space-y-6">
+                <div>
+                    <h3 className="font-semibold text-foreground">Hallo Welt 1</h3>
+                    <blockquote className="mt-2 border-l-2 pl-6 italic text-muted-foreground">
+                        Paulik, P. und Reisch, M. (2023) <br/>
+                        5. Auflage – Hallo Welt: Erhebliche Kritik am unerhörten Bildungsgang der Lernvollzugsanstalt SK-S, [Seitenzahl(en)] <br/>
+                        Verfügbar unter: www.paulik-reisch.de; ISBN 979-8-879-79169-3 <br/>
+                        [Datum des Zugriffs]
+                    </blockquote>
+                </div>
+                 <div>
+                    <h3 className="font-semibold text-foreground">Hallo Welt 2</h3>
+                    <blockquote className="mt-2 border-l-2 pl-6 italic text-muted-foreground">
+                        Paulik, P. und Reisch, M. (2025) <br/>
+                        1. Auflage – Hallo Welt 2: Wie das Leben funktioniert, [Seitenzahl(en)] <br/>
+                        Verfügbar unter: www.paulik-reisch.de; ISBN 979-8-298-31897-6 <br/>
+                        [Datum des Zugriffs]
+                    </blockquote>
+                </div>
               </div>
             </div>
 
