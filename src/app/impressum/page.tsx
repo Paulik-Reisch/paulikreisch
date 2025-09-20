@@ -17,7 +17,7 @@ export default function ImpressumPage() {
               <p className="text-muted-foreground">
                 Philipp Paulik und Maximilian Reisch<br />
                 [Straße und Hausnummer]<br />
-                [PLZ] Neunkirchen<br />
+                53819 Neunkirchen<br />
                 Deutschland
               </p>
             </div>
