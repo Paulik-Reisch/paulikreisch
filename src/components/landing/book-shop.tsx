@@ -72,9 +72,6 @@ function BookCard({ book }: { book: typeof books.hw1 | typeof books.hw2 }) {
 
 export function BookShop() {
   const { toast } = useToast();
-  const [isSpinning, setIsSpinning] = useState(false);
-  const [price, setPrice] = useState<string>("???");
-  const [priceColor, setPriceColor] = useState("text-foreground");
   
   const handleNewsletterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -85,59 +82,6 @@ export function BookShop() {
     });
     e.currentTarget.reset();
   };
-
-  const spinPrice = () => {
-    if (isSpinning) return;
-    setIsSpinning(true);
-
-    const spinDuration = 3000;
-    const intervalDuration = 100;
-    let intervals = spinDuration / intervalDuration;
-
-    const spinInterval = setInterval(() => {
-        const randomPrice = (Math.random() * (569000 - 0.01) + 0.01).toFixed(2);
-        setPrice(randomPrice.replace('.',','));
-        intervals--;
-        if (intervals <= 0) {
-            clearInterval(spinInterval);
-            const finalPrice = (Math.random() < 0.1) ? (Math.random() * (15 - 5) + 5).toFixed(2) : (Math.random() * (1000 - 15) + 15).toFixed(2);
-            const finalPriceFormatted = finalPrice.replace('.', ',');
-            setPrice(finalPriceFormatted);
-            setIsSpinning(false);
-            
-            let toastTitle = "Herzlichen Glückwunsch!";
-            let toastDescription = `Ihr persönlicher Preis: ${finalPriceFormatted}€! Ein echtes Schnäppchen!`;
-            let showBuyButton = true;
-
-            if(parseFloat(finalPrice) > 100) {
-                toastTitle = "Pech gehabt!";
-                toastDescription = `Ihr Preis: ${finalPriceFormatted}€! Vielleicht versuchen Sie es morgen nochmal.`;
-                showBuyButton = false;
-            } else if (parseFloat(finalPrice) <= 1) {
-                toastTitle = "JACKPOT!";
-                toastDescription = `Sie zahlen nur ${finalPriceFormatted}€! Das ist quasi geschenkt!`;
-            }
-
-            toast({
-                title: toastTitle,
-                description: toastDescription,
-                action: showBuyButton ? (
-                    <a href={books.hw2.amazonLink} target="_blank" rel="noopener noreferrer">
-                        <Button variant="secondary">Jetzt kaufen</Button>
-                    </a>
-                ) : undefined,
-            });
-        }
-    }, intervalDuration);
-  };
-
-  useEffect(() => {
-    if (isSpinning) {
-      setPriceColor("text-destructive");
-    } else {
-      setPriceColor("text-primary");
-    }
-  }, [isSpinning]);
 
   return (
     <section className="w-full py-12 md:py-24">
@@ -178,48 +122,37 @@ export function BookShop() {
 
         <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <h2 className="font-headline text-3xl font-bold tracking-tight mb-8">Bald im Handel</h2>
-            <Card className="overflow-hidden border-2 bg-gradient-to-tr from-blue-50 via-transparent to-transparent">
-                <div className="grid md:grid-cols-2 items-center">
-                    <div className="p-6 md:p-10 flex flex-col justify-center order-2 md:order-1">
-                        <span className="font-semibold text-primary animate-pulse mb-2">Erscheint bald!</span>
-                        <h3 className="font-headline text-4xl font-bold">{books.hw2.title}</h3>
-                        <p className="text-lg text-muted-foreground mb-4">{books.hw2.subtitle}</p>
-                        
-                        <p className="text-base leading-relaxed text-balance my-4">{books.hw2.description}</p>
-                        
-                        <div className="my-4 p-4 rounded-lg bg-muted/50 border">
-                            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                                <div className="text-center sm:text-left">
-                                    <p className="font-bold">Preis-Lotterie:</p>
-                                    <p className={cn("text-4xl font-mono font-bold transition-colors duration-300", isSpinning ? 'animate-pulse' : '', priceColor)}>{price}{price.includes('?') ? '' : ' €'}</p>
-                                </div>
-                                <Button variant="destructive" onClick={spinPrice} disabled={isSpinning} className="transition-transform duration-200 hover:scale-105 active:scale-95">
-                                    <Ticket className="mr-2"/> Dein Glück versuchen
-                                </Button>
-                            </div>
-                        </div>
-                        
-                        <div className="mt-6">
-                            <p className="text-sm font-semibold mb-2">Benachrichtigung erhalten, wenn das Buch online geht:</p>
-                            <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-2">
-                               <Input type="email" name="email" placeholder="deine-email@adresse.de" required className="flex-grow"/>
-                               <Button type="submit">
-                                   <Mail className="mr-2"/> Abonnieren
-                               </Button>
-                            </form>
-                        </div>
-                         <Link href="/lp2" className="text-sm font-semibold text-primary hover:underline inline-flex items-center group mt-6">
-                            <Info className="mr-2 h-4 w-4"/> Mehr über Hallo Welt 2 erfahren <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                        </Link>
+             <div className="grid md:grid-cols-2 gap-8">
+                <Card className="flex flex-col justify-center items-center p-8 text-center bg-muted/50">
+                     <div className="p-3 bg-primary/10 rounded-full mb-4">
+                         <Info className="w-8 h-8 text-primary" />
                     </div>
-                    <div className="relative aspect-[2/3] w-full h-full order-1 md:order-2 group">
-                         <div className="absolute inset-0 bg-black/10 backdrop-blur-sm flex items-center justify-center z-10 transition-opacity duration-300 opacity-100 group-hover:opacity-0">
-                            <Sparkles className="w-16 h-16 text-white/80 animate-ping" />
-                        </div>
-                        <Image alt={`Cover von ${books.hw2.title}`} src={books.hw2.imageSrc} data-ai-hint={books.hw2.aiHint} fill className="object-cover" />
+                    <h3 className="font-headline text-2xl font-bold">Hallo Welt 2 kommt</h3>
+                    <p className="text-muted-foreground mt-2 mb-6 max-w-sm text-balance">
+                       Die Fortsetzung, die niemand wollte, aber jeder braucht. Noch chaotischer, noch bissiger.
+                    </p>
+                    <Link href="/lp2">
+                        <Button variant="outline">
+                            Mehr erfahren <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                    </Link>
+                </Card>
+                 <Card className="flex flex-col justify-center items-center p-8 text-center bg-muted/50">
+                     <div className="p-3 bg-primary/10 rounded-full mb-4">
+                         <Mail className="w-8 h-8 text-primary" />
                     </div>
-                </div>
-            </Card>
+                    <h3 className="font-headline text-2xl font-bold">Nichts verpassen</h3>
+                    <p className="text-muted-foreground mt-2 mb-6 max-w-sm text-balance">
+                        Erhalten Sie eine Benachrichtigung, wenn das Buch online geht. Kein Spam, nur die wichtigen Katastrophen.
+                    </p>
+                     <form onSubmit={handleNewsletterSubmit} className="w-full max-w-sm flex gap-2">
+                        <Input type="email" name="email" placeholder="deine-email@adresse.de" required className="flex-grow"/>
+                        <Button type="submit">
+                           Abonnieren
+                        </Button>
+                    </form>
+                </Card>
+            </div>
         </div>
 
       </div>
