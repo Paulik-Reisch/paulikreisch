@@ -19,7 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { HW2PreorderPopup } from "./hw2-preorder-popup";
+import { SignatureOrderForm } from "./signature-order-form";
 
 
 const books = {
@@ -31,7 +31,8 @@ const books = {
     imageSrc: "https://placehold.co/400x600.png",
     aiHint: "book cover",
     amazonLink: "https://www.amazon.de/-/de/Hallo-Welt-Erhebliche-Bildungsgang-Lernvollzugsanstalt/dp/B0CVXT9X4J",
-    description: "Die satirische Abrechnung mit dem Schulsystem, Lehrern als Beamtenrobotern und dem täglichen Wahnsinn des Erwachsenwerdens. Ein Muss für jeden, der die Schule überlebt hat (oder es noch versucht)."
+    description: "Die satirische Abrechnung mit dem Schulsystem, Lehrern als Beamtenrobotern und dem täglichen Wahnsinn des Erwachsenwerdens. Ein Muss für jeden, der die Schule überlebt hat (oder es noch versucht).",
+    signaturePrice: 35.00,
   },
   hw2: {
     id: 2,
@@ -42,7 +43,8 @@ const books = {
     imageSrc: "https://placehold.co/400x600.png",
     aiHint: "book cover funny",
     amazonLink: "https://www.amazon.de/dp/B0D9L4DCMG",
-    description: "Die Fortsetzung, die niemand wollte, aber jeder braucht. Eine Abrechnung mit Bürokratie, dem deutschen Internet und dem Mietenwahnsinn. Noch chaotischer, noch bissiger."
+    description: "Die Fortsetzung, die niemand wollte, aber jeder braucht. Eine Abrechnung mit Bürokratie, dem deutschen Internet und dem Mietenwahnsinn. Noch chaotischer, noch bissiger.",
+    signaturePrice: 52.99,
   },
 };
 
@@ -91,7 +93,7 @@ function HW2BookCard({ book }: { book: typeof books.hw2 }) {
                                 {book.preorderPrice ? "Jetzt vorbestellen" : "Bei Amazon kaufen"}
                             </Button>
                         </DialogTrigger>
-                        <HW2PreorderPopup />
+                        <SignatureOrderForm book={book} isHW2Preorder={true}/>
                     </Dialog>
                 </div>
             </CardContent>
@@ -100,7 +102,7 @@ function HW2BookCard({ book }: { book: typeof books.hw2 }) {
 }
 
 
-function BookCard({ book }: { book: (typeof books.hw1 | typeof books.hw2) & {preorderPrice?: string} }) {
+function BookCard({ book }: { book: (typeof books.hw1) }) {
     return (
         <Card className="flex flex-col h-full overflow-hidden transition-transform duration-300 hover:-translate-y-2">
             <CardContent className="p-4 md:p-6 flex flex-col h-full">
@@ -117,7 +119,7 @@ function BookCard({ book }: { book: (typeof books.hw1 | typeof books.hw2) & {pre
                      <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="w-full mt-auto">
                         <Button size="lg" className="w-full" variant="secondary">
                             <ShoppingCart className="mr-2 h-4 w-4" />
-                            {book.preorderPrice ? "Jetzt vorbestellen" : "Bei Amazon kaufen"}
+                           Bei Amazon kaufen
                         </Button>
                     </a>
                 </div>
@@ -160,15 +162,7 @@ export function BookShop() {
                         </Button>
                     </div>
                     </DialogTrigger>
-                     <DialogContent className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-                        <DialogHeader>
-                            <DialogTitle className="font-headline text-3xl">Sonderbestellung: Originalausgabe</DialogTitle>
-                            <DialogDescription>
-                            Stellen Sie sich Ihre persönliche, von den Autoren gequälte Ausgabe zusammen. Ein Unikat, genau wie Ihre Probleme.
-                            </DialogDescription>
-                        </DialogHeader>
-                        {/* Placeholder for a form that might be used for HW1 */}
-                    </DialogContent>
+                    <SignatureOrderForm book={books.hw1} />
                 </Dialog>
             </div>
         </div>
@@ -213,6 +207,3 @@ export function BookShop() {
     </section>
   );
 }
-
-
-    
