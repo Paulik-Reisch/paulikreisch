@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -36,22 +37,23 @@ export function CookieBanner() {
   return (
     <div 
         className={cn(
-            "fixed bottom-0 left-0 right-0 z-50 p-4 bg-card border-t shadow-lg animate-in slide-in-from-bottom-5",
+            "fixed bottom-4 left-4 z-50 w-full max-w-sm p-4 bg-card border shadow-lg rounded-lg animate-in slide-in-from-bottom-5",
             !showBanner && "animate-out slide-out-to-bottom-5"
         )}
     >
-      <div className="container mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="flex items-start gap-4">
-           <Cookie className="h-8 w-8 text-primary shrink-0 mt-1" />
-           <p className="text-sm text-muted-foreground text-balance">
-            Ja, auch wir brauchen dieses nervige Banner. Wir verwenden Cookies, um sicherzustellen, dass Sie dieses Banner nicht ständig sehen. Indem Sie auf "Akzeptieren" klicken, stimmen Sie der Speicherung eines rein funktionalen Cookies zu. Mehr dazu in unserer
-            <Link href="/cookie-richtlinie" className="underline hover:text-primary"> Cookie-Richtlinie </Link> und 
-            <Link href="/datenschutz" className="underline hover:text-primary"> Datenschutzerklärung</Link>.
-           </p>
+      <div className="flex flex-col gap-4">
+        <div className="flex items-start gap-3">
+           <Cookie className="h-6 w-6 text-primary shrink-0 mt-1" />
+           <div>
+            <h3 className="font-semibold font-headline">Cookies? Leider ja.</h3>
+            <p className="text-sm text-muted-foreground text-balance">
+                Wir nutzen ein rein funktionales Cookie, um uns Ihre Zustimmung zu merken. Mehr Infos in unserer <Link href="/cookie-richtlinie" className="underline hover:text-primary">Cookie-Richtlinie</Link>.
+            </p>
+           </div>
         </div>
-        <div className="flex gap-2 shrink-0">
-          <Button onClick={handleAccept}>Akzeptieren</Button>
-          <Button variant="outline" onClick={handleDecline}>Ablehnen</Button>
+        <div className="flex gap-2 shrink-0 justify-end">
+          <Button size="sm" onClick={handleAccept}>Akzeptieren</Button>
+          <Button size="sm" variant="outline" onClick={handleDecline}>Ablehnen</Button>
         </div>
       </div>
     </div>
