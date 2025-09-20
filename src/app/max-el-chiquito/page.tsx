@@ -11,7 +11,7 @@ function ChiquitoName() {
 
   let name;
   if (p === '1') {
-    name = 'max';
+    name = 'Max';
   } else if (p === '2') {
     name = 'Philipp';
   } else {
