@@ -65,7 +65,7 @@ function BookCard({ book }: { book: (typeof books.hw1 | typeof books.hw2) & {pre
                          <span className="text-2xl font-bold">{book.price}</span>
                       )}
                         <span className="text-xs text-muted-foreground ml-2">inkl. MwSt.</span>
-                         {book.preorderPrice && <p className="text-xs text-primary font-semibold mt-1">{'{...% auf die ersten 50 exemplare}'}</p>}
+                         {book.preorderPrice && <p className="text-xs text-primary font-semibold mt-1">{'19% auf die ersten 50 exemplare}'}</p>}
                     </div>
                      <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="w-full mt-auto">
                         <Button size="lg" className="w-full" variant="secondary">
