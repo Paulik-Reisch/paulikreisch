@@ -6,12 +6,10 @@ import { Features } from "@/components/landing/features";
 import { LP2Teaser } from "@/components/landing/lp2-teaser";
 import { Testimonials } from "@/components/landing/testimonials";
 import { Newsletter } from "@/components/landing/newsletter";
-import { Footer } from "@/components/landing/footer";
 import { CtaBanner } from "@/components/landing/cta-banner";
-import { LP4Teaser } from "@/components/landing/lp4-teaser";
 import { RandomTeaser } from "@/components/landing/random-teaser";
-import { CountdownTeaser } from "@/components/landing/countdown-teaser";
 import { HW2Teaser } from "@/components/landing/hw2-teaser";
+import { Footer } from "@/components/landing/footer";
 
 export default function Home() {
   return (
@@ -25,10 +23,8 @@ export default function Home() {
         <Features />
         <LP2Teaser />
         <Testimonials />
-        <LP4Teaser />
         <CtaBanner />
         <RandomTeaser />
-        <CountdownTeaser />
         <Newsletter />
       </main>
       <Footer />
