@@ -1,14 +1,14 @@
 
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, CheckCircle, FileText, ArrowDown, Sparkles } from "lucide-react";
+import { Loader2, CheckCircle, FileText, Sparkles } from "lucide-react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
@@ -45,6 +45,18 @@ const signatureSchema = z.object({
 
 type SignatureFormValues = z.infer<typeof signatureSchema>;
 
+const bookPrices = {
+    hw1: 10.99,
+    hw2: 25.99,
+    hw2_preorder: 17.99,
+    logistics: 7.99,
+    hw1_signature: 50,
+    hw1_dedication: 20,
+    hw1_custom_dedication: 5,
+    hw2_signature_package: 35,
+};
+
+
 export function SignatureOrderForm({ book }: { book: any }) {
   const { toast } = useToast();
   
@@ -64,29 +76,39 @@ export function SignatureOrderForm({ book }: { book: any }) {
 
   const watchFields = watch();
   
-  const totalPrice = useMemo(() => {
+ const { totalPrice, originalPrice, totalDiscount } = useMemo(() => {
     let price = 0;
-    const book1Price = 10.99;
-    const logisticsPrice = 7.99;
+    const book1Price = bookPrices.hw1;
+    const logisticsPrice = bookPrices.logistics;
 
-    // HW1 Calculation
-    let hw1Total = book1Price + logisticsPrice;
-    if (watchFields.hw1_hasSignature) hw1Total += 50;
-    if (watchFields.hw1_hasDedication) hw1Total += 20;
-    if (watchFields.hw1_hasDedication && watchFields.hw1_provideDedication) hw1Total += 5;
+    let hw1SignaturePrice = 0;
+    if (watchFields.hw1_hasSignature) hw1SignaturePrice += bookPrices.hw1_signature;
+    if (watchFields.hw1_hasDedication) hw1SignaturePrice += bookPrices.hw1_dedication;
+    if (watchFields.hw1_hasDedication && watchFields.hw1_provideDedication) hw1SignaturePrice += bookPrices.hw1_custom_dedication;
+
+    price += book1Price + logisticsPrice + hw1SignaturePrice;
     
-    price += hw1Total;
+    let originalTotalPrice = price;
+    let finalDiscount = 0;
 
     if (watchFields.acceptComboDeal) {
-        // Apply 80% discount on HW1 book price
-        price -= book1Price * 0.8;
+        const hw1Discount = book1Price * 0.8;
+        price -= hw1Discount;
+        finalDiscount += hw1Discount;
 
-        // Add HW2 price
-        price += 17.99; // Preorder price for HW2 book
-        price += 35.00; // Price for signature and dedication for HW2
+        const hw2Price = bookPrices.hw2_preorder;
+        const hw2SignaturePrice = bookPrices.hw2_signature_package;
+        const hw2OriginalBookPrice = bookPrices.hw2;
+        const hw2BookDiscount = hw2OriginalBookPrice - hw2Price;
+        
+        price += hw2Price + hw2SignaturePrice;
+        finalDiscount += hw2BookDiscount;
+
+        originalTotalPrice += hw2OriginalBookPrice + hw2SignaturePrice;
     }
 
-    return price;
+    return { totalPrice: price, originalPrice: originalTotalPrice, totalDiscount: finalDiscount };
+
   }, [watchFields]);
 
 
@@ -123,7 +145,7 @@ export function SignatureOrderForm({ book }: { book: any }) {
                     />
                     <Label htmlFor="hw1_hasSignature" className="font-semibold text-base cursor-pointer flex justify-between w-full">
                         <span>Originalsignatur der Autoren</span>
-                        <span className="text-muted-foreground font-mono">+50,00 €</span>
+                        <span className="text-muted-foreground font-mono">+{bookPrices.hw1_signature.toFixed(2)} €</span>
                     </Label>
                 </div>
                  <div className="flex items-center space-x-3 p-2 rounded-md bg-background/50">
@@ -134,7 +156,7 @@ export function SignatureOrderForm({ book }: { book: any }) {
                     />
                     <Label htmlFor="hw1_hasDedication" className="font-semibold text-base cursor-pointer flex justify-between w-full">
                        <span>Persönliche Widmung</span>
-                       <span className="text-muted-foreground font-mono">+20,00 €</span>
+                       <span className="text-muted-foreground font-mono">+{bookPrices.hw1_dedication.toFixed(2)} €</span>
                     </Label>
                 </div>
                  {watchFields.hw1_hasDedication && (
@@ -147,7 +169,7 @@ export function SignatureOrderForm({ book }: { book: any }) {
                             />
                             <Label htmlFor="hw1_provideDedication" className="cursor-pointer flex justify-between w-full">
                                 <span>Ich möchte meine eigene Widmung vorgeben</span>
-                                <span className="text-muted-foreground font-mono">+5,00 €</span>
+                                <span className="text-muted-foreground font-mono">+{bookPrices.hw1_custom_dedication.toFixed(2)} €</span>
                             </Label>
                         </div>
                         {watchFields.hw1_provideDedication && (
@@ -284,32 +306,50 @@ export function SignatureOrderForm({ book }: { book: any }) {
                 {/* HW1 Summary */}
                 <div className="flex justify-between">
                     <span>{book.title}</span>
-                    <span>10,99 €</span>
+                    <span>{bookPrices.hw1.toFixed(2)} €</span>
                 </div>
                 <div className="flex justify-between">
                     <span>Logistik & Bearbeitung</span>
-                    <span>7,99 €</span>
+                    <span>{bookPrices.logistics.toFixed(2)} €</span>
                 </div>
-                {watchFields.hw1_hasSignature && <div className="flex justify-between"><span>Originalsignatur (HW1)</span><span>50,00 €</span></div>}
-                {watchFields.hw1_hasDedication && <div className="flex justify-between"><span>Persönliche Widmung (HW1)</span><span>20,00 €</span></div>}
-                {watchFields.hw1_hasDedication && watchFields.hw1_provideDedication && <div className="flex justify-between"><span>Wunsch-Text (HW1)</span><span>5,00 €</span></div>}
-                {watchFields.acceptComboDeal && <div className="flex justify-between text-destructive"><span>Rabatt (80% auf HW1)</span><span>-8,79 €</span></div>}
-
-                {/* HW2 Summary (Conditional) */}
+                {watchFields.hw1_hasSignature && <div className="flex justify-between"><span>Originalsignatur (HW1)</span><span>{bookPrices.hw1_signature.toFixed(2)} €</span></div>}
+                {watchFields.hw1_hasDedication && <div className="flex justify-between"><span>Persönliche Widmung (HW1)</span><span>{bookPrices.hw1_dedication.toFixed(2)} €</span></div>}
+                {watchFields.hw1_hasDedication && watchFields.hw1_provideDedication && <div className="flex justify-between"><span>Wunsch-Text (HW1)</span><span>{bookPrices.hw1_custom_dedication.toFixed(2)} €</span></div>}
+                
                 {watchFields.acceptComboDeal && (
                     <>
+                        <div className="flex justify-between text-destructive">
+                            <span>Rabatt (80% auf HW1)</span>
+                            <span>-{(bookPrices.hw1 * 0.8).toFixed(2)} €</span>
+                        </div>
                         <Separator className="my-2"/>
                         <div className="flex justify-between font-semibold">
                             <span>"Hallo Welt 2" Vorbesteller-Paket</span>
-                            <span>52,99 €</span>
+                            <span>{(bookPrices.hw2_preorder + bookPrices.hw2_signature_package).toFixed(2)} €</span>
                         </div>
-                        <div className="flex justify-between pl-4 text-xs">
-                            <span>(Buch: 17,99€ + Signatur/Widmung: 35,00€)</span>
+                         <div className="flex justify-between pl-4 text-xs">
+                            <span>Originalpreis Buch</span>
+                            <span className="line-through text-muted-foreground">{bookPrices.hw2.toFixed(2)} €</span>
+                        </div>
+                        <div className="flex justify-between pl-4 text-xs text-destructive">
+                            <span>Mengenbegrenzter Rabatt (31%)</span>
+                            <span>-{(bookPrices.hw2 - bookPrices.hw2_preorder).toFixed(2)} €</span>
                         </div>
                     </>
                 )}
             </div>
             <Separator />
+            {watchFields.acceptComboDeal && (
+                 <div className="space-y-1 text-sm">
+                     <div className="flex justify-between items-baseline">
+                        <span className="font-bold text-destructive">Totale Ersparnis:</span>
+                        <div className="flex items-baseline gap-2 font-mono">
+                            <span className="text-muted-foreground line-through">{originalPrice.toFixed(2)}€</span>
+                            <span className="font-bold text-destructive">-{totalDiscount.toFixed(2)}€</span>
+                        </div>
+                    </div>
+                </div>
+            )}
             <div className="flex justify-between font-bold text-xl">
                 <span>Zu bezahlen:</span>
                 <span className={cn(watchFields.acceptComboDeal ? 'animate-pulse' : '')}>{totalPrice.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</span>
@@ -342,5 +382,3 @@ export function SignatureOrderForm({ book }: { book: any }) {
     </DialogContent>
   );
 }
-
-    
