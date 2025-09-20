@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export function Footer() {
   return (
     <footer className="w-full border-t py-12 md:py-16 bg-muted/40">
@@ -7,9 +9,10 @@ export function Footer() {
           Die Hallo Welt (HW) Bücherserie ist erstellt, gepflegt und unabhängig publiziert durch Philipp Paulik (Autor), Maximilian Reisch (Autor), Luin Schiffbauer (Illustrator) und weitere Mitwirkende.
           Veröffentlicht und produziert durch Kindle Direct Publishing (KDP) der Amazon Distribution GmbH, Leipzig sowie ggf. weitere Verlags- und Produktionspartner.
         </p>
-        <p className="mt-8 text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Paulik & Reisch. Alle Rechte vorbehalten. Und einige Falschheiten.
-        </p>
+        <div className="mt-8 text-xs text-muted-foreground flex gap-4">
+          <p>© {new Date().getFullYear()} Paulik & Reisch. Alle Rechte vorbehalten. Und einige Falschheiten.</p>
+          <Link href="/impressum" className="hover:underline">Impressum</Link>
+        </div>
       </div>
     </footer>
   );
