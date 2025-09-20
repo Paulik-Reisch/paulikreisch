@@ -62,12 +62,6 @@ export function HW2PreorderPopup() {
     });
   };
 
-  const PriceSlasher = ({ value }: { value: number; }) => (
-    <span className="line-through text-muted-foreground/80">
-        {value.toFixed(2)}€
-    </span>
-  );
-
   return (
     <DialogContent className="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -88,11 +82,6 @@ export function HW2PreorderPopup() {
             </div>
         </div>
 
-        <div className="text-center space-y-2">
-            <h3 className="font-headline text-2xl font-semibold">Signierte Sonderausgabe</h3>
-            <p className="text-muted-foreground max-w-lg mx-auto text-balance">Nur für die nächsten {minutes} Minuten erhalten Sie ein von den Autoren persönlich signiertes Exemplar zum absoluten Vorzugspreis!</p>
-        </div>
-        
         <div className="my-8 space-y-4">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -144,20 +133,48 @@ export function HW2PreorderPopup() {
             </div>
         </div>
 
-        <div className="p-4 bg-muted/50 rounded-lg space-y-3 mb-6">
+        <div className="p-4 bg-muted/50 rounded-lg space-y-4 mb-6">
             <h4 className="font-headline text-lg font-semibold">Zusammenfassung</h4>
-            <div className="space-y-1 text-sm">
-                <div className="flex justify-between">
-                    <span>Signiertes Vorbesteller-Exemplar</span>
-                    <span className="line-through text-muted-foreground">90,00€</span>
+            <div className="space-y-3 text-sm">
+                <div className="space-y-1">
+                    <div className="flex justify-between">
+                        <span>Signiertes Vorbesteller-Exemplar</span>
+                        <span className="line-through text-muted-foreground">90,00€</span>
+                    </div>
+                     <div className="flex justify-between text-destructive">
+                        <span>Zeitlich begrenzter Rabatt</span>
+                        <span>-55,00€</span>
+                    </div>
+                    <div className="flex justify-between font-medium">
+                        <span>Zwischensumme</span>
+                        <span>35,00€</span>
+                    </div>
                 </div>
-                 <div className="flex justify-between text-destructive">
-                    <span>Zeitlich begrenzter Rabatt</span>
-                    <span>-55,00€</span>
+                <Separator/>
+                 <div className="space-y-1">
+                    <div className="flex justify-between">
+                        <span>Produkt 2: "Hallo Welt 2"</span>
+                        <span className="line-through text-muted-foreground">25,99€</span>
+                    </div>
+                     <div className="flex justify-between text-destructive">
+                        <span>Mengenbegrenzter Rabatt (31%)</span>
+                        <span>-8,00€</span>
+                    </div>
+                    <div className="flex justify-between font-medium">
+                        <span>Zwischensumme</span>
+                        <span>17,99€</span>
+                    </div>
+                </div>
+                <Separator />
+                <div className="space-y-1">
+                    <div className="flex justify-between text-destructive font-bold">
+                        <span>Totale Ersparnis:</span>
+                        <span>63,00€</span>
+                    </div>
                 </div>
             </div>
             <Separator />
-            <div className="flex justify-between font-bold text-base">
+            <div className="flex justify-between font-bold text-xl">
                 <span>Zu bezahlen:</span>
                 <span>35,00€</span>
             </div>
