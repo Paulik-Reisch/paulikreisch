@@ -6,12 +6,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Timer, CheckCircle, FileText } from "lucide-react";
+import { Loader2, Timer, CheckCircle, FileText, ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { Separator } from "../ui/separator";
 
 const COUNTDOWN_SECONDS = 10 * 60; // 10 minutes
 
@@ -32,8 +33,7 @@ type PreorderFormValues = z.infer<typeof preorderSchema>;
 export function HW2PreorderPopup() {
   const { toast } = useToast();
   const [timeLeft, setTimeLeft] = useState(COUNTDOWN_SECONDS);
-  const [priceStep, setPriceStep] = useState(0);
-
+  
   const {
     register,
     handleSubmit,
@@ -50,14 +50,6 @@ export function HW2PreorderPopup() {
     }
   }, [timeLeft]);
   
-  useEffect(() => {
-    const steps = [90, 70, 50];
-    if(priceStep < steps.length) {
-        const timer = setTimeout(() => setPriceStep(priceStep + 1), 700);
-        return () => clearTimeout(timer);
-    }
-  }, [priceStep]);
-
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
 
@@ -96,17 +88,9 @@ export function HW2PreorderPopup() {
             </div>
         </div>
 
-        <div className="text-center space-y-4">
+        <div className="text-center space-y-2">
             <h3 className="font-headline text-2xl font-semibold">Signierte Sonderausgabe</h3>
-            <p className="text-muted-foreground">Nur für die nächsten {minutes} Minuten erhalten Sie ein von den Autoren persönlich signiertes Exemplar zum absoluten Vorzugspreis!</p>
-            <div className="text-4xl font-bold space-x-4">
-                <PriceSlasher value={90} />
-                <PriceSlasher value={70} />
-                <PriceSlasher value={50} />
-                <span className="text-primary">
-                    nur 35,00€!
-                </span>
-            </div>
+            <p className="text-muted-foreground max-w-lg mx-auto text-balance">Nur für die nächsten {minutes} Minuten erhalten Sie ein von den Autoren persönlich signiertes Exemplar zum absoluten Vorzugspreis!</p>
         </div>
         
         <div className="my-8 space-y-4">
@@ -160,14 +144,42 @@ export function HW2PreorderPopup() {
             </div>
         </div>
 
-        <div className="mt-8">
+        <div className="p-4 bg-muted/50 rounded-lg space-y-3 mb-6">
+            <h4 className="font-headline text-lg font-semibold">Zusammenfassung</h4>
+            <div className="space-y-1 text-sm">
+                <div className="flex justify-between">
+                    <span>Signiertes Vorbesteller-Exemplar</span>
+                    <span className="line-through text-muted-foreground">90,00€</span>
+                </div>
+                 <div className="flex justify-between text-destructive">
+                    <span>Zeitlich begrenzter Rabatt</span>
+                    <span>-55,00€</span>
+                </div>
+            </div>
+            <Separator />
+            <div className="flex justify-between font-bold text-base">
+                <span>Zu bezahlen:</span>
+                <span>35,00€</span>
+            </div>
+        </div>
+
+        <div className="mt-8 flex flex-col items-center">
             <Button type="submit" size="lg" className="w-full text-lg h-14" disabled={isSubmitting || timeLeft === 0}>
                 {isSubmitting 
                     ? <><Loader2 className="mr-2 h-6 w-6 animate-spin" />Wird geprüft...</>
                     : <><CheckCircle className="mr-2 h-6 w-6" />Jetzt unwiderruflich kostenpflichtig bestellen!</>
                 }
             </Button>
+
+            <Separator className="my-4 w-1/2" />
+            
+            <DialogClose asChild>
+                <a href="https://www.amazon.de/dp/B0D9L4DCMG" target="_blank" rel="noopener noreferrer" className="text-yellow-600 hover:text-yellow-700 font-semibold text-sm underline-offset-4 hover:underline">
+                    Ohne persönliche Signatur fortfahren
+                </a>
+            </DialogClose>
         </div>
+
 
         <div className="mt-8 text-xs text-muted-foreground space-y-2 p-4 bg-muted/50 rounded-lg">
             <h4 className="font-bold flex items-center"><FileText className="mr-2 h-4 w-4"/>Rechtliche Hinweise zur Sonderbestellung</h4>
