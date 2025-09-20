@@ -6,19 +6,16 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
+import { DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Timer, CheckCircle, FileText } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Loader2, CheckCircle, FileText } from "lucide-react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import { Checkbox } from "../ui/checkbox";
 import { Textarea } from "../ui/textarea";
 
-const COUNTDOWN_SECONDS = (11 * 60) + 32;
-
-const preorderSchema = z.object({
+const signatureSchema = z.object({
   firstName: z.string().min(1, "Vorname ist ein Pflichtfeld."),
   lastName: z.string().min(1, "Nachname ist ein Pflichtfeld."),
   email: z.string().email("Bitte geben Sie eine gültige E-Mail-Adresse ein."),
@@ -29,18 +26,16 @@ const preorderSchema = z.object({
   city: z.string().min(1, "Ort ist ein Pflichtfeld."),
   country: z.string().default("Deutschland"),
   
-  hasSignature: z.boolean().default(true),
+  hasSignature: z.boolean().default(false),
   hasDedication: z.boolean().default(false),
   provideDedication: z.boolean().default(false),
   customDedication: z.string().optional(),
 });
 
-type PreorderFormValues = z.infer<typeof preorderSchema>;
-
+type SignatureFormValues = z.infer<typeof signatureSchema>;
 
 export function SignatureOrderForm({ book, isHW2Preorder = false }: { book: any, isHW2Preorder?: boolean }) {
   const { toast } = useToast();
-  const [timeLeft, setTimeLeft] = useState(COUNTDOWN_SECONDS);
   
   const {
     register,
@@ -48,11 +43,11 @@ export function SignatureOrderForm({ book, isHW2Preorder = false }: { book: any,
     control,
     watch,
     formState: { errors, isSubmitting },
-  } = useForm<PreorderFormValues>({
-    resolver: zodResolver(preorderSchema),
+  } = useForm<SignatureFormValues>({
+    resolver: zodResolver(signatureSchema),
     defaultValues: {
       country: "Deutschland",
-      hasSignature: true,
+      hasSignature: false,
       hasDedication: false,
       provideDedication: false,
     },
@@ -60,17 +55,16 @@ export function SignatureOrderForm({ book, isHW2Preorder = false }: { book: any,
 
   const watchFields = watch();
   
-  useEffect(() => {
-    if (isHW2Preorder && timeLeft > 0) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [timeLeft, isHW2Preorder]);
-  
-  const minutes = Math.floor(timeLeft / 60);
-  const seconds = timeLeft % 60;
+  const totalPrice = useMemo(() => {
+    let price = 10.99 + 7.99; // Buch + Logistik
+    if (watchFields.hasSignature) price += 50;
+    if (watchFields.hasDedication) price += 20;
+    if (watchFields.hasDedication && watchFields.provideDedication) price += 5;
+    return price;
+  }, [watchFields]);
 
-  const onSubmit = async (data: PreorderFormValues) => {
+
+  const onSubmit = async (data: SignatureFormValues) => {
     await new Promise(resolve => setTimeout(resolve, 2000));
     console.log("Bestelldaten:", data);
     toast({
@@ -84,27 +78,12 @@ export function SignatureOrderForm({ book, isHW2Preorder = false }: { book: any,
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogHeader>
             <DialogTitle className="font-headline text-3xl text-center">
-                {isHW2Preorder ? "Ihre EXKLUSIVE Vorbesteller-Chance!" : `Sonderbestellung: ${book.title}`}
+                Sonderbestellung: {book.title}
             </DialogTitle>
             <DialogDescription className="text-center text-base">
-                {isHW2Preorder 
-                    ? "Dieses Angebot ist so flüchtig wie die Motivation eines Beamten am Freitagnachmittag. Nur hier, nur jetzt."
-                    : "Stellen Sie sich Ihre persönliche, von den Autoren gequälte Ausgabe zusammen. Ein Unikat, genau wie Ihre Probleme."
-                }
+                Stellen Sie sich Ihre persönliche, von den Autoren gequälte Ausgabe zusammen. Ein Unikat, genau wie Ihre Probleme.
             </DialogDescription>
         </DialogHeader>
-
-        {isHW2Preorder && (
-            <div className="flex flex-col items-center justify-center p-6 my-4 border-2 border-dashed border-destructive rounded-xl bg-destructive/10">
-                <div className="flex items-center text-destructive font-bold text-lg">
-                    <Timer className="mr-2 h-6 w-6"/>
-                    Angebot endet in:
-                </div>
-                <div className={cn("font-mono text-5xl font-bold", timeLeft < 60 && "text-destructive")}>
-                    {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
-                </div>
-            </div>
-        )}
 
         <div className="my-8 space-y-8">
             <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
@@ -115,7 +94,10 @@ export function SignatureOrderForm({ book, isHW2Preorder = false }: { book: any,
                         control={control}
                         render={({ field }) => <Checkbox id="hasSignature" checked={field.value} onCheckedChange={field.onChange} />}
                     />
-                    <Label htmlFor="hasSignature" className="font-semibold text-base cursor-pointer">Originalsignatur der Autoren</Label>
+                    <Label htmlFor="hasSignature" className="font-semibold text-base cursor-pointer flex justify-between w-full">
+                        <span>Originalsignatur der Autoren</span>
+                        <span className="text-muted-foreground font-mono">+50,00 €</span>
+                    </Label>
                 </div>
                  <div className="flex items-center space-x-3 p-2 rounded-md bg-background/50">
                     <Controller
@@ -123,7 +105,10 @@ export function SignatureOrderForm({ book, isHW2Preorder = false }: { book: any,
                         control={control}
                         render={({ field }) => <Checkbox id="hasDedication" checked={field.value} onCheckedChange={field.onChange} />}
                     />
-                    <Label htmlFor="hasDedication" className="font-semibold text-base cursor-pointer">Persönliche Widmung</Label>
+                    <Label htmlFor="hasDedication" className="font-semibold text-base cursor-pointer flex justify-between w-full">
+                       <span>Persönliche Widmung</span>
+                       <span className="text-muted-foreground font-mono">+20,00 €</span>
+                    </Label>
                 </div>
                  {watchFields.hasDedication && (
                     <div className="pl-8 space-y-4 pt-2">
@@ -133,7 +118,10 @@ export function SignatureOrderForm({ book, isHW2Preorder = false }: { book: any,
                                 control={control}
                                 render={({ field }) => <Checkbox id="provideDedication" checked={field.value} onCheckedChange={field.onChange} />}
                             />
-                            <Label htmlFor="provideDedication" className="cursor-pointer">Ich möchte meine eigene Widmung vorgeben</Label>
+                            <Label htmlFor="provideDedication" className="cursor-pointer flex justify-between w-full">
+                                <span>Ich möchte meine eigene Widmung vorgeben</span>
+                                <span className="text-muted-foreground font-mono">+5,00 €</span>
+                            </Label>
                         </div>
                         {watchFields.provideDedication && (
                              <div className="pl-2">
@@ -203,60 +191,45 @@ export function SignatureOrderForm({ book, isHW2Preorder = false }: { book: any,
             </div>
         </div>
 
-        {isHW2Preorder && (
-            <div className="p-4 bg-muted/50 rounded-lg space-y-4 mb-6">
-                <h4 className="font-headline text-lg font-semibold">3. Zusammenfassung Ihrer Bestellung</h4>
-                <div className="space-y-3 text-sm">
-                    <div className="space-y-1">
-                        <div className="flex justify-between">
-                            <span>Signiertes Vorbesteller-Exemplar</span>
-                            <span className="line-through text-muted-foreground">90,00€</span>
-                        </div>
-                        <div className="flex justify-between text-destructive">
-                            <span>Zeitlich begrenzter Rabatt</span>
-                            <span>-55,00€</span>
-                        </div>
-                        <div className="flex justify-between font-medium">
-                            <span>Zwischensumme</span>
-                            <span>35,00€</span>
-                        </div>
-                    </div>
-                    <Separator/>
-                    <div className="space-y-1">
-                        <div className="flex justify-between">
-                            <span>{book.title}</span>
-                            <span className="line-through text-muted-foreground">{book.price}</span>
-                        </div>
-                        <div className="flex justify-between text-destructive">
-                            <span>Mengenbegrenzter Rabatt (31%)</span>
-                            <span>-8,00€</span>
-                        </div>
-                        <div className="flex justify-between font-medium">
-                            <span>Zwischensumme</span>
-                            <span>17,99€</span>
-                        </div>
-                    </div>
-                    <Separator />
-                    <div className="space-y-1">
-                        <div className="flex justify-between items-baseline">
-                            <span className="text-destructive font-bold">Totale Ersparnis:</span>
-                            <div className="flex items-baseline gap-2">
-                                <span className="text-muted-foreground line-through">115,99€</span>
-                                <span className="font-bold text-destructive">-63,00€</span>
-                            </div>
-                        </div>
-                    </div>
+        <div className="p-4 bg-muted/50 rounded-lg space-y-4 mb-6">
+            <h4 className="font-headline text-lg font-semibold">3. Zusammenfassung Ihrer Bestellung</h4>
+            <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                    <span>Buch: {book.title}</span>
+                    <span>10,99 €</span>
                 </div>
-                <Separator />
-                <div className="flex justify-between font-bold text-xl">
-                    <span>Zu bezahlen:</span>
-                    <span>{book.signaturePrice.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</span>
+                 <div className="flex justify-between">
+                    <span>Logistik & Bearbeitung</span>
+                    <span>7,99 €</span>
                 </div>
+                {watchFields.hasSignature && (
+                    <div className="flex justify-between">
+                        <span>Originalsignatur</span>
+                        <span>50,00 €</span>
+                    </div>
+                )}
+                {watchFields.hasDedication && (
+                    <div className="flex justify-between">
+                        <span>Persönliche Widmung</span>
+                        <span>20,00 €</span>
+                    </div>
+                )}
+                {watchFields.hasDedication && watchFields.provideDedication && (
+                     <div className="flex justify-between">
+                        <span>Wunsch-Text für Widmung</span>
+                        <span>5,00 €</span>
+                    </div>
+                )}
             </div>
-        )}
+            <Separator />
+            <div className="flex justify-between font-bold text-xl">
+                <span>Zu bezahlen:</span>
+                <span>{totalPrice.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</span>
+            </div>
+        </div>
 
         <div className="mt-8 flex flex-col items-center">
-            <Button type="submit" size="lg" className="w-full text-lg h-14" disabled={isSubmitting || (isHW2Preorder && timeLeft === 0)}>
+            <Button type="submit" size="lg" className="w-full text-lg h-14" disabled={isSubmitting}>
                 {isSubmitting 
                     ? <><Loader2 className="mr-2 h-6 w-6 animate-spin" />Wird geprüft...</>
                     : <><CheckCircle className="mr-2 h-6 w-6" />Jetzt unwiderruflich kostenpflichtig bestellen!</>
@@ -284,3 +257,5 @@ export function SignatureOrderForm({ book, isHW2Preorder = false }: { book: any,
     </DialogContent>
   );
 }
+
+    
