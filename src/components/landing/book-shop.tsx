@@ -64,7 +64,7 @@ function HW2BookCard({ book }: { book: typeof books.hw2 }) {
                 <div className="flex flex-col flex-grow">
                     <h3 className="font-headline text-xl font-bold">{book.title}</h3>
                     <p className="text-xs text-muted-foreground flex-grow mt-1">{book.subtitle}</p>
-                    <div className="my-2 h-14">
+                    <div className="my-2 h-20">
                         <div className="flex items-baseline gap-2">
                             <span
                                 className={cn(
@@ -75,13 +75,13 @@ function HW2BookCard({ book }: { book: typeof books.hw2 }) {
                                 {book.price}
                             </span>
                             {showDiscount && (
-                                <span className="text-2xl font-bold text-primary animate-in fade-in zoom-in-50 duration-500">
+                                <span className="text-2xl font-bold text-destructive animate-in fade-in zoom-in-50 duration-500">
                                     {book.preorderPrice}
                                 </span>
                             )}
                         </div>
-                        {showDiscount && <p className="text-xs text-primary font-semibold mt-1 animate-in fade-in duration-500">{'31% auf die ersten 50 exemplare}'}</p>}
-                        <span className="text-xs text-muted-foreground ml-2">inkl. MwSt.</span>
+                        {showDiscount && <p className="text-xs text-destructive font-semibold mt-1 animate-in fade-in duration-500">31% auf die ersten 50 exemplare</p>}
+                        <span className="text-xs text-muted-foreground">inkl. MwSt.</span>
                     </div>
                      <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="w-full mt-auto">
                         <Button size="lg" className="w-full" variant="secondary">
@@ -173,8 +173,7 @@ export function BookShop() {
         <Separator className="my-12 md:my-24" />
 
         <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            <h2 className="font-headline text-3xl font-bold tracking-tight mb-8">Bald im Handel</h2>
-             <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-8">
                 <Card className="flex flex-col justify-center items-center p-8 text-center bg-muted/50">
                      <div className="p-3 bg-primary/10 rounded-full mb-4">
                          <Info className="w-8 h-8 text-primary" />
@@ -211,3 +210,5 @@ export function BookShop() {
     </section>
   );
 }
+
+    
