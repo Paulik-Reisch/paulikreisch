@@ -36,7 +36,8 @@ const books = {
     id: 2,
     title: "Hallo Welt 2",
     subtitle: "Wie das Leben funktioniert",
-    price: "12,99 €",
+    price: "25,99 €",
+    preorderPrice: "20,99 €",
     imageSrc: "https://placehold.co/400x600.png",
     aiHint: "book cover funny",
     amazonLink: "https://www.amazon.de/dp/B0D9L4DCMG",
@@ -44,7 +45,7 @@ const books = {
   },
 };
 
-function BookCard({ book }: { book: typeof books.hw1 | typeof books.hw2 }) {
+function BookCard({ book }: { book: (typeof books.hw1 | typeof books.hw2) & {preorderPrice?: string} }) {
     return (
         <Card className="flex flex-col h-full overflow-hidden transition-transform duration-300 hover:-translate-y-2">
             <CardContent className="p-4 md:p-6 flex flex-col h-full">
@@ -55,13 +56,21 @@ function BookCard({ book }: { book: typeof books.hw1 | typeof books.hw2 }) {
                     <h3 className="font-headline text-xl font-bold">{book.title}</h3>
                     <p className="text-xs text-muted-foreground flex-grow mt-1">{book.subtitle}</p>
                     <div className="my-2">
-                        <span className="text-2xl font-bold">{book.price}</span>
+                      {book.preorderPrice ? (
+                        <div className="flex items-baseline gap-2">
+                           <span className="text-2xl font-bold text-primary">{book.preorderPrice}</span>
+                          <span className="text-md font-medium text-muted-foreground line-through">{book.price}</span>
+                        </div>
+                      ) : (
+                         <span className="text-2xl font-bold">{book.price}</span>
+                      )}
                         <span className="text-xs text-muted-foreground ml-2">inkl. MwSt.</span>
+                         {book.preorderPrice && <p className="text-xs text-primary font-semibold mt-1">{'{...% auf die ersten 50 exemplare}'}</p>}
                     </div>
                      <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="w-full mt-auto">
                         <Button size="lg" className="w-full" variant="secondary">
                             <ShoppingCart className="mr-2 h-4 w-4" />
-                            Bei Amazon kaufen
+                            {book.preorderPrice ? "Jetzt vorbestellen" : "Bei Amazon kaufen"}
                         </Button>
                     </a>
                 </div>
