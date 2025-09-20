@@ -37,6 +37,12 @@ const preorderSchema = z.object({
 
 type PreorderFormValues = z.infer<typeof preorderSchema>;
 
+const bookPrices = {
+    hw2_preorder: 17.99,
+    hw2_original: 25.99,
+    signature_package: 35.00,
+};
+
 
 export function HW2PreorderPopup({ book, children }: { book: any, children: React.ReactNode }) {
   const { toast } = useToast();
@@ -69,6 +75,19 @@ export function HW2PreorderPopup({ book, children }: { book: any, children: Reac
   
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
+
+  const { totalPrice, totalDiscount, originalTotalPrice } = useMemo(() => {
+    const signaturePrice = bookPrices.signature_package;
+    const bookPrice = bookPrices.hw2_preorder;
+    const originalBookPrice = bookPrices.hw2_original;
+    const bookDiscount = originalBookPrice - bookPrice;
+    
+    const price = signaturePrice + bookPrice;
+    const originalPrice = signaturePrice + originalBookPrice;
+    const discount = originalPrice - price;
+
+    return { totalPrice: price, totalDiscount: discount, originalTotalPrice: originalPrice };
+  }, []);
 
   const onSubmit = async (data: PreorderFormValues) => {
     await new Promise(resolve => setTimeout(resolve, 2000));
@@ -109,11 +128,7 @@ export function HW2PreorderPopup({ book, children }: { book: any, children: Reac
                  <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
                     <h3 className="text-xl font-headline font-semibold">1. Konfiguration Ihres persönlichen Unikats</h3>
                     <div className="flex items-center space-x-3 p-2 rounded-md bg-background/50">
-                        <Controller
-                            name="hasSignature"
-                            control={control}
-                            render={({ field }) => <Checkbox id="hasSignature" checked={field.value} onCheckedChange={field.onChange} />}
-                        />
+                        <Checkbox id="hasSignature" checked={true} disabled />
                         <Label htmlFor="hasSignature" className="font-semibold text-base cursor-pointer">Originalsignatur der Autoren</Label>
                     </div>
                     <div className="flex items-center space-x-3 p-2 rounded-md bg-background/50">
@@ -209,39 +224,31 @@ export function HW2PreorderPopup({ book, children }: { book: any, children: Reac
                     <div className="space-y-1">
                         <div className="flex justify-between">
                             <span>Originale Signatur und Widmung der Autoren</span>
-                            <span className="line-through text-muted-foreground">90,00€</span>
-                        </div>
-                        <div className="flex justify-between text-destructive">
-                            <span>Zeitlich begrenzter Rabatt</span>
-                            <span>-55,00€</span>
-                        </div>
-                        <div className="flex justify-between font-medium">
-                            <span>Zwischensumme</span>
-                            <span>35,00€</span>
+                             <span>{bookPrices.signature_package.toFixed(2)} €</span>
                         </div>
                     </div>
                     <Separator/>
                     <div className="space-y-1">
                         <div className="flex justify-between">
                             <span>{book.title}</span>
-                            <span className="line-through text-muted-foreground">{book.price}</span>
+                            <span className="line-through text-muted-foreground">{bookPrices.hw2_original.toFixed(2)} €</span>
                         </div>
                         <div className="flex justify-between text-destructive">
                             <span>Mengenbegrenzter Rabatt (31%)</span>
-                            <span>-8,00€</span>
+                            <span>-{(bookPrices.hw2_original - bookPrices.hw2_preorder).toFixed(2)} €</span>
                         </div>
                         <div className="flex justify-between font-medium">
                             <span>Zwischensumme</span>
-                            <span>17,99€</span>
+                            <span>{bookPrices.hw2_preorder.toFixed(2)} €</span>
                         </div>
                     </div>
                     <Separator />
                     <div className="space-y-1">
                          <div className="flex justify-between items-baseline">
                             <span className="text-destructive font-bold">Totale Ersparnis:</span>
-                            <div className="flex items-baseline gap-2">
-                                <span className="text-muted-foreground line-through">115,99€</span>
-                                <span className="font-bold text-destructive">-63,00€</span>
+                            <div className="flex items-baseline gap-2 font-mono">
+                                <span className="text-muted-foreground line-through">{originalTotalPrice.toFixed(2)}€</span>
+                                <span className="font-bold text-destructive">-{totalDiscount.toFixed(2)}€</span>
                             </div>
                         </div>
                     </div>
@@ -249,7 +256,7 @@ export function HW2PreorderPopup({ book, children }: { book: any, children: Reac
                 <Separator />
                 <div className="flex justify-between font-bold text-xl">
                     <span>Zu bezahlen:</span>
-                    <span>{book.signaturePrice.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</span>
+                    <span>{totalPrice.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</span>
                 </div>
             </div>
 
@@ -264,7 +271,7 @@ export function HW2PreorderPopup({ book, children }: { book: any, children: Reac
                 <Separator className="my-4 w-2/3" />
                 
                 <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="w-full">
-                    <Button variant="secondary" className="w-full">
+                    <Button type="button" variant="secondary" className="w-full bg-gradient-to-b from-yellow-400 to-yellow-500 border-yellow-500 text-black hover:from-yellow-400/80 hover:to-yellow-500/90">
                         Ohne persönliche Signatur fortfahren
                     </Button>
                 </a>
