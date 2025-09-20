@@ -18,22 +18,17 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
 
 const signatureSchema = z.object({
-  // HW1 Fields
-  hw1_hasSignature: z.boolean().default(false),
+  hw1_hasSignature: z.boolean().default(true),
   hw1_hasDedication: z.boolean().default(false),
   hw1_provideDedication: z.boolean().default(false),
   hw1_customDedication: z.string().optional(),
   
-  // Combo Deal Field
   acceptComboDeal: z.boolean().default(false),
 
-  // HW2 Fields
-  hw2_hasSignature: z.boolean().default(true),
   hw2_hasDedication: z.boolean().default(false),
   hw2_provideDedication: z.boolean().default(false),
   hw2_customDedication: z.string().optional(),
 
-  // Address Fields
   firstName: z.string().min(1, "Vorname ist ein Pflichtfeld."),
   lastName: z.string().min(1, "Nachname ist ein Pflichtfeld."),
   email: z.string().email("Bitte geben Sie eine gültige E-Mail-Adresse ein."),
@@ -47,13 +42,14 @@ type SignatureFormValues = z.infer<typeof signatureSchema>;
 
 const bookPrices = {
     hw1: 10.99,
-    hw2_original: 25.99,
     hw2_preorder: 17.99,
-    logistics: 7.99,
-    hw1_signature: 50,
-    hw1_dedication: 20,
-    hw1_custom_dedication: 5,
-    hw2_signature_package: 35,
+    hw2_original: 25.99,
+    logistics_single: 7.99,
+    logistics_bundle: 12.99,
+    hw1_signature: 50.00,
+    hw1_dedication: 20.00,
+    hw1_custom_dedication: 5.00,
+    hw2_signature_package: 35.00,
 };
 
 
@@ -78,34 +74,39 @@ export function SignatureOrderForm({ book }: { book: any }) {
   
  const { totalPrice, originalPrice, totalDiscount } = useMemo(() => {
     let price = 0;
-    const book1Price = bookPrices.hw1;
-    const logisticsPrice = bookPrices.logistics;
-
+    let originalTotalPrice = 0;
+    
+    // HW1 Calculation
+    let hw1Price = bookPrices.hw1;
     let hw1SignaturePrice = 0;
     if (watchFields.hw1_hasSignature) hw1SignaturePrice += bookPrices.hw1_signature;
     if (watchFields.hw1_hasDedication) hw1SignaturePrice += bookPrices.hw1_dedication;
     if (watchFields.hw1_hasDedication && watchFields.hw1_provideDedication) hw1SignaturePrice += bookPrices.hw1_custom_dedication;
-
-    price += book1Price + logisticsPrice + hw1SignaturePrice;
     
-    let originalTotalPrice = price;
-    let finalDiscount = 0;
+    let baseHw1Cost = hw1Price + hw1SignaturePrice;
+    originalTotalPrice += baseHw1Cost;
+    price += baseHw1Cost;
 
     if (watchFields.acceptComboDeal) {
-        const hw1Discount = book1Price * 0.8;
+        // Apply 80% discount on HW1 book price
+        const hw1Discount = bookPrices.hw1 * 0.8;
         price -= hw1Discount;
-        finalDiscount += hw1Discount;
-
-        const hw2Price = bookPrices.hw2_preorder;
-        const hw2SignaturePrice = bookPrices.hw2_signature_package;
-        const hw2OriginalBookPrice = bookPrices.hw2_original;
-        const hw2BookDiscount = hw2OriginalBookPrice - hw2Price;
         
-        price += hw2Price + hw2SignaturePrice;
-        finalDiscount += hw2BookDiscount;
+        // Add HW2 preorder package
+        const hw2PreorderPackagePrice = bookPrices.hw2_preorder + bookPrices.hw2_signature_package;
+        price += hw2PreorderPackagePrice;
 
-        originalTotalPrice += hw2OriginalBookPrice + hw2SignaturePrice;
+        // Add logistics for bundle
+        price += bookPrices.logistics_bundle;
+        originalTotalPrice += bookPrices.hw2_original + bookPrices.hw2_signature_package + bookPrices.logistics_bundle;
+
+    } else {
+        // Add logistics for single book
+        price += bookPrices.logistics_single;
+        originalTotalPrice += bookPrices.logistics_single;
     }
+
+    const finalDiscount = originalTotalPrice > price ? originalTotalPrice - price : 0;
 
     return { totalPrice: price, originalPrice: originalTotalPrice, totalDiscount: finalDiscount };
 
@@ -134,9 +135,8 @@ export function SignatureOrderForm({ book }: { book: any }) {
         </DialogHeader>
 
         <div className="my-8 space-y-8">
-            {/* Konfiguration HW1 */}
             <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
-                <h3 className="text-xl font-headline font-semibold">1. Konfiguration für "Hallo Welt 1"</h3>
+                <h3 className="text-xl font-headline font-semibold">1. Konfiguration für "Hallo Welt"</h3>
                  <div className="flex items-center space-x-3 p-2 rounded-md bg-background/50">
                     <Controller
                         name="hw1_hasSignature"
@@ -181,16 +181,18 @@ export function SignatureOrderForm({ book }: { book: any }) {
                                 />
                              </div>
                         )}
+                         {!watchFields.hw1_provideDedication && (
+                                <p className="text-xs text-muted-foreground pl-2 italic">Wenn Sie nichts vorgeben, lassen wir uns etwas furchtbar Passendes für Sie einfallen.</p>
+                            )}
                     </div>
                 )}
             </div>
             
-            {/* Combo Deal Offer */}
             <Alert className={cn("border-2 border-primary text-primary transition-all duration-500", watchFields.acceptComboDeal && "bg-primary/10")}>
                 <Sparkles className="h-4 w-4" />
                 <AlertTitle className="font-headline text-xl">KRISE? Sparen Sie jetzt!</AlertTitle>
                 <AlertDescription className="text-primary/90 text-base">
-                    Aktivieren Sie dieses Angebot und sparen Sie <span className="font-bold">80% auf "Hallo Welt 1"</span>, indem Sie "Hallo Welt 2" (inkl. Signatur & Widmung) für nur {(bookPrices.hw2_signature_package + bookPrices.hw2_preorder).toFixed(2)}€ VORBESTELLEN!
+                    Aktivieren Sie dieses Angebot und sparen Sie <span className="font-bold">80% auf "Hallo Welt"</span>, indem Sie "Hallo Welt 2" (inkl. Signatur) für nur {(bookPrices.hw2_signature_package + bookPrices.hw2_preorder).toFixed(2)}€ VORBESTELLEN!
                 </AlertDescription>
                  <div className="flex items-center space-x-3 p-2 rounded-md mt-4">
                     <Controller
@@ -204,7 +206,6 @@ export function SignatureOrderForm({ book }: { book: any }) {
                 </div>
             </Alert>
             
-            {/* Konfiguration HW2 (Conditional) */}
             {watchFields.acceptComboDeal && (
                  <div className="space-y-4 p-4 border rounded-lg bg-muted/50 animate-in fade-in slide-in-from-top-5 duration-500">
                     <h3 className="text-xl font-headline font-semibold">2. Konfiguration für "Hallo Welt 2" (Vorbestellung)</h3>
@@ -247,12 +248,14 @@ export function SignatureOrderForm({ book }: { book: any }) {
                                     />
                                  </div>
                             )}
+                             {!watchFields.hw2_provideDedication && (
+                                <p className="text-xs text-muted-foreground pl-2 italic">Wenn Sie nichts vorgeben, lassen wir uns etwas furchtbar Passendes für Sie einfallen.</p>
+                            )}
                         </div>
                     )}
                 </div>
             )}
 
-            {/* Address Form */}
             <div className="space-y-4">
               <h3 className="text-xl font-headline font-semibold">{watchFields.acceptComboDeal ? '3.' : '2.'} Lieferadresse des Antragstellers</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -299,47 +302,49 @@ export function SignatureOrderForm({ book }: { book: any }) {
             </div>
         </div>
 
-        {/* Price Summary */}
         <div className="p-4 bg-muted/50 rounded-lg space-y-4 mb-6">
             <h4 className="font-headline text-lg font-semibold">{watchFields.acceptComboDeal ? '4.' : '3.'} Zusammenfassung Ihrer Bestellung</h4>
             <div className="space-y-2 text-sm">
-                {/* HW1 Summary */}
                 <div className="flex justify-between">
                     <span>{book.title}</span>
                     <span>{bookPrices.hw1.toFixed(2)} €</span>
-                </div>
-                <div className="flex justify-between">
-                    <span>Logistik & Bearbeitung</span>
-                    <span>{bookPrices.logistics.toFixed(2)} €</span>
                 </div>
                 {watchFields.hw1_hasSignature && <div className="flex justify-between"><span>Originalsignatur (HW1)</span><span>{bookPrices.hw1_signature.toFixed(2)} €</span></div>}
                 {watchFields.hw1_hasDedication && <div className="flex justify-between"><span>Persönliche Widmung (HW1)</span><span>{bookPrices.hw1_dedication.toFixed(2)} €</span></div>}
                 {watchFields.hw1_hasDedication && watchFields.hw1_provideDedication && <div className="flex justify-between"><span>Wunsch-Text (HW1)</span><span>{bookPrices.hw1_custom_dedication.toFixed(2)} €</span></div>}
                 
-                {watchFields.acceptComboDeal && (
+                {watchFields.acceptComboDeal ? (
                     <>
                         <div className="flex justify-between text-destructive">
                             <span>Rabatt (80% auf HW1)</span>
                             <span>-{(bookPrices.hw1 * 0.8).toFixed(2)} €</span>
                         </div>
                         <Separator className="my-2"/>
-                        <div className="flex justify-between font-semibold">
+                         <div className="flex justify-between font-semibold">
                             <span>"Hallo Welt 2" Vorbesteller-Paket</span>
-                            <span>{(bookPrices.hw2_preorder + bookPrices.hw2_signature_package).toFixed(2)} €</span>
+                             <span>{(bookPrices.hw2_preorder + bookPrices.hw2_signature_package).toFixed(2)} €</span>
                         </div>
                          <div className="flex justify-between pl-4 text-xs">
-                            <span>Originalpreis Buch</span>
-                            <span className="line-through text-muted-foreground">{bookPrices.hw2_original.toFixed(2)} €</span>
+                            <span>(Buch: {bookPrices.hw2_preorder.toFixed(2)}€, Signatur-Paket: {bookPrices.hw2_signature_package.toFixed(2)}€)</span>
                         </div>
-                        <div className="flex justify-between pl-4 text-xs text-destructive">
-                            <span>Mengenbegrenzter Rabatt (31%)</span>
-                            <span>-{(bookPrices.hw2_original - bookPrices.hw2_preorder).toFixed(2)} €</span>
+                         <div className="flex justify-between pl-4 text-xs text-destructive">
+                            <span>(Ersparnis Buch: {(bookPrices.hw2_original - bookPrices.hw2_preorder).toFixed(2)}€)</span>
+                        </div>
+                        <Separator className="my-2"/>
+                        <div className="flex justify-between">
+                            <span>Logistik & Bearbeitung (Bundle)</span>
+                            <span>{bookPrices.logistics_bundle.toFixed(2)} €</span>
                         </div>
                     </>
+                ) : (
+                     <div className="flex justify-between">
+                        <span>Logistik & Bearbeitung</span>
+                        <span>{bookPrices.logistics_single.toFixed(2)} €</span>
+                    </div>
                 )}
             </div>
             <Separator />
-            {watchFields.acceptComboDeal && totalDiscount > 0 && (
+            {totalDiscount > 0 && (
                  <div className="space-y-1 text-sm">
                      <div className="flex justify-between items-baseline">
                         <span className="font-bold text-destructive">Totale Ersparnis:</span>
@@ -356,14 +361,13 @@ export function SignatureOrderForm({ book }: { book: any }) {
             </div>
         </div>
 
-        <div className="mt-8 flex flex-col items-center">
+        <div className="mt-8 flex flex-col items-center gap-4">
              <Button type="submit" size="lg" className="w-full text-lg h-14" disabled={isSubmitting}>
                 {isSubmitting 
                     ? <><Loader2 className="mr-2 h-6 w-6 animate-spin" />Wird geprüft...</>
                     : <><CheckCircle className="mr-2 h-6 w-6" />Jetzt unwiderruflich kostenpflichtig bestellen!</>
                 }
             </Button>
-            <Separator className="my-4 w-2/3" />
             <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="w-full">
                 <Button type="button" variant="secondary" className="w-full bg-gradient-to-b from-yellow-400 to-yellow-500 border-yellow-500 text-black hover:from-yellow-400/80 hover:to-yellow-500/90">
                     Ohne persönliche Signatur fortfahren
