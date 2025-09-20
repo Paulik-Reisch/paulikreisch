@@ -8,7 +8,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Timer, CheckCircle, FileText, ShoppingCart } from "lucide-react";
+import { Loader2, Timer, CheckCircle, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -83,6 +83,7 @@ export function HW2PreorderPopup() {
         </div>
 
         <div className="my-8 space-y-4">
+            <h3 className="text-xl font-headline font-semibold">Ihre Lieferadresse</h3>
              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <Label htmlFor="firstName">Vorname</Label>
@@ -169,7 +170,7 @@ export function HW2PreorderPopup() {
                 <div className="space-y-1">
                     <div className="flex justify-between text-destructive font-bold">
                         <span>Totale Ersparnis:</span>
-                        <span>63,00€</span>
+                        <span>-63,00€</span>
                     </div>
                 </div>
             </div>
@@ -188,7 +189,7 @@ export function HW2PreorderPopup() {
                 }
             </Button>
 
-            <Separator className="my-4 w-1/2" />
+            <Separator className="my-4 w-2/3" />
             
             <DialogClose asChild>
                 <a href="https://www.amazon.de/dp/B0D9L4DCMG" target="_blank" rel="noopener noreferrer" className="w-full">
