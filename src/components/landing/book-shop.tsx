@@ -19,6 +19,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { SignatureOrderForm } from "./signature-order-form";
+import { HW2PreorderPopup } from "./hw2-preorder-popup";
 
 
 const books = {
@@ -80,15 +81,18 @@ function HW2BookCard({ book }: { book: typeof books.hw2 }) {
                                 </span>
                             )}
                         </div>
-                        {showDiscount && <p className="text-xs text-destructive font-semibold mt-1 animate-in fade-in duration-500">31% auf die ersten 50 Exemplare</p>}
+                        {showDiscount && <p className="text-xs text-destructive font-semibold mt-1 animate-in fade-in duration-500">{Math.round((1 - 17.99 / 25.99) * 100)}% auf die ersten 50 Exemplare</p>}
                         <span className="text-xs text-muted-foreground">inkl. MwSt.</span>
                     </div>
-                     <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="w-full mt-auto">
-                        <Button size="lg" className="w-full" variant="secondary">
-                            <ShoppingCart className="mr-2 h-4 w-4" />
-                            {book.preorderPrice ? "Jetzt vorbestellen" : "Bei Amazon kaufen"}
-                        </Button>
-                    </a>
+                     <Dialog>
+                        <DialogTrigger asChild>
+                            <Button size="lg" className="w-full mt-auto">
+                                <ShoppingCart className="mr-2 h-4 w-4" />
+                                {book.preorderPrice ? "Jetzt vorbestellen" : "Bei Amazon kaufen"}
+                            </Button>
+                        </DialogTrigger>
+                        <HW2PreorderPopup />
+                    </Dialog>
                 </div>
             </CardContent>
         </Card>
