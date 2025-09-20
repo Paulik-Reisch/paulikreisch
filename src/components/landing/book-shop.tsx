@@ -37,13 +37,64 @@ const books = {
     title: "Hallo Welt 2",
     subtitle: "Wie das Leben funktioniert",
     price: "25,99 €",
-    preorderPrice: "20,99 €",
+    preorderPrice: "17,99 €",
     imageSrc: "https://placehold.co/400x600.png",
     aiHint: "book cover funny",
     amazonLink: "https://www.amazon.de/dp/B0D9L4DCMG",
     description: "Die Fortsetzung, die niemand wollte, aber jeder braucht. Eine Abrechnung mit Bürokratie, dem deutschen Internet und dem Mietenwahnsinn. Noch chaotischer, noch bissiger."
   },
 };
+
+function HW2BookCard({ book }: { book: typeof books.hw2 }) {
+    const [showDiscount, setShowDiscount] = useState(false);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowDiscount(true);
+        }, 1000); // Delay for the animation to start
+        return () => clearTimeout(timer);
+    }, []);
+
+    return (
+        <Card className="flex flex-col h-full overflow-hidden transition-transform duration-300 hover:-translate-y-2">
+            <CardContent className="p-4 md:p-6 flex flex-col h-full">
+                <div className="relative aspect-[2/3] w-full mb-4 rounded-md overflow-hidden">
+                    <Image alt={`Cover von ${book.title}`} src={book.imageSrc} data-ai-hint={book.aiHint} fill className="object-cover transition-transform duration-300 group-hover:scale-105" />
+                </div>
+                <div className="flex flex-col flex-grow">
+                    <h3 className="font-headline text-xl font-bold">{book.title}</h3>
+                    <p className="text-xs text-muted-foreground flex-grow mt-1">{book.subtitle}</p>
+                    <div className="my-2 h-14">
+                        <div className="flex items-baseline gap-2">
+                            <span
+                                className={cn(
+                                    "text-2xl font-bold transition-all duration-500",
+                                    showDiscount ? "text-muted-foreground line-through text-lg" : "text-foreground"
+                                )}
+                            >
+                                {book.price}
+                            </span>
+                            {showDiscount && (
+                                <span className="text-2xl font-bold text-primary animate-in fade-in zoom-in-50 duration-500">
+                                    {book.preorderPrice}
+                                </span>
+                            )}
+                        </div>
+                        {showDiscount && <p className="text-xs text-primary font-semibold mt-1 animate-in fade-in duration-500">{'31% auf die ersten 50 exemplare}'}</p>}
+                        <span className="text-xs text-muted-foreground ml-2">inkl. MwSt.</span>
+                    </div>
+                     <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="w-full mt-auto">
+                        <Button size="lg" className="w-full" variant="secondary">
+                            <ShoppingCart className="mr-2 h-4 w-4" />
+                            {book.preorderPrice ? "Jetzt vorbestellen" : "Bei Amazon kaufen"}
+                        </Button>
+                    </a>
+                </div>
+            </CardContent>
+        </Card>
+    );
+}
+
 
 function BookCard({ book }: { book: (typeof books.hw1 | typeof books.hw2) & {preorderPrice?: string} }) {
     return (
@@ -55,17 +106,9 @@ function BookCard({ book }: { book: (typeof books.hw1 | typeof books.hw2) & {pre
                 <div className="flex flex-col flex-grow">
                     <h3 className="font-headline text-xl font-bold">{book.title}</h3>
                     <p className="text-xs text-muted-foreground flex-grow mt-1">{book.subtitle}</p>
-                    <div className="my-2">
-                      {book.preorderPrice ? (
-                        <div className="flex items-baseline gap-2">
-                           <span className="text-2xl font-bold text-primary">{book.preorderPrice}</span>
-                          <span className="text-md font-medium text-muted-foreground line-through">{book.price}</span>
-                        </div>
-                      ) : (
+                    <div className="my-2 h-14">
                          <span className="text-2xl font-bold">{book.price}</span>
-                      )}
                         <span className="text-xs text-muted-foreground ml-2">inkl. MwSt.</span>
-                         {book.preorderPrice && <p className="text-xs text-primary font-semibold mt-1">{'19% auf die ersten 50 exemplare}'}</p>}
                     </div>
                      <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="w-full mt-auto">
                         <Button size="lg" className="w-full" variant="secondary">
@@ -100,7 +143,7 @@ export function BookShop() {
             <h2 className="font-headline text-3xl font-bold tracking-tight mb-8">Die aktuellen Meisterwerke</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
                 <BookCard book={books.hw1} />
-                <BookCard book={books.hw2} />
+                <HW2BookCard book={books.hw2} />
 
                 <Dialog>
                     <DialogTrigger asChild>
