@@ -53,10 +53,6 @@ function BookCard({ book }: { book: typeof books.hw1 }) {
                 <div className="flex flex-col flex-grow">
                     <h3 className="font-headline text-xl font-bold">{book.title}</h3>
                     <p className="text-xs text-muted-foreground flex-grow mt-1">{book.subtitle}</p>
-                    <div className="flex items-center gap-1 my-3">
-                        {[...Array(5)].map((_,i) => <Star key={i} className={i < 4 ? "w-4 h-4 fill-primary text-primary" : "w-4 h-4 fill-muted stroke-muted-foreground"}/>)}
-                         <span className="text-xs text-muted-foreground ml-1">(4.2/5 Sterne)</span>
-                    </div>
                     <div className="my-2">
                         <span className="text-2xl font-bold">{book.price}</span>
                         <span className="text-xs text-muted-foreground ml-2">inkl. MwSt.</span>
