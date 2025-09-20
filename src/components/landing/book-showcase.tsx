@@ -27,7 +27,7 @@ export function BookShowcase() {
                 Die satirische Abrechnung mit dem Schulsystem, Lehrern als Beamtenrobotern und dem täglichen Wahnsinn des Erwachsenwerdens.
             </p>
             <Link href="/buchhandlung-paulik-reisch" className="mt-6">
-                <Button>Band 1 kaufen</Button>
+                <Button variant="secondary">Band 1 kaufen</Button>
             </Link>
           </div>
           
@@ -49,7 +49,7 @@ export function BookShowcase() {
                 Die Fortsetzung, die niemand wollte, aber jeder braucht. Eine Abrechnung mit Bürokratie, dem deutschen Internet und dem Mietenwahnsinn.
             </p>
              <Link href="/buchhandlung-paulik-reisch" className="mt-6">
-                <Button>Band 2 kaufen</Button>
+                <Button variant="secondary">Band 2 kaufen</Button>
             </Link>
           </div>
 

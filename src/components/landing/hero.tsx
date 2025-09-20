@@ -18,7 +18,7 @@ export function Hero() {
             </div>
             <div className="flex flex-col gap-2 min-[400px]:flex-row animate-in fade-in slide-in-from-top-20 duration-1000">
               <Link href="/buchhandlung-paulik-reisch">
-                <Button size="lg">Jetzt kaufen (Sie wissen, Sie wollen es)</Button>
+                <Button size="lg" variant="secondary">Jetzt kaufen (Sie wissen, Sie wollen es)</Button>
               </Link>
             </div>
           </div>

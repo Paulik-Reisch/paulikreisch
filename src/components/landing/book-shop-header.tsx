@@ -9,7 +9,7 @@ export function BookShopHeader() {
           <span className="font-headline font-semibold text-lg">Hallo Welt | Buchhandlung Paulik & Reisch</span>
         </a>
         <Link href="/buchhandlung-paulik-reisch">
-          <Button size="sm">Buch kaufen</Button>
+          <Button size="sm" variant="secondary">Buch kaufen</Button>
         </Link>
       </div>
     </header>

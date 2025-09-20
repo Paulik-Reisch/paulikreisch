@@ -9,7 +9,7 @@ export function Header() {
           <span className="font-headline font-semibold text-lg">Hallo Welt</span>
         </a>
         <Link href="/buchhandlung-paulik-reisch">
-          <Button size="sm">Buch kaufen</Button>
+          <Button size="sm" variant="secondary">Buch kaufen</Button>
         </Link>
       </div>
     </header>

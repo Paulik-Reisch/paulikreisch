@@ -96,7 +96,7 @@ export function BookShop() {
                 description: toastDescription,
                 action: showBuyButton ? (
                     <a href={books.hw2.amazonLink} target="_blank" rel="noopener noreferrer">
-                        <Button>Jetzt kaufen</Button>
+                        <Button variant="secondary">Jetzt kaufen</Button>
                     </a>
                 ) : undefined,
             });
@@ -143,7 +143,7 @@ export function BookShop() {
                         <span className="text-sm text-muted-foreground">inkl. MwSt. &amp; Wahnsinn</span>
                     </div>
                     <a href={books.hw1.amazonLink} target="_blank" rel="noopener noreferrer" className="w-full">
-                        <Button size="lg" className="w-full">
+                        <Button size="lg" className="w-full" variant="secondary">
                             <ShoppingCart className="mr-2" />
                             Jetzt bei Amazon kaufen
                         </Button>
