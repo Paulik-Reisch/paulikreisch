@@ -35,7 +35,7 @@ const books = {
   hw2: {
     id: 2,
     title: "Hallo Welt 2",
-    subtitle: "Wie's Leben funktioniert",
+    subtitle: "Wie das Leben funktioniert",
     imageSrc: "https://placehold.co/400x600.png",
     aiHint: "book cover funny",
     amazonLink: "https://www.amazon.de/dp/B0D9L4DCMG",
