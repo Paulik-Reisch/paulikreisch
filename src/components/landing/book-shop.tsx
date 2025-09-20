@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -144,7 +145,6 @@ export function BookShop() {
       <div className="container px-4 md:px-6">
         
         <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            <h2 className="font-headline text-3xl font-bold tracking-tight mb-8">Die aktuellen Meisterwerke</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
                 <BookCard book={books.hw1} />
                 <HW2BookCard book={books.hw2} />

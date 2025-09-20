@@ -1,20 +1,46 @@
 
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, AlertTriangle, Timer, Gift, FileText, CheckCircle } from "lucide-react";
+import { Loader2, Timer, CheckCircle, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
 const COUNTDOWN_SECONDS = 10 * 60; // 10 minutes
 
+const preorderSchema = z.object({
+  firstName: z.string().min(1, "Vorname ist ein Pflichtfeld."),
+  lastName: z.string().min(1, "Nachname ist ein Pflichtfeld."),
+  email: z.string().email("Bitte geben Sie eine gültige E-Mail-Adresse ein."),
+  street: z.string().min(1, "Straße ist ein Pflichtfeld."),
+  houseNumber: z.string().min(1, "Hausnummer ist ein Pflichtfeld."),
+  zip: z.string().min(4, "Bitte geben Sie eine gültige PLZ ein."),
+  city: z.string().min(1, "Ort ist ein Pflichtfeld."),
+});
+
+type PreorderFormValues = z.infer<typeof preorderSchema>;
+
+
 export function HW2PreorderPopup() {
   const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [timeLeft, setTimeLeft] = useState(COUNTDOWN_SECONDS);
   const [priceStep, setPriceStep] = useState(0);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<PreorderFormValues>({
+    resolver: zodResolver(preorderSchema),
+  });
+
 
   useEffect(() => {
     if (timeLeft > 0) {
@@ -34,15 +60,13 @@ export function HW2PreorderPopup() {
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
 
-  const handleSubmit = () => {
-    setIsSubmitting(true);
-    setTimeout(() => {
-        toast({
-            title: "Herzlichen Glückwunsch (oder Beileid?)",
-            description: "Ihre unverbindliche, aber moralisch verpflichtende Vorbestellung wurde registriert.",
-        });
-        setIsSubmitting(false);
-    }, 2000);
+  const onSubmit = async (data: PreorderFormValues) => {
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    console.log("Vorbestelldaten:", data);
+    toast({
+        title: "Herzlichen Glückwunsch (oder Beileid?)",
+        description: "Ihre unverbindliche, aber moralisch verpflichtende Vorbestellung wurde registriert.",
+    });
   };
 
   const PriceSlasher = ({ value, delay }: { value: number; delay: number }) => (
@@ -53,6 +77,7 @@ export function HW2PreorderPopup() {
 
   return (
     <DialogContent className="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <form onSubmit={handleSubmit(onSubmit)}>
         <DialogHeader>
             <DialogTitle className="font-headline text-3xl text-center">Ihre EXKLUSIVE Vorbesteller-Chance!</DialogTitle>
             <DialogDescription className="text-center text-base">
@@ -84,9 +109,53 @@ export function HW2PreorderPopup() {
                 }
             </div>
         </div>
+        
+        <div className="my-8 space-y-4">
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <Label htmlFor="firstName">Vorname</Label>
+                    <Input id="firstName" {...register("firstName")} />
+                    {errors.firstName && <p className="text-sm text-destructive mt-1">{errors.firstName.message}</p>}
+                </div>
+                <div>
+                    <Label htmlFor="lastName">Nachname</Label>
+                    <Input id="lastName" {...register("lastName")} />
+                    {errors.lastName && <p className="text-sm text-destructive mt-1">{errors.lastName.message}</p>}
+                </div>
+            </div>
+            <div>
+                <Label htmlFor="email">E-Mail Adresse</Label>
+                <Input id="email" type="email" {...register("email")} />
+                {errors.email && <p className="text-sm text-destructive mt-1">{errors.email.message}</p>}
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4">
+                <div>
+                    <Label htmlFor="street">Straße</Label>
+                    <Input id="street" {...register("street")} />
+                    {errors.street && <p className="text-sm text-destructive mt-1">{errors.street.message}</p>}
+                </div>
+                <div>
+                    <Label htmlFor="houseNumber">Hausnr.</Label>
+                    <Input id="houseNumber" {...register("houseNumber")} className="w-24"/>
+                    {errors.houseNumber && <p className="text-sm text-destructive mt-1">{errors.houseNumber.message}</p>}
+                </div>
+            </div>
+             <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4">
+                <div>
+                    <Label htmlFor="zip">PLZ</Label>
+                    <Input id="zip" {...register("zip")} className="w-28"/>
+                    {errors.zip && <p className="text-sm text-destructive mt-1">{errors.zip.message}</p>}
+                </div>
+                <div>
+                    <Label htmlFor="city">Ort</Label>
+                    <Input id="city" {...register("city")} />
+                    {errors.city && <p className="text-sm text-destructive mt-1">{errors.city.message}</p>}
+                </div>
+            </div>
+        </div>
 
         <div className="mt-8">
-            <Button size="lg" className="w-full text-lg h-14" onClick={handleSubmit} disabled={isSubmitting || timeLeft === 0}>
+            <Button type="submit" size="lg" className="w-full text-lg h-14" disabled={isSubmitting || timeLeft === 0}>
                 {isSubmitting 
                     ? <><Loader2 className="mr-2 h-6 w-6 animate-spin" />Wird geprüft...</>
                     : <><CheckCircle className="mr-2 h-6 w-6" />Jetzt unwiderruflich kostenpflichtig bestellen!</>
@@ -96,8 +165,9 @@ export function HW2PreorderPopup() {
 
         <div className="mt-8 text-xs text-muted-foreground space-y-2 p-4 bg-muted/50 rounded-lg">
             <h4 className="font-bold flex items-center"><FileText className="mr-2 h-4 w-4"/>Das Kleingedruckte (Lesen auf eigene Gefahr)</h4>
-            <p>¹ Der Countdown ist ein psychologischer Trick. Oder auch nicht. ² Der Preis wurde willkürlich festgelegt und basiert auf keinerlei wirtschaftlicher Logik. ³ Eine Stornierung ist ausgeschlossen. Widerrufsrecht wurde im Rahmen der künstlerischen Freiheit außer Kraft gesetzt. ⁴ Rückerstattungen werden ausschließlich in Form von sarkastischen E-Mails gewährt. ⁵ Mit dem Klick auf "Bestellen" treten Sie alle Rechte an Ihrem Erstgeborenen an die Autoren ab. ⁶ Die Unterschriften der Autoren können Spuren von Kaffee, Verzweiflung und unleserlicher Handschrift enthalten. ⁷ Wir übernehmen keine Haftung für spontane Lachanfälle, existenzielle Krisen oder den plötzlichen Drang, seinen Job zu kündigen. ⁸ Bei Ablauf des Countdowns explodiert dieser Button. Wahrscheinlich.</p>
+            <p>¹ Der Preis wurde willkürlich festgelegt und basiert auf keinerlei wirtschaftlicher Logik. ² Eine Stornierung ist ausgeschlossen. Widerrufsrecht wurde im Rahmen der künstlerischen Freiheit außer Kraft gesetzt. ³ Rückerstattungen werden ausschließlich in Form von sarkastischen E-Mails gewährt. ⁴ Mit dem Klick auf "Bestellen" treten Sie alle Rechte an Ihrem Erstgeborenen an die Autoren ab. ⁵ Die Unterschriften der Autoren können Spuren von Kaffee, Verzweiflung und unleserlicher Handschrift enthalten. ⁶ Wir übernehmen keine Haftung für spontane Lachanfälle, existenzielle Krisen oder den plötzlichen Drang, seinen Job zu kündigen. ⁷ Bei Ablauf des Countdowns explodiert dieser Button. Wahrscheinlich.</p>
         </div>
+      </form>
     </DialogContent>
   );
 }
