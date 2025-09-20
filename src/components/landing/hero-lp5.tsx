@@ -15,28 +15,36 @@ export function HeroLP5() {
   });
 
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+
 
   return (
     <section
       ref={containerRef}
-      className="relative h-[80vh] w-full overflow-hidden"
+      className="relative h-[120vh] w-full overflow-hidden"
     >
       <motion.div
         className="absolute inset-0 z-0"
         style={{ y }}
       >
-        <Image
-          src="/images/book-cover-hw1.jpg"
-          alt="Buchcover Hallo Welt"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-black/30" />
+         <motion.div 
+            className="relative w-full h-full"
+            style={{ scale }}
+        >
+            <Image
+                src="/images/book-cover-hw1.jpg"
+                alt="Buchcover Hallo Welt"
+                fill
+                className="object-contain"
+                priority
+                style={{ transform: 'rotate3d(0, 1, 0, 15deg) scale(0.9)' }}
+            />
+        </motion.div>
+        <div className="absolute inset-0 bg-black/10" />
       </motion.div>
       
-      <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-white p-4">
-        <div className="space-y-6">
+      <div className="relative z-10 flex h-[80vh] flex-col items-center justify-center text-center text-white p-4">
+        <div className="space-y-6 bg-black/50 backdrop-blur-sm p-8 rounded-lg">
             <motion.div 
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
