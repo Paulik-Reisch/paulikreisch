@@ -64,7 +64,7 @@ export function TopicLPs() {
 
   return (
     <section id="topic-lps" className="w-full py-12 md:py-24 lg:py-32 bg-muted/40">
-      <div className="container px-4 md:px-6">
+      <div className="container px-4 md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
           <div className="space-y-2">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Was dich interessieren könnte:</h2>
