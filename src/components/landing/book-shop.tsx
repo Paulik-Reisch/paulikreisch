@@ -36,6 +36,7 @@ const books = {
     id: 2,
     title: "Hallo Welt 2",
     subtitle: "Wie das Leben funktioniert",
+    price: "12,99 €",
     imageSrc: "https://placehold.co/400x600.png",
     aiHint: "book cover funny",
     amazonLink: "https://www.amazon.de/dp/B0D9L4DCMG",
@@ -43,7 +44,7 @@ const books = {
   },
 };
 
-function BookCard({ book }: { book: typeof books.hw1 }) {
+function BookCard({ book }: { book: typeof books.hw1 | typeof books.hw2 }) {
     return (
         <Card className="flex flex-col h-full overflow-hidden transition-transform duration-300 hover:-translate-y-2">
             <CardContent className="p-4 md:p-6 flex flex-col h-full">
@@ -144,8 +145,9 @@ export function BookShop() {
         
         <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <h2 className="font-headline text-3xl font-bold tracking-tight mb-8">Die aktuellen Meisterwerke</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
                 <BookCard book={books.hw1} />
+                <BookCard book={books.hw2} />
 
                 <Dialog>
                     <DialogTrigger asChild>
