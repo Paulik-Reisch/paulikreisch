@@ -1,40 +1,51 @@
 
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, CheckCircle, FileText } from "lucide-react";
+import { Loader2, CheckCircle, FileText, ArrowDown, Sparkles } from "lucide-react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import { Checkbox } from "../ui/checkbox";
 import { Textarea } from "../ui/textarea";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { cn } from "@/lib/utils";
 
 const signatureSchema = z.object({
+  // HW1 Fields
+  hw1_hasSignature: z.boolean().default(false),
+  hw1_hasDedication: z.boolean().default(false),
+  hw1_provideDedication: z.boolean().default(false),
+  hw1_customDedication: z.string().optional(),
+  
+  // Combo Deal Field
+  acceptComboDeal: z.boolean().default(false),
+
+  // HW2 Fields
+  hw2_hasSignature: z.boolean().default(true),
+  hw2_hasDedication: z.boolean().default(false),
+  hw2_provideDedication: z.boolean().default(false),
+  hw2_customDedication: z.string().optional(),
+
+  // Address Fields
   firstName: z.string().min(1, "Vorname ist ein Pflichtfeld."),
   lastName: z.string().min(1, "Nachname ist ein Pflichtfeld."),
   email: z.string().email("Bitte geben Sie eine gültige E-Mail-Adresse ein."),
-  phone: z.string().optional(),
   street: z.string().min(1, "Straße ist ein Pflichtfeld."),
   houseNumber: z.string().min(1, "Hausnummer ist ein Pflichtfeld."),
   zip: z.string().min(4, "Bitte geben Sie eine gültige PLZ ein."),
   city: z.string().min(1, "Ort ist ein Pflichtfeld."),
-  country: z.string().default("Deutschland"),
-  
-  hasSignature: z.boolean().default(false),
-  hasDedication: z.boolean().default(false),
-  provideDedication: z.boolean().default(false),
-  customDedication: z.string().optional(),
 });
 
 type SignatureFormValues = z.infer<typeof signatureSchema>;
 
-export function SignatureOrderForm({ book, isHW2Preorder = false }: { book: any, isHW2Preorder?: boolean }) {
+export function SignatureOrderForm({ book }: { book: any }) {
   const { toast } = useToast();
   
   const {
@@ -46,20 +57,35 @@ export function SignatureOrderForm({ book, isHW2Preorder = false }: { book: any,
   } = useForm<SignatureFormValues>({
     resolver: zodResolver(signatureSchema),
     defaultValues: {
-      country: "Deutschland",
-      hasSignature: false,
-      hasDedication: false,
-      provideDedication: false,
+        hw1_hasSignature: true,
+        acceptComboDeal: false,
     },
   });
 
   const watchFields = watch();
   
   const totalPrice = useMemo(() => {
-    let price = 10.99 + 7.99; // Buch + Logistik
-    if (watchFields.hasSignature) price += 50;
-    if (watchFields.hasDedication) price += 20;
-    if (watchFields.hasDedication && watchFields.provideDedication) price += 5;
+    let price = 0;
+    const book1Price = 10.99;
+    const logisticsPrice = 7.99;
+
+    // HW1 Calculation
+    let hw1Total = book1Price + logisticsPrice;
+    if (watchFields.hw1_hasSignature) hw1Total += 50;
+    if (watchFields.hw1_hasDedication) hw1Total += 20;
+    if (watchFields.hw1_hasDedication && watchFields.hw1_provideDedication) hw1Total += 5;
+    
+    price += hw1Total;
+
+    if (watchFields.acceptComboDeal) {
+        // Apply 80% discount on HW1 book price
+        price -= book1Price * 0.8;
+
+        // Add HW2 price
+        price += 17.99; // Preorder price for HW2 book
+        price += 35.00; // Price for signature and dedication for HW2
+    }
+
     return price;
   }, [watchFields]);
 
@@ -86,61 +112,127 @@ export function SignatureOrderForm({ book, isHW2Preorder = false }: { book: any,
         </DialogHeader>
 
         <div className="my-8 space-y-8">
+            {/* Konfiguration HW1 */}
             <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
-                <h3 className="text-xl font-headline font-semibold">1. Konfiguration Ihres persönlichen Unikats</h3>
+                <h3 className="text-xl font-headline font-semibold">1. Konfiguration für "Hallo Welt 1"</h3>
                  <div className="flex items-center space-x-3 p-2 rounded-md bg-background/50">
                     <Controller
-                        name="hasSignature"
+                        name="hw1_hasSignature"
                         control={control}
-                        render={({ field }) => <Checkbox id="hasSignature" checked={field.value} onCheckedChange={field.onChange} />}
+                        render={({ field }) => <Checkbox id="hw1_hasSignature" checked={field.value} onCheckedChange={field.onChange} />}
                     />
-                    <Label htmlFor="hasSignature" className="font-semibold text-base cursor-pointer flex justify-between w-full">
+                    <Label htmlFor="hw1_hasSignature" className="font-semibold text-base cursor-pointer flex justify-between w-full">
                         <span>Originalsignatur der Autoren</span>
                         <span className="text-muted-foreground font-mono">+50,00 €</span>
                     </Label>
                 </div>
                  <div className="flex items-center space-x-3 p-2 rounded-md bg-background/50">
                     <Controller
-                        name="hasDedication"
+                        name="hw1_hasDedication"
                         control={control}
-                        render={({ field }) => <Checkbox id="hasDedication" checked={field.value} onCheckedChange={field.onChange} />}
+                        render={({ field }) => <Checkbox id="hw1_hasDedication" checked={field.value} onCheckedChange={field.onChange} />}
                     />
-                    <Label htmlFor="hasDedication" className="font-semibold text-base cursor-pointer flex justify-between w-full">
+                    <Label htmlFor="hw1_hasDedication" className="font-semibold text-base cursor-pointer flex justify-between w-full">
                        <span>Persönliche Widmung</span>
                        <span className="text-muted-foreground font-mono">+20,00 €</span>
                     </Label>
                 </div>
-                 {watchFields.hasDedication && (
+                 {watchFields.hw1_hasDedication && (
                     <div className="pl-8 space-y-4 pt-2">
                         <div className="flex items-center space-x-3 p-2 rounded-md">
                             <Controller
-                                name="provideDedication"
+                                name="hw1_provideDedication"
                                 control={control}
-                                render={({ field }) => <Checkbox id="provideDedication" checked={field.value} onCheckedChange={field.onChange} />}
+                                render={({ field }) => <Checkbox id="hw1_provideDedication" checked={field.value} onCheckedChange={field.onChange} />}
                             />
-                            <Label htmlFor="provideDedication" className="cursor-pointer flex justify-between w-full">
+                            <Label htmlFor="hw1_provideDedication" className="cursor-pointer flex justify-between w-full">
                                 <span>Ich möchte meine eigene Widmung vorgeben</span>
                                 <span className="text-muted-foreground font-mono">+5,00 €</span>
                             </Label>
                         </div>
-                        {watchFields.provideDedication && (
+                        {watchFields.hw1_provideDedication && (
                              <div className="pl-2">
                                 <Textarea 
-                                    {...register("customDedication")} 
+                                    {...register("hw1_customDedication")} 
                                     placeholder="Ihr Wunschtext für die Nachwelt (max. 150 Zeichen)..."
                                     maxLength={150}
                                 />
                              </div>
                         )}
-                        {!watchFields.provideDedication && (
-                             <p className="text-xs text-muted-foreground pl-2 italic">Wenn Sie nichts vorgeben, lassen wir uns etwas furchtbar Passendes für Sie einfallen.</p>
-                        )}
                     </div>
                 )}
             </div>
+            
+            {/* Combo Deal Offer */}
+            <Alert className={cn("border-2 border-primary text-primary transition-all duration-500", watchFields.acceptComboDeal && "bg-primary/10")}>
+                <Sparkles className="h-4 w-4" />
+                <AlertTitle className="font-headline text-xl">KRISE? Sparen Sie jetzt!</AlertTitle>
+                <AlertDescription className="text-primary/90 text-base">
+                    Aktivieren Sie dieses Angebot und sparen Sie <span className="font-bold">80% auf "Hallo Welt 1"</span>, indem Sie "Hallo Welt 2" (inkl. Signatur & Widmung) für nur 52,99€ VORBESTELLEN!
+                </AlertDescription>
+                 <div className="flex items-center space-x-3 p-2 rounded-md mt-4">
+                    <Controller
+                        name="acceptComboDeal"
+                        control={control}
+                        render={({ field }) => <Checkbox id="acceptComboDeal" checked={field.value} onCheckedChange={field.onChange} className="border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"/>}
+                    />
+                    <Label htmlFor="acceptComboDeal" className="font-semibold text-lg cursor-pointer">
+                        Ja, ich will den Wahnsinn verdoppeln!
+                    </Label>
+                </div>
+            </Alert>
+            
+            {/* Konfiguration HW2 (Conditional) */}
+            {watchFields.acceptComboDeal && (
+                 <div className="space-y-4 p-4 border rounded-lg bg-muted/50 animate-in fade-in slide-in-from-top-5 duration-500">
+                    <h3 className="text-xl font-headline font-semibold">2. Konfiguration für "Hallo Welt 2" (Vorbestellung)</h3>
+                     <div className="flex items-center space-x-3 p-2 rounded-md bg-background/50">
+                        <Checkbox id="hw2_hasSignature" checked={true} disabled />
+                        <Label htmlFor="hw2_hasSignature" className="font-semibold text-base flex justify-between w-full">
+                            <span>Originalsignatur der Autoren</span>
+                            <span className="text-muted-foreground font-mono">Inklusive</span>
+                        </Label>
+                    </div>
+                     <div className="flex items-center space-x-3 p-2 rounded-md bg-background/50">
+                        <Controller
+                            name="hw2_hasDedication"
+                            control={control}
+                            render={({ field }) => <Checkbox id="hw2_hasDedication" checked={field.value} onCheckedChange={field.onChange} />}
+                        />
+                        <Label htmlFor="hw2_hasDedication" className="font-semibold text-base cursor-pointer flex justify-between w-full">
+                           <span>Persönliche Widmung</span>
+                           <span className="text-muted-foreground font-mono">Inklusive</span>
+                        </Label>
+                    </div>
+                     {watchFields.hw2_hasDedication && (
+                        <div className="pl-8 space-y-4 pt-2">
+                            <div className="flex items-center space-x-3 p-2 rounded-md">
+                                <Controller
+                                    name="hw2_provideDedication"
+                                    control={control}
+                                    render={({ field }) => <Checkbox id="hw2_provideDedication" checked={field.value} onCheckedChange={field.onChange} />}
+                                />
+                                <Label htmlFor="hw2_provideDedication" className="cursor-pointer flex justify-between w-full">
+                                    <span>Ich möchte meine eigene Widmung vorgeben</span>
+                                </Label>
+                            </div>
+                            {watchFields.hw2_provideDedication && (
+                                 <div className="pl-2">
+                                    <Textarea 
+                                        {...register("hw2_customDedication")} 
+                                        placeholder="Ihr Wunschtext für die Nachwelt (max. 150 Zeichen)..."
+                                        maxLength={150}
+                                    />
+                                 </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            )}
 
+            {/* Address Form */}
             <div className="space-y-4">
-              <h3 className="text-xl font-headline font-semibold">2. Lieferadresse des Antragstellers</h3>
+              <h3 className="text-xl font-headline font-semibold">{watchFields.acceptComboDeal ? '3.' : '2.'} Lieferadresse des Antragstellers</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                       <Label htmlFor="firstName">Vorname</Label>
@@ -153,17 +245,11 @@ export function SignatureOrderForm({ book, isHW2Preorder = false }: { book: any,
                       {errors.lastName && <p className="text-sm text-destructive mt-1">{errors.lastName.message}</p>}
                   </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <Label htmlFor="email">E-Mail Adresse</Label>
                     <Input id="email" type="email" {...register("email")} />
                     {errors.email && <p className="text-sm text-destructive mt-1">{errors.email.message}</p>}
                 </div>
-                 <div>
-                    <Label htmlFor="phone">Telefon (optional)</Label>
-                    <Input id="phone" type="tel" {...register("phone")} />
-                </div>
-              </div>
               <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4">
                   <div>
                       <Label htmlFor="street">Straße</Label>
@@ -191,40 +277,42 @@ export function SignatureOrderForm({ book, isHW2Preorder = false }: { book: any,
             </div>
         </div>
 
+        {/* Price Summary */}
         <div className="p-4 bg-muted/50 rounded-lg space-y-4 mb-6">
-            <h4 className="font-headline text-lg font-semibold">3. Zusammenfassung Ihrer Bestellung</h4>
+            <h4 className="font-headline text-lg font-semibold">{watchFields.acceptComboDeal ? '4.' : '3.'} Zusammenfassung Ihrer Bestellung</h4>
             <div className="space-y-2 text-sm">
+                {/* HW1 Summary */}
                 <div className="flex justify-between">
-                    <span>Buch: {book.title}</span>
+                    <span>{book.title}</span>
                     <span>10,99 €</span>
                 </div>
-                 <div className="flex justify-between">
+                <div className="flex justify-between">
                     <span>Logistik & Bearbeitung</span>
                     <span>7,99 €</span>
                 </div>
-                {watchFields.hasSignature && (
-                    <div className="flex justify-between">
-                        <span>Originalsignatur</span>
-                        <span>50,00 €</span>
-                    </div>
-                )}
-                {watchFields.hasDedication && (
-                    <div className="flex justify-between">
-                        <span>Persönliche Widmung</span>
-                        <span>20,00 €</span>
-                    </div>
-                )}
-                {watchFields.hasDedication && watchFields.provideDedication && (
-                     <div className="flex justify-between">
-                        <span>Wunsch-Text für Widmung</span>
-                        <span>5,00 €</span>
-                    </div>
+                {watchFields.hw1_hasSignature && <div className="flex justify-between"><span>Originalsignatur (HW1)</span><span>50,00 €</span></div>}
+                {watchFields.hw1_hasDedication && <div className="flex justify-between"><span>Persönliche Widmung (HW1)</span><span>20,00 €</span></div>}
+                {watchFields.hw1_hasDedication && watchFields.hw1_provideDedication && <div className="flex justify-between"><span>Wunsch-Text (HW1)</span><span>5,00 €</span></div>}
+                {watchFields.acceptComboDeal && <div className="flex justify-between text-destructive"><span>Rabatt (80% auf HW1)</span><span>-8,79 €</span></div>}
+
+                {/* HW2 Summary (Conditional) */}
+                {watchFields.acceptComboDeal && (
+                    <>
+                        <Separator className="my-2"/>
+                        <div className="flex justify-between font-semibold">
+                            <span>"Hallo Welt 2" Vorbesteller-Paket</span>
+                            <span>52,99 €</span>
+                        </div>
+                        <div className="flex justify-between pl-4 text-xs">
+                            <span>(Buch: 17,99€ + Signatur/Widmung: 35,00€)</span>
+                        </div>
+                    </>
                 )}
             </div>
             <Separator />
             <div className="flex justify-between font-bold text-xl">
                 <span>Zu bezahlen:</span>
-                <span>{totalPrice.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</span>
+                <span className={cn(watchFields.acceptComboDeal ? 'animate-pulse' : '')}>{totalPrice.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</span>
             </div>
         </div>
 
@@ -235,10 +323,8 @@ export function SignatureOrderForm({ book, isHW2Preorder = false }: { book: any,
                     : <><CheckCircle className="mr-2 h-6 w-6" />Jetzt unwiderruflich kostenpflichtig bestellen!</>
                 }
             </Button>
-
             <Separator className="my-4 w-2/3" />
-            
-            <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="w-full">
+             <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="w-full">
                 <Button type="button" variant="secondary" className="w-full bg-gradient-to-b from-yellow-400 to-yellow-500 border-yellow-500 text-black hover:from-yellow-400/80 hover:to-yellow-500/90">
                     Ohne persönliche Signatur fortfahren
                 </Button>
@@ -247,11 +333,10 @@ export function SignatureOrderForm({ book, isHW2Preorder = false }: { book: any,
 
         <div className="mt-8 text-xs text-muted-foreground space-y-2 p-4 bg-muted/50 rounded-lg">
             <h4 className="font-bold flex items-center"><FileText className="mr-2 h-4 w-4"/>Rechtliche Hinweise zur Sonderbestellung</h4>
-            <p>1. Bei diesem Angebot handelt es sich um eine zeitlich begrenzte Vorbestellaktion für eine signierte Sonderausgabe. Mit dem Klick auf "Jetzt unwiderruflich kostenpflichtig bestellen" geben Sie ein verbindliches Angebot zum Kauf des Produkts ab.</p>
+            <p>1. Mit dem Klick auf "Jetzt unwiderruflich kostenpflichtig bestellen" geben Sie ein verbindliches Angebot zum Kauf der ausgewählten Produkte ab.</p>
             <p>2. Gemäß § 312g Abs. 2 Nr. 1 BGB besteht für Waren, die nicht vorgefertigt sind und für deren Herstellung eine individuelle Auswahl oder Bestimmung durch den Verbraucher maßgeblich ist (wie bei personalisierten Widmungen oder Signaturen), kein gesetzliches Widerrufsrecht.</p>
-            <p>3. Eine Stornierung oder Rückerstattung nach Abschluss der Bestellung ist daher ausgeschlossen. Alle Verkäufe im Rahmen dieser Aktion sind endgültig.</p>
+            <p>3. Eine Stornierung oder Rückerstattung nach Abschluss der Bestellung ist daher ausgeschlossen. Alle Verkäufe sind endgültig.</p>
             <p>4. Die angegebenen Preise sind Endpreise zzgl. Versandkosten. Die Zahlung wird zum Zeitpunkt der Bestellung fällig. Ihre Daten werden ausschließlich zur Abwicklung dieser Bestellung verwendet.</p>
-            <p>5. Die Unterschriften der Autoren sind ein künstlerischer Akt und können in Form und Lesbarkeit variieren. Dies stellt keinen Mangel dar.</p>
         </div>
       </form>
     </DialogContent>
