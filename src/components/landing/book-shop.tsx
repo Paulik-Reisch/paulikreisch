@@ -80,7 +80,7 @@ function HW2BookCard({ book }: { book: typeof books.hw2 }) {
                                 </span>
                             )}
                         </div>
-                        {showDiscount && <p className="text-xs text-destructive font-semibold mt-1 animate-in fade-in duration-500">31% auf die ersten 50 exemplare</p>}
+                        {showDiscount && <p className="text-xs text-destructive font-semibold mt-1 animate-in fade-in duration-500">31% auf die ersten 50 Exemplare</p>}
                         <span className="text-xs text-muted-foreground">inkl. MwSt.</span>
                     </div>
                      <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="w-full mt-auto">
