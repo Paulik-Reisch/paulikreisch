@@ -1,8 +1,8 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useState, useEffect, useMemo } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -13,8 +13,18 @@ import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
+import { Checkbox } from "../ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Textarea } from "../ui/textarea";
 
-const COUNTDOWN_SECONDS = (11 * 60) + 32; // 11 minutes 32 seconds
+const COUNTDOWN_SECONDS = (11 * 60) + 32;
+
+const PRICES = {
+  book: 17.99, // HW2 price
+  signature: 35.0,
+  dedication: 15.0, // Let's make this a bit more reasonable
+  customDedication: 10.0,
+};
 
 const preorderSchema = z.object({
   firstName: z.string().min(1, "Vorname ist ein Pflichtfeld."),
@@ -25,6 +35,15 @@ const preorderSchema = z.object({
   houseNumber: z.string().min(1, "Hausnummer ist ein Pflichtfeld."),
   zip: z.string().min(4, "Bitte geben Sie eine gültige PLZ ein."),
   city: z.string().min(1, "Ort ist ein Pflichtfeld."),
+  country: z.string().default("Deutschland"),
+  
+  quantity: z.number().min(1, "Mindestens 1 Exemplar.").max(10, "Maximal 10 Exemplare.").default(1),
+  hasSignature: z.boolean().default(false),
+  signaturePlacement: z.enum(["front", "back", "inside"]).optional(),
+  signaturePage: z.string().optional(),
+  hasDedication: z.boolean().default(false),
+  provideDedication: z.boolean().default(false),
+  customDedication: z.string().optional(),
 });
 
 type PreorderFormValues = z.infer<typeof preorderSchema>;
@@ -37,10 +56,35 @@ export function HW2PreorderPopup() {
   const {
     register,
     handleSubmit,
+    control,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<PreorderFormValues>({
     resolver: zodResolver(preorderSchema),
+    defaultValues: {
+      country: "Deutschland",
+      quantity: 1,
+      hasSignature: true, // Pre-selected for the special offer
+      hasDedication: false,
+      provideDedication: false,
+    },
   });
+
+  const watchFields = watch();
+
+  const totalSignaturePrice = useMemo(() => {
+    let total = PRICES.signature;
+     if (watchFields.hasDedication) {
+      total += PRICES.dedication;
+    }
+    if (watchFields.hasDedication && watchFields.provideDedication) {
+      total += PRICES.customDedication;
+    }
+    return total;
+  }, [watchFields]);
+  
+  const totalBookPrice = PRICES.book * (watchFields.quantity || 1);
+  const totalPrice = totalSignaturePrice + totalBookPrice;
 
 
   useEffect(() => {
@@ -63,7 +107,7 @@ export function HW2PreorderPopup() {
   };
 
   return (
-    <DialogContent className="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <DialogContent className="max-w-3xl w-full max-h-[90vh] overflow-y-auto">
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogHeader>
             <DialogTitle className="font-headline text-3xl text-center">Ihre EXKLUSIVE Vorbesteller-Chance!</DialogTitle>
@@ -82,55 +126,102 @@ export function HW2PreorderPopup() {
             </div>
         </div>
 
-        <div className="my-8 space-y-4">
-            <h3 className="text-xl font-headline font-semibold">Ihre Lieferadresse</h3>
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="my-8 space-y-6">
+            
+            {/* Konfiguration */}
+            <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
+                <h3 className="text-xl font-headline font-semibold">1. Konfiguration des Unikats</h3>
                 <div>
-                    <Label htmlFor="firstName">Vorname</Label>
-                    <Input id="firstName" {...register("firstName")} />
-                    {errors.firstName && <p className="text-sm text-destructive mt-1">{errors.firstName.message}</p>}
+                    <Label htmlFor="quantity">Stückzahl "Hallo Welt 2"</Label>
+                    <Input id="quantity" type="number" min="1" max="10" {...register("quantity", { valueAsNumber: true })} className="w-24 mt-1"/>
+                    {errors.quantity && <p className="text-sm text-destructive mt-1">{errors.quantity.message}</p>}
                 </div>
-                <div>
-                    <Label htmlFor="lastName">Nachname</Label>
-                    <Input id="lastName" {...register("lastName")} />
-                    {errors.lastName && <p className="text-sm text-destructive mt-1">{errors.lastName.message}</p>}
+                 <div className="flex items-center space-x-2">
+                    <Controller
+                        name="hasSignature"
+                        control={control}
+                        render={({ field }) => <Checkbox id="hasSignature" checked={field.value} onCheckedChange={field.onChange} />}
+                    />
+                    <Label htmlFor="hasSignature" className="font-semibold">Originalsignatur der Autoren</Label>
                 </div>
+                 <div className="flex items-center space-x-2">
+                    <Controller
+                        name="hasDedication"
+                        control={control}
+                        render={({ field }) => <Checkbox id="hasDedication" checked={field.value} onCheckedChange={field.onChange} />}
+                    />
+                    <Label htmlFor="hasDedication" className="font-semibold">Persönliche Widmung</Label>
+                </div>
+                 {watchFields.hasDedication && (
+                    <div className="pl-6 space-y-4">
+                        <div className="flex items-center space-x-2">
+                            <Controller
+                                name="provideDedication"
+                                control={control}
+                                render={({ field }) => <Checkbox id="provideDedication" checked={field.value} onCheckedChange={field.onChange} />}
+                            />
+                            <Label htmlFor="provideDedication">Eigene Widmung vorgeben</Label>
+                        </div>
+                        {watchFields.provideDedication && (
+                            <Textarea 
+                                {...register("customDedication")} 
+                                placeholder="Ihr Wunschtext für die Nachwelt..."
+                            />
+                        )}
+                    </div>
+                )}
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                  <Label htmlFor="email">E-Mail Adresse</Label>
-                  <Input id="email" type="email" {...register("email")} />
-                  {errors.email && <p className="text-sm text-destructive mt-1">{errors.email.message}</p>}
+
+            {/* Persönliche Daten */}
+            <div className="space-y-4">
+              <h3 className="text-xl font-headline font-semibold">2. Lieferadresse</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                      <Label htmlFor="firstName">Vorname</Label>
+                      <Input id="firstName" {...register("firstName")} />
+                      {errors.firstName && <p className="text-sm text-destructive mt-1">{errors.firstName.message}</p>}
+                  </div>
+                  <div>
+                      <Label htmlFor="lastName">Nachname</Label>
+                      <Input id="lastName" {...register("lastName")} />
+                      {errors.lastName && <p className="text-sm text-destructive mt-1">{errors.lastName.message}</p>}
+                  </div>
               </div>
-               <div>
-                  <Label htmlFor="phone">Telefon (optional)</Label>
-                  <Input id="phone" type="tel" {...register("phone")} />
-                  {errors.phone && <p className="text-sm text-destructive mt-1">{errors.phone.message}</p>}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <Label htmlFor="email">E-Mail Adresse</Label>
+                    <Input id="email" type="email" {...register("email")} />
+                    {errors.email && <p className="text-sm text-destructive mt-1">{errors.email.message}</p>}
+                </div>
+                 <div>
+                    <Label htmlFor="phone">Telefon (optional)</Label>
+                    <Input id="phone" type="tel" {...register("phone")} />
+                </div>
               </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4">
-                <div>
-                    <Label htmlFor="street">Straße</Label>
-                    <Input id="street" {...register("street")} />
-                    {errors.street && <p className="text-sm text-destructive mt-1">{errors.street.message}</p>}
-                </div>
-                <div>
-                    <Label htmlFor="houseNumber">Hausnr.</Label>
-                    <Input id="houseNumber" {...register("houseNumber")} className="w-24"/>
-                    {errors.houseNumber && <p className="text-sm text-destructive mt-1">{errors.houseNumber.message}</p>}
-                </div>
-            </div>
-             <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4">
-                <div>
-                    <Label htmlFor="zip">PLZ</Label>
-                    <Input id="zip" {...register("zip")} className="w-28"/>
-                    {errors.zip && <p className="text-sm text-destructive mt-1">{errors.zip.message}</p>}
-                </div>
-                <div>
-                    <Label htmlFor="city">Ort</Label>
-                    <Input id="city" {...register("city")} />
-                    {errors.city && <p className="text-sm text-destructive mt-1">{errors.city.message}</p>}
-                </div>
+              <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4">
+                  <div>
+                      <Label htmlFor="street">Straße</Label>
+                      <Input id="street" {...register("street")} />
+                      {errors.street && <p className="text-sm text-destructive mt-1">{errors.street.message}</p>}
+                  </div>
+                  <div>
+                      <Label htmlFor="houseNumber">Hausnr.</Label>
+                      <Input id="houseNumber" {...register("houseNumber")} className="w-24"/>
+                      {errors.houseNumber && <p className="text-sm text-destructive mt-1">{errors.houseNumber.message}</p>}
+                  </div>
+              </div>
+               <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4">
+                  <div>
+                      <Label htmlFor="zip">PLZ</Label>
+                      <Input id="zip" {...register("zip")} className="w-28"/>
+                      {errors.zip && <p className="text-sm text-destructive mt-1">{errors.zip.message}</p>}
+                  </div>
+                  <div>
+                      <Label htmlFor="city">Ort</Label>
+                      <Input id="city" {...register("city")} />
+                      {errors.city && <p className="text-sm text-destructive mt-1">{errors.city.message}</p>}
+                  </div>
+              </div>
             </div>
         </div>
 
@@ -213,3 +304,5 @@ export function HW2PreorderPopup() {
     </DialogContent>
   );
 }
+
+    

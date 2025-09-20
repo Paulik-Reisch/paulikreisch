@@ -19,7 +19,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { SignatureOrderForm } from "./signature-order-form";
 import { HW2PreorderPopup } from "./hw2-preorder-popup";
 
 
@@ -111,7 +110,7 @@ function BookCard({ book }: { book: (typeof books.hw1 | typeof books.hw2) & {pre
                 <div className="flex flex-col flex-grow">
                     <h3 className="font-headline text-xl font-bold">{book.title}</h3>
                     <p className="text-xs text-muted-foreground flex-grow mt-1">{book.subtitle}</p>
-                    <div className="my-2 h-14">
+                    <div className="my-2 h-20">
                          <span className="text-2xl font-bold">{book.price}</span>
                         <span className="text-xs text-muted-foreground ml-2">inkl. MwSt.</span>
                     </div>
@@ -161,14 +160,14 @@ export function BookShop() {
                         </Button>
                     </div>
                     </DialogTrigger>
-                    <DialogContent className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                        <DialogTitle className="font-headline text-3xl">Sonderbestellung: Originalausgabe</DialogTitle>
-                        <DialogDescription>
-                        Stellen Sie sich Ihre persönliche, von den Autoren gequälte Ausgabe zusammen. Ein Unikat, genau wie Ihre Probleme.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <SignatureOrderForm />
+                     <DialogContent className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                        <DialogHeader>
+                            <DialogTitle className="font-headline text-3xl">Sonderbestellung: Originalausgabe</DialogTitle>
+                            <DialogDescription>
+                            Stellen Sie sich Ihre persönliche, von den Autoren gequälte Ausgabe zusammen. Ein Unikat, genau wie Ihre Probleme.
+                            </DialogDescription>
+                        </DialogHeader>
+                        {/* Placeholder for a form that might be used for HW1 */}
                     </DialogContent>
                 </Dialog>
             </div>
@@ -214,5 +213,6 @@ export function BookShop() {
     </section>
   );
 }
+
 
     
