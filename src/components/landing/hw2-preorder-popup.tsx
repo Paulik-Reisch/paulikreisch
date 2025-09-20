@@ -19,6 +19,7 @@ const preorderSchema = z.object({
   firstName: z.string().min(1, "Vorname ist ein Pflichtfeld."),
   lastName: z.string().min(1, "Nachname ist ein Pflichtfeld."),
   email: z.string().email("Bitte geben Sie eine gültige E-Mail-Adresse ein."),
+  phone: z.string().optional(),
   street: z.string().min(1, "Straße ist ein Pflichtfeld."),
   houseNumber: z.string().min(1, "Hausnummer ist ein Pflichtfeld."),
   zip: z.string().min(4, "Bitte geben Sie eine gültige PLZ ein."),
@@ -123,10 +124,17 @@ export function HW2PreorderPopup() {
                     {errors.lastName && <p className="text-sm text-destructive mt-1">{errors.lastName.message}</p>}
                 </div>
             </div>
-            <div>
-                <Label htmlFor="email">E-Mail Adresse</Label>
-                <Input id="email" type="email" {...register("email")} />
-                {errors.email && <p className="text-sm text-destructive mt-1">{errors.email.message}</p>}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                  <Label htmlFor="email">E-Mail Adresse</Label>
+                  <Input id="email" type="email" {...register("email")} />
+                  {errors.email && <p className="text-sm text-destructive mt-1">{errors.email.message}</p>}
+              </div>
+               <div>
+                  <Label htmlFor="phone">Telefon (optional)</Label>
+                  <Input id="phone" type="tel" {...register("phone")} />
+                  {errors.phone && <p className="text-sm text-destructive mt-1">{errors.phone.message}</p>}
+              </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4">
                 <div>
