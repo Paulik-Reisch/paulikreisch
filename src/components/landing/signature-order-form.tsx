@@ -239,7 +239,7 @@ export function SignatureOrderForm({ book, isHW2Preorder = false }: { book: any,
             <Separator className="my-4 w-2/3" />
             
             <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="w-full">
-                <Button variant="secondary" className="w-full bg-gradient-to-b from-yellow-400 to-yellow-500 border-yellow-500 text-black hover:from-yellow-400/80 hover:to-yellow-500/90">
+                <Button type="button" variant="secondary" className="w-full bg-gradient-to-b from-yellow-400 to-yellow-500 border-yellow-500 text-black hover:from-yellow-400/80 hover:to-yellow-500/90">
                     Ohne persönliche Signatur fortfahren
                 </Button>
             </a>
