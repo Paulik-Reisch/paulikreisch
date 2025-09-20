@@ -22,7 +22,7 @@ const COUNTDOWN_SECONDS = (11 * 60) + 32;
 const PRICES = {
   book: 17.99, // HW2 price
   signature: 35.0,
-  dedication: 15.0, // Let's make this a bit more reasonable
+  dedication: 15.0, 
   customDedication: 10.0,
 };
 
@@ -37,7 +37,6 @@ const preorderSchema = z.object({
   city: z.string().min(1, "Ort ist ein Pflichtfeld."),
   country: z.string().default("Deutschland"),
   
-  quantity: z.number().min(1, "Mindestens 1 Exemplar.").max(10, "Maximal 10 Exemplare.").default(1),
   hasSignature: z.boolean().default(false),
   signaturePlacement: z.enum(["front", "back", "inside"]).optional(),
   signaturePage: z.string().optional(),
@@ -63,7 +62,6 @@ export function HW2PreorderPopup() {
     resolver: zodResolver(preorderSchema),
     defaultValues: {
       country: "Deutschland",
-      quantity: 1,
       hasSignature: true, // Pre-selected for the special offer
       hasDedication: false,
       provideDedication: false,
@@ -73,7 +71,10 @@ export function HW2PreorderPopup() {
   const watchFields = watch();
 
   const totalSignaturePrice = useMemo(() => {
-    let total = PRICES.signature;
+    let total = 0;
+    if (watchFields.hasSignature) {
+        total += PRICES.signature;
+    }
      if (watchFields.hasDedication) {
       total += PRICES.dedication;
     }
@@ -83,7 +84,7 @@ export function HW2PreorderPopup() {
     return total;
   }, [watchFields]);
   
-  const totalBookPrice = PRICES.book * (watchFields.quantity || 1);
+  const totalBookPrice = PRICES.book;
   const totalPrice = totalSignaturePrice + totalBookPrice;
 
 
@@ -131,11 +132,7 @@ export function HW2PreorderPopup() {
             {/* Konfiguration */}
             <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
                 <h3 className="text-xl font-headline font-semibold">1. Konfiguration des Unikats</h3>
-                <div>
-                    <Label htmlFor="quantity">Stückzahl "Hallo Welt 2"</Label>
-                    <Input id="quantity" type="number" min="1" max="10" {...register("quantity", { valueAsNumber: true })} className="w-24 mt-1"/>
-                    {errors.quantity && <p className="text-sm text-destructive mt-1">{errors.quantity.message}</p>}
-                </div>
+                
                  <div className="flex items-center space-x-2">
                     <Controller
                         name="hasSignature"
@@ -304,5 +301,3 @@ export function HW2PreorderPopup() {
     </DialogContent>
   );
 }
-
-    
