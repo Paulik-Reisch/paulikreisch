@@ -18,13 +18,6 @@ import { Textarea } from "../ui/textarea";
 
 const COUNTDOWN_SECONDS = (11 * 60) + 32;
 
-const PRICES = {
-  book: 17.99, // HW2 price
-  signature: 35.0,
-  dedication: 15.0, 
-  customDedication: 10.0,
-};
-
 const preorderSchema = z.object({
   firstName: z.string().min(1, "Vorname ist ein Pflichtfeld."),
   lastName: z.string().min(1, "Nachname ist ein Pflichtfeld."),
@@ -36,7 +29,7 @@ const preorderSchema = z.object({
   city: z.string().min(1, "Ort ist ein Pflichtfeld."),
   country: z.string().default("Deutschland"),
   
-  hasSignature: z.boolean().default(false),
+  hasSignature: z.boolean().default(true),
   hasDedication: z.boolean().default(false),
   provideDedication: z.boolean().default(false),
   customDedication: z.string().optional(),
@@ -95,7 +88,7 @@ export function HW2PreorderPopup() {
         <DialogHeader>
             <DialogTitle className="font-headline text-3xl text-center">Ihre EXKLUSIVE Vorbesteller-Chance!</DialogTitle>
             <DialogDescription className="text-center text-base">
-                Dieses Angebot ist so flüchtig wie die Motivation eines Beamten am Freitagnachmittag.
+                Dieses Angebot ist so flüchtig wie die Motivation eines Beamten am Freitagnachmittag. Nur hier, nur jetzt.
             </DialogDescription>
         </DialogHeader>
 
@@ -109,43 +102,49 @@ export function HW2PreorderPopup() {
             </div>
         </div>
 
-        <div className="my-8 space-y-6">
+        <div className="my-8 space-y-8">
             
              {/* Konfiguration */}
             <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
-                <h3 className="text-xl font-headline font-semibold">1. Konfiguration des Unikats</h3>
+                <h3 className="text-xl font-headline font-semibold">1. Konfiguration Ihres persönlichen Unikats</h3>
                 
-                 <div className="flex items-center space-x-2">
+                 <div className="flex items-center space-x-3 p-2 rounded-md bg-background/50">
                     <Controller
                         name="hasSignature"
                         control={control}
                         render={({ field }) => <Checkbox id="hasSignature" checked={field.value} onCheckedChange={field.onChange} />}
                     />
-                    <Label htmlFor="hasSignature" className="font-semibold">Originalsignatur der Autoren</Label>
+                    <Label htmlFor="hasSignature" className="font-semibold text-base cursor-pointer">Originalsignatur der Autoren</Label>
                 </div>
-                 <div className="flex items-center space-x-2">
+                 <div className="flex items-center space-x-3 p-2 rounded-md bg-background/50">
                     <Controller
                         name="hasDedication"
                         control={control}
                         render={({ field }) => <Checkbox id="hasDedication" checked={field.value} onCheckedChange={field.onChange} />}
                     />
-                    <Label htmlFor="hasDedication" className="font-semibold">Persönliche Widmung</Label>
+                    <Label htmlFor="hasDedication" className="font-semibold text-base cursor-pointer">Persönliche Widmung</Label>
                 </div>
                  {watchFields.hasDedication && (
-                    <div className="pl-6 space-y-4">
-                        <div className="flex items-center space-x-2">
+                    <div className="pl-8 space-y-4 pt-2">
+                        <div className="flex items-center space-x-3 p-2 rounded-md">
                             <Controller
                                 name="provideDedication"
                                 control={control}
                                 render={({ field }) => <Checkbox id="provideDedication" checked={field.value} onCheckedChange={field.onChange} />}
                             />
-                            <Label htmlFor="provideDedication">Eigene Widmung vorgeben</Label>
+                            <Label htmlFor="provideDedication" className="cursor-pointer">Ich möchte meine eigene Widmung vorgeben</Label>
                         </div>
                         {watchFields.provideDedication && (
-                            <Textarea 
-                                {...register("customDedication")} 
-                                placeholder="Ihr Wunschtext für die Nachwelt..."
-                            />
+                             <div className="pl-2">
+                                <Textarea 
+                                    {...register("customDedication")} 
+                                    placeholder="Ihr Wunschtext für die Nachwelt (max. 150 Zeichen)..."
+                                    maxLength={150}
+                                />
+                             </div>
+                        )}
+                        {!watchFields.provideDedication && (
+                             <p className="text-xs text-muted-foreground pl-2 italic">Wenn Sie nichts vorgeben, lassen wir uns etwas furchtbar Passendes für Sie einfallen.</p>
                         )}
                     </div>
                 )}
@@ -153,7 +152,7 @@ export function HW2PreorderPopup() {
 
             {/* Persönliche Daten */}
             <div className="space-y-4">
-              <h3 className="text-xl font-headline font-semibold">2. Lieferadresse</h3>
+              <h3 className="text-xl font-headline font-semibold">2. Lieferadresse des Antragstellers</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                       <Label htmlFor="firstName">Vorname</Label>
@@ -205,7 +204,7 @@ export function HW2PreorderPopup() {
         </div>
 
         <div className="p-4 bg-muted/50 rounded-lg space-y-4 mb-6">
-            <h4 className="font-headline text-lg font-semibold">Zusammenfassung</h4>
+            <h4 className="font-headline text-lg font-semibold">3. Zusammenfassung Ihrer Bestellung</h4>
             <div className="space-y-3 text-sm">
                 <div className="space-y-1">
                     <div className="flex justify-between">
@@ -286,5 +285,7 @@ export function HW2PreorderPopup() {
     </DialogContent>
   );
 }
+
+    
 
     
