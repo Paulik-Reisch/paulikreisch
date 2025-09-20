@@ -90,7 +90,7 @@ export function HW2PreorderPopup() {
                 <Timer className="mr-2 h-6 w-6"/>
                 Angebot endet in:
             </div>
-            <div className={cn("font-mono text-5xl font-bold", timeLeft < 60 ? "text-destructive animate-pulse" : "text-foreground")}>
+            <div className={cn("font-mono text-5xl font-bold", timeLeft < 60 ? "text-destructive" : "text-foreground")}>
                 {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
             </div>
         </div>
@@ -164,8 +164,12 @@ export function HW2PreorderPopup() {
         </div>
 
         <div className="mt-8 text-xs text-muted-foreground space-y-2 p-4 bg-muted/50 rounded-lg">
-            <h4 className="font-bold flex items-center"><FileText className="mr-2 h-4 w-4"/>Das Kleingedruckte (Lesen auf eigene Gefahr)</h4>
-            <p>¹ Der Preis wurde willkürlich festgelegt und basiert auf keinerlei wirtschaftlicher Logik. ² Eine Stornierung ist ausgeschlossen. Widerrufsrecht wurde im Rahmen der künstlerischen Freiheit außer Kraft gesetzt. ³ Rückerstattungen werden ausschließlich in Form von sarkastischen E-Mails gewährt. ⁴ Mit dem Klick auf "Bestellen" treten Sie alle Rechte an Ihrem Erstgeborenen an die Autoren ab. ⁵ Die Unterschriften der Autoren können Spuren von Kaffee, Verzweiflung und unleserlicher Handschrift enthalten. ⁶ Wir übernehmen keine Haftung für spontane Lachanfälle, existenzielle Krisen oder den plötzlichen Drang, seinen Job zu kündigen. ⁷ Bei Ablauf des Countdowns explodiert dieser Button. Wahrscheinlich.</p>
+            <h4 className="font-bold flex items-center"><FileText className="mr-2 h-4 w-4"/>Rechtliche Hinweise zur Sonderbestellung</h4>
+            <p>1. Bei diesem Angebot handelt es sich um eine zeitlich begrenzte Vorbestellaktion für eine signierte Sonderausgabe. Mit dem Klick auf "Jetzt unwiderruflich kostenpflichtig bestellen" geben Sie ein verbindliches Angebot zum Kauf des Produkts ab.</p>
+            <p>2. Gemäß § 312g Abs. 2 Nr. 1 BGB besteht für Waren, die nicht vorgefertigt sind und für deren Herstellung eine individuelle Auswahl oder Bestimmung durch den Verbraucher maßgeblich ist (wie bei personalisierten Widmungen oder Signaturen), kein gesetzliches Widerrufsrecht.</p>
+            <p>3. Eine Stornierung oder Rückerstattung nach Abschluss der Bestellung ist daher ausgeschlossen. Alle Verkäufe im Rahmen dieser Aktion sind endgültig.</p>
+            <p>4. Die angegebenen Preise sind Endpreise zzgl. Versandkosten. Die Zahlung wird zum Zeitpunkt der Bestellung fällig. Ihre Daten werden ausschließlich zur Abwicklung dieser Bestellung verwendet.</p>
+            <p>5. Die Unterschriften der Autoren sind ein künstlerischer Akt und können in Form und Lesbarkeit variieren. Dies stellt keinen Mangel dar.</p>
         </div>
       </form>
     </DialogContent>
