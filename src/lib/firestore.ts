@@ -38,7 +38,7 @@ export interface Order {
 
 export interface PageComponent {
     id: string;
-    type: 'heading' | 'text' | 'button' | 'image' | 'spacer' | 'separator' | 'columns';
+    type: 'heading' | 'text' | 'button' | 'image' | 'spacer' | 'separator' | 'columns' | 'customHtml';
     props: {
         [key: string]: any;
     };

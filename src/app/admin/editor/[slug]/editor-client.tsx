@@ -141,6 +141,9 @@ function generatePageHtml(components: PageComponent[]): string {
 
                 return `<div class="${columnClasses} my-6" style="gap: ${gap};">${columnsHtml}</div>`
             }
+            case 'customHtml': {
+                return props.html || '';
+            }
             default:
                 return '';
         }
@@ -197,7 +200,7 @@ function PageComponentEditor({ component, onUpdate, onDelete, onMove }: { compon
         </div>
     );
 
-     const renderTextarea = (propName: string, label: string) => (
+     const renderTextarea = (propName: string, label: string, rows = 4) => (
          <div key={propName}>
             <Label htmlFor={`${component.id}-${propName}`} className="text-xs">{label}</Label>
             <Textarea 
@@ -205,7 +208,7 @@ function PageComponentEditor({ component, onUpdate, onDelete, onMove }: { compon
                 value={component.props[propName] || ''} 
                 onChange={(e) => updateProp(propName, e.target.value)}
                 className="text-xs"
-                rows={4}
+                rows={rows}
             />
         </div>
     );
@@ -295,9 +298,9 @@ function PageComponentEditor({ component, onUpdate, onDelete, onMove }: { compon
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="solid">Solid</SelectItem>
-                                <SelectItem value="dashed">Dashed</SelectItem>
-                                <SelectItem value="dotted">Dotted</SelectItem>
+                                <SelectItem value="solid">Durchgezogen</SelectItem>
+                                <SelectItem value="dashed">Gestrichelt</SelectItem>
+                                <SelectItem value="dotted">Gepunktet</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
@@ -353,6 +356,11 @@ function PageComponentEditor({ component, onUpdate, onDelete, onMove }: { compon
                     </div>
                 </div>
             );
+            case 'customHtml': return (
+                <div className="space-y-4">
+                    {renderTextarea('html', 'HTML-Code', 10)}
+                </div>
+            );
             default: return <p>Unbekannter Komponententyp</p>
         }
     }
@@ -365,6 +373,7 @@ function PageComponentEditor({ component, onUpdate, onDelete, onMove }: { compon
         spacer: <Rows className="h-4 w-4" />,
         separator: <Minus className="h-4 w-4" />,
         columns: <Columns className="h-4 w-4" />,
+        customHtml: <Code className="h-4 w-4" />,
     }
 
     return (
@@ -404,8 +413,10 @@ export function EditorClient({ page }: { page: LegalPage }) {
     setFormattedDate(new Date(page.lastUpdated).toLocaleString('de-DE'));
     
     // Initial HTML generation
-    if (page.components && page.components.length > 0) {
+    if (page.components && page.components.length > 0 && !page.content) {
         setGeneratedHtml(generatePageHtml(page.components));
+    } else if (page.content) {
+        setHasManuallyEditedHtml(true);
     }
   }, []); // Run only once on mount
 
@@ -473,6 +484,7 @@ export function EditorClient({ page }: { page: LegalPage }) {
           props
       };
       setComponents(prev => [...prev, newComponent]);
+      setHasManuallyEditedHtml(false);
   };
 
   const updateComponent = (id: string, props: any) => {
@@ -481,10 +493,12 @@ export function EditorClient({ page }: { page: LegalPage }) {
           props.columns = Array.from({ length: props.numColumns }, (_, i) => props.columns[i] || { content: '' });
       }
       setComponents(prev => prev.map(c => c.id === id ? { ...c, props } : c));
+      setHasManuallyEditedHtml(false);
   };
   
   const deleteComponent = (id: string) => {
       setComponents(prev => prev.filter(c => c.id !== id));
+      setHasManuallyEditedHtml(false);
   };
 
   const moveComponent = (id: string, direction: 'up' | 'down') => {
@@ -530,7 +544,7 @@ export function EditorClient({ page }: { page: LegalPage }) {
                     <h3 className="text-sm font-medium mb-2">Komponenten</h3>
                      {hasManuallyEditedHtml && (
                         <div className="p-2 mb-2 text-xs bg-yellow-100 border border-yellow-300 rounded-md text-yellow-800">
-                           HTML wurde manuell bearbeitet. Der Komponenten-Editor ist deaktiviert, bis Sie speichern.
+                           HTML wurde manuell bearbeitet. Der Komponenten-Editor ist deaktiviert. Änderungen im Code haben Priorität.
                         </div>
                     )}
                     <Accordion type="single" collapsible className="w-full space-y-2" disabled={hasManuallyEditedHtml}>
@@ -554,7 +568,8 @@ export function EditorClient({ page }: { page: LegalPage }) {
                     <Button variant="outline" onClick={() => addComponent('image')} disabled={hasManuallyEditedHtml}><ImageIcon className="mr-2 h-4 w-4"/>Bild</Button>
                     <Button variant="outline" onClick={() => addComponent('spacer')} disabled={hasManuallyEditedHtml}><Rows className="mr-2 h-4 w-4"/>Abstand</Button>
                     <Button variant="outline" onClick={() => addComponent('separator')} disabled={hasManuallyEditedHtml}><Minus className="mr-2 h-4 w-4"/>Trennlinie</Button>
-                    <Button variant="outline" className="col-span-2" onClick={() => addComponent('columns')} disabled={hasManuallyEditedHtml}><Columns className="mr-2 h-4 w-4"/>Spalten</Button>
+                    <Button variant="outline" onClick={() => addComponent('columns')} disabled={hasManuallyEditedHtml}><Columns className="mr-2 h-4 w-4"/>Spalten</Button>
+                    <Button variant="outline" onClick={() => addComponent('customHtml')} disabled={hasManuallyEditedHtml}><Code className="mr-2 h-4 w-4"/>Custom HTML</Button>
                 </div>
                 <form action={handleFormSubmit}>
                      <Button type="submit" disabled={isSaving} className="w-full">
