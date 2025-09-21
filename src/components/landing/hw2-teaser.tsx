@@ -52,7 +52,7 @@ export function HW2Teaser() {
                         <CardDescription>{topic.description}</CardDescription>
                     </CardContent>
                     <CardFooter className="justify-center">
-                         <Link href={topic.link} legacyBehavior>
+                         <Link href={topic.link}>
                             <Button variant="outline">
                                 {topic.cta} <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
