@@ -2,7 +2,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useActionState, useFormStatus } from "react";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import Link from "next/link";
 import { LegalPage, PageComponent } from "@/lib/firestore";
 import { updateLegalPageAction } from "@/app/admin/actions";
@@ -336,5 +337,3 @@ export function EditorClient({ page }: { page: LegalPage }) {
     </div>
   );
 }
-
-    
