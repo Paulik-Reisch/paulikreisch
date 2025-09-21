@@ -29,7 +29,7 @@ export function Hero({ product }: { product?: Product }) {
           <div className="relative animate-in fade-in zoom-in-50 duration-1000">
              <Image
                 alt="Buchcover"
-                className="mx-auto aspect-square overflow-hidden rounded-xl object-cover sm:w-full lg:order-last transform -rotate-3 transition-transform duration-500 hover:rotate-0 hover:scale-105 shadow-2xl"
+                className="mx-auto aspect-[1/1] overflow-hidden rounded-xl object-contain sm:w-full lg:order-last transform -rotate-3 transition-transform duration-500 hover:rotate-0 hover:scale-105 shadow-2xl"
                 data-ai-hint={imageHint}
                 height="550"
                 src={imageSrc}
