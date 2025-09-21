@@ -1,3 +1,4 @@
+
 "use server";
 
 import { z } from "zod";
@@ -282,3 +283,5 @@ export async function subscribeToNewsletterAction(
         return { error: "Anmeldung fehlgeschlagen. Das Internet ist wahrscheinlich wieder kaputt." };
     }
 }
+
+    
