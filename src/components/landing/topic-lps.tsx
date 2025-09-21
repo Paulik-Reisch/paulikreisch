@@ -75,43 +75,20 @@ export function TopicLPs() {
           </div>
         </div>
         
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+        <div className="max-w-2xl mx-auto">
             <div className="flex flex-col gap-2">
                 {topics.map((topic) => (
                     <Link
                         href={topic.link}
                         key={topic.link}
-                        className={cn(
-                            "p-4 rounded-lg transition-all duration-300",
-                            activeTopic.link === topic.link ? 'bg-card shadow-lg' : 'hover:bg-card/50'
-                        )}
-                        onMouseEnter={() => setActiveTopic(topic)}
+                        className='p-4 rounded-lg transition-all duration-300 bg-card shadow-md hover:shadow-xl'
                     >
                         <h3 className="font-headline text-xl font-bold">{topic.title}</h3>
                         <p className="text-sm text-muted-foreground">{topic.description}</p>
-                        <div className={cn(
-                            "flex items-center text-primary font-semibold text-sm mt-2 transition-all duration-300",
-                            activeTopic.link === topic.link ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-                        )}>
+                        <div className="flex items-center text-primary font-semibold text-sm mt-2">
                             Mehr erfahren <ArrowRight className="ml-2 h-4 w-4" />
                         </div>
                     </Link>
-                ))}
-            </div>
-            <div className="relative h-64 md:h-96 lg:h-full min-h-[300px] lg:min-h-full rounded-xl overflow-hidden shadow-2xl transform lg:group-hover:scale-105 transition-transform duration-500 -rotate-1">
-                 {topics.map((topic) => (
-                    <Image
-                        key={topic.link}
-                        alt={topic.title}
-                        className={cn(
-                            "absolute inset-0 w-full h-full object-cover transition-opacity duration-500",
-                            activeTopic.link === topic.link ? "opacity-100" : "opacity-0"
-                        )}
-                        height="600"
-                        src={topic.image}
-                        data-ai-hint={topic.aiHint}
-                        width="800"
-                    />
                 ))}
             </div>
         </div>
