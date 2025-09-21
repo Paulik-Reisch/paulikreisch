@@ -89,7 +89,7 @@ export function HeroPfeiffer() {
             Unsere Recherche führt uns zurück in die heiligen Hallen der Lernvollzugsanstalt Siebenkirchen-Seelscheid.
           </p>
           <p>
-            Die Legende hat einen Namen: Rabea Pfeifer. Im Buch "Hallo Welt" als <strong className="font-headline">R. Pfffer</strong> verewigt, war sie die Spanischlehrerin, die den jungen Autoren den Weg wies. Nicht den Weg zur Grammatik – nein, den Weg zu den wirklich wichtigen Dingen im Leben. Frau Pfeifer, eine Frau, deren Begeisterung für die spanische Sprache nur von ihrer Abneigung gegen Mathematik und funktionierende Technik übertroffen wurde, war eine Institution.
+            Die Legende hat einen Namen: Rabea Pfeifer. Im Buch <Link href="/buchhandlung-paulik-reisch" className="font-bold underline">"Hallo Welt"</Link> als <strong className="font-headline">R. Pfffer</strong> verewigt, war sie die Spanischlehrerin, die den jungen Autoren den Weg wies. Nicht den Weg zur Grammatik – nein, den Weg zu den wirklich wichtigen Dingen im Leben. Frau Pfeifer, eine Frau, deren Begeisterung für die spanische Sprache nur von ihrer Abneigung gegen Mathematik und funktionierende Technik übertroffen wurde, war eine Institution.
           </p>
           
            <blockquote>
@@ -129,11 +129,11 @@ export function HeroPfeiffer() {
             <p>
                 Doch dann geschah das Wunder: In einer Bewegung, die man nur als übernatürlich beschreiben kann, schnipste La Silbadora im freien Fall mit den Fingern. Wie von Geisterhand materialisierte sich ein Exemplar von <Link href="/buchhandlung-paulik-reisch" className="font-bold underline">"Hallo Welt 1"</Link> direkt unter ihr und federte den Aufprall ab. Sie landete weich. Ihr Genick blieb intakt.
             </p>
-            <p>
+             <p>
                 Ende gut, alles gut. Selbst das Buch war nicht zerknickt. Denn das, meine Damen und Herren, ist gedruckte und geschriebene Qualität. Eine Qualität, die Leben rettet.
             </p>
 
-          <div className="text-center mt-12 py-12 border-t border-b border-dashed">
+          <div className="text-center my-12 py-12 border-t border-b border-dashed">
             <h2 className="font-headline text-3xl font-bold">Erleben Sie das Pfeifkonzert selbst!</h2>
             <p className="mt-4 text-muted-foreground">
                 "Hallo Welt 2" ist die Anleitung zum Überleben in einer Welt, die den Verstand verloren hat. Oder der schnellste Weg, ihn selbst zu verlieren.
@@ -143,7 +143,7 @@ export function HeroPfeiffer() {
             </Link>
           </div>
           
-            <p className="mt-12">
+            <p>
                 Die Chipirones essende Frau Silbadora mag Witze sehr. Sehr sogar. Es wird gemunkelt, dass ihre legendären Pfeifmelodien oft nur überpfiffene Versionen von Pointen sind, die nur sie versteht. Ihr Lachen, so heißt es, könne das Fundament jedes noch so stabilen Schulgebäudes erschüttern und sei der wahre Grund für die Risse in den Wänden der Lernvollzugsanstalt.
             </p>
             <p>
@@ -183,5 +183,3 @@ export function HeroPfeiffer() {
     </section>
   );
 }
-
-    
