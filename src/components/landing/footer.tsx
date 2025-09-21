@@ -4,7 +4,7 @@ export function Footer() {
   return (
     <footer className="w-full border-t py-12 md:py-16 bg-muted/40">
       <div className="container mx-auto text-center flex flex-col items-center justify-center">
-        <h3 className="font-headline text-2xl font-bold">Hallo Welt</h3>
+        <h3 className="font-headline text-2xl font-bold">Hallo Welt – Die Bücherserie</h3>
         <p className="mt-4 text-xs text-muted-foreground max-w-2xl text-balance">
           Die satirische "Hallo Welt"-Bücherserie ist eine Idee und Kreation von Philipp Paulik (Autor), Maximilian Reisch (Autor), Luin Schiffbauer (Illustrator) und weiteren Mitwirkenden.
           Veröffentlicht und produziert durch Kindle Direct Publishing (KDP) der Amazon Distribution GmbH, Leipzig sowie ggf. weitere Verlags- und Produktionspartner.
