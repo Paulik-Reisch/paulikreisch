@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 
@@ -21,7 +22,7 @@ export function HeroSportIstMord() {
                     className="mx-auto aspect-square overflow-hidden rounded-xl object-contain sm:w-full"
                     data-ai-hint="fitness poster parody"
                     height="550"
-                    src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/ChatGPT%20Image%2021.%20Sept.%202025%2C%2023_19_44.png?alt=media&token=d8a863ee-59b5-4127-8ec9-54b396e2f2d8"
+                    src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/sport.png?alt=media"
                     width="550"
                 />
                  <p className="absolute bottom-4 right-4 bg-destructive text-destructive-foreground p-2 rounded-md transform -rotate-6 font-bold shadow-lg">JETZT MIT NOCH MEHR VERLETZUNGEN!</p>

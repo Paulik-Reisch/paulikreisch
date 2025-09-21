@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
@@ -7,7 +8,7 @@ export function HeroBusfahrenMutprobe() {
     <section className="relative w-full h-[80vh] flex items-center justify-center text-center text-white">
       <Image
         alt="Überfüllter Bus"
-        src="https://placehold.co/1920x1080.png"
+        src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/bus.png?alt=media"
         data-ai-hint="overcrowded bus"
         fill
         className="object-cover -z-10 brightness-50"

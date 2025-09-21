@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 
@@ -9,7 +10,7 @@ export function HeroSchuleStraflager() {
           className="absolute inset-0 w-full h-full object-cover opacity-20"
           data-ai-hint="school prison"
           fill
-          src=" 202025%2C%2023_05_44.png?alt=media&token=d013d7f3-5cc9-4ec2-850c-cffe457205a9"
+          src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/schule.png?alt=media"
         />
       <div className="container px-4 md:px-6 relative z-10">
         <div className="flex flex-col items-center space-y-6 text-center">
