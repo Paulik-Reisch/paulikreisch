@@ -2,6 +2,7 @@
 "use client";
 
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 
@@ -25,12 +26,21 @@ function ChiquitoName() {
   );
 }
 
+// Wrap the entire page content in a component to use Suspense
+function ChiquitoPageContent() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ChiquitoName />
+    </Suspense>
+  );
+}
+
 export default function FelipeElChiquitoPage() {
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
       <Header />
       <main className="flex-1 flex items-center justify-center">
-        <ChiquitoName />
+        <ChiquitoPageContent />
       </main>
       <Footer />
     </div>
