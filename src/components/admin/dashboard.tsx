@@ -38,7 +38,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send } from "lucide-react";
+import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -73,6 +73,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 
 function LeadsTable({ initialSubscribers }: { initialSubscribers: Subscriber[] }) {
@@ -553,7 +554,7 @@ type AdminNewsletterState = {
 
 const initialNewsletterState: AdminNewsletterState = { success: false };
 
-function NewsletterManager({ initialNewsletters }: { initialNewsletters: Newsletter[] }) {
+function NewsletterManager({ initialNewsletters, onTabChange }: { initialNewsletters: Newsletter[], onTabChange: (value: string) => void; }) {
     const router = useRouter();
     const [newsletters, setNewsletters] = useState(initialNewsletters);
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -620,6 +621,9 @@ function NewsletterManager({ initialNewsletters }: { initialNewsletters: Newslet
                         </form>
                     </DialogContent>
                 </Dialog>
+                <Button onClick={() => onTabChange('campaigns')}>
+                    Kampagne starten <Send className="ml-2 h-4 w-4" />
+                </Button>
             </div>
              <div className="border rounded-lg overflow-hidden">
                 <Table>
@@ -804,6 +808,99 @@ function CampaignsManager({ initialNewsletters, initialSubscribers }: { initialN
     );
 }
 
+function OverviewTab({
+    products,
+    legalPages,
+    newsletters,
+    subscribers,
+    onTabChange
+} : {
+    products: Product[],
+    legalPages: LegalPage[],
+    newsletters: Newsletter[],
+    subscribers: Subscriber[],
+    onTabChange: (value: string) => void;
+}) {
+    const stats = [
+        {
+            title: "Abonnenten",
+            value: subscribers.length,
+            icon: Users,
+            link: "leads"
+        },
+        {
+            title: "Produkte",
+            value: products.length,
+            icon: Book,
+            link: "products"
+        },
+        {
+            title: "Newsletter",
+            value: newsletters.length,
+            icon: Newspaper,
+            link: "newsletters"
+        },
+        {
+            title: "Dynamische LPs",
+            value: legalPages.length,
+            icon: LayoutDashboard,
+            link: "legal"
+        }
+    ]
+
+    return (
+        <div>
+            <h2 className="text-2xl font-bold font-headline mb-4">Willkommen im Cockpit!</h2>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                {stats.map(stat => (
+                    <Card key={stat.title}>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
+                            <stat.icon className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">{stat.value}</div>
+                             <button onClick={() => onTabChange(stat.link)} className="text-xs text-muted-foreground hover:text-primary flex items-center">
+                                Zum Tab <ArrowRight className="h-3 w-3 ml-1" />
+                            </button>
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
+
+            <div className="mt-8 grid gap-4 md:grid-cols-2">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="font-headline text-xl">Schnellzugriff</CardTitle>
+                    </CardHeader>
+                    <CardContent className="grid grid-cols-2 gap-4">
+                        <Button variant="outline" onClick={() => onTabChange('newsletters')}>
+                            <PlusCircle className="mr-2 h-4 w-4" />
+                            Neuer Newsletter
+                        </Button>
+                        <Button variant="outline" onClick={() => onTabChange('campaigns')}>
+                            <Send className="mr-2 h-4 w-4" />
+                            Neue Kampagne
+                        </Button>
+                        <Button variant="outline" onClick={() => onTabChange('legal')}>
+                            <FilePlus className="mr-2 h-4 w-4" />
+                            Neue LP Seite
+                        </Button>
+                        <Button variant="outline" onClick={() => onTabChange('products')}>
+                             <PlusCircle className="mr-2 h-4 w-4" />
+                            Neues Produkt
+                        </Button>
+                    </CardContent>
+                </Card>
+                 <Card className="flex flex-col justify-center items-center p-6 text-center bg-muted/40">
+                    <h3 className="font-headline text-lg font-semibold">"Hallo Welt" Admin-Bereich</h3>
+                    <p className="text-sm text-muted-foreground mt-1">Verwalten Sie hier die Inhalte, Produkte und Abonnenten. Gehen Sie mit großer Macht weise um.</p>
+                </Card>
+            </div>
+        </div>
+    )
+}
+
 export function AdminDashboard({
     initialProducts,
     initialLegalPages,
@@ -815,15 +912,27 @@ export function AdminDashboard({
     initialNewsletters: Newsletter[];
     initialSubscribers: Subscriber[];
 }) {
+    const [activeTab, setActiveTab] = useState("übersicht");
+
     return (
-        <Tabs defaultValue="leads" className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 md:grid-cols-6 h-auto">
+                <TabsTrigger value="übersicht"><LayoutDashboard className="mr-2 h-4 w-4" />Übersicht</TabsTrigger>
                 <TabsTrigger value="leads"><Users className="mr-2 h-4 w-4" />Leads</TabsTrigger>
                 <TabsTrigger value="products">Produkte</TabsTrigger>
                 <TabsTrigger value="legal">Dynamische LPs</TabsTrigger>
                 <TabsTrigger value="newsletters">Newsletter</TabsTrigger>
                 <TabsTrigger value="campaigns"><Send className="mr-2 h-4 w-4" />Kampagnen</TabsTrigger>
             </TabsList>
+            <TabsContent value="übersicht" className="mt-6">
+                <OverviewTab 
+                    products={initialProducts}
+                    legalPages={initialLegalPages}
+                    newsletters={initialNewsletters}
+                    subscribers={initialSubscribers}
+                    onTabChange={setActiveTab}
+                />
+            </TabsContent>
             <TabsContent value="leads" className="mt-6">
                 <LeadsTable initialSubscribers={initialSubscribers} />
             </TabsContent>
@@ -831,10 +940,10 @@ export function AdminDashboard({
                 <ProductsManager initialProducts={initialProducts} />
             </TabsContent>
             <TabsContent value="legal" className="mt-6">
-                <LegalPagesManager initialPages={initialPages} />
+                <LegalPagesManager initialPages={initialLegalPages} />
             </TabsContent>
             <TabsContent value="newsletters" className="mt-6">
-                <NewsletterManager initialNewsletters={initialNewsletters} />
+                <NewsletterManager initialNewsletters={initialNewsletters} onTabChange={setActiveTab} />
             </TabsContent>
              <TabsContent value="campaigns" className="mt-6">
                 <CampaignsManager initialNewsletters={initialNewsletters} initialSubscribers={initialSubscribers} />
@@ -842,3 +951,5 @@ export function AdminDashboard({
         </Tabs>
     )
 }
+
+    
