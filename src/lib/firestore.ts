@@ -12,7 +12,8 @@ import {
     orderBy,
     query,
     getDoc,
-    setDoc
+    setDoc,
+    deleteDoc
 } from "firebase/firestore";
 
 export interface Product {
@@ -30,14 +31,14 @@ export interface Product {
 export interface Order {
     id: string;
     [key: string]: any;
-    timestamp: string; // Changed from Timestamp to string
+    timestamp: string;
 }
 
 export interface LegalPage {
     id: string;
     title: string;
     content: string;
-    lastUpdated: string; // Changed from Timestamp to string
+    lastUpdated: string;
 }
 
 const db = getFirestore(app);
@@ -57,6 +58,11 @@ export async function addProduct(data: Omit<Product, 'id'>) {
 export async function updateProduct(productId: string, data: Partial<Product>) {
     const productRef = doc(db, 'products', productId);
     await updateDoc(productRef, data);
+}
+
+export async function deleteProduct(productId: string) {
+    const productRef = doc(db, 'products', productId);
+    await deleteDoc(productRef);
 }
 
 export async function getOrders(): Promise<Order[]> {
@@ -142,4 +148,9 @@ export async function updateLegalPage(pageId: string, data: { title: string, con
         ...data,
         lastUpdated: Timestamp.now() 
     }, { merge: true });
+}
+
+export async function deleteLegalPage(pageId: string) {
+    const pageRef = doc(db, 'legal_pages', pageId);
+    await deleteDoc(pageRef);
 }

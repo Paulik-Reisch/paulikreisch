@@ -4,8 +4,10 @@ import { z } from "zod";
 import {
   addProduct,
   updateProduct,
+  deleteProduct,
   addLegalPage,
   updateLegalPage,
+  deleteLegalPage,
   Product,
 } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
@@ -25,7 +27,10 @@ const ProductSchema = z.object({
 export type AdminProductState = {
   success: boolean;
   error: string | null;
+  message?: string;
 };
+
+const initialProductState: AdminProductState = { success: false, error: null };
 
 export async function addProductAction(
   prevState: AdminProductState,
@@ -42,7 +47,7 @@ export async function addProductAction(
     await addProduct(validatedFields.data);
     revalidatePath("/admin");
     revalidatePath("/buchhandlung-paulik-reisch");
-    return { success: true, error: null };
+    return { success: true, message: "Produkt erfolgreich hinzugefügt." };
   } catch (e) {
     const error = e as Error;
     return { success: false, error: error.message };
@@ -65,10 +70,35 @@ export async function updateProductAction(
     await updateProduct(productId, productData);
     revalidatePath("/admin");
     revalidatePath("/buchhandlung-paulik-reisch");
-    return { success: true, error: null };
+    return { success: true, message: "Produkt erfolgreich aktualisiert." };
   } catch (e) {
     const error = e as Error;
     return { success: false, error: "Fehler beim Aktualisieren: " + error.message };
+  }
+}
+
+const DeleteProductSchema = z.object({
+  productId: z.string(),
+});
+
+export async function deleteProductAction(
+  prevState: AdminProductState,
+  formData: FormData
+): Promise<AdminProductState> {
+  const validatedFields = DeleteProductSchema.safeParse(Object.fromEntries(formData.entries()));
+
+  if (!validatedFields.success) {
+    return { success: false, error: "Ungültige Produkt-ID." };
+  }
+
+  try {
+    await deleteProduct(validatedFields.data.productId);
+    revalidatePath("/admin");
+    revalidatePath("/buchhandlung-paulik-reisch");
+    return { success: true, message: "Produkt wurde gelöscht." };
+  } catch (e) {
+    const error = e as Error;
+    return { success: false, error: "Fehler beim Löschen: " + error.message };
   }
 }
 
@@ -83,7 +113,11 @@ const LegalPageSchema = z.object({
 export type AdminLegalPageState = {
     success: boolean;
     error: string | null;
+    message?: string;
 };
+
+const initialLegalPageState: AdminLegalPageState = { success: false, error: null };
+
 
 export async function addLegalPageAction(
     prevState: AdminLegalPageState,
@@ -101,7 +135,7 @@ export async function addLegalPageAction(
         await addLegalPage(pageId, { title, content });
         revalidatePath("/admin");
         revalidatePath(`/${pageId}`);
-        return { success: true, error: null };
+        return { success: true, message: "Seite erfolgreich erstellt." };
     } catch (e) {
         const error = e as Error;
         return { success: false, error: error.message };
@@ -130,9 +164,35 @@ export async function updateLegalPageAction(
         await updateLegalPage(pageId, { title, content });
         revalidatePath("/admin");
         revalidatePath(`/${pageId}`);
-        return { success: true, error: null };
+        return { success: true, message: "Seite erfolgreich aktualisiert." };
     } catch (e) {
         const error = e as Error;
         return { success: false, error: "Fehler beim Aktualisieren: " + error.message };
+    }
+}
+
+const DeleteLegalPageSchema = z.object({
+  pageId: z.string(),
+});
+
+export async function deleteLegalPageAction(
+    prevState: AdminLegalPageState,
+    formData: FormData
+): Promise<AdminLegalPageState> {
+    const validatedFields = DeleteLegalPageSchema.safeParse(Object.fromEntries(formData.entries()));
+
+    if (!validatedFields.success) {
+        return { success: false, error: "Ungültige Seiten-ID." };
+    }
+    
+    try {
+        await deleteLegalPage(validatedFields.data.pageId);
+        revalidatePath("/admin");
+        // We can't easily revalidate a dynamic slug that no longer exists,
+        // but revalidating /admin is the most important part.
+        return { success: true, message: "Seite wurde gelöscht." };
+    } catch (e) {
+        const error = e as Error;
+        return { success: false, error: "Fehler beim Löschen: " + error.message };
     }
 }

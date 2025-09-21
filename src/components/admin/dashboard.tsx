@@ -11,8 +11,10 @@ import {
 import {
     addProductAction,
     updateProductAction,
+    deleteProductAction,
     addLegalPageAction,
     updateLegalPageAction,
+    deleteLegalPageAction,
 } from "@/app/admin/actions";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -28,7 +30,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle } from "lucide-react";
+import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle, Trash2 } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -42,6 +44,17 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 function LeadsTable() {
     const [orders, setOrders] = useState<Order[]>([]);
@@ -134,6 +147,7 @@ function LeadsTable() {
 type AdminProductState = {
   success: boolean;
   error: string | null;
+  message?: string;
 };
 
 const initialProductState: AdminProductState = { success: false, error: null };
@@ -141,12 +155,12 @@ const initialProductState: AdminProductState = { success: false, error: null };
 function ProductsManager({ initialProducts }: { initialProducts: Product[] }) {
     const [products, setProducts] = useState<Product[]>(initialProducts);
     const [editingProducts, setEditingProducts] = useState<{ [key: string]: Partial<Product> }>({});
-    const [saving, setSaving] = useState(false);
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const { toast } = useToast();
 
     const [addState, addFormAction] = useActionState(addProductAction, initialProductState);
     const [updateState, updateFormAction] = useActionState(updateProductAction, initialProductState);
+    const [deleteState, deleteFormAction] = useActionState(deleteProductAction, initialProductState);
 
      useEffect(() => {
         setProducts(initialProducts);
@@ -154,25 +168,33 @@ function ProductsManager({ initialProducts }: { initialProducts: Product[] }) {
     
     useEffect(() => {
         if (addState.success) {
-            toast({ title: "Erstellt", description: "Neues Produkt wurde erfolgreich hinzugefügt." });
+            toast({ title: "Erfolg", description: addState.message });
             setIsAddDialogOpen(false);
-            // Re-fetching is handled by revalidation on the server
         }
         if (addState.error) {
             toast({ variant: "destructive", title: "Fehler", description: addState.error });
         }
-    }, [addState]);
+    }, [addState, toast]);
     
     useEffect(() => {
         if (updateState.success) {
-            toast({ title: "Gespeichert", description: "Produkt wurde erfolgreich aktualisiert." });
+            toast({ title: "Erfolg", description: updateState.message });
             setEditingProducts({});
-             // Re-fetching is handled by revalidation on the server
         }
         if (updateState.error) {
             toast({ variant: "destructive", title: "Fehler", description: updateState.error });
         }
-    }, [updateState]);
+    }, [updateState, toast]);
+
+    useEffect(() => {
+        if (deleteState.success) {
+            toast({ title: "Erfolg", description: deleteState.message });
+        }
+        if (deleteState.error) {
+            toast({ variant: "destructive", title: "Fehler", description: deleteState.error });
+        }
+    }, [deleteState, toast]);
+
 
     const handleInputChange = (productId: string, field: keyof Product, value: string | number) => {
         setEditingProducts(prev => ({
@@ -219,7 +241,7 @@ function ProductsManager({ initialProducts }: { initialProducts: Product[] }) {
                             <TableHead>Preis</TableHead>
                             <TableHead>Vorbestell-Preis</TableHead>
                             <TableHead>Amazon Link</TableHead>
-                            <TableHead className="text-right">Aktion</TableHead>
+                            <TableHead className="text-right">Aktionen</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -260,18 +282,37 @@ function ProductsManager({ initialProducts }: { initialProducts: Product[] }) {
                                         />
                                     </TableCell>
                                     <TableCell className="text-right">
-                                        <form action={updateFormAction}>
-                                            <input type="hidden" name="productId" value={product.id} />
-                                            <input type="hidden" name="productData" value={JSON.stringify(editingProducts[product.id] || {})} />
-                                            <Button
-                                                type="submit"
-                                                disabled={!editingProducts[product.id]}
-                                                size="sm"
-                                            >
-                                                <Save className="mr-2 h-4 w-4" />
-                                                Speichern
-                                            </Button>
-                                        </form>
+                                        <div className="flex gap-2 justify-end">
+                                            <form action={updateFormAction}>
+                                                <input type="hidden" name="productId" value={product.id} />
+                                                <input type="hidden" name="productData" value={JSON.stringify(editingProducts[product.id] || {})} />
+                                                <Button type="submit" disabled={!editingProducts[product.id]} size="sm" variant="outline">
+                                                    <Save className="h-4 w-4" />
+                                                </Button>
+                                            </form>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Button size="sm" variant="destructive">
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <form action={deleteFormAction}>
+                                                        <input type="hidden" name="productId" value={product.id} />
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>Sind Sie sicher?</AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                Diese Aktion kann nicht rückgängig gemacht werden. Das Produkt wird dauerhaft gelöscht.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+                                                            <AlertDialogAction type="submit">Löschen</AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </form>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             )})
@@ -284,8 +325,9 @@ function ProductsManager({ initialProducts }: { initialProducts: Product[] }) {
 }
 
 type AdminLegalPageState = {
-    success: boolean;
-    error: string | null;
+  success: boolean;
+  error: string | null;
+  message?: string;
 };
 const initialLegalPageState: AdminLegalPageState = { success: false, error: null };
 
@@ -298,6 +340,7 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
 
     const [addState, addFormAction] = useActionState(addLegalPageAction, initialLegalPageState);
     const [updateState, updateFormAction] = useActionState(updateLegalPageAction, initialLegalPageState);
+    const [deleteState, deleteFormAction] = useActionState(deleteLegalPageAction, initialLegalPageState);
 
     useEffect(() => {
         setPages(initialPages);
@@ -305,25 +348,32 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
 
     useEffect(() => {
         if (addState.success) {
-            toast({ title: "Erstellt", description: "Neue Seite wurde erfolgreich hinzugefügt." });
+            toast({ title: "Erfolg", description: addState.message });
             setIsAddDialogOpen(false);
-            // Revalidation handles refetch
         }
         if (addState.error) {
             toast({ variant: "destructive", title: "Fehler", description: addState.error });
         }
-    }, [addState]);
+    }, [addState, toast]);
 
     useEffect(() => {
         if (updateState.success) {
-            toast({ title: "Gespeichert", description: `Seite wurde erfolgreich aktualisiert.` });
+            toast({ title: "Erfolg", description: updateState.message });
             setEditingPages({});
-            // Revalidation handles refetch
         }
         if (updateState.error) {
             toast({ variant: "destructive", title: "Fehler", description: updateState.error });
         }
-    }, [updateState]);
+    }, [updateState, toast]);
+
+    useEffect(() => {
+        if (deleteState.success) {
+            toast({ title: "Erfolg", description: deleteState.message });
+        }
+        if (deleteState.error) {
+            toast({ variant: "destructive", title: "Fehler", description: deleteState.error });
+        }
+    }, [deleteState, toast]);
 
     const handleInputChange = (pageId: string, field: keyof LegalPage, value: string) => {
         setEditingPages(prev => ({
@@ -337,17 +387,17 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
             <div className="flex justify-between items-center mb-4">
                  <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                     <DialogTrigger asChild>
-                        <Button variant="outline"><PlusCircle className="mr-2 h-4 w-4" /> Neue Seite</Button>
+                        <Button variant="outline"><PlusCircle className="mr-2 h-4 w-4" /> Neue LP hinzufügen</Button>
                     </DialogTrigger>
                     <DialogContent>
                         <form action={addFormAction}>
                             <DialogHeader>
-                                <DialogTitle>Neue Rechtstexte-Seite hinzufügen</DialogTitle>
+                                <DialogTitle>Neue Dynamische LP hinzufügen</DialogTitle>
                             </DialogHeader>
                             <div className="grid gap-4 py-4">
-                                <Input name="pageId" placeholder="Seiten-ID (slug, z.B. 'agb')" required />
+                                <Input name="pageId" placeholder="Seiten-ID (slug, z.B. 'neue-seite')" required />
                                 <Input name="title" placeholder="Seitentitel" required />
-                                <Textarea name="content" placeholder="Inhalt" required className="h-48" />
+                                <Textarea name="content" placeholder="Inhalt (unterstützt Markdown/HTML je nach Seiten-Template)" required className="h-48" />
                             </div>
                             <DialogFooter>
                                 <DialogClose asChild><Button type="button" variant="secondary">Abbrechen</Button></DialogClose>
@@ -360,7 +410,7 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
             {pages.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground">
                     <FileText className="mx-auto h-8 w-8 mb-2" />
-                    Keine Rechtstexte gefunden.
+                    Keine Seiten gefunden.
                 </div>
             ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -371,7 +421,7 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
                                 <form action={updateFormAction}>
                                     <input type="hidden" name="pageId" value={page.id} />
                                     <CardHeader>
-                                        <CardTitle>Seite: {page.id}</CardTitle>
+                                        <CardTitle>Seite: /{page.id}</CardTitle>
                                         <CardDescription>Zuletzt aktualisiert: {page.lastUpdated ? format(new Date(page.lastUpdated), "dd.MM.yyyy HH:mm", { locale: de }) : 'N/A'}</CardDescription>
                                     </CardHeader>
                                     <CardContent className="space-y-4">
@@ -385,24 +435,48 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
                                             />
                                         </div>
                                         <div>
-                                            <Label htmlFor={`content-${page.id}`}>Inhalt (unterstützt Paragraphen via Leerzeile)</Label>
+                                            <Label htmlFor={`content-${page.id}`}>Inhalt</Label>
                                             <Textarea
                                                 id={`content-${page.id}`}
                                                 name="content"
                                                 value={currentPage.content ?? ''}
                                                 onChange={(e) => handleInputChange(page.id, 'content', e.target.value)}
                                                 className="h-64"
-                                                placeholder="Geben Sie hier den Inhalt ein. Absätze werden durch Leerzeilen erzeugt."
+                                                placeholder="Geben Sie hier den Inhalt ein."
                                             />
                                         </div>
-                                        <Button
-                                            type="submit"
-                                            disabled={!editingPages[page.id]}
-                                            className="w-full"
-                                        >
-                                            <Save className="mr-2 h-4 w-4" />
-                                            Änderungen speichern
-                                        </Button>
+                                        <div className="flex gap-2">
+                                            <Button
+                                                type="submit"
+                                                disabled={!editingPages[page.id]}
+                                                className="w-full"
+                                            >
+                                                <Save className="mr-2 h-4 w-4" />
+                                                Änderungen speichern
+                                            </Button>
+                                             <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Button size="icon" variant="destructive">
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <form action={deleteLegalPageAction}>
+                                                        <input type="hidden" name="pageId" value={page.id} />
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>Sind Sie sicher?</AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                Diese Aktion kann nicht rückgängig gemacht werden. Die Seite /{page.id} wird dauerhaft gelöscht.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+                                                            <AlertDialogAction type="submit">Löschen</AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </form>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </div>
                                     </CardContent>
                                 </form>
                             </Card>
@@ -426,7 +500,7 @@ export function AdminDashboard({
             <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="leads">Leads / Bestellungen</TabsTrigger>
                 <TabsTrigger value="products">Produkte</TabsTrigger>
-                <TabsTrigger value="legal">Rechtstexte</TabsTrigger>
+                <TabsTrigger value="legal">Dynamische LPs</TabsTrigger>
             </TabsList>
             <TabsContent value="leads" className="mt-6">
                 <LeadsTable />
