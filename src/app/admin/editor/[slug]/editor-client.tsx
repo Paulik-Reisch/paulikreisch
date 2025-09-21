@@ -1,8 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
-import { useActionState } from "react";
+import { useState, useEffect, useActionState, useTransition } from "react";
 import { useFormStatus } from "react-dom";
 import Link from "next/link";
 import { LegalPage, PageComponent } from "@/lib/firestore";
@@ -48,13 +47,23 @@ function generatePageHtml(components: PageComponent[]): string {
         switch(component.type) {
             case 'heading':
                 const Tag = props.level || 'h1';
-                return `<${Tag} class="${props.className || ''}">${props.text || ''}</${Tag}>`;
+                // Provide default styling for headings, which can be overridden by className
+                const defaultHeadingClasses: {[key:string]: string} = {
+                    h1: "text-4xl font-bold tracking-tighter",
+                    h2: "text-3xl font-bold tracking-tight",
+                    h3: "text-2xl font-semibold",
+                    h4: "text-xl font-semibold",
+                };
+                const classes = props.className || defaultHeadingClasses[Tag] || '';
+                return `<${Tag} class="${classes}">${props.text || ''}</${Tag}>`;
             case 'text':
-                return `<p class="${props.className || ''}">${(props.text || '').replace(/\n/g, '<br />')}</p>`;
+                // Provide default styling for paragraphs
+                const textClasses = props.className || 'leading-relaxed text-muted-foreground';
+                return `<p class="${textClasses}">${(props.text || '').replace(/\n/g, '<br />')}</p>`;
             case 'button':
                 return `<div class="my-6 text-center"><a href="${props.href || '#'}" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 shadow-md transform active:scale-95 border h-11 px-8 bg-primary text-primary-foreground hover:bg-primary/90">${props.text || 'Klick'}</a></div>`;
             case 'image':
-                return `<div class="my-6 text-center"><img src="${props.src || 'https://placehold.co/800x450'}" alt="${props.alt || ''}" style="max-width: ${props.width || '100%'}; margin: auto;" class="h-auto rounded-lg shadow-md inline-block" /></div>`;
+                 return `<img src="${props.src || 'https://placehold.co/800x450'}" alt="${props.alt || ''}" style="max-width: ${props.width || '100%'};" class="h-auto rounded-lg shadow-md my-6 mx-auto block" />`;
             case 'spacer':
                  return `<div style="height: ${props.height || '2rem'}"></div>`;
             default:
@@ -128,13 +137,13 @@ function PageComponentEditor({ component, onUpdate, onDelete, onMove }: { compon
                             </SelectContent>
                         </Select>
                     </div>
-                    {renderField('className', 'Zusätzliche CSS-Klassen (Tailwind)')}
+                    {renderField('className', 'Zusätzliche CSS-Klassen (Tailwind)', 'text', 'z.B. text-center text-primary')}
                 </div>
             );
             case 'text': return (
                 <div className="space-y-4">
                     {renderTextarea('text', 'Text (unterstützt Zeilenumbrüche)')}
-                    {renderField('className', 'Zusätzliche CSS-Klassen (Tailwind)')}
+                    {renderField('className', 'Zusätzliche CSS-Klassen (Tailwind)', 'text', 'z.B. text-center text-lg')}
                 </div>
             );
             case 'button': return (
@@ -185,25 +194,6 @@ function PageComponentEditor({ component, onUpdate, onDelete, onMove }: { compon
     )
 }
 
-function SubmitButton() {
-    const { pending } = useFormStatus();
-    return (
-        <Button type="submit" disabled={pending} className="w-full">
-            {pending ? (
-                <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Wird gespeichert...
-                </>
-            ) : (
-                <>
-                    <Save className="mr-2 h-4 w-4" />
-                    Seite speichern
-                </>
-            )}
-        </Button>
-    )
-}
-
 export function EditorClient({ page }: { page: LegalPage }) {
   const [title, setTitle] = useState(page.title);
   const [components, setComponents] = useState<PageComponent[]>(page.components || []);
@@ -212,6 +202,7 @@ export function EditorClient({ page }: { page: LegalPage }) {
 
   const [updateState, updateFormAction] = useActionState(updateLegalPageAction, initialLegalPageState);
   const { toast } = useToast();
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     // This effect runs only on the client, after hydration
@@ -232,11 +223,13 @@ export function EditorClient({ page }: { page: LegalPage }) {
   }, [updateState, toast]);
 
   const handleFormSubmit = (formData: FormData) => {
-    formData.set('pageId', page.id);
-    formData.set('title', title);
-    formData.set('components', JSON.stringify(components));
-    formData.set('content', generatedHtml);
-    updateFormAction(formData);
+    startTransition(() => {
+        formData.set('pageId', page.id);
+        formData.set('title', title);
+        formData.set('components', JSON.stringify(components));
+        formData.set('content', generatePageHtml(components)); // always regenerate on save
+        updateFormAction(formData);
+    });
   };
   
   const addComponent = (type: PageComponent['type']) => {
@@ -314,7 +307,19 @@ export function EditorClient({ page }: { page: LegalPage }) {
                     <Button variant="outline" onClick={() => addComponent('spacer')}><Rows className="mr-2 h-4 w-4"/>Abstand</Button>
                 </div>
                 <form action={handleFormSubmit}>
-                    <SubmitButton />
+                     <Button type="submit" disabled={isPending} className="w-full">
+                        {isPending ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Wird gespeichert...
+                            </>
+                        ) : (
+                            <>
+                                <Save className="mr-2 h-4 w-4" />
+                                Seite speichern
+                            </>
+                        )}
+                    </Button>
                 </form>
             </div>
         </div>
@@ -327,7 +332,7 @@ export function EditorClient({ page }: { page: LegalPage }) {
                 </TabsList>
                 <TabsContent value="preview" className="mt-4 flex-grow bg-gray-100 dark:bg-gray-800 p-4 rounded-md">
                      <iframe
-                        srcDoc={`<html><head><link href="/globals.css" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-background text-foreground"><div class="prose dark:prose-invert max-w-none">${generatedHtml}</div></body></html>`}
+                        srcDoc={`<html><head><link href="/globals.css" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-background text-foreground"><div class="max-w-none p-4">${generatedHtml}</div></body></html>`}
                         title="Seiten-Vorschau"
                         className="w-full h-full border bg-white"
                     />
