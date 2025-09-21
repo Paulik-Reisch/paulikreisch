@@ -11,43 +11,50 @@ const topics = [
         title: "Schule = Straflager",
         description: "Die Lernvollzugsanstalt hat wieder geöffnet. Freistunden als Fluchtversuch, Lehrer als Wärter.",
         link: "/lp-schule-straflager",
-        icon: School
+        icon: School,
+        color: "text-red-500"
     },
     {
         title: "Lehrer sind auch nur Menschen",
         description: "Ein Kapitel über inkompetente Lehrer. Ein Hoch auf den Beamtenroboter mit Kaffeetasse.",
         link: "/lp-lehrer-roboter",
-        icon: Coffee
+        icon: Coffee,
+        color: "text-blue-500"
     },
     {
         title: "Mensa = Todesfalle",
         description: "Ekelhumor vom Feinsten. Das Essen als Bio-Waffe. Lies das Menü der Hölle.",
         link: "/lp-mensa-todesfalle",
-        icon: Utensils
+        icon: Utensils,
+        color: "text-green-500"
     },
     {
         title: "Busfahren = Mutprobe",
         description: "Der tägliche Nahverkehr als Gladiatorenkampf. Hol dir den 'Survival Guide'.",
         link: "/lp-busfahren-mutprobe",
-        icon: Bus
+        icon: Bus,
+        color: "text-yellow-500"
     },
     {
         title: "Sport ist Mord",
         description: "Ein tiefgründiger Blick in die Abgründe der Sporthalle. Völkerball als Kriegsersatz.",
         link: "/lp-sport-ist-mord",
-        icon: Dumbbell
+        icon: Dumbbell,
+        color: "text-indigo-500"
     },
     {
         title: "Schulzeiten = Genickbruch",
         description: "Warum Frühaufstehen ein Staatsverbrechen ist. Der Wecker ist der wahre Feind der Menschheit.",
         link: "/lp-schulzeiten-genickbruch",
-        icon: AlarmClock
+        icon: AlarmClock,
+        color: "text-purple-500"
     },
     {
         title: "Corona für Schüler erklärt",
         description: "Eine satirische Aufarbeitung von Tests & Quarantäne. Nasenbohrer willkommen!",
         link: "/lp-corona-satire",
-        icon: Biohazard
+        icon: Biohazard,
+        color: "text-pink-500"
     }
 ];
 
@@ -70,7 +77,7 @@ export function TopicLPs() {
                     <AccordionItem value={topic.title} key={topic.title}>
                         <AccordionTrigger className="text-xl font-headline hover:no-underline">
                             <div className="flex items-center gap-4">
-                                <topic.icon className="h-6 w-6 text-primary" />
+                                <topic.icon className={`h-6 w-6 ${topic.color}`} />
                                 {topic.title}
                             </div>
                         </AccordionTrigger>
