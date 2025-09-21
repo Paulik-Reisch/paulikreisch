@@ -1,18 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useActionState } from "react";
 import { 
     getOrders, 
     getProducts, 
     Order, 
     Product, 
-    updateProduct, 
     LegalPage, 
     getLegalPages, 
-    updateLegalPage,
-    addLegalPage,
-    addProduct
 } from "@/lib/firestore";
+import {
+    addProductAction,
+    updateProductAction,
+    addLegalPageAction,
+    updateLegalPageAction,
+    AdminProductState,
+    AdminLegalPageState,
+} from "@/app/admin/actions";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -138,11 +143,15 @@ function ProductsManager() {
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const { toast } = useToast();
 
+    const [addState, addFormAction] = useActionState(addProductAction, { success: false, error: null });
+    const [updateState, updateFormAction] = useActionState(updateProductAction, { success: false, error: null });
+
     const fetchProducts = async () => {
         setLoading(true);
         try {
             const fetchedProducts = await getProducts();
             setProducts(fetchedProducts);
+            setEditingProducts({});
         } catch (error) {
             console.error("Error fetching products:", error);
             toast({ variant: "destructive", title: "Fehler", description: "Produkte konnten nicht geladen werden." });
@@ -154,6 +163,27 @@ function ProductsManager() {
     useEffect(() => {
         fetchProducts();
     }, []);
+    
+    useEffect(() => {
+        if (addState.success) {
+            toast({ title: "Erstellt", description: "Neues Produkt wurde erfolgreich hinzugefügt." });
+            setIsAddDialogOpen(false);
+            fetchProducts();
+        }
+        if (addState.error) {
+            toast({ variant: "destructive", title: "Fehler", description: addState.error });
+        }
+    }, [addState]);
+    
+    useEffect(() => {
+        if (updateState.success) {
+            toast({ title: "Gespeichert", description: "Produkt wurde erfolgreich aktualisiert." });
+            fetchProducts();
+        }
+        if (updateState.error) {
+            toast({ variant: "destructive", title: "Fehler", description: updateState.error });
+        }
+    }, [updateState]);
 
     const handleInputChange = (productId: string, field: keyof Product, value: string | number) => {
         setEditingProducts(prev => ({
@@ -161,57 +191,6 @@ function ProductsManager() {
             [productId]: { ...prev[productId], [field]: value }
         }));
     };
-
-    const handleSave = async (productId: string) => {
-        const productData = editingProducts[productId];
-        if (!productData) return;
-
-        setSaving(true);
-        try {
-            await updateProduct(productId, productData);
-            toast({ title: "Gespeichert", description: "Produkt wurde erfolgreich aktualisiert." });
-            setEditingProducts(prev => {
-                const newEditing = { ...prev };
-                delete newEditing[productId];
-                return newEditing;
-            });
-            await fetchProducts(); // Refresh data
-        } catch (error) {
-            console.error("Error updating product:", error);
-            toast({ variant: "destructive", title: "Fehler", description: "Produkt konnte nicht gespeichert werden." });
-        } finally {
-            setSaving(false);
-        }
-    };
-
-    const handleAddProduct = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        setSaving(true);
-        const formData = new FormData(event.currentTarget);
-        const newProductData = {
-            title: formData.get('title') as string,
-            subtitle: formData.get('subtitle') as string,
-            price: parseFloat(formData.get('price') as string),
-            preorderPrice: parseFloat(formData.get('preorderPrice') as string) || undefined,
-            amazonLink: formData.get('amazonLink') as string,
-            imageSrc: formData.get('imageSrc') as string,
-            aiHint: formData.get('aiHint') as string,
-            description: formData.get('description') as string,
-        };
-
-        try {
-            await addProduct(newProductData);
-            toast({ title: "Erstellt", description: "Neues Produkt wurde erfolgreich hinzugefügt." });
-            setIsAddDialogOpen(false);
-            await fetchProducts();
-        } catch (error) {
-            console.error("Error adding product:", error);
-            toast({ variant: "destructive", title: "Fehler", description: "Produkt konnte nicht hinzugefügt werden." });
-        } finally {
-            setSaving(false);
-        }
-    };
-
 
     return (
         <div>
@@ -221,7 +200,7 @@ function ProductsManager() {
                         <Button variant="outline"><PlusCircle className="mr-2 h-4 w-4" /> Neues Produkt</Button>
                     </DialogTrigger>
                     <DialogContent>
-                        <form onSubmit={handleAddProduct}>
+                        <form action={addFormAction}>
                             <DialogHeader>
                                 <DialogTitle>Neues Produkt hinzufügen</DialogTitle>
                             </DialogHeader>
@@ -237,14 +216,12 @@ function ProductsManager() {
                             </div>
                             <DialogFooter>
                                 <DialogClose asChild><Button type="button" variant="secondary">Abbrechen</Button></DialogClose>
-                                <Button type="submit" disabled={saving}>
-                                    {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Speichern'}
-                                </Button>
+                                <Button type="submit">Speichern</Button>
                             </DialogFooter>
                         </form>
                     </DialogContent>
                 </Dialog>
-                <Button onClick={fetchProducts} disabled={loading || saving} variant="outline">
+                <Button onClick={fetchProducts} disabled={loading} variant="outline">
                     {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
                     Aktualisieren
                 </Button>
@@ -298,14 +275,18 @@ function ProductsManager() {
                                         />
                                     </TableCell>
                                     <TableCell className="text-right">
-                                        <Button
-                                            onClick={() => handleSave(product.id)}
-                                            disabled={!editingProducts[product.id] || saving}
-                                            size="sm"
-                                        >
-                                            {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Save className="mr-2 h-4 w-4" />}
-                                            Speichern
-                                        </Button>
+                                        <form action={updateFormAction}>
+                                            <input type="hidden" name="productId" value={product.id} />
+                                            <input type="hidden" name="productData" value={JSON.stringify(editingProducts[product.id] || {})} />
+                                            <Button
+                                                type="submit"
+                                                disabled={!editingProducts[product.id]}
+                                                size="sm"
+                                            >
+                                                <Save className="mr-2 h-4 w-4" />
+                                                Speichern
+                                            </Button>
+                                        </form>
                                     </TableCell>
                                 </TableRow>
                             )})
@@ -321,15 +302,18 @@ function LegalPagesManager() {
     const [pages, setPages] = useState<LegalPage[]>([]);
     const [editingPages, setEditingPages] = useState<{ [key: string]: Partial<LegalPage> }>({});
     const [loading, setLoading] = useState(true);
-    const [saving, setSaving] = useState(false);
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const { toast } = useToast();
+
+    const [addState, addFormAction] = useActionState(addLegalPageAction, { success: false, error: null });
+    const [updateState, updateFormAction] = useActionState(updateLegalPageAction, { success: false, error: null });
 
     const fetchPages = async () => {
         setLoading(true);
         try {
             const fetchedPages = await getLegalPages();
             setPages(fetchedPages);
+            setEditingPages({});
         } catch (error) {
             console.error("Error fetching legal pages:", error);
             toast({ variant: "destructive", title: "Fehler", description: "Rechtstexte konnten nicht geladen werden." });
@@ -342,57 +326,32 @@ function LegalPagesManager() {
         fetchPages();
     }, []);
 
+    useEffect(() => {
+        if (addState.success) {
+            toast({ title: "Erstellt", description: "Neue Seite wurde erfolgreich hinzugefügt." });
+            setIsAddDialogOpen(false);
+            fetchPages();
+        }
+        if (addState.error) {
+            toast({ variant: "destructive", title: "Fehler", description: addState.error });
+        }
+    }, [addState]);
+
+    useEffect(() => {
+        if (updateState.success) {
+            toast({ title: "Gespeichert", description: `Seite wurde erfolgreich aktualisiert.` });
+            fetchPages();
+        }
+        if (updateState.error) {
+            toast({ variant: "destructive", title: "Fehler", description: updateState.error });
+        }
+    }, [updateState]);
+
     const handleInputChange = (pageId: string, field: keyof LegalPage, value: string) => {
         setEditingPages(prev => ({
             ...prev,
             [pageId]: { ...prev[pageId], [field]: value }
         }));
-    };
-    
-    const handleSave = async (pageId: string) => {
-        const pageData = editingPages[pageId];
-        if (!pageData || !pageData.title || !pageData.content) {
-             toast({ variant: "destructive", title: "Fehler", description: "Titel und Inhalt dürfen nicht leer sein." });
-            return;
-        };
-
-        setSaving(true);
-        try {
-            await updateLegalPage(pageId, { title: pageData.title, content: pageData.content });
-            toast({ title: "Gespeichert", description: `Seite wurde erfolgreich aktualisiert.` });
-            setEditingPages(prev => {
-                const newEditing = { ...prev };
-                delete newEditing[pageId];
-                return newEditing;
-            });
-            await fetchPages();
-        } catch (error) {
-            console.error("Error updating legal page:", error);
-            toast({ variant: "destructive", title: "Fehler", description: "Seite konnte nicht gespeichert werden." });
-        } finally {
-            setSaving(false);
-        }
-    };
-
-    const handleAddPage = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        setSaving(true);
-        const formData = new FormData(event.currentTarget);
-        const pageId = formData.get('pageId') as string;
-        const title = formData.get('title') as string;
-        const content = formData.get('content') as string;
-
-        try {
-            await addLegalPage(pageId, { title, content });
-            toast({ title: "Erstellt", description: "Neue Seite wurde erfolgreich hinzugefügt." });
-            setIsAddDialogOpen(false);
-            await fetchPages();
-        } catch (error: any) {
-            console.error("Error adding page:", error);
-            toast({ variant: "destructive", title: "Fehler", description: error.message || "Seite konnte nicht hinzugefügt werden." });
-        } finally {
-            setSaving(false);
-        }
     };
 
     return (
@@ -403,7 +362,7 @@ function LegalPagesManager() {
                         <Button variant="outline"><PlusCircle className="mr-2 h-4 w-4" /> Neue Seite</Button>
                     </DialogTrigger>
                     <DialogContent>
-                        <form onSubmit={handleAddPage}>
+                        <form action={addFormAction}>
                             <DialogHeader>
                                 <DialogTitle>Neue Rechtstexte-Seite hinzufügen</DialogTitle>
                             </DialogHeader>
@@ -414,14 +373,12 @@ function LegalPagesManager() {
                             </div>
                             <DialogFooter>
                                 <DialogClose asChild><Button type="button" variant="secondary">Abbrechen</Button></DialogClose>
-                                <Button type="submit" disabled={saving}>
-                                    {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Speichern'}
-                                </Button>
+                                <Button type="submit">Speichern</Button>
                             </DialogFooter>
                         </form>
                     </DialogContent>
                 </Dialog>
-                <Button onClick={fetchPages} disabled={loading || saving} variant="outline">
+                <Button onClick={fetchPages} disabled={loading} variant="outline">
                     {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
                     Aktualisieren
                 </Button>
@@ -441,38 +398,43 @@ function LegalPagesManager() {
                         const currentPage = { ...page, ...editingPages[page.id] };
                         return (
                             <Card key={page.id}>
-                                <CardHeader>
-                                    <CardTitle>Seite: {page.id}</CardTitle>
-                                    <CardDescription>Zuletzt aktualisiert: {page.lastUpdated ? format(page.lastUpdated.toDate(), "dd.MM.yyyy HH:mm", { locale: de }) : 'N/A'}</CardDescription>
-                                </CardHeader>
-                                <CardContent className="space-y-4">
-                                     <div>
-                                        <Label htmlFor={`title-${page.id}`}>Seitentitel</Label>
-                                        <Input
-                                            id={`title-${page.id}`}
-                                            value={currentPage.title ?? ''}
-                                            onChange={(e) => handleInputChange(page.id, 'title', e.target.value)}
-                                        />
-                                    </div>
-                                    <div>
-                                        <Label htmlFor={`content-${page.id}`}>Inhalt (unterstützt Paragraphen via Leerzeile)</Label>
-                                         <Textarea
-                                            id={`content-${page.id}`}
-                                            value={currentPage.content ?? ''}
-                                            onChange={(e) => handleInputChange(page.id, 'content', e.target.value)}
-                                            className="h-64"
-                                            placeholder="Geben Sie hier den Inhalt ein. Absätze werden durch Leerzeilen erzeugt."
-                                        />
-                                    </div>
-                                    <Button
-                                        onClick={() => handleSave(page.id)}
-                                        disabled={!editingPages[page.id] || saving}
-                                        className="w-full"
-                                    >
-                                        {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Save className="mr-2 h-4 w-4" />}
-                                        Änderungen speichern
-                                    </Button>
-                                </CardContent>
+                                <form action={updateFormAction}>
+                                    <input type="hidden" name="pageId" value={page.id} />
+                                    <CardHeader>
+                                        <CardTitle>Seite: {page.id}</CardTitle>
+                                        <CardDescription>Zuletzt aktualisiert: {page.lastUpdated ? format(page.lastUpdated.toDate(), "dd.MM.yyyy HH:mm", { locale: de }) : 'N/A'}</CardDescription>
+                                    </CardHeader>
+                                    <CardContent className="space-y-4">
+                                        <div>
+                                            <Label htmlFor={`title-${page.id}`}>Seitentitel</Label>
+                                            <Input
+                                                id={`title-${page.id}`}
+                                                name="title"
+                                                value={currentPage.title ?? ''}
+                                                onChange={(e) => handleInputChange(page.id, 'title', e.target.value)}
+                                            />
+                                        </div>
+                                        <div>
+                                            <Label htmlFor={`content-${page.id}`}>Inhalt (unterstützt Paragraphen via Leerzeile)</Label>
+                                            <Textarea
+                                                id={`content-${page.id}`}
+                                                name="content"
+                                                value={currentPage.content ?? ''}
+                                                onChange={(e) => handleInputChange(page.id, 'content', e.target.value)}
+                                                className="h-64"
+                                                placeholder="Geben Sie hier den Inhalt ein. Absätze werden durch Leerzeilen erzeugt."
+                                            />
+                                        </div>
+                                        <Button
+                                            type="submit"
+                                            disabled={!editingPages[page.id]}
+                                            className="w-full"
+                                        >
+                                            <Save className="mr-2 h-4 w-4" />
+                                            Änderungen speichern
+                                        </Button>
+                                    </CardContent>
+                                </form>
                             </Card>
                         );
                     })}
