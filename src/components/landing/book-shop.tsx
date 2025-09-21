@@ -149,17 +149,12 @@ export function BookShop({ initialProducts }: { initialProducts: Product[]}) {
                     <>
                         <BookCardSkeleton />
                         <BookCardSkeleton />
-                        <div className="group relative col-span-1 border-2 border-dashed rounded-xl flex flex-col items-center justify-center p-6 text-center">
-                            <Skeleton className="w-12 h-12 rounded-full" />
-                            <Skeleton className="h-6 w-3/4 mt-4" />
-                            <Skeleton className="h-4 w-full mt-2" />
-                            <Skeleton className="h-10 w-32 mt-6" />
-                        </div>
+                        <BookCardSkeleton />
                     </>
                 ) : (
                     <>
-                        {products.hw1 && <BookCard book={products.hw1} />}
-                        {products.hw2 && <HW2BookCard book={products.hw2} />}
+                        {Object.values(products).filter(p => p.id === 'hw1').map(p => <BookCard key={p.id} book={p} />)}
+                        {Object.values(products).filter(p => p.id === 'hw2').map(p => <HW2BookCard key={p.id} book={p} />)}
 
                         {products.hw1 && (
                             <Dialog>
