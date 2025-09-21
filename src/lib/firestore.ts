@@ -43,12 +43,48 @@ export interface LegalPage {
 
 const db = getFirestore(app);
 
+// In a real app, this would fetch from Firestore.
+// For this prototype, we return mock data to avoid empty states.
+const defaultProducts: Product[] = [
+    {
+        id: "hw1",
+        title: "Hallo Welt",
+        subtitle: "Erhebliche Kritik am unerhörten Bildungsgang der Lernvollzugsanstalt SK-S",
+        price: 10.99,
+        imageSrc: "https://m.media-amazon.com/images/I/61hB6jTD-CL._SY466_.jpg",
+        aiHint: "book cover satire",
+        amazonLink: "https://www.amazon.de/Hallo-Welt-unerh%C3%B6rten-Bildungsgang-Lernvollzugsanstalt/dp/3982548803",
+        description: "Die satirische Abrechnung mit dem Schulsystem, Lehrern als Beamtenrobotern und dem täglichen Wahnsinn des Erwachsenwerdens."
+    },
+    {
+        id: "hw2",
+        title: "Hallo Welt 2",
+        subtitle: "Wie das Leben funktioniert",
+        price: 12.99,
+        preorderPrice: 9.99,
+        imageSrc: "https://placehold.co/300x450.png",
+        aiHint: "funny book cover",
+        amazonLink: "#",
+        description: "Die Fortsetzung, die niemand wollte. Eine Abrechnung mit Bürokratie, deutschem Internet und Mietenwahnsinn."
+    }
+];
+
 export async function getProducts(): Promise<Product[]> {
-    const productsCol = collection(db, 'products');
-    const productSnapshot = await getDocs(productsCol);
-    const productList = productSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
-    return productList;
+    try {
+        const productsCol = collection(db, 'products');
+        const productSnapshot = await getDocs(productsCol);
+        if (productSnapshot.empty) {
+            console.log("No products found in Firestore, returning default products.");
+            return defaultProducts;
+        }
+        const productList = productSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
+        return productList;
+    } catch (error) {
+        console.error("Error fetching products from Firestore, returning default products:", error);
+        return defaultProducts;
+    }
 }
+
 
 export async function addProduct(data: Omit<Product, 'id'>) {
     const productsCol = collection(db, 'products');
@@ -71,10 +107,11 @@ export async function getOrders(): Promise<Order[]> {
     const orderSnapshot = await getDocs(q);
     const orderList = orderSnapshot.docs.map(doc => {
         const data = doc.data();
+        const timestamp = data.timestamp;
         return { 
             id: doc.id, 
             ...data,
-            timestamp: (data.timestamp as Timestamp).toDate().toISOString()
+            timestamp: timestamp ? (timestamp as Timestamp).toDate().toISOString() : new Date().toISOString(),
         } as Order;
     });
     return orderList;
@@ -99,11 +136,12 @@ export async function getLegalPages(): Promise<LegalPage[]> {
     }
     const pageList = legalSnapshot.docs.map(doc => {
         const data = doc.data();
+        const lastUpdated = data.lastUpdated;
         return { 
             id: doc.id, 
             title: data.title,
             content: data.content,
-            lastUpdated: (data.lastUpdated as Timestamp).toDate().toISOString(),
+            lastUpdated: lastUpdated ? (lastUpdated as Timestamp).toDate().toISOString() : new Date().toISOString(),
         } as LegalPage;
     });
     return pageList;
@@ -115,11 +153,12 @@ export async function getLegalPage(slug: string): Promise<LegalPage | null> {
 
     if (docSnap.exists()) {
         const data = docSnap.data();
+        const lastUpdated = data.lastUpdated;
         return {
             id: docSnap.id,
             title: data.title,
             content: data.content,
-            lastUpdated: (data.lastUpdated as Timestamp).toDate().toISOString()
+            lastUpdated: lastUpdated ? (lastUpdated as Timestamp).toDate().toISOString() : new Date().toISOString(),
         } as LegalPage;
     } else {
         return null;
