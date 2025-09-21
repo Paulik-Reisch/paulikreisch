@@ -10,6 +10,9 @@ import {
   updateLegalPage,
   deleteLegalPage,
   Product,
+  addNewsletter,
+  updateNewsletter,
+  deleteNewsletter,
 } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
 import { correctHtml } from "@/ai/flows/correct-html-flow";
@@ -361,4 +364,101 @@ export async function correctHtmlAction(
         console.error(e);
         return { error: "HTML konnte nicht korrigiert werden. Die KI ist möglicherweise im Urlaub." };
     }
+}
+
+
+// Newsletter Editor Actions
+export type AdminNewsletterState = {
+  success: boolean;
+  error?: string | null;
+  message?: string;
+  newNewsletterId?: string;
+};
+
+const initialNewsletterState: AdminNewsletterState = { success: false, error: null };
+
+const AddNewsletterSchema = z.object({
+  name: z.string().min(1, "Name ist erforderlich."),
+  subject: z.string().min(1, "Betreff ist erforderlich."),
+});
+
+export async function addNewsletterAction(
+  prevState: AdminNewsletterState,
+  formData: FormData
+): Promise<AdminNewsletterState> {
+  const validatedFields = AddNewsletterSchema.safeParse(Object.fromEntries(formData.entries()));
+
+  if (!validatedFields.success) {
+    const errorMessages = validatedFields.error.errors.map((e) => e.message).join(". ");
+    return { success: false, error: errorMessages };
+  }
+
+  try {
+    const newId = await addNewsletter(validatedFields.data);
+    revalidatePath("/admin");
+    return { success: true, message: "Newsletter erfolgreich erstellt.", newNewsletterId: newId };
+  } catch (e) {
+    const error = e as Error;
+    return { success: false, error: error.message };
+  }
+}
+
+const UpdateNewsletterSchema = z.object({
+  id: z.string(),
+  name: z.string().optional(),
+  subject: z.string().optional(),
+  components: z.string().optional(), // components will be passed as a JSON string
+});
+
+export async function updateNewsletterAction(
+  prevState: AdminNewsletterState,
+  formData: FormData
+): Promise<AdminNewsletterState> {
+  const validatedFields = UpdateNewsletterSchema.safeParse(Object.fromEntries(formData.entries()));
+
+  if (!validatedFields.success) {
+    const errorMessages = validatedFields.error.errors.map((e) => e.message).join(". ");
+    return { success: false, error: errorMessages };
+  }
+  
+  try {
+    const { id, components, ...rest } = validatedFields.data;
+    const dataToUpdate: any = { ...rest };
+    if (components) {
+        dataToUpdate.components = JSON.parse(components);
+    }
+    
+    await updateNewsletter(id, dataToUpdate);
+    revalidatePath("/admin");
+    revalidatePath(`/admin/nle/${id}`);
+    return { success: true, message: "Newsletter erfolgreich aktualisiert." };
+  } catch (e) {
+    const error = e as Error;
+    return { success: false, error: "Fehler beim Aktualisieren: " + error.message };
+  }
+}
+
+
+const DeleteNewsletterSchema = z.object({
+  id: z.string(),
+});
+
+export async function deleteNewsletterAction(
+  prevState: AdminNewsletterState,
+  formData: FormData
+): Promise<AdminNewsletterState> {
+  const validatedFields = DeleteNewsletterSchema.safeParse(Object.fromEntries(formData.entries()));
+
+  if (!validatedFields.success) {
+    return { success: false, error: "Ungültige Newsletter-ID." };
+  }
+  
+  try {
+    await deleteNewsletter(validatedFields.data.id);
+    revalidatePath("/admin");
+    return { success: true, message: "Newsletter wurde gelöscht." };
+  } catch (e) {
+    const error = e as Error;
+    return { success: false, error: "Fehler beim Löschen: " + error.message };
+  }
 }

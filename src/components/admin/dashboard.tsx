@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { 
     Order, 
     Product, 
     LegalPage, 
+    Newsletter,
     getOrders
 } from "@/lib/firestore";
 import {
@@ -15,6 +17,8 @@ import {
     addLegalPageAction,
     deleteLegalPageAction,
     createDefaultLegalPagesAction,
+    addNewsletterAction,
+    deleteNewsletterAction,
 } from "@/app/admin/actions";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -30,7 +34,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus } from "lucide-react";
+import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -493,19 +497,158 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
     )
 }
 
+type AdminNewsletterState = {
+  success: boolean;
+  error?: string | null;
+  message?: string;
+  newNewsletterId?: string;
+};
+
+const initialNewsletterState: AdminNewsletterState = { success: false };
+
+function NewsletterManager({ initialNewsletters }: { initialNewsletters: Newsletter[] }) {
+    const router = useRouter();
+    const [newsletters, setNewsletters] = useState(initialNewsletters);
+    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+    const { toast } = useToast();
+
+    const [addState, addFormAction] = useActionState(addNewsletterAction, initialNewsletterState);
+    const [deleteState, deleteFormAction] = useActionState(deleteNewsletterAction, initialNewsletterState);
+    
+    useEffect(() => {
+        setNewsletters(initialNewsletters);
+    }, [initialNewsletters]);
+    
+    useEffect(() => {
+        if (addState.success) {
+            toast({ title: "Erfolg", description: addState.message });
+            setIsAddDialogOpen(false);
+            if (addState.newNewsletterId) {
+                router.push(`/admin/nle/${addState.newNewsletterId}`);
+            }
+        }
+        if (addState.error) {
+            toast({ variant: "destructive", title: "Fehler", description: addState.error });
+        }
+    }, [addState, toast, router]);
+
+    useEffect(() => {
+        if (deleteState.success) {
+            toast({ title: "Erfolg", description: deleteState.message });
+        }
+        if (deleteState.error) {
+            toast({ variant: "destructive", title: "Fehler", description: deleteState.error });
+        }
+    }, [deleteState, toast]);
+
+    return (
+        <div>
+            <div className="flex justify-between items-center mb-4">
+                 <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                    <DialogTrigger asChild>
+                        <Button variant="outline"><PlusCircle className="mr-2 h-4 w-4" /> Neuer Newsletter</Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <form action={addFormAction}>
+                            <DialogHeader>
+                                <DialogTitle>Neuen Newsletter erstellen</DialogTitle>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4">
+                                <Input name="name" placeholder="Interner Name (z.B. 'Launch-Kampagne Woche 1')" required />
+                                <Input name="subject" placeholder="Betreff der E-Mail" required />
+                            </div>
+                            <DialogFooter>
+                                <DialogClose asChild><Button type="button" variant="secondary">Abbrechen</Button></DialogClose>
+                                <Button type="submit">Erstellen & Bearbeiten</Button>
+                            </DialogFooter>
+                        </form>
+                    </DialogContent>
+                </Dialog>
+            </div>
+             <div className="border rounded-lg overflow-hidden">
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Name</TableHead>
+                            <TableHead>Betreff</TableHead>
+                            <TableHead>Zuletzt aktualisiert</TableHead>
+                            <TableHead className="text-right">Aktionen</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {newsletters.length === 0 ? (
+                             <TableRow>
+                                <TableCell colSpan={4} className="text-center py-12 text-muted-foreground">
+                                    <Mail className="mx-auto h-8 w-8 mb-2" />
+                                    Keine Newsletter gefunden.
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            newsletters.map((newsletter) => (
+                                <TableRow key={newsletter.id}>
+                                    <TableCell className="font-medium">{newsletter.name}</TableCell>
+                                    <TableCell className="text-muted-foreground">{newsletter.subject}</TableCell>
+                                    <TableCell className="text-muted-foreground">
+                                        {newsletter.lastUpdated ? format(new Date(newsletter.lastUpdated), "dd.MM.yyyy HH:mm", { locale: de }) : 'N/A'}
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        <div className="flex gap-2 justify-end">
+                                            <Link href={`/admin/nle/${newsletter.id}`}>
+                                                <Button size="sm" variant="outline">
+                                                    <Edit className="h-4 w-4" />
+                                                </Button>
+                                            </Link>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Button size="sm" variant="destructive">
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>Sind Sie sicher?</AlertDialogTitle>
+                                                        <AlertDialogDescription>
+                                                          Diese Aktion kann nicht rückgängig gemacht werden. Der Newsletter wird dauerhaft gelöscht.
+                                                        </AlertDialogDescription>
+                                                    </AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+                                                        <form action={deleteFormAction}>
+                                                            <input type="hidden" name="id" value={newsletter.id} />
+                                                            <AlertDialogAction type="submit">Löschen</AlertDialogAction>
+                                                        </form>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+        </div>
+    )
+}
+
+
 export function AdminDashboard({
     initialProducts,
     initialLegalPages,
+    initialNewsletters,
 }: {
     initialProducts: Product[];
     initialLegalPages: LegalPage[];
+    initialNewsletters: Newsletter[];
 }) {
     return (
         <Tabs defaultValue="leads" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="leads">Leads / Bestellungen</TabsTrigger>
                 <TabsTrigger value="products">Produkte</TabsTrigger>
                 <TabsTrigger value="legal">Dynamische LPs</TabsTrigger>
+                <TabsTrigger value="newsletters">Newsletter</TabsTrigger>
             </TabsList>
             <TabsContent value="leads" className="mt-6">
                 <LeadsTable />
@@ -516,8 +659,9 @@ export function AdminDashboard({
             <TabsContent value="legal" className="mt-6">
                 <LegalPagesManager initialPages={initialLegalPages} />
             </TabsContent>
+            <TabsContent value="newsletters" className="mt-6">
+                <NewsletterManager initialNewsletters={initialNewsletters} />
+            </TabsContent>
         </Tabs>
     )
 }
-
-    

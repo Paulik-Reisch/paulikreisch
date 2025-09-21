@@ -41,6 +41,23 @@ export interface LegalPage {
     lastUpdated: string;
 }
 
+export interface NewsletterComponent {
+    id: string;
+    type: 'heading' | 'text' | 'button' | 'image';
+    props: {
+        [key: string]: string;
+    };
+}
+
+export interface Newsletter {
+    id: string;
+    name: string;
+    subject: string;
+    components: NewsletterComponent[];
+    lastUpdated: string;
+}
+
+
 const db = getFirestore(app);
 
 // In a real app, this would fetch from Firestore.
@@ -216,4 +233,64 @@ export async function updateLegalPage(pageId: string, data: { title: string, con
 export async function deleteLegalPage(pageId: string) {
     const pageRef = doc(db, 'legal_pages', pageId);
     await deleteDoc(pageRef);
+}
+
+
+// --- Newsletter Functions ---
+
+export async function getNewsletters(): Promise<Newsletter[]> {
+    const newslettersCol = collection(db, 'newsletters');
+    const q = query(newslettersCol, orderBy("lastUpdated", "desc"));
+    const newsletterSnapshot = await getDocs(q);
+    return newsletterSnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+            id: doc.id,
+            name: data.name,
+            subject: data.subject,
+            components: data.components || [],
+            lastUpdated: (data.lastUpdated as Timestamp).toDate().toISOString(),
+        } as Newsletter;
+    });
+}
+
+export async function getNewsletter(id: string): Promise<Newsletter | null> {
+    const docRef = doc(db, "newsletters", id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+        const data = docSnap.data();
+        return {
+            id: docSnap.id,
+            name: data.name,
+            subject: data.subject,
+            components: data.components || [],
+            lastUpdated: (data.lastUpdated as Timestamp).toDate().toISOString(),
+        } as Newsletter;
+    } else {
+        return null;
+    }
+}
+
+export async function addNewsletter(data: { name: string; subject: string }): Promise<string> {
+    const newslettersCol = collection(db, 'newsletters');
+    const docRef = await addDoc(newslettersCol, {
+        ...data,
+        components: [],
+        lastUpdated: Timestamp.now(),
+    });
+    return docRef.id;
+}
+
+export async function updateNewsletter(id: string, data: Partial<Omit<Newsletter, 'id'>>) {
+    const newsletterRef = doc(db, 'newsletters', id);
+    await updateDoc(newsletterRef, {
+        ...data,
+        lastUpdated: Timestamp.now(),
+    });
+}
+
+export async function deleteNewsletter(id: string) {
+    const newsletterRef = doc(db, 'newsletters', id);
+    await deleteDoc(newsletterRef);
 }

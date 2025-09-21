@@ -1,13 +1,14 @@
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import { AdminDashboard } from "@/components/admin/dashboard";
-import { getLegalPages, getProducts } from "@/lib/firestore";
+import { getLegalPages, getProducts, getNewsletters } from "@/lib/firestore";
 
 
 export default async function AdminPage() {
   // Fetch initial data on the server
   const initialProducts = await getProducts();
   const initialLegalPages = await getLegalPages();
+  const initialNewsletters = await getNewsletters();
 
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
@@ -20,6 +21,7 @@ export default async function AdminPage() {
             <AdminDashboard 
               initialProducts={initialProducts}
               initialLegalPages={initialLegalPages}
+              initialNewsletters={initialNewsletters}
             />
         </div>
       </main>
