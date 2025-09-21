@@ -1,4 +1,5 @@
 
+
 "use server";
 
 import { z } from "zod";
@@ -15,6 +16,7 @@ import {
   deleteNewsletter,
   PageComponent,
   getAdminPassword,
+  addTagsToSubscribers,
 } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
 import { correctHtml } from "@/ai/flows/correct-html-flow";
@@ -382,4 +384,40 @@ export async function deleteNewsletterAction(
   }
 }
 
+const TagSubscribersSchema = z.object({
+    subscriberIds: z.string(),
+    tagName: z.string().min(1, "Tag-Name darf nicht leer sein."),
+});
+
+export type TaggingState = {
+    success: boolean;
+    error: string | null;
+};
+
+export async function tagSubscribersAction(
+    prevState: TaggingState,
+    formData: FormData
+): Promise<TaggingState> {
+    const validatedFields = TagSubscribersSchema.safeParse(Object.fromEntries(formData.entries()));
+
+    if (!validatedFields.success) {
+        return { success: false, error: "Ungültige Eingabe." };
+    }
+
+    try {
+        const subscriberIds = JSON.parse(validatedFields.data.subscriberIds);
+        const tags = validatedFields.data.tagName.split(',').map(t => t.trim()).filter(t => t);
+        
+        if (subscriberIds.length === 0) {
+             return { success: false, error: "Keine Abonnenten ausgewählt." };
+        }
+
+        await addTagsToSubscribers(subscriberIds, tags);
+        revalidatePath("/admin");
+        return { success: true, error: null };
+    } catch (e) {
+        const error = e as Error;
+        return { success: false, error: `Fehler beim Taggen: ${error.message}` };
+    }
+}
     

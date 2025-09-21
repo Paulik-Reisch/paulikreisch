@@ -1,15 +1,16 @@
 
+
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { 
-    Order, 
     Product, 
     LegalPage, 
     Newsletter,
-    getOrders
+    Subscriber,
+    getSubscribers,
 } from "@/lib/firestore";
 import {
     addProductAction,
@@ -19,6 +20,7 @@ import {
     deleteLegalPageAction,
     addNewsletterAction,
     deleteNewsletterAction,
+    tagSubscribersAction,
 } from "@/app/admin/actions";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -34,7 +36,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -62,32 +65,74 @@ import {
 import Link from "next/link";
 import { CodeEditor } from "./code-editor";
 
-function LeadsTable() {
-    const [orders, setOrders] = useState<Order[]>([]);
-    const [loading, setLoading] = useState(true);
+function LeadsTable({ initialSubscribers }: { initialSubscribers: Subscriber[] }) {
+    const [subscribers, setSubscribers] = useState<Subscriber[]>(initialSubscribers);
+    const [loading, setLoading] = useState(false);
+    const [selectedSubscribers, setSelectedSubscribers] = useState<string[]>([]);
+    const [tagName, setTagName] = useState('');
     const { toast } = useToast();
 
-    const fetchOrders = async () => {
+    const [tagState, tagFormAction] = useActionState(tagSubscribersAction, { success: false, error: null });
+
+    const fetchLeads = async () => {
         setLoading(true);
         try {
-            const fetchedOrders = await getOrders();
-            setOrders(fetchedOrders);
+            const fetchedSubscribers = await getSubscribers();
+            setSubscribers(fetchedSubscribers);
         } catch (error) {
-            console.error("Error fetching orders:", error);
-            toast({ variant: "destructive", title: "Fehler", description: "Bestellungen konnten nicht geladen werden." });
+            console.error("Error fetching subscribers:", error);
+            toast({ variant: "destructive", title: "Fehler", description: "Abonnenten konnten nicht geladen werden." });
         } finally {
             setLoading(false);
         }
     };
+    
+    useEffect(() => {
+        setSubscribers(initialSubscribers);
+    }, [initialSubscribers]);
 
     useEffect(() => {
-        fetchOrders();
-    }, []);
+        if(tagState.success) {
+            toast({ title: "Erfolg", description: "Tags wurden erfolgreich zugewiesen."});
+            setSelectedSubscribers([]);
+            setTagName('');
+            fetchLeads(); // Refresh data
+        }
+        if (tagState.error) {
+            toast({ variant: "destructive", title: "Fehler", description: tagState.error });
+        }
+    }, [tagState, toast]);
+
+    const handleSelectAll = (checked: boolean | 'indeterminate') => {
+        if (checked === true) {
+            setSelectedSubscribers(subscribers.map(sub => sub.id));
+        } else {
+            setSelectedSubscribers([]);
+        }
+    };
+    
+    const handleTagFormSubmit = (formData: FormData) => {
+        formData.set('subscriberIds', JSON.stringify(selectedSubscribers));
+        tagFormAction(formData);
+    }
 
     return (
         <div>
-            <div className="flex justify-end mb-4">
-                <Button onClick={fetchOrders} disabled={loading} variant="outline">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
+                 <form action={handleTagFormSubmit} className="flex items-center gap-2">
+                    <Input 
+                        placeholder="Tag-Name (z.B. HW2-Interesse)" 
+                        value={tagName}
+                        onChange={(e) => setTagName(e.target.value)}
+                        name="tagName"
+                        disabled={selectedSubscribers.length === 0}
+                    />
+                    <Button type="submit" disabled={selectedSubscribers.length === 0 || !tagName}>
+                        <Tag className="mr-2 h-4 w-4" />
+                        Zuweisen ({selectedSubscribers.length})
+                    </Button>
+                </form>
+                <Button onClick={fetchLeads} disabled={loading} variant="outline">
                     {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
                     Aktualisieren
                 </Button>
@@ -96,11 +141,16 @@ function LeadsTable() {
                 <Table>
                     <TableHeader>
                         <TableRow>
+                            <TableHead className="w-[50px]">
+                                <Checkbox 
+                                    checked={selectedSubscribers.length === subscribers.length && subscribers.length > 0 ? true : (selectedSubscribers.length > 0 ? 'indeterminate' : false)}
+                                    onCheckedChange={handleSelectAll}
+                                />
+                            </TableHead>
+                            <TableHead>E-Mail</TableHead>
+                            <TableHead>Quelle</TableHead>
+                            <TableHead>Tags</TableHead>
                             <TableHead>Datum</TableHead>
-                            <TableHead>Kunde</TableHead>
-                            <TableHead>Bestelltyp</TableHead>
-                            <TableHead>Bestellte Artikel</TableHead>
-                            <TableHead className="text-right">Gesamtpreis</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -110,7 +160,7 @@ function LeadsTable() {
                                     <Loader2 className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
                                 </TableCell>
                             </TableRow>
-                        ) : orders.length === 0 ? (
+                        ) : subscribers.length === 0 ? (
                              <TableRow>
                                 <TableCell colSpan={5} className="text-center py-12 text-muted-foreground">
                                     <VenetianMask className="mx-auto h-8 w-8 mb-2" />
@@ -118,27 +168,29 @@ function LeadsTable() {
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            orders.map((order) => (
-                                <TableRow key={order.id}>
+                            subscribers.map((sub) => (
+                                <TableRow key={sub.id} data-state={selectedSubscribers.includes(sub.id) ? 'selected' : ''}>
                                     <TableCell>
-                                        {order.timestamp ? format(new Date(order.timestamp), "dd.MM.yyyy HH:mm", { locale: de }) : 'N/A'}
+                                        <Checkbox 
+                                            checked={selectedSubscribers.includes(sub.id)}
+                                            onCheckedChange={(checked) => {
+                                                setSelectedSubscribers(prev => 
+                                                    checked ? [...prev, sub.id] : prev.filter(id => id !== sub.id)
+                                                )
+                                            }}
+                                        />
                                     </TableCell>
                                     <TableCell>
-                                        <div className="font-medium">{order.firstName} {order.lastName}</div>
-                                        <div className="text-sm text-muted-foreground">{order.email}</div>
+                                        <div className="font-medium">{sub.email}</div>
                                     </TableCell>
                                     <TableCell>
-                                        <Badge variant={order.orderType?.includes('Bundle') ? 'default' : 'secondary'}>
-                                            {order.orderType || 'Unbekannt'}
-                                        </Badge>
+                                        {Array.isArray(sub.source) ? sub.source.map(s => <Badge key={s} variant="secondary" className="mr-1">{s}</Badge>) : <Badge variant="secondary">{sub.source}</Badge>}
                                     </TableCell>
                                     <TableCell>
-                                        {order.items?.map((item: any, index: number) => (
-                                            <div key={index} className="text-sm">{item.title}</div>
-                                        ))}
+                                        {sub.tags?.map(tag => <Badge key={tag} variant="outline" className="mr-1">{tag}</Badge>)}
                                     </TableCell>
-                                    <TableCell className="text-right font-mono">
-                                        {order.totalPrice?.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}
+                                     <TableCell>
+                                        {sub.subscribedAt ? format(new Date(sub.subscribedAt), "dd.MM.yyyy HH:mm", { locale: de }) : 'N/A'}
                                     </TableCell>
                                 </TableRow>
                             ))
@@ -636,21 +688,23 @@ export function AdminDashboard({
     initialProducts,
     initialLegalPages,
     initialNewsletters,
+    initialSubscribers,
 }: {
     initialProducts: Product[];
     initialLegalPages: LegalPage[];
     initialNewsletters: Newsletter[];
+    initialSubscribers: Subscriber[];
 }) {
     return (
         <Tabs defaultValue="leads" className="w-full">
             <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="leads">Leads / Bestellungen</TabsTrigger>
+                <TabsTrigger value="leads"><Users className="mr-2 h-4 w-4" />Leads</TabsTrigger>
                 <TabsTrigger value="products">Produkte</TabsTrigger>
                 <TabsTrigger value="legal">Dynamische LPs</TabsTrigger>
                 <TabsTrigger value="newsletters">Newsletter</TabsTrigger>
             </TabsList>
             <TabsContent value="leads" className="mt-6">
-                <LeadsTable />
+                <LeadsTable initialSubscribers={initialSubscribers} />
             </TabsContent>
             <TabsContent value="products" className="mt-6">
                 <ProductsManager initialProducts={initialProducts} />

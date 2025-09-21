@@ -1,7 +1,7 @@
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import { AdminDashboard } from "@/components/admin/dashboard";
-import { getLegalPages, getProducts, getNewsletters } from "@/lib/firestore";
+import { getLegalPages, getProducts, getNewsletters, getSubscribers } from "@/lib/firestore";
 import { Button } from "@/components/ui/button";
 import { logoutAction } from "./actions";
 import { LogOut } from "lucide-react";
@@ -12,6 +12,7 @@ export default async function AdminPage() {
   const initialProducts = await getProducts();
   const initialLegalPages = await getLegalPages();
   const initialNewsletters = await getNewsletters();
+  const initialSubscribers = await getSubscribers();
 
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
@@ -33,6 +34,7 @@ export default async function AdminPage() {
               initialProducts={initialProducts}
               initialLegalPages={initialLegalPages}
               initialNewsletters={initialNewsletters}
+              initialSubscribers={initialSubscribers}
             />
         </div>
       </main>

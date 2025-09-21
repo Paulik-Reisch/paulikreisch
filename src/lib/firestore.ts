@@ -15,7 +15,8 @@ import {
     query,
     getDoc,
     setDoc,
-    deleteDoc
+    deleteDoc,
+    arrayUnion
 } from "firebase/firestore";
 
 export interface Product {
@@ -35,6 +36,15 @@ export interface Order {
     [key: string]: any;
     timestamp: string;
 }
+
+export interface Subscriber {
+    id: string; // The email address
+    email: string;
+    source: string;
+    subscribedAt: string;
+    tags?: string[];
+}
+
 
 export interface PageComponent {
     id: string;
@@ -171,6 +181,11 @@ export async function addOrder(orderData: any) {
         timestamp: Timestamp.now()
     };
     await addDoc(ordersCol, dataWithTimestamp);
+    
+    // Also add to subscribers if not already there
+    if (orderData.email) {
+        await addSubscriber(orderData.email, orderData.orderType || 'Order');
+    }
 }
 
 // --- SUBSCRIBERS ---
@@ -180,20 +195,55 @@ export async function addSubscriber(email: string, source?: string) {
     const docSnap = await getDoc(subscriberRef);
 
     if (docSnap.exists()) {
-        // Optional: Update existing subscriber
+        const updatedSources = arrayUnion(source || 'unknown');
         await updateDoc(subscriberRef, {
             lastSeen: Timestamp.now(),
-            source: source || docSnap.data().source || 'unknown',
+            source: updatedSources
         });
-        // We could throw an error, but it's often better UX to just confirm they are subscribed.
         throw new Error(`Ein Abonnent mit der E-Mail "${email}" existiert bereits.`);
     } else {
         await setDoc(subscriberRef, { 
             email: email,
-            source: source || 'unknown',
-            subscribedAt: Timestamp.now() 
+            source: [source || 'unknown'],
+            subscribedAt: Timestamp.now(),
+            tags: [],
         });
     }
+}
+
+export async function getSubscribers(): Promise<Subscriber[]> {
+    const subsCol = collection(db, 'subscribers');
+    const q = query(subsCol, orderBy("subscribedAt", "desc"));
+    const subsSnapshot = await getDocs(q);
+    if (subsSnapshot.empty) {
+        return [];
+    }
+    const subsList = subsSnapshot.docs.map(doc => {
+        const data = doc.data();
+        const subscribedAt = data.subscribedAt;
+        return { 
+            id: doc.id, 
+            email: data.email,
+            source: data.source,
+            tags: data.tags || [],
+            subscribedAt: subscribedAt ? (subscribedAt as Timestamp).toDate().toISOString() : new Date().toISOString(),
+        } as Subscriber;
+    });
+    return subsList;
+}
+
+export async function addTagsToSubscribers(subscriberIds: string[], tags: string[]) {
+    if (!subscriberIds || subscriberIds.length === 0 || !tags || tags.length === 0) {
+        throw new Error("Subscriber IDs and tags are required.");
+    }
+    const batch = [];
+    for (const id of subscriberIds) {
+        const subscriberRef = doc(db, 'subscribers', id);
+        batch.push(updateDoc(subscriberRef, {
+            tags: arrayUnion(...tags)
+        }));
+    }
+    await Promise.all(batch);
 }
 
 
