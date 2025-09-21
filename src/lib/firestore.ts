@@ -40,7 +40,7 @@ export interface Order {
 export interface Subscriber {
     id: string; // The email address
     email: string;
-    source: string;
+    source: string[] | string;
     subscribedAt: string;
     tags?: string[];
 }
@@ -195,11 +195,17 @@ export async function addSubscriber(email: string, source?: string) {
     const docSnap = await getDoc(subscriberRef);
 
     if (docSnap.exists()) {
-        const updatedSources = arrayUnion(source || 'unknown');
-        await updateDoc(subscriberRef, {
-            lastSeen: Timestamp.now(),
-            source: updatedSources
-        });
+        // If the subscriber already exists, update the source array
+        // Make sure `source` field is an array.
+        const existingData = docSnap.data();
+        const existingSources = existingData.source || [];
+        const newSources = Array.isArray(existingSources) ? existingSources : [existingSources];
+        
+        if (source && !newSources.includes(source)) {
+            await updateDoc(subscriberRef, {
+                source: arrayUnion(source)
+            });
+        }
         throw new Error(`Ein Abonnent mit der E-Mail "${email}" existiert bereits.`);
     } else {
         await setDoc(subscriberRef, { 
@@ -210,6 +216,7 @@ export async function addSubscriber(email: string, source?: string) {
         });
     }
 }
+
 
 export async function getSubscribers(): Promise<Subscriber[]> {
     const subsCol = collection(db, 'subscribers');
@@ -608,5 +615,3 @@ export async function deleteNewsletter(id: string) {
     const newsletterRef = doc(db, 'newsletters', id);
     await deleteDoc(newsletterRef);
 }
-
-    

@@ -425,6 +425,7 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
     
     const handleAddFormSubmit = (formData: FormData) => {
         formData.set('content', newContent);
+        formData.set('components', '[]'); // Start with empty components for new pages
         addFormAction(formData);
     }
 
@@ -436,10 +437,10 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
                         <Button variant="outline"><PlusCircle className="mr-2 h-4 w-4" /> Neue Dynamische LP</Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-4xl max-h-[90vh] flex flex-col">
-                        <form action={handleAddFormSubmit} className="flex flex-col min-h-0 flex-grow">
+                        <form onSubmit={(e) => { e.preventDefault(); handleAddFormSubmit(new FormData(e.currentTarget)); }} className="flex flex-col min-h-0 flex-grow">
                             <DialogHeader>
                                 <DialogTitle>Neue Dynamische LP hinzufügen</DialogTitle>
-                                <DialogDescription>Erstellen Sie hier eine neue Seite mit HTML und Tailwind CSS.</DialogDescription>
+                                <DialogDescription>Erstellen Sie hier eine neue Seite.</DialogDescription>
                             </DialogHeader>
                             <div className="grid gap-4 py-4 flex-grow min-h-0">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -452,14 +453,11 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
                                         <Input id="title" name="title" placeholder="Seitentitel für Browser-Tab" required />
                                     </div>
                                 </div>
-                                <div className="flex flex-col min-h-0 flex-grow">
-                                    <Label htmlFor="content">Inhalt (HTML & Tailwind CSS)</Label>
-                                    <CodeEditor value={newContent} onChange={setNewContent} />
-                                </div>
+                               
                             </div>
                             <DialogFooter>
                                 <DialogClose asChild><Button type="button" variant="secondary">Abbrechen</Button></DialogClose>
-                                <Button type="submit">Speichern</Button>
+                                <Button type="submit">Erstellen & Bearbeiten</Button>
                             </DialogFooter>
                         </form>
                     </DialogContent>
@@ -718,5 +716,3 @@ export function AdminDashboard({
         </Tabs>
     )
 }
-
-    
