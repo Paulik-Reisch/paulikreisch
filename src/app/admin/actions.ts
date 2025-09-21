@@ -17,6 +17,7 @@ import {
   PageComponent,
   getAdminPassword,
   addTagsToSubscribers,
+  getSubscribers,
 } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
 import { correctHtml } from "@/ai/flows/correct-html-flow";
@@ -419,4 +420,77 @@ export async function tagSubscribersAction(
         const error = e as Error;
         return { success: false, error: `Fehler beim Taggen: ${error.message}` };
     }
+}
+
+
+// Campaign Actions
+const SendNewsletterSchema = z.object({
+  newsletterId: z.string().min(1, "Bitte wählen Sie einen Newsletter aus."),
+  tags: z.string(),
+});
+
+export type SendNewsletterState = {
+  success: boolean;
+  message: string | null;
+};
+
+export async function sendNewsletterAction(
+  prevState: SendNewsletterState,
+  formData: FormData
+): Promise<SendNewsletterState> {
+  const validatedFields = SendNewsletterSchema.safeParse(Object.fromEntries(formData.entries()));
+
+  if (!validatedFields.success) {
+    return { success: false, message: "Ungültige Eingabe." };
+  }
+
+  const { newsletterId } = validatedFields.data;
+  const tags: string[] = JSON.parse(validatedFields.data.tags);
+
+  if (tags.length === 0) {
+    return { success: false, message: "Bitte wählen Sie mindestens einen Tag als Zielgruppe aus." };
+  }
+
+  try {
+    const allSubscribers = await getSubscribers();
+    const targetSubscribers = allSubscribers.filter(s => 
+        tags.every(tag => s.tags?.includes(tag))
+    );
+
+    if (targetSubscribers.length === 0) {
+      return { success: false, message: "Es wurden keine Abonnenten für die ausgewählten Tags gefunden." };
+    }
+    
+    const recipientEmails = targetSubscribers.map(s => s.email);
+
+    // =================================================================
+    // HIER E-MAIL-VERSAND-LOGIK EINFÜGEN (z.B. mit Resend, Mailgun, etc.)
+    // 
+    // Beispiel mit einer hypothetischen `sendEmail` Funktion:
+    //
+    // const newsletter = await getNewsletter(newsletterId);
+    // if (!newsletter) {
+    //   return { success: false, message: "Newsletter nicht gefunden." };
+    // }
+    //
+    // await sendEmail({
+    //   to: recipientEmails,
+    //   subject: newsletter.subject,
+    //   html: newsletter.content,
+    //   from: 'hallo-welt@paulik-reisch.de'
+    // });
+    //
+    // =================================================================
+
+    console.log(`SIMULATION: Sende Newsletter ${newsletterId} an ${recipientEmails.length} Empfänger.`);
+    console.log("Empfänger:", recipientEmails);
+
+    revalidatePath("/admin");
+    return { success: true, message: `Versand von Newsletter an ${recipientEmails.length} Empfänger wurde simuliert.` };
+
+  } catch (e) {
+    const error = e as Error;
+    console.error("Newsletter send error:", error);
+    return { success: false, message: `Fehler bei der Kampagnen-Simulation: ${error.message}` };
+  }
 }

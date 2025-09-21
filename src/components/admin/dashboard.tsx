@@ -21,6 +21,7 @@ import {
     addNewsletterAction,
     deleteNewsletterAction,
     tagSubscribersAction,
+    sendNewsletterAction,
 } from "@/app/admin/actions";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -37,7 +38,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag } from "lucide-react";
+import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -64,6 +65,15 @@ import {
 } from "@/components/ui/alert-dialog";
 import Link from "next/link";
 import { CodeEditor } from "./code-editor";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
 
 function LeadsTable({ initialSubscribers }: { initialSubscribers: Subscriber[] }) {
     const [subscribers, setSubscribers] = useState<Subscriber[]>(initialSubscribers);
@@ -681,6 +691,118 @@ function NewsletterManager({ initialNewsletters }: { initialNewsletters: Newslet
     )
 }
 
+function CampaignsManager({ initialNewsletters, initialSubscribers }: { initialNewsletters: Newsletter[], initialSubscribers: Subscriber[] }) {
+    const { toast } = useToast();
+    const [sendState, sendFormAction] = useActionState(sendNewsletterAction, { success: false, message: null });
+
+    const allTags = useMemo(() => {
+        const tagSet = new Set<string>();
+        initialSubscribers.forEach(s => s.tags?.forEach(t => tagSet.add(t)));
+        return Array.from(tagSet);
+    }, [initialSubscribers]);
+
+    const [selectedNewsletter, setSelectedNewsletter] = useState<string>('');
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
+    
+    useEffect(() => {
+        if(sendState.message) {
+            toast({
+                title: sendState.success ? "Kampagne gestartet (simuliert)" : "Fehler",
+                description: sendState.message,
+                variant: sendState.success ? "default" : "destructive",
+            });
+        }
+    }, [sendState, toast]);
+
+    const matchingSubscribers = useMemo(() => {
+        if (selectedTags.length === 0) return 0;
+        return initialSubscribers.filter(s => selectedTags.every(tag => s.tags?.includes(tag))).length;
+    }, [selectedTags, initialSubscribers]);
+
+    const handleTagClick = (tag: string) => {
+        setSelectedTags(prev => 
+            prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+        );
+    };
+
+    return (
+        <form action={sendFormAction}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="space-y-6 p-6 border rounded-lg">
+                    <h3 className="font-headline text-2xl font-bold">1. Newsletter auswählen</h3>
+                    <Select name="newsletterId" required onValueChange={setSelectedNewsletter} value={selectedNewsletter}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Wählen Sie einen Newsletter..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {initialNewsletters.map(nl => (
+                                <SelectItem key={nl.id} value={nl.id}>{nl.name} - ({nl.subject})</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+
+                    <h3 className="font-headline text-2xl font-bold mt-8">2. Zielgruppe definieren</h3>
+                    <p className="text-sm text-muted-foreground">Wählen Sie einen oder mehrere Tags aus. Die Kampagne wird an alle Abonnenten gesendet, die **alle** ausgewählten Tags besitzen.</p>
+                     <div className="flex flex-wrap gap-2">
+                        {allTags.length === 0 ? (
+                            <p className="text-sm text-muted-foreground">Noch keine Tags vorhanden. Weisen Sie im "Leads"-Tab welche zu.</p>
+                        ) : allTags.map(tag => (
+                            <Button 
+                                key={tag} 
+                                type="button"
+                                variant={selectedTags.includes(tag) ? "default" : "outline"}
+                                onClick={() => handleTagClick(tag)}
+                            >
+                                {tag}
+                            </Button>
+                        ))}
+                    </div>
+                    {/* Hidden input to pass tags to server action */}
+                    <input type="hidden" name="tags" value={JSON.stringify(selectedTags)} />
+                </div>
+                <div className="space-y-6 p-6 border rounded-lg bg-muted/50">
+                    <h3 className="font-headline text-2xl font-bold">3. Vorschau & Versand</h3>
+                     <Alert>
+                        <Send className="h-4 w-4" />
+                        <AlertTitle>Zusammenfassung</AlertTitle>
+                        <AlertDescription>
+                            <p>Newsletter: <strong>{initialNewsletters.find(nl => nl.id === selectedNewsletter)?.name || 'Keiner ausgewählt'}</strong></p>
+                            <p>Ziel-Tags: {selectedTags.length > 0 ? selectedTags.map(t => <Badge key={t} className="mr-1">{t}</Badge>) : 'Keine'}</p>
+                            <p className="mt-2 text-lg">Abonnenten, die erreicht werden: <strong className="text-primary">{matchingSubscribers}</strong></p>
+                        </AlertDescription>
+                    </Alert>
+                    
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                             <Button size="lg" className="w-full" disabled={!selectedNewsletter || selectedTags.length === 0 || matchingSubscribers === 0}>
+                                <Send className="mr-2 h-5 w-5" />
+                                Kampagne starten
+                            </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Sind Sie absolut sicher?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    Sie sind dabei, den Newsletter "{initialNewsletters.find(nl => nl.id === selectedNewsletter)?.name}" an {matchingSubscribers} Empfänger zu senden. Diese Aktion ist nur simuliert und versendet keine echten E-Mails.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+                                <AlertDialogAction type="submit">Ja, Versand simulieren</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                    <Alert variant="destructive">
+                        <AlertTitle>Wichtiger Hinweis</AlertTitle>
+                        <AlertDescription>
+                            Diese Funktion ist derzeit nur eine **Simulation**. Es werden **keine echten E-Mails** versendet. Ein Entwickler muss hier einen E-Mail-Service wie Resend oder Mailgun anbinden. Die Logik ist in `sendNewsletterAction` in `src/app/admin/actions.ts` vorbereitet.
+                        </AlertDescription>
+                    </Alert>
+                </div>
+            </div>
+        </form>
+    );
+}
 
 export function AdminDashboard({
     initialProducts,
@@ -695,11 +817,12 @@ export function AdminDashboard({
 }) {
     return (
         <Tabs defaultValue="leads" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
                 <TabsTrigger value="leads"><Users className="mr-2 h-4 w-4" />Leads</TabsTrigger>
                 <TabsTrigger value="products">Produkte</TabsTrigger>
                 <TabsTrigger value="legal">Dynamische LPs</TabsTrigger>
                 <TabsTrigger value="newsletters">Newsletter</TabsTrigger>
+                <TabsTrigger value="campaigns"><Send className="mr-2 h-4 w-4" />Kampagnen</TabsTrigger>
             </TabsList>
             <TabsContent value="leads" className="mt-6">
                 <LeadsTable initialSubscribers={initialSubscribers} />
@@ -708,10 +831,13 @@ export function AdminDashboard({
                 <ProductsManager initialProducts={initialProducts} />
             </TabsContent>
             <TabsContent value="legal" className="mt-6">
-                <LegalPagesManager initialPages={initialLegalPages} />
+                <LegalPagesManager initialPages={initialPages} />
             </TabsContent>
             <TabsContent value="newsletters" className="mt-6">
                 <NewsletterManager initialNewsletters={initialNewsletters} />
+            </TabsContent>
+             <TabsContent value="campaigns" className="mt-6">
+                <CampaignsManager initialNewsletters={initialNewsletters} initialSubscribers={initialSubscribers} />
             </TabsContent>
         </Tabs>
     )
