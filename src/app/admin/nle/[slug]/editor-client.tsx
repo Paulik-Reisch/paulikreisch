@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useActionState } from "react";
+import { useActionState, useFormStatus } from "react";
 import Link from "next/link";
 import { Newsletter, NewsletterComponent } from "@/lib/firestore";
 import { updateNewsletterAction } from "@/app/admin/actions";
@@ -12,7 +12,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Save, ArrowLeft, Eye, Code, PlusCircle, Trash2, ArrowUp, ArrowDown, Type, Image as ImageIcon, Link as LinkIcon, AlignLeft, AlignCenter, AlignRight, Copy, Rows, Columns, Minus, GalleryHorizontal } from "lucide-react";
-import { useFormStatus } from "react-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Accordion,
@@ -38,7 +37,7 @@ function generateComponentHTML(component: NewsletterComponent): string {
         case 'heading':
             return `
                 <tr>
-                    <td style="padding: 10px 20px; text-align: ${align};">
+                    <td align="${align}" style="padding: 10px 20px; text-align: ${align};">
                         <h1 style="font-family: Arial, sans-serif; font-size: ${props.fontSize || '24px'}; color: ${props.color || '#000000'}; margin: 0;">${props.text || ''}</h1>
                     </td>
                 </tr>
@@ -46,7 +45,7 @@ function generateComponentHTML(component: NewsletterComponent): string {
         case 'text':
              return `
                  <tr>
-                    <td style="padding: 10px 20px; text-align: ${align};">
+                    <td align="${align}" style="padding: 10px 20px; text-align: ${align};">
                         <p style="font-family: Arial, sans-serif; font-size: ${props.fontSize || '16px'}; color: ${props.color || '#333333'}; margin: 0; line-height: 1.5;">${(props.text || '').replace(/\n/g, '<br />')}</p>
                     </td>
                 </tr>
@@ -57,8 +56,8 @@ function generateComponentHTML(component: NewsletterComponent): string {
                     <td align="${align}" style="padding: 20px;">
                       <table border="0" cellspacing="0" cellpadding="0" role="presentation">
                         <tr>
-                          <td align="center" style="border-radius:3px;background:${props.backgroundColor || '#007bff'};" bgcolor="${props.backgroundColor || '#007bff'}">
-                            <a href="${props.href || '#'}" target="_blank" style="font-size: ${props.fontSize || '16px'}; font-family: Arial, sans-serif; color: ${props.color || '#ffffff'}; text-decoration: none; text-decoration: none;border-radius: 3px; padding: 10px 25px; border: 1px solid ${props.backgroundColor || '#007bff'}; display: inline-block; font-weight: bold;">
+                          <td align="center" style="background:${props.backgroundColor || '#007bff'};" bgcolor="${props.backgroundColor || '#007bff'}">
+                            <a href="${props.href || '#'}" target="_blank" style="font-size: ${props.fontSize || '16px'}; font-family: Arial, sans-serif; color: ${props.color || '#ffffff'}; text-decoration: none; text-decoration: none; padding: 10px 25px; border: 1px solid ${props.backgroundColor || '#007bff'}; display: inline-block; font-weight: bold;">
                               ${props.text || ''}
                             </a>
                           </td>

@@ -75,25 +75,6 @@ type AdminLegalPageState = {
 };
 const initialLegalPageState: AdminLegalPageState = { success: false, error: null };
 
-function SubmitButton() {
-    const { pending } = useFormStatus();
-    return (
-        <Button type="submit" disabled={pending} className="w-full">
-            {pending ? (
-                <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Wird gespeichert...
-                </>
-            ) : (
-                <>
-                    <Save className="mr-2 h-4 w-4" />
-                    Seite speichern
-                </>
-            )}
-        </Button>
-    )
-}
-
 function PageComponentEditor({ component, onUpdate, onDelete, onMove }: { component: PageComponent, onUpdate: (id: string, props: any) => void, onDelete: (id: string) => void, onMove: (id: string, direction: 'up' | 'down') => void }) {
     
     const updateProp = (propName: string, value: string) => {
@@ -203,6 +184,24 @@ function PageComponentEditor({ component, onUpdate, onDelete, onMove }: { compon
     )
 }
 
+function SubmitButton() {
+    const { pending } = useFormStatus();
+    return (
+        <Button type="submit" disabled={pending} className="w-full">
+            {pending ? (
+                <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Wird gespeichert...
+                </>
+            ) : (
+                <>
+                    <Save className="mr-2 h-4 w-4" />
+                    Seite speichern
+                </>
+            )}
+        </Button>
+    )
+}
 
 export function EditorClient({ page }: { page: LegalPage }) {
   const [title, setTitle] = useState(page.title);
@@ -337,3 +336,5 @@ export function EditorClient({ page }: { page: LegalPage }) {
     </div>
   );
 }
+
+    
