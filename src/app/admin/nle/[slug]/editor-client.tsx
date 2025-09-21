@@ -39,16 +39,16 @@ function generateComponentHTML(component: NewsletterComponent): string {
         case 'heading':
             return `
                 <tr>
-                    <td style="padding: 10px 20px;">
-                        <h1 style="font-family: Arial, sans-serif; font-size: ${props.fontSize || '24px'}; color: ${props.color || '#000000'}; margin: 0; text-align: ${align};">${props.text || ''}</h1>
+                    <td style="padding: 10px 20px; text-align: ${align};">
+                        <h1 style="font-family: Arial, sans-serif; font-size: ${props.fontSize || '24px'}; color: ${props.color || '#000000'}; margin: 0;">${props.text || ''}</h1>
                     </td>
                 </tr>
             `;
         case 'text':
              return `
                  <tr>
-                    <td style="padding: 10px 20px;">
-                        <p style="font-family: Arial, sans-serif; font-size: ${props.fontSize || '16px'}; color: ${props.color || '#333333'}; margin: 0; line-height: 1.5; text-align: ${align};">${(props.text || '').replace(/\n/g, '<br />')}</p>
+                    <td style="padding: 10px 20px; text-align: ${align};">
+                        <p style="font-family: Arial, sans-serif; font-size: ${props.fontSize || '16px'}; color: ${props.color || '#333333'}; margin: 0; line-height: 1.5;">${(props.text || '').replace(/\n/g, '<br />')}</p>
                     </td>
                 </tr>
             `;
@@ -73,7 +73,7 @@ function generateComponentHTML(component: NewsletterComponent): string {
             return `
                 <tr>
                     <td align="${align}" style="padding: 10px 20px;">
-                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="width: ${width}px; max-width: 100%;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" align="${align}" style="width: ${width}px; max-width: 100%;">
                             <tr>
                                 <td>
                                     <img src="${props.src || 'https://placehold.co/600x400'}" alt="${props.alt || ''}" style="width: 100%; height: auto; display: block;" width="${width}" />
@@ -107,15 +107,20 @@ function generateEmailHTML(components: NewsletterComponent[], subject: string): 
             </style>
         </head>
         <body style="margin: 0 !important; padding: 0 !important; background-color: #f4f4f4;">
-            <!--[if (gte mso 9)|(IE)]>
-            <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
-            <tr>
-            <td align="center" valign="top" width="600">
-            <![endif]-->
             <table border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tr>
                     <td align="center" style="background-color: #f4f4f4;">
+                        <!--[if (gte mso 9)|(IE)]>
+                        <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
+                        <tr>
+                        <td align="center" valign="top" width="600">
+                        <![endif]-->
                         <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="max-width: 600px; width: 100%;">
+                            <tr>
+                                <td align="center" valign="top" style="font-size: 11px; font-family: Arial, sans-serif; color: #888888; padding: 10px;">
+                                    E-Mail wird nicht korrekt angezeigt? <a href="#" target="_blank" style="color: #888888; text-decoration: underline;">Online ansehen</a>
+                                </td>
+                            </tr>
                             <tr>
                                 <td align="center" valign="top" style="background-color: #ffffff;">
                                     <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -123,15 +128,27 @@ function generateEmailHTML(components: NewsletterComponent[], subject: string): 
                                     </table>
                                 </td>
                             </tr>
+                             <tr>
+                                <td bgcolor="#eae7e1" style="padding:20px; font-family:Arial, sans-serif; font-size:12px; color:#333333; line-height:1.4; text-align:left;">
+                                  <b>Impressum:</b><br>
+                                  Philipp Paulik und Maximilian Reisch<br>
+                                  Mozartstraße 1<br>
+                                  53819 Neunkirchen<br>
+                                  E-Mail: <a href="mailto:hallowelt@paulik-reisch.de" style="color:#333333; text-decoration:underline;">hallowelt@paulik-reisch.de</a><br><br>
+
+                                  Diese E-Mail wurde automatisch versendet. Falls Sie keine weiteren Nachrichten wünschen, klicken Sie bitte hier: 
+                                  <a href="#unsubscribe" target="_blank" style="color:#333333; text-decoration:underline;">Abmelden</a>
+                                </td>
+                            </tr>
                         </table>
+                        <!--[if (gte mso 9)|(IE)]>
+                        </td>
+                        </tr>
+                        </table>
+                        <![endif]-->
                     </td>
                 </tr>
             </table>
-            <!--[if (gte mso 9)|(IE)]>
-            </td>
-            </tr>
-            </table>
-            <![endif]-->
         </body>
         </html>
     `;

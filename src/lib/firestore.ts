@@ -281,19 +281,60 @@ export async function addNewsletter(data: { name: string; subject: string }): Pr
     const docRef = await addDoc(newslettersCol, {
         ...data,
         components: [],
-        content: `<!DOCTYPE html>
-<html>
+        content: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>${data.subject}</title>
+    <style type="text/css">
+        body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+        table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+        img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+        table { border-collapse: collapse !important; }
+        body { height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; }
+    </style>
 </head>
-<body style="margin: 0; padding: 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-color: #f4f4f4;">
-    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4;">
+<body style="margin: 0 !important; padding: 0 !important; background-color: #f4f4f4;">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
-            <td align="center">
-                <table width="600" border="0" cellpadding="0" cellspacing="0" style="max-width: 600px; width: 100%; background-color: #ffffff;">
-                    <!-- Add your components here -->
+            <td align="center" style="background-color: #f4f4f4;">
+                <!--[if (gte mso 9)|(IE)]>
+                <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
+                <tr>
+                <td align="center" valign="top" width="600">
+                <![endif]-->
+                <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="max-width: 600px; width: 100%;">
+                    <tr>
+                        <td align="center" valign="top" style="font-size: 11px; font-family: Arial, sans-serif; color: #888888; padding: 10px;">
+                            E-Mail wird nicht korrekt angezeigt? <a href="#" target="_blank" style="color: #888888; text-decoration: underline;">Online ansehen</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="top" style="background-color: #ffffff;">
+                            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                <!-- Add your components here -->
+                            </table>
+                        </td>
+                    </tr>
+                     <tr>
+                        <td bgcolor="#eae7e1" style="padding:20px; font-family:Arial, sans-serif; font-size:12px; color:#333333; line-height:1.4; text-align:left;">
+                          <b>Impressum:</b><br>
+                          Philipp Paulik und Maximilian Reisch<br>
+                          Mozartstraße 1<br>
+                          53819 Neunkirchen<br>
+                          E-Mail: <a href="mailto:hallowelt@paulik-reisch.de" style="color:#333333; text-decoration:underline;">hallowelt@paulik-reisch.de</a><br><br>
+
+                          Diese E-Mail wurde automatisch versendet. Falls Sie keine weiteren Nachrichten wünschen, klicken Sie bitte hier: 
+                          <a href="#unsubscribe" target="_blank" style="color:#333333; text-decoration:underline;">Abmelden</a>
+                        </td>
+                    </tr>
                 </table>
+                <!--[if (gte mso 9)|(IE)]>
+                </td>
+                </tr>
+                </table>
+                <![endif]-->
             </td>
         </tr>
     </table>
