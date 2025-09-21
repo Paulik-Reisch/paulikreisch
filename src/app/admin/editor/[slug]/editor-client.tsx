@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useEffect, useActionState, useTransition } from "react";
@@ -29,6 +30,10 @@ import {
   AlignCenter,
   AlignLeft,
   AlignRight,
+  Columns,
+  AlignVerticalJustifyStart,
+  AlignVerticalJustifyCenter,
+  AlignVerticalJustifyEnd
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -62,20 +67,15 @@ import { cn } from "@/lib/utils";
 function generatePageHtml(components: PageComponent[]): string {
     const componentHtml = components.map(component => {
         const props = component.props;
-        const align = props.alignment || 'left';
-        const alignClasses: {[key: string]: string} = {
-            left: "text-left",
-            center: "text-center",
-            right: "text-right",
-        }
-        const justifyClasses: {[key: string]: string} = {
-            left: "justify-start",
-            center: "justify-center",
-            right: "justify-end",
-        }
-
+        
         switch(component.type) {
-            case 'heading':
+            case 'heading': {
+                const align = props.alignment || 'left';
+                const alignClasses: {[key: string]: string} = {
+                    left: "text-left",
+                    center: "text-center",
+                    right: "text-right",
+                }
                 const Tag = props.level || 'h1';
                 const defaultHeadingClasses: {[key:string]: string} = {
                     h1: "text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl",
@@ -85,32 +85,66 @@ function generatePageHtml(components: PageComponent[]): string {
                 };
                 const classes = cn(defaultHeadingClasses[Tag], alignClasses[align], props.className);
                 return `<${Tag} class="${classes}">${props.text || ''}</${Tag}>`;
-            case 'text':
+            }
+            case 'text': {
+                const align = props.alignment || 'left';
+                 const alignClasses: {[key: string]: string} = {
+                    left: "text-left",
+                    center: "text-center",
+                    right: "text-right",
+                }
                 const textClasses = cn('leading-relaxed text-muted-foreground', alignClasses[align], props.className);
                 return `<p class="${textClasses}">${(props.text || '').replace(/\n/g, '<br />')}</p>`;
-            case 'button':
+            }
+            case 'button': {
+                const align = props.alignment || 'left';
+                const justifyClasses: {[key: string]: string} = {
+                    left: "justify-start",
+                    center: "justify-center",
+                    right: "justify-end",
+                }
                  const buttonContainerClasses = cn("my-6 flex", justifyClasses[align]);
                  return `<div class="${buttonContainerClasses}"><a href="${props.href || '#'}" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 shadow-md transform active:scale-95 border h-11 px-8 bg-primary text-primary-foreground hover:bg-primary/90">${props.text || 'Klick'}</a></div>`;
-            case 'image':
+            }
+            case 'image': {
+                const align = props.alignment || 'left';
+                 const justifyClasses: {[key: string]: string} = {
+                    left: "justify-start",
+                    center: "justify-center",
+                    right: "justify-end",
+                }
                  const imageContainerClasses = cn("my-6 flex", justifyClasses[align]);
                  return `<div class="${imageContainerClasses}"><img src="${props.src || 'https://placehold.co/800x450'}" alt="${props.alt || ''}" style="max-width: ${props.width || '100%'};" class="h-auto rounded-lg shadow-md" /></div>`;
+            }
             case 'spacer':
                  return `<div style="height: ${props.height || '2rem'}"></div>`;
-            case 'separator':
+            case 'separator': {
                 const color = props.color || 'hsl(var(--border))';
                 const thickness = props.thickness || '1px';
                 const style = props.style || 'solid';
-                return `<hr style="border: none; border-top: ${thickness} ${style} ${color}; margin: 2rem 0;" />`
+                return `<hr style="border: none; border-top: ${thickness} ${style} ${color}; margin: 2rem 0;" />`;
+            }
+            case 'columns': {
+                const numColumns = props.numColumns || 2;
+                const gap = props.gap || '1rem';
+                const verticalAlignment = props.verticalAlignment || 'start';
+                const columnClasses = `grid grid-cols-1 md:grid-cols-${numColumns} gap-[${gap}] items-${verticalAlignment}`;
+                
+                const columnsHtml = (props.columns || []).map((col: any, index: number) => {
+                    const colBg = col.bgColor ? `background-color: ${col.bgColor};` : '';
+                    const colPadding = col.padding || '1rem';
+                    const colBorderRadius = col.borderRadius || '0.5rem';
+                    return `<div style="${colBg} padding: ${colPadding}; border-radius: ${colBorderRadius};">${col.content || ''}</div>`;
+                }).join('\n');
+
+                return `<div class="${columnClasses} my-6">${columnsHtml}</div>`
+            }
             default:
                 return '';
         }
     }).join('\n');
 
-    return `
-        <div class="space-y-6">
-            ${componentHtml}
-        </div>
-    `;
+    return `${componentHtml}`;
 }
 
 type AdminLegalPageState = {
@@ -125,6 +159,13 @@ function PageComponentEditor({ component, onUpdate, onDelete, onMove }: { compon
     const updateProp = (propName: string, value: any) => {
         onUpdate(component.id, { ...component.props, [propName]: value });
     };
+
+    const updateColumnProp = (index: number, propName: string, value: any) => {
+        const newColumns = [...(component.props.columns || [])];
+        newColumns[index] = { ...newColumns[index], [propName]: value };
+        onUpdate(component.id, { ...component.props, columns: newColumns });
+    };
+
 
     const renderField = (propName: string, label: string, type: string = 'text', placeholder?: string) => (
          <div key={propName}>
@@ -244,7 +285,7 @@ function PageComponentEditor({ component, onUpdate, onDelete, onMove }: { compon
                         {renderColorInput('color', 'Farbe', '#cccccc')}
                         <div className="flex-1">
                             <Label htmlFor={`${component.id}-thickness`} className="text-xs">Dicke (px)</Label>
-                            <Input id={`${component.id}-thickness`} type="number" value={component.props.thickness || '1'} onChange={(e) => updateProp('thickness', e.target.value + 'px')} className="h-8"/>
+                            <Input id={`${component.id}-thickness`} type="number" value={component.props.thickness ? parseInt(component.props.thickness) : 1} onChange={(e) => updateProp('thickness', e.target.value + 'px')} className="h-8"/>
                         </div>
                     </div>
                      <div className="flex-1">
@@ -262,6 +303,56 @@ function PageComponentEditor({ component, onUpdate, onDelete, onMove }: { compon
                     </div>
                 </div>
             );
+            case 'columns': return (
+                 <div className="space-y-4">
+                    <div className="flex gap-4">
+                        <div className="flex-1">
+                             <Label htmlFor={`${component.id}-numColumns`} className="text-xs">Anzahl Spalten</Label>
+                            <Select onValueChange={(v) => updateProp('numColumns', parseInt(v))} defaultValue={String(component.props.numColumns || 2)}>
+                                <SelectTrigger className="h-8">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="2">2</SelectItem>
+                                    <SelectItem value="3">3</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                         <div className="flex-1">
+                            {renderField('gap', 'Abstand (z.B. 1rem)', 'text', '1rem')}
+                        </div>
+                    </div>
+                    <div>
+                        <Label className="text-xs">Vertikale Ausrichtung</Label>
+                        <div className="flex gap-1 mt-1">
+                            {(['start', 'center', 'end'] as const).map(align => (
+                                <Button key={align} size="icon" variant={component.props.verticalAlignment === align ? "secondary" : "ghost"} className="h-8 w-8" onClick={() => updateProp('verticalAlignment', align)}>
+                                    {align === 'start' && <AlignVerticalJustifyStart className="h-4 w-4" />}
+                                    {align === 'center' && <AlignVerticalJustifyCenter className="h-4 w-4" />}
+                                    {align === 'end' && <AlignVerticalJustifyEnd className="h-4 w-4" />}
+                                </Button>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="space-y-4">
+                        {Array.from({ length: component.props.numColumns || 2 }).map((_, index) => (
+                            <div key={index} className="p-3 border rounded-md bg-muted/50 space-y-2">
+                                <h4 className="text-xs font-semibold">Spalte {index + 1}</h4>
+                                <div>
+                                    <Label htmlFor={`${component.id}-col-${index}-content`} className="text-xs">Inhalt (HTML)</Label>
+                                    <Textarea
+                                        id={`${component.id}-col-${index}-content`}
+                                        value={component.props.columns?.[index]?.content || ''}
+                                        onChange={(e) => updateColumnProp(index, 'content', e.target.value)}
+                                        className="text-xs font-mono"
+                                        rows={6}
+                                    />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
             default: return <p>Unbekannter Komponententyp</p>
         }
     }
@@ -273,6 +364,7 @@ function PageComponentEditor({ component, onUpdate, onDelete, onMove }: { compon
         image: <ImageIcon className="h-4 w-4" />,
         spacer: <Rows className="h-4 w-4" />,
         separator: <Minus className="h-4 w-4" />,
+        columns: <Columns className="h-4 w-4" />,
     }
 
     return (
@@ -352,7 +444,7 @@ export function EditorClient({ page }: { page: LegalPage }) {
         
         if(hasManuallyEditedHtml) {
             formData.set('content', generatedHtml);
-            formData.set('components', '[]'); // Clear components if HTML was manually edited
+            formData.set('components', JSON.stringify([])); // Clear components if HTML was manually edited
         } else {
             const freshHtml = generatePageHtml(components);
             formData.set('content', freshHtml);
@@ -371,16 +463,25 @@ export function EditorClient({ page }: { page: LegalPage }) {
   };
   
   const addComponent = (type: PageComponent['type']) => {
+      let props = {};
+      if (type === 'columns') {
+        props = { numColumns: 2, columns: [{ content: '' }, { content: '' }], gap: '1rem', verticalAlignment: 'start' }
+      }
       const newComponent: PageComponent = {
           id: `${type}-${Date.now()}`,
           type: type,
-          props: {}
+          props
       };
       setComponents(prev => [...prev, newComponent]);
       setHasManuallyEditedHtml(false);
   };
 
   const updateComponent = (id: string, props: any) => {
+      const oldComponent = components.find(c => c.id === id);
+      if (oldComponent?.type === 'columns' && props.numColumns !== oldComponent.props.numColumns) {
+          props.columns = Array.from({ length: props.numColumns }, (_, i) => props.columns[i] || { content: '' });
+      }
+
       setComponents(prev => prev.map(c => c.id === id ? { ...c, props } : c));
       setHasManuallyEditedHtml(false);
   };
@@ -458,6 +559,7 @@ export function EditorClient({ page }: { page: LegalPage }) {
                     <Button variant="outline" onClick={() => addComponent('image')}><ImageIcon className="mr-2 h-4 w-4"/>Bild</Button>
                     <Button variant="outline" onClick={() => addComponent('spacer')}><Rows className="mr-2 h-4 w-4"/>Abstand</Button>
                     <Button variant="outline" onClick={() => addComponent('separator')}><Minus className="mr-2 h-4 w-4"/>Trennlinie</Button>
+                    <Button variant="outline" className="col-span-2" onClick={() => addComponent('columns')}><Columns className="mr-2 h-4 w-4"/>Spalten</Button>
                 </div>
                 <form action={handleFormSubmit}>
                      <Button type="submit" disabled={isSaving} className="w-full">
@@ -486,7 +588,7 @@ export function EditorClient({ page }: { page: LegalPage }) {
                 </TabsList>
                 <TabsContent value="preview" className="mt-4 flex-grow bg-gray-100 dark:bg-gray-800 p-4 rounded-md">
                      <iframe
-                        srcDoc={`<html><head><link href="/globals.css" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-background text-foreground"><div class="max-w-none p-4">${generatedHtml}</div></body></html>`}
+                        srcDoc={`<html><head><link href="/globals.css" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-background text-foreground"><div class="max-w-none p-4 space-y-6">${generatedHtml}</div></body></html>`}
                         title="Seiten-Vorschau"
                         className="w-full h-full border bg-white"
                     />

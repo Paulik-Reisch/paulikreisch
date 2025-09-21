@@ -1,4 +1,5 @@
 
+
 "use server";
 
 import { app } from "@/app/firebase";
@@ -37,7 +38,7 @@ export interface Order {
 
 export interface PageComponent {
     id: string;
-    type: 'heading' | 'text' | 'button' | 'image' | 'spacer' | 'separator';
+    type: 'heading' | 'text' | 'button' | 'image' | 'spacer' | 'separator' | 'columns';
     props: {
         [key: string]: any;
     };
