@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
@@ -20,6 +18,7 @@ import { cn } from "@/lib/utils";
 import { Product, getProducts } from "@/lib/firestore";
 import { useActionState } from "react";
 import { createOrderAction } from "@/app/actions";
+import { HW2PreorderPopup } from "./hw2-preorder-popup";
 
 const signatureSchema = z.object({
   hw1_hasSignature: z.boolean().default(true),
@@ -54,7 +53,7 @@ const bookPrices = {
 };
 
 
-export function SignatureOrderForm({ book }: { book: Product, isHW2Preorder?: boolean }) {
+export function SignatureOrderForm({ book, isHW2Preorder }: { book: Product, isHW2Preorder?: boolean }) {
   const { toast } = useToast();
   const [products, setProducts] = useState<{ [key: string]: Product }>({});
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -197,11 +196,9 @@ export function SignatureOrderForm({ book }: { book: Product, isHW2Preorder?: bo
 
   if (isHW2Preorder) {
     return (
-        <DialogContent>
-            <HW2PreorderPopup book={book}>
-                <></>
-            </HW2PreorderPopup>
-        </DialogContent>
+      <HW2PreorderPopup book={book}>
+        <></>
+      </HW2PreorderPopup>
     );
   }
 
@@ -471,83 +468,3 @@ export function SignatureOrderForm({ book }: { book: Product, isHW2Preorder?: bo
     </DialogContent>
   );
 }
-
-// Separate component for HW2 Preorder to keep logic clean
-function HW2PreorderPopup({ book }: { book: Product }) {
-    const { toast } = useToast();
-    const [state, formAction] = useActionState(createOrderAction, { success: false, error: null });
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-    const {
-        register,
-        handleSubmit,
-        control,
-        watch,
-        formState: { errors },
-        reset
-    } = useForm<SignatureFormValues>({
-        resolver: zodResolver(signatureSchema),
-        defaultValues: { hasSignature: true }
-    });
-
-    const watchFields = watch();
-
-    useEffect(() => {
-        if (state.success) {
-            toast({
-                title: "Bestellung erfolgreich!",
-                description: "Ihre Vorbestellung wurde registriert.",
-            });
-            reset();
-            setIsDialogOpen(false);
-        }
-        if (state.error) {
-            toast({
-                variant: "destructive",
-                title: "Fehler",
-                description: state.error
-            });
-        }
-    }, [state, toast, reset]);
-    
-    const { totalPrice } = useMemo(() => {
-        let price = book.preorderPrice || book.price || 0;
-        price += bookPrices.hw2_signature_package;
-        return { totalPrice: price };
-    }, [book]);
-
-    const onFormSubmit = (data: SignatureFormValues) => {
-        const orderPayload = {
-            ...data,
-            orderType: 'HW2 Signature Preorder',
-            items: [{
-                id: book.id,
-                title: book.title,
-                type: 'Buch (Vorbestellung)',
-                price: book.preorderPrice,
-                signature: true,
-                dedication: data.hw2_hasDedication ? (data.hw2_provideDedication ? data.hw2_customDedication : 'Standard') : null,
-            }],
-            totalPrice,
-            timestamp: new Date().toISOString(),
-        };
-
-        const formData = new FormData();
-        formData.append("payload", JSON.stringify(orderPayload));
-        formAction(formData);
-    };
-
-    const isSubmitting = (state as any)?.pending;
-
-    return (
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            {/* The trigger is now external, passed as children */}
-            <DialogContent className="max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-                <form onSubmit={handleSubmit(onFormSubmit)}>
-                    {/* Form content from the original hw2-preorder-popup */}
-                </form>
-            </DialogContent>
-        </Dialog>
-    )
-}
-    
