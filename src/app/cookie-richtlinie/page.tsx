@@ -26,7 +26,7 @@ export default function CookieRichtliniePage() {
             <div className="space-y-4">
               <h2 className="text-2xl font-bold font-headline">Wie wir Cookies verwenden</h2>
               <p className="text-muted-foreground">
-                Wir verwenden Cookies aus einem einzigen wichtigen Grund:
+                Wir verwenden Cookies aus einem einzigen Grund:
               </p>
               <ul className="list-disc list-inside text-muted-foreground space-y-2">
                 <li>
