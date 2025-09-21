@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Product } from "@/lib/firestore";
 
 export function Hero({ product }: { product?: Product }) {
-  const imageSrc = product?.imageSrc || "https://placehold.co/550x550.png";
+  const imageSrc = product?.imageSrc || "https://m.media-amazon.com/images/I/61hB6jTD-CL._SY466_.jpg";
   const imageHint = product?.aiHint || "book cover";
 
   return (
@@ -29,11 +29,11 @@ export function Hero({ product }: { product?: Product }) {
           <div className="relative animate-in fade-in zoom-in-50 duration-1000">
              <Image
                 alt="Buchcover"
-                className="mx-auto aspect-[1/1] overflow-hidden rounded-xl object-contain sm:w-full lg:order-last transform -rotate-3 transition-transform duration-500 hover:rotate-0 hover:scale-105 shadow-2xl"
+                className="mx-auto aspect-[2/3] overflow-hidden rounded-xl object-contain sm:w-full lg:order-last transform -rotate-3 transition-transform duration-500 hover:rotate-0 hover:scale-105 shadow-2xl"
                 data-ai-hint={imageHint}
                 height="550"
                 src={imageSrc}
-                width="550"
+                width="400"
               />
           </div>
         </div>
