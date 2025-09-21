@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Save, ArrowLeft, Sparkles } from "lucide-react";
 import { useFormStatus } from "react-dom";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type AdminLegalPageState = {
   success: boolean;
@@ -122,7 +123,11 @@ export function EditorClient({ page }: { page: LegalPage }) {
       </div>
       <div className="flex-1 flex flex-col min-h-0">
         <Label htmlFor="content">Inhalt (HTML & Tailwind CSS)</Label>
-        <CodeEditor value={content} onChange={setContent} />
+        {isCorrectionPending ? (
+            <Skeleton className="w-full h-full border rounded-md" />
+        ) : (
+            <CodeEditor value={content} onChange={setContent} />
+        )}
       </div>
     </form>
     </>
