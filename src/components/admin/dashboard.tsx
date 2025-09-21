@@ -15,6 +15,7 @@ import {
     addLegalPageAction,
     updateLegalPageAction,
     deleteLegalPageAction,
+    createDefaultLegalPagesAction,
 } from "@/app/admin/actions";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -30,7 +31,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle, Trash2, Edit } from "lucide-react";
+import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -389,6 +390,7 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
 
     const [addState, addFormAction] = useActionState(addLegalPageAction, initialLegalPageState);
     const [deleteState, deleteFormAction] = useActionState(deleteLegalPageAction, initialLegalPageState);
+    const [createDefaultsState, createDefaultsFormAction] = useActionState(createDefaultLegalPagesAction, initialLegalPageState);
     
     const [newContent, setNewContent] = useState("<h1 class=\"text-4xl font-bold\">Neuer Seitentitel</h1>\n<p class=\"mt-4\">Dies ist der Inhalt Ihrer neuen Seite.</p>");
 
@@ -415,6 +417,15 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
             toast({ variant: "destructive", title: "Fehler", description: deleteState.error });
         }
     }, [deleteState, toast]);
+
+     useEffect(() => {
+        if (createDefaultsState.message) {
+            toast({ title: "Aktion ausgeführt", description: createDefaultsState.message });
+        }
+        if (createDefaultsState.error) {
+            toast({ variant: "destructive", title: "Fehler", description: createDefaultsState.error });
+        }
+    }, [createDefaultsState, toast]);
     
     const handleAddFormSubmit = (formData: FormData) => {
         formData.set('content', newContent);
@@ -457,6 +468,9 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
                         </form>
                     </DialogContent>
                 </Dialog>
+                <form action={createDefaultsFormAction}>
+                    <Button variant="ghost"><FilePlus className="mr-2 h-4 w-4" />Standardseiten erstellen</Button>
+                </form>
             </div>
              <div className="border rounded-lg overflow-hidden">
                 <Table>

@@ -196,3 +196,41 @@ export async function deleteLegalPageAction(
         return { success: false, error: "Fehler beim Löschen: " + error.message };
     }
 }
+
+export async function createDefaultLegalPagesAction(): Promise<AdminLegalPageState> {
+    const defaultPages = [
+        { pageId: "impressum", title: "Impressum", content: "<h1>Impressum</h1><p>Bitte füllen Sie diese Seite mit Ihren Daten.</p>" },
+        { pageId: "datenschutz", title: "Datenschutzerklärung", content: "<h1>Datenschutzerklärung</h1><p>Bitte füllen Sie diese Seite mit Ihren Datenschutzbestimmungen.</p>" },
+        { pageId: "cookie-richtlinie", title: "Cookie-Richtlinie", content: "<h1>Cookie-Richtlinie</h1><p>Bitte füllen Sie diese Seite mit Ihren Cookie-Richtlinien.</p>" },
+        { pageId: "agb", title: "Allgemeine Geschäftsbedingungen", content: "<h1>AGB</h1><p>Bitte füllen Sie diese Seite mit Ihren AGBs.</p>" },
+        { pageId: "lizenz", title: "Lizenz", content: "<h1>Lizenz</h1><p>Bitte füllen Sie diese Seite mit Ihren Lizenzinformationen.</p>" },
+    ];
+
+    const results = { created: [] as string[], errors: [] as string[] };
+
+    for (const page of defaultPages) {
+        try {
+            await addLegalPage(page.pageId, { title: page.title, content: page.content });
+            results.created.push(page.pageId);
+        } catch (e) {
+            const error = e as Error;
+            // Ignore errors for pages that already exist
+            if (!error.message.includes("existiert bereits")) {
+                results.errors.push(`${page.pageId}: ${error.message}`);
+            }
+        }
+    }
+
+    if (results.errors.length > 0) {
+        return { success: false, error: `Fehler beim Erstellen der Seiten: ${results.errors.join(", ")}` };
+    }
+
+    revalidatePath("/admin");
+    defaultPages.forEach(p => revalidatePath(`/${p.pageId}`));
+    
+    const message = results.created.length > 0 
+        ? `Seiten erfolgreich erstellt: ${results.created.join(", ")}`
+        : "Alle Standardseiten existieren bereits.";
+
+    return { success: true, message };
+}
