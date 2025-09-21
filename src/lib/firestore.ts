@@ -35,10 +35,20 @@ export interface Order {
     timestamp: string;
 }
 
+export interface PageComponent {
+    id: string;
+    type: 'heading' | 'text' | 'button' | 'image' | 'spacer';
+    props: {
+        [key: string]: any;
+    };
+}
+
+
 export interface LegalPage {
     id: string;
     title: string;
-    content: string;
+    content: string; // Will store the generated HTML for preview, components are the source of truth
+    components: PageComponent[];
     lastUpdated: string;
 }
 
@@ -183,7 +193,8 @@ export async function getLegalPages(): Promise<LegalPage[]> {
         return { 
             id: doc.id, 
             title: data.title,
-            content: data.content,
+            content: data.content || '',
+            components: data.components || [],
             lastUpdated: lastUpdated ? (lastUpdated as Timestamp).toDate().toISOString() : new Date().toISOString(),
         } as LegalPage;
     });
@@ -200,7 +211,8 @@ export async function getLegalPage(slug: string): Promise<LegalPage | null> {
         return {
             id: docSnap.id,
             title: data.title,
-            content: data.content,
+            content: data.content || '',
+            components: data.components || [],
             lastUpdated: lastUpdated ? (lastUpdated as Timestamp).toDate().toISOString() : new Date().toISOString(),
         } as LegalPage;
     } else {
@@ -208,7 +220,7 @@ export async function getLegalPage(slug: string): Promise<LegalPage | null> {
     }
 }
 
-export async function addLegalPage(pageId: string, data: { title: string; content: string }) {
+export async function addLegalPage(pageId: string, data: { title: string; content: string, components: PageComponent[] }) {
     if (!pageId) throw new Error("Page ID (slug) is required.");
     const pageRef = doc(db, 'legal_pages', pageId);
     const docSnap = await getDoc(pageRef);
@@ -224,7 +236,7 @@ export async function addLegalPage(pageId: string, data: { title: string; conten
 }
 
 
-export async function updateLegalPage(pageId: string, data: { title: string, content: string }) {
+export async function updateLegalPage(pageId: string, data: Partial<Omit<LegalPage, 'id'>>) {
     const pageRef = doc(db, 'legal_pages', pageId);
     await setDoc(pageRef, { 
         ...data,
@@ -281,87 +293,245 @@ export async function addNewsletter(data: { name: string; subject: string }): Pr
     const docRef = await addDoc(newslettersCol, {
         ...data,
         components: [],
-        content: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>${data.subject}</title>
-    <style type="text/css">
-        body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
-        table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
-        img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
-        table { border-collapse: collapse !important; }
-        body { height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; }
-    </style>
-</head>
-<body style="margin: 0 !important; padding: 0 !important; background-color: #f4f4f4;">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-        <tr>
-            <td align="center" style="background-color: #f4f4f4;">
-                <!--[if (gte mso 9)|(IE)]>
-                <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
-                <tr>
-                <td align="center" valign="top" width="600">
-                <![endif]-->
-                <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="max-width: 600px; width: 100%;">
-                    <tr>
-                        <td align="center" valign="top" style="font-size: 11px; font-family: Arial, sans-serif; color: #888888; padding: 10px;">
-                            E-Mail wird nicht korrekt angezeigt? <a href="#" target="_blank" style="color: #888888; text-decoration: underline;">Online ansehen</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="center" valign="top" style="background-color: #ffffff;">
-                            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
-                                <!-- Add your components here -->
-                            </table>
-                        </td>
-                    </tr>
-                     <tr>
-                        <td bgcolor="#eae7e1" style="padding:20px; font-family:Arial, sans-serif; font-size:12px; color:#333333; line-height:1.4; text-align:left;">
-                          Beste Grüße,<br><br>
-                          Paulik & Reisch<br>
-                          Hallo Welt – Die Bücherserie<br><br>
-                          <a href="mailto:hallo-welt@paulik-reisch.de" style="color:#333333; text-decoration:underline;">hallo-welt@paulik-reisch.de</a><br><br>
-                          <b>Direkter Kontakt:</b><br>
-                          Philipp Paulik – <a href="mailto:philipp@paulik-reisch.de" style="color:#333333; text-decoration:underline;">philipp@paulik-reisch.de</a><br>
-                          Maximilian Reisch – <a href="mailto:max@paulik-reisch.de" style="color:#333333; text-decoration:underline;">max@paulik-reisch.de</a><br><br>
-                          Die Hallo Welt (HW) Bücherserie ist erstellt, gepflegt und individuell publiziert durch Philipp Paulik (Autor), Maximilian Reisch (Autor), Luin Schiffbauer (Illustrator) und weitere Mitwirkende.<br><br>
-                          Veröffentlicht und produziert durch Kindle Direct Publishing (KDP) der Amazon Distribution GmbH, Leipzig sowie ggf. weitere Verlags- und Produktionspartner.<br><br>
-                          <b style="font-size:10px;">Vertraulichkeitshinweis</b><br>
-                          <span style="font-size:10px;">Diese Nachricht und ihre Anhänge sind vertraulich und ausschließlich für die bezeichneten Empfänger bestimmt. Sollten Sie diese E-Mail irrtümlich erhalten haben, informieren Sie bitte umgehend den Absender und löschen Sie diese Nachricht sowie alle Anhänge. Die unbefugte Weitergabe oder Nutzung ist untersagt.</span><br><br>
-                          <b style="font-size:10px;">Rechtlicher Hinweis</b><br>
-                          <span style="font-size:10px;">Die Inhalte dieser E-Mail stellen keine rechtsverbindliche Erklärung dar. Für den Abschluss von Verträgen ist ausschließlich die Schriftform gemäß § 126 BGB maßgeblich. Jegliche Haftung für Übermittlungsfehler, Schäden oder die Nutzung der enthaltenen Informationen wird ausgeschlossen. Irrtum und Änderungen vorbehalten.</span><br><br>
-                          <b>Impressum:</b><br>
-                          Philipp Paulik und Maximilian Reisch<br>
-                          Mozartstraße 1<br>
-                          53819 Neunkirchen<br>
-                          E-Mail: <a href="mailto:hallowelt@paulik-reisch.de" style="color:#333333; text-decoration:underline;">hallowelt@paulik-reisch.de</a><br><br>
-                          Diese E-Mail wurde automatisch versendet. Falls Sie keine weiteren Nachrichten wünschen, klicken Sie bitte hier: 
-                          <a href="#unsubscribe" target="_blank" style="color:#333333; text-decoration:underline;">Abmelden</a><br><br>
-                          © 2025 Paulik & Reisch. Alle Rechte vorbehalten. Und einige Falschheiten.
-                        </td>
-                    </tr>
-                </table>
-                <!--[if (gte mso 9)|(IE)]>
-                </td>
-                </tr>
-                </table>
-                <![endif]-->
-            </td>
-        </tr>
-    </table>
-</body>
-</html>`,
+        content: ``,
         lastUpdated: Timestamp.now(),
     });
+    
+    const initialContent = generateEmailHTML([], data.subject, `${process.env.NEXT_PUBLIC_BASE_URL}/nl/preview/${docRef.id}`);
+    await updateDoc(docRef, { content: initialContent });
+
     return docRef.id;
+}
+
+
+function generateComponentHTML(component: NewsletterComponent): string {
+    const props = component.props;
+    const align = props.alignment as 'left' | 'center' | 'right' || 'left';
+
+    switch(component.type) {
+        case 'heading':
+            return `
+                <tr>
+                    <td align="${align}" style="padding: 10px 20px; text-align: ${align};">
+                        <h1 style="font-family: Arial, sans-serif; font-size: ${props.fontSize || '24px'}; color: ${props.color || '#000000'}; margin: 0;">${props.text || ''}</h1>
+                    </td>
+                </tr>
+            `;
+        case 'text':
+             return `
+                 <tr>
+                    <td align="${align}" style="padding: 10px 20px; text-align: ${align};">
+                        <p style="font-family: Arial, sans-serif; font-size: ${props.fontSize || '16px'}; color: ${props.color || '#333333'}; margin: 0; line-height: 1.5;">${(props.text || '').replace(/\n/g, '<br />')}</p>
+                    </td>
+                </tr>
+            `;
+        case 'button':
+            return `
+                <tr>
+                    <td align="${align}" style="padding: 20px;">
+                      <table border="0" cellspacing="0" cellpadding="0" role="presentation">
+                        <tr>
+                          <td align="center" style="background:${props.backgroundColor || '#007bff'};" bgcolor="${props.backgroundColor || '#007bff'}">
+                            <a href="${props.href || '#'}" target="_blank" style="font-size: ${props.fontSize || '16px'}; font-family: Arial, sans-serif; color: ${props.color || '#ffffff'}; text-decoration: none; text-decoration: none; padding: 10px 25px; border: 1px solid ${props.backgroundColor || '#007bff'}; display: inline-block; font-weight: bold;">
+                              ${props.text || ''}
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                </tr>
+            `;
+        case 'image':
+            const width = props.width ? parseInt(props.width, 10) : 600;
+            return `
+                <tr>
+                    <td align="${align}" style="padding: 10px 20px;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" align="${align}" style="max-width: 100%;">
+                            <tr>
+                                <td>
+                                    <img src="${props.src || 'https://placehold.co/600x400'}" alt="${props.alt || ''}" style="width: 100%; height: auto; display: block; max-width: ${width}px;" width="${width}" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            `;
+        case 'separator':
+            return `
+                <tr>
+                    <td style="padding: ${props.padding || 10}px 20px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <td height="1" style="border-bottom: ${props.thickness || 1}px ${props.style || 'solid'} ${props.color || '#cccccc'};"></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            `;
+        case 'spacer':
+            return `
+                <tr>
+                    <td style="height: ${props.height || 20}px; line-height: ${props.height || 20}px; font-size: 1px;">&nbsp;</td>
+                </tr>
+            `;
+        case 'two-columns':
+            return `
+                <tr>
+                    <td style="padding: 10px 20px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <td valign="top" width="50%" style="padding-right: 10px;">
+                                    <p style="font-family: Arial, sans-serif; font-size: 14px; color: #333333; margin: 0; line-height: 1.5;">${(props.text1 || '').replace(/\n/g, '<br />')}</p>
+                                </td>
+                                <td valign="top" width="50%" style="padding-left: 10px;">
+                                    <p style="font-family: Arial, sans-serif; font-size: 14px; color: #333333; margin: 0; line-height: 1.5;">${(props.text2 || '').replace(/\n/g, '<br />')}</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            `;
+        case 'image-text':
+            const imageOrder = props.layout === 'image-right' ? 2 : 1;
+            const textOrder = props.layout === 'image-right' ? 1 : 2;
+            const widths = (props.columnWidth || '50/50').split('/');
+            const imageWidthPercent = widths[imageOrder - 1];
+            const textWidthPercent = widths[textOrder - 1];
+            
+            const imageContent = `
+                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tr>
+                        <td align="center" style="padding: 5px;">
+                             <img src="${props.src || 'https://placehold.co/300x200'}" alt="${props.alt || ''}" style="width: 100%; height: auto; display: block;" width="100%" />
+                        </td>
+                    </tr>
+                </table>`;
+
+            const textContent = `
+                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tr>
+                        <td align="left" style="padding: 5px;">
+                            <p style="font-family: Arial, sans-serif; font-size: 14px; color: #333333; margin: 0; line-height: 1.5;">${(props.text || '').replace(/\n/g, '<br />')}</p>
+                        </td>
+                    </tr>
+                </table>`;
+
+            return `
+                <tr>
+                    <td style="padding: 10px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <td valign="top" width="${imageWidthPercent}%" style="${textOrder === 1 ? 'padding-right:10px;' : 'padding-left:10px;'}">
+                                    ${imageOrder === 1 ? imageContent : textContent}
+                                </td>
+                                <td valign="top" width="${textWidthPercent}%" style="${imageOrder === 1 ? 'padding-left:10px;' : 'padding-right:10px;'}">
+                                    ${textOrder === 2 ? textContent : imageContent}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            `;
+        default:
+            return '';
+    }
+}
+
+function generateEmailHTML(components: NewsletterComponent[], subject: string, previewUrl: string): string {
+    const body = components.map(generateComponentHTML).join('');
+
+    return `
+        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html xmlns="http://www.w3.org/1999/xhtml">
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <title>${subject}</title>
+            <style type="text/css">
+                body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+                table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+                img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+                table { border-collapse: collapse !important; }
+                body { height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; }
+            </style>
+        </head>
+        <body style="margin: 0 !important; padding: 0 !important; background-color: #f4f4f4;">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                    <td align="center" style="background-color: #f4f4f4;">
+                        <!--[if (gte mso 9)|(IE)]>
+                        <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
+                        <tr>
+                        <td align="center" valign="top" width="600">
+                        <![endif]-->
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="max-width: 600px; width: 100%;">
+                            <tr>
+                                <td align="center" valign="top" style="font-size: 11px; font-family: Arial, sans-serif; color: #888888; padding: 10px;">
+                                    E-Mail wird nicht korrekt angezeigt? <a href="${previewUrl}" target="_blank" style="color: #888888; text-decoration: underline;">Online ansehen</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" valign="top" style="background-color: #ffffff;">
+                                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                        ${body}
+                                    </table>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td bgcolor="#eae7e1" style="padding:20px; font-family:Arial, sans-serif; font-size:12px; color:#333333; line-height:1.4; text-align:left;">
+                                  Beste Grüße,<br><br>
+                                  Paulik & Reisch<br>
+                                  Hallo Welt – Die Bücherserie<br><br>
+                                  <a href="mailto:hallo-welt@paulik-reisch.de" style="color:#333333; text-decoration:underline;">hallo-welt@paulik-reisch.de</a><br><br>
+                                  <b>Direkter Kontakt:</b><br>
+                                  Philipp Paulik – <a href="mailto:philipp@paulik-reisch.de" style="color:#333333; text-decoration:underline;">philipp@paulik-reisch.de</a><br>
+                                  Maximilian Reisch – <a href="mailto:max@paulik-reisch.de" style="color:#333333; text-decoration:underline;">max@paulik-reisch.de</a><br><br>
+                                  Die Hallo Welt (HW) Bücherserie ist erstellt, gepflegt und individuell publiziert durch Philipp Paulik (Autor), Maximilian Reisch (Autor), Luin Schiffbauer (Illustrator) und weitere Mitwirkende.<br><br>
+                                  Veröffentlicht und produziert durch Kindle Direct Publishing (KDP) der Amazon Distribution GmbH, Leipzig sowie ggf. weitere Verlags- und Produktionspartner.<br><br>
+                                  <b style="font-size:10px;">Vertraulichkeitshinweis</b><br>
+                                  <span style="font-size:10px;">Diese Nachricht und ihre Anhänge sind vertraulich und ausschließlich für die bezeichneten Empfänger bestimmt. Sollten Sie diese E-Mail irrtümlich erhalten haben, informieren Sie bitte umgehend den Absender und löschen Sie diese Nachricht sowie alle Anhänge. Die unbefugte Weitergabe oder Nutzung ist untersagt.</span><br><br>
+                                  <b style="font-size:10px;">Rechtlicher Hinweis</b><br>
+                                  <span style="font-size:10px;">Die Inhalte dieser E-Mail stellen keine rechtsverbindliche Erklärung dar. Für den Abschluss von Verträgen ist ausschließlich die Schriftform gemäß § 126 BGB maßgeblich. Jegliche Haftung für Übermittlungsfehler, Schäden oder die Nutzung der enthaltenen Informationen wird ausgeschlossen. Irrtum und Änderungen vorbehalten.</span><br><br>
+                                  <b>Impressum:</b><br>
+                                  Philipp Paulik und Maximilian Reisch<br>
+                                  Mozartstraße 1<br>
+                                  53819 Neunkirchen<br>
+                                  E-Mail: <a href="mailto:hallowelt@paulik-reisch.de" style="color:#333333; text-decoration:underline;">hallowelt@paulik-reisch.de</a><br><br>
+                                  Diese E-Mail wurde automatisch versendet. Falls Sie keine weiteren Nachrichten wünschen, klicken Sie bitte hier: 
+                                  <a href="#unsubscribe" target="_blank" style="color:#333333; text-decoration:underline;">Abmelden</a><br><br>
+                                  © 2025 Paulik & Reisch. Alle Rechte vorbehalten. Und einige Falschheiten.
+                                </td>
+                            </tr>
+                        </table>
+                        <!--[if (gte mso 9)|(IE)]>
+                        </td>
+                        </tr>
+                        </table>
+                        <![endif]-->
+                    </td>
+                </tr>
+            </table>
+        </body>
+        </html>
+    `;
 }
 
 export async function updateNewsletter(id: string, data: Partial<Omit<Newsletter, 'id'>>) {
     const newsletterRef = doc(db, 'newsletters', id);
+    
+    let finalData: any = { ...data };
+
+    if (data.components) {
+        const docSnap = await getDoc(newsletterRef);
+        if (docSnap.exists()) {
+             const existingData = docSnap.data();
+             const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || ''}/nl/preview/${id}`;
+             finalData.content = generateEmailHTML(data.components, data.subject || existingData.subject, previewUrl);
+        }
+    }
+
     await updateDoc(newsletterRef, {
-        ...data,
+        ...finalData,
         lastUpdated: Timestamp.now(),
     });
 }
