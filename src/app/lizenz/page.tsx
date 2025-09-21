@@ -3,8 +3,28 @@ import { Footer } from "@/components/landing/footer";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Book, Scale } from "lucide-react";
+import { getLegalPage } from "@/lib/firestore";
+import { notFound } from "next/navigation";
 
-export default function LizenzPage() {
+export default async function LizenzPage() {
+    const page = await getLegalPage("lizenz");
+
+    if (!page) {
+        notFound();
+    }
+
+    const sections = page.content.split('---');
+    const zitiervorschlagContent = sections[0] || '';
+    const lizenzContent = sections[1] || '';
+
+    const zitiervorschlagParts = zitiervorschlagContent.split('\n\n');
+    const zitiervorschlagIntro = zitiervorschlagParts.shift();
+    const hw1Zitat = zitiervorschlagParts[0] || '';
+    const hw2Zitat = zitiervorschlagParts[1] || '';
+    
+    const lizenzParts = lizenzContent.split('\n\n');
+    const lizenzIntro = lizenzParts.shift();
+    
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
       <Header />
@@ -13,7 +33,7 @@ export default function LizenzPage() {
           <div className="space-y-12">
             <div className="text-center">
                 <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl">
-                Lizenzierung & Weiternutzung
+                {page.title}
                 </h1>
                 <p className="text-lg text-muted-foreground mt-4 text-balance">
                 Der (überraschend) seriöse Teil darüber, was Sie mit unseren geistigen Ergüssen tun dürfen und was nicht.
@@ -28,27 +48,21 @@ export default function LizenzPage() {
                 <div>
                     <h2 className="text-2xl font-bold font-headline">Zitiervorschlag</h2>
                     <p className="text-muted-foreground mt-1">
-                        Um unsere Werke korrekt zu zitieren, empfehlen wir folgende Quellenangaben. Ja, auch Satire will korrekt zitiert werden.
+                        {zitiervorschlagIntro}
                     </p>
                 </div>
               </div>
               <div className="pl-12 space-y-6">
                 <div>
                     <h3 className="font-semibold text-foreground">Hallo Welt 1</h3>
-                    <blockquote className="mt-2 border-l-2 pl-6 italic text-muted-foreground">
-                        Paulik, P. und Reisch, M. (2023) <br/>
-                        5. Auflage – Hallo Welt: Erhebliche Kritik am unerhörten Bildungsgang der Lernvollzugsanstalt SK-S, [Seitenzahl(en)] <br/>
-                        Verfügbar unter: www.paulik-reisch.de; ISBN 979-8-879-79169-3 <br/>
-                        [Datum des Zugriffs]
+                    <blockquote className="mt-2 border-l-2 pl-6 italic text-muted-foreground"
+                     dangerouslySetInnerHTML={{ __html: hw1Zitat.replace(/\n/g, '<br />') }}>
                     </blockquote>
                 </div>
                  <div>
                     <h3 className="font-semibold text-foreground">Hallo Welt 2</h3>
-                    <blockquote className="mt-2 border-l-2 pl-6 italic text-muted-foreground">
-                        Paulik, P. und Reisch, M. (2025) <br/>
-                        1. Auflage – Hallo Welt 2: Wie das Leben funktioniert, [Seitenzahl(en)] <br/>
-                        Verfügbar unter: www.paulik-reisch.de; ISBN 979-8-298-31897-6 <br/>
-                        [Datum des Zugriffs]
+                    <blockquote className="mt-2 border-l-2 pl-6 italic text-muted-foreground"
+                     dangerouslySetInnerHTML={{ __html: hw2Zitat.replace(/\n/g, '<br />') }}>
                     </blockquote>
                 </div>
               </div>
@@ -62,15 +76,13 @@ export default function LizenzPage() {
                     <div>
                         <h2 className="text-2xl font-bold font-headline">Lizenz</h2>
                          <p className="text-muted-foreground mt-1">
-                            Dieses Werk steht unter einer Lizenz, die so kompliziert klingt, wie sie ist. Aber keine Sorge, wir haben es für Sie zusammengefasst.
+                            {lizenzIntro}
                         </p>
                     </div>
                 </div>
 
               <div className="pl-12 space-y-4 text-muted-foreground text-sm">
-                <p>
-                  Dieses Werk wird unter den Bedingungen der Creative Commons Attribution-Non-Commercial-ShareAlike 4.0 International Public License (nachfolgend »CC BY-NC-SA 4.0« oder »Lizenz«) zur Verfügung gestellt. Die vollständigen, authentischen und rechtsverbindlichen Lizenzbedingungen sind unter der offiziellen Webseite der Creative Commons in ihrer jeweils aktuellen Fassung abrufbar und bilden einen integralen Bestandteil dieser Lizenzvereinbarung.
-                </p>
+                {lizenzParts.slice(0, 1).map((p, i) => <p key={i}>{p}</p>)}
                 <div className="text-center my-4">
                     <Link href="https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.de" target="_blank" rel="noopener noreferrer">
                         <Badge variant="secondary" className="text-sm py-2 px-4 cursor-pointer hover:scale-105 transition-transform">
@@ -78,15 +90,8 @@ export default function LizenzPage() {
                         </Badge>
                     </Link>
                 </div>
-                <p>
-                  Die Lizenzgewährung erfolgt ausschließlich in dem Umfang und unter den Bedingungen, wie sie in der CC BY-NC-SA 4.0 expressis verbis festgelegt sind. Die vorliegenden Lizenzbestimmungen sind nicht erweiterbar, modifizierbar, einschränkbar oder auf Dritte übertragbar, es sei denn, dies ist ausdrücklich in der CC BY-NC-SA 4.0 vorgesehen. Jede Abweichung von den originären Creative Commons-Bestimmungen ist unwirksam und führt zum automatischen Erlöschen der Lizenzgewährung.
-                </p>
-                <p>
-                  Abgeleitete Werke, Bearbeitungen oder sonstige auf diesem Werk basierende Schöpfungen unterliegen zwingend der identischen CC BY-NC-SA 4.0-Lizenzierung. Eine Lizenzierung unter kompatiblen, jedoch nicht identischen Creative Commons-Lizenzen ist ausgeschlossen.
-                </p>
-                <p>
-                  Eine Wiederherstellung der Lizenzrechte erfolgt ausschließlich nach Maßgabe der Bestimmungen in Abschnitt 6(b) der CC BY-NC-SA 4.0. Die Haftung des Lizenzgebers ist auf Vorsatz und grobe Fahrlässigkeit beschränkt, soweit nicht zwingende gesetzliche Bestimmungen entgegenstehen.
-                </p>
+                {lizenzParts.slice(1).map((p, i) => <p key={i}>{p}</p>)}
+                <p className="text-xs text-muted-foreground pt-4">Stand: {page.lastUpdated ? page.lastUpdated.toDate().toLocaleDateString('de-DE') : new Date().toLocaleDateString('de-DE')}</p>
               </div>
             </div>
 

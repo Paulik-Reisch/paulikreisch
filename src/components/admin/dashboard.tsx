@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getOrders, getProducts, Order, Product, updateProduct } from "@/lib/firestore";
+import { getOrders, getProducts, Order, Product, updateProduct, LegalPage, getLegalPages, updateLegalPage } from "@/lib/firestore";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -14,10 +14,13 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2, RefreshCw, Save, VenetianMask } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Loader2, RefreshCw, Save, VenetianMask, FileText } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 
 function LeadsTable() {
     const [orders, setOrders] = useState<Order[]>([]);
@@ -78,7 +81,7 @@ function LeadsTable() {
                             orders.map((order) => (
                                 <TableRow key={order.id}>
                                     <TableCell>
-                                        {format(order.timestamp.toDate(), "dd.MM.yyyy HH:mm", { locale: de })}
+                                        {order.timestamp ? format(order.timestamp.toDate(), "dd.MM.yyyy HH:mm", { locale: de }) : 'N/A'}
                                     </TableCell>
                                     <TableCell>
                                         <div className="font-medium">{order.firstName} {order.lastName}</div>
@@ -201,7 +204,7 @@ function ProductsTable() {
                                     <TableCell>
                                         <Input
                                             type="number"
-                                            value={currentProduct.price || ''}
+                                            value={currentProduct.price ?? ''}
                                             onChange={(e) => handleInputChange(product.id, 'price', e.target.value)}
                                             className="w-24"
                                         />
@@ -209,7 +212,7 @@ function ProductsTable() {
                                     <TableCell>
                                          <Input
                                             type="number"
-                                            value={currentProduct.preorderPrice || ''}
+                                            value={currentProduct.preorderPrice ?? ''}
                                             onChange={(e) => handleInputChange(product.id, 'preorderPrice', e.target.value)}
                                             className="w-24"
                                             placeholder="N/A"
@@ -242,18 +245,147 @@ function ProductsTable() {
     );
 }
 
+
+function LegalPagesManager() {
+    const [pages, setPages] = useState<LegalPage[]>([]);
+    const [editingPages, setEditingPages] = useState<{ [key: string]: Partial<LegalPage> }>({});
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const { toast } = useToast();
+
+    const fetchPages = async () => {
+        setLoading(true);
+        try {
+            const fetchedPages = await getLegalPages();
+            setPages(fetchedPages);
+        } catch (error) {
+            console.error("Error fetching legal pages:", error);
+            toast({ variant: "destructive", title: "Fehler", description: "Rechtstexte konnten nicht geladen werden." });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchPages();
+    }, []);
+
+    const handleInputChange = (pageId: string, field: keyof LegalPage, value: string) => {
+        setEditingPages(prev => ({
+            ...prev,
+            [pageId]: {
+                ...prev[pageId],
+                [field]: value,
+            }
+        }));
+    };
+
+    const handleSave = async (pageId: string) => {
+        const pageData = editingPages[pageId];
+        if (!pageData || !pageData.title || !pageData.content) {
+             toast({ variant: "destructive", title: "Fehler", description: "Titel und Inhalt dürfen nicht leer sein." });
+            return;
+        };
+
+        setSaving(true);
+        try {
+            await updateLegalPage(pageId, { title: pageData.title, content: pageData.content });
+            toast({ title: "Gespeichert", description: `Seite "${pageData.title}" wurde erfolgreich aktualisiert.` });
+            setEditingPages(prev => {
+                const newEditing = { ...prev };
+                delete newEditing[pageId];
+                return newEditing;
+            });
+            await fetchPages(); // Refresh data
+        } catch (error) {
+            console.error("Error updating legal page:", error);
+            toast({ variant: "destructive", title: "Fehler", description: "Seite konnte nicht gespeichert werden." });
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    return (
+        <div>
+            <div className="flex justify-end mb-4">
+                <Button onClick={fetchPages} disabled={loading || saving} variant="outline">
+                    {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
+                    Aktualisieren
+                </Button>
+            </div>
+            {loading ? (
+                <div className="text-center py-12">
+                    <Loader2 className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
+                </div>
+            ) : pages.length === 0 ? (
+                <div className="text-center py-12 text-muted-foreground">
+                    <FileText className="mx-auto h-8 w-8 mb-2" />
+                    Keine Rechtstexte gefunden.
+                    <p className="text-sm">Sie müssen ggf. zuerst in der Datenbank angelegt werden (z.B. mit den IDs: impressum, datenschutz, etc.).</p>
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {pages.map((page) => {
+                        const currentPage = { ...page, ...editingPages[page.id] };
+                        return (
+                            <Card key={page.id}>
+                                <CardHeader>
+                                    <CardTitle>Seite: {page.id}</CardTitle>
+                                    <CardDescription>Zuletzt aktualisiert: {page.lastUpdated ? format(page.lastUpdated.toDate(), "dd.MM.yyyy HH:mm", { locale: de }) : 'N/A'}</CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                     <div>
+                                        <Label htmlFor={`title-${page.id}`}>Seitentitel</Label>
+                                        <Input
+                                            id={`title-${page.id}`}
+                                            value={currentPage.title ?? ''}
+                                            onChange={(e) => handleInputChange(page.id, 'title', e.target.value)}
+                                        />
+                                    </div>
+                                    <div>
+                                        <Label htmlFor={`content-${page.id}`}>Inhalt (unterstützt Paragraphen via Leerzeile)</Label>
+                                         <Textarea
+                                            id={`content-${page.id}`}
+                                            value={currentPage.content ?? ''}
+                                            onChange={(e) => handleInputChange(page.id, 'content', e.target.value)}
+                                            className="h-64"
+                                            placeholder="Geben Sie hier den Inhalt ein. Absätze werden durch Leerzeilen erzeugt."
+                                        />
+                                    </div>
+                                    <Button
+                                        onClick={() => handleSave(page.id)}
+                                        disabled={!editingPages[page.id] || saving}
+                                        className="w-full"
+                                    >
+                                        {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Save className="mr-2 h-4 w-4" />}
+                                        Speichern
+                                    </Button>
+                                </CardContent>
+                            </Card>
+                        );
+                    })}
+                </div>
+            )}
+        </div>
+    )
+}
+
 export function AdminDashboard() {
     return (
         <Tabs defaultValue="leads" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="leads">Leads / Bestellungen</TabsTrigger>
                 <TabsTrigger value="products">Produkte</TabsTrigger>
+                <TabsTrigger value="legal">Rechtstexte</TabsTrigger>
             </TabsList>
             <TabsContent value="leads" className="mt-6">
                 <LeadsTable />
             </TabsContent>
             <TabsContent value="products" className="mt-6">
                 <ProductsTable />
+            </TabsContent>
+            <TabsContent value="legal" className="mt-6">
+                <LegalPagesManager />
             </TabsContent>
         </Tabs>
     )
