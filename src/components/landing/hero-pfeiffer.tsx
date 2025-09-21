@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useActionState, useEffect, useRef } from "react";
@@ -116,7 +117,7 @@ export function HeroPfeiffer() {
           <header className="text-center mb-12">
             <Badge variant="secondary">Exklusiv-Enthüllung</Badge>
             <h1 className="font-headline text-4xl sm:text-6xl font-bold tracking-tighter mt-4 text-balance">
-              Das Mysterium der "La Silbadora Pfeiffer"
+              Hallo Welt & das Mysterium der "La Silbadora Pfeiffer"
             </h1>
             <p className="text-xl text-muted-foreground mt-4 text-balance">
               Eine redaktionelle Analyse eines Phänomens, das die Grundfesten
