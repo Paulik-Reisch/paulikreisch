@@ -19,7 +19,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { SignatureOrderForm } from "./signature-order-form";
-import { getProducts, Product } from "@/lib/firestore";
+import { Product } from "@/lib/firestore";
 import { Skeleton } from "../ui/skeleton";
 
 
@@ -58,7 +58,7 @@ function HW2BookCard({ book }: { book: Product }) {
                                 </span>
                             )}
                         </div>
-                        {showDiscount && <p className="text-xs text-destructive font-semibold mt-1 animate-in fade-in duration-500">{Math.round((1 - (book.preorderPrice || 0) / (book.price || 1)) * 100)}% auf die ersten 50 Exemplare</p>}
+                        {showDiscount && <p className="text-xs text-destructive font-semibold mt-1 animate-in fade-in duration-500">{book.price && book.preorderPrice ? Math.round((1 - book.preorderPrice / book.price) * 100) : 0}% auf die ersten 50 Exemplare</p>}
                         <span className="text-xs text-muted-foreground">inkl. MwSt.</span>
                     </div>
                      <Dialog>
@@ -120,34 +120,14 @@ function BookCardSkeleton() {
 }
 
 
-export function BookShop() {
+export function BookShop({ initialProducts }: { initialProducts: Product[]}) {
   const { toast } = useToast();
-  const [products, setProducts] = useState<{ [key: string]: Product }>({});
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const fetchedProducts = await getProducts();
-        const productsById = fetchedProducts.reduce((acc, product) => {
-            acc[product.id] = product;
-            return acc;
-        }, {} as { [key: string]: Product });
-        setProducts(productsById);
-      } catch (error) {
-        console.error("Fehler beim Laden der Produkte:", error);
-        toast({
-            variant: "destructive",
-            title: "Fehler",
-            description: "Produkte konnten nicht geladen werden.",
-        });
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchProducts();
-  }, [toast]);
   
+  const products = initialProducts.reduce((acc, product) => {
+      acc[product.id] = product;
+      return acc;
+  }, {} as { [key: string]: Product });
+
   const handleNewsletterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const email = e.currentTarget.email.value;
@@ -165,7 +145,7 @@ export function BookShop() {
         
         <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-                {loading ? (
+                {!initialProducts ? (
                     <>
                         <BookCardSkeleton />
                         <BookCardSkeleton />
