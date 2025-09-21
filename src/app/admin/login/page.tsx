@@ -1,7 +1,14 @@
 import { LoginForm } from './login-form';
 import { BookHeart } from 'lucide-react';
+import { getSession } from '@/lib/session';
+import { redirect } from 'next/navigation';
 
-export default function AdminLoginPage() {
+export default async function AdminLoginPage() {
+  const session = await getSession();
+  if (session) {
+    redirect("/admin");
+  }
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-muted/40 p-4">
       <div className="w-full max-w-md">

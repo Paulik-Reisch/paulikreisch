@@ -420,4 +420,3 @@ export async function tagSubscribersAction(
         return { success: false, error: `Fehler beim Taggen: ${error.message}` };
     }
 }
-    

@@ -5,9 +5,16 @@ import { getLegalPages, getProducts, getNewsletters, getSubscribers } from "@/li
 import { Button } from "@/components/ui/button";
 import { logoutAction } from "./actions";
 import { LogOut } from "lucide-react";
+import { getSession } from "@/lib/session";
+import { redirect } from "next/navigation";
 
 
 export default async function AdminPage() {
+  const session = await getSession();
+  if (!session) {
+    redirect("/admin/login");
+  }
+
   // Fetch initial data on the server
   const initialProducts = await getProducts();
   const initialLegalPages = await getLegalPages();
@@ -42,5 +49,3 @@ export default async function AdminPage() {
     </div>
   );
 }
-
-    
