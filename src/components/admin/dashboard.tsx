@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -797,7 +796,7 @@ function CampaignsManager({ initialNewsletters, initialSubscribers }: { initialN
     useEffect(() => {
         if(sendState.message) {
             toast({
-                title: sendState.success ? "Kampagne gestartet (simuliert)" : "Fehler",
+                title: sendState.success ? "Kampagne gestartet" : "Fehler",
                 description: sendState.message,
                 variant: sendState.success ? "default" : "destructive",
             });
@@ -873,21 +872,23 @@ function CampaignsManager({ initialNewsletters, initialSubscribers }: { initialN
                             <AlertDialogHeader>
                                 <AlertDialogTitle>Sind Sie absolut sicher?</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                    Sie sind dabei, den Newsletter "{initialNewsletters.find(nl => nl.id === selectedNewsletter)?.name}" an {matchingSubscribers} Empfänger zu senden. Diese Aktion ist nur simuliert und versendet keine echten E-Mails.
+                                    Sie sind dabei, den Newsletter "{initialNewsletters.find(nl => nl.id === selectedNewsletter)?.name}" an {matchingSubscribers} Empfänger zu senden.
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                                 <AlertDialogCancel>Abbrechen</AlertDialogCancel>
-                                <AlertDialogAction type="submit">Ja, Versand simulieren</AlertDialogAction>
+                                <AlertDialogAction type="submit">Ja, jetzt versenden</AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
-                    <Alert variant="destructive">
-                        <AlertTitle>Wichtiger Hinweis</AlertTitle>
-                        <AlertDescription>
-                            Diese Funktion ist derzeit nur eine **Simulation**. Es werden **keine echten E-Mails** versendet. Ein Entwickler muss hier einen E-Mail-Service wie Resend oder Mailgun anbinden. Die Logik ist in `sendNewsletterAction` in `src/app/admin/actions.ts` vorbereitet.
-                        </AlertDescription>
-                    </Alert>
+                    {sendState.success === false && sendState.message && (
+                         <Alert variant="destructive">
+                            <AlertTitle>Fehler beim Versand</AlertTitle>
+                            <AlertDescription>
+                                {sendState.message}
+                            </AlertDescription>
+                        </Alert>
+                    )}
                 </div>
             </div>
         </form>
@@ -1037,3 +1038,5 @@ export function AdminDashboard({
         </Tabs>
     )
 }
+
+    
