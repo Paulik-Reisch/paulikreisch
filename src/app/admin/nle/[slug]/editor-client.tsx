@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Save, ArrowLeft, Eye, Code, PlusCircle, Trash2, ArrowUp, ArrowDown, Type, Image as ImageIcon, Link as LinkIcon, AlignLeft, AlignCenter, AlignRight } from "lucide-react";
+import { Loader2, Save, ArrowLeft, Eye, Code, PlusCircle, Trash2, ArrowUp, ArrowDown, Type, Image as ImageIcon, Link as LinkIcon, AlignLeft, AlignCenter, AlignRight, Copy } from "lucide-react";
 import { useFormStatus } from "react-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -58,7 +58,7 @@ function generateComponentHTML(component: NewsletterComponent): string {
                     <td style="padding: 20px;" align="${align}">
                         <table border="0" cellpadding="0" cellspacing="0" role="presentation">
                             <tr>
-                                <td align="center" bgcolor="${props.backgroundColor || '#007bff'}" role="presentation" style="background:${props.backgroundColor || '#007bff'};border:none;cursor:auto;padding:10px 25px;">
+                                <td align="center" bgcolor="${props.backgroundColor || '#007bff'}" role="presentation" style="background:${props.backgroundColor || '#007bff'};border:none;border-radius:0;cursor:auto;padding:10px 25px;">
                                     <a href="${props.href || '#'}" style="background:${props.backgroundColor || '#007bff'};color:${props.color || '#ffffff'};font-family:Arial, sans-serif;font-size:${props.fontSize || '16px'};font-weight:bold;line-height:120%;margin:0;text-decoration:none;text-transform:none;" target="_blank">
                                         ${props.text || ''}
                                     </a>
@@ -88,7 +88,7 @@ function generateComponentHTML(component: NewsletterComponent): string {
     }
 }
 
-function generateEmailHTML(components: NewsletterComponent[], subject: string): string {
+function generateEmailHTML(components: NewsletterComponent[], subject: string, previewUrl: string): string {
     const body = components.map(generateComponentHTML).join('');
 
     return `
@@ -118,7 +118,7 @@ function generateEmailHTML(components: NewsletterComponent[], subject: string): 
                         <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="max-width: 600px; width: 100%;">
                             <tr>
                                 <td align="center" valign="top" style="font-size: 11px; font-family: Arial, sans-serif; color: #888888; padding: 10px;">
-                                    E-Mail wird nicht korrekt angezeigt? <a href="#" target="_blank" style="color: #888888; text-decoration: underline;">Online ansehen</a>
+                                    E-Mail wird nicht korrekt angezeigt? <a href="${previewUrl}" target="_blank" style="color: #888888; text-decoration: underline;">Online ansehen</a>
                                 </td>
                             </tr>
                             <tr>
@@ -334,18 +334,24 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
   const [name, setName] = useState(newsletter.name);
   const [subject, setSubject] = useState(newsletter.subject);
   const [components, setComponents] = useState<NewsletterComponent[]>(newsletter.components);
-  const [htmlContent, setHtmlContent] = useState(() => generateEmailHTML(newsletter.components, newsletter.subject));
+  const [htmlContent, setHtmlContent] = useState('');
   const [hasManuallyEditedHtml, setHasManuallyEditedHtml] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState('');
 
   const [updateState, updateFormAction] = useActionState(updateNewsletterAction, initialEditorState);
   const { toast } = useToast();
 
   useEffect(() => {
+    // This effect runs only on the client
+    const origin = window.location.origin;
+    const url = `${origin}/nl/preview/${newsletter.id}`;
+    setPreviewUrl(url);
+
     // Only update HTML from components if it hasn't been manually edited.
     if (!hasManuallyEditedHtml) {
-        setHtmlContent(generateEmailHTML(components, subject));
+        setHtmlContent(generateEmailHTML(components, subject, url));
     }
-  }, [components, subject, hasManuallyEditedHtml]);
+  }, [components, subject, hasManuallyEditedHtml, newsletter.id]);
 
   useEffect(() => {
     if (updateState.success) {
@@ -413,17 +419,28 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
       setComponents(newComponents);
   }
 
+  const handleCopyPreviewLink = () => {
+    navigator.clipboard.writeText(previewUrl);
+    toast({
+        title: "Kopiert!",
+        description: "Der Vorschau-Link wurde in die Zwischenablage kopiert.",
+    });
+  }
+
   return (
     <div className="grid md:grid-cols-[350px_1fr] h-full">
         {/* Sidebar */}
         <div className="flex flex-col bg-background border-r h-full">
-            <div className="p-4 border-b">
+            <div className="p-4 border-b flex items-center justify-between">
                  <Link href="/admin">
                     <Button variant="outline" size="sm">
                         <ArrowLeft className="mr-2 h-4 w-4" />
-                        Zurück zum Dashboard
+                        Zurück
                     </Button>
                 </Link>
+                <Button variant="ghost" size="sm" onClick={handleCopyPreviewLink}>
+                    <Copy className="mr-2 h-4 w-4" /> Link kopieren
+                </Button>
             </div>
             <div className="p-4 space-y-4 flex-grow overflow-y-auto">
                 <div>

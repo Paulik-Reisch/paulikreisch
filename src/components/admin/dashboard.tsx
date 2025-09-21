@@ -34,7 +34,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail } from "lucide-react";
+import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -541,6 +541,15 @@ function NewsletterManager({ initialNewsletters }: { initialNewsletters: Newslet
         }
     }, [deleteState, toast]);
 
+    const handleCopyLink = (newsletterId: string) => {
+        const previewUrl = `${window.location.origin}/nl/preview/${newsletterId}`;
+        navigator.clipboard.writeText(previewUrl);
+        toast({
+            title: "Kopiert!",
+            description: "Der Vorschau-Link wurde in die Zwischenablage kopiert.",
+        });
+    };
+
     return (
         <div>
             <div className="flex justify-between items-center mb-4">
@@ -593,6 +602,9 @@ function NewsletterManager({ initialNewsletters }: { initialNewsletters: Newslet
                                     </TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex gap-2 justify-end">
+                                            <Button size="sm" variant="ghost" onClick={() => handleCopyLink(newsletter.id)}>
+                                                <Copy className="h-4 w-4" />
+                                            </Button>
                                             <Link href={`/admin/nle/${newsletter.id}`}>
                                                 <Button size="sm" variant="outline">
                                                     <Edit className="h-4 w-4" />
