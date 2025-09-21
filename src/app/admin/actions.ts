@@ -12,6 +12,7 @@ import {
   Product,
 } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
+import { correctHtml } from "@/ai/flows/correct-html-flow";
 
 // Products
 const ProductSchema = z.object({
@@ -279,7 +280,7 @@ export async function createDefaultLegalPagesAction(): Promise<AdminLegalPageSta
                 <h2>4. Eigentumsvorbehalt</h2>
                 <p>Die Ware bleibt bis zur vollst&auml;ndigen Bezahlung unser Eigentum.</p>
                 <h2>Haftungsausschluss f&uuml;r Satire</h2>
-                <p>Alle Produkte, Texte und Inhalte auf dieser Website sind satirischer Natur. Eine Haftung f&uuml;r eventuell auftretende Verwirrung, existenzielle Krisen oder spontane Lachanf&auml;lle wird ausdr&uuml;cklich ausgeschlossen. Der Erwerb unserer B&uuml;cher geschieht auf eigene Gefahr f&uuml;r Ihr Zwerchfell und Ihre bisherige Weltanschauung.</p>
+                <p>Alle Produkte, Texte und Inhalte auf dieser Website sind satirischer Natur. Eine Haftung f&uuml;r eventuell auftretende Verwirrung, existenzielle Krisen oder spontane Lachanf&alle wird ausdr&uuml;cklich ausgeschlossen. Der Erwerb unserer B&uuml;cher geschieht auf eigene Gefahr f&uuml;r Ihr Zwerchfell und Ihre bisherige Weltanschauung.</p>
             ` 
         },
         { 
@@ -334,4 +335,30 @@ export async function createDefaultLegalPagesAction(): Promise<AdminLegalPageSta
         : "Alle Standardseiten existieren bereits.";
 
     return { success: true, message };
+}
+
+
+const CorrectHtmlSchema = z.object({
+  html: z.string(),
+});
+
+export async function correctHtmlAction(
+    prevState: { correctedHtml?: string; error?: string },
+    formData: FormData
+) {
+    const validatedFields = CorrectHtmlSchema.safeParse({
+        html: formData.get("html"),
+    });
+
+    if (!validatedFields.success) {
+        return { error: "Ungültige Eingabe." };
+    }
+
+    try {
+        const result = await correctHtml(validatedFields.data);
+        return { correctedHtml: result.correctedHtml };
+    } catch (e) {
+        console.error(e);
+        return { error: "HTML konnte nicht korrigiert werden. Die KI ist möglicherweise im Urlaub." };
+    }
 }

@@ -8,3 +8,4 @@ import '@/ai/flows/generate-report-card-flow.ts';
 import '@/ai/flows/generate-bureaucracy-flow.ts';
 import '@/ai/flows/generate-db-excuse-flow.ts';
 import '@/ai/flows/generate-satire-type-flow.ts';
+import '@/ai/flows/correct-html-flow.ts';
