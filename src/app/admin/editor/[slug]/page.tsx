@@ -5,7 +5,8 @@ import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 
 export default async function EditorPage({ params }: { params: { slug: string } }) {
-  const page = await getLegalPage(params.slug);
+  const { slug } = params;
+  const page = await getLegalPage(slug);
 
   if (!page) {
     notFound();
