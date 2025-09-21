@@ -26,7 +26,7 @@ export function HeroLehrerRoboter() {
             className="mx-auto aspect-square overflow-hidden rounded-xl object-cover sm:w-full lg:order-last transform -rotate-3 transition-transform duration-500 hover:rotate-0 hover:scale-105 shadow-2xl"
             data-ai-hint="robot teacher coffee"
             height="550"
-            src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/lehrer.png?alt=media"
+            src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/lehrer.png?alt=media&token=e49dd416-a307-4278-909d-6920dcf7a0c3"
             width="550"
           />
         </div>

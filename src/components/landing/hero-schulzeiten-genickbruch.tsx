@@ -9,7 +9,7 @@ export function HeroSchulzeitenGenickbruch() {
     <section className="w-full py-20 md:py-32 lg:py-48 bg-gray-900 text-white relative">
        <Image
           alt="Explodierender Wecker"
-          src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/schulzeiten.png?alt=media"
+          src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/schulzeiten.png?alt=media&token=63d97151-7333-4241-85ea-96e6973d71f3"
           data-ai-hint="exploding clock"
           layout="fill"
           objectFit="cover"

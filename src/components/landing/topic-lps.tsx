@@ -13,21 +13,21 @@ const topics = [
         title: "Schule = Straflager",
         description: "Die Lernvollzugsanstalt hat wieder geöffnet. Freistunden als Fluchtversuch, Lehrer als Wärter.",
         link: "/lp-schule-straflager",
-        image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/schule.png?alt=media",
+        image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/schule.png?alt=media&token=8d6d2220-8eee-4143-ba1e-8517eec2385f",
         aiHint: "prison school"
     },
     {
         title: "Lehrer sind auch nur Menschen (leider)",
         description: "Ein Kapitel über inkompetente Lehrer. Ein Hoch auf den Beamtenroboter mit Kaffeetasse.",
         link: "/lp-lehrer-roboter",
-        image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/lehrer.png?alt=media",
+        image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/lehrer.png?alt=media&token=e49dd416-a307-4278-909d-6920dcf7a0c3",
         aiHint: "robot teacher"
     },
     {
         title: "Mensa = Todesfalle",
         description: "Ekelhumor vom Feinsten. Das Essen als Bio-Waffe. Lies das Menü der Hölle.",
         link: "/lp-mensa-todesfalle",
-        image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/mensa.png?alt=media",
+        image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/mensa.png?alt=media&token=4e17cbe9-5f6e-4d4f-b919-e3917f961601",
         aiHint: "disgusting food"
     },
     {
@@ -41,21 +41,21 @@ const topics = [
         title: "Sport ist Mord",
         description: "Ein tiefgründiger Blick in die Abgründe der Sporthalle. Design wie ein Fitness-Werbeplakat – nur mit Knochenbrüchen.",
         link: "/lp-sport-ist-mord",
-        image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/sport.png?alt=media",
+        image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/sport.png?alt=media&token=81c3dfa8-3b76-4b30-a0d3-96ff219145ce",
         aiHint: "sports accident"
     },
     {
         title: "Schulzeiten = Genickbruch",
         description: "Warum Frühaufstehen ein Staatsverbrechen ist. Der Wecker ist der wahre Feind der Menschheit.",
         link: "/lp-schulzeiten-genickbruch",
-        image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/schulzeiten.png?alt=media",
+        image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/schulzeiten.png?alt=media&token=63d97151-7333-4241-85ea-96e6973d71f3",
         aiHint: "alarm clock"
     },
     {
         title: "Corona für Schüler erklärt",
         description: "Eine satirische Aufarbeitung von Tests & Quarantäne. Nasenbohrer willkommen!",
         link: "/lp-corona-satire",
-        image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/corona.png?alt=media",
+        image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/corona.png?alt=media&token=e85455c1-b0c4-4f46-8fac-d9fb346de97d",
         aiHint: "medical test"
     }
 ];

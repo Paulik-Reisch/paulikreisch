@@ -8,7 +8,7 @@ export function HeroMensaTodesfalle() {
     <section className="w-full py-20 md:py-32 lg:py-40 bg-destructive text-destructive-foreground relative">
         <Image
             alt="Abstraktes, unappetitliches Essen"
-            src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/mensa.png?alt=media"
+            src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/mensa.png?alt=media&token=4e17cbe9-5f6e-4d4f-b919-e3917f961601"
             data-ai-hint="disgusting food abstract"
             layout="fill"
             objectFit="cover"

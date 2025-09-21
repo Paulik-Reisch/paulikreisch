@@ -10,7 +10,7 @@ export function HeroSchuleStraflager() {
           className="absolute inset-0 w-full h-full object-cover opacity-20"
           data-ai-hint="school prison"
           fill
-          src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/schule.png?alt=media"
+          src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/schule.png?alt=media&token=8d6d2220-8eee-4143-ba1e-8517eec2385f"
         />
       <div className="container px-4 md:px-6 relative z-10">
         <div className="flex flex-col items-center space-y-6 text-center">
