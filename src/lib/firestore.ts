@@ -378,6 +378,28 @@ export async function addNewsletter(data: { name: string; subject: string }): Pr
     return docRef.id;
 }
 
+export async function duplicateNewsletter(id: string): Promise<string> {
+    const originalNewsletter = await getNewsletter(id);
+    if (!originalNewsletter) {
+        throw new Error("Original newsletter not found.");
+    }
+    
+    // Create a unique name for the copy
+    const newName = `Kopie von ${originalNewsletter.name}`;
+    const newSubject = originalNewsletter.subject;
+
+    // Create the new newsletter and get its ID
+    const newNewsletterId = await addNewsletter({ name: newName, subject: newSubject });
+
+    // Update the new newsletter with the content and components of the original
+    await updateNewsletter(newNewsletterId, {
+        content: originalNewsletter.content,
+        components: originalNewsletter.components,
+    });
+    
+    return newNewsletterId;
+}
+
 
 function generateComponentHTML(component: NewsletterComponent): string {
     const props = component.props;

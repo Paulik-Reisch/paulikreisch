@@ -14,6 +14,7 @@ import {
   addNewsletter,
   updateNewsletter,
   deleteNewsletter,
+  duplicateNewsletter,
   PageComponent,
   getAdminPassword,
   addTagsToSubscribers,
@@ -384,6 +385,29 @@ export async function deleteNewsletterAction(
     return { success: false, error: "Fehler beim Löschen: " + error.message };
   }
 }
+
+const DuplicateNewsletterSchema = z.object({
+  id: z.string(),
+});
+
+export async function duplicateNewsletterAction(
+    prevState: AdminNewsletterState,
+    formData: FormData
+): Promise<AdminNewsletterState> {
+    const validatedFields = DuplicateNewsletterSchema.safeParse(Object.fromEntries(formData.entries()));
+    if (!validatedFields.success) {
+        return { success: false, error: "Ungültige Newsletter-ID." };
+    }
+    try {
+        await duplicateNewsletter(validatedFields.data.id);
+        revalidatePath("/admin");
+        return { success: true, message: "Newsletter erfolgreich dupliziert." };
+    } catch (e) {
+        const error = e as Error;
+        return { success: false, error: "Fehler beim Duplizieren: " + error.message };
+    }
+}
+
 
 const TagSubscribersSchema = z.object({
     subscriberIds: z.string(),

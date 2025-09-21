@@ -20,6 +20,7 @@ import {
     deleteLegalPageAction,
     addNewsletterAction,
     deleteNewsletterAction,
+    duplicateNewsletterAction,
     tagSubscribersAction,
     sendNewsletterAction,
 } from "@/app/admin/actions";
@@ -38,7 +39,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX } from "lucide-react";
+import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -615,6 +616,7 @@ function NewsletterManager({ initialNewsletters, onTabChange }: { initialNewslet
 
     const [addState, addFormAction] = useActionState(addNewsletterAction, initialNewsletterState);
     const [deleteState, deleteFormAction] = useActionState(deleteNewsletterAction, initialNewsletterState);
+    const [duplicateState, duplicateFormAction] = useActionState(duplicateNewsletterAction, initialNewsletterState);
     
     useEffect(() => {
         setNewsletters(initialNewsletters);
@@ -641,6 +643,15 @@ function NewsletterManager({ initialNewsletters, onTabChange }: { initialNewslet
             toast({ variant: "destructive", title: "Fehler", description: deleteState.error });
         }
     }, [deleteState, toast]);
+
+     useEffect(() => {
+        if (duplicateState.success) {
+            toast({ title: "Erfolg", description: duplicateState.message });
+        }
+        if (duplicateState.error) {
+            toast({ variant: "destructive", title: "Fehler", description: duplicateState.error });
+        }
+    }, [duplicateState, toast]);
 
     const handleCopyLink = (newsletterId: string) => {
         const previewUrl = `${window.location.origin}/nl/preview/${newsletterId}`;
@@ -706,6 +717,28 @@ function NewsletterManager({ initialNewsletters, onTabChange }: { initialNewslet
                                     </TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex gap-2 justify-end">
+                                             <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Button size="sm" variant="ghost">
+                                                        <CopyPlus className="h-4 w-4" />
+                                                    </Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                     <form action={duplicateFormAction}>
+                                                        <input type="hidden" name="id" value={newsletter.id} />
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>Newsletter duplizieren?</AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                              Möchten Sie wirklich eine Kopie von "{newsletter.name}" erstellen?
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+                                                            <AlertDialogAction type="submit">Ja, duplizieren</AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </form>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
                                             <Button size="sm" variant="ghost" onClick={() => handleCopyLink(newsletter.id)}>
                                                 <Copy className="h-4 w-4" />
                                             </Button>
@@ -1004,7 +1037,3 @@ export function AdminDashboard({
         </Tabs>
     )
 }
-
-    
-
-    
