@@ -126,6 +126,30 @@ export async function addOrder(orderData: any) {
     await addDoc(ordersCol, dataWithTimestamp);
 }
 
+// --- SUBSCRIBERS ---
+export async function addSubscriber(email: string, source?: string) {
+    const docId = email.toLowerCase();
+    const subscriberRef = doc(db, 'subscribers', docId);
+    const docSnap = await getDoc(subscriberRef);
+
+    if (docSnap.exists()) {
+        // Optional: Update existing subscriber
+        await updateDoc(subscriberRef, {
+            lastSeen: Timestamp.now(),
+            source: source || docSnap.data().source || 'unknown',
+        });
+        // We could throw an error, but it's often better UX to just confirm they are subscribed.
+        throw new Error(`Ein Abonnent mit der E-Mail "${email}" existiert bereits.`);
+    } else {
+        await setDoc(subscriberRef, { 
+            email: email,
+            source: source || 'unknown',
+            subscribedAt: Timestamp.now() 
+        });
+    }
+}
+
+
 // --- Legal Pages CMS Functions ---
 
 export async function getLegalPages(): Promise<LegalPage[]> {

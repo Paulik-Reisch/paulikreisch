@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useActionState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ShoppingCart, Star, Ticket, Mail, Sparkles, ArrowRight, PenSquare, Info } from "lucide-react";
+import { ShoppingCart, Star, Ticket, Mail, Sparkles, ArrowRight, PenSquare, Info, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
@@ -21,6 +21,8 @@ import {
 import { SignatureOrderForm } from "./signature-order-form";
 import { Product } from "@/lib/firestore";
 import { Skeleton } from "../ui/skeleton";
+import { subscribeToNewsletterAction } from "@/app/actions";
+import { useFormStatus } from "react-dom";
 
 
 function HW2BookCard({ book }: { book: Product }) {
@@ -119,24 +121,35 @@ function BookCardSkeleton() {
     );
 }
 
+const initialNewsletterState = { success: undefined, error: undefined, message: undefined };
+
+function NewsletterSubmitButton() {
+    const { pending } = useFormStatus();
+    return (
+        <Button type="submit" disabled={pending}>
+            {pending ? <Loader2 className="animate-spin" /> : "Abonnieren"}
+        </Button>
+    )
+}
 
 export function BookShop({ initialProducts }: { initialProducts: Product[]}) {
   const { toast } = useToast();
+  const formRef = React.useRef<HTMLFormElement>(null);
+  
+  const [state, formAction] = useActionState(subscribeToNewsletterAction, initialNewsletterState);
+
+  useEffect(() => {
+    if (state.success) {
+      toast({ title: "Fast geschafft!", description: state.message });
+      formRef.current?.reset();
+    }
+    if (state.error) {
+      toast({ variant: "destructive", title: "Fehler", description: state.error });
+    }
+  }, [state, toast]);
   
   const hw1 = initialProducts.find(p => p.id === 'hw1');
   const hw2 = initialProducts.find(p => p.id === 'hw2');
-
-
-  const handleNewsletterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const email = e.currentTarget.email.value;
-    // Here you could add the logic to save the email to firestore
-    toast({
-      title: "Fast geschafft!",
-      description: `Wir haben eine Bestätigungs-E-Mail an ${email} gesendet. (Nicht wirklich, aber danke für's Mitmachen!)`,
-    });
-    e.currentTarget.reset();
-  };
 
   return (
     <section className="w-full py-12 md:py-24">
@@ -203,11 +216,10 @@ export function BookShop({ initialProducts }: { initialProducts: Product[]}) {
                     <p className="text-muted-foreground mt-2 mb-6 max-w-sm text-balance">
                         Erhalten Sie eine Benachrichtigung, wenn das Buch online geht.
                     </p>
-                     <form onSubmit={handleNewsletterSubmit} className="w-full max-w-sm flex gap-2">
+                     <form ref={formRef} action={formAction} className="w-full max-w-sm flex gap-2">
                         <Input type="email" name="email" placeholder="deine-email@adresse.de" required className="flex-grow"/>
-                        <Button type="submit">
-                           Abonnieren
-                        </Button>
+                        <input type="hidden" name="source" value="book-shop-newsletter" />
+                        <NewsletterSubmitButton />
                     </form>
                 </Card>
             </div>

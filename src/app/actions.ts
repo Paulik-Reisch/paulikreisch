@@ -10,7 +10,8 @@ import { generateReportCard } from "@/ai/flows/generate-report-card-flow";
 import { generateBureaucracyResponse } from "@/ai/flows/generate-bureaucracy-flow";
 import { generateDbExcuse } from "@/ai/flows/generate-db-excuse-flow";
 import { generateSatireType } from "@/ai/flows/generate-satire-type-flow";
-import { addOrder } from "@/lib/firestore";
+import { addOrder, addSubscriber } from "@/lib/firestore";
+import { revalidatePath } from "next/cache";
 
 const testimonialSchema = z.object({
   topic: z.string().min(2, { message: "Das Thema muss mindestens 2 Zeichen lang sein." }).max(50),
@@ -236,9 +237,48 @@ export async function createOrderAction(
   try {
     const orderData = JSON.parse(validatedFields.data.payload);
     await addOrder(orderData);
+    revalidatePath("/admin");
     return { success: true, error: null };
   } catch (e) {
     console.error(e);
     return { success: false, error: "Bestellung konnte nicht gespeichert werden. Bitte versuchen Sie es erneut." };
   }
+}
+
+const SubscriberSchema = z.object({
+    email: z.string().email("Bitte geben Sie eine gültige E-Mail Adresse ein."),
+    source: z.string().optional(),
+});
+
+export async function subscribeToNewsletterAction(
+    prevState: {
+        success?: boolean;
+        error?: string;
+        message?: string;
+    },
+    formData: FormData
+) {
+    const validatedFields = SubscriberSchema.safeParse({
+        email: formData.get("email"),
+        source: formData.get("source"),
+    });
+
+    if (!validatedFields.success) {
+        const errorMessages = validatedFields.error.errors.map(e => e.message).join('. ');
+        return {
+            error: errorMessages,
+        };
+    }
+    
+    try {
+        await addSubscriber(validatedFields.data.email, validatedFields.data.source);
+        return { success: true, message: `Wir haben eine Bestätigungs-E-Mail an ${validatedFields.data.email} gesendet. (Nicht wirklich, aber danke für's Mitmachen!)` };
+    } catch (e) {
+        console.error(e);
+        const error = e as Error;
+        if (error.message.includes("existiert bereits")) {
+            return { success: true, message: `Diese E-Mail ist bereits registriert. Sie bleiben auf dem Laufenden!` };
+        }
+        return { error: "Anmeldung fehlgeschlagen. Das Internet ist wahrscheinlich wieder kaputt." };
+    }
 }
