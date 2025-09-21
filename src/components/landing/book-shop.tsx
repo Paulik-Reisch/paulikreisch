@@ -123,10 +123,9 @@ function BookCardSkeleton() {
 export function BookShop({ initialProducts }: { initialProducts: Product[]}) {
   const { toast } = useToast();
   
-  const products = initialProducts.reduce((acc, product) => {
-      acc[product.id] = product;
-      return acc;
-  }, {} as { [key: string]: Product });
+  const hw1 = initialProducts.find(p => p.id === 'hw1');
+  const hw2 = initialProducts.find(p => p.id === 'hw2');
+
 
   const handleNewsletterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -150,13 +149,14 @@ export function BookShop({ initialProducts }: { initialProducts: Product[]}) {
                         <BookCardSkeleton />
                         <BookCardSkeleton />
                         <BookCardSkeleton />
+                        <BookCardSkeleton />
                     </>
                 ) : (
                     <>
-                        {Object.values(products).filter(p => p.id === 'hw1').map(p => <BookCard key={p.id} book={p} />)}
-                        {Object.values(products).filter(p => p.id === 'hw2').map(p => <HW2BookCard key={p.id} book={p} />)}
+                        {hw1 && <BookCard book={hw1} />}
+                        {hw2 && <HW2BookCard book={hw2} />}
 
-                        {products.hw1 && (
+                        {hw1 && (
                             <Dialog>
                                 <DialogTrigger asChild>
                                 <div className="group relative col-span-1 border-2 border-dashed rounded-xl flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:border-primary hover:bg-muted/50 transition-all duration-300 hover:-translate-y-2">
@@ -169,7 +169,7 @@ export function BookShop({ initialProducts }: { initialProducts: Product[]}) {
                                     </Button>
                                 </div>
                                 </DialogTrigger>
-                                <SignatureOrderForm book={products.hw1} />
+                                <SignatureOrderForm book={hw1} />
                             </Dialog>
                         )}
                     </>
