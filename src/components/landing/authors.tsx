@@ -19,9 +19,9 @@ export function Authors() {
               <Image
                 alt="Autor Paulik"
                 className="mx-auto mb-4 rounded-full"
-                data-ai-hint="author portrait"
+                data-ai-hint="funny portrait"
                 height="120"
-                src="https://placehold.co/120x120.png"
+                src="https://picsum.photos/seed/paulik/120/120"
                 style={{
                   aspectRatio: "120/120",
                   objectFit: "cover",
@@ -42,9 +42,9 @@ export function Authors() {
               <Image
                 alt="Autor Reisch"
                 className="mx-auto mb-4 rounded-full"
-                data-ai-hint="author portrait"
+                data-ai-hint="weird portrait"
                 height="120"
-                src="https://placehold.co/120x120.png"
+                src="https://picsum.photos/seed/reisch/120/120"
                 style={{
                   aspectRatio: "120/120",
                   objectFit: "cover",
