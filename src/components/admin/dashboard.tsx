@@ -38,7 +38,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper } from "lucide-react";
+import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -74,6 +74,7 @@ import {
 } from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { cn } from "@/lib/utils";
 
 
 function LeadsTable({ initialSubscribers }: { initialSubscribers: Subscriber[] }) {
@@ -82,8 +83,24 @@ function LeadsTable({ initialSubscribers }: { initialSubscribers: Subscriber[] }
     const [selectedSubscribers, setSelectedSubscribers] = useState<string[]>([]);
     const [tagName, setTagName] = useState('');
     const { toast } = useToast();
+    const [searchTerm, setSearchTerm] = useState("");
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
     const [tagState, tagFormAction] = useActionState(tagSubscribersAction, { success: false, error: null });
+
+    const allTags = useMemo(() => {
+        const tagSet = new Set<string>();
+        subscribers.forEach(s => s.tags?.forEach(t => tagSet.add(t)));
+        return Array.from(tagSet).sort();
+    }, [subscribers]);
+
+    const filteredSubscribers = useMemo(() => {
+        return subscribers.filter(sub => {
+            const matchesSearch = sub.email.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesTags = selectedTags.length === 0 || selectedTags.every(tag => sub.tags?.includes(tag));
+            return matchesSearch && matchesTags;
+        });
+    }, [subscribers, searchTerm, selectedTags]);
 
     const fetchLeads = async () => {
         setLoading(true);
@@ -116,7 +133,7 @@ function LeadsTable({ initialSubscribers }: { initialSubscribers: Subscriber[] }
 
     const handleSelectAll = (checked: boolean | 'indeterminate') => {
         if (checked === true) {
-            setSelectedSubscribers(subscribers.map(sub => sub.id));
+            setSelectedSubscribers(filteredSubscribers.map(sub => sub.id));
         } else {
             setSelectedSubscribers([]);
         }
@@ -126,10 +143,16 @@ function LeadsTable({ initialSubscribers }: { initialSubscribers: Subscriber[] }
         formData.set('subscriberIds', JSON.stringify(selectedSubscribers));
         tagFormAction(formData);
     }
+    
+    const handleTagFilterClick = (tag: string) => {
+        setSelectedTags(prev => 
+            prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+        );
+    }
 
     return (
-        <div>
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
+        <div className="space-y-4">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                  <form action={handleTagFormSubmit} className="flex items-center gap-2">
                     <Input 
                         placeholder="Tag-Name (z.B. HW2-Interesse)" 
@@ -143,10 +166,40 @@ function LeadsTable({ initialSubscribers }: { initialSubscribers: Subscriber[] }
                         Zuweisen ({selectedSubscribers.length})
                     </Button>
                 </form>
+                <div className="relative w-full md:w-64">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                        type="search"
+                        placeholder="Nach E-Mail suchen..."
+                        className="pl-8"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
                 <Button onClick={fetchLeads} disabled={loading} variant="outline">
                     {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
                     Aktualisieren
                 </Button>
+            </div>
+             <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-sm font-medium">Filter nach Tags:</span>
+                {allTags.map(tag => (
+                     <Button 
+                        key={tag} 
+                        variant={selectedTags.includes(tag) ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => handleTagFilterClick(tag)}
+                        className="h-7"
+                    >
+                        {tag}
+                    </Button>
+                ))}
+                {selectedTags.length > 0 && (
+                    <Button variant="ghost" size="sm" onClick={() => setSelectedTags([])} className="h-7 text-muted-foreground">
+                        <FilterX className="mr-2 h-4 w-4"/>
+                        Filter zurücksetzen
+                    </Button>
+                )}
             </div>
             <div className="border rounded-lg overflow-hidden">
                 <Table>
@@ -154,7 +207,7 @@ function LeadsTable({ initialSubscribers }: { initialSubscribers: Subscriber[] }
                         <TableRow>
                             <TableHead className="w-[50px]">
                                 <Checkbox 
-                                    checked={selectedSubscribers.length === subscribers.length && subscribers.length > 0 ? true : (selectedSubscribers.length > 0 ? 'indeterminate' : false)}
+                                    checked={selectedSubscribers.length === filteredSubscribers.length && filteredSubscribers.length > 0 ? true : (selectedSubscribers.length > 0 ? 'indeterminate' : false)}
                                     onCheckedChange={handleSelectAll}
                                 />
                             </TableHead>
@@ -171,15 +224,15 @@ function LeadsTable({ initialSubscribers }: { initialSubscribers: Subscriber[] }
                                     <Loader2 className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
                                 </TableCell>
                             </TableRow>
-                        ) : subscribers.length === 0 ? (
+                        ) : filteredSubscribers.length === 0 ? (
                              <TableRow>
                                 <TableCell colSpan={5} className="text-center py-12 text-muted-foreground">
                                     <VenetianMask className="mx-auto h-8 w-8 mb-2" />
-                                    Noch keine Leads. Die Welt ist noch nicht bereit für so viel Genialität.
+                                    {subscribers.length === 0 ? "Noch keine Leads." : "Keine Leads entsprechen Ihren Filterkriterien."}
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            subscribers.map((sub) => (
+                            filteredSubscribers.map((sub) => (
                                 <TableRow key={sub.id} data-state={selectedSubscribers.includes(sub.id) ? 'selected' : ''}>
                                     <TableCell>
                                         <Checkbox 
@@ -951,5 +1004,7 @@ export function AdminDashboard({
         </Tabs>
     )
 }
+
+    
 
     
