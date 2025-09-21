@@ -30,6 +30,29 @@ const schimpfwoerter = [
     { de: "Deine Mutter", es: "Tu puta madre", anwendung: "Letztes Mittel. Nur für absolute Notfälle." },
 ];
 
+const witze = [
+    { witz: "¿Qué le dice un semáforo a otro? — ¡No me mires, que me estoy cambiando!", uebersetzung: "Was sagt eine Ampel zur anderen? — Schau mich nicht an, ich ziehe mich gerade um!", erklaerung: "Wortspiel: 'cambiar' bedeutet sowohl 'sich umziehen' als auch '(Farbe) wechseln'." },
+    { witz: "¿Cuál es el último animal que subió al arca de Noé? — El del-fín.", uebersetzung: "Welches ist das letzte Tier, das die Arche Noah bestieg? — Der Del-phin.", erklaerung: "Wortspiel: 'del fin' klingt wie 'delfín' (Delphin) und bedeutet 'vom Ende'." },
+    { witz: "Papá, ¿qué se siente tener un hijo tan guapo? — No sé, hijo, pregúntale a tu abuelo.", uebersetzung: "Papa, wie fühlt es sich an, einen so gutaussehenden Sohn zu haben? — Ich weiß nicht, mein Sohn, frag deinen Großvater.", erklaerung: "Der Vater gibt das 'Kompliment' indirekt an sich selbst weiter." },
+    { witz: "Entra un hombre a una pajarería y pregunta: ¿Cuánto cuesta el loro? — 6.000 euros. — ¡Caramba! ¿Y qué hace? — Habla 7 idiomas y sabe de computación. — ¡Me lo llevo! Al día siguiente, vuelve: ¡El loro no ha dicho ni una palabra! — Es que es muy tímido. ¡Usted háblele primero!", uebersetzung: "Ein Mann geht in eine Tierhandlung und fragt: Was kostet der Papagei? - 6.000 Euro. - Wow! Was kann er denn? - Er spricht 7 Sprachen und kennt sich mit Computern aus. - Ich nehme ihn! Am nächsten Tag kommt er zurück: Der Papagei hat kein Wort gesagt! - Er ist nur sehr schüchtern. Sprechen Sie ihn einfach zuerst an!", erklaerung: "Eine klassische Pointe, die die hohe Erwartung mit einer banalen Ausrede bricht." },
+    { witz: "¿Cómo se llama el campeón de buceo japonés? — Tokofondo.", uebersetzung: "Wie heißt der japanische Meister im Tauchen? — Tokofondo.", erklaerung: "Klingt wie ein japanischer Name, bedeutet aber wörtlich 'Ich berühre den Grund' (toco fondo)." },
+    { witz: "Van dos soldados en una moto y no se cae ninguno. ¿Por qué? — ¡Porque van soldados!", uebersetzung: "Zwei Soldaten fahren auf einem Motorrad und keiner fällt herunter. Warum? — Weil sie 'gelötet' sind!", erklaerung: "Wortspiel: 'soldado' ist ein Soldat, aber 'soldados' (Plural) klingt wie 'gelötet'." },
+    { witz: "¿Qué le dice un pez a otro? — ¡Nada!", uebersetzung: "Was sagt ein Fisch zum anderen? — Nichts! / Schwimm!", erklaerung: "Wortspiel: 'Nada' bedeutet 'nichts' und ist auch die Imperativform von 'nadar' (schwimmen)." },
+    { witz: "En una entrevista de trabajo: ¿Nivel de inglés? — Alto. — A ver, traduzca 'fiesta'. — Party. — Úselo en una frase. — Hoy 'party' un plato de lentejas y estaban riquísimas.", uebersetzung: "Im Vorstellungsgespräch: Englisch-Niveau? - Hoch. - Übersetzen Sie 'Fest'. - Party. - Verwenden Sie es in einem Satz. - Heute 'teilte' ich einen Teller Linsen und sie waren köstlich.", erklaerung: "Wortspiel: 'Party' klingt wie 'partí', die Vergangenheitsform von 'partir' (teilen/aufteilen)." },
+    { witz: "¿Por qué los pájaros no usan Facebook? — Porque ya tienen Twitter.", uebersetzung: "Warum benutzen Vögel kein Facebook? — Weil sie schon Twitter haben.", erklaerung: "Wortspiel, das das Zwitschern ('tweet') der Vögel mit dem sozialen Netzwerk verbindet." },
+    { witz: "¿Qué es un 'lapier'? — Una 'piedul'.", uebersetzung: "Was ist ein 'Schoßbein'? — Ein 'Fußtei'.", erklaerung: "Völlig unsinniges Wortspiel, das Silben verdreht. 'Lapiz' (Bleistift) wird zu 'Pizla'." },
+    { witz: "¿Cómo se dice 'espejo' en chino? — Aitoiyó.", uebersetzung: "Wie sagt man 'Spiegel' auf Chinesisch? — Aitoiyó.", erklaerung: "Lautmalerisch für 'Ahí estoy yo' (Da bin ich)." },
+    { witz: "Se abre el telón y se ve a un hombre con un solo pelo. Se cierra el telón. ¿Cómo se llama la película? — El solitario.", uebersetzung: "Der Vorhang geht auf und man sieht einen Mann mit nur einem Haar. Der Vorhang fällt. Wie heißt der Film? — Der Einsame.", erklaerung: "Ein einfacher, visueller Witz." },
+    { witz: "Era un hombre tan, tan, tan alto que se comió un yogur y cuando le llegó al estómago ya estaba caducado.", uebersetzung: "Es war einmal ein Mann, der war so, so, so groß, dass er einen Joghurt aß und als dieser im Magen ankam, war er schon abgelaufen.", erklaerung: "Eine klassische spanische 'tan, tan'-Übertreibung." },
+    { witz: "¿Cómo maldice un pollito a otro? — ¡Caldito seas!", uebersetzung: "Wie verflucht ein Küken ein anderes? — 'Brühe sollst du sein!'", erklaerung: "Wortspiel: Klingt wie 'maldito seas' (verflucht seist du), aber 'caldito' ist eine kleine Brühe." },
+    { witz: "¿Qué le dice un espagueti a otro? — ¡Oye, el cuerpo me pide salsa!", uebersetzung: "Was sagt eine Spaghetti zur anderen? — Hey, mein Körper verlangt nach Soße! / Hey, mein Körper will tanzen!", erklaerung: "Wortspiel: 'Salsa' ist sowohl Soße als auch ein Tanzstil." },
+    { witz: "¿Para qué va una caja al gimnasio? — ¡Para hacerse caja fuerte!", uebersetzung: "Warum geht eine Kiste ins Fitnessstudio? — Um ein Tresor zu werden!", erklaerung: "Wortspiel: 'caja fuerte' bedeutet Tresor, wörtlich aber 'starke Kiste'." },
+    { witz: "Un gato va caminando por un tejado y maúlla: '¡Miau, miau!'. Se le acerca otro gato y le dice: '¡Guau, guau!'. El primer gato se extraña: '¿Por qué ladras?'. Y el otro le contesta: 'Es que estoy aprendiendo idiomas.'", uebersetzung: "Eine Katze geht über ein Dach und miaut: 'Miau, miau!'. Eine andere Katze kommt und sagt: 'Wau, wau!'. Die erste Katze wundert sich: 'Warum bellst du?'. Die andere antwortet: 'Ich lerne gerade Sprachen.'", erklaerung: "Ein absurder Witz, der auf der Idee des Sprachenlernens basiert." },
+    { witz: "¿Cuál es el colmo de un jardinero? — Que su novia se llame Rosa y lo deje plantado.", uebersetzung: "Was ist das Ärgste für einen Gärtner? — Dass seine Freundin Rosa heißt und ihn sitzen lässt.", erklaerung: "Wortspiel: 'dejar plantado' bedeutet 'jemanden sitzen lassen', wörtlich aber 'jemanden eingepflanzt lassen'." },
+    { witz: "¿Qué hace una abeja en el gimnasio? — Zumba.", uebersetzung: "Was macht eine Biene im Fitnessstudio? — Zumba.", erklaerung: "Wortspiel: 'Zumba' ist ein Fitness-Tanz, und Bienen summen ('zumbar')." },
+    { witz: "Esto es un hombre que entra a un bar de pinchos y dice: ¡Ay! ¡Ay! ¡Ay!", uebersetzung: "Kommt ein Mann in eine Tapas-Bar (mit Spießen) und sagt: 'Au! Au! Au!'", erklaerung: "Wortspiel: 'Pinchos' sind kleine Snacks auf Spießen, aber 'pincho' bedeutet auch 'Stich' oder 'Stachel'." },
+];
+
 
 export function HeroPfeiffer() {
   return (
@@ -127,6 +150,38 @@ export function HeroPfeiffer() {
                 <Button size="lg" className="animate-pulse" variant="default">Jetzt dem Wahnsinn stellen</Button>
             </Link>
           </div>
+          
+            <p className="mt-12">
+                Die Chipirones essende Frau Silbadora mag Witze sehr. Sehr sogar. Es wird gemunkelt, dass ihre legendären Pfeifmelodien oft nur überpfiffene Versionen von Pointen sind, die nur sie versteht. Ihr Lachen, so heißt es, könne das Fundament jedes noch so stabilen Schulgebäudes erschüttern und sei der wahre Grund für die Risse in den Wänden der Lernvollzugsanstalt.
+            </p>
+            <p>
+                Die Autoren, Philipp und Max, wussten um diese Leidenschaft. In einem Anflug jugendlicher Genialität (oder war es doch nur Prokrastination vor den Spanisch-Hausaufgaben?) erschufen sie ein digitales Denkmal für ihre Mentorin. Ein Ort, an dem der Witz regiert und die Ernsthaftigkeit draußen bleiben muss. Eine Ode an das, was Frau Pfeiffer ihnen wirklich beigebracht hat: das Leben nicht ganz so ernst zu nehmen.
+            </p>
+            <p>
+                Diese Webseite trug den klangvollen Namen "eñje". Sie mag heute zwar so verstaubt sein wie die Kreide unter der Tafel, aber es ist uns gelungen, einige der besten Artefakte aus den digitalen Trümmern zu bergen. Eine Sammlung von Witzen, die einst das Herz (und das Zwerchfell) von La Silbadora erfreuten.
+            </p>
+
+            <div className="my-12 not-prose">
+                <h3 className="font-headline text-2xl font-bold text-center mb-4">Die besten Witze von eñje.es</h3>
+                 <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="font-semibold">Spanischer Witz</TableHead>
+                            <TableHead className="font-semibold">Deutsche Übersetzung</TableHead>
+                            <TableHead className="font-semibold">Sprachliche Erklärung</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {witze.map((item, index) => (
+                        <TableRow key={index}>
+                            <TableCell className="italic">{item.witz}</TableCell>
+                            <TableCell>{item.uebersetzung}</TableCell>
+                            <TableCell className="text-sm text-muted-foreground">{item.erklaerung}</TableCell>
+                        </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </div>
         </article>
       </div>
     </section>
