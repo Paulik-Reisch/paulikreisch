@@ -33,7 +33,7 @@ export function Authors() {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Reisch sorgt für das Chaos. Angetrieben von Kaffee und existenzieller Angst stellt er sicher, dass keine Handlung zu viel Sinn ergibt. Er betrachtet es als öffentlichen Dienst.
+                Paulik sorgt für das Chaos. Angetrieben von Kaffee und existenzieller Angst stellt er sicher, dass keine Handlung zu viel Sinn ergibt. Er betrachtet es als öffentlichen Dienst.
               </p>
             </CardContent>
           </Card>
@@ -56,7 +56,7 @@ export function Authors() {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Paulik ist ein Meister der Syntax und Satire. Sein Lebensziel ist es, einen so verwirrenden Satz zu schreiben, dass er einen Nobelpreis gewinnt. Er versucht es immer noch.
+                Reisch ist ein Meister der Syntax und Satire. Sein Lebensziel ist es, einen so verwirrenden Satz zu schreiben, dass er einen Nobelpreis gewinnt. Er versucht es immer noch.
               </p>
             </CardContent>
           </Card>

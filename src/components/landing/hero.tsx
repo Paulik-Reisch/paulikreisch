@@ -10,10 +10,10 @@ export function Hero() {
           <div className="flex flex-col justify-center space-y-4">
             <div className="space-y-4">
               <h1 className="font-headline text-3xl sm:text-4xl font-bold tracking-tighter md:text-5xl xl:text-7xl/none text-balance animate-in fade-in slide-in-from-top-12 duration-1000">
-                Ein Buch, das allen Konventionen trotzt. Und gutem Geschmack.
+                Ein Buch, das allen Konventionen trotzt.
               </h1>
               <p className="max-w-[600px] text-muted-foreground md:text-xl animate-in fade-in slide-in-from-top-16 duration-1000">
-                Willkommen bei "Hallo Welt". Eine literarische Reise, so tiefgründig, dass Sie alles in Frage stellen werden, was Sie über Bücher zu wissen glaubten. Und die Realität. Und Eichhörnchen.
+                Willkommen bei "Hallo Welt". Eine literarische Reise, so tiefgründig, dass Sie alles in Frage stellen werden, was Sie über Bücher zu wissen glaubten. Und die Realität.
               </p>
             </div>
             <div className="flex flex-col gap-2 min-[400px]:flex-row animate-in fade-in slide-in-from-top-20 duration-1000">

@@ -12,6 +12,7 @@ import {
     addProductAction,
     updateProductAction,
     deleteProductAction,
+    addLegalPageAction,
     deleteLegalPageAction,
     createDefaultLegalPagesAction,
 } from "@/app/admin/actions";
@@ -473,7 +474,7 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
                                                     </AlertDialogHeader>
                                                     <AlertDialogFooter>
                                                         <AlertDialogCancel>Abbrechen</AlertDialogCancel>
-                                                        <form action={deleteLegalPageAction}>
+                                                        <form action={deleteFormAction}>
                                                             <input type="hidden" name="pageId" value={page.id} />
                                                             <AlertDialogAction type="submit">Löschen</AlertDialogAction>
                                                         </form>
@@ -518,3 +519,5 @@ export function AdminDashboard({
         </Tabs>
     )
 }
+
+    
