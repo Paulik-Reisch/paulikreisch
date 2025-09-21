@@ -182,6 +182,10 @@ export function HeroPfeiffer() {
                     </TableBody>
                 </Table>
             </div>
+            
+            <p>
+                Drei Jahre nach der Lernvollzugszeit. Ein milder Sommerabend in Italien. La Silbadora sitzt mit ihren beiden ehemaligen Schützlingen, den nun jungen Autoren, am Strand. Eine Flasche Rotwein macht die Runde, das Rauschen der Wellen liefert den Soundtrack. Sie blicken zurück auf die wilde Zeit, auf Treppenstürze, unsinnige Regeln und den täglichen Kampf gegen die Absurdität. Und mitten in diesem Moment des Friedens, zwischen zwei Schlucken Wein, entweicht ihr ein leises, fast unhörbares Pfeifen – eine Melodie, die nur die drei verstehen. Ein Witz ohne Worte. Die Legende lebt.
+            </p>
         </article>
       </div>
     </section>
