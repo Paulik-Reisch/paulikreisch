@@ -1,7 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getOrders, getProducts, Order, Product, updateProduct, LegalPage, getLegalPages, updateLegalPage } from "@/lib/firestore";
+import { 
+    getOrders, 
+    getProducts, 
+    Order, 
+    Product, 
+    updateProduct, 
+    LegalPage, 
+    getLegalPages, 
+    updateLegalPage,
+    addLegalPage,
+    addProduct
+} from "@/lib/firestore";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -16,11 +27,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Loader2, RefreshCw, Save, VenetianMask, FileText } from "lucide-react";
+import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
 
 function LeadsTable() {
     const [orders, setOrders] = useState<Order[]>([]);
@@ -110,11 +130,12 @@ function LeadsTable() {
     );
 }
 
-function ProductsTable() {
+function ProductsManager() {
     const [products, setProducts] = useState<Product[]>([]);
     const [editingProducts, setEditingProducts] = useState<{ [key: string]: Partial<Product> }>({});
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const { toast } = useToast();
 
     const fetchProducts = async () => {
@@ -134,16 +155,10 @@ function ProductsTable() {
         fetchProducts();
     }, []);
 
-    const handleInputChange = (productId: string, field: keyof Product, value: string) => {
-        const numericFields = ['price', 'preorderPrice'];
-        const parsedValue = numericFields.includes(field) ? parseFloat(value) : value;
-
+    const handleInputChange = (productId: string, field: keyof Product, value: string | number) => {
         setEditingProducts(prev => ({
             ...prev,
-            [productId]: {
-                ...prev[productId],
-                [field]: parsedValue,
-            }
+            [productId]: { ...prev[productId], [field]: value }
         }));
     };
 
@@ -169,9 +184,66 @@ function ProductsTable() {
         }
     };
 
+    const handleAddProduct = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setSaving(true);
+        const formData = new FormData(event.currentTarget);
+        const newProductData = {
+            title: formData.get('title') as string,
+            subtitle: formData.get('subtitle') as string,
+            price: parseFloat(formData.get('price') as string),
+            preorderPrice: parseFloat(formData.get('preorderPrice') as string) || undefined,
+            amazonLink: formData.get('amazonLink') as string,
+            imageSrc: formData.get('imageSrc') as string,
+            aiHint: formData.get('aiHint') as string,
+            description: formData.get('description') as string,
+        };
+
+        try {
+            await addProduct(newProductData);
+            toast({ title: "Erstellt", description: "Neues Produkt wurde erfolgreich hinzugefügt." });
+            setIsAddDialogOpen(false);
+            await fetchProducts();
+        } catch (error) {
+            console.error("Error adding product:", error);
+            toast({ variant: "destructive", title: "Fehler", description: "Produkt konnte nicht hinzugefügt werden." });
+        } finally {
+            setSaving(false);
+        }
+    };
+
+
     return (
         <div>
-            <div className="flex justify-end mb-4">
+             <div className="flex justify-between items-center mb-4">
+                <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                    <DialogTrigger asChild>
+                        <Button variant="outline"><PlusCircle className="mr-2 h-4 w-4" /> Neues Produkt</Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <form onSubmit={handleAddProduct}>
+                            <DialogHeader>
+                                <DialogTitle>Neues Produkt hinzufügen</DialogTitle>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4">
+                                <Input name="title" placeholder="Titel" required />
+                                <Input name="subtitle" placeholder="Untertitel" />
+                                <Input name="price" type="number" step="0.01" placeholder="Preis (z.B. 10.99)" required />
+                                <Input name="preorderPrice" type="number" step="0.01" placeholder="Vorbestell-Preis (optional)" />
+                                <Input name="amazonLink" placeholder="Amazon Link" required />
+                                <Input name="imageSrc" placeholder="Bild-URL (z.B. https://picsum.photos/...)" required />
+                                <Input name="aiHint" placeholder="AI-Hint für Bild (z.B. book cover)" />
+                                <Textarea name="description" placeholder="Beschreibung" />
+                            </div>
+                            <DialogFooter>
+                                <DialogClose asChild><Button type="button" variant="secondary">Abbrechen</Button></DialogClose>
+                                <Button type="submit" disabled={saving}>
+                                    {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Speichern'}
+                                </Button>
+                            </DialogFooter>
+                        </form>
+                    </DialogContent>
+                </Dialog>
                 <Button onClick={fetchProducts} disabled={loading || saving} variant="outline">
                     {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
                     Aktualisieren
@@ -205,7 +277,7 @@ function ProductsTable() {
                                         <Input
                                             type="number"
                                             value={currentProduct.price ?? ''}
-                                            onChange={(e) => handleInputChange(product.id, 'price', e.target.value)}
+                                            onChange={(e) => handleInputChange(product.id, 'price', parseFloat(e.target.value))}
                                             className="w-24"
                                         />
                                     </TableCell>
@@ -213,7 +285,7 @@ function ProductsTable() {
                                          <Input
                                             type="number"
                                             value={currentProduct.preorderPrice ?? ''}
-                                            onChange={(e) => handleInputChange(product.id, 'preorderPrice', e.target.value)}
+                                            onChange={(e) => handleInputChange(product.id, 'preorderPrice', parseFloat(e.target.value))}
                                             className="w-24"
                                             placeholder="N/A"
                                         />
@@ -245,12 +317,12 @@ function ProductsTable() {
     );
 }
 
-
 function LegalPagesManager() {
     const [pages, setPages] = useState<LegalPage[]>([]);
     const [editingPages, setEditingPages] = useState<{ [key: string]: Partial<LegalPage> }>({});
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const { toast } = useToast();
 
     const fetchPages = async () => {
@@ -273,13 +345,10 @@ function LegalPagesManager() {
     const handleInputChange = (pageId: string, field: keyof LegalPage, value: string) => {
         setEditingPages(prev => ({
             ...prev,
-            [pageId]: {
-                ...prev[pageId],
-                [field]: value,
-            }
+            [pageId]: { ...prev[pageId], [field]: value }
         }));
     };
-
+    
     const handleSave = async (pageId: string) => {
         const pageData = editingPages[pageId];
         if (!pageData || !pageData.title || !pageData.content) {
@@ -290,13 +359,13 @@ function LegalPagesManager() {
         setSaving(true);
         try {
             await updateLegalPage(pageId, { title: pageData.title, content: pageData.content });
-            toast({ title: "Gespeichert", description: `Seite "${pageData.title}" wurde erfolgreich aktualisiert.` });
+            toast({ title: "Gespeichert", description: `Seite wurde erfolgreich aktualisiert.` });
             setEditingPages(prev => {
                 const newEditing = { ...prev };
                 delete newEditing[pageId];
                 return newEditing;
             });
-            await fetchPages(); // Refresh data
+            await fetchPages();
         } catch (error) {
             console.error("Error updating legal page:", error);
             toast({ variant: "destructive", title: "Fehler", description: "Seite konnte nicht gespeichert werden." });
@@ -305,9 +374,53 @@ function LegalPagesManager() {
         }
     };
 
+    const handleAddPage = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setSaving(true);
+        const formData = new FormData(event.currentTarget);
+        const pageId = formData.get('pageId') as string;
+        const title = formData.get('title') as string;
+        const content = formData.get('content') as string;
+
+        try {
+            await addLegalPage(pageId, { title, content });
+            toast({ title: "Erstellt", description: "Neue Seite wurde erfolgreich hinzugefügt." });
+            setIsAddDialogOpen(false);
+            await fetchPages();
+        } catch (error: any) {
+            console.error("Error adding page:", error);
+            toast({ variant: "destructive", title: "Fehler", description: error.message || "Seite konnte nicht hinzugefügt werden." });
+        } finally {
+            setSaving(false);
+        }
+    };
+
     return (
         <div>
-            <div className="flex justify-end mb-4">
+            <div className="flex justify-between items-center mb-4">
+                 <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                    <DialogTrigger asChild>
+                        <Button variant="outline"><PlusCircle className="mr-2 h-4 w-4" /> Neue Seite</Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <form onSubmit={handleAddPage}>
+                            <DialogHeader>
+                                <DialogTitle>Neue Rechtstexte-Seite hinzufügen</DialogTitle>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4">
+                                <Input name="pageId" placeholder="Seiten-ID (slug, z.B. 'agb')" required />
+                                <Input name="title" placeholder="Seitentitel" required />
+                                <Textarea name="content" placeholder="Inhalt" required className="h-48" />
+                            </div>
+                            <DialogFooter>
+                                <DialogClose asChild><Button type="button" variant="secondary">Abbrechen</Button></DialogClose>
+                                <Button type="submit" disabled={saving}>
+                                    {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Speichern'}
+                                </Button>
+                            </DialogFooter>
+                        </form>
+                    </DialogContent>
+                </Dialog>
                 <Button onClick={fetchPages} disabled={loading || saving} variant="outline">
                     {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
                     Aktualisieren
@@ -321,7 +434,6 @@ function LegalPagesManager() {
                 <div className="text-center py-12 text-muted-foreground">
                     <FileText className="mx-auto h-8 w-8 mb-2" />
                     Keine Rechtstexte gefunden.
-                    <p className="text-sm">Sie müssen ggf. zuerst in der Datenbank angelegt werden (z.B. mit den IDs: impressum, datenschutz, etc.).</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -358,7 +470,7 @@ function LegalPagesManager() {
                                         className="w-full"
                                     >
                                         {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Save className="mr-2 h-4 w-4" />}
-                                        Speichern
+                                        Änderungen speichern
                                     </Button>
                                 </CardContent>
                             </Card>
@@ -382,7 +494,7 @@ export function AdminDashboard() {
                 <LeadsTable />
             </TabsContent>
             <TabsContent value="products" className="mt-6">
-                <ProductsTable />
+                <ProductsManager />
             </TabsContent>
             <TabsContent value="legal" className="mt-6">
                 <LegalPagesManager />

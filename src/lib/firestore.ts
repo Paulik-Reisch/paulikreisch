@@ -49,6 +49,11 @@ export async function getProducts(): Promise<Product[]> {
     return productList;
 }
 
+export async function addProduct(data: Omit<Product, 'id'>) {
+    const productsCol = collection(db, 'products');
+    await addDoc(productsCol, data);
+}
+
 export async function updateProduct(productId: string, data: Partial<Product>) {
     const productRef = doc(db, 'products', productId);
     await updateDoc(productRef, data);
@@ -85,7 +90,6 @@ export async function getLegalPages(): Promise<LegalPage[]> {
     const legalCol = collection(db, 'legal_pages');
     const legalSnapshot = await getDocs(legalCol);
     if (legalSnapshot.empty) {
-        // Optional: Seed initial data if collection is empty
         return [];
     }
     const pageList = legalSnapshot.docs.map(doc => {
@@ -111,14 +115,23 @@ export async function getLegalPage(slug: string): Promise<LegalPage | null> {
             lastUpdated: (data.lastUpdated as Timestamp)
         } as LegalPage;
     } else {
-        // Fallback content if document doesn't exist yet
-        return {
-            id: slug,
-            title: `Seite "${slug}" nicht gefunden`,
-            content: "Dieser Inhalt wurde noch nicht im Admin-Bereich erstellt. Bitte fügen Sie ihn dort hinzu.",
-            lastUpdated: Timestamp.now()
-        };
+        return null;
     }
+}
+
+export async function addLegalPage(pageId: string, data: { title: string; content: string }) {
+    if (!pageId) throw new Error("Page ID (slug) is required.");
+    const pageRef = doc(db, 'legal_pages', pageId);
+    const docSnap = await getDoc(pageRef);
+
+    if (docSnap.exists()) {
+        throw new Error(`Eine Seite mit der ID "${pageId}" existiert bereits.`);
+    }
+
+    await setDoc(pageRef, { 
+        ...data,
+        lastUpdated: Timestamp.now() 
+    });
 }
 
 
