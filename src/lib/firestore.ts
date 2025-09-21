@@ -37,7 +37,7 @@ export interface Order {
 
 export interface PageComponent {
     id: string;
-    type: 'heading' | 'text' | 'button' | 'image' | 'spacer';
+    type: 'heading' | 'text' | 'button' | 'image' | 'spacer' | 'separator';
     props: {
         [key: string]: any;
     };
@@ -328,11 +328,11 @@ function generateComponentHTML(component: NewsletterComponent): string {
         case 'button':
             return `
                 <tr>
-                    <td align="${align}" style="padding: 20px;">
-                      <table border="0" cellspacing="0" cellpadding="0" role="presentation">
+                    <td align="${align}" style="padding: 20px; text-align: ${align};">
+                      <table border="0" cellspacing="0" cellpadding="0" role="presentation" align="${align}" style="margin-left: ${align === 'center' ? 'auto' : '0'}; margin-right: ${align === 'center' ? 'auto' : '0'};">
                         <tr>
-                          <td align="center" style="background:${props.backgroundColor || '#007bff'};" bgcolor="${props.backgroundColor || '#007bff'}">
-                            <a href="${props.href || '#'}" target="_blank" style="font-size: ${props.fontSize || '16px'}; font-family: Arial, sans-serif; color: ${props.color || '#ffffff'}; text-decoration: none; text-decoration: none; padding: 10px 25px; border: 1px solid ${props.backgroundColor || '#007bff'}; display: inline-block; font-weight: bold;">
+                          <td align="center" style="background-color:${props.backgroundColor || '#007bff'};" bgcolor="${props.backgroundColor || '#007bff'}">
+                            <a href="${props.href || '#'}" target="_blank" style="font-size: ${props.fontSize || '16px'}; font-family: Arial, sans-serif; color: ${props.color || '#ffffff'}; text-decoration: none; padding: 10px 25px; border: 1px solid ${props.backgroundColor || '#007bff'}; display: inline-block; font-weight: bold;">
                               ${props.text || ''}
                             </a>
                           </td>
@@ -346,7 +346,7 @@ function generateComponentHTML(component: NewsletterComponent): string {
             return `
                 <tr>
                     <td align="${align}" style="padding: 10px 20px;">
-                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" align="${align}" style="max-width: 100%;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" align="${align}" style="max-width: 100%; margin-left: ${align === 'center' ? 'auto' : '0'}; margin-right: ${align === 'center' ? 'auto' : '0'};">
                             <tr>
                                 <td>
                                     <img src="${props.src || 'https://placehold.co/600x400'}" alt="${props.alt || ''}" style="width: 100%; height: auto; display: block; max-width: ${width}px;" width="${width}" />

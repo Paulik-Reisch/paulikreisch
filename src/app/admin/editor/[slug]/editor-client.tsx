@@ -24,7 +24,11 @@ import {
   ArrowDown,
   Eye,
   Code,
-  Sparkles
+  Sparkles,
+  Minus,
+  AlignCenter,
+  AlignLeft,
+  AlignRight,
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -53,10 +57,23 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { cn } from "@/lib/utils";
 
 function generatePageHtml(components: PageComponent[]): string {
     const componentHtml = components.map(component => {
         const props = component.props;
+        const align = props.alignment || 'left';
+        const alignClasses: {[key: string]: string} = {
+            left: "text-left",
+            center: "text-center",
+            right: "text-right",
+        }
+        const justifyClasses: {[key: string]: string} = {
+            left: "justify-start",
+            center: "justify-center",
+            right: "justify-end",
+        }
+
         switch(component.type) {
             case 'heading':
                 const Tag = props.level || 'h1';
@@ -66,17 +83,24 @@ function generatePageHtml(components: PageComponent[]): string {
                     h3: "text-2xl font-semibold",
                     h4: "text-xl font-semibold",
                 };
-                const classes = props.className || defaultHeadingClasses[Tag] || '';
+                const classes = cn(defaultHeadingClasses[Tag], alignClasses[align], props.className);
                 return `<${Tag} class="${classes}">${props.text || ''}</${Tag}>`;
             case 'text':
-                const textClasses = props.className || 'leading-relaxed text-muted-foreground';
+                const textClasses = cn('leading-relaxed text-muted-foreground', alignClasses[align], props.className);
                 return `<p class="${textClasses}">${(props.text || '').replace(/\n/g, '<br />')}</p>`;
             case 'button':
-                 return `<div class="my-6 text-center"><a href="${props.href || '#'}" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 shadow-md transform active:scale-95 border h-11 px-8 bg-primary text-primary-foreground hover:bg-primary/90">${props.text || 'Klick'}</a></div>`;
+                 const buttonContainerClasses = cn("my-6 flex", justifyClasses[align]);
+                 return `<div class="${buttonContainerClasses}"><a href="${props.href || '#'}" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 shadow-md transform active:scale-95 border h-11 px-8 bg-primary text-primary-foreground hover:bg-primary/90">${props.text || 'Klick'}</a></div>`;
             case 'image':
-                 return `<img src="${props.src || 'https://placehold.co/800x450'}" alt="${props.alt || ''}" style="max-width: ${props.width || '100%'};" class="h-auto rounded-lg shadow-md my-6 mx-auto block" />`;
+                 const imageContainerClasses = cn("my-6 flex", justifyClasses[align]);
+                 return `<div class="${imageContainerClasses}"><img src="${props.src || 'https://placehold.co/800x450'}" alt="${props.alt || ''}" style="max-width: ${props.width || '100%'};" class="h-auto rounded-lg shadow-md" /></div>`;
             case 'spacer':
                  return `<div style="height: ${props.height || '2rem'}"></div>`;
+            case 'separator':
+                const color = props.color || 'hsl(var(--border))';
+                const thickness = props.thickness || '1px';
+                const style = props.style || 'solid';
+                return `<hr style="border: none; border-top: ${thickness} ${style} ${color}; margin: 2rem 0;" />`
             default:
                 return '';
         }
@@ -98,7 +122,7 @@ const initialLegalPageState: AdminLegalPageState = { success: false, error: null
 
 function PageComponentEditor({ component, onUpdate, onDelete, onMove }: { component: PageComponent, onUpdate: (id: string, props: any) => void, onDelete: (id: string) => void, onMove: (id: string, direction: 'up' | 'down') => void }) {
     
-    const updateProp = (propName: string, value: string) => {
+    const updateProp = (propName: string, value: any) => {
         onUpdate(component.id, { ...component.props, [propName]: value });
     };
 
@@ -115,6 +139,22 @@ function PageComponentEditor({ component, onUpdate, onDelete, onMove }: { compon
             />
         </div>
     );
+    
+    const renderColorInput = (propName: string, label: string, defaultValue: string) => (
+        <div className="flex-1">
+            <Label htmlFor={`${component.id}-${propName}`} className="text-xs">{label}</Label>
+            <div className="flex items-center gap-2">
+                 <Input 
+                    id={`${component.id}-${propName}`} 
+                    value={component.props[propName] || ''}
+                    placeholder={defaultValue}
+                    onChange={(e) => updateProp(propName, e.target.value)}
+                    className="h-8"
+                />
+                <Input type="color" value={component.props[propName] || defaultValue} onChange={e => updateProp(propName, e.target.value)} className="w-8 h-8 p-1"/>
+            </div>
+        </div>
+    );
 
      const renderTextarea = (propName: string, label: string) => (
          <div key={propName}>
@@ -128,39 +168,61 @@ function PageComponentEditor({ component, onUpdate, onDelete, onMove }: { compon
             />
         </div>
     );
+    
+    const renderAlignmentSelector = () => (
+         <div>
+            <Label className="text-xs">Ausrichtung</Label>
+            <div className="flex gap-1 mt-1">
+                {(['left', 'center', 'right'] as const).map(align => (
+                     <Button key={align} size="icon" variant={component.props.alignment === align ? "secondary" : "ghost"} className="h-8 w-8" onClick={() => updateProp('alignment', align)}>
+                        {align === 'left' && <AlignLeft className="h-4 w-4" />}
+                        {align === 'center' && <AlignCenter className="h-4 w-4" />}
+                        {align === 'right' && <AlignRight className="h-4 w-4" />}
+                    </Button>
+                ))}
+            </div>
+        </div>
+    );
 
     const renderContent = () => {
         switch(component.type) {
             case 'heading': return (
                 <div className="space-y-4">
                     {renderField('text', 'Überschrift')}
-                    <div>
-                        <Label htmlFor={`${component.id}-level`} className="text-xs">Ebene</Label>
-                        <Select onValueChange={(v) => updateProp('level', v)} defaultValue={component.props.level || 'h1'}>
-                            <SelectTrigger className="h-8">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="h1">H1 (Hauptüberschrift)</SelectItem>
-                                <SelectItem value="h2">H2 (Unterüberschrift)</SelectItem>
-                                <SelectItem value="h3">H3</SelectItem>
-                                <SelectItem value="h4">H4</SelectItem>
-                            </SelectContent>
-                        </Select>
+                    <div className="flex gap-4">
+                        <div className="flex-1">
+                            <Label htmlFor={`${component.id}-level`} className="text-xs">Ebene</Label>
+                            <Select onValueChange={(v) => updateProp('level', v)} defaultValue={component.props.level || 'h1'}>
+                                <SelectTrigger className="h-8">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="h1">H1</SelectItem>
+                                    <SelectItem value="h2">H2</SelectItem>
+                                    <SelectItem value="h3">H3</SelectItem>
+                                    <SelectItem value="h4">H4</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="flex-1">
+                            {renderAlignmentSelector()}
+                        </div>
                     </div>
-                    {renderField('className', 'Zusätzliche CSS-Klassen (Tailwind)', 'text', 'z.B. text-center text-primary')}
+                    {renderField('className', 'Zusätzliche CSS-Klassen (Tailwind)', 'text', 'z.B. text-primary')}
                 </div>
             );
             case 'text': return (
                 <div className="space-y-4">
                     {renderTextarea('text', 'Text (unterstützt Zeilenumbrüche)')}
-                    {renderField('className', 'Zusätzliche CSS-Klassen (Tailwind)', 'text', 'z.B. text-center text-lg')}
+                    {renderAlignmentSelector()}
+                    {renderField('className', 'Zusätzliche CSS-Klassen (Tailwind)', 'text', 'z.B. text-lg')}
                 </div>
             );
             case 'button': return (
                 <div className="space-y-4">
                     {renderField('text', 'Button-Text')}
                     {renderField('href', 'Button-Link (URL)')}
+                    {renderAlignmentSelector()}
                 </div>
             );
             case 'image': return (
@@ -168,11 +230,36 @@ function PageComponentEditor({ component, onUpdate, onDelete, onMove }: { compon
                     {renderField('src', 'Bild-URL')}
                     {renderField('alt', 'Alternativtext')}
                     {renderField('width', 'Maximale Breite (z.B. 500px, 80%)', 'text', '100%')}
+                    {renderAlignmentSelector()}
                 </div>
             );
             case 'spacer': return (
                 <div className="space-y-4">
                     {renderField('height', 'Höhe (z.B. 2rem, 32px)')}
+                </div>
+            );
+            case 'separator': return (
+                 <div className="space-y-4">
+                    <div className="flex gap-2 items-end">
+                        {renderColorInput('color', 'Farbe', '#cccccc')}
+                        <div className="flex-1">
+                            <Label htmlFor={`${component.id}-thickness`} className="text-xs">Dicke (px)</Label>
+                            <Input id={`${component.id}-thickness`} type="number" value={component.props.thickness || '1'} onChange={(e) => updateProp('thickness', e.target.value + 'px')} className="h-8"/>
+                        </div>
+                    </div>
+                     <div className="flex-1">
+                        <Label htmlFor={`${component.id}-style`} className="text-xs">Stil</Label>
+                         <Select onValueChange={(v) => updateProp('style', v)} defaultValue={component.props.style || 'solid'}>
+                            <SelectTrigger className="h-8">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="solid">Solid</SelectItem>
+                                <SelectItem value="dashed">Dashed</SelectItem>
+                                <SelectItem value="dotted">Dotted</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
                 </div>
             );
             default: return <p>Unbekannter Komponententyp</p>
@@ -185,6 +272,7 @@ function PageComponentEditor({ component, onUpdate, onDelete, onMove }: { compon
         button: <LinkIcon className="h-4 w-4" />,
         image: <ImageIcon className="h-4 w-4" />,
         spacer: <Rows className="h-4 w-4" />,
+        separator: <Minus className="h-4 w-4" />,
     }
 
     return (
@@ -369,6 +457,7 @@ export function EditorClient({ page }: { page: LegalPage }) {
                     <Button variant="outline" onClick={() => addComponent('button')}><LinkIcon className="mr-2 h-4 w-4"/>Button</Button>
                     <Button variant="outline" onClick={() => addComponent('image')}><ImageIcon className="mr-2 h-4 w-4"/>Bild</Button>
                     <Button variant="outline" onClick={() => addComponent('spacer')}><Rows className="mr-2 h-4 w-4"/>Abstand</Button>
+                    <Button variant="outline" onClick={() => addComponent('separator')}><Minus className="mr-2 h-4 w-4"/>Trennlinie</Button>
                 </div>
                 <form action={handleFormSubmit}>
                      <Button type="submit" disabled={isSaving} className="w-full">
@@ -437,5 +526,3 @@ export function EditorClient({ page }: { page: LegalPage }) {
     </div>
   );
 }
-
-    

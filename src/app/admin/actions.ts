@@ -331,7 +331,3 @@ export async function deleteNewsletterAction(
     return { success: false, error: "Fehler beim Löschen: " + error.message };
   }
 }
-
-    
-
-    
