@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -32,43 +33,32 @@ import { CodeEditor } from "@/components/admin/code-editor";
 
 function generateComponentHTML(component: NewsletterComponent): string {
     const props = component.props;
-    const styles: React.CSSProperties = {};
+    const align = props.alignment as 'left' | 'center' | 'right' || 'left';
 
     switch(component.type) {
         case 'heading':
-            styles.fontFamily = 'Arial, sans-serif';
-            styles.fontSize = props.fontSize || '24px';
-            styles.color = props.color || '#000000';
-            styles.margin = 0;
-            styles.textAlign = props.alignment as 'left' | 'center' | 'right' || 'left';
             return `
                 <tr>
                     <td style="padding: 10px 20px;">
-                        <h1 style="${Object.entries(styles).map(([k, v]) => `${k.replace(/([A-Z])/g, '-$1').toLowerCase()}:${v}`).join(';')}">${props.text || ''}</h1>
+                        <h1 style="font-family: Arial, sans-serif; font-size: ${props.fontSize || '24px'}; color: ${props.color || '#000000'}; margin: 0; text-align: ${align};">${props.text || ''}</h1>
                     </td>
                 </tr>
             `;
         case 'text':
-             styles.fontFamily = 'Arial, sans-serif';
-            styles.fontSize = props.fontSize || '16px';
-            styles.color = props.color || '#333333';
-            styles.margin = 0;
-            styles.lineHeight = 1.5;
-            styles.textAlign = props.alignment as 'left' | 'center' | 'right' || 'left';
-            return `
+             return `
                  <tr>
                     <td style="padding: 10px 20px;">
-                        <p style="${Object.entries(styles).map(([k, v]) => `${k.replace(/([A-Z])/g, '-$1').toLowerCase()}:${v}`).join(';')}">${(props.text || '').replace(/\n/g, '<br />')}</p>
+                        <p style="font-family: Arial, sans-serif; font-size: ${props.fontSize || '16px'}; color: ${props.color || '#333333'}; margin: 0; line-height: 1.5; text-align: ${align};">${(props.text || '').replace(/\n/g, '<br />')}</p>
                     </td>
                 </tr>
             `;
         case 'button':
             return `
                 <tr>
-                    <td style="padding: 20px;" align="${props.alignment || 'left'}">
-                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
+                    <td style="padding: 20px;" align="${align}">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation">
                             <tr>
-                                <td align="center" bgcolor="${props.backgroundColor || '#007bff'}" role="presentation" style="border:none;border-radius:3px;cursor:auto;padding:10px 25px;" valign="middle">
+                                <td align="center" bgcolor="${props.backgroundColor || '#007bff'}" role="presentation" style="background:${props.backgroundColor || '#007bff'};border:none;cursor:auto;padding:10px 25px;">
                                     <a href="${props.href || '#'}" style="background:${props.backgroundColor || '#007bff'};color:${props.color || '#ffffff'};font-family:Arial, sans-serif;font-size:${props.fontSize || '16px'};font-weight:bold;line-height:120%;margin:0;text-decoration:none;text-transform:none;" target="_blank">
                                         ${props.text || ''}
                                     </a>
@@ -79,10 +69,17 @@ function generateComponentHTML(component: NewsletterComponent): string {
                 </tr>
             `;
         case 'image':
+            const width = props.width ? parseInt(props.width, 10) : 600;
             return `
                 <tr>
-                    <td style="padding: 10px 20px;" align="${props.alignment || 'center'}">
-                        <img src="${props.src || 'https://placehold.co/600x400'}" alt="${props.alt || ''}" style="width: 100%; height: auto; max-width: ${props.width || '600px'}; display: block;" width="${props.width || '600'}" />
+                    <td align="${align}" style="padding: 10px 20px;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="width: ${width}px; max-width: 100%;">
+                            <tr>
+                                <td>
+                                    <img src="${props.src || 'https://placehold.co/600x400'}" alt="${props.alt || ''}" style="width: 100%; height: auto; display: block;" width="${width}" />
+                                </td>
+                            </tr>
+                        </table>
                     </td>
                 </tr>
             `;
@@ -91,26 +88,50 @@ function generateComponentHTML(component: NewsletterComponent): string {
     }
 }
 
-function generateEmailHTML(components: NewsletterComponent[]): string {
+function generateEmailHTML(components: NewsletterComponent[], subject: string): string {
     const body = components.map(generateComponentHTML).join('');
 
     return `
-        <!DOCTYPE html>
-        <html>
+        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
-            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-            <title>Email</title>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <title>${subject}</title>
+            <style type="text/css">
+                body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+                table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+                img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+                table { border-collapse: collapse !important; }
+                body { height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; }
+            </style>
         </head>
-        <body style="margin: 0; padding: 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-color: #f4f4f4;">
-            <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4;">
+        <body style="margin: 0 !important; padding: 0 !important; background-color: #f4f4f4;">
+            <!--[if (gte mso 9)|(IE)]>
+            <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
+            <tr>
+            <td align="center" valign="top" width="600">
+            <![endif]-->
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tr>
-                    <td align="center">
-                        <table width="600" border="0" cellpadding="0" cellspacing="0" style="max-width: 600px; width: 100%; background-color: #ffffff;">
-                            ${body}
+                    <td align="center" style="background-color: #f4f4f4;">
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="max-width: 600px; width: 100%;">
+                            <tr>
+                                <td align="center" valign="top" style="background-color: #ffffff;">
+                                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                        ${body}
+                                    </table>
+                                </td>
+                            </tr>
                         </table>
                     </td>
                 </tr>
             </table>
+            <!--[if (gte mso 9)|(IE)]>
+            </td>
+            </tr>
+            </table>
+            <![endif]-->
         </body>
         </html>
     `;
@@ -259,7 +280,7 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component:
                 <div className="space-y-4">
                     {renderField('src', 'Bild-URL')}
                     {renderField('alt', 'Alternativtext')}
-                    {renderField('width', 'Breite (z.B. 600px)', 'text', '600px')}
+                    {renderField('width', 'Breite (z.B. 600)', 'text', '600')}
                     {renderAlignmentSelector()}
                 </div>
             );
@@ -296,7 +317,7 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
   const [name, setName] = useState(newsletter.name);
   const [subject, setSubject] = useState(newsletter.subject);
   const [components, setComponents] = useState<NewsletterComponent[]>(newsletter.components);
-  const [htmlContent, setHtmlContent] = useState(() => generateEmailHTML(newsletter.components));
+  const [htmlContent, setHtmlContent] = useState(() => generateEmailHTML(newsletter.components, newsletter.subject));
   const [hasManuallyEditedHtml, setHasManuallyEditedHtml] = useState(false);
 
   const [updateState, updateFormAction] = useActionState(updateNewsletterAction, initialEditorState);
@@ -305,13 +326,14 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
   useEffect(() => {
     // Only update HTML from components if it hasn't been manually edited.
     if (!hasManuallyEditedHtml) {
-        setHtmlContent(generateEmailHTML(components));
+        setHtmlContent(generateEmailHTML(components, subject));
     }
-  }, [components, hasManuallyEditedHtml]);
+  }, [components, subject, hasManuallyEditedHtml]);
 
   useEffect(() => {
     if (updateState.success) {
       toast({ title: "Erfolg", description: updateState.message });
+      setHasManuallyEditedHtml(false); // Reset manual edit state on successful save
     }
     if (updateState.error) {
       toast({ variant: "destructive", title: "Fehler", description: updateState.error });
@@ -328,7 +350,8 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
     if (!hasManuallyEditedHtml) {
       formData.set('components', JSON.stringify(components));
     } else {
-      // Send empty array to indicate manual edit
+      // Send empty array to indicate manual edit and to clear old components.
+      // The content field is now the source of truth.
       formData.set('components', '[]'); 
     }
     updateFormAction(formData);
@@ -396,6 +419,11 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
                 </div>
                  <div>
                     <h3 className="text-sm font-medium mb-2">Komponenten</h3>
+                    {hasManuallyEditedHtml && (
+                        <div className="p-2 mb-2 text-xs bg-yellow-100 border border-yellow-300 rounded-md text-yellow-800">
+                           Sie bearbeiten den HTML-Code manuell. Komponenten-Änderungen werden nicht mehr synchronisiert. Speichern Sie, um die visuellen Komponenten wieder zu aktivieren.
+                        </div>
+                    )}
                     <Accordion type="single" collapsible className="w-full space-y-2">
                         {components.map((comp) => (
                            <ComponentEditor 
