@@ -8,7 +8,7 @@ export function HeroBusfahrenMutprobe() {
     <section className="relative w-full h-[80vh] flex items-center justify-center text-center text-white">
       <Image
         alt="Überfüllter Bus"
-        src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/bus.png?alt=media"
+        src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/bus.png?alt=media&token=08503995-08e6-46dc-accf-cdfaa2f34650"
         data-ai-hint="overcrowded bus"
         fill
         className="object-cover -z-10 brightness-50"

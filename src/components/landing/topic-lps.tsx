@@ -34,7 +34,7 @@ const topics = [
         title: "Busfahren = Mutprobe",
         description: "Der tägliche Nahverkehr als Gladiatorenkampf. Hol dir den 'Survival Guide'.",
         link: "/lp-busfahren-mutprobe",
-        image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/bus.png?alt=media",
+        image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/bus.png?alt=media&token=08503995-08e6-46dc-accf-cdfaa2f34650",
         aiHint: "crowded bus"
     },
     {
