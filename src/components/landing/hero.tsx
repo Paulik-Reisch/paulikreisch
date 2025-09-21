@@ -1,8 +1,12 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Product } from "@/lib/firestore";
 
-export function Hero() {
+export function Hero({ product }: { product?: Product }) {
+  const imageSrc = product?.imageSrc || "https://placehold.co/550x550.png";
+  const imageHint = product?.aiHint || "book cover";
+
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
@@ -26,9 +30,9 @@ export function Hero() {
              <Image
                 alt="Buchcover"
                 className="mx-auto aspect-square overflow-hidden rounded-xl object-cover sm:w-full lg:order-last transform -rotate-3 transition-transform duration-500 hover:rotate-0 hover:scale-105 shadow-2xl"
-                data-ai-hint="book cover"
+                data-ai-hint={imageHint}
                 height="550"
-                src="https://placehold.co/550x550.png"
+                src={imageSrc}
                 width="550"
               />
           </div>
