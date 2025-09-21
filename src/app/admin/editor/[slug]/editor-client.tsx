@@ -65,8 +65,8 @@ import {
 import { cn } from "@/lib/utils";
 
 function generatePageHtml(components: PageComponent[]): string {
-    const componentHtml = components.map(component => {
-        const props = component.props;
+    return components.map(component => {
+        const props = component.props || {};
         
         switch(component.type) {
             case 'heading': {
@@ -128,23 +128,23 @@ function generatePageHtml(components: PageComponent[]): string {
                 const numColumns = props.numColumns || 2;
                 const gap = props.gap || '1rem';
                 const verticalAlignment = props.verticalAlignment || 'start';
-                const columnClasses = `grid grid-cols-1 md:grid-cols-${numColumns} gap-[${gap}] items-${verticalAlignment}`;
                 
-                const columnsHtml = (props.columns || []).map((col: any, index: number) => {
+                const columnClasses = `grid grid-cols-1 md:grid-cols-${numColumns} items-${verticalAlignment}`;
+                
+                const columnsHtml = (props.columns || []).map((col: any) => {
                     const colBg = col.bgColor ? `background-color: ${col.bgColor};` : '';
                     const colPadding = col.padding || '1rem';
                     const colBorderRadius = col.borderRadius || '0.5rem';
-                    return `<div style="${colBg} padding: ${colPadding}; border-radius: ${colBorderRadius};">${col.content || ''}</div>`;
+                    const content = col.content || '';
+                    return `<div style="${colBg} padding: ${colPadding}; border-radius: ${colBorderRadius};">${content}</div>`;
                 }).join('\n');
 
-                return `<div class="${columnClasses} my-6">${columnsHtml}</div>`
+                return `<div class="${columnClasses} my-6" style="gap: ${gap};">${columnsHtml}</div>`
             }
             default:
                 return '';
         }
     }).join('\n');
-
-    return `${componentHtml}`;
 }
 
 type AdminLegalPageState = {
@@ -407,7 +407,7 @@ export function EditorClient({ page }: { page: LegalPage }) {
     if (page.components && page.components.length > 0) {
         setGeneratedHtml(generatePageHtml(page.components));
     }
-  }, [page.lastUpdated, page.components]);
+  }, []); // Run only once on mount
 
   useEffect(() => {
       if (!hasManuallyEditedHtml) {
@@ -465,7 +465,7 @@ export function EditorClient({ page }: { page: LegalPage }) {
   const addComponent = (type: PageComponent['type']) => {
       let props = {};
       if (type === 'columns') {
-        props = { numColumns: 2, columns: [{ content: '' }, { content: '' }], gap: '1rem', verticalAlignment: 'start' }
+        props = { numColumns: 2, columns: Array.from({length: 2}, () => ({ content: ''})), gap: '1rem', verticalAlignment: 'start' }
       }
       const newComponent: PageComponent = {
           id: `${type}-${Date.now()}`,
@@ -473,7 +473,6 @@ export function EditorClient({ page }: { page: LegalPage }) {
           props
       };
       setComponents(prev => [...prev, newComponent]);
-      setHasManuallyEditedHtml(false);
   };
 
   const updateComponent = (id: string, props: any) => {
@@ -481,14 +480,11 @@ export function EditorClient({ page }: { page: LegalPage }) {
       if (oldComponent?.type === 'columns' && props.numColumns !== oldComponent.props.numColumns) {
           props.columns = Array.from({ length: props.numColumns }, (_, i) => props.columns[i] || { content: '' });
       }
-
       setComponents(prev => prev.map(c => c.id === id ? { ...c, props } : c));
-      setHasManuallyEditedHtml(false);
   };
   
   const deleteComponent = (id: string) => {
       setComponents(prev => prev.filter(c => c.id !== id));
-      setHasManuallyEditedHtml(false);
   };
 
   const moveComponent = (id: string, direction: 'up' | 'down') => {
@@ -502,7 +498,6 @@ export function EditorClient({ page }: { page: LegalPage }) {
       const [movedComponent] = newComponents.splice(index, 1);
       newComponents.splice(newIndex, 0, movedComponent);
       setComponents(newComponents);
-      setHasManuallyEditedHtml(false);
   }
 
   const handleHtmlChange = (value: string) => {
@@ -535,7 +530,7 @@ export function EditorClient({ page }: { page: LegalPage }) {
                     <h3 className="text-sm font-medium mb-2">Komponenten</h3>
                      {hasManuallyEditedHtml && (
                         <div className="p-2 mb-2 text-xs bg-yellow-100 border border-yellow-300 rounded-md text-yellow-800">
-                           HTML wurde manuell bearbeitet. Der Komponenten-Editor ist deaktiviert.
+                           HTML wurde manuell bearbeitet. Der Komponenten-Editor ist deaktiviert, bis Sie speichern.
                         </div>
                     )}
                     <Accordion type="single" collapsible className="w-full space-y-2" disabled={hasManuallyEditedHtml}>
@@ -553,13 +548,13 @@ export function EditorClient({ page }: { page: LegalPage }) {
             </div>
             <div className="p-4 border-t space-y-2">
                  <div className="grid grid-cols-2 gap-2">
-                    <Button variant="outline" onClick={() => addComponent('heading')}><Type className="mr-2 h-4 w-4"/>Überschrift</Button>
-                    <Button variant="outline" onClick={() => addComponent('text')}><Pilcrow className="mr-2 h-4 w-4"/>Text</Button>
-                    <Button variant="outline" onClick={() => addComponent('button')}><LinkIcon className="mr-2 h-4 w-4"/>Button</Button>
-                    <Button variant="outline" onClick={() => addComponent('image')}><ImageIcon className="mr-2 h-4 w-4"/>Bild</Button>
-                    <Button variant="outline" onClick={() => addComponent('spacer')}><Rows className="mr-2 h-4 w-4"/>Abstand</Button>
-                    <Button variant="outline" onClick={() => addComponent('separator')}><Minus className="mr-2 h-4 w-4"/>Trennlinie</Button>
-                    <Button variant="outline" className="col-span-2" onClick={() => addComponent('columns')}><Columns className="mr-2 h-4 w-4"/>Spalten</Button>
+                    <Button variant="outline" onClick={() => addComponent('heading')} disabled={hasManuallyEditedHtml}><Type className="mr-2 h-4 w-4"/>Überschrift</Button>
+                    <Button variant="outline" onClick={() => addComponent('text')} disabled={hasManuallyEditedHtml}><Pilcrow className="mr-2 h-4 w-4"/>Text</Button>
+                    <Button variant="outline" onClick={() => addComponent('button')} disabled={hasManuallyEditedHtml}><LinkIcon className="mr-2 h-4 w-4"/>Button</Button>
+                    <Button variant="outline" onClick={() => addComponent('image')} disabled={hasManuallyEditedHtml}><ImageIcon className="mr-2 h-4 w-4"/>Bild</Button>
+                    <Button variant="outline" onClick={() => addComponent('spacer')} disabled={hasManuallyEditedHtml}><Rows className="mr-2 h-4 w-4"/>Abstand</Button>
+                    <Button variant="outline" onClick={() => addComponent('separator')} disabled={hasManuallyEditedHtml}><Minus className="mr-2 h-4 w-4"/>Trennlinie</Button>
+                    <Button variant="outline" className="col-span-2" onClick={() => addComponent('columns')} disabled={hasManuallyEditedHtml}><Columns className="mr-2 h-4 w-4"/>Spalten</Button>
                 </div>
                 <form action={handleFormSubmit}>
                      <Button type="submit" disabled={isSaving} className="w-full">
@@ -588,7 +583,7 @@ export function EditorClient({ page }: { page: LegalPage }) {
                 </TabsList>
                 <TabsContent value="preview" className="mt-4 flex-grow bg-gray-100 dark:bg-gray-800 p-4 rounded-md">
                      <iframe
-                        srcDoc={`<html><head><link href="/globals.css" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-background text-foreground"><div class="max-w-none p-4 space-y-6">${generatedHtml}</div></body></html>`}
+                        srcDoc={`<html><head><link href="/globals.css" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-background text-foreground"><div class="p-4 space-y-6">${generatedHtml}</div></body></html>`}
                         title="Seiten-Vorschau"
                         className="w-full h-full border bg-white"
                     />
