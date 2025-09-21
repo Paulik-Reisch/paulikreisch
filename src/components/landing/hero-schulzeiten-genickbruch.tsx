@@ -1,11 +1,21 @@
+
 import { Button } from '@/components/ui/button';
 import { AlarmClockOff } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function HeroSchulzeitenGenickbruch() {
   return (
-    <section className="w-full py-20 md:py-32 lg:py-48 bg-gray-900 text-white">
-      <div className="container px-4 md:px-6">
+    <section className="w-full py-20 md:py-32 lg:py-48 bg-gray-900 text-white relative">
+       <Image
+          alt="Explodierender Wecker"
+          src="https://picsum.photos/seed/alarmclock/1920/1080"
+          data-ai-hint="exploding clock"
+          layout="fill"
+          objectFit="cover"
+          className="absolute inset-0 -z-10 brightness-50 opacity-40"
+        />
+      <div className="container px-4 md:px-6 relative z-10">
         <div className="flex flex-col items-center space-y-8 text-center">
           <div className="space-y-4">
             <AlarmClockOff className="h-24 w-24 mx-auto text-primary animate-pulse" />

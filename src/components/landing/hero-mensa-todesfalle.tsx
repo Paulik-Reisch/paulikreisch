@@ -1,10 +1,20 @@
+
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function HeroMensaTodesfalle() {
   return (
-    <section className="w-full py-20 md:py-32 lg:py-40 bg-destructive text-destructive-foreground">
-      <div className="container px-4 md:px-6">
+    <section className="w-full py-20 md:py-32 lg:py-40 bg-destructive text-destructive-foreground relative">
+        <Image
+            alt="Abstraktes, unappetitliches Essen"
+            src="https://picsum.photos/seed/mensafood/1920/1080"
+            data-ai-hint="disgusting food abstract"
+            layout="fill"
+            objectFit="cover"
+            className="absolute inset-0 -z-10 brightness-50 opacity-50"
+        />
+      <div className="container px-4 md:px-6 z-10 relative">
         <div className="flex flex-col items-center space-y-6 text-center">
           <div className="space-y-4">
             <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl xl:text-8xl/none text-balance">
