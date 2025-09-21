@@ -357,7 +357,7 @@ function EditLegalPageDialog({ page, onOpenChange, open }: { page: LegalPage; op
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-4xl max-h-[90vh] flex flex-col">
-                <form action={handleFormSubmit}>
+                <form action={handleFormSubmit} className="flex flex-col min-h-0 flex-grow">
                     <input type="hidden" name="pageId" value={page.id} />
                     <DialogHeader>
                         <DialogTitle>Dynamische LP bearbeiten: /{page.id}</DialogTitle>
@@ -440,7 +440,7 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
                         <Button variant="outline"><PlusCircle className="mr-2 h-4 w-4" /> Neue Dynamische LP</Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-4xl max-h-[90vh] flex flex-col">
-                        <form action={handleAddFormSubmit}>
+                        <form action={handleAddFormSubmit} className="flex flex-col min-h-0 flex-grow">
                             <DialogHeader>
                                 <DialogTitle>Neue Dynamische LP hinzufügen</DialogTitle>
                                 <DialogDescription>Erstellen Sie hier eine neue Seite mit HTML und Tailwind CSS.</DialogDescription>
@@ -574,3 +574,5 @@ export function AdminDashboard({
         </Tabs>
     )
 }
+
+    
