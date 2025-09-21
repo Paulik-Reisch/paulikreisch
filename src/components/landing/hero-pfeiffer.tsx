@@ -93,7 +93,7 @@ export function HeroPfeiffer() {
           </p>
           
            <blockquote>
-            "Sie sprang mit ollem Enthusiasmus vor die Tafel", erinnert sich einer der Autoren, "und lehrte uns die ersten wirklich nützlichen Wörter. Nicht 'hola', nicht 'gracias'. Sie lehrte uns das, was man braucht, wenn der Bus zu spät kommt oder das Mensaessen wieder nach atomarer Kernschmelze schmeckt."
+            "Sie sprang mit ollem Enthusiasmus vor die Tafel", erinnert sich einer der Autoren, "und lehrte uns die ersten wirklich nützlichen Wörter. Nicht 'hola', nicht 'gracias'. Sie lehrte uns das, was man braucht, wenn der Bus zu spät kommt oder das Mensaessen wieder nach atomarer Kernschmelze schmeckt - beides natürlich ausführlich in <Link href="/buchhandlung-paulik-reisch" className="font-bold underline">Hallo Welt</Link> beschrieben."
           </blockquote>
 
           <p>
@@ -124,7 +124,7 @@ export function HeroPfeiffer() {
             </div>
 
             <p>
-                Neueste Berichte aus dem inneren Zirkel der Autorität besagen, dass La Silbadora kürzlich ein Exemplar von "Hallo Welt" in die Hände bekam. Zeugen berichten von einem unkontrollierbaren Lachanfall, der durch die Gänge der Lernvollzugsanstalt hallte. Sie konnte sich nicht mehr halten und stürzte – so die dramatische Schilderung – die berüchtigten Treppen des Schulgebäudes hinab. Wer das Buch gelesen hat, weiß, was das normalerweise zur Folge hat: ein Genickbruch.
+                Neueste Berichte aus dem inneren Zirkel der Autorität besagen, dass La Silbadora kürzlich ein Exemplar von "Hallo Welt" in die Hände bekam. Zeugen berichten von einem unkontrollierbaren Lachanfall, der durch die Gänge der Lernvollzugsanstalt hallte. Sie konnte sich nicht mehr halten und stürzte – so die dramatische Schilderung – die berüchtigten Treppen des Schulgebäudes hinab. <Link href="/buchhandlung-paulik-reisch" className="font-bold underline">Wer das Buch gelesen hat</Link>, weiß, was das normalerweise zur Folge hat: ein Genickbruch.
             </p>
             <p>
                 Doch dann geschah das Wunder: In einer Bewegung, die man nur als übernatürlich beschreiben kann, schnipste La Silbadora im freien Fall mit den Fingern. Wie von Geisterhand materialisierte sich ein Exemplar von <Link href="/buchhandlung-paulik-reisch" className="font-bold underline">"Hallo Welt 1"</Link> direkt unter ihr und federte den Aufprall ab. Sie landete weich. Ihr Genick blieb intakt.
@@ -132,7 +132,7 @@ export function HeroPfeiffer() {
              <p>
                 Ende gut, alles gut. Selbst das Buch war nicht zerknickt. Denn das, meine Damen und Herren, ist gedruckte und geschriebene Qualität. Eine Qualität, die Leben rettet.
             </p>
-
+            
           <div className="text-center my-12 py-12 border-t border-b border-dashed">
             <h2 className="font-headline text-3xl font-bold">Erleben Sie das Pfeifkonzert selbst!</h2>
             <p className="mt-4 text-muted-foreground">
