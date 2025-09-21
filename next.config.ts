@@ -30,6 +30,15 @@ const nextConfig: NextConfig = {
       }
     ],
   },
+  webpack: (config, { isServer }) => {
+    // This is to suppress a warning from a dependency of a dependency (handlebars).
+    // It's not a critical error, but it's good to keep the build logs clean.
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      "handlebars": false,
+    };
+    return config;
+  },
 };
 
 export default nextConfig;
