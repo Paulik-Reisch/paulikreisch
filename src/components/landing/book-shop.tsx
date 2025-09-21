@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -20,35 +21,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { SignatureOrderForm } from "./signature-order-form";
+import { getProducts, Product } from "@/lib/firestore";
+import { Skeleton } from "../ui/skeleton";
 
 
-const books = {
-  hw1: {
-    id: 1,
-    title: "Hallo Welt",
-    subtitle: "Erhebliche Kritik am unerhörten Bildungsgang der Lernvollzugsanstalt SK-S",
-    price: "10,99 €",
-    imageSrc: "https://placehold.co/400x600.png",
-    aiHint: "book cover",
-    amazonLink: "https://www.amazon.de/-/de/Hallo-Welt-Erhebliche-Bildungsgang-Lernvollzugsanstalt/dp/B0CVXT9X4J",
-    description: "Die satirische Abrechnung mit dem Schulsystem, Lehrern als Beamtenrobotern und dem täglichen Wahnsinn des Erwachsenwerdens. Ein Muss für jeden, der die Schule überlebt hat (oder es noch versucht).",
-    signaturePrice: 35.00,
-  },
-  hw2: {
-    id: 2,
-    title: "Hallo Welt 2",
-    subtitle: "Wie das Leben funktioniert",
-    price: "25,99 €",
-    preorderPrice: "17,99 €",
-    imageSrc: "https://placehold.co/400x600.png",
-    aiHint: "book cover funny",
-    amazonLink: "https://www.amazon.de/dp/B0D9L4DCMG",
-    description: "Die Fortsetzung, die niemand wollte, aber jeder braucht. Eine Abrechnung mit Bürokratie, dem deutschen Internet und dem Mietenwahnsinn. Noch chaotischer, noch bissiger.",
-    signaturePrice: 52.99,
-  },
-};
-
-function HW2BookCard({ book }: { book: typeof books.hw2 }) {
+function HW2BookCard({ book }: { book: Product }) {
     const [showDiscount, setShowDiscount] = useState(false);
 
     useEffect(() => {
@@ -75,15 +52,15 @@ function HW2BookCard({ book }: { book: typeof books.hw2 }) {
                                     showDiscount ? "text-muted-foreground line-through text-lg" : "text-foreground"
                                 )}
                             >
-                                {book.price}
+                                {book.price} €
                             </span>
-                            {showDiscount && (
+                            {showDiscount && book.preorderPrice && (
                                 <span className="text-2xl font-bold text-destructive animate-in fade-in zoom-in-50 duration-500">
-                                    {book.preorderPrice}
+                                    {book.preorderPrice} €
                                 </span>
                             )}
                         </div>
-                        {showDiscount && <p className="text-xs text-destructive font-semibold mt-1 animate-in fade-in duration-500">{Math.round((1 - 17.99 / 25.99) * 100)}% auf die ersten 50 Exemplare</p>}
+                        {showDiscount && <p className="text-xs text-destructive font-semibold mt-1 animate-in fade-in duration-500">{Math.round((1 - (book.preorderPrice || 0) / (book.price || 1)) * 100)}% auf die ersten 50 Exemplare</p>}
                         <span className="text-xs text-muted-foreground">inkl. MwSt.</span>
                     </div>
                      <Dialog>
@@ -102,7 +79,7 @@ function HW2BookCard({ book }: { book: typeof books.hw2 }) {
 }
 
 
-function BookCard({ book }: { book: (typeof books.hw1) }) {
+function BookCard({ book }: { book: Product }) {
     return (
         <Card className="flex flex-col h-full overflow-hidden transition-transform duration-300 hover:-translate-y-2">
             <CardContent className="p-4 md:p-6 flex flex-col h-full">
@@ -113,7 +90,7 @@ function BookCard({ book }: { book: (typeof books.hw1) }) {
                     <h3 className="font-headline text-xl font-bold">{book.title}</h3>
                     <p className="text-xs text-muted-foreground flex-grow mt-1">{book.subtitle}</p>
                     <div className="my-2 h-20">
-                         <span className="text-2xl font-bold">{book.price}</span>
+                         <span className="text-2xl font-bold">{book.price} €</span>
                         <span className="text-xs text-muted-foreground ml-2">inkl. MwSt.</span>
                     </div>
                      <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="w-full mt-auto">
@@ -128,12 +105,55 @@ function BookCard({ book }: { book: (typeof books.hw1) }) {
     );
 }
 
+function BookCardSkeleton() {
+    return (
+        <Card className="flex flex-col h-full overflow-hidden">
+            <CardContent className="p-4 md:p-6 flex flex-col h-full">
+                <Skeleton className="relative aspect-[2/3] w-full mb-4 rounded-md" />
+                <div className="flex flex-col flex-grow">
+                    <Skeleton className="h-6 w-3/4 mb-2" />
+                    <Skeleton className="h-4 w-full mb-4" />
+                    <Skeleton className="h-10 w-1/2 mb-4" />
+                    <Skeleton className="h-12 w-full" />
+                </div>
+            </CardContent>
+        </Card>
+    );
+}
+
+
 export function BookShop() {
   const { toast } = useToast();
+  const [products, setProducts] = useState<{ [key: string]: Product }>({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const fetchedProducts = await getProducts();
+        const productsById = fetchedProducts.reduce((acc, product) => {
+            acc[product.id] = product;
+            return acc;
+        }, {} as { [key: string]: Product });
+        setProducts(productsById);
+      } catch (error) {
+        console.error("Fehler beim Laden der Produkte:", error);
+        toast({
+            variant: "destructive",
+            title: "Fehler",
+            description: "Produkte konnten nicht geladen werden.",
+        });
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchProducts();
+  }, [toast]);
   
   const handleNewsletterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const email = e.currentTarget.email.value;
+    // Here you could add the logic to save the email to firestore
     toast({
       title: "Fast geschafft!",
       description: `Wir haben eine Bestätigungs-E-Mail an ${email} gesendet. (Nicht wirklich, aber danke für's Mitmachen!)`,
@@ -147,23 +167,40 @@ export function BookShop() {
         
         <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-                <BookCard book={books.hw1} />
-                <HW2BookCard book={books.hw2} />
+                {loading ? (
+                    <>
+                        <BookCardSkeleton />
+                        <BookCardSkeleton />
+                        <div className="group relative col-span-1 border-2 border-dashed rounded-xl flex flex-col items-center justify-center p-6 text-center">
+                            <Skeleton className="w-12 h-12 rounded-full" />
+                            <Skeleton className="h-6 w-3/4 mt-4" />
+                            <Skeleton className="h-4 w-full mt-2" />
+                            <Skeleton className="h-10 w-32 mt-6" />
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        {products.hw1 && <BookCard book={products.hw1} />}
+                        {products.hw2 && <HW2BookCard book={products.hw2} />}
 
-                <Dialog>
-                    <DialogTrigger asChild>
-                    <div className="group relative col-span-1 border-2 border-dashed rounded-xl flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:border-primary hover:bg-muted/50 transition-all duration-300 hover:-translate-y-2">
-                        <Sparkles className="w-10 h-10 text-primary/50 group-hover:text-primary transition-colors duration-300 transform group-hover:scale-110" />
-                        <h3 className="font-headline text-xl font-bold mt-4">Signierte Sonderausgabe</h3>
-                        <p className="text-muted-foreground text-sm mt-2">Sichern Sie sich ein von den Autoren persönlich gequältes und signiertes Exemplar.</p>
-                         <Button variant="outline" className="mt-6">
-                            <PenSquare className="mr-2 h-4 w-4"/>
-                            Jetzt konfigurieren
-                        </Button>
-                    </div>
-                    </DialogTrigger>
-                    <SignatureOrderForm book={books.hw1} />
-                </Dialog>
+                        {products.hw1 && (
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                <div className="group relative col-span-1 border-2 border-dashed rounded-xl flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:border-primary hover:bg-muted/50 transition-all duration-300 hover:-translate-y-2">
+                                    <Sparkles className="w-10 h-10 text-primary/50 group-hover:text-primary transition-colors duration-300 transform group-hover:scale-110" />
+                                    <h3 className="font-headline text-xl font-bold mt-4">Signierte Sonderausgabe</h3>
+                                    <p className="text-muted-foreground text-sm mt-2">Sichern Sie sich ein von den Autoren persönlich gequältes und signiertes Exemplar.</p>
+                                     <Button variant="outline" className="mt-6">
+                                        <PenSquare className="mr-2 h-4 w-4"/>
+                                        Jetzt konfigurieren
+                                    </Button>
+                                </div>
+                                </DialogTrigger>
+                                <SignatureOrderForm book={products.hw1} />
+                            </Dialog>
+                        )}
+                    </>
+                )}
             </div>
         </div>
 

@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -15,6 +16,9 @@ import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import { Checkbox } from "../ui/checkbox";
 import { Textarea } from "../ui/textarea";
+import { Product } from "@/lib/firestore";
+import { useActionState } from "react";
+import { createOrderAction } from "@/app/actions";
 
 const COUNTDOWN_SECONDS = (11 * 60) + 32;
 
@@ -38,22 +42,23 @@ const preorderSchema = z.object({
 type PreorderFormValues = z.infer<typeof preorderSchema>;
 
 const bookPrices = {
-    hw2_preorder: 17.99,
-    hw2_original: 25.99,
-    signature_package: 35.00,
+    hw2_signature_package: 35.00,
 };
 
-
-export function HW2PreorderPopup({ book, children }: { book: any, children: React.ReactNode }) {
+export function HW2PreorderPopup({ book, children }: { book: Product, children: React.ReactNode }) {
   const { toast } = useToast();
   const [timeLeft, setTimeLeft] = useState(COUNTDOWN_SECONDS);
-  
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const [state, formAction] = useActionState(createOrderAction, { success: false, error: null });
+
   const {
     register,
     handleSubmit,
     control,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { errors },
+    reset
   } = useForm<PreorderFormValues>({
     resolver: zodResolver(preorderSchema),
     defaultValues: {
@@ -67,43 +72,75 @@ export function HW2PreorderPopup({ book, children }: { book: any, children: Reac
   const watchFields = watch();
   
   useEffect(() => {
-    if (timeLeft > 0) {
+    if (timeLeft > 0 && isDialogOpen) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timer);
     }
-  }, [timeLeft]);
+  }, [timeLeft, isDialogOpen]);
   
+  useEffect(() => {
+      if (state.success) {
+        toast({
+            title: "Herzlichen Glückwunsch (oder Beileid?)",
+            description: "Ihre unverbindliche, aber moralisch verpflichtende Bestellung wurde registriert.",
+        });
+        reset();
+        setIsDialogOpen(false);
+      }
+      if (state.error) {
+        toast({
+            variant: "destructive",
+            title: "Fehler",
+            description: state.error
+        });
+      }
+  }, [state, toast, reset]);
+
+
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
 
   const { totalPrice, totalDiscount, originalTotalPrice } = useMemo(() => {
-    const signaturePrice = bookPrices.signature_package;
-    const bookPrice = bookPrices.hw2_preorder;
-    const originalBookPrice = bookPrices.hw2_original;
+    const signaturePrice = bookPrices.hw2_signature_package;
+    const bookPrice = book.preorderPrice || book.price || 0;
+    const originalBookPrice = book.price || 0;
     
     const price = signaturePrice + bookPrice;
     const originalPrice = signaturePrice + originalBookPrice;
     const discount = originalPrice - price;
 
     return { totalPrice: price, totalDiscount: discount, originalTotalPrice: originalPrice };
-  }, []);
+  }, [book]);
 
-  const onSubmit = async (data: PreorderFormValues) => {
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    console.log("Bestelldaten:", data);
-    toast({
-        title: "Herzlichen Glückwunsch (oder Beileid?)",
-        description: "Ihre unverbindliche, aber moralisch verpflichtende Bestellung wurde registriert.",
-    });
+  const onFormSubmit = (data: PreorderFormValues) => {
+    const orderPayload = {
+      ...data,
+      orderType: 'HW2 Preorder',
+      items: [{
+          id: book.id,
+          title: book.title,
+          type: 'Buch',
+          price: book.preorderPrice,
+          signature: data.hasSignature,
+          dedication: data.hasDedication ? (data.provideDedication ? data.customDedication : 'Standard') : null,
+      }],
+      totalPrice,
+      timestamp: new Date().toISOString(),
+    };
+    const formData = new FormData();
+    formData.append("payload", JSON.stringify(orderPayload));
+    formAction(formData);
   };
+  
+  const isSubmitting = (state as any)?.pending;
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
             {children}
         </DialogTrigger>
         <DialogContent className="max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onFormSubmit)}>
             <DialogHeader>
                 <DialogTitle className="font-headline text-3xl text-center">
                     Ihre EXKLUSIVE Vorbesteller-Chance!
@@ -223,26 +260,26 @@ export function HW2PreorderPopup({ book, children }: { book: any, children: Reac
                     <div className="space-y-1">
                         <div className="flex justify-between">
                             <span>Originale Signatur und Widmung der Autoren</span>
-                             <span>{bookPrices.signature_package.toFixed(2)} €</span>
+                             <span>{bookPrices.hw2_signature_package.toFixed(2)} €</span>
                         </div>
                     </div>
                     <Separator/>
                     <div className="space-y-1">
                         <div className="flex justify-between">
                             <span>{book.title}</span>
-                            <span className="line-through text-muted-foreground">{bookPrices.hw2_original.toFixed(2)} €</span>
+                            <span className="line-through text-muted-foreground">{book.price.toFixed(2)} €</span>
                         </div>
                         <div className="flex justify-between text-destructive">
-                            <span>Mengenbegrenzter Rabatt (31%)</span>
-                            <span>-{(bookPrices.hw2_original - bookPrices.hw2_preorder).toFixed(2)} €</span>
+                            <span>Mengenbegrenzter Rabatt ({Math.round((1 - (book.preorderPrice || 0) / (book.price || 1)) * 100)}%)</span>
+                            <span>-{(book.price - (book.preorderPrice || 0)).toFixed(2)} €</span>
                         </div>
                         <div className="flex justify-between font-medium">
                             <span>Zwischensumme Buch</span>
-                            <span>{bookPrices.hw2_preorder.toFixed(2)} €</span>
+                            <span>{(book.preorderPrice || 0).toFixed(2)} €</span>
                         </div>
                     </div>
                     <Separator />
-                    <div className="space-y-1">
+                     <div className="space-y-1">
                          <div className="flex justify-between items-baseline">
                             <span className="text-destructive font-bold">Totale Ersparnis:</span>
                             <div className="flex items-baseline gap-2 font-mono">

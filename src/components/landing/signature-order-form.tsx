@@ -1,12 +1,13 @@
 
+
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { DialogContent, DialogHeader, DialogTitle, DialogDescription, Dialog } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, CheckCircle, FileText, Sparkles } from "lucide-react";
 import { Input } from "../ui/input";
@@ -16,6 +17,9 @@ import { Checkbox } from "../ui/checkbox";
 import { Textarea } from "../ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
+import { Product, getProducts } from "@/lib/firestore";
+import { useActionState } from "react";
+import { createOrderAction } from "@/app/actions";
 
 const signatureSchema = z.object({
   hw1_hasSignature: z.boolean().default(true),
@@ -41,9 +45,6 @@ const signatureSchema = z.object({
 type SignatureFormValues = z.infer<typeof signatureSchema>;
 
 const bookPrices = {
-    hw1: 10.99,
-    hw2_preorder: 17.99,
-    hw2_original: 25.99,
     logistics_single: 7.99,
     logistics_bundle: 12.99,
     hw1_signature: 50.00,
@@ -53,15 +54,36 @@ const bookPrices = {
 };
 
 
-export function SignatureOrderForm({ book }: { book: any }) {
+export function SignatureOrderForm({ book }: { book: Product, isHW2Preorder?: boolean }) {
   const { toast } = useToast();
+  const [products, setProducts] = useState<{ [key: string]: Product }>({});
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const [state, formAction] = useActionState(createOrderAction, { success: false, error: null });
   
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const fetchedProducts = await getProducts();
+        const productsById = fetchedProducts.reduce((acc, product) => {
+            acc[product.id] = product;
+            return acc;
+        }, {} as { [key: string]: Product });
+        setProducts(productsById);
+      } catch (error) {
+        console.error("Fehler beim Laden der Produkte:", error);
+      }
+    }
+    fetchProducts();
+  }, []);
+
   const {
     register,
     handleSubmit,
     control,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { errors },
+    reset,
   } = useForm<SignatureFormValues>({
     resolver: zodResolver(signatureSchema),
     defaultValues: {
@@ -71,13 +93,35 @@ export function SignatureOrderForm({ book }: { book: any }) {
   });
 
   const watchFields = watch();
+
+   useEffect(() => {
+      if (state.success) {
+        toast({
+            title: "Herzlichen Glückwunsch (oder Beileid?)",
+            description: "Ihre unverbindliche, aber moralisch verpflichtende Bestellung wurde registriert.",
+        });
+        reset();
+        setIsDialogOpen(false);
+      }
+      if (state.error) {
+        toast({
+            variant: "destructive",
+            title: "Fehler",
+            description: state.error
+        });
+      }
+  }, [state, toast, reset]);
   
  const { totalPrice, originalPrice, totalDiscount } = useMemo(() => {
     let price = 0;
     let originalTotalPrice = 0;
+    const hw1 = book;
+    const hw2 = products.hw2;
+
+    if (!hw1) return { totalPrice: 0, originalPrice: 0, totalDiscount: 0};
     
     // HW1 Calculation
-    let hw1Price = bookPrices.hw1;
+    let hw1Price = hw1.price || 0;
     let hw1SignaturePrice = 0;
     if (watchFields.hw1_hasSignature) hw1SignaturePrice += bookPrices.hw1_signature;
     if (watchFields.hw1_hasDedication) hw1SignaturePrice += bookPrices.hw1_dedication;
@@ -87,21 +131,18 @@ export function SignatureOrderForm({ book }: { book: any }) {
     originalTotalPrice += baseHw1Cost;
     price += baseHw1Cost;
 
-    if (watchFields.acceptComboDeal) {
-        // Apply 80% discount on HW1 book price
-        const hw1Discount = bookPrices.hw1 * 0.8;
+    if (watchFields.acceptComboDeal && hw2) {
+        const hw1Discount = hw1Price * 0.8;
         price -= hw1Discount;
         
-        // Add HW2 preorder package
-        const hw2PreorderPackagePrice = bookPrices.hw2_preorder + bookPrices.hw2_signature_package;
+        const hw2PreorderPrice = hw2.preorderPrice || hw2.price || 0;
+        const hw2PreorderPackagePrice = hw2PreorderPrice + bookPrices.hw2_signature_package;
         price += hw2PreorderPackagePrice;
 
-        // Add logistics for bundle
         price += bookPrices.logistics_bundle;
-        originalTotalPrice += bookPrices.hw2_original + bookPrices.hw2_signature_package + bookPrices.logistics_bundle;
+        originalTotalPrice += (hw2.price || 0) + bookPrices.hw2_signature_package + bookPrices.logistics_bundle;
 
     } else {
-        // Add logistics for single book
         price += bookPrices.logistics_single;
         originalTotalPrice += bookPrices.logistics_single;
     }
@@ -110,21 +151,63 @@ export function SignatureOrderForm({ book }: { book: any }) {
 
     return { totalPrice: price, originalPrice: originalTotalPrice, totalDiscount: finalDiscount };
 
-  }, [watchFields]);
+  }, [watchFields, book, products.hw2]);
 
+  const onFormSubmit = (data: SignatureFormValues) => {
+    const hw1 = book;
+    const hw2 = products.hw2;
+    const items = [];
+    if (hw1) {
+        items.push({
+            id: hw1.id,
+            title: hw1.title,
+            type: 'Buch',
+            price: hw1.price,
+            signature: data.hw1_hasSignature,
+            dedication: data.hw1_hasDedication ? (data.hw1_provideDedication ? data.hw1_customDedication : 'Standard') : null,
+        });
+    }
+    if (watchFields.acceptComboDeal && hw2) {
+        items.push({
+            id: hw2.id,
+            title: hw2.title,
+            type: 'Buch (Vorbestellung)',
+            price: hw2.preorderPrice,
+            signature: true,
+            dedication: data.hw2_hasDedication ? (data.hw2_provideDedication ? data.hw2_customDedication : 'Standard') : null,
+        })
+    }
 
-  const onSubmit = async (data: SignatureFormValues) => {
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    console.log("Bestelldaten:", data);
-    toast({
-        title: "Herzlichen Glückwunsch (oder Beileid?)",
-        description: "Ihre unverbindliche, aber moralisch verpflichtende Bestellung wurde registriert.",
-    });
+    const orderPayload = {
+      ...data,
+      orderType: watchFields.acceptComboDeal ? 'HW1 + HW2 Bundle' : 'HW1 Signature Edition',
+      items,
+      totalPrice,
+      totalDiscount,
+      originalPrice,
+      timestamp: new Date().toISOString(),
+    };
+
+    const formData = new FormData();
+    formData.append("payload", JSON.stringify(orderPayload));
+    formAction(formData);
   };
+  
+  const isSubmitting = (state as any)?.pending;
+
+  if (isHW2Preorder) {
+    return (
+        <DialogContent>
+            <HW2PreorderPopup book={book}>
+                <></>
+            </HW2PreorderPopup>
+        </DialogContent>
+    );
+  }
 
   return (
     <DialogContent className="max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onFormSubmit)}>
         <DialogHeader>
             <DialogTitle className="font-headline text-3xl text-center">
                 Sonderbestellung: {book.title}
@@ -188,11 +271,12 @@ export function SignatureOrderForm({ book }: { book: any }) {
                 )}
             </div>
             
+            {products.hw2 && (
             <Alert className={cn("border-2 border-primary text-primary transition-all duration-500", watchFields.acceptComboDeal && "bg-primary/10")}>
                 <Sparkles className="h-4 w-4" />
                 <AlertTitle className="font-headline text-xl">KRISE? Sparen Sie jetzt!</AlertTitle>
                 <AlertDescription className="text-primary/90 text-base">
-                    Aktivieren Sie dieses Angebot und sparen Sie <span className="font-bold">80% auf "Hallo Welt"</span>, indem Sie "Hallo Welt 2" (inkl. Signatur) für nur {(bookPrices.hw2_signature_package + bookPrices.hw2_preorder).toFixed(2)}€ VORBESTELLEN!
+                    Aktivieren Sie dieses Angebot und sparen Sie <span className="font-bold">80% auf "Hallo Welt"</span>, indem Sie "Hallo Welt 2" (inkl. Signatur) für nur {(bookPrices.hw2_signature_package + (products.hw2.preorderPrice || 0)).toFixed(2)}€ VORBESTELLEN!
                 </AlertDescription>
                  <div className="flex items-center space-x-3 p-2 rounded-md mt-4">
                     <Controller
@@ -205,6 +289,7 @@ export function SignatureOrderForm({ book }: { book: any }) {
                     </Label>
                 </div>
             </Alert>
+            )}
             
             {watchFields.acceptComboDeal && (
                  <div className="space-y-4 p-4 border rounded-lg bg-muted/50 animate-in fade-in slide-in-from-top-5 duration-500">
@@ -307,28 +392,28 @@ export function SignatureOrderForm({ book }: { book: any }) {
             <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                     <span>{book.title}</span>
-                    <span>{bookPrices.hw1.toFixed(2)} €</span>
+                    <span>{(book.price || 0).toFixed(2)} €</span>
                 </div>
                 {watchFields.hw1_hasSignature && <div className="flex justify-between"><span>Originalsignatur (HW1)</span><span>{bookPrices.hw1_signature.toFixed(2)} €</span></div>}
                 {watchFields.hw1_hasDedication && <div className="flex justify-between"><span>Persönliche Widmung (HW1)</span><span>{bookPrices.hw1_dedication.toFixed(2)} €</span></div>}
                 {watchFields.hw1_hasDedication && watchFields.hw1_provideDedication && <div className="flex justify-between"><span>Wunsch-Text (HW1)</span><span>{bookPrices.hw1_custom_dedication.toFixed(2)} €</span></div>}
                 
-                {watchFields.acceptComboDeal ? (
+                {watchFields.acceptComboDeal && products.hw2 ? (
                     <>
                         <div className="flex justify-between text-destructive">
                             <span>Rabatt (80% auf HW1)</span>
-                            <span>-{(bookPrices.hw1 * 0.8).toFixed(2)} €</span>
+                            <span>-{( (book.price || 0) * 0.8).toFixed(2)} €</span>
                         </div>
                         <Separator className="my-2"/>
                          <div className="flex justify-between font-semibold">
                             <span>"Hallo Welt 2" Vorbesteller-Paket</span>
-                             <span>{(bookPrices.hw2_preorder + bookPrices.hw2_signature_package).toFixed(2)} €</span>
+                             <span>{((products.hw2.preorderPrice || 0) + bookPrices.hw2_signature_package).toFixed(2)} €</span>
                         </div>
                          <div className="flex justify-between pl-4 text-xs">
-                            <span>(Buch: {bookPrices.hw2_preorder.toFixed(2)}€, Signatur-Paket: {bookPrices.hw2_signature_package.toFixed(2)}€)</span>
+                            <span>(Buch: {(products.hw2.preorderPrice || 0).toFixed(2)}€, Signatur-Paket: {bookPrices.hw2_signature_package.toFixed(2)}€)</span>
                         </div>
                          <div className="flex justify-between pl-4 text-xs text-destructive">
-                            <span>(Ersparnis Buch: {(bookPrices.hw2_original - bookPrices.hw2_preorder).toFixed(2)}€)</span>
+                            <span>(Ersparnis Buch: {((products.hw2.price || 0) - (products.hw2.preorderPrice || 0)).toFixed(2)}€)</span>
                         </div>
                         <Separator className="my-2"/>
                         <div className="flex justify-between">
@@ -387,4 +472,82 @@ export function SignatureOrderForm({ book }: { book: any }) {
   );
 }
 
+// Separate component for HW2 Preorder to keep logic clean
+function HW2PreorderPopup({ book }: { book: Product }) {
+    const { toast } = useToast();
+    const [state, formAction] = useActionState(createOrderAction, { success: false, error: null });
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const {
+        register,
+        handleSubmit,
+        control,
+        watch,
+        formState: { errors },
+        reset
+    } = useForm<SignatureFormValues>({
+        resolver: zodResolver(signatureSchema),
+        defaultValues: { hasSignature: true }
+    });
+
+    const watchFields = watch();
+
+    useEffect(() => {
+        if (state.success) {
+            toast({
+                title: "Bestellung erfolgreich!",
+                description: "Ihre Vorbestellung wurde registriert.",
+            });
+            reset();
+            setIsDialogOpen(false);
+        }
+        if (state.error) {
+            toast({
+                variant: "destructive",
+                title: "Fehler",
+                description: state.error
+            });
+        }
+    }, [state, toast, reset]);
+    
+    const { totalPrice } = useMemo(() => {
+        let price = book.preorderPrice || book.price || 0;
+        price += bookPrices.hw2_signature_package;
+        return { totalPrice: price };
+    }, [book]);
+
+    const onFormSubmit = (data: SignatureFormValues) => {
+        const orderPayload = {
+            ...data,
+            orderType: 'HW2 Signature Preorder',
+            items: [{
+                id: book.id,
+                title: book.title,
+                type: 'Buch (Vorbestellung)',
+                price: book.preorderPrice,
+                signature: true,
+                dedication: data.hw2_hasDedication ? (data.hw2_provideDedication ? data.hw2_customDedication : 'Standard') : null,
+            }],
+            totalPrice,
+            timestamp: new Date().toISOString(),
+        };
+
+        const formData = new FormData();
+        formData.append("payload", JSON.stringify(orderPayload));
+        formAction(formData);
+    };
+
+    const isSubmitting = (state as any)?.pending;
+
+    return (
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            {/* The trigger is now external, passed as children */}
+            <DialogContent className="max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+                <form onSubmit={handleSubmit(onFormSubmit)}>
+                    {/* Form content from the original hw2-preorder-popup */}
+                </form>
+            </DialogContent>
+        </Dialog>
+    )
+}
     

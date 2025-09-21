@@ -10,6 +10,7 @@ import { generateReportCard } from "@/ai/flows/generate-report-card-flow";
 import { generateBureaucracyResponse } from "@/ai/flows/generate-bureaucracy-flow";
 import { generateDbExcuse } from "@/ai/flows/generate-db-excuse-flow";
 import { generateSatireType } from "@/ai/flows/generate-satire-type-flow";
+import { addOrder } from "@/lib/firestore";
 
 const testimonialSchema = z.object({
   topic: z.string().min(2, { message: "Das Thema muss mindestens 2 Zeichen lang sein." }).max(50),
@@ -214,4 +215,30 @@ export async function createSatireTypeAction(
         console.error(e);
         return { result: null, error: "Analyse fehlgeschlagen. Der Psychoanalytiker ist gerade in der Kaffeepause." };
     }
+}
+
+const OrderSchema = z.object({
+  payload: z.string(),
+});
+
+export async function createOrderAction(
+  prevState: any,
+  formData: FormData
+) {
+  const validatedFields = OrderSchema.safeParse({
+    payload: formData.get("payload"),
+  });
+
+  if (!validatedFields.success) {
+    return { success: false, error: "Ungültige Bestelldaten." };
+  }
+
+  try {
+    const orderData = JSON.parse(validatedFields.data.payload);
+    await addOrder(orderData);
+    return { success: true, error: null };
+  } catch (e) {
+    console.error(e);
+    return { success: false, error: "Bestellung konnte nicht gespeichert werden. Bitte versuchen Sie es erneut." };
+  }
 }

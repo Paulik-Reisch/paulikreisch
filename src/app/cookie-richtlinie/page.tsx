@@ -30,18 +30,18 @@ export default function CookieRichtliniePage() {
               </p>
               <ul className="list-disc list-inside text-muted-foreground space-y-2">
                 <li>
-                  <strong>Technisch notwendige Cookies:</strong> Wir setzen ein Cookie, um Ihre Zustimmung (oder Ablehnung) zu unserem Cookie-Banner zu speichern. Ohne dieses Cookie müssten wir Sie auf jeder einzelnen Seite erneut fragen, was selbst für unsere Verhältnisse zu sadistisch wäre. Dieses Cookie heißt `cookie_consent` und speichert nur, ob Sie zugestimmt haben oder nicht. Das war's.
+                  <strong>Technisch notwendige Cookies:</strong> Wir setzen ein Cookie, um Ihre Zustimmung (oder Ablehnung) zu unserem Cookie-Banner zu speichern. Ohne dieses Cookie müssten wir Sie auf jeder einzelnen Seite erneut fragen, was selbst für unsere Verhältnisse zu sadistisch wäre. Dieses Cookie heißt "cookie_consent" und speichert nur, ob Sie zugestimmt haben oder nicht.
                 </li>
               </ul>
               <p className="text-muted-foreground">
-                Wir verwenden keine Analyse-Cookies. Wir verwenden keine Marketing-Cookies. Wir tracken Sie nicht. Wir wissen nicht, wer Sie sind, und ehrlich gesagt, bei dem Humor, den Sie anscheinend haben, ist das vielleicht auch besser so.
+                Weder verwenden wir Analyse- oder Marketing-Cookies, noch tracken wir Sie. Wir wissen nicht, wer Sie sind, und ehrlich gesagt ist das vielleicht auch besser.
               </p>
             </div>
 
             <div className="space-y-4">
               <h2 className="text-2xl font-bold font-headline">Wie Sie Cookies kontrollieren können</h2>
               <p className="text-muted-foreground">
-                Sie können Cookies nach Belieben steuern und/oder löschen. Details finden Sie unter aboutcookies.org. Sie können alle Cookies löschen, die sich bereits auf Ihrem Computer befinden, und Sie können die meisten Browser so einstellen, dass die Ablage von Cookies verhindert wird. Wenn Sie dies tun, müssen Sie jedoch möglicherweise einige Einstellungen bei jedem Besuch einer Seite manuell anpassen und die Beeinträchtigung einiger Funktionen in Kauf nehmen.
+                Sie können Cookies nach Belieben steuern und/oder löschen. Details finden Sie unter aboutcookies.org. Sie können alle Cookies löschen, die sich bereits auf Ihrem Computer befinden, und Sie können die meisten Browser so einstellen, dass die Ablage von Cookies verhindert wird. Wenn Sie dies tun, müssen Sie jedoch möglicherweise einige Einstellungen beim Besuch einer Seite manuell anpassen und die Beeinträchtigung einiger Funktionen in Kauf nehmen.
               </p>
               <p className="text-muted-foreground">
                 Für weitere Fragen, die Ihr Leben nicht einfacher machen, lesen Sie unsere <Link href="/datenschutz" className="underline">Datenschutzerklärung</Link>.

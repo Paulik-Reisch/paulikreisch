@@ -19,7 +19,7 @@ export default function DatenschutzPage() {
             <div className="space-y-4">
               <h2 className="text-2xl font-bold font-headline">1. Verantwortliche Stelle</h2>
               <p className="text-muted-foreground">
-                Verantwortlich für die Datenerhebung auf dieser Webseite sind:
+                Verantwortlich für die Datenerhebung auf dieser Website sind:
                 <br />
                 Philipp Paulik und Maximilian Reisch
                 <br />
@@ -37,7 +37,7 @@ export default function DatenschutzPage() {
               <h2 className="text-2xl font-bold font-headline">2. Welche Daten wir sammeln (und warum)</h2>
               <h3 className="text-xl font-bold">Server-Log-Dateien</h3>
               <p className="text-muted-foreground">
-                Unser Hoster (also der Computer, auf dem diese Webseite wohnt) sammelt automatisch Informationen, die Ihr Browser an uns übermittelt. Das sind: Browsertyp und -version, verwendetes Betriebssystem, Referrer URL (die Seite, von der Sie kamen), Hostname des zugreifenden Rechners (Ihre IP-Adresse, aber anonymisiert) und die Uhrzeit der Serveranfrage. Diese Daten sind technisch notwendig, um die Seite anzuzeigen und um sicherzustellen, dass keine Roboter versuchen, unsere Witze zu klauen. Eine Zusammenführung dieser Daten mit anderen Datenquellen wird nicht vorgenommen.
+                Unser Hoster (also der Computer, auf dem diese Website wohnt) sammelt automatisch Informationen, die Ihr Browser an uns übermittelt. Das sind: Browsertyp und -version, verwendetes Betriebssystem, Referrer URL (die Seite, von der Sie kamen), Hostname des zugreifenden Rechners (Ihre IP-Adresse, aber anonymisiert) und die Uhrzeit der Serveranfrage. Diese Daten sind technisch notwendig, um die Seite anzuzeigen und um sicherzustellen, dass keine Roboter versuchen, unsere Witze zu klauen. Eine Zusammenführung dieser Daten mit anderen Datenquellen wird nicht vorgenommen.
               </p>
 
               <h3 className="text-xl font-bold">Cookies</h3>
