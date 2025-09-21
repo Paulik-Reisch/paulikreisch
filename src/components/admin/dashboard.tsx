@@ -42,6 +42,7 @@ import {
   DialogTrigger,
   DialogFooter,
   DialogClose,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   AlertDialog,
@@ -55,6 +56,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import Link from "next/link";
+import { CodeEditor } from "./code-editor";
 
 function LeadsTable() {
     const [orders, setOrders] = useState<Order[]>([]);
@@ -331,9 +333,9 @@ type AdminLegalPageState = {
 };
 const initialLegalPageState: AdminLegalPageState = { success: false, error: null };
 
-
 function EditLegalPageDialog({ page, onOpenChange, open }: { page: LegalPage; open: boolean; onOpenChange: (open: boolean) => void; }) {
     const [updateState, updateFormAction] = useActionState(updateLegalPageAction, initialLegalPageState);
+    const [content, setContent] = useState(page.content);
     const { toast } = useToast();
 
     useEffect(() => {
@@ -346,29 +348,27 @@ function EditLegalPageDialog({ page, onOpenChange, open }: { page: LegalPage; op
         }
     }, [updateState, toast, onOpenChange]);
 
+    const handleFormSubmit = (formData: FormData) => {
+        formData.set('content', content); // Ensure latest content is in form data
+        updateFormAction(formData);
+    };
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-4xl">
-                <form action={updateFormAction}>
+            <DialogContent className="sm:max-w-4xl max-h-[90vh] flex flex-col">
+                <form action={handleFormSubmit}>
                     <input type="hidden" name="pageId" value={page.id} />
                     <DialogHeader>
                         <DialogTitle>Dynamische LP bearbeiten: /{page.id}</DialogTitle>
                     </DialogHeader>
-                    <div className="grid gap-4 py-4">
+                    <div className="grid gap-4 py-4 flex-grow min-h-0">
                         <div>
                             <Label htmlFor="title">Seitentitel</Label>
                             <Input id="title" name="title" defaultValue={page.title} required />
                         </div>
-                        <div>
-                            <Label htmlFor="content">Inhalt (HTML & Tailwind CSS erlaubt)</Label>
-                            <Textarea
-                                id="content"
-                                name="content"
-                                defaultValue={page.content}
-                                required
-                                className="h-96 font-mono"
-                                placeholder="<h1>Titel</h1><p class='text-red-500'>Inhalt...</p>"
-                            />
+                        <div className="flex flex-col min-h-0 flex-grow">
+                            <Label htmlFor="content">Inhalt (HTML & Tailwind CSS)</Label>
+                            <CodeEditor value={content} onChange={setContent} />
                         </div>
                     </div>
                     <DialogFooter>
@@ -381,7 +381,6 @@ function EditLegalPageDialog({ page, onOpenChange, open }: { page: LegalPage; op
     );
 }
 
-
 function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
     const [pages, setPages] = useState<LegalPage[]>(initialPages);
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -390,6 +389,8 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
 
     const [addState, addFormAction] = useActionState(addLegalPageAction, initialLegalPageState);
     const [deleteState, deleteFormAction] = useActionState(deleteLegalPageAction, initialLegalPageState);
+    
+    const [newContent, setNewContent] = useState("<h1 class=\"text-4xl font-bold\">Neuer Seitentitel</h1>\n<p class=\"mt-4\">Dies ist der Inhalt Ihrer neuen Seite.</p>");
 
     useEffect(() => {
         setPages(initialPages);
@@ -399,6 +400,7 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
         if (addState.success) {
             toast({ title: "Erfolg", description: addState.message });
             setIsAddDialogOpen(false);
+            setNewContent("<h1 class=\"text-4xl font-bold\">Neuer Seitentitel</h1>\n<p class=\"mt-4\">Dies ist der Inhalt Ihrer neuen Seite.</p>");
         }
         if (addState.error) {
             toast({ variant: "destructive", title: "Fehler", description: addState.error });
@@ -413,6 +415,11 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
             toast({ variant: "destructive", title: "Fehler", description: deleteState.error });
         }
     }, [deleteState, toast]);
+    
+    const handleAddFormSubmit = (formData: FormData) => {
+        formData.set('content', newContent);
+        addFormAction(formData);
+    }
 
     return (
         <div>
@@ -421,15 +428,27 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
                     <DialogTrigger asChild>
                         <Button variant="outline"><PlusCircle className="mr-2 h-4 w-4" /> Neue Dynamische LP</Button>
                     </DialogTrigger>
-                    <DialogContent>
-                        <form action={addFormAction}>
+                    <DialogContent className="sm:max-w-4xl max-h-[90vh] flex flex-col">
+                        <form action={handleAddFormSubmit}>
                             <DialogHeader>
                                 <DialogTitle>Neue Dynamische LP hinzufügen</DialogTitle>
+                                <DialogDescription>Erstellen Sie hier eine neue Seite mit HTML und Tailwind CSS.</DialogDescription>
                             </DialogHeader>
-                            <div className="grid gap-4 py-4">
-                                <Input name="pageId" placeholder="Seiten-ID (slug, z.B. 'neue-seite')" required />
-                                <Input name="title" placeholder="Seitentitel" required />
-                                <Textarea name="content" placeholder="Inhalt (HTML & Tailwind CSS erlaubt)" required className="h-48 font-mono" />
+                            <div className="grid gap-4 py-4 flex-grow min-h-0">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <Label htmlFor="pageId">Seiten-ID (slug)</Label>
+                                        <Input id="pageId" name="pageId" placeholder="z.B. 'neue-seite'" required />
+                                    </div>
+                                     <div>
+                                        <Label htmlFor="title">Seitentitel</Label>
+                                        <Input id="title" name="title" placeholder="Seitentitel für Browser-Tab" required />
+                                    </div>
+                                </div>
+                                <div className="flex flex-col min-h-0 flex-grow">
+                                    <Label htmlFor="content">Inhalt (HTML & Tailwind CSS)</Label>
+                                    <CodeEditor value={newContent} onChange={setNewContent} />
+                                </div>
                             </div>
                             <DialogFooter>
                                 <DialogClose asChild><Button type="button" variant="secondary">Abbrechen</Button></DialogClose>
