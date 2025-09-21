@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { ArrowRight, School, Coffee, Utensils, Bus, Dumbbell, AlarmClock, Biohazard } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 
 const topics = [
@@ -64,27 +64,29 @@ export function TopicLPs() {
           </div>
         </div>
         
-        <div className="mx-auto grid max-w-5xl items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-            {topics.map((topic, index) => (
-                <Card key={topic.link} className="flex flex-col transform transition-transform duration-300 hover:scale-105 hover:shadow-xl" style={{ transform: `rotate(${(index % 2 === 0 ? -1 : 1) * (1 + index * 0.2)}deg)` }}>
-                    <CardHeader className="items-center text-center">
-                        <div className="p-4 bg-primary/10 rounded-full mb-4">
-                            <topic.icon className="h-8 w-8 text-primary" />
-                        </div>
-                        <CardTitle className="font-headline text-xl">{topic.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="text-center flex-grow">
-                        <CardDescription>{topic.description}</CardDescription>
-                    </CardContent>
-                    <CardFooter className="justify-center">
-                         <Link href={topic.link}>
-                            <Button variant="outline">
-                                Mehr erfahren <ArrowRight className="ml-2 h-4 w-4" />
-                            </Button>
-                        </Link>
-                    </CardFooter>
-                </Card>
-            ))}
+        <div className="mx-auto max-w-3xl">
+            <Accordion type="single" collapsible className="w-full">
+                {topics.map((topic) => (
+                    <AccordionItem value={topic.title} key={topic.title}>
+                        <AccordionTrigger className="text-xl font-headline hover:no-underline">
+                            <div className="flex items-center gap-4">
+                                <topic.icon className="h-6 w-6 text-primary" />
+                                {topic.title}
+                            </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="pt-2">
+                           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                                <p className="text-muted-foreground text-base flex-grow">{topic.description}</p>
+                                <Link href={topic.link} className="shrink-0">
+                                    <Button variant="outline">
+                                        Mehr erfahren <ArrowRight className="ml-2 h-4 w-4" />
+                                    </Button>
+                                </Link>
+                            </div>
+                        </AccordionContent>
+                    </AccordionItem>
+                ))}
+            </Accordion>
         </div>
       </div>
     </section>
