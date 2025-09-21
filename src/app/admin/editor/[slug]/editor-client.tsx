@@ -2,10 +2,9 @@
 "use client";
 
 import { useState, useEffect, useActionState, useTransition } from "react";
-import { useFormStatus } from "react-dom";
 import Link from "next/link";
 import { LegalPage, PageComponent } from "@/lib/firestore";
-import { updateLegalPageAction } from "@/app/admin/actions";
+import { updateLegalPageAction, correctHtmlAction } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,6 +22,9 @@ import {
   Trash2,
   ArrowUp,
   ArrowDown,
+  Eye,
+  Code,
+  Sparkles
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -39,7 +41,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-
+import { CodeEditor } from "@/components/admin/code-editor";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 function generatePageHtml(components: PageComponent[]): string {
     const componentHtml = components.map(component => {
@@ -47,9 +60,8 @@ function generatePageHtml(components: PageComponent[]): string {
         switch(component.type) {
             case 'heading':
                 const Tag = props.level || 'h1';
-                // Provide default styling for headings, which can be overridden by className
                 const defaultHeadingClasses: {[key:string]: string} = {
-                    h1: "text-4xl font-bold tracking-tighter",
+                    h1: "text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl",
                     h2: "text-3xl font-bold tracking-tight",
                     h3: "text-2xl font-semibold",
                     h4: "text-xl font-semibold",
@@ -57,11 +69,10 @@ function generatePageHtml(components: PageComponent[]): string {
                 const classes = props.className || defaultHeadingClasses[Tag] || '';
                 return `<${Tag} class="${classes}">${props.text || ''}</${Tag}>`;
             case 'text':
-                // Provide default styling for paragraphs
                 const textClasses = props.className || 'leading-relaxed text-muted-foreground';
                 return `<p class="${textClasses}">${(props.text || '').replace(/\n/g, '<br />')}</p>`;
             case 'button':
-                return `<div class="my-6 text-center"><a href="${props.href || '#'}" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 shadow-md transform active:scale-95 border h-11 px-8 bg-primary text-primary-foreground hover:bg-primary/90">${props.text || 'Klick'}</a></div>`;
+                 return `<div class="my-6 text-center"><a href="${props.href || '#'}" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 shadow-md transform active:scale-95 border h-11 px-8 bg-primary text-primary-foreground hover:bg-primary/90">${props.text || 'Klick'}</a></div>`;
             case 'image':
                  return `<img src="${props.src || 'https://placehold.co/800x450'}" alt="${props.alt || ''}" style="max-width: ${props.width || '100%'};" class="h-auto rounded-lg shadow-md my-6 mx-auto block" />`;
             case 'spacer':
@@ -184,7 +195,7 @@ function PageComponentEditor({ component, onUpdate, onDelete, onMove }: { compon
                     <span className="capitalize flex-grow text-left">{component.type}</span>
                     <Button type="button" size="icon" variant="ghost" className="h-6 w-6" onClick={(e) => { e.stopPropagation(); onMove(component.id, 'up'); }}><ArrowUp className="h-4 w-4"/></Button>
                     <Button type="button" size="icon" variant="ghost" className="h-6 w-6" onClick={(e) => { e.stopPropagation(); onMove(component.id, 'down'); }}><ArrowDown className="h-4 w-4"/></Button>
-                    <Button type="button" size="icon" variant="ghost" className="h-6 w-6 text-destructive hover:text-destructive" onClick={(e) => { e.stopPropagation(); onDelete(component.id); }}><Trash2 className="h-4 w-4"/></Button>
+                    <Button type="button" size="icon" variant="destructive" className="h-6 w-6" onClick={(e) => { e.stopPropagation(); onDelete(component.id); }}><Trash2 className="h-4 w-4"/></Button>
                 </div>
             </AccordionTrigger>
             <AccordionContent className="p-4 border border-t-0 rounded-b-md">
@@ -197,38 +208,77 @@ function PageComponentEditor({ component, onUpdate, onDelete, onMove }: { compon
 export function EditorClient({ page }: { page: LegalPage }) {
   const [title, setTitle] = useState(page.title);
   const [components, setComponents] = useState<PageComponent[]>(page.components || []);
-  const [generatedHtml, setGeneratedHtml] = useState('');
+  const [generatedHtml, setGeneratedHtml] = useState(page.content || '');
+  const [hasManuallyEditedHtml, setHasManuallyEditedHtml] = useState(false);
   const [formattedDate, setFormattedDate] = useState<string | null>(null);
 
   const [updateState, updateFormAction] = useActionState(updateLegalPageAction, initialLegalPageState);
+  const [correctState, correctFormAction] = useActionState(correctHtmlAction, { correctedHtml: undefined, error: undefined });
+
   const { toast } = useToast();
-  const [isPending, startTransition] = useTransition();
+  const [isSaving, startSavingTransition] = useTransition();
+  const [isCorrecting, startCorrectingTransition] = useTransition();
 
   useEffect(() => {
     // This effect runs only on the client, after hydration
     setFormattedDate(new Date(page.lastUpdated).toLocaleString('de-DE'));
-  }, [page.lastUpdated]);
+    
+    // Initial HTML generation
+    if (page.components && page.components.length > 0) {
+        setGeneratedHtml(generatePageHtml(page.components));
+    }
+  }, [page.lastUpdated, page.components]);
 
   useEffect(() => {
-      setGeneratedHtml(generatePageHtml(components));
-  }, [components]);
+      if (!hasManuallyEditedHtml) {
+        setGeneratedHtml(generatePageHtml(components));
+      }
+  }, [components, hasManuallyEditedHtml]);
 
   useEffect(() => {
     if (updateState.success) {
       toast({ title: "Erfolg", description: updateState.message });
+      setHasManuallyEditedHtml(false);
     }
     if (updateState.error) {
       toast({ variant: "destructive", title: "Fehler", description: updateState.error });
     }
   }, [updateState, toast]);
 
+   useEffect(() => {
+    if (correctState.correctedHtml) {
+        setGeneratedHtml(correctState.correctedHtml);
+        setHasManuallyEditedHtml(true);
+        toast({ title: "KI-Korrektur", description: "Der HTML-Code wurde von der KI optimiert." });
+    }
+    if (correctState.error) {
+        toast({ variant: "destructive", title: "Fehler", description: correctState.error });
+    }
+  }, [correctState, toast]);
+
+
   const handleFormSubmit = (formData: FormData) => {
-    startTransition(() => {
+    startSavingTransition(() => {
         formData.set('pageId', page.id);
         formData.set('title', title);
-        formData.set('components', JSON.stringify(components));
-        formData.set('content', generatePageHtml(components)); // always regenerate on save
+        
+        if(hasManuallyEditedHtml) {
+            formData.set('content', generatedHtml);
+            formData.set('components', '[]'); // Clear components if HTML was manually edited
+        } else {
+            const freshHtml = generatePageHtml(components);
+            formData.set('content', freshHtml);
+            formData.set('components', JSON.stringify(components));
+        }
         updateFormAction(formData);
+    });
+  };
+
+  const handleCorrectHtml = () => {
+    startCorrectingTransition(() => {
+        const formData = new FormData();
+        formData.set('html', generatedHtml);
+        correctFormAction(formData);
     });
   };
   
@@ -239,14 +289,17 @@ export function EditorClient({ page }: { page: LegalPage }) {
           props: {}
       };
       setComponents(prev => [...prev, newComponent]);
+      setHasManuallyEditedHtml(false);
   };
 
   const updateComponent = (id: string, props: any) => {
       setComponents(prev => prev.map(c => c.id === id ? { ...c, props } : c));
+      setHasManuallyEditedHtml(false);
   };
   
   const deleteComponent = (id: string) => {
       setComponents(prev => prev.filter(c => c.id !== id));
+      setHasManuallyEditedHtml(false);
   };
 
   const moveComponent = (id: string, direction: 'up' | 'down') => {
@@ -260,6 +313,12 @@ export function EditorClient({ page }: { page: LegalPage }) {
       const [movedComponent] = newComponents.splice(index, 1);
       newComponents.splice(newIndex, 0, movedComponent);
       setComponents(newComponents);
+      setHasManuallyEditedHtml(false);
+  }
+
+  const handleHtmlChange = (value: string) => {
+    setHasManuallyEditedHtml(true);
+    setGeneratedHtml(value);
   }
 
   return (
@@ -285,7 +344,12 @@ export function EditorClient({ page }: { page: LegalPage }) {
                 </div>
                 <div>
                     <h3 className="text-sm font-medium mb-2">Komponenten</h3>
-                    <Accordion type="single" collapsible className="w-full space-y-2">
+                     {hasManuallyEditedHtml && (
+                        <div className="p-2 mb-2 text-xs bg-yellow-100 border border-yellow-300 rounded-md text-yellow-800">
+                           HTML wurde manuell bearbeitet. Der Komponenten-Editor ist deaktiviert.
+                        </div>
+                    )}
+                    <Accordion type="single" collapsible className="w-full space-y-2" disabled={hasManuallyEditedHtml}>
                         {components.map((comp) => (
                            <PageComponentEditor 
                                 key={comp.id} 
@@ -307,8 +371,8 @@ export function EditorClient({ page }: { page: LegalPage }) {
                     <Button variant="outline" onClick={() => addComponent('spacer')}><Rows className="mr-2 h-4 w-4"/>Abstand</Button>
                 </div>
                 <form action={handleFormSubmit}>
-                     <Button type="submit" disabled={isPending} className="w-full">
-                        {isPending ? (
+                     <Button type="submit" disabled={isSaving} className="w-full">
+                        {isSaving ? (
                             <>
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                 Wird gespeichert...
@@ -327,8 +391,9 @@ export function EditorClient({ page }: { page: LegalPage }) {
         {/* Main Content */}
         <main className="flex-1 flex flex-col p-4 md:p-6 overflow-y-auto h-full bg-background border rounded-lg">
              <Tabs defaultValue="preview" className="w-full h-full flex flex-col">
-                <TabsList className="grid w-full grid-cols-1">
-                    <TabsTrigger value="preview">Live-Vorschau</TabsTrigger>
+                <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="preview"><Eye className="mr-2 h-4 w-4"/>Live-Vorschau</TabsTrigger>
+                     <TabsTrigger value="code"><Code className="mr-2 h-4 w-4"/>HTML-Code</TabsTrigger>
                 </TabsList>
                 <TabsContent value="preview" className="mt-4 flex-grow bg-gray-100 dark:bg-gray-800 p-4 rounded-md">
                      <iframe
@@ -337,8 +402,40 @@ export function EditorClient({ page }: { page: LegalPage }) {
                         className="w-full h-full border bg-white"
                     />
                 </TabsContent>
+                <TabsContent value="code" className="mt-4 flex-grow flex flex-col min-h-0">
+                    <div className="flex-grow min-h-0">
+                         <CodeEditor 
+                            value={generatedHtml}
+                            onChange={handleHtmlChange}
+                        />
+                    </div>
+                    <div className="pt-2 flex justify-end">
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button variant="outline" size="sm" disabled={isCorrecting}>
+                                {isCorrecting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
+                                KI-Korrektur
+                                </Button>
+                            </AlertDialogTrigger>
+                             <AlertDialogContent>
+                                <AlertDialogHeader>
+                                <AlertDialogTitle>HTML mit KI korrigieren?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    Diese Aktion analysiert den aktuellen HTML-Code und versucht, ihn zu bereinigen und zu verbessern, ohne den Inhalt zu verändern. Bestehende Komponenten-Struktur geht verloren. Fortfahren?
+                                </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+                                <AlertDialogAction onClick={handleCorrectHtml}>Ja, korrigieren</AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                    </div>
+                </TabsContent>
             </Tabs>
         </main>
     </div>
   );
 }
+
+    
