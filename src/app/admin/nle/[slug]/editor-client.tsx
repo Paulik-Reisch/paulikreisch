@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -10,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Save, ArrowLeft, Eye, Code, PlusCircle, Trash2, ArrowUp, ArrowDown, Type, Image as ImageIcon, Link as LinkIcon } from "lucide-react";
+import { Loader2, Save, ArrowLeft, Eye, Code, PlusCircle, Trash2, ArrowUp, ArrowDown, Type, Image as ImageIcon, Link as LinkIcon, AlignLeft, AlignCenter, AlignRight } from "lucide-react";
 import { useFormStatus } from "react-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -18,36 +19,57 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion"
+} from "@/components/ui/accordion";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 
 function generateComponentHTML(component: NewsletterComponent): string {
+    const props = component.props;
+    const styles: React.CSSProperties = {};
+
     switch(component.type) {
         case 'heading':
+            styles.fontFamily = 'Arial, sans-serif';
+            styles.fontSize = props.fontSize || '24px';
+            styles.color = props.color || '#000000';
+            styles.margin = 0;
+            styles.textAlign = props.alignment as 'left' | 'center' | 'right' || 'left';
             return `
                 <tr>
                     <td style="padding: 10px 20px;">
-                        <h1 style="font-family: Arial, sans-serif; font-size: 24px; margin: 0;">${component.props.text || ''}</h1>
+                        <h1 style="${Object.entries(styles).map(([k, v]) => `${k.replace(/([A-Z])/g, '-$1').toLowerCase()}:${v}`).join(';')}">${props.text || ''}</h1>
                     </td>
                 </tr>
             `;
         case 'text':
+             styles.fontFamily = 'Arial, sans-serif';
+            styles.fontSize = props.fontSize || '16px';
+            styles.color = props.color || '#333333';
+            styles.margin = 0;
+            styles.lineHeight = 1.5;
+            styles.textAlign = props.alignment as 'left' | 'center' | 'right' || 'left';
             return `
                  <tr>
                     <td style="padding: 10px 20px;">
-                        <p style="font-family: Arial, sans-serif; font-size: 16px; margin: 0; line-height: 1.5;">${component.props.text || ''}</p>
+                        <p style="${Object.entries(styles).map(([k, v]) => `${k.replace(/([A-Z])/g, '-$1').toLowerCase()}:${v}`).join(';')}">${(props.text || '').replace(/\n/g, '<br />')}</p>
                     </td>
                 </tr>
             `;
         case 'button':
             return `
                 <tr>
-                    <td style="padding: 20px;">
+                    <td style="padding: 20px;" align="${props.alignment || 'left'}">
                         <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
                             <tr>
-                                <td align="center" bgcolor="#007bff" role="presentation" style="border:none;border-radius:3px;cursor:auto;padding:10px 25px;" valign="middle">
-                                    <a href="${component.props.href || '#'}" style="background:#007bff;color:#ffffff;font-family:Arial, sans-serif;font-size:16px;font-weight:bold;line-height:120%;margin:0;text-decoration:none;text-transform:none;" target="_blank">
-                                        ${component.props.text || ''}
+                                <td align="center" bgcolor="${props.backgroundColor || '#007bff'}" role="presentation" style="border:none;border-radius:3px;cursor:auto;padding:10px 25px;" valign="middle">
+                                    <a href="${props.href || '#'}" style="background:${props.backgroundColor || '#007bff'};color:${props.color || '#ffffff'};font-family:Arial, sans-serif;font-size:${props.fontSize || '16px'};font-weight:bold;line-height:120%;margin:0;text-decoration:none;text-transform:none;" target="_blank">
+                                        ${props.text || ''}
                                     </a>
                                 </td>
                             </tr>
@@ -58,8 +80,8 @@ function generateComponentHTML(component: NewsletterComponent): string {
         case 'image':
             return `
                 <tr>
-                    <td style="padding: 10px 20px;">
-                        <img src="${component.props.src || 'https://placehold.co/600x400'}" alt="${component.props.alt || ''}" style="width: 100%; height: auto; max-width: 600px; display: block;" width="600" />
+                    <td style="padding: 10px 20px;" align="${props.alignment || 'center'}">
+                        <img src="${props.src || 'https://placehold.co/600x400'}" alt="${props.alt || ''}" style="width: 100%; height: auto; max-width: ${props.width || '600px'}; display: block;" width="${props.width || '600'}" />
                     </td>
                 </tr>
             `;
@@ -120,37 +142,126 @@ function SubmitButton() {
 }
 
 function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component: NewsletterComponent, onUpdate: (id: string, props: any) => void, onDelete: (id: string) => void, onMove: (id: string, direction: 'up' | 'down') => void }) {
-    const renderField = (propName: string, label: string, type: string = 'text') => (
+    
+    const updateProp = (propName: string, value: string) => {
+        onUpdate(component.id, { ...component.props, [propName]: value });
+    };
+
+    const renderField = (propName: string, label: string, type: string = 'text', placeholder?: string) => (
          <div key={propName}>
             <Label htmlFor={`${component.id}-${propName}`} className="text-xs">{label}</Label>
             <Input 
                 id={`${component.id}-${propName}`} 
                 type={type}
                 value={component.props[propName] || ''} 
-                onChange={(e) => onUpdate(component.id, { ...component.props, [propName]: e.target.value })}
+                onChange={(e) => updateProp(propName, e.target.value)}
                 className="h-8"
+                placeholder={placeholder}
             />
         </div>
     );
+
      const renderTextarea = (propName: string, label: string) => (
          <div key={propName}>
             <Label htmlFor={`${component.id}-${propName}`} className="text-xs">{label}</Label>
             <Textarea 
                 id={`${component.id}-${propName}`} 
                 value={component.props[propName] || ''} 
-                onChange={(e) => onUpdate(component.id, { ...component.props, [propName]: e.target.value })}
+                onChange={(e) => updateProp(propName, e.target.value)}
                 className="text-xs"
                 rows={3}
             />
         </div>
     );
+    
+    const renderAlignmentSelector = () => (
+         <div>
+            <Label className="text-xs">Ausrichtung</Label>
+            <div className="flex gap-1 mt-1">
+                {(['left', 'center', 'right'] as const).map(align => (
+                     <Button key={align} size="icon" variant={component.props.alignment === align ? "secondary" : "outline"} className="h-8 w-8" onClick={() => updateProp('alignment', align)}>
+                        {align === 'left' && <AlignLeft className="h-4 w-4" />}
+                        {align === 'center' && <AlignCenter className="h-4 w-4" />}
+                        {align === 'right' && <AlignRight className="h-4 w-4" />}
+                    </Button>
+                ))}
+            </div>
+        </div>
+    );
+
+    const renderFontSizeSelector = (defaultSize: string) => (
+         <div className="flex-1">
+            <Label htmlFor={`${component.id}-fontSize`} className="text-xs">Schriftgröße</Label>
+            <Input 
+                id={`${component.id}-fontSize`} 
+                value={component.props.fontSize || ''}
+                placeholder={defaultSize}
+                onChange={(e) => updateProp('fontSize', e.target.value)}
+                className="h-8"
+            />
+        </div>
+    );
+
+    const renderColorInput = (propName: string, label: string, defaultValue: string) => (
+        <div className="flex-1">
+            <Label htmlFor={`${component.id}-${propName}`} className="text-xs">{label}</Label>
+            <div className="flex items-center gap-2">
+                 <Input 
+                    id={`${component.id}-${propName}`} 
+                    value={component.props[propName] || ''}
+                    placeholder={defaultValue}
+                    onChange={(e) => updateProp(propName, e.target.value)}
+                    className="h-8"
+                />
+                <Input type="color" value={component.props[propName] || defaultValue} onChange={e => updateProp(propName, e.target.value)} className="w-8 h-8 p-1"/>
+            </div>
+        </div>
+    );
 
     const renderContent = () => {
         switch(component.type) {
-            case 'heading': return renderField('text', 'Überschrift');
-            case 'text': return renderTextarea('text', 'Text');
-            case 'button': return <div className="space-y-2">{renderField('text', 'Button-Text')}{renderField('href', 'Button-Link (URL)')}</div>;
-            case 'image': return <div className="space-y-2">{renderField('src', 'Bild-URL')}{renderField('alt', 'Alternativtext')}</div>;
+            case 'heading': return (
+                <div className="space-y-4">
+                    {renderField('text', 'Überschrift')}
+                    <div className="flex gap-2">
+                        {renderFontSizeSelector("24px")}
+                        {renderColorInput('color', 'Farbe', '#000000')}
+                    </div>
+                    {renderAlignmentSelector()}
+                </div>
+            );
+            case 'text': return (
+                <div className="space-y-4">
+                    {renderTextarea('text', 'Text')}
+                     <div className="flex gap-2">
+                        {renderFontSizeSelector("16px")}
+                        {renderColorInput('color', 'Farbe', '#333333')}
+                    </div>
+                    {renderAlignmentSelector()}
+                </div>
+            );
+            case 'button': return (
+                <div className="space-y-4">
+                    {renderField('text', 'Button-Text')}
+                    {renderField('href', 'Button-Link (URL)')}
+                     <div className="flex gap-2">
+                        {renderFontSizeSelector("16px")}
+                        {renderColorInput('color', 'Textfarbe', '#FFFFFF')}
+                    </div>
+                     <div className="flex gap-2">
+                        {renderColorInput('backgroundColor', 'Hintergrund', '#007bff')}
+                    </div>
+                    {renderAlignmentSelector()}
+                </div>
+            );
+            case 'image': return (
+                <div className="space-y-4">
+                    {renderField('src', 'Bild-URL')}
+                    {renderField('alt', 'Alternativtext')}
+                    {renderField('width', 'Breite (z.B. 600px)', 'text', '600px')}
+                    {renderAlignmentSelector()}
+                </div>
+            );
             default: return <p>Unbekannter Komponententyp</p>
         }
     }
