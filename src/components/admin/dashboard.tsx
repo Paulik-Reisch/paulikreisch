@@ -12,8 +12,6 @@ import {
     addProductAction,
     updateProductAction,
     deleteProductAction,
-    addLegalPageAction,
-    updateLegalPageAction,
     deleteLegalPageAction,
     createDefaultLegalPagesAction,
 } from "@/app/admin/actions";
@@ -334,58 +332,9 @@ type AdminLegalPageState = {
 };
 const initialLegalPageState: AdminLegalPageState = { success: false, error: null };
 
-function EditLegalPageDialog({ page, onOpenChange, open }: { page: LegalPage; open: boolean; onOpenChange: (open: boolean) => void; }) {
-    const [updateState, updateFormAction] = useActionState(updateLegalPageAction, initialLegalPageState);
-    const [content, setContent] = useState(page.content);
-    const { toast } = useToast();
-
-    useEffect(() => {
-        if (updateState.success) {
-            toast({ title: "Erfolg", description: updateState.message });
-            onOpenChange(false);
-        }
-        if (updateState.error) {
-            toast({ variant: "destructive", title: "Fehler", description: updateState.error });
-        }
-    }, [updateState, toast, onOpenChange]);
-
-    const handleFormSubmit = (formData: FormData) => {
-        formData.set('content', content); // Ensure latest content is in form data
-        updateFormAction(formData);
-    };
-
-    return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-4xl max-h-[90vh] flex flex-col">
-                <form action={handleFormSubmit} className="flex flex-col min-h-0 flex-grow">
-                    <input type="hidden" name="pageId" value={page.id} />
-                    <DialogHeader>
-                        <DialogTitle>Dynamische LP bearbeiten: /{page.id}</DialogTitle>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4 flex-grow min-h-0">
-                        <div>
-                            <Label htmlFor="title">Seitentitel</Label>
-                            <Input id="title" name="title" defaultValue={page.title} required />
-                        </div>
-                        <div className="flex flex-col min-h-0 flex-grow">
-                            <Label htmlFor="content">Inhalt (HTML & Tailwind CSS)</Label>
-                            <CodeEditor value={content} onChange={setContent} />
-                        </div>
-                    </div>
-                    <DialogFooter>
-                        <DialogClose asChild><Button type="button" variant="secondary">Abbrechen</Button></DialogClose>
-                        <Button type="submit">Änderungen speichern</Button>
-                    </DialogFooter>
-                </form>
-            </DialogContent>
-        </Dialog>
-    );
-}
-
 function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
     const [pages, setPages] = useState<LegalPage[]>(initialPages);
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-    const [editingPage, setEditingPage] = useState<LegalPage | null>(null);
     const { toast } = useToast();
 
     const [addState, addFormAction] = useActionState(addLegalPageAction, initialLegalPageState);
@@ -504,9 +453,11 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
                                     </TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex gap-2 justify-end">
-                                            <Button size="sm" variant="outline" onClick={() => setEditingPage(page)}>
-                                                <Edit className="h-4 w-4" />
-                                            </Button>
+                                            <Link href={`/admin/editor/${page.id}`}>
+                                                <Button size="sm" variant="outline">
+                                                    <Edit className="h-4 w-4" />
+                                                </Button>
+                                            </Link>
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild>
                                                     <Button size="sm" variant="destructive">
@@ -514,19 +465,19 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
                                                     </Button>
                                                 </AlertDialogTrigger>
                                                 <AlertDialogContent>
-                                                    <form action={deleteLegalPageAction}>
-                                                        <input type="hidden" name="pageId" value={page.id} />
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogTitle>Sind Sie sicher?</AlertDialogTitle>
-                                                            <AlertDialogDescription>
-                                                                Diese Aktion kann nicht rückgängig gemacht werden. Die Seite /{page.id} wird dauerhaft gelöscht.
-                                                            </AlertDialogDescription>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>Sind Sie sicher?</AlertDialogTitle>
+                                                        <AlertDialogDescription>
+                                                            Diese Aktion kann nicht rückgängig gemacht werden. Die Seite /{page.id} wird dauerhaft gelöscht.
+                                                        </AlertDialogDescription>
+                                                    </AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+                                                        <form action={deleteLegalPageAction}>
+                                                            <input type="hidden" name="pageId" value={page.id} />
                                                             <AlertDialogAction type="submit">Löschen</AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                    </form>
+                                                        </form>
+                                                    </AlertDialogFooter>
                                                 </AlertDialogContent>
                                             </AlertDialog>
                                         </div>
@@ -537,13 +488,6 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
                     </TableBody>
                 </Table>
             </div>
-            {editingPage && (
-                <EditLegalPageDialog 
-                    page={editingPage}
-                    open={!!editingPage}
-                    onOpenChange={(open) => !open && setEditingPage(null)}
-                />
-            )}
         </div>
     )
 }
@@ -574,5 +518,3 @@ export function AdminDashboard({
         </Tabs>
     )
 }
-
-    

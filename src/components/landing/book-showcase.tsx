@@ -34,7 +34,7 @@ export function BookShowcase() {
           {/* Hallo Welt 2 */}
           <div className="flex flex-col items-center text-center">
             <h2 className="font-headline text-3xl font-bold tracking-tight mb-2">Hallo Welt 2</h2>
-            <p className="text-muted-foreground text-lg mb-6">Wie's Leben funktioniert</p>
+            <p className="text-muted-foreground text-lg mb-6">Wie das Leben funktioniert</p>
              <div className="relative transform-gpu transition-transform duration-500 hover:scale-105 hover:rotate-2">
                 <Image
                     alt="Buchcover Hallo Welt 2"
@@ -46,7 +46,7 @@ export function BookShowcase() {
                 />
             </div>
             <p className="max-w-md mt-6 text-muted-foreground text-balance">
-                Die Fortsetzung, die niemand wollte, aber jeder braucht. Eine Abrechnung mit Bürokratie, dem deutschen Internet und dem Mietenwahnsinn.
+                Die Fortsetzung, die niemand wollte. Eine Abrechnung mit Bürokratie, deutschem Internet und Mietenwahnsinn.
             </p>
              <Link href="/buchhandlung-paulik-reisch" className="mt-6">
                 <Button variant="secondary">Band 2 kaufen</Button>

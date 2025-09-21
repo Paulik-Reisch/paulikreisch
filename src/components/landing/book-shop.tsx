@@ -187,7 +187,7 @@ export function BookShop({ initialProducts }: { initialProducts: Product[]}) {
                     </div>
                     <h3 className="font-headline text-2xl font-bold">Hallo Welt 2 kommt</h3>
                     <p className="text-muted-foreground mt-2 mb-6 max-w-sm text-balance">
-                       Die Fortsetzung, die niemand wollte, aber jeder braucht. Noch chaotischer, noch bissiger.
+                       Die Fortsetzung, die niemand wollte, aber jeder braucht.
                     </p>
                     <Link href="/lp2">
                         <Button variant="outline">
@@ -201,7 +201,7 @@ export function BookShop({ initialProducts }: { initialProducts: Product[]}) {
                     </div>
                     <h3 className="font-headline text-2xl font-bold">Nichts verpassen</h3>
                     <p className="text-muted-foreground mt-2 mb-6 max-w-sm text-balance">
-                        Erhalten Sie eine Benachrichtigung, wenn das Buch online geht. Kein Spam, nur die wichtigen Katastrophen.
+                        Erhalten Sie eine Benachrichtigung, wenn das Buch online geht.
                     </p>
                      <form onSubmit={handleNewsletterSubmit} className="w-full max-w-sm flex gap-2">
                         <Input type="email" name="email" placeholder="deine-email@adresse.de" required className="flex-grow"/>
