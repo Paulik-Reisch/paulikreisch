@@ -16,19 +16,13 @@ export default async function DynamicLegalPage({ params }: { params: { slug: str
     <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
       <Header />
       <main className="flex-1">
-        {/*
-          The 'prose' class provides default styling for raw HTML.
-          You can write any HTML with Tailwind classes in the LPM content field.
-          This div acts as the container for your custom landing page content.
-        */}
-        <div 
-          className="prose dark:prose-invert max-w-none" 
-          dangerouslySetInnerHTML={{ __html: page.content }} 
-        />
-
-        <div className="container mx-auto px-4 md:px-6 mt-12">
-            <p className="text-xs text-muted-foreground">Stand: {page.lastUpdated ? format(new Date(page.lastUpdated), 'dd.MM.yyyy', { locale: de }) : 'N/A'}</p>
-        </div>
+        <article className="container mx-auto px-4 md:px-6 py-12 md:py-24">
+            <div 
+              className="prose dark:prose-invert max-w-none" 
+              dangerouslySetInnerHTML={{ __html: page.content }} 
+            />
+            <p className="text-xs text-muted-foreground mt-12">Stand: {page.lastUpdated ? format(new Date(page.lastUpdated), 'dd.MM.yyyy', { locale: de }) : 'N/A'}</p>
+        </article>
       </main>
       <Footer />
     </div>
