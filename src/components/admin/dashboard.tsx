@@ -30,11 +30,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle, Trash2 } from "lucide-react";
+import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle, Trash2, Edit } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import {
   Dialog,
   DialogContent,
@@ -55,6 +54,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import Link from "next/link";
 
 function LeadsTable() {
     const [orders, setOrders] = useState<Order[]>([]);
@@ -332,14 +332,63 @@ type AdminLegalPageState = {
 const initialLegalPageState: AdminLegalPageState = { success: false, error: null };
 
 
+function EditLegalPageDialog({ page, onOpenChange, open }: { page: LegalPage; open: boolean; onOpenChange: (open: boolean) => void; }) {
+    const [updateState, updateFormAction] = useActionState(updateLegalPageAction, initialLegalPageState);
+    const { toast } = useToast();
+
+    useEffect(() => {
+        if (updateState.success) {
+            toast({ title: "Erfolg", description: updateState.message });
+            onOpenChange(false);
+        }
+        if (updateState.error) {
+            toast({ variant: "destructive", title: "Fehler", description: updateState.error });
+        }
+    }, [updateState, toast, onOpenChange]);
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-4xl">
+                <form action={updateFormAction}>
+                    <input type="hidden" name="pageId" value={page.id} />
+                    <DialogHeader>
+                        <DialogTitle>Dynamische LP bearbeiten: /{page.id}</DialogTitle>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div>
+                            <Label htmlFor="title">Seitentitel</Label>
+                            <Input id="title" name="title" defaultValue={page.title} required />
+                        </div>
+                        <div>
+                            <Label htmlFor="content">Inhalt (HTML & Tailwind CSS erlaubt)</Label>
+                            <Textarea
+                                id="content"
+                                name="content"
+                                defaultValue={page.content}
+                                required
+                                className="h-96 font-mono"
+                                placeholder="<h1>Titel</h1><p class='text-red-500'>Inhalt...</p>"
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <DialogClose asChild><Button type="button" variant="secondary">Abbrechen</Button></DialogClose>
+                        <Button type="submit">Änderungen speichern</Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+    );
+}
+
+
 function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
     const [pages, setPages] = useState<LegalPage[]>(initialPages);
-    const [editingPages, setEditingPages] = useState<{ [key: string]: Partial<LegalPage> }>({});
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+    const [editingPage, setEditingPage] = useState<LegalPage | null>(null);
     const { toast } = useToast();
 
     const [addState, addFormAction] = useActionState(addLegalPageAction, initialLegalPageState);
-    const [updateState, updateFormAction] = useActionState(updateLegalPageAction, initialLegalPageState);
     const [deleteState, deleteFormAction] = useActionState(deleteLegalPageAction, initialLegalPageState);
 
     useEffect(() => {
@@ -357,16 +406,6 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
     }, [addState, toast]);
 
     useEffect(() => {
-        if (updateState.success) {
-            toast({ title: "Erfolg", description: updateState.message });
-            setEditingPages({});
-        }
-        if (updateState.error) {
-            toast({ variant: "destructive", title: "Fehler", description: updateState.error });
-        }
-    }, [updateState, toast]);
-
-    useEffect(() => {
         if (deleteState.success) {
             toast({ title: "Erfolg", description: deleteState.message });
         }
@@ -375,19 +414,12 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
         }
     }, [deleteState, toast]);
 
-    const handleInputChange = (pageId: string, field: keyof LegalPage, value: string) => {
-        setEditingPages(prev => ({
-            ...prev,
-            [pageId]: { ...prev[pageId], [field]: value }
-        }));
-    };
-
     return (
         <div>
             <div className="flex justify-between items-center mb-4">
                  <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                     <DialogTrigger asChild>
-                        <Button variant="outline"><PlusCircle className="mr-2 h-4 w-4" /> Neue LP hinzufügen</Button>
+                        <Button variant="outline"><PlusCircle className="mr-2 h-4 w-4" /> Neue Dynamische LP</Button>
                     </DialogTrigger>
                     <DialogContent>
                         <form action={addFormAction}>
@@ -397,7 +429,7 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
                             <div className="grid gap-4 py-4">
                                 <Input name="pageId" placeholder="Seiten-ID (slug, z.B. 'neue-seite')" required />
                                 <Input name="title" placeholder="Seitentitel" required />
-                                <Textarea name="content" placeholder="Inhalt (unterstützt Markdown/HTML je nach Seiten-Template)" required className="h-48" />
+                                <Textarea name="content" placeholder="Inhalt (HTML & Tailwind CSS erlaubt)" required className="h-48 font-mono" />
                             </div>
                             <DialogFooter>
                                 <DialogClose asChild><Button type="button" variant="secondary">Abbrechen</Button></DialogClose>
@@ -407,56 +439,44 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
                     </DialogContent>
                 </Dialog>
             </div>
-            {pages.length === 0 ? (
-                <div className="text-center py-12 text-muted-foreground">
-                    <FileText className="mx-auto h-8 w-8 mb-2" />
-                    Keine Seiten gefunden.
-                </div>
-            ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {pages.map((page) => {
-                        const currentPage = { ...page, ...editingPages[page.id] };
-                        return (
-                            <Card key={page.id}>
-                                <form action={updateFormAction}>
-                                    <input type="hidden" name="pageId" value={page.id} />
-                                    <CardHeader>
-                                        <CardTitle>Seite: /{page.id}</CardTitle>
-                                        <CardDescription>Zuletzt aktualisiert: {page.lastUpdated ? format(new Date(page.lastUpdated), "dd.MM.yyyy HH:mm", { locale: de }) : 'N/A'}</CardDescription>
-                                    </CardHeader>
-                                    <CardContent className="space-y-4">
-                                        <div>
-                                            <Label htmlFor={`title-${page.id}`}>Seitentitel</Label>
-                                            <Input
-                                                id={`title-${page.id}`}
-                                                name="title"
-                                                value={currentPage.title ?? ''}
-                                                onChange={(e) => handleInputChange(page.id, 'title', e.target.value)}
-                                            />
-                                        </div>
-                                        <div>
-                                            <Label htmlFor={`content-${page.id}`}>Inhalt</Label>
-                                            <Textarea
-                                                id={`content-${page.id}`}
-                                                name="content"
-                                                value={currentPage.content ?? ''}
-                                                onChange={(e) => handleInputChange(page.id, 'content', e.target.value)}
-                                                className="h-64"
-                                                placeholder="Geben Sie hier den Inhalt ein."
-                                            />
-                                        </div>
-                                        <div className="flex gap-2">
-                                            <Button
-                                                type="submit"
-                                                disabled={!editingPages[page.id]}
-                                                className="w-full"
-                                            >
-                                                <Save className="mr-2 h-4 w-4" />
-                                                Änderungen speichern
+             <div className="border rounded-lg overflow-hidden">
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Titel</TableHead>
+                            <TableHead>URL-Slug</TableHead>
+                            <TableHead>Zuletzt aktualisiert</TableHead>
+                            <TableHead className="text-right">Aktionen</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {pages.length === 0 ? (
+                             <TableRow>
+                                <TableCell colSpan={4} className="text-center py-12 text-muted-foreground">
+                                    <FileText className="mx-auto h-8 w-8 mb-2" />
+                                    Keine Seiten gefunden.
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            pages.map((page) => (
+                                <TableRow key={page.id}>
+                                    <TableCell className="font-medium">{page.title}</TableCell>
+                                    <TableCell>
+                                        <Link href={`/${page.id}`} target="_blank" className="text-muted-foreground hover:text-primary underline">
+                                            /{page.id}
+                                        </Link>
+                                    </TableCell>
+                                    <TableCell className="text-muted-foreground">
+                                        {page.lastUpdated ? format(new Date(page.lastUpdated), "dd.MM.yyyy HH:mm", { locale: de }) : 'N/A'}
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        <div className="flex gap-2 justify-end">
+                                            <Button size="sm" variant="outline" onClick={() => setEditingPage(page)}>
+                                                <Edit className="h-4 w-4" />
                                             </Button>
-                                             <AlertDialog>
+                                            <AlertDialog>
                                                 <AlertDialogTrigger asChild>
-                                                    <Button size="icon" variant="destructive">
+                                                    <Button size="sm" variant="destructive">
                                                         <Trash2 className="h-4 w-4" />
                                                     </Button>
                                                 </AlertDialogTrigger>
@@ -477,12 +497,19 @@ function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
                                                 </AlertDialogContent>
                                             </AlertDialog>
                                         </div>
-                                    </CardContent>
-                                </form>
-                            </Card>
-                        );
-                    })}
-                </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+            {editingPage && (
+                <EditLegalPageDialog 
+                    page={editingPage}
+                    open={!!editingPage}
+                    onOpenChange={(open) => !open && setEditingPage(null)}
+                />
             )}
         </div>
     )
