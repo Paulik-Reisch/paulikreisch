@@ -1,6 +1,13 @@
+"use client";
+
+import React, { useActionState, useEffect, useRef } from "react";
+import { useFormStatus } from "react-dom";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { subscribeToNewsletterAction } from "@/app/actions";
+import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Badge } from "../ui/badge";
 import {
   Table,
@@ -10,6 +17,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
+import { Loader2, Mail } from "lucide-react";
 
 
 const schimpfwoerter = [
@@ -53,6 +61,52 @@ const witze = [
     { witz: "Esto es un hombre que entra a un bar de pinchos y dice: ¡Ay! ¡Ay! ¡Ay!", uebersetzung: "Kommt ein Mann in eine Tapas-Bar (mit Spießen) und sagt: 'Au! Au! Au!'", erklaerung: "Wortspiel: 'Pinchos' sind kleine Snacks auf Spießen, aber 'pincho' bedeutet auch 'Stich' oder 'Stachel'." },
 ];
 
+const initialNewsletterState = { success: undefined, error: undefined, message: undefined };
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" disabled={pending}>
+      {pending ? (
+        <>
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        </>
+      ) : (
+        "Benachrichtigt mich!"
+      )}
+    </Button>
+  );
+}
+
+function HW2LeadForm({ title, description, source }: { title: string, description: string, source: string }) {
+    const formRef = useRef<HTMLFormElement>(null);
+    const [state, formAction] = useActionState(subscribeToNewsletterAction, initialNewsletterState);
+    const { toast } = useToast();
+
+    useEffect(() => {
+        if (state.success) {
+            toast({ title: "Erfolgreich eingetragen!", description: state.message });
+            formRef.current?.reset();
+        }
+        if (state.error) {
+            toast({ variant: "destructive", title: "Fehler", description: state.error });
+        }
+    }, [state, toast]);
+
+    return (
+        <div className="not-prose my-12 text-center p-8 bg-muted/50 border border-dashed rounded-lg">
+            <h3 className="font-headline text-2xl font-bold">{title}</h3>
+            <p className="mt-2 text-muted-foreground max-w-xl mx-auto text-balance">
+                {description}
+            </p>
+            <form ref={formRef} action={formAction} className="mt-4 flex flex-col sm:flex-row gap-2 max-w-sm mx-auto">
+                <Input name="email" className="flex-1" placeholder="deine.email@provider.de" type="email" required />
+                <input type="hidden" name="source" value={source} />
+                <SubmitButton />
+            </form>
+        </div>
+    )
+}
 
 export function HeroPfeiffer() {
   return (
@@ -122,6 +176,12 @@ export function HeroPfeiffer() {
                 </Table>
                 <p className="text-xs text-center text-muted-foreground mt-2">*Haftungsausschluss: Die Verwendung dieser Vokabeln erfolgt auf eigene Gefahr. Kann zu blauen Augen oder diplomatischen Krisen führen.</p>
             </div>
+            
+            <HW2LeadForm
+                title="Lust auf noch mehr Wortakrobatik?"
+                description="Seien Sie der Erste, der erfährt, wann 'Hallo Welt 2' erscheint. Wir benachrichtigen Sie, versprochen."
+                source="pfeiffer-lead-1"
+            />
 
             <p>
                 Neueste Berichte aus dem inneren Zirkel der Autorität besagen, dass La Silbadora kürzlich ein Exemplar von "Hallo Welt" in die Hände bekam. Zeugen berichten von einem unkontrollierbaren Lachanfall, der durch die Gänge der Lernvollzugsanstalt hallte. Sie konnte sich nicht mehr halten und stürzte – so die dramatische Schilderung – die berüchtigten Treppen des Schulgebäudes hinab. <Link href="/buchhandlung-paulik-reisch" className="font-bold underline">Wer das Buch gelesen hat</Link>, weiß, was das normalerweise zur Folge hat: ein Genickbruch.
@@ -133,10 +193,10 @@ export function HeroPfeiffer() {
                 Ende gut, alles gut. Selbst das Buch war nicht zerknickt. Denn das, meine Damen und Herren, ist gedruckte und geschriebene Qualität. Eine Qualität, die Leben rettet.
             </p>
             
-          <div className="text-center my-12 py-12 border-t border-b border-dashed">
+          <div className="text-center my-12 py-12 border-t border-b border-dashed not-prose">
             <h2 className="font-headline text-3xl font-bold">Erleben Sie das Pfeifkonzert selbst!</h2>
             <p className="mt-4 text-muted-foreground">
-                "Hallo Welt 2" ist die Anleitung zum Überleben in einer Welt, die den Verstand verloren hat. Oder der schnellste Weg, ihn selbst zu verlieren.
+                "Hallo Welt" ist die Anleitung zum Überleben in einer Welt, die den Verstand verloren hat. Oder der schnellste Weg, ihn selbst zu verlieren.
             </p>
             <Link href="/buchhandlung-paulik-reisch" className="mt-6 inline-block">
                 <Button size="lg" className="animate-pulse" variant="default">Jetzt dem Wahnsinn stellen</Button>
@@ -178,6 +238,12 @@ export function HeroPfeiffer() {
             <p>
                 Drei Jahre nach der Lernvollzugszeit. Ein milder Sommerabend in Italien. La Silbadora sitzt mit ihren beiden ehemaligen Schützlingen, den nun jungen Autoren, am Strand. Eine Flasche Rotwein macht die Runde, das Rauschen der Wellen liefert den Soundtrack. Sie blicken zurück auf die wilde Zeit, auf Treppenstürze, unsinnige Regeln und den täglichen Kampf gegen die Absurdität. Und mitten in diesem Moment des Friedens, zwischen zwei Schlucken Wein, entweicht ihr ein leises, fast unhörbares Pfeifen – eine Melodie, die nur die drei verstehen. Ein Witz ohne Worte. Die Legende lebt.
             </p>
+
+            <HW2LeadForm
+                title="Die Geschichte geht weiter..."
+                description="Gefällt Ihnen, was Sie lesen? 'Hallo Welt 2' setzt dem Ganzen die Krone auf. Tragen Sie sich ein und erfahren Sie als Erster, wann das nächste Kapitel des Wahnsinns beginnt."
+                source="pfeiffer-lead-2"
+            />
         </article>
       </div>
     </section>
