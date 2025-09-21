@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -12,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Save, ArrowLeft, Eye, Code, PlusCircle, Trash2, ArrowUp, ArrowDown, Type, Image as ImageIcon, Link as LinkIcon, AlignLeft, AlignCenter, AlignRight, Copy, Rows, Columns, Minus } from "lucide-react";
+import { Loader2, Save, ArrowLeft, Eye, Code, PlusCircle, Trash2, ArrowUp, ArrowDown, Type, Image as ImageIcon, Link as LinkIcon, AlignLeft, AlignCenter, AlignRight, Copy, Rows, Columns, Minus, GalleryHorizontal } from "lucide-react";
 import { useFormStatus } from "react-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -55,16 +54,16 @@ function generateComponentHTML(component: NewsletterComponent): string {
         case 'button':
             return `
                 <tr>
-                    <td style="padding: 20px;" align="${align}">
-                        <table border="0" cellpadding="0" cellspacing="0" role="presentation">
-                            <tr>
-                                <td align="center" bgcolor="${props.backgroundColor || '#007bff'}" role="presentation" style="border:none;cursor:auto;padding:10px 25px;background:${props.backgroundColor || '#007bff'};">
-                                    <a href="${props.href || '#'}" style="background:${props.backgroundColor || '#007bff'};color:${props.color || '#ffffff'};font-family:Arial, sans-serif;font-size:${props.fontSize || '16px'};font-weight:bold;line-height:120%;margin:0;text-decoration:none;text-transform:none;" target="_blank">
-                                        ${props.text || ''}
-                                    </a>
-                                </td>
-                            </tr>
-                        </table>
+                    <td align="${align}" style="padding: 20px;">
+                      <table border="0" cellspacing="0" cellpadding="0" role="presentation">
+                        <tr>
+                          <td align="center" style="border-radius:3px;background:${props.backgroundColor || '#007bff'};" bgcolor="${props.backgroundColor || '#007bff'}">
+                            <a href="${props.href || '#'}" target="_blank" style="font-size: ${props.fontSize || '16px'}; font-family: Arial, sans-serif; color: ${props.color || '#ffffff'}; text-decoration: none; text-decoration: none;border-radius: 3px; padding: 10px 25px; border: 1px solid ${props.backgroundColor || '#007bff'}; display: inline-block; font-weight: bold;">
+                              ${props.text || ''}
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
                     </td>
                 </tr>
             `;
@@ -73,10 +72,10 @@ function generateComponentHTML(component: NewsletterComponent): string {
             return `
                 <tr>
                     <td align="${align}" style="padding: 10px 20px;">
-                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" align="${align}" style="width: ${width}px; max-width: 100%;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" align="${align}" style="max-width: 100%;">
                             <tr>
                                 <td>
-                                    <img src="${props.src || 'https://placehold.co/600x400'}" alt="${props.alt || ''}" style="width: 100%; height: auto; display: block;" width="${width}" />
+                                    <img src="${props.src || 'https://placehold.co/600x400'}" alt="${props.alt || ''}" style="width: 100%; height: auto; display: block; max-width: ${width}px;" width="${width}" />
                                 </td>
                             </tr>
                         </table>
@@ -112,6 +111,47 @@ function generateComponentHTML(component: NewsletterComponent): string {
                                 </td>
                                 <td valign="top" width="50%" style="padding-left: 10px;">
                                     <p style="font-family: Arial, sans-serif; font-size: 14px; color: #333333; margin: 0; line-height: 1.5;">${(props.text2 || '').replace(/\n/g, '<br />')}</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            `;
+        case 'image-text':
+            const imageOrder = props.layout === 'image-right' ? 2 : 1;
+            const textOrder = props.layout === 'image-right' ? 1 : 2;
+            const widths = (props.columnWidth || '50/50').split('/');
+            const imageWidthPercent = widths[imageOrder - 1];
+            const textWidthPercent = widths[textOrder - 1];
+            
+            const imageContent = `
+                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tr>
+                        <td align="center" style="padding: 5px;">
+                             <img src="${props.src || 'https://placehold.co/300x200'}" alt="${props.alt || ''}" style="width: 100%; height: auto; display: block;" width="100%" />
+                        </td>
+                    </tr>
+                </table>`;
+
+            const textContent = `
+                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tr>
+                        <td align="left" style="padding: 5px;">
+                            <p style="font-family: Arial, sans-serif; font-size: 14px; color: #333333; margin: 0; line-height: 1.5;">${(props.text || '').replace(/\n/g, '<br />')}</p>
+                        </td>
+                    </tr>
+                </table>`;
+
+            return `
+                <tr>
+                    <td style="padding: 10px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <td valign="top" width="${imageWidthPercent}%" style="${textOrder === 1 ? 'padding-right:10px;' : 'padding-left:10px;'}">
+                                    ${imageOrder === 1 ? imageContent : textContent}
+                                </td>
+                                <td valign="top" width="${textWidthPercent}%" style="${imageOrder === 1 ? 'padding-left:10px;' : 'padding-right:10px;'}">
+                                    ${textOrder === 2 ? textContent : imageContent}
                                 </td>
                             </tr>
                         </table>
@@ -345,7 +385,7 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component:
                 <div className="space-y-4">
                     {renderField('src', 'Bild-URL')}
                     {renderField('alt', 'Alternativtext')}
-                    {renderField('width', 'Breite (z.B. 600)', 'text', '600')}
+                    {renderField('width', 'Max. Breite (z.B. 600)', 'text', '600')}
                     {renderAlignmentSelector()}
                 </div>
             );
@@ -391,18 +431,51 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component:
                     {renderTextarea('text2', 'Text Spalte 2')}
                 </div>
             );
+            case 'image-text': return (
+                <div className="space-y-4">
+                    {renderField('src', 'Bild-URL')}
+                    {renderField('alt', 'Alternativtext')}
+                    {renderTextarea('text', 'Text')}
+                    <div>
+                        <Label className="text-xs">Layout</Label>
+                         <Select onValueChange={(v) => updateProp('layout', v)} defaultValue={component.props.layout || 'image-left'}>
+                            <SelectTrigger className="h-8">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="image-left">Bild links, Text rechts</SelectItem>
+                                <SelectItem value="image-right">Text links, Bild rechts</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div>
+                        <Label className="text-xs">Spaltenbreite (Bild/Text)</Label>
+                         <Select onValueChange={(v) => updateProp('columnWidth', v)} defaultValue={component.props.columnWidth || '50/50'}>
+                            <SelectTrigger className="h-8">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="50/50">50% / 50%</SelectItem>
+                                <SelectItem value="33/67">33% / 67%</SelectItem>
+                                <SelectItem value="67/33">67% / 33%</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </div>
+            );
             default: return <p>Unbekannter Komponententyp</p>
         }
     }
 
-    const typeIcons = {
+    const typeIcons: {[key: string]: React.ReactNode} = {
         heading: <Type className="h-4 w-4" />,
         text: <Type className="h-4 w-4" />,
         button: <LinkIcon className="h-4 w-4" />,
         image: <ImageIcon className="h-4 w-4" />,
         separator: <Minus className="h-4 w-4" />,
         spacer: <Rows className="h-4 w-4" />,
-        'two-columns': <Columns className="h-4 w-4" />
+        'two-columns': <Columns className="h-4 w-4" />,
+        'image-text': <GalleryHorizontal className="h-4 w-4" />
     }
 
     return (
@@ -573,6 +646,7 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
                     <Button variant="outline" onClick={() => addComponent('spacer')}><Rows className="mr-2 h-4 w-4"/>Abstand</Button>
                     <Button variant="outline" onClick={() => addComponent('separator')}><Minus className="mr-2 h-4 w-4"/>Trenner</Button>
                     <Button variant="outline" onClick={() => addComponent('two-columns')} className="col-span-2"><Columns className="mr-2 h-4 w-4"/>Zwei Spalten</Button>
+                    <Button variant="outline" onClick={() => addComponent('image-text')} className="col-span-2"><GalleryHorizontal className="mr-2 h-4 w-4"/>Bild &amp; Text</Button>
                 </div>
                 <form action={handleFormSubmit}>
                     <SubmitButton />

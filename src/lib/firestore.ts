@@ -44,7 +44,7 @@ export interface LegalPage {
 
 export interface NewsletterComponent {
     id: string;
-    type: 'heading' | 'text' | 'button' | 'image';
+    type: 'heading' | 'text' | 'button' | 'image' | 'separator' | 'spacer' | 'two-columns' | 'image-text';
     props: {
         [key: string]: any;
     };
