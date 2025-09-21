@@ -49,10 +49,17 @@ function SubmitButton() {
 
 export function EditorClient({ page }: { page: LegalPage }) {
   const [content, setContent] = useState(page.content);
+  const [formattedDate, setFormattedDate] = useState<string | null>(null);
   const [updateState, updateFormAction] = useActionState(updateLegalPageAction, initialLegalPageState);
   const [correctHtmlState, correctHtmlFormAction, isCorrectionPending] = useActionState(correctHtmlAction, initialCorrectHtmlState);
 
   const { toast } = useToast();
+
+  useEffect(() => {
+    // This effect runs only on the client, after hydration
+    setFormattedDate(new Date(page.lastUpdated).toLocaleString('de-DE'));
+  }, [page.lastUpdated]);
+
 
   useEffect(() => {
     if (updateState.success) {
@@ -118,7 +125,7 @@ export function EditorClient({ page }: { page: LegalPage }) {
             <Input id="title" name="title" defaultValue={page.title} required />
         </div>
         <div className="text-sm text-muted-foreground self-end">
-            Zuletzt aktualisiert: {new Date(page.lastUpdated).toLocaleString('de-DE')}
+            Zuletzt aktualisiert: {formattedDate || <Skeleton className="h-4 w-32 inline-block" />}
         </div>
       </div>
       <div className="flex-1 flex flex-col min-h-0">
