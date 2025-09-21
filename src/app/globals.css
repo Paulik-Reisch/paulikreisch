@@ -64,29 +64,6 @@
     @apply bg-background text-foreground;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    cursor: none;
-  }
-  
-  a, button, [role="button"], input[type="submit"], input[type="button"], .cursor-pointer {
-    cursor: none;
-  }
-
-  .custom-cursor {
-    position: fixed;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: hsl(var(--primary));
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    transition: width 0.2s, height 0.2s, background-color 0.2s;
-    z-index: 9999;
-  }
-
-  .custom-cursor.hover {
-    width: 30px;
-    height: 30px;
-    background-color: hsla(var(--primary), 0.5);
   }
 }
 
