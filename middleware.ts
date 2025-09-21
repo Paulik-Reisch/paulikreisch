@@ -10,32 +10,38 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * - admin/login (the login page itself)
      */
-    "/admin/:path*",
-    "/((?!api|_next/static|_next/image|favicon.ico|admin/login).*)",
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ],
 };
 
 export async function middleware(request: NextRequest) {
-  // Only apply middleware to /admin routes
-  if (!request.nextUrl.pathname.startsWith("/admin")) {
-    return NextResponse.next();
-  }
+  const { pathname } = request.nextUrl;
 
-  // Allow access to the login page
-  if (request.nextUrl.pathname === "/admin/login") {
+  // Only apply middleware to /admin routes
+  if (!pathname.startsWith('/admin')) {
     return NextResponse.next();
   }
 
   const session = await getSession();
-  const loginUrl = new URL("/admin/login", request.url);
+  const isLoginPage = pathname === '/admin/login';
 
-  // If there's no session, redirect to the login page.
-  if (!session) {
-    return NextResponse.redirect(loginUrl);
+  // If user is on the login page
+  if (isLoginPage) {
+    // If they have a session, redirect to the dashboard
+    if (session) {
+      return NextResponse.redirect(new URL('/admin', request.url));
+    }
+    // Otherwise, show the login page
+    return NextResponse.next();
   }
 
+  // For any other /admin page, if there's no session, redirect to login
+  if (!session) {
+    return NextResponse.redirect(new URL('/admin/login', request.url));
+  }
+
+  // If there is a session, allow access
   return NextResponse.next();
 }
 

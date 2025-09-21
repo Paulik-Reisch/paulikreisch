@@ -19,7 +19,7 @@ import {
 import { revalidatePath } from "next/cache";
 import { correctHtml } from "@/ai/flows/correct-html-flow";
 import { cookies } from "next/headers";
-import { encrypt, decrypt } from "@/lib/session";
+import { encrypt } from "@/lib/session";
 import { redirect } from "next/navigation";
 
 
@@ -381,3 +381,5 @@ export async function deleteNewsletterAction(
     return { success: false, error: "Fehler beim Löschen: " + error.message };
   }
 }
+
+    
