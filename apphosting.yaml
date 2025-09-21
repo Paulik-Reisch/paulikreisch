@@ -7,3 +7,6 @@ runConfig:
   maxInstances: 1
 buildConfig:
   memoryMiB: 2048
+secretEnv:
+  - secret: RESEND_API_KEY
+    name: RESEND_API_KEY

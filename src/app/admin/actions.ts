@@ -19,12 +19,14 @@ import {
   getAdminPassword,
   addTagsToSubscribers,
   getSubscribers,
+  getNewsletter,
 } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
 import { correctHtml } from "@/ai/flows/correct-html-flow";
 import { cookies } from "next/headers";
 import { encrypt } from "@/lib/session";
 import { redirect } from "next/navigation";
+import { Resend } from 'resend';
 
 
 const LoginSchema = z.object({
@@ -474,6 +476,10 @@ export async function sendNewsletterAction(
   if (tags.length === 0) {
     return { success: false, message: "Bitte wählen Sie mindestens einen Tag als Zielgruppe aus." };
   }
+  
+  if (!process.env.RESEND_API_KEY) {
+     return { success: false, message: "Resend API-Schlüssel ist nicht konfiguriert. Bitte im Secret Manager hinterlegen." };
+  }
 
   try {
     const allSubscribers = await getSubscribers();
@@ -487,34 +493,31 @@ export async function sendNewsletterAction(
     
     const recipientEmails = targetSubscribers.map(s => s.email);
 
-    // =================================================================
-    // HIER E-MAIL-VERSAND-LOGIK EINFÜGEN (z.B. mit Resend, Mailgun, etc.)
-    // 
-    // Beispiel mit einer hypothetischen `sendEmail` Funktion:
-    //
-    // const newsletter = await getNewsletter(newsletterId);
-    // if (!newsletter) {
-    //   return { success: false, message: "Newsletter nicht gefunden." };
-    // }
-    //
-    // await sendEmail({
-    //   to: recipientEmails,
-    //   subject: newsletter.subject,
-    //   html: newsletter.content,
-    //   from: 'hallo-welt@paulik-reisch.de'
-    // });
-    //
-    // =================================================================
+    const newsletter = await getNewsletter(newsletterId);
+    if (!newsletter) {
+      return { success: false, message: "Newsletter nicht gefunden." };
+    }
+    
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
-    console.log(`SIMULATION: Sende Newsletter ${newsletterId} an ${recipientEmails.length} Empfänger.`);
-    console.log("Empfänger:", recipientEmails);
+    const { data, error } = await resend.emails.send({
+      from: 'Hallo Welt <hallo-welt@paulik-reisch.de>',
+      to: recipientEmails,
+      subject: newsletter.subject,
+      html: newsletter.content,
+    });
+
+    if (error) {
+      console.error("Resend error:", error);
+      return { success: false, message: `Fehler beim E-Mail-Versand: ${error.message}` };
+    }
 
     revalidatePath("/admin");
-    return { success: true, message: `Versand von Newsletter an ${recipientEmails.length} Empfänger wurde simuliert.` };
+    return { success: true, message: `Newsletter an ${recipientEmails.length} Empfänger erfolgreich versendet. (Batch-ID: ${data?.id})` };
 
   } catch (e) {
     const error = e as Error;
-    console.error("Newsletter send error:", error);
-    return { success: false, message: `Fehler bei der Kampagnen-Simulation: ${error.message}` };
+    console.error("Newsletter send action error:", error);
+    return { success: false, message: `Fehler bei der Kampagnen-Ausführung: ${error.message}` };
   }
 }
