@@ -408,6 +408,7 @@ const UpdateNewsletterSchema = z.object({
   name: z.string().optional(),
   subject: z.string().optional(),
   components: z.string().optional(), // components will be passed as a JSON string
+  content: z.string().optional(), // Final HTML content
 });
 
 export async function updateNewsletterAction(
@@ -422,8 +423,12 @@ export async function updateNewsletterAction(
   }
   
   try {
-    const { id, components, ...rest } = validatedFields.data;
+    const { id, components, content, ...rest } = validatedFields.data;
     const dataToUpdate: any = { ...rest };
+    
+    if (content) {
+        dataToUpdate.content = content;
+    }
     if (components) {
         dataToUpdate.components = JSON.parse(components);
     }

@@ -1,3 +1,4 @@
+
 "use server";
 
 import { app } from "@/app/firebase";
@@ -45,7 +46,7 @@ export interface NewsletterComponent {
     id: string;
     type: 'heading' | 'text' | 'button' | 'image';
     props: {
-        [key: string]: string;
+        [key: string]: any;
     };
 }
 
@@ -54,6 +55,7 @@ export interface Newsletter {
     name: string;
     subject: string;
     components: NewsletterComponent[];
+    content: string; // Storing the final HTML
     lastUpdated: string;
 }
 
@@ -249,6 +251,7 @@ export async function getNewsletters(): Promise<Newsletter[]> {
             name: data.name,
             subject: data.subject,
             components: data.components || [],
+            content: data.content || '',
             lastUpdated: (data.lastUpdated as Timestamp).toDate().toISOString(),
         } as Newsletter;
     });
@@ -265,6 +268,7 @@ export async function getNewsletter(id: string): Promise<Newsletter | null> {
             name: data.name,
             subject: data.subject,
             components: data.components || [],
+            content: data.content || '',
             lastUpdated: (data.lastUpdated as Timestamp).toDate().toISOString(),
         } as Newsletter;
     } else {
@@ -277,6 +281,24 @@ export async function addNewsletter(data: { name: string; subject: string }): Pr
     const docRef = await addDoc(newslettersCol, {
         ...data,
         components: [],
+        content: `<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>${data.subject}</title>
+</head>
+<body style="margin: 0; padding: 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-color: #f4f4f4;">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4;">
+        <tr>
+            <td align="center">
+                <table width="600" border="0" cellpadding="0" cellspacing="0" style="max-width: 600px; width: 100%; background-color: #ffffff;">
+                    <!-- Add your components here -->
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>`,
         lastUpdated: Timestamp.now(),
     });
     return docRef.id;

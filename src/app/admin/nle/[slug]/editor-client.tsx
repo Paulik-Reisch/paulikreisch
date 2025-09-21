@@ -27,6 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { CodeEditor } from "@/components/admin/code-editor";
 
 
 function generateComponentHTML(component: NewsletterComponent): string {
@@ -295,9 +296,18 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
   const [name, setName] = useState(newsletter.name);
   const [subject, setSubject] = useState(newsletter.subject);
   const [components, setComponents] = useState<NewsletterComponent[]>(newsletter.components);
+  const [htmlContent, setHtmlContent] = useState(() => generateEmailHTML(newsletter.components));
+  const [hasManuallyEditedHtml, setHasManuallyEditedHtml] = useState(false);
 
   const [updateState, updateFormAction] = useActionState(updateNewsletterAction, initialEditorState);
   const { toast } = useToast();
+
+  useEffect(() => {
+    // Only update HTML from components if it hasn't been manually edited.
+    if (!hasManuallyEditedHtml) {
+        setHtmlContent(generateEmailHTML(components));
+    }
+  }, [components, hasManuallyEditedHtml]);
 
   useEffect(() => {
     if (updateState.success) {
@@ -312,10 +322,23 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
     formData.set('id', newsletter.id);
     formData.set('name', name);
     formData.set('subject', subject);
-    formData.set('components', JSON.stringify(components));
+    // Always save the latest HTML content from the editor
+    formData.set('content', htmlContent);
+    // Save components only if HTML was not manually edited
+    if (!hasManuallyEditedHtml) {
+      formData.set('components', JSON.stringify(components));
+    } else {
+      // Send empty array to indicate manual edit
+      formData.set('components', '[]'); 
+    }
     updateFormAction(formData);
   };
   
+  const handleHtmlChange = (value: string) => {
+    setHasManuallyEditedHtml(true);
+    setHtmlContent(value);
+  }
+
   const addComponent = (type: NewsletterComponent['type']) => {
       const newComponent: NewsletterComponent = {
           id: `${type}-${Date.now()}`,
@@ -323,17 +346,21 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
           props: {}
       };
       setComponents(prev => [...prev, newComponent]);
+      setHasManuallyEditedHtml(false);
   };
 
   const updateComponent = (id: string, props: any) => {
       setComponents(prev => prev.map(c => c.id === id ? { ...c, props } : c));
+      setHasManuallyEditedHtml(false);
   };
   
   const deleteComponent = (id: string) => {
       setComponents(prev => prev.filter(c => c.id !== id));
+      setHasManuallyEditedHtml(false);
   };
 
   const moveComponent = (id: string, direction: 'up' | 'down') => {
+      setHasManuallyEditedHtml(false);
       const index = components.findIndex(c => c.id === id);
       if (index === -1) return;
       
@@ -345,8 +372,6 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
       newComponents.splice(newIndex, 0, movedComponent);
       setComponents(newComponents);
   }
-
-  const generatedHTML = generateEmailHTML(components);
 
   return (
     <div className="grid md:grid-cols-[350px_1fr] h-full">
@@ -398,7 +423,7 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
         </div>
 
         {/* Main Content */}
-        <main className="flex-1 flex flex-col p-4 md:p-6 overflow-y-auto">
+        <main className="flex-1 flex flex-col p-4 md:p-6 overflow-y-auto h-full">
             <Tabs defaultValue="preview" className="w-full h-full flex flex-col">
                 <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="preview"><Eye className="mr-2 h-4 w-4"/>Vorschau</TabsTrigger>
@@ -406,16 +431,15 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
                 </TabsList>
                 <TabsContent value="preview" className="mt-4 flex-grow bg-gray-200 p-4 rounded-md">
                     <iframe
-                        srcDoc={generatedHTML}
+                        srcDoc={htmlContent}
                         title="E-Mail Vorschau"
                         className="w-full h-full border bg-white"
                     />
                 </TabsContent>
-                <TabsContent value="code" className="mt-4 flex-grow">
-                    <Textarea 
-                        readOnly 
-                        value={generatedHTML}
-                        className="w-full h-full font-mono text-xs resize-none"
+                <TabsContent value="code" className="mt-4 flex-grow flex flex-col min-h-0">
+                    <CodeEditor 
+                        value={htmlContent}
+                        onChange={handleHtmlChange}
                     />
                 </TabsContent>
             </Tabs>
