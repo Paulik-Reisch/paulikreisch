@@ -207,82 +207,6 @@ export async function deleteLegalPageAction(
     }
 }
 
-// Helper to generate simple HTML from page components
-function generatePageHtml(components: PageComponent[]): string {
-    return components.map(component => {
-        const props = component.props;
-        switch(component.type) {
-            case 'heading':
-                const Tag = props.level || 'h1';
-                return `<${Tag} class="${props.className || 'text-4xl font-bold tracking-tighter sm:text-5xl'}">${props.text || ''}</${Tag}>`;
-            case 'text':
-                return `<p class="${props.className || 'text-muted-foreground md:text-xl'}">${(props.text || '').replace(/\n/g, '<br />')}</p>`;
-            case 'button':
-                return `<div class="mt-6"><a href="${props.href || '#'}" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 shadow-md transform active:scale-95 border h-11 px-8 bg-primary text-primary-foreground hover:bg-primary/90">${props.text || 'Klick'}</a></div>`;
-            case 'image':
-                return `<div class="my-6"><img src="${props.src || 'https://placehold.co/800x450'}" alt="${props.alt || ''}" class="w-full h-auto rounded-lg shadow-md" /></div>`;
-            case 'spacer':
-                 return `<div style="height: ${props.height || '2rem'}"></div>`;
-            default:
-                return '';
-        }
-    }).join('\n');
-}
-
-export async function createDefaultLegalPagesAction(): Promise<AdminLegalPageState> {
-    const defaultPages = [
-        { 
-            pageId: "impressum", 
-            title: "Impressum", 
-            components: [
-                { id: "h1", type: 'heading', props: { text: 'Impressum', level: 'h1', className: 'text-4xl font-bold mb-4'}},
-                { id: "h2", type: 'heading', props: { text: 'Angaben gemäß § 5 TMG', level: 'h2', className: 'text-2xl font-bold mt-6 mb-2'}},
-                { id: "p1", type: 'text', props: { text: '[Vollständiger Name]<br />[Straße und Hausnummer]<br />[PLZ und Ort]', className: 'text-base'}},
-                { id: "h3", type: 'heading', props: { text: 'Kontakt', level: 'h2', className: 'text-2xl font-bold mt-6 mb-2'}},
-                { id: "p2", type: 'text', props: { text: 'Telefon: [Ihre Telefonnummer]<br />E-Mail: [Ihre E-Mail-Adresse]', className: 'text-base'}}
-            ]
-        },
-        { 
-            pageId: "datenschutz", 
-            title: "Datenschutzerklärung", 
-            components: [
-                { id: "h1", type: 'heading', props: { text: 'Datenschutzerklärung', level: 'h1', className: 'text-4xl font-bold mb-4'}},
-                { id: "p1", type: 'text', props: { text: 'Wir nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Hier finden Sie Informationen darüber, wie wir mit Ihren Daten umgehen.', className: 'text-base'}}
-            ]
-        },
-    ];
-
-    const results = { created: [] as string[], errors: [] as string[] };
-
-    for (const page of defaultPages) {
-        try {
-            const content = generatePageHtml(page.components as PageComponent[]);
-            await addLegalPage(page.pageId, { title: page.title, content, components: page.components as PageComponent[] });
-            results.created.push(page.pageId);
-        } catch (e) {
-            const error = e as Error;
-            // Ignore errors for pages that already exist
-            if (!error.message.includes("existiert bereits")) {
-                results.errors.push(`${page.pageId}: ${error.message}`);
-            }
-        }
-    }
-
-    if (results.errors.length > 0) {
-        return { success: false, error: `Fehler beim Erstellen der Seiten: ${results.errors.join(", ")}` };
-    }
-
-    revalidatePath("/admin");
-    defaultPages.forEach(p => revalidatePath(`/${p.pageId}`));
-    
-    const message = results.created.length > 0 
-        ? `Seiten erfolgreich erstellt: ${results.created.join(", ")}`
-        : "Alle Standardseiten existieren bereits.";
-
-    return { success: true, message };
-}
-
-
 const CorrectHtmlSchema = z.object({
   html: z.string(),
 });
@@ -407,3 +331,5 @@ export async function deleteNewsletterAction(
     return { success: false, error: "Fehler beim Löschen: " + error.message };
   }
 }
+
+    
