@@ -145,7 +145,7 @@ export function BookShop({ initialProducts }: { initialProducts: Product[]}) {
         
         <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-                {!initialProducts ? (
+                {initialProducts.length === 0 ? (
                     <>
                         <BookCardSkeleton />
                         <BookCardSkeleton />
