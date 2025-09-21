@@ -14,9 +14,59 @@ import {
   updateNewsletter,
   deleteNewsletter,
   PageComponent,
+  getAdminPassword,
 } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
 import { correctHtml } from "@/ai/flows/correct-html-flow";
+import { cookies } from "next/headers";
+import { encrypt, decrypt } from "@/lib/session";
+import { redirect } from "next/navigation";
+
+
+const LoginSchema = z.object({
+    password: z.string(),
+});
+
+export type LoginState = {
+    success: boolean;
+    error: string | null;
+};
+
+export async function loginAction(
+    prevState: LoginState,
+    formData: FormData
+): Promise<LoginState> {
+    const validatedFields = LoginSchema.safeParse(Object.fromEntries(formData.entries()));
+
+    if (!validatedFields.success) {
+        return { success: false, error: "Ungültige Eingabe." };
+    }
+    
+    const adminPassword = await getAdminPassword();
+
+    if (!adminPassword) {
+        return { success: false, error: "Admin-Passwort ist in der Datenbank nicht konfiguriert." };
+    }
+
+    if (validatedFields.data.password !== adminPassword) {
+        return { success: false, error: "Falsches Passwort." };
+    }
+
+    // Create session
+    const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+    const session = await encrypt({ expires });
+
+    cookies().set("session", session, { expires, httpOnly: true });
+
+    revalidatePath("/admin");
+    redirect('/admin');
+}
+
+export async function logoutAction() {
+    cookies().set("session", "", { expires: new Date(0) });
+    redirect('/admin/login');
+}
+
 
 // Products
 const ProductSchema = z.object({

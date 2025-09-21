@@ -99,6 +99,23 @@ const defaultProducts: Product[] = [
     }
 ];
 
+export async function getAdminPassword(): Promise<string | null> {
+    try {
+        const docRef = doc(db, "settings", "admin");
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists() && docSnap.data().password) {
+            return docSnap.data().password as string;
+        } else {
+            console.warn("Admin password not found in Firestore under settings/admin.");
+            return null;
+        }
+    } catch (error) {
+        console.error("Error fetching admin password:", error);
+        return null;
+    }
+}
+
 export async function getProducts(): Promise<Product[]> {
     try {
         const productsCol = collection(db, 'products');
