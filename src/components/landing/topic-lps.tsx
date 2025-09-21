@@ -1,68 +1,57 @@
 
 "use client";
 
-import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
-import Image from 'next/image';
-import { Card, CardContent } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
+import { ArrowRight, School, Coffee, Utensils, Bus, Dumbbell, AlarmClock, Biohazard } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 const topics = [
     {
         title: "Schule = Straflager",
         description: "Die Lernvollzugsanstalt hat wieder geöffnet. Freistunden als Fluchtversuch, Lehrer als Wärter.",
         link: "/lp-schule-straflager",
-        image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/schule.png?alt=media&token=8d6d2220-8eee-4143-ba1e-8517eec2385f",
-        aiHint: "prison school"
+        icon: School
     },
     {
-        title: "Lehrer sind auch nur Menschen (leider)",
+        title: "Lehrer sind auch nur Menschen",
         description: "Ein Kapitel über inkompetente Lehrer. Ein Hoch auf den Beamtenroboter mit Kaffeetasse.",
         link: "/lp-lehrer-roboter",
-        image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/lehrer.png?alt=media&token=e49dd416-a307-4278-909d-6920dcf7a0c3",
-        aiHint: "robot teacher"
+        icon: Coffee
     },
     {
         title: "Mensa = Todesfalle",
         description: "Ekelhumor vom Feinsten. Das Essen als Bio-Waffe. Lies das Menü der Hölle.",
         link: "/lp-mensa-todesfalle",
-        image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/mensa.png?alt=media&token=4e17cbe9-5f6e-4d4f-b919-e3917f961601",
-        aiHint: "disgusting food"
+        icon: Utensils
     },
     {
         title: "Busfahren = Mutprobe",
         description: "Der tägliche Nahverkehr als Gladiatorenkampf. Hol dir den 'Survival Guide'.",
         link: "/lp-busfahren-mutprobe",
-        image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/bus.png?alt=media&token=08503995-08e6-46dc-accf-cdfaa2f34650",
-        aiHint: "crowded bus"
+        icon: Bus
     },
     {
         title: "Sport ist Mord",
-        description: "Ein tiefgründiger Blick in die Abgründe der Sporthalle. Design wie ein Fitness-Werbeplakat – nur mit Knochenbrüchen.",
+        description: "Ein tiefgründiger Blick in die Abgründe der Sporthalle. Völkerball als Kriegsersatz.",
         link: "/lp-sport-ist-mord",
-        image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/sport.png?alt=media&token=81c3dfa8-3b76-4b30-a0d3-96ff219145ce",
-        aiHint: "sports accident"
+        icon: Dumbbell
     },
     {
         title: "Schulzeiten = Genickbruch",
         description: "Warum Frühaufstehen ein Staatsverbrechen ist. Der Wecker ist der wahre Feind der Menschheit.",
         link: "/lp-schulzeiten-genickbruch",
-        image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/schulzeiten.png?alt=media&token=63d97151-7333-4241-85ea-96e6973d71f3",
-        aiHint: "alarm clock"
+        icon: AlarmClock
     },
     {
         title: "Corona für Schüler erklärt",
         description: "Eine satirische Aufarbeitung von Tests & Quarantäne. Nasenbohrer willkommen!",
         link: "/lp-corona-satire",
-        image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/corona.png?alt=media&token=e85455c1-b0c4-4f46-8fac-d9fb346de97d",
-        aiHint: "medical test"
+        icon: Biohazard
     }
 ];
 
 export function TopicLPs() {
-  const [activeTopic, setActiveTopic] = useState(topics[0]);
-
   return (
     <section id="topic-lps" className="w-full py-12 md:py-24 lg:py-32 bg-muted/40">
       <div className="container px-4 md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
@@ -75,22 +64,27 @@ export function TopicLPs() {
           </div>
         </div>
         
-        <div className="max-w-2xl mx-auto">
-            <div className="flex flex-col gap-2">
-                {topics.map((topic) => (
-                    <Link
-                        href={topic.link}
-                        key={topic.link}
-                        className='p-4 rounded-lg transition-all duration-300 bg-card shadow-md hover:shadow-xl'
-                    >
-                        <h3 className="font-headline text-xl font-bold">{topic.title}</h3>
-                        <p className="text-sm text-muted-foreground">{topic.description}</p>
-                        <div className="flex items-center text-primary font-semibold text-sm mt-2">
-                            Mehr erfahren <ArrowRight className="ml-2 h-4 w-4" />
+        <div className="mx-auto grid max-w-5xl items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+            {topics.map((topic, index) => (
+                <Card key={topic.link} className="flex flex-col transform transition-transform duration-300 hover:scale-105 hover:shadow-xl" style={{ transform: `rotate(${(index % 2 === 0 ? -1 : 1) * (1 + index * 0.2)}deg)` }}>
+                    <CardHeader className="items-center text-center">
+                        <div className="p-4 bg-primary/10 rounded-full mb-4">
+                            <topic.icon className="h-8 w-8 text-primary" />
                         </div>
-                    </Link>
-                ))}
-            </div>
+                        <CardTitle className="font-headline text-xl">{topic.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-center flex-grow">
+                        <CardDescription>{topic.description}</CardDescription>
+                    </CardContent>
+                    <CardFooter className="justify-center">
+                         <Link href={topic.link}>
+                            <Button variant="outline">
+                                Mehr erfahren <ArrowRight className="ml-2 h-4 w-4" />
+                            </Button>
+                        </Link>
+                    </CardFooter>
+                </Card>
+            ))}
         </div>
       </div>
     </section>
