@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Save, ArrowLeft, Eye, Code, PlusCircle, Trash2, ArrowUp, ArrowDown, Type, Image as ImageIcon, Link as LinkIcon, AlignLeft, AlignCenter, AlignRight, Copy } from "lucide-react";
+import { Loader2, Save, ArrowLeft, Eye, Code, PlusCircle, Trash2, ArrowUp, ArrowDown, Type, Image as ImageIcon, Link as LinkIcon, AlignLeft, AlignCenter, AlignRight, Copy, Rows, Columns, Minus } from "lucide-react";
 import { useFormStatus } from "react-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -58,7 +58,7 @@ function generateComponentHTML(component: NewsletterComponent): string {
                     <td style="padding: 20px;" align="${align}">
                         <table border="0" cellpadding="0" cellspacing="0" role="presentation">
                             <tr>
-                                <td align="center" bgcolor="${props.backgroundColor || '#007bff'}" role="presentation" style="background:${props.backgroundColor || '#007bff'};border:none;cursor:auto;padding:10px 25px;">
+                                <td align="center" bgcolor="${props.backgroundColor || '#007bff'}" role="presentation" style="border:none;cursor:auto;padding:10px 25px;background:${props.backgroundColor || '#007bff'};">
                                     <a href="${props.href || '#'}" style="background:${props.backgroundColor || '#007bff'};color:${props.color || '#ffffff'};font-family:Arial, sans-serif;font-size:${props.fontSize || '16px'};font-weight:bold;line-height:120%;margin:0;text-decoration:none;text-transform:none;" target="_blank">
                                         ${props.text || ''}
                                     </a>
@@ -77,6 +77,41 @@ function generateComponentHTML(component: NewsletterComponent): string {
                             <tr>
                                 <td>
                                     <img src="${props.src || 'https://placehold.co/600x400'}" alt="${props.alt || ''}" style="width: 100%; height: auto; display: block;" width="${width}" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            `;
+        case 'separator':
+            return `
+                <tr>
+                    <td style="padding: ${props.padding || 10}px 20px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <td height="1" style="border-bottom: ${props.thickness || 1}px ${props.style || 'solid'} ${props.color || '#cccccc'};"></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            `;
+        case 'spacer':
+            return `
+                <tr>
+                    <td style="height: ${props.height || 20}px; line-height: ${props.height || 20}px; font-size: 1px;">&nbsp;</td>
+                </tr>
+            `;
+        case 'two-columns':
+            return `
+                <tr>
+                    <td style="padding: 10px 20px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <td valign="top" width="50%" style="padding-right: 10px;">
+                                    <p style="font-family: Arial, sans-serif; font-size: 14px; color: #333333; margin: 0; line-height: 1.5;">${(props.text1 || '').replace(/\n/g, '<br />')}</p>
+                                </td>
+                                <td valign="top" width="50%" style="padding-left: 10px;">
+                                    <p style="font-family: Arial, sans-serif; font-size: 14px; color: #333333; margin: 0; line-height: 1.5;">${(props.text2 || '').replace(/\n/g, '<br />')}</p>
                                 </td>
                             </tr>
                         </table>
@@ -314,6 +349,48 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component:
                     {renderAlignmentSelector()}
                 </div>
             );
+            case 'separator': return (
+                <div className="space-y-4">
+                    <div className="flex gap-2 items-end">
+                        {renderColorInput('color', 'Farbe', '#cccccc')}
+                        <div className="flex-1">
+                            <Label htmlFor={`${component.id}-thickness`} className="text-xs">Dicke (px)</Label>
+                            <Input id={`${component.id}-thickness`} type="number" value={component.props.thickness || '1'} onChange={(e) => updateProp('thickness', e.target.value)} className="h-8"/>
+                        </div>
+                    </div>
+                     <div className="flex-1">
+                        <Label htmlFor={`${component.id}-style`} className="text-xs">Stil</Label>
+                         <Select onValueChange={(v) => updateProp('style', v)} defaultValue={component.props.style || 'solid'}>
+                            <SelectTrigger className="h-8">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="solid">Solid</SelectItem>
+                                <SelectItem value="dashed">Dashed</SelectItem>
+                                <SelectItem value="dotted">Dotted</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div className="flex-1">
+                        <Label htmlFor={`${component.id}-padding`} className="text-xs">Vertikaler Abstand (px)</Label>
+                        <Input id={`${component.id}-padding`} type="number" value={component.props.padding || '10'} onChange={(e) => updateProp('padding', e.target.value)} className="h-8"/>
+                    </div>
+                </div>
+            );
+            case 'spacer': return (
+                <div className="space-y-4">
+                     <div className="flex-1">
+                        <Label htmlFor={`${component.id}-height`} className="text-xs">Höhe (px)</Label>
+                        <Input id={`${component.id}-height`} type="number" value={component.props.height || '20'} onChange={(e) => updateProp('height', e.target.value)} className="h-8"/>
+                    </div>
+                </div>
+            );
+            case 'two-columns': return (
+                 <div className="space-y-4">
+                    {renderTextarea('text1', 'Text Spalte 1')}
+                    {renderTextarea('text2', 'Text Spalte 2')}
+                </div>
+            );
             default: return <p>Unbekannter Komponententyp</p>
         }
     }
@@ -322,7 +399,10 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component:
         heading: <Type className="h-4 w-4" />,
         text: <Type className="h-4 w-4" />,
         button: <LinkIcon className="h-4 w-4" />,
-        image: <ImageIcon className="h-4 w-4" />
+        image: <ImageIcon className="h-4 w-4" />,
+        separator: <Minus className="h-4 w-4" />,
+        spacer: <Rows className="h-4 w-4" />,
+        'two-columns': <Columns className="h-4 w-4" />
     }
 
     return (
@@ -330,7 +410,7 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component:
             <AccordionTrigger className="hover:no-underline p-2 bg-muted/50 rounded-t-md border">
                 <div className="flex items-center gap-2 text-sm font-semibold w-full">
                     {typeIcons[component.type]}
-                    <span className="capitalize flex-grow text-left">{component.type}</span>
+                    <span className="capitalize flex-grow text-left">{component.type.replace('-', ' ')}</span>
                      <Button type="button" size="icon" variant="ghost" className="h-6 w-6" onClick={(e) => { e.stopPropagation(); onMove(component.id, 'up'); }}><ArrowUp className="h-4 w-4"/></Button>
                     <Button type="button" size="icon" variant="ghost" className="h-6 w-6" onClick={(e) => { e.stopPropagation(); onMove(component.id, 'down'); }}><ArrowDown className="h-4 w-4"/></Button>
                     <Button type="button" size="icon" variant="ghost" className="h-6 w-6 text-destructive hover:text-destructive" onClick={(e) => { e.stopPropagation(); onDelete(component.id); }}><Trash2 className="h-4 w-4"/></Button>
@@ -490,6 +570,9 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
                     <Button variant="outline" onClick={() => addComponent('text')}><Type className="mr-2 h-4 w-4"/>Text</Button>
                     <Button variant="outline" onClick={() => addComponent('button')}><LinkIcon className="mr-2 h-4 w-4"/>Button</Button>
                     <Button variant="outline" onClick={() => addComponent('image')}><ImageIcon className="mr-2 h-4 w-4"/>Bild</Button>
+                    <Button variant="outline" onClick={() => addComponent('spacer')}><Rows className="mr-2 h-4 w-4"/>Abstand</Button>
+                    <Button variant="outline" onClick={() => addComponent('separator')}><Minus className="mr-2 h-4 w-4"/>Trenner</Button>
+                    <Button variant="outline" onClick={() => addComponent('two-columns')} className="col-span-2"><Columns className="mr-2 h-4 w-4"/>Zwei Spalten</Button>
                 </div>
                 <form action={handleFormSubmit}>
                     <SubmitButton />
@@ -522,3 +605,5 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
     </div>
   );
 }
+
+    
