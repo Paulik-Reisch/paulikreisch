@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Book, Scale } from "lucide-react";
 import { getLegalPage } from "@/lib/firestore";
 import { notFound } from "next/navigation";
+import { format } from "date-fns";
+
 
 export default async function LizenzPage() {
     const page = await getLegalPage("lizenz");
@@ -91,7 +93,7 @@ export default async function LizenzPage() {
                     </Link>
                 </div>
                 {lizenzParts.slice(1).map((p, i) => <p key={i}>{p}</p>)}
-                <p className="text-xs text-muted-foreground pt-4">Stand: {page.lastUpdated ? page.lastUpdated.toDate().toLocaleDateString('de-DE') : new Date().toLocaleDateString('de-DE')}</p>
+                <p className="text-xs text-muted-foreground pt-4">Stand: {page.lastUpdated ? format(new Date(page.lastUpdated), 'dd.MM.yyyy') : new Date().toLocaleDateString('de-DE')}</p>
               </div>
             </div>
 

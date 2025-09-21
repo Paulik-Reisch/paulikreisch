@@ -3,20 +3,16 @@
 import { useState, useEffect } from "react";
 import { useActionState } from "react";
 import { 
-    getOrders, 
-    getProducts, 
     Order, 
     Product, 
     LegalPage, 
-    getLegalPages, 
+    getOrders
 } from "@/lib/firestore";
 import {
     addProductAction,
     updateProductAction,
     addLegalPageAction,
     updateLegalPageAction,
-    AdminProductState,
-    AdminLegalPageState,
 } from "@/app/admin/actions";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -106,7 +102,7 @@ function LeadsTable() {
                             orders.map((order) => (
                                 <TableRow key={order.id}>
                                     <TableCell>
-                                        {order.timestamp ? format(order.timestamp.toDate(), "dd.MM.yyyy HH:mm", { locale: de }) : 'N/A'}
+                                        {order.timestamp ? format(new Date(order.timestamp), "dd.MM.yyyy HH:mm", { locale: de }) : 'N/A'}
                                     </TableCell>
                                     <TableCell>
                                         <div className="font-medium">{order.firstName} {order.lastName}</div>
@@ -135,40 +131,32 @@ function LeadsTable() {
     );
 }
 
-function ProductsManager() {
-    const [products, setProducts] = useState<Product[]>([]);
+type AdminProductState = {
+  success: boolean;
+  error: string | null;
+};
+
+const initialProductState: AdminProductState = { success: false, error: null };
+
+function ProductsManager({ initialProducts }: { initialProducts: Product[] }) {
+    const [products, setProducts] = useState<Product[]>(initialProducts);
     const [editingProducts, setEditingProducts] = useState<{ [key: string]: Partial<Product> }>({});
-    const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const { toast } = useToast();
 
-    const [addState, addFormAction] = useActionState(addProductAction, { success: false, error: null });
-    const [updateState, updateFormAction] = useActionState(updateProductAction, { success: false, error: null });
+    const [addState, addFormAction] = useActionState(addProductAction, initialProductState);
+    const [updateState, updateFormAction] = useActionState(updateProductAction, initialProductState);
 
-    const fetchProducts = async () => {
-        setLoading(true);
-        try {
-            const fetchedProducts = await getProducts();
-            setProducts(fetchedProducts);
-            setEditingProducts({});
-        } catch (error) {
-            console.error("Error fetching products:", error);
-            toast({ variant: "destructive", title: "Fehler", description: "Produkte konnten nicht geladen werden." });
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchProducts();
-    }, []);
+     useEffect(() => {
+        setProducts(initialProducts);
+    }, [initialProducts]);
     
     useEffect(() => {
         if (addState.success) {
             toast({ title: "Erstellt", description: "Neues Produkt wurde erfolgreich hinzugefügt." });
             setIsAddDialogOpen(false);
-            fetchProducts();
+            // Re-fetching is handled by revalidation on the server
         }
         if (addState.error) {
             toast({ variant: "destructive", title: "Fehler", description: addState.error });
@@ -178,7 +166,8 @@ function ProductsManager() {
     useEffect(() => {
         if (updateState.success) {
             toast({ title: "Gespeichert", description: "Produkt wurde erfolgreich aktualisiert." });
-            fetchProducts();
+            setEditingProducts({});
+             // Re-fetching is handled by revalidation on the server
         }
         if (updateState.error) {
             toast({ variant: "destructive", title: "Fehler", description: updateState.error });
@@ -221,10 +210,6 @@ function ProductsManager() {
                         </form>
                     </DialogContent>
                 </Dialog>
-                <Button onClick={fetchProducts} disabled={loading} variant="outline">
-                    {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
-                    Aktualisieren
-                </Button>
             </div>
             <div className="border rounded-lg overflow-hidden">
                 <Table>
@@ -238,10 +223,10 @@ function ProductsManager() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {loading ? (
+                        {products.length === 0 ? (
                              <TableRow>
                                 <TableCell colSpan={5} className="text-center py-12">
-                                    <Loader2 className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
+                                    <p>Keine Produkte gefunden.</p>
                                 </TableCell>
                             </TableRow>
                         ) : (
@@ -298,39 +283,31 @@ function ProductsManager() {
     );
 }
 
-function LegalPagesManager() {
-    const [pages, setPages] = useState<LegalPage[]>([]);
+type AdminLegalPageState = {
+    success: boolean;
+    error: string | null;
+};
+const initialLegalPageState: AdminLegalPageState = { success: false, error: null };
+
+
+function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
+    const [pages, setPages] = useState<LegalPage[]>(initialPages);
     const [editingPages, setEditingPages] = useState<{ [key: string]: Partial<LegalPage> }>({});
-    const [loading, setLoading] = useState(true);
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const { toast } = useToast();
 
-    const [addState, addFormAction] = useActionState(addLegalPageAction, { success: false, error: null });
-    const [updateState, updateFormAction] = useActionState(updateLegalPageAction, { success: false, error: null });
-
-    const fetchPages = async () => {
-        setLoading(true);
-        try {
-            const fetchedPages = await getLegalPages();
-            setPages(fetchedPages);
-            setEditingPages({});
-        } catch (error) {
-            console.error("Error fetching legal pages:", error);
-            toast({ variant: "destructive", title: "Fehler", description: "Rechtstexte konnten nicht geladen werden." });
-        } finally {
-            setLoading(false);
-        }
-    };
+    const [addState, addFormAction] = useActionState(addLegalPageAction, initialLegalPageState);
+    const [updateState, updateFormAction] = useActionState(updateLegalPageAction, initialLegalPageState);
 
     useEffect(() => {
-        fetchPages();
-    }, []);
+        setPages(initialPages);
+    }, [initialPages]);
 
     useEffect(() => {
         if (addState.success) {
             toast({ title: "Erstellt", description: "Neue Seite wurde erfolgreich hinzugefügt." });
             setIsAddDialogOpen(false);
-            fetchPages();
+            // Revalidation handles refetch
         }
         if (addState.error) {
             toast({ variant: "destructive", title: "Fehler", description: addState.error });
@@ -340,7 +317,8 @@ function LegalPagesManager() {
     useEffect(() => {
         if (updateState.success) {
             toast({ title: "Gespeichert", description: `Seite wurde erfolgreich aktualisiert.` });
-            fetchPages();
+            setEditingPages({});
+            // Revalidation handles refetch
         }
         if (updateState.error) {
             toast({ variant: "destructive", title: "Fehler", description: updateState.error });
@@ -378,16 +356,8 @@ function LegalPagesManager() {
                         </form>
                     </DialogContent>
                 </Dialog>
-                <Button onClick={fetchPages} disabled={loading} variant="outline">
-                    {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
-                    Aktualisieren
-                </Button>
             </div>
-            {loading ? (
-                <div className="text-center py-12">
-                    <Loader2 className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
-                </div>
-            ) : pages.length === 0 ? (
+            {pages.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground">
                     <FileText className="mx-auto h-8 w-8 mb-2" />
                     Keine Rechtstexte gefunden.
@@ -402,7 +372,7 @@ function LegalPagesManager() {
                                     <input type="hidden" name="pageId" value={page.id} />
                                     <CardHeader>
                                         <CardTitle>Seite: {page.id}</CardTitle>
-                                        <CardDescription>Zuletzt aktualisiert: {page.lastUpdated ? format(page.lastUpdated.toDate(), "dd.MM.yyyy HH:mm", { locale: de }) : 'N/A'}</CardDescription>
+                                        <CardDescription>Zuletzt aktualisiert: {page.lastUpdated ? format(new Date(page.lastUpdated), "dd.MM.yyyy HH:mm", { locale: de }) : 'N/A'}</CardDescription>
                                     </CardHeader>
                                     <CardContent className="space-y-4">
                                         <div>
@@ -444,7 +414,13 @@ function LegalPagesManager() {
     )
 }
 
-export function AdminDashboard() {
+export function AdminDashboard({
+    initialProducts,
+    initialLegalPages,
+}: {
+    initialProducts: Product[];
+    initialLegalPages: LegalPage[];
+}) {
     return (
         <Tabs defaultValue="leads" className="w-full">
             <TabsList className="grid w-full grid-cols-3">
@@ -456,10 +432,10 @@ export function AdminDashboard() {
                 <LeadsTable />
             </TabsContent>
             <TabsContent value="products" className="mt-6">
-                <ProductsManager />
+                <ProductsManager initialProducts={initialProducts} />
             </TabsContent>
             <TabsContent value="legal" className="mt-6">
-                <LegalPagesManager />
+                <LegalPagesManager initialPages={initialLegalPages} />
             </TabsContent>
         </Tabs>
     )

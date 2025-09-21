@@ -30,14 +30,14 @@ export interface Product {
 export interface Order {
     id: string;
     [key: string]: any;
-    timestamp: Timestamp;
+    timestamp: string; // Changed from Timestamp to string
 }
 
 export interface LegalPage {
     id: string;
     title: string;
     content: string;
-    lastUpdated: Timestamp;
+    lastUpdated: string; // Changed from Timestamp to string
 }
 
 const db = getFirestore(app);
@@ -68,7 +68,7 @@ export async function getOrders(): Promise<Order[]> {
         return { 
             id: doc.id, 
             ...data,
-            timestamp: (data.timestamp as Timestamp)
+            timestamp: (data.timestamp as Timestamp).toDate().toISOString()
         } as Order;
     });
     return orderList;
@@ -76,10 +76,9 @@ export async function getOrders(): Promise<Order[]> {
 
 export async function addOrder(orderData: any) {
     const ordersCol = collection(db, 'orders');
-    // Firestore automatically converts JS Date objects to Timestamps
     const dataWithTimestamp = {
         ...orderData,
-        timestamp: new Date(orderData.timestamp)
+        timestamp: Timestamp.now()
     };
     await addDoc(ordersCol, dataWithTimestamp);
 }
@@ -96,8 +95,9 @@ export async function getLegalPages(): Promise<LegalPage[]> {
         const data = doc.data();
         return { 
             id: doc.id, 
-            ...data,
-            lastUpdated: (data.lastUpdated as Timestamp)
+            title: data.title,
+            content: data.content,
+            lastUpdated: (data.lastUpdated as Timestamp).toDate().toISOString(),
         } as LegalPage;
     });
     return pageList;
@@ -111,8 +111,9 @@ export async function getLegalPage(slug: string): Promise<LegalPage | null> {
         const data = docSnap.data();
         return {
             id: docSnap.id,
-            ...data,
-            lastUpdated: (data.lastUpdated as Timestamp)
+            title: data.title,
+            content: data.content,
+            lastUpdated: (data.lastUpdated as Timestamp).toDate().toISOString()
         } as LegalPage;
     } else {
         return null;

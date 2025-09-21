@@ -3,6 +3,7 @@ import { Footer } from "@/components/landing/footer";
 import { getLegalPage } from "@/lib/firestore";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { format } from "date-fns";
 
 function processContent(content: string) {
     const parts = content.split(/(\[\[.*?\]\])/g);
@@ -64,7 +65,7 @@ export default async function CookieRichtliniePage() {
             })}
             
              <div className="space-y-4">
-                 <p className="text-xs text-muted-foreground">Stand: {page.lastUpdated ? page.lastUpdated.toDate().toLocaleDateString('de-DE') : new Date().toLocaleDateString('de-DE')}</p>
+                 <p className="text-xs text-muted-foreground">Stand: {page.lastUpdated ? format(new Date(page.lastUpdated), 'dd.MM.yyyy') : new Date().toLocaleDateString('de-DE')}</p>
             </div>
           </div>
         </div>

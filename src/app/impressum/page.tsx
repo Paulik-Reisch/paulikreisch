@@ -2,6 +2,7 @@ import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import { getLegalPage } from "@/lib/firestore";
 import { notFound } from "next/navigation";
+import { format } from "date-fns";
 
 export default async function ImpressumPage() {
   const page = await getLegalPage("impressum");
@@ -36,7 +37,7 @@ export default async function ImpressumPage() {
                 </div>
               );
             })}
-             <p className="text-xs text-muted-foreground mt-8">Stand: {page.lastUpdated ? page.lastUpdated.toDate().toLocaleDateString('de-DE') : new Date().toLocaleDateString('de-DE')}</p>
+             <p className="text-xs text-muted-foreground mt-8">Stand: {page.lastUpdated ? format(new Date(page.lastUpdated), 'dd.MM.yyyy') : new Date().toLocaleDateString('de-DE')}</p>
           </div>
         </div>
       </main>
