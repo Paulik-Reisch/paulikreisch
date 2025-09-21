@@ -13,20 +13,20 @@ export default function AGBPage() {
               Allgemeine Geschäftsbedingungen (AGB)
             </h1>
             <p className="text-lg text-muted-foreground">
-              Nutzungsbedingungen für die Webseite und die darauf angebotenen Dienste.
+              Nutzungsbedingungen für die Website und die darauf angebotenen Dienste
             </p>
 
             <div className="space-y-4">
               <h2 className="text-2xl font-bold font-headline">§ 1 Geltungsbereich und Anbieter</h2>
               <p className="text-muted-foreground">
-                Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für die Nutzung der Webseite www.paulik-reisch.de und aller darauf angebotenen Dienste, insbesondere der interaktiven KI-Generatoren. Betreiber der Webseite und Vertragspartner sind Philipp Paulik und Maximilian Reisch (nachfolgend "Betreiber" genannt).
+                Die Allgemeinen Geschäftsbedingungen (AGB) gelten für die Nutzung der Webseite www.paulik-reisch.de und aller darauf angebotenen Dienste, insbesondere der interaktiven KI-Generatoren. Betreiber der Website und Vertragspartner sind Philipp Paulik und Maximilian Reisch (nachfolgend "Betreiber" genannt).
               </p>
             </div>
 
             <div className="space-y-4">
               <h2 className="text-2xl font-bold font-headline">§ 2 Leistungsgegenstand</h2>
               <p className="text-muted-foreground">
-                Die Betreiber stellen auf dieser Webseite Informationen zu ihren literarischen Werken sowie interaktive, auf künstlicher Intelligenz (KI) basierende Unterhaltungsfunktionen (nachfolgend "KI-Dienste") zur Verfügung. Die Nutzung der Webseite und der KI-Dienste ist unentgeltlich. Die KI-Dienste dienen reinen Unterhaltungszwecken. Die generierten Inhalte sind satirisch und erheben keinen Anspruch auf Richtigkeit, Genauigkeit oder Angemessenheit.
+                Die Betreiber stellen auf dieser Website Informationen zu ihren literarischen Werken sowie interaktive, auf künstlicher Intelligenz basierende, Unterhaltungsfunktionen (nachfolgend "KI-Dienste") zur Verfügung. Die Nutzung der Website und der KI-Dienste ist unentgeltlich. Die KI-Dienste dienen reinen Unterhaltungszwecken. Die generierten Inhalte sind satirisch und erheben keinen Anspruch auf Richtigkeit, Genauigkeit oder Angemessenheit.
               </p>
             </div>
             
@@ -46,21 +46,21 @@ export default function AGBPage() {
             <div className="space-y-4">
               <h2 className="text-2xl font-bold font-headline">§ 4 Haftungsausschluss</h2>
               <p className="text-muted-foreground">
-                Die Betreiber haften nicht für die von den KI-Diensten generierten Inhalte. Diese Inhalte sind fiktiv, können ungenau, unangemessen oder beleidigend sein und spiegeln nicht die Meinung der Betreiber wider. Die Haftung für Schäden, die aus der Nutzung oder Nichtnutzung der angebotenen Informationen bzw. durch die Nutzung fehlerhafter und unvollständiger Informationen verursacht wurden, ist grundsätzlich ausgeschlossen, sofern seitens der Betreiber kein nachweislich vorsätzliches oder grob fahrlässiges Verschulden vorliegt.
+                Die Betreiber haften nicht für die von den KI-Diensten generierten Inhalte. Die Inhalte sind fiktiv, können ungenau, unangemessen oder beleidigend sein und spiegeln nicht die Meinung der Betreiber wider. Die Haftung für Schäden, die aus der Nutzung oder Nichtnutzung der angebotenen Informationen bzw. durch die Nutzung fehlerhafter und unvollständiger Informationen verursacht wurden, ist grundsätzlich ausgeschlossen, sofern seitens der Betreiber kein nachweislich vorsätzliches oder grob fahrlässiges Verschulden vorliegt.
               </p>
             </div>
 
             <div className="space-y-4">
               <h2 className="text-2xl font-bold font-headline">§ 5 Urheberrecht</h2>
               <p className="text-muted-foreground">
-                Alle auf dieser Webseite veröffentlichten Inhalte, insbesondere Texte, Bilder und die Gestaltung, unterliegen dem deutschen Urheberrecht. Die durch die KI-Dienste generierten Texte dürfen im Rahmen der unter <Link href="/lizenz" className="underline">Lizenz</Link> genannten Bedingungen weiterverwendet werden.
+                Alle auf dieser Website veröffentlichten Inhalte, insbesondere Texte, Bilder und die Gestaltung, unterliegen dem deutschen Urheberrecht. Die durch die KI-Dienste generierten Texte dürfen im Rahmen der unter <Link href="/lizenz" className="underline">Lizenz</Link> genannten Bedingungen weiterverwendet werden.
               </p>
             </div>
 
             <div className="space-y-4">
               <h2 className="text-2xl font-bold font-headline">§ 6 Schlussbestimmungen</h2>
               <p className="text-muted-foreground">
-                Sollten einzelne Bestimmungen dieser AGB unwirksam sein oder werden, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt. Die Betreiber behalten sich das Recht vor, diese AGB jederzeit zu ändern.
+                Sollten einzelne Bestimmungen der AGB unwirksam sein oder werden, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt. Die Betreiber behalten sich das Recht vor, die AGB jederzeit zu ändern.
               </p>
                <p className="text-xs text-muted-foreground">Stand: {new Date().toLocaleDateString('de-DE')}</p>
             </div>

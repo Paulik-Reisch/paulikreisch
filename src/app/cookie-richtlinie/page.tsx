@@ -19,14 +19,14 @@ export default function CookieRichtliniePage() {
             <div className="space-y-4">
               <h2 className="text-2xl font-bold font-headline">Was zum Teufel ist ein Cookie?</h2>
               <p className="text-muted-foreground">
-                Ein Cookie ist eine kleine Textdatei, die eine Webseite auf Ihrem Computer oder Mobilgerät speichert, wenn Sie sie besuchen. Es ist nicht essbar, enttäuschenderweise. Es hilft der Website, sich Ihre Aktionen und Präferenzen (wie z.B. die Tatsache, dass Sie unser nerviges Cookie-Banner bereits gesehen haben) über einen bestimmten Zeitraum zu merken.
+                Ein Cookie ist eine kleine Textdatei, die eine Website auf Ihrem Computer oder Mobilgerät speichert, wenn Sie diese besuchen. Er ist enttäuschenderweise nicht essbar, sondern hilft der Website, sich Ihre Aktionen und Präferenzen (wie z.B. die Tatsache, dass Sie unser nerviges Cookie-Banner bereits gesehen haben) über einen bestimmten Zeitraum zu merken.
               </p>
             </div>
 
             <div className="space-y-4">
               <h2 className="text-2xl font-bold font-headline">Wie wir Cookies verwenden</h2>
               <p className="text-muted-foreground">
-                Wir verwenden Cookies aus einem einzigen, existenziell wichtigen Grund:
+                Wir verwenden Cookies aus einem einzigen wichtigen Grund:
               </p>
               <ul className="list-disc list-inside text-muted-foreground space-y-2">
                 <li>
