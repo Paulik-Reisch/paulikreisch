@@ -109,7 +109,7 @@ function HW2LeadForm({ title, description, source }: { title: string, descriptio
     )
 }
 
-export function HeroPfeiffer() {
+export function HeroPfeifer() {
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
@@ -117,7 +117,7 @@ export function HeroPfeiffer() {
           <header className="text-center mb-12">
             <Badge variant="secondary">Exklusiv-Enthüllung</Badge>
             <h1 className="font-headline text-4xl sm:text-6xl font-bold tracking-tighter mt-4 text-balance">
-              Hallo Welt & das Mysterium der "La Silbadora Pfeiffer"
+              Hallo Welt & das Mysterium der "La Silbadora Pfeifer"
             </h1>
             <p className="text-xl text-muted-foreground mt-4 text-balance">
               Eine redaktionelle Analyse eines Phänomens, das die Grundfesten
@@ -138,13 +138,13 @@ export function HeroPfeiffer() {
           <p>
             In den verrauchten Amtsstuben und schlecht beleuchteten
             Universitätskorridoren flüstert man ihren Namen nur:{" "}
-            <span className="font-semibold italic">La Silbadora Pfeiffer</span>.
+            <span className="font-semibold italic">La Silbadora Pfeifer</span>.
             Ein Phantom. Eine Frau, deren pfeifende Melodien die
             Gesetze der Physik außer Kraft setzen. Doch was steckt wirklich hinter diesem Mythos?
             Unsere Recherche führt uns zurück in die heiligen Hallen der Lernvollzugsanstalt Siebenkirchen-Seelscheid.
           </p>
           <p>
-            Die Legende hat einen Namen: Rabea Pfeifer. Im Buch <Link href="/buchhandlung-paulik-reisch" className="font-bold underline">"Hallo Welt"</Link> als <strong className="font-headline">R. Pfffer</strong> verewigt, war sie die Spanischlehrerin, die den jungen Autoren den Weg wies. Nicht den Weg zur Grammatik – nein, den Weg zu den wirklich wichtigen Dingen im Leben. Frau Pfeifer, eine Frau, deren Begeisterung für die spanische Sprache nur von ihrer Abneigung gegen Mathematik und funktionierende Technik übertroffen wurde, war eine Institution.
+            Die Legende hat einen Namen: Rabea Pfeifer. Im Buch <Link href="/buchhandlung-paulik-reisch" className="font-bold underline">"Hallo Welt"</Link> als <strong className="font-headline">R. Pfeffer</strong> verewigt, war sie die Spanischlehrerin, die den jungen Autoren den Weg wies. Nicht den Weg zur Grammatik – nein, den Weg zu den wirklich wichtigen Dingen im Leben. Frau Pfeifer, eine Frau, deren Begeisterung für die spanische Sprache nur von ihrer Abneigung gegen Mathematik und funktionierende Technik übertroffen wurde, war eine Institution.
           </p>
           
            <blockquote>
@@ -181,7 +181,7 @@ export function HeroPfeiffer() {
             <HW2LeadForm
                 title="Lust auf noch mehr Wortakrobatik?"
                 description="Seien Sie der Erste, der erfährt, wann 'Hallo Welt 2' erscheint. Wir benachrichtigen Sie, versprochen."
-                source="pfeiffer-lead-1"
+                source="Pfeifer-lead-1"
             />
 
             <p>
@@ -208,7 +208,7 @@ export function HeroPfeiffer() {
                 Die Chipirones essende Frau Silbadora mag Witze sehr. Sehr sogar. Es wird gemunkelt, dass ihre legendären Pfeifmelodien oft nur überpfiffene Versionen von Pointen sind, die nur sie versteht. Ihr Lachen, so heißt es, könne das Fundament jedes noch so stabilen Schulgebäudes erschüttern und sei der wahre Grund für die Risse in den Wänden der Lernvollzugsanstalt.
             </p>
             <p>
-                Die Autoren, Philipp und Max, wussten um diese Leidenschaft. In einem Anflug jugendlicher Genialität (oder war es doch nur Prokrastination vor den Spanisch-Hausaufgaben?) erschufen sie ein digitales Denkmal für ihre Mentorin. Ein Ort, an dem der Witz regiert und die Ernsthaftigkeit draußen bleiben muss. Eine Ode an das, was Frau Pfeiffer ihnen wirklich beigebracht hat: das Leben nicht ganz so ernst zu nehmen.
+                Die Autoren, Philipp und Max, wussten um diese Leidenschaft. In einem Anflug jugendlicher Genialität (oder war es doch nur Prokrastination vor den Spanisch-Hausaufgaben?) erschufen sie ein digitales Denkmal für ihre Mentorin. Ein Ort, an dem der Witz regiert und die Ernsthaftigkeit draußen bleiben muss. Eine Ode an das, was Frau Pfeifer ihnen wirklich beigebracht hat: das Leben nicht ganz so ernst zu nehmen.
             </p>
             <p>
                 Diese Webseite trug den klangvollen Namen "eñje". Sie mag heute zwar so verstaubt sein wie die Kreide unter der Tafel, aber es ist uns gelungen, einige der besten Artefakte aus den digitalen Trümmern zu bergen. Eine Sammlung von Witzen, die einst das Herz (und das Zwerchfell) von La Silbadora erfreuten.
@@ -243,7 +243,7 @@ export function HeroPfeiffer() {
             <HW2LeadForm
                 title="Die Geschichte geht weiter..."
                 description="Gefällt Ihnen, was Sie lesen? 'Hallo Welt 2' setzt dem Ganzen die Krone auf. Tragen Sie sich ein und erfahren Sie als Erster, wann das nächste Kapitel des Wahnsinns beginnt."
-                source="pfeiffer-lead-2"
+                source="Pfeifer-lead-2"
             />
         </article>
       </div>
