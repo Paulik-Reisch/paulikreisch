@@ -152,11 +152,11 @@ export function HeroPfeifer() {
           </blockquote>
 
           <p>
-            Es war nach der 8. Klasse, als unsere Helden unter die Fittiche von La Silbadora kamen. Sie lernten, dass Sprache mehr ist als nur Kommunikation. Sie ist eine Waffe. Ein Werkzeug. Eine Kunstform. Insbesondere die Kunstform der gepflegten Beleidigung. Frau Pfeifer vermittelte ihnen die wertvollsten Lektionen ihres Lebens in Form von handverlesenen *palabrotas* – Schimpfwörtern.
+            Es war nach der 8. Klasse, als unsere Helden unter die Fittiche von La Silbadora kamen. Sie lernten, dass Sprache mehr ist als nur Kommunikation. Sie ist eine Waffe. Ein Werkzeug. Eine Kunstform. Insbesondere die Kunstform der gepflegten Beleidigung. Frau Pfeifer vermittelte ihnen die wertvollsten Lektionen ihres Lebens in Form von handverlesenen "palabrotas" – Schimpfwörtern.
           </p>
 
             <div className="my-12 not-prose">
-                <h3 className="font-headline text-2xl font-bold text-center mb-4">Grundwortschatz Spanisch nach R. Pfffer</h3>
+                <h3 className="font-headline text-2xl font-bold text-center mb-4">Grundwortschatz Spanisch nach R. Pfeifer</h3>
                  <Table>
                     <TableHeader>
                         <TableRow>

@@ -11,6 +11,7 @@ import { generateReportCard } from "@/ai/flows/generate-report-card-flow";
 import { generateBureaucracyResponse } from "@/ai/flows/generate-bureaucracy-flow";
 import { generateDbExcuse } from "@/ai/flows/generate-db-excuse-flow";
 import { generateSatireType } from "@/ai/flows/generate-satire-type-flow";
+import { pfeiferTranslate } from "@/ai/flows/pfeifer-translate-flow";
 import { addOrder, addSubscriber } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
 
@@ -218,6 +219,38 @@ export async function createSatireTypeAction(
         return { result: null, error: "Analyse fehlgeschlagen. Der Psychoanalytiker ist gerade in der Kaffeepause." };
     }
 }
+
+const pfeiferTranslateSchema = z.object({
+  text: z.string().min(1, "Bitte geben Sie einen Text ein.").max(500, "Der Text darf maximal 500 Zeichen lang sein."),
+});
+
+export async function pfeiferTranslateAction(
+  prevState: {
+    translation?: string;
+    error?: string;
+  },
+  formData: FormData
+) {
+  const validatedFields = pfeiferTranslateSchema.safeParse({
+    text: formData.get("text"),
+  });
+
+  if (!validatedFields.success) {
+    const errorMessages = validatedFields.error.errors.map(e => e.message).join('. ');
+    return {
+      error: errorMessages,
+    };
+  }
+
+  try {
+    const result = await pfeiferTranslate(validatedFields.data);
+    return { translation: result.translation };
+  } catch (e) {
+    console.error(e);
+    return { error: "Übersetzung fehlgeschlagen. La Silbadora macht gerade Siesta." };
+  }
+}
+
 
 const OrderSchema = z.object({
   payload: z.string(),
