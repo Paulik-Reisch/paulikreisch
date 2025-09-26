@@ -127,7 +127,7 @@ export function HeroPfeifer() {
 
           <div className="relative aspect-video mb-12 rounded-lg overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-500 -rotate-1">
             <Image
-              src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/r-pfeifer-con-espania.png?alt=media&token=60bf3e15-b0e1-439e-a286-538ced5aedfd"
+              src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/r-pfeifer-con-espania.png?alt=media&token=d858afac-622b-42b9-837e-c2ac5143189a"
               alt="Die legendäre Spanischlehrerin R. Pfeifer mit einer Spanienflagge im Hintergrund"
               data-ai-hint="teacher spain"
               layout="fill"
