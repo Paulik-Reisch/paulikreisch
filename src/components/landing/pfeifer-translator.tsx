@@ -32,8 +32,14 @@ function TranslateButton() {
         </>
       ) : (
         <>
-          <Languages className="mr-2 h-4 w-4" />
-          Übersetzen
+          <Image 
+            src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/pfeifer-translate-logo.png?alt=media&token=b9cc1522-b994-43d9-ac64-a034cf323a91"
+            alt="Pfeifer Translate Logo"
+            width={24}
+            height={24}
+            className="mr-2 rounded-full"
+          />
+          Verpfeifern!
         </>
       )}
     </Button>
