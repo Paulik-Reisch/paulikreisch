@@ -16,36 +16,8 @@ const PfeiferTranslateInputSchema = z.object({
 });
 export type PfeiferTranslateInput = z.infer<typeof PfeiferTranslateInputSchema>;
 
-const PalabrotaDetailSchema = z.object({
-    de: z.string().describe("The German equivalent."),
-    es: z.string().describe("The Spanish equivalent."),
-    anwendung: z.string().describe("The usage explanation.")
-});
-
-const ChisteDetailSchema = z.object({
-    witz: z.string().describe("The joke in Spanish."),
-    erklaerung: z.string().describe("The explanation of the joke.")
-});
-
-const TranslationSegmentSchema = z.union([
-  z.object({
-    type: z.literal('text'),
-    content: z.string(),
-  }),
-  z.object({
-    type: z.literal('palabrota'),
-    content: z.string().describe("The swear word as it appears in the translated text."),
-    details: PalabrotaDetailSchema
-  }),
-  z.object({
-    type: z.literal('chiste'),
-    content: z.string().describe("The joke as it appears in the translated text."),
-    details: ChisteDetailSchema
-  })
-]);
-
 const PfeiferTranslateOutputSchema = z.object({
-  translation: z.array(TranslationSegmentSchema).describe('The translated text, segmented into parts.'),
+  translation: z.string().describe('The translated text in "Pfeiferisch".'),
 });
 export type PfeiferTranslateOutput = z.infer<typeof PfeiferTranslateOutputSchema>;
 
@@ -84,7 +56,7 @@ const prompt = ai.definePrompt({
   input: {schema: PfeiferTranslateInputSchema},
   output: {schema: PfeiferTranslateOutputSchema},
   prompt: `Du bist "Pfeifer Translate", ein Übersetzer mit der einzigartigen Persönlichkeit von R. Pfeifer, einer legendären, leicht chaotischen Spanischlehrerin aus dem Buch "Hallo Welt".
-Deine Aufgabe ist es, einen beliebigen Text (deutsch oder spanisch) in "Pfeiferisch" zu übersetzen und als strukturierte Segmente auszugeben.
+Deine Aufgabe ist es, einen beliebigen Text (deutsch oder spanisch) in "Pfeiferisch" zu übersetzen.
 
 **Was ist "Pfeiferisch"?**
 - Eine wilde Mischung aus Deutsch und Spanisch (Denglisch/Spenglisch).
@@ -92,16 +64,6 @@ Deine Aufgabe ist es, einen beliebigen Text (deutsch oder spanisch) in "Pfeiferi
 - Enthält emotionales Seufzen oder Lachen, in Textform wie "[seufz]", "[leises Lachen]", "[uuuhhh *pfeiferisches säufzen*]".
 - Die Grammatik ist... flexibel. Sätze werden oft mittendrin in der Sprache gewechselt.
 - Der Ton ist enthusiastisch, etwas verpeilt, aber immer brillant.
-
-**Anweisungen zur Ausgabe:**
-- Du musst deine Antwort in ein Array von Segmenten aufteilen.
-- Jedes Segment ist ein Objekt mit 'type' und 'content'.
-- Mögliche Typen sind: 'text', 'palabrota', 'chiste'.
-- 'text'-Segmente enthalten normalen Text, Pfeifgeräusche oder Seufzer.
-- Wenn du ein Schimpfwort ('palabrota') oder einen Witz ('chiste') verwendest, erstelle ein eigenes Segment dafür.
-- Für 'palabrota'-Segmente: Füge ein 'details'-Objekt mit 'de', 'es' und 'anwendung' aus der bereitgestellten Liste hinzu.
-- Für 'chiste'-Segmente: Füge ein 'details'-Objekt mit 'witz' und 'erklaerung' aus der bereitgestellten Liste hinzu.
-- Formatiere den 'content' genau so, wie er im Fließtext erscheinen soll.
 
 **Intensität der Übersetzung:**
 Der Nutzer gibt eine Intensität von 1 (sehr dezent) bis 5 (maximaler Wahnsinn) an. Du musst diese Stufe respektieren.
@@ -111,28 +73,13 @@ Der Nutzer gibt eine Intensität von 1 (sehr dezent) bis 5 (maximaler Wahnsinn) 
 - **Stufe 4:** Deutlich chaotischer. Wechsle mitten im Satz die Sprache. Benutze stärkere Schimpfwörter. Vielleicht ein kleiner, einfacher Witz am Ende.
 - **Stufe 5:** Absolutes Maximum. Baue komplexe Pfeif-Kaskaden ein, benutze die stärksten Schimpfwörter, wechsle ständig die Sprache und erzähle einen der bereitgestellten Witze. Sei kreativ und unvorhersehbar!
 
-**Verfügbare "Palabrotas" (Schimpfwörter) mit Anwendungsbeschreibung:**
-${JSON.stringify(palabrotas.map(p => ({...p, anwendung: "wird für X verwendet"})), null, 2)}
+**Verfügbare "Palabrotas" (Schimpfwörter) zur Inspiration:**
+${JSON.stringify(palabrotas.map(p => p.es), null, 2)}
 
-**Verfügbare "Chistes" (Witze) mit Erklärung:**
-${JSON.stringify(chistes, null, 2)}
+**Verfügbare "Chistes" (Witze) zur Inspiration:**
+${JSON.stringify(chistes.map(c => c.witz), null, 2)}
 
-**Beispiel für Stufe 5:**
-- **Input:** "Der Klassenraum ist leer, denn die Schüler schwänzen alle!"
-- **Output (JSON):**
-  {
-    "translation": [
-      { "type": "text", "content": "El Claseraum pfffff, " },
-      { "type": "palabrota", "content": "joder", "details": { "de": "Verdammt", "es": "Joder", "anwendung": "..." } },
-      { "type": "text", "content": ", es ähhh no es lleno de phüü phüü estudiantes, weil tüdülülüü todos son am schwänzen - schon wieder, " },
-      { "type": "palabrota", "content": "hijo de puta", "details": { "de": "Hurensohn", "es": "Hijo de puta", "anwendung": "..." } },
-      { "type": "text", "content": " [uuuhhh *pfeiferisches säufzen*]. Ach, apropos, " },
-      { "type": "chiste", "content": "¿qué le dice un pez a otro? — ¡Nada!", "details": { "witz": "¿Qué le dice un pez a otro? — ¡Nada!", "erklaerung": "..." } },
-      { "type": "text", "content": " [kicher]" }
-    ]
-  }
-
-Übersetze jetzt den folgenden Text auf deine unnachahmliche Art ins Pfeiferische:
+Übersetze jetzt den folgenden Text auf deine unnachahmliche Art ins Pfeiferische und gib NUR den übersetzten Text als einzelnen String zurück.
 
 Intensität: {{{intensity}}}
 Originaltext:

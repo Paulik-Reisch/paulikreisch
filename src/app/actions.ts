@@ -1,6 +1,4 @@
-
-
-"use server";
+'use server';
 
 import { z } from "zod";
 import {
@@ -228,7 +226,7 @@ const pfeiferTranslateSchema = z.object({
 
 export async function pfeiferTranslateAction(
   prevState: {
-    translation?: PfeiferTranslateOutput;
+    translation?: string;
     error?: string;
   },
   formData: FormData
@@ -247,7 +245,7 @@ export async function pfeiferTranslateAction(
 
   try {
     const result = await pfeiferTranslate(validatedFields.data);
-    return { translation: result };
+    return { translation: result.translation };
   } catch (e) {
     console.error(e);
     return { error: "Übersetzung fehlgeschlagen. La Silbadora macht gerade Siesta." };
@@ -319,5 +317,3 @@ export async function subscribeToNewsletterAction(
         return { error: "Anmeldung fehlgeschlagen. Das Internet ist wahrscheinlich wieder kaputt." };
     }
 }
-
-    

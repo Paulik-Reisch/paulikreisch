@@ -1,29 +1,19 @@
+'use client';
 
-"use client";
-
-import { useActionState, useEffect, useState, useRef } from "react";
-import { useFormStatus } from "react-dom";
-import { pfeiferTranslateAction } from "@/app/actions";
-import { PfeiferTranslateOutput } from "@/ai/flows/pfeifer-translate-flow";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
-import { Loader2, Languages, Copy, Settings } from "lucide-react";
-import { Skeleton } from "../ui/skeleton";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Label } from "../ui/label";
-import { Slider } from "../ui/slider";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
-
-type Translation = PfeiferTranslateOutput['translation'];
+import { useActionState, useEffect, useState, useRef } from 'react';
+import { useFormStatus, useFormState } from 'react-dom';
+import { pfeiferTranslateAction } from '@/app/actions';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2, Languages, Copy, Settings } from 'lucide-react';
+import { Skeleton } from '../ui/skeleton';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Label } from '../ui/label';
+import { Slider } from '../ui/slider';
 
 const initialState: {
-  translation?: Translation;
+  translation?: string;
   error?: string;
 } = {
   translation: undefined,
@@ -61,21 +51,21 @@ export function PfeiferTranslator() {
   const [state, formAction] = useActionState(pfeiferTranslateAction, initialState);
   const { toast } = useToast();
   const [inputText, setInputText] = useState("Der Klassenraum ist leer, denn die Schüler schwänzen alle!");
-  const [outputText, setOutputText] = useState<Translation>([]);
+  const [outputText, setOutputText] = useState<string>("");
   const [intensity, setIntensity] = useState(3);
   const { pending } = useFormStatus();
 
   useEffect(() => {
     if (pending) {
-      setOutputText([]);
+      setOutputText('');
     }
   }, [pending]);
   
   useEffect(() => {
     if (state.error) {
       toast({
-        variant: "destructive",
-        title: "Fehler",
+        variant: 'destructive',
+        title: 'Fehler',
         description: state.error,
       });
     }
@@ -87,13 +77,9 @@ export function PfeiferTranslator() {
   const handleCopyToClipboard = (text: string) => {
     if (!text) return;
     navigator.clipboard.writeText(text);
-    toast({ title: "Kopiert!", description: "Der Text wurde in die Zwischenablage kopiert." });
+    toast({ title: 'Kopiert!', description: 'Der Text wurde in die Zwischenablage kopiert.' });
   };
   
-  const getFullTextFromOutput = () => {
-    return outputText.map(segment => segment.content).join('');
-  }
-
   return (
     <section className="w-full py-12 md:py-16" style={{ backgroundColor: 'hsl(var(--color-bg-light-pink))' }}>
        <div className="container px-4 md:px-6">
@@ -171,51 +157,15 @@ export function PfeiferTranslator() {
                             <Skeleton className="h-5 w-3/4" />
                             <Skeleton className="h-5 w-5/6" />
                         </div>
-                    ) : outputText.length > 0 ? (
-                        <TooltipProvider>
-                             <p>
-                                {outputText.map((segment, index) => {
-                                    if (segment.type === 'text') {
-                                        return <span key={index}>{segment.content}</span>;
-                                    }
-
-                                    const tooltipContent = (
-                                        <TooltipContent>
-                                            {segment.type === 'palabrota' ? (
-                                                <div className="p-2 max-w-xs">
-                                                    <p className="font-bold text-base">{segment.details.es}</p>
-                                                    <p className="text-sm text-muted-foreground">Deutsch: {segment.details.de}</p>
-                                                    <p className="text-xs mt-2 italic">"{segment.details.anwendung}"</p>
-                                                </div>
-                                            ) : (
-                                                <div className="p-2 max-w-xs">
-                                                     <p className="font-bold text-base">{segment.details.witz}</p>
-                                                     <p className="text-xs mt-2 italic">{segment.details.erklaerung}</p>
-                                                </div>
-                                            )}
-                                        </TooltipContent>
-                                    );
-
-                                    return (
-                                        <Tooltip key={index}>
-                                            <TooltipTrigger asChild>
-                                                <span className="underline decoration-dotted cursor-help font-semibold text-primary">
-                                                    {segment.content}
-                                                </span>
-                                            </TooltipTrigger>
-                                            {tooltipContent}
-                                        </Tooltip>
-                                    );
-                                })}
-                            </p>
-                        </TooltipProvider>
+                    ) : outputText ? (
+                        <p>{outputText}</p>
                     ) : (
                         <span className="text-muted-foreground">Übersetzung erscheint hier...</span>
                     )}
                </div>
                <div className="flex justify-between items-center mt-2 px-2">
                  <span className="text-xs text-muted-foreground"></span>
-                 <Button type="button" variant="ghost" size="icon" onClick={() => handleCopyToClipboard(getFullTextFromOutput())}>
+                 <Button type="button" variant="ghost" size="icon" onClick={() => handleCopyToClipboard(outputText)}>
                     <Copy className="h-5 w-5" />
                  </Button>
                </div>
