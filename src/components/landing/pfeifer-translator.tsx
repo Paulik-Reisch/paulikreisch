@@ -6,12 +6,13 @@ import { pfeiferTranslateAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Languages, Copy, Settings } from 'lucide-react';
+import { Loader2, Copy, Settings, ArrowRight } from 'lucide-react';
 import { Skeleton } from '../ui/skeleton';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Label } from '../ui/label';
 import { Slider } from '../ui/slider';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const initialState: {
   translation?: string;
@@ -91,21 +92,27 @@ export function PfeiferTranslator() {
   return (
     <section className="w-full py-12 md:py-16" style={{ backgroundColor: 'hsl(var(--color-bg-light-pink))' }}>
        <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center space-y-4 text-center mb-8">
-            <Image 
-                src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/pfeifer-translate-logo.png?alt=media&token=b9cc1522-b994-43d9-ac64-a034cf323a91"
-                alt="Pfeifer Translate Logo"
-                width={128}
-                height={128}
-                className="rounded-full shadow-lg"
-            />
-             <p className="text-sm font-semibold text-primary">La Silbadora Special</p>
-            <h1 className="font-headline text-2xl font-bold tracking-tighter">
-                Pfeifer Translate
-            </h1>
-            <p className="max-w-[700px] text-muted-foreground text-sm">
-                Ein Übersetzer, den die Welt nicht braucht, aber verdient hat. Angetrieben von der Genialität und dem Chaos von R. Pfeifer.
-            </p>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left mb-8">
+            <div className="flex items-center gap-3">
+              <Image 
+                  src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/pfeifer-translate-logo.png?alt=media&token=b9cc1522-b994-43d9-ac64-a034cf323a91"
+                  alt="Pfeifer Translate Logo"
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+              />
+              <div>
+                <h1 className="font-headline text-xl font-bold tracking-tighter">
+                    Pfeifer Translate
+                </h1>
+                <p className="text-xs text-muted-foreground">Ein La Silbadora Special</p>
+              </div>
+            </div>
+            <Link href="/lp-pfeifer">
+              <Button variant="ghost" size="sm">
+                Was ist das? <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
         </div>
 
         <form action={formAction} className="max-w-4xl mx-auto flex flex-col items-center gap-4">
