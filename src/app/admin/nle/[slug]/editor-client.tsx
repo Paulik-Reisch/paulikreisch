@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Save, ArrowLeft, Eye, Code, PlusCircle, Trash2, ArrowUp, ArrowDown, Type, Image as ImageIcon, Link as LinkIcon, AlignLeft, AlignCenter, AlignRight, Copy, Rows, Columns, Minus, GalleryHorizontal } from "lucide-react";
+import { Loader2, Save, ArrowLeft, Eye, Code, PlusCircle, Trash2, ArrowUp, ArrowDown, Type, Image as ImageIcon, Link as LinkIcon, AlignLeft, AlignCenter, AlignRight, Copy, Rows, Columns, Minus, GalleryHorizontal, Settings, Box } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Accordion,
@@ -29,6 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CodeEditor } from "@/components/admin/code-editor";
+import { Switch } from "@/components/ui/switch";
 
 
 function generateComponentHTML(component: NewsletterComponent): string {
@@ -166,8 +167,12 @@ function generateComponentHTML(component: NewsletterComponent): string {
     }
 }
 
-function generateEmailHTML(components: NewsletterComponent[], subject: string, previewUrl: string): string {
+function generateEmailHTML(components: NewsletterComponent[], subject: string, previewUrl: string, useWrapper: boolean): string {
     const body = components.map(generateComponentHTML).join('');
+
+    if (!useWrapper) {
+        return `<!DOCTYPE html><html><head><title>${subject}</title></head><body>${body}</body></html>`;
+    }
 
     return `
         <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -484,6 +489,7 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
   const [name, setName] = useState(newsletter.name);
   const [subject, setSubject] = useState(newsletter.subject);
   const [components, setComponents] = useState<NewsletterComponent[]>(newsletter.components);
+  const [useWrapper, setUseWrapper] = useState(newsletter.useWrapper !== false);
   const [htmlContent, setHtmlContent] = useState('');
   const [hasManuallyEditedHtml, setHasManuallyEditedHtml] = useState(false);
   const [previewUrl, setPreviewUrl] = useState('');
@@ -499,9 +505,9 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
 
     // Only update HTML from components if it hasn't been manually edited.
     if (!hasManuallyEditedHtml) {
-        setHtmlContent(generateEmailHTML(components, subject, url));
+        setHtmlContent(generateEmailHTML(components, subject, url, useWrapper));
     }
-  }, [components, subject, hasManuallyEditedHtml, newsletter.id]);
+  }, [components, subject, useWrapper, hasManuallyEditedHtml, newsletter.id]);
 
   useEffect(() => {
     if (updateState.success) {
@@ -517,6 +523,7 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
     formData.set('id', newsletter.id);
     formData.set('name', name);
     formData.set('subject', subject);
+    formData.set('useWrapper', useWrapper.toString());
     // Always save the latest HTML content from the editor
     formData.set('content', htmlContent);
     // Save components only if HTML was not manually edited
@@ -601,8 +608,31 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
                     <Label htmlFor="subject">Betreff</Label>
                     <Input id="subject" value={subject} onChange={e => setSubject(e.target.value)} />
                 </div>
+
+                <Accordion type="single" collapsible className="w-full" defaultValue="settings">
+                    <AccordionItem value="settings">
+                        <AccordionTrigger className="hover:no-underline text-sm font-semibold">
+                            <div className="flex items-center gap-2">
+                                <Settings className="h-4 w-4" /> Einstellungen
+                            </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="p-4 space-y-4">
+                            <div className="flex items-center justify-between rounded-lg border p-3 shadow-sm">
+                                <div className="space-y-0.5">
+                                    <Label>Standard E-Mail Layout</Label>
+                                    <p className="text-xs text-muted-foreground">
+                                        Aktivieren, um den Inhalt in einen 600px breiten Container mit Header/Footer zu packen.
+                                    </p>
+                                </div>
+                                <Switch checked={useWrapper} onCheckedChange={setUseWrapper} />
+                            </div>
+                        </AccordionContent>
+                    </AccordionItem>
+                </Accordion>
+
+
                  <div>
-                    <h3 className="text-sm font-medium mb-2">Komponenten</h3>
+                    <h3 className="text-sm font-medium mb-2 mt-4 flex items-center gap-2"><Box className="h-4 w-4"/>Komponenten</h3>
                     {hasManuallyEditedHtml && (
                         <div className="p-2 mb-2 text-xs bg-yellow-100 border border-yellow-300 rounded-md text-yellow-800">
                            Sie bearbeiten den HTML-Code manuell. Komponenten-Änderungen werden nicht mehr synchronisiert. Speichern Sie, um die visuellen Komponenten wieder zu aktivieren.

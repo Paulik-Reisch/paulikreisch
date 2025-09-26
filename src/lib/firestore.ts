@@ -78,6 +78,7 @@ export interface Newsletter {
     components: NewsletterComponent[];
     content: string; // Storing the final HTML
     lastUpdated: string;
+    useWrapper?: boolean;
 }
 
 
@@ -340,6 +341,7 @@ export async function getNewsletters(): Promise<Newsletter[]> {
             components: data.components || [],
             content: data.content || '',
             lastUpdated: (data.lastUpdated as Timestamp).toDate().toISOString(),
+            useWrapper: data.useWrapper !== false, // default to true
         } as Newsletter;
     });
 }
@@ -357,6 +359,7 @@ export async function getNewsletter(id: string): Promise<Newsletter | null> {
             components: data.components || [],
             content: data.content || '',
             lastUpdated: (data.lastUpdated as Timestamp).toDate().toISOString(),
+            useWrapper: data.useWrapper !== false, // default to true
         } as Newsletter;
     } else {
         return null;
@@ -370,6 +373,7 @@ export async function addNewsletter(data: { name: string; subject: string }): Pr
         components: [],
         content: ``, // Start with empty content
         lastUpdated: Timestamp.now(),
+        useWrapper: true,
     });
     return docRef.id;
 }
@@ -389,6 +393,7 @@ export async function duplicateNewsletter(id: string): Promise<string> {
         components: originalNewsletter.components,
         content: originalNewsletter.content,
         lastUpdated: Timestamp.now(),
+        useWrapper: originalNewsletter.useWrapper,
     });
     
     return newNewsletterRef.id;
@@ -530,8 +535,12 @@ function generateComponentHTML(component: NewsletterComponent): string {
     }
 }
 
-function generateEmailHTML(components: NewsletterComponent[], subject: string, previewUrl: string): string {
+function generateEmailHTML(components: NewsletterComponent[], subject: string, previewUrl: string, useWrapper: boolean): string {
     const body = components.map(generateComponentHTML).join('');
+
+    if (!useWrapper) {
+        return body;
+    }
 
     return `
         <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -589,14 +598,24 @@ export async function updateNewsletter(id: string, data: Partial<Omit<Newsletter
     
     let finalData: any = { ...data };
 
+    // If components are being updated, we need to regenerate the HTML content
     if (data.components) {
         const docSnap = await getDoc(newsletterRef);
         if (docSnap.exists()) {
              const existingData = docSnap.data();
+             const useWrapper = data.useWrapper !== undefined ? data.useWrapper : existingData.useWrapper !== false;
              const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || ''}/nl/preview/${id}`;
-             finalData.content = generateEmailHTML(data.components, data.subject || existingData.subject, previewUrl);
+             finalData.content = generateEmailHTML(data.components, data.subject || existingData.subject, previewUrl, useWrapper);
+        }
+    } else if (data.useWrapper !== undefined) {
+         const docSnap = await getDoc(newsletterRef);
+         if (docSnap.exists()) {
+            const existingData = docSnap.data();
+            const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || ''}/nl/preview/${id}`;
+            finalData.content = generateEmailHTML(existingData.components, data.subject || existingData.subject, previewUrl, data.useWrapper);
         }
     }
+
 
     await updateDoc(newsletterRef, {
         ...finalData,

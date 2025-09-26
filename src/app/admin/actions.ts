@@ -332,6 +332,7 @@ const UpdateNewsletterSchema = z.object({
   subject: z.string().optional(),
   components: z.string().optional(), // components will be passed as a JSON string
   content: z.string().optional(), // Final HTML content
+  useWrapper: z.string().optional(),
 });
 
 export async function updateNewsletterAction(
@@ -346,11 +347,14 @@ export async function updateNewsletterAction(
   }
   
   try {
-    const { id, components, ...rest } = validatedFields.data;
+    const { id, components, useWrapper, ...rest } = validatedFields.data;
     const dataToUpdate: any = { ...rest };
     
     if (components) {
         dataToUpdate.components = JSON.parse(components);
+    }
+    if (useWrapper) {
+        dataToUpdate.useWrapper = useWrapper === 'true';
     }
     
     await updateNewsletter(id, dataToUpdate);
