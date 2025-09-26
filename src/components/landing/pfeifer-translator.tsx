@@ -74,7 +74,7 @@ export function PfeiferTranslator() {
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center space-y-4 text-center mb-12">
           <Badge variant="secondary">La Silbadora Special</Badge>
-          <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl text-balance">
+          <h1 className="font-headline text-2xl font-bold tracking-tighter sm:text-3xl text-balance">
             Pfeifer Translate
           </h1>
           <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl text-balance">
