@@ -24,7 +24,7 @@ const initialState: {
 function TranslateButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending} size="lg">
+    <Button type="submit" disabled={pending} size="lg" variant="secondary">
       {pending ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
