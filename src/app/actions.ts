@@ -1,4 +1,5 @@
 
+
 "use server";
 
 import { z } from "zod";
@@ -11,7 +12,7 @@ import { generateReportCard } from "@/ai/flows/generate-report-card-flow";
 import { generateBureaucracyResponse } from "@/ai/flows/generate-bureaucracy-flow";
 import { generateDbExcuse } from "@/ai/flows/generate-db-excuse-flow";
 import { generateSatireType } from "@/ai/flows/generate-satire-type-flow";
-import { pfeiferTranslate } from "@/ai/flows/pfeifer-translate-flow";
+import { pfeiferTranslate, PfeiferTranslateOutput } from "@/ai/flows/pfeifer-translate-flow";
 import { addOrder, addSubscriber } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
 
@@ -227,7 +228,7 @@ const pfeiferTranslateSchema = z.object({
 
 export async function pfeiferTranslateAction(
   prevState: {
-    translation?: string;
+    translation?: PfeiferTranslateOutput;
     error?: string;
   },
   formData: FormData
@@ -246,7 +247,7 @@ export async function pfeiferTranslateAction(
 
   try {
     const result = await pfeiferTranslate(validatedFields.data);
-    return { translation: result.translation };
+    return { translation: result };
   } catch (e) {
     console.error(e);
     return { error: "Übersetzung fehlgeschlagen. La Silbadora macht gerade Siesta." };
