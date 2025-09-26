@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useEffect, useState } from 'react';
+import { useActionState, useEffect, useState, useRef } from 'react';
 import { useFormStatus } from 'react-dom';
 import { pfeiferTranslateAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
@@ -33,7 +33,7 @@ function TranslateButton() {
         </>
       ) : (
         <>
-          <Image 
+          <Image
             src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/pfeifer-translate-logo.png?alt=media&token=b9cc1522-b994-43d9-ac64-a034cf323a91"
             alt="Pfeifer Translate Logo"
             width={24}
