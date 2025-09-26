@@ -171,7 +171,7 @@ function generateEmailHTML(components: NewsletterComponent[], subject: string, p
     const body = components.map(generateComponentHTML).join('');
 
     if (!useWrapper) {
-        return `<!DOCTYPE html><html><head><title>${subject}</title></head><body>${body}</body></html>`;
+        return body;
     }
 
     return `
@@ -209,6 +209,17 @@ function generateEmailHTML(components: NewsletterComponent[], subject: string, p
                                     <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
                                         ${body}
                                     </table>
+                                </td>
+                            </tr>
+                             <!-- Footer -->
+                            <tr>
+                                <td align="center" style="padding:20px; background-color:#f4f4f4; font-size:12px; line-height:18px; color:#666666; font-family: Arial, sans-serif;">
+                                    <p style="margin:0 0 8px 0;">Die satirische "Hallo Welt"-Bücherserie ist eine Idee und Kreation von Philipp Paulik (Autor), Maximilian Reisch (Autor), Luin Schiffbauer (Illustrator) und weiteren Mitwirkenden. Veröffentlicht und produziert durch Kindle Direct Publishing (KDP) der Amazon Distribution GmbH, Leipzig sowie ggf. weitere Verlags- und Produktionspartner.
+                                    </p>
+                                    <p style="margin:0 0 8px 0;">Du möchtest keine weiteren E‑Mails erhalten?
+                                    <a href="/nl/unsubscribe" target="_blank" style="color:#0A5EBF; text-decoration:underline;">Hier abmelden</a>.
+                                    </p>
+                                    <p style="margin:0;">&copy; ${new Date().getFullYear()} Hallo Welt – Philipp Paulik & Maximilian Reisch</p>
                                 </td>
                             </tr>
                         </table>
@@ -694,3 +705,5 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
     </div>
   );
 }
+
+    
