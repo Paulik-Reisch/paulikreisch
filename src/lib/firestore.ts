@@ -579,6 +579,17 @@ function generateEmailHTML(components: NewsletterComponent[], subject: string, p
                                     </table>
                                 </td>
                             </tr>
+                            <!-- Footer -->
+                            <tr>
+                                <td align="center" style="padding:20px; background-color:#f4f4f4; font-size:12px; line-height:18px; color:#666666;">
+                                    <p style="margin:0 0 8px 0;">Die satirische "Hallo Welt"-Bücherserie ist eine Idee und Kreation von Philipp Paulik (Autor), Maximilian Reisch (Autor), Luin Schiffbauer (Illustrator) und weiteren Mitwirkenden. Veröffentlicht und produziert durch Kindle Direct Publishing (KDP) der Amazon Distribution GmbH, Leipzig sowie ggf. weitere Verlags- und Produktionspartner.
+                                    </p>
+                                    <p style="margin:0 0 8px 0;">Du möchtest keine weiteren E‑Mails erhalten?
+                                    <a href="#" style="color:#0A5EBF; text-decoration:underline;">Hier abmelden</a>.
+                                    </p>
+                                    <p style="margin:0;">&copy; ${new Date().getFullYear()} Hallo Welt – Philipp Paulik & Maximilian Reisch</p>
+                                </td>
+                            </tr>
                         </table>
                         <!--[if (gte mso 9)|(IE)]>
                         </td>
