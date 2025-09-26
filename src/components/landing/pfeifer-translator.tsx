@@ -63,8 +63,14 @@ export function PfeiferTranslator() {
   const [inputText, setInputText] = useState("Der Klassenraum ist leer, denn die Schüler schwänzen alle!");
   const [outputText, setOutputText] = useState<Translation>([]);
   const [intensity, setIntensity] = useState(3);
-  const formRef = useRef<HTMLFormElement>(null);
+  const { pending } = useFormStatus();
 
+  useEffect(() => {
+    if (pending) {
+      setOutputText([]);
+    }
+  }, [pending]);
+  
   useEffect(() => {
     if (state.error) {
       toast({
@@ -84,12 +90,6 @@ export function PfeiferTranslator() {
     toast({ title: "Kopiert!", description: "Der Text wurde in die Zwischenablage kopiert." });
   };
   
-  const handleFormAction = (formData: FormData) => {
-    setOutputText([]); // Clear previous translation
-    formData.append('intensity', String(intensity));
-    formAction(formData);
-  }
-
   const getFullTextFromOutput = () => {
     return outputText.map(segment => segment.content).join('');
   }
@@ -98,16 +98,17 @@ export function PfeiferTranslator() {
     <section className="w-full py-12 md:py-16" style={{ backgroundColor: 'hsl(var(--color-bg-light-pink))' }}>
        <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center space-y-2 text-center mb-8">
+             <p className="text-sm font-semibold text-primary">La Silbadora Special</p>
             <h1 className="font-headline text-2xl font-bold tracking-tighter">
                 Pfeifer Translate
             </h1>
             <p className="max-w-[700px] text-muted-foreground text-sm">
-                Angetrieben von der Genialität und dem Chaos von R. Pfeifer.
+                Ein Übersetzer, den die Welt nicht braucht, aber verdient hat. Angetrieben von der Genialität und dem Chaos von R. Pfeifer.
             </p>
         </div>
 
-        <form ref={formRef} action={handleFormAction} className="max-w-4xl mx-auto flex flex-col items-center gap-4">
-           <input type="hidden" name="intensity" value={intensity} />
+        <form action={formAction} className="max-w-4xl mx-auto flex flex-col items-center gap-4">
+          <input type="hidden" name="intensity" value={intensity} />
           <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Input Box */}
             <div className="border bg-card rounded-lg p-4 flex flex-col">
@@ -163,7 +164,7 @@ export function PfeiferTranslator() {
                  </Popover>
                </div>
                <div className="flex-grow p-2 text-lg min-h-[224px] text-left">
-                    {useFormStatus().pending ? (
+                    {pending ? (
                          <div className="space-y-3">
                             <Skeleton className="h-5 w-4/5" />
                             <Skeleton className="h-5 w-full" />
