@@ -127,9 +127,9 @@ export function HeroPfeifer() {
 
           <div className="relative aspect-video mb-12 rounded-lg overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-500 -rotate-1">
             <Image
-              src="https://placehold.co/800x450.png"
-              alt="Eine mysteriöse pfeifende Frau im Schatten"
-              data-ai-hint="mysterious woman whistling shadow"
+              src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/r-pfeifer-con-espania.png?alt=media&token=60bf3e15-b0e1-439e-a286-538ced5aedfd"
+              alt="Die legendäre Spanischlehrerin R. Pfeifer mit einer Spanienflagge im Hintergrund"
+              data-ai-hint="teacher spain"
               layout="fill"
               objectFit="cover"
             />
