@@ -12,6 +12,7 @@ import {z} from 'genkit';
 
 const PfeiferTranslateInputSchema = z.object({
   text: z.string().describe("The text to be translated, can be German or Spanish."),
+  intensity: z.number().min(1).max(5).default(3).describe("The intensity of 'Pfeiferisch' from 1 (mild) to 5 (maximum chaos)."),
 });
 export type PfeiferTranslateInput = z.infer<typeof PfeiferTranslateInputSchema>;
 
@@ -23,6 +24,32 @@ export type PfeiferTranslateOutput = z.infer<typeof PfeiferTranslateOutputSchema
 export async function pfeiferTranslate(input: PfeiferTranslateInput): Promise<PfeiferTranslateOutput> {
   return pfeiferTranslateFlow(input);
 }
+
+const palabrotas = [
+    { de: "Dummkopf", es: "Gilipollas" },
+    { de: "Arschloch", es: "Capullo / Cabrón" },
+    { de: "Idiot", es: "Idiota" },
+    { de: "Hurensohn", es: "Hijo de puta" },
+    { de: "Scheiße", es: "Mierda" },
+    { de: "Verdammt", es: "Joder" },
+    { de: "Blödmann", es: "Tonto del culo" },
+    { de: "Wichser", es: "Pajero" },
+    { de: "Miststück", es: "Zorra" },
+    { de: "Leck mich am Arsch", es: "Vete a la mierda" },
+    { de: "Vollidiot", es:"Subnormal" },
+    { de: "Penner", es: "Pringado" },
+    { de: "Verpiss dich", es: "Lárgate" },
+    { de: "Halt die Klappe", es: "Cállate la boca" },
+    { de: "Deine Mutter", es: "Tu puta madre" },
+];
+
+const chistes = [
+    { witz: "¿Qué le dice un semáforo a otro? — ¡No me mires, que me estoy cambiando!", erklaerung: "Wortspiel: 'cambiar' bedeutet sowohl 'sich umziehen' als auch '(Farbe) wechseln'." },
+    { witz: "¿Cuál es el último animal que subió al arca de Noé? — El del-fín.", erklaerung: "Wortspiel: 'del fin' klingt wie 'delfín' (Delphin) und bedeutet 'vom Ende'." },
+    { witz: "Papá, ¿qué se siente tener un hijo tan guapo? — No sé, hijo, pregúntale a tu abuelo.", erklaerung: "Der Vater gibt das 'Kompliment' indirekt an sich selbst weiter." },
+    { witz: "¿Cómo se llama el campeón de buceo japonés? — Tokofondo.", erklaerung: "Klingt wie ein japanischer Name, bedeutet aber wörtlich 'Ich berühre den Grund' (toco fondo)." },
+    { witz: "¿Qué le dice un pez a otro? — ¡Nada!", erklaerung: "Wortspiel: 'Nada' bedeutet 'nichts' und ist auch die Imperativform von 'nadar' (schwimmen)." },
+];
 
 const prompt = ai.definePrompt({
   name: 'pfeiferTranslatePrompt',
@@ -38,12 +65,27 @@ Deine Aufgabe ist es, einen beliebigen Text (deutsch oder spanisch) in "Pfeiferi
 - Die Grammatik ist... flexibel. Sätze werden oft mittendrin in der Sprache gewechselt.
 - Der Ton ist enthusiastisch, etwas verpeilt, aber immer brillant.
 
-**Beispiel:**
+**Intensität der Übersetzung:**
+Der Nutzer gibt eine Intensität von 1 (sehr dezent) bis 5 (maximaler Wahnsinn) an. Du musst diese Stufe respektieren.
+- **Stufe 1:** Nur ein Hauch von "Pfeiferisch". Ein paar spanische Wörter, vielleicht ein kurzes "pffft".
+- **Stufe 2:** Etwas mehr Sprachmix, ein längeres Pfeifen, vielleicht ein "[seufz]".
+- **Stufe 3:** Eine ausgewogene Mischung. Denglisch/Spenglisch, Pfeifgeräusche, vielleicht ein harmloses Schimpfwort wie "tonto" oder "mierda".
+- **Stufe 4:** Deutlich chaotischer. Wechsle mitten im Satz die Sprache. Benutze stärkere Schimpfwörter. Vielleicht ein kleiner, einfacher Witz am Ende.
+- **Stufe 5:** Absolutes Maximum. Baue komplexe Pfeif-Kaskaden ein, benutze die stärksten Schimpfwörter, wechsle ständig die Sprache und erzähle einen der bereitgestellten Witze. Sei kreativ und unvorhersehbar!
+
+**Verfügbare "Palabrotas" (Schimpfwörter), die du je nach Intensität einbauen kannst:**
+${JSON.stringify(palabrotas, null, 2)}
+
+**Verfügbare "Chistes" (Witze), die du je nach Intensität einbauen kannst:**
+${JSON.stringify(chistes, null, 2)}
+
+**Beispiel für Stufe 5:**
 - **Input:** "Der Klassenraum ist leer, denn die Schüler schwänzen alle!"
-- **Pfeiferisch Output:** "El Claseraum pfffff es ähhh no es lleno de phüü phüü estudiantes, weil tüdülülüü todos son am schwänzen - schon wieder [uuuhhh *pfeiferisches säufzen*]"
+- **Pfeiferisch Output:** "El Claseraum pfffff, joder, es ähhh no es lleno de phüü phüü estudiantes, weil tüdülülüü todos son am schwänzen - schon wieder, hijo de puta [uuuhhh *pfeiferisches säufzen*]. Ach, apropos, ¿qué le dice un pez a otro? — ¡Nada! [kicher]"
 
 Übersetze jetzt den folgenden Text auf deine unnachahmliche Art ins Pfeiferische:
 
+Intensität: {{{intensity}}}
 Originaltext:
 {{{text}}}
 `,

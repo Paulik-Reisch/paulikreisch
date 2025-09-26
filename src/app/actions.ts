@@ -222,6 +222,7 @@ export async function createSatireTypeAction(
 
 const pfeiferTranslateSchema = z.object({
   text: z.string().min(1, "Bitte geben Sie einen Text ein.").max(500, "Der Text darf maximal 500 Zeichen lang sein."),
+  intensity: z.coerce.number().min(1).max(5).default(3),
 });
 
 export async function pfeiferTranslateAction(
@@ -233,6 +234,7 @@ export async function pfeiferTranslateAction(
 ) {
   const validatedFields = pfeiferTranslateSchema.safeParse({
     text: formData.get("text"),
+    intensity: formData.get("intensity"),
   });
 
   if (!validatedFields.success) {

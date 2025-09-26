@@ -7,9 +7,11 @@ import { pfeiferTranslateAction } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Languages, Copy } from "lucide-react";
-import { Badge } from "../ui/badge";
+import { Loader2, Languages, Copy, Settings } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Label } from "../ui/label";
+import { Slider } from "../ui/slider";
 
 const initialState = {
   translation: "",
@@ -35,13 +37,21 @@ function TranslateButton() {
   );
 }
 
+const intensityLabels = [
+    "Dezentes Flüstern",
+    "Leichtes Säuseln",
+    "Normaler Wahnsinn",
+    "Fortgeschrittenes Chaos",
+    "Maximaler Genickbruch"
+];
+
 export function PfeiferTranslator() {
   const [state, formAction] = useActionState(pfeiferTranslateAction, initialState);
   const { toast } = useToast();
   const [inputText, setInputText] = useState("Der Klassenraum ist leer, denn die Schüler schwänzen alle!");
   const [outputText, setOutputText] = useState("");
+  const [intensity, setIntensity] = useState(3);
   const formRef = useRef<HTMLFormElement>(null);
-
 
   useEffect(() => {
     if (state.error) {
@@ -66,6 +76,7 @@ export function PfeiferTranslator() {
     event.preventDefault();
     setOutputText(""); // Clear previous translation
     const formData = new FormData(event.currentTarget);
+    formData.append('intensity', String(intensity));
     formAction(formData);
   }
 
@@ -85,8 +96,8 @@ export function PfeiferTranslator() {
           <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Input Box */}
             <div className="border bg-card rounded-lg p-4 flex flex-col">
-              <div className="flex items-center gap-2 mb-2">
-                <Button type="button" variant="ghost" size="sm">Deutsch / Spanisch</Button>
+              <div className="flex items-center justify-between text-sm text-muted-foreground mb-2 px-2">
+                <span>Deutsch / Spanisch</span>
               </div>
               <Textarea
                 name="text"
@@ -96,20 +107,45 @@ export function PfeiferTranslator() {
                 className="flex-grow bg-transparent border-0 focus-visible:ring-0 resize-none text-lg p-2"
                 rows={8}
               />
-              <div className="flex justify-between items-center mt-2">
+              <div className="flex justify-between items-center mt-2 px-2">
                 <span className="text-xs text-muted-foreground">{inputText.length} / 500</span>
-                <div className="flex gap-2">
-                    <Button type="button" variant="ghost" size="icon" onClick={() => handleCopyToClipboard(inputText)}>
-                        <Copy className="h-5 w-5" />
-                    </Button>
-                </div>
+                <Button type="button" variant="ghost" size="icon" onClick={() => handleCopyToClipboard(inputText)}>
+                    <Copy className="h-5 w-5" />
+                </Button>
               </div>
             </div>
 
             {/* Output Box */}
             <div className="border bg-muted/50 rounded-lg p-4 flex flex-col relative">
-               <div className="flex items-center gap-2 mb-2">
-                 <Button type="button" variant="secondary" size="sm">Pfeiferisch</Button>
+               <div className="flex items-center justify-between text-sm text-muted-foreground mb-2 px-2">
+                 <span>Pfeiferisch</span>
+                 <Popover>
+                    <PopoverTrigger asChild>
+                         <Button variant="ghost" size="icon">
+                            <Settings className="h-5 w-5" />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-80">
+                        <div className="grid gap-4">
+                            <div className="space-y-2">
+                                <h4 className="font-medium leading-none">Pfeiferische Intensität</h4>
+                                <p className="text-sm text-muted-foreground">
+                                    Steuert, wie chaotisch die Übersetzung wird.
+                                </p>
+                            </div>
+                            <div className="grid gap-2">
+                                <Slider
+                                    value={[intensity]}
+                                    onValueChange={(value) => setIntensity(value[0])}
+                                    min={1}
+                                    max={5}
+                                    step={1}
+                                />
+                                <div className="text-center font-bold text-primary">{intensityLabels[intensity - 1]}</div>
+                            </div>
+                        </div>
+                    </PopoverContent>
+                 </Popover>
                </div>
                <div className="flex-grow p-2 text-lg min-h-[224px] text-left">
                     {useFormStatus().pending ? (
@@ -123,13 +159,11 @@ export function PfeiferTranslator() {
                         outputText || <span className="text-muted-foreground">Übersetzung erscheint hier...</span>
                     )}
                </div>
-               <div className="flex justify-between items-center mt-2">
+               <div className="flex justify-between items-center mt-2 px-2">
                  <span className="text-xs text-muted-foreground"></span>
-                 <div className="flex gap-2">
-                    <Button type="button" variant="ghost" size="icon" onClick={() => handleCopyToClipboard(outputText)}>
-                        <Copy className="h-5 w-5" />
-                    </Button>
-                 </div>
+                 <Button type="button" variant="ghost" size="icon" onClick={() => handleCopyToClipboard(outputText)}>
+                    <Copy className="h-5 w-5" />
+                 </Button>
                </div>
             </div>
           </div>
