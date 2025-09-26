@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -158,6 +159,8 @@ function generateComponentHTML(component: NewsletterComponent): string {
                     </td>
                 </tr>
             `;
+        case 'customHtml':
+            return props.html || '';
         default:
             return '';
     }
@@ -201,31 +204,6 @@ function generateEmailHTML(components: NewsletterComponent[], subject: string, p
                                     <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
                                         ${body}
                                     </table>
-                                </td>
-                            </tr>
-                             <tr>
-                                <td bgcolor="#eae7e1" style="padding:20px; font-family:Arial, sans-serif; font-size:12px; color:#333333; line-height:1.4; text-align:left;">
-                                  Beste Grüße,<br><br>
-                                  Paulik & Reisch<br>
-                                  Hallo Welt – Die Bücherserie<br><br>
-                                  <a href="mailto:hallo-welt@paulik-reisch.de" style="color:#333333; text-decoration:underline;">hallo-welt@paulik-reisch.de</a><br><br>
-                                  <b>Direkter Kontakt:</b><br>
-                                  Philipp Paulik – <a href="mailto:philipp@paulik-reisch.de" style="color:#333333; text-decoration:underline;">philipp@paulik-reisch.de</a><br>
-                                  Maximilian Reisch – <a href="mailto:max@paulik-reisch.de" style="color:#333333; text-decoration:underline;">max@paulik-reisch.de</a><br><br>
-                                  Die Hallo Welt (HW) Bücherserie ist erstellt, gepflegt und individuell publiziert durch Philipp Paulik (Autor), Maximilian Reisch (Autor), Luin Schiffbauer (Illustrator) und weitere Mitwirkende.<br><br>
-                                  Veröffentlicht und produziert durch Kindle Direct Publishing (KDP) der Amazon Distribution GmbH, Leipzig sowie ggf. weitere Verlags- und Produktionspartner.<br><br>
-                                  <b style="font-size:10px;">Vertraulichkeitshinweis</b><br>
-                                  <span style="font-size:10px;">Diese Nachricht und ihre Anhänge sind vertraulich und ausschließlich für die bezeichneten Empfänger bestimmt. Sollten Sie diese E-Mail irrtümlich erhalten haben, informieren Sie bitte umgehend den Absender und löschen Sie diese Nachricht sowie alle Anhänge. Die unbefugte Weitergabe oder Nutzung ist untersagt.</span><br><br>
-                                  <b style="font-size:10px;">Rechtlicher Hinweis</b><br>
-                                  <span style="font-size:10px;">Die Inhalte dieser E-Mail stellen keine rechtsverbindliche Erklärung dar. Für den Abschluss von Verträgen ist ausschließlich die Schriftform gemäß § 126 BGB maßgeblich. Jegliche Haftung für Übermittlungsfehler, Schäden oder die Nutzung der enthaltenen Informationen wird ausgeschlossen. Irrtum und Änderungen vorbehalten.</span><br><br>
-                                  <b>Impressum:</b><br>
-                                  Philipp Paulik und Maximilian Reisch<br>
-                                  Mozartstraße 1<br>
-                                  53819 Neunkirchen<br>
-                                  E-Mail: <a href="mailto:hallowelt@paulik-reisch.de" style="color:#333333; text-decoration:underline;">hallowelt@paulik-reisch.de</a><br><br>
-                                  Diese E-Mail wurde automatisch versendet. Falls Sie keine weiteren Nachrichten wünschen, klicken Sie bitte hier: 
-                                  <a href="#unsubscribe" target="_blank" style="color:#333333; text-decoration:underline;">Abmelden</a><br><br>
-                                  © 2025 Paulik & Reisch. Alle Rechte vorbehalten. Und einige Falschheiten.
                                 </td>
                             </tr>
                         </table>
@@ -288,15 +266,15 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component:
         </div>
     );
 
-     const renderTextarea = (propName: string, label: string) => (
+     const renderTextarea = (propName: string, label: string, rows = 4) => (
          <div key={propName}>
             <Label htmlFor={`${component.id}-${propName}`} className="text-xs">{label}</Label>
             <Textarea 
                 id={`${component.id}-${propName}`} 
                 value={component.props[propName] || ''} 
                 onChange={(e) => updateProp(propName, e.target.value)}
-                className="text-xs"
-                rows={3}
+                className="text-xs font-mono"
+                rows={rows}
             />
         </div>
     );
@@ -359,7 +337,7 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component:
             );
             case 'text': return (
                 <div className="space-y-4">
-                    {renderTextarea('text', 'Text')}
+                    {renderTextarea('text', 'Text', 6)}
                      <div className="flex gap-2">
                         {renderFontSizeSelector("16px")}
                         {renderColorInput('color', 'Farbe', '#333333')}
@@ -427,15 +405,15 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component:
             );
             case 'two-columns': return (
                  <div className="space-y-4">
-                    {renderTextarea('text1', 'Text Spalte 1')}
-                    {renderTextarea('text2', 'Text Spalte 2')}
+                    {renderTextarea('text1', 'Text Spalte 1', 6)}
+                    {renderTextarea('text2', 'Text Spalte 2', 6)}
                 </div>
             );
             case 'image-text': return (
                 <div className="space-y-4">
                     {renderField('src', 'Bild-URL')}
                     {renderField('alt', 'Alternativtext')}
-                    {renderTextarea('text', 'Text')}
+                    {renderTextarea('text', 'Text', 6)}
                     <div>
                         <Label className="text-xs">Layout</Label>
                          <Select onValueChange={(v) => updateProp('layout', v)} defaultValue={component.props.layout || 'image-left'}>
@@ -463,6 +441,11 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component:
                     </div>
                 </div>
             );
+            case 'customHtml': return (
+                <div className="space-y-4">
+                    {renderTextarea('html', 'HTML-Code', 10)}
+                </div>
+            );
             default: return <p>Unbekannter Komponententyp</p>
         }
     }
@@ -475,7 +458,8 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component:
         separator: <Minus className="h-4 w-4" />,
         spacer: <Rows className="h-4 w-4" />,
         'two-columns': <Columns className="h-4 w-4" />,
-        'image-text': <GalleryHorizontal className="h-4 w-4" />
+        'image-text': <GalleryHorizontal className="h-4 w-4" />,
+        customHtml: <Code className="h-4 w-4" />,
     }
 
     return (
@@ -645,8 +629,9 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
                     <Button variant="outline" onClick={() => addComponent('image')}><ImageIcon className="mr-2 h-4 w-4"/>Bild</Button>
                     <Button variant="outline" onClick={() => addComponent('spacer')}><Rows className="mr-2 h-4 w-4"/>Abstand</Button>
                     <Button variant="outline" onClick={() => addComponent('separator')}><Minus className="mr-2 h-4 w-4"/>Trenner</Button>
-                    <Button variant="outline" onClick={() => addComponent('two-columns')} className="col-span-2"><Columns className="mr-2 h-4 w-4"/>Zwei Spalten</Button>
-                    <Button variant="outline" onClick={() => addComponent('image-text')} className="col-span-2"><GalleryHorizontal className="mr-2 h-4 w-4"/>Bild &amp; Text</Button>
+                    <Button variant="outline" onClick={() => addComponent('two-columns')}><Columns className="mr-2 h-4 w-4"/>Zwei Spalten</Button>
+                    <Button variant="outline" onClick={() => addComponent('image-text')}><GalleryHorizontal className="mr-2 h-4 w-4"/>Bild & Text</Button>
+                    <Button variant="outline" onClick={() => addComponent('customHtml')} className="col-span-2"><Code className="mr-2 h-4 w-4"/>Custom HTML</Button>
                 </div>
                 <form action={handleFormSubmit}>
                     <SubmitButton />

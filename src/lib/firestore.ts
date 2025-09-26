@@ -65,7 +65,7 @@ export interface LegalPage {
 
 export interface NewsletterComponent {
     id: string;
-    type: 'heading' | 'text' | 'button' | 'image' | 'separator' | 'spacer' | 'two-columns' | 'image-text';
+    type: 'heading' | 'text' | 'button' | 'image' | 'separator' | 'spacer' | 'two-columns' | 'image-text' | 'customHtml';
     props: {
         [key: string]: any;
     };
@@ -368,13 +368,9 @@ export async function addNewsletter(data: { name: string; subject: string }): Pr
     const docRef = await addDoc(newslettersCol, {
         ...data,
         components: [],
-        content: ``,
+        content: ``, // Start with empty content
         lastUpdated: Timestamp.now(),
     });
-    
-    const initialContent = generateEmailHTML([], data.subject, `${process.env.NEXT_PUBLIC_BASE_URL}/nl/preview/${docRef.id}`);
-    await updateDoc(docRef, { content: initialContent });
-
     return docRef.id;
 }
 
@@ -384,20 +380,18 @@ export async function duplicateNewsletter(id: string): Promise<string> {
         throw new Error("Original newsletter not found.");
     }
     
-    // Create a unique name for the copy
     const newName = `Kopie von ${originalNewsletter.name}`;
     const newSubject = originalNewsletter.subject;
 
-    // Create the new newsletter and get its ID
-    const newNewsletterId = await addNewsletter({ name: newName, subject: newSubject });
-
-    // Update the new newsletter with the content and components of the original
-    await updateNewsletter(newNewsletterId, {
-        content: originalNewsletter.content,
+    const newNewsletterRef = await addDoc(collection(db, 'newsletters'), {
+        name: newName,
+        subject: newSubject,
         components: originalNewsletter.components,
+        content: originalNewsletter.content,
+        lastUpdated: Timestamp.now(),
     });
     
-    return newNewsletterId;
+    return newNewsletterRef.id;
 }
 
 
@@ -529,6 +523,8 @@ function generateComponentHTML(component: NewsletterComponent): string {
                     </td>
                 </tr>
             `;
+        case 'customHtml':
+            return props.html || '';
         default:
             return '';
     }
@@ -572,31 +568,6 @@ function generateEmailHTML(components: NewsletterComponent[], subject: string, p
                                     <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
                                         ${body}
                                     </table>
-                                </td>
-                            </tr>
-                             <tr>
-                                <td bgcolor="#eae7e1" style="padding:20px; font-family:Arial, sans-serif; font-size:12px; color:#333333; line-height:1.4; text-align:left;">
-                                  Beste Grüße,<br><br>
-                                  Paulik & Reisch<br>
-                                  Hallo Welt – Die Bücherserie<br><br>
-                                  <a href="mailto:hallo-welt@paulik-reisch.de" style="color:#333333; text-decoration:underline;">hallo-welt@paulik-reisch.de</a><br><br>
-                                  <b>Direkter Kontakt:</b><br>
-                                  Philipp Paulik – <a href="mailto:philipp@paulik-reisch.de" style="color:#333333; text-decoration:underline;">philipp@paulik-reisch.de</a><br>
-                                  Maximilian Reisch – <a href="mailto:max@paulik-reisch.de" style="color:#333333; text-decoration:underline;">max@paulik-reisch.de</a><br><br>
-                                  Die Hallo Welt (HW) Bücherserie ist erstellt, gepflegt und individuell publiziert durch Philipp Paulik (Autor), Maximilian Reisch (Autor), Luin Schiffbauer (Illustrator) und weitere Mitwirkende.<br><br>
-                                  Veröffentlicht und produziert durch Kindle Direct Publishing (KDP) der Amazon Distribution GmbH, Leipzig sowie ggf. weitere Verlags- und Produktionspartner.<br><br>
-                                  <b style="font-size:10px;">Vertraulichkeitshinweis</b><br>
-                                  <span style="font-size:10px;">Diese Nachricht und ihre Anhänge sind vertraulich und ausschließlich für die bezeichneten Empfänger bestimmt. Sollten Sie diese E-Mail irrtümlich erhalten haben, informieren Sie bitte umgehend den Absender und löschen Sie diese Nachricht sowie alle Anhänge. Die unbefugte Weitergabe oder Nutzung ist untersagt.</span><br><br>
-                                  <b style="font-size:10px;">Rechtlicher Hinweis</b><br>
-                                  <span style="font-size:10px;">Die Inhalte dieser E-Mail stellen keine rechtsverbindliche Erklärung dar. Für den Abschluss von Verträgen ist ausschließlich die Schriftform gemäß § 126 BGB maßgeblich. Jegliche Haftung für Übermittlungsfehler, Schäden oder die Nutzung der enthaltenen Informationen wird ausgeschlossen. Irrtum und Änderungen vorbehalten.</span><br><br>
-                                  <b>Impressum:</b><br>
-                                  Philipp Paulik und Maximilian Reisch<br>
-                                  Mozartstraße 1<br>
-                                  53819 Neunkirchen<br>
-                                  E-Mail: <a href="mailto:hallowelt@paulik-reisch.de" style="color:#333333; text-decoration:underline;">hallowelt@paulik-reisch.de</a><br><br>
-                                  Diese E-Mail wurde automatisch versendet. Falls Sie keine weiteren Nachrichten wünschen, klicken Sie bitte hier: 
-                                  <a href="#unsubscribe" target="_blank" style="color:#333333; text-decoration:underline;">Abmelden</a><br><br>
-                                  © 2025 Paulik & Reisch. Alle Rechte vorbehalten. Und einige Falschheiten.
                                 </td>
                             </tr>
                         </table>

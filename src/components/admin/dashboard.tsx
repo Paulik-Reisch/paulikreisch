@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -718,7 +719,7 @@ function NewsletterManager({ initialNewsletters, onTabChange }: { initialNewslet
                                         <div className="flex gap-2 justify-end">
                                              <AlertDialog>
                                                 <AlertDialogTrigger asChild>
-                                                    <Button size="sm" variant="ghost">
+                                                    <Button size="sm" variant="ghost" title="Diesen Newsletter als Vorlage verwenden und duplizieren">
                                                         <CopyPlus className="h-4 w-4" />
                                                     </Button>
                                                 </AlertDialogTrigger>
@@ -728,7 +729,7 @@ function NewsletterManager({ initialNewsletters, onTabChange }: { initialNewslet
                                                         <AlertDialogHeader>
                                                             <AlertDialogTitle>Newsletter duplizieren?</AlertDialogTitle>
                                                             <AlertDialogDescription>
-                                                              Möchten Sie wirklich eine Kopie von "{newsletter.name}" erstellen?
+                                                              Möchten Sie wirklich eine Kopie von "{newsletter.name}" erstellen? Dies ist nützlich, um eine Vorlage zu erstellen.
                                                             </AlertDialogDescription>
                                                         </AlertDialogHeader>
                                                         <AlertDialogFooter>
@@ -738,17 +739,17 @@ function NewsletterManager({ initialNewsletters, onTabChange }: { initialNewslet
                                                     </form>
                                                 </AlertDialogContent>
                                             </AlertDialog>
-                                            <Button size="sm" variant="ghost" onClick={() => handleCopyLink(newsletter.id)}>
+                                            <Button size="sm" variant="ghost" title="Vorschau-Link kopieren" onClick={() => handleCopyLink(newsletter.id)}>
                                                 <Copy className="h-4 w-4" />
                                             </Button>
-                                            <Link href={`/admin/nle/${newsletter.id}`}>
+                                            <Link href={`/admin/nle/${newsletter.id}`} title="Newsletter bearbeiten">
                                                 <Button size="sm" variant="outline">
                                                     <Edit className="h-4 w-4" />
                                                 </Button>
                                             </Link>
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild>
-                                                    <Button size="sm" variant="destructive">
+                                                    <Button size="sm" variant="destructive" title="Newsletter löschen">
                                                         <Trash2 className="h-4 w-4" />
                                                     </Button>
                                                 </AlertDialogTrigger>

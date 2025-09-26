@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect, useActionState } from "react";
@@ -70,7 +71,7 @@ function HW2BookCard({ book }: { book: Product }) {
                                 {book.preorderPrice ? "Jetzt vorbestellen" : "Bei Amazon kaufen"}
                             </Button>
                         </DialogTrigger>
-                        <SignatureOrderForm book={book} isHW2Preorder={true}/>
+                        <SignatureOrderForm book={book}/>
                     </Dialog>
                 </div>
             </CardContent>

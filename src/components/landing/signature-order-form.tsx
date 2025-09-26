@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
@@ -53,7 +54,7 @@ const bookPrices = {
 };
 
 
-export function SignatureOrderForm({ book, isHW2Preorder }: { book: Product, isHW2Preorder?: boolean }) {
+export function SignatureOrderForm({ book }: { book: Product }) {
   const { toast } = useToast();
   const [products, setProducts] = useState<{ [key: string]: Product }>({});
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -193,14 +194,6 @@ export function SignatureOrderForm({ book, isHW2Preorder }: { book: Product, isH
   };
   
   const isSubmitting = (state as any)?.pending;
-
-  if (isHW2Preorder) {
-    return (
-      <HW2PreorderPopup book={book}>
-        <></>
-      </HW2PreorderPopup>
-    );
-  }
 
   return (
     <DialogContent className="max-w-3xl w-full max-h-[90vh] overflow-y-auto">

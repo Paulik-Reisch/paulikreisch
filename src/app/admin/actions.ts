@@ -20,6 +20,7 @@ import {
   addTagsToSubscribers,
   getSubscribers,
   getNewsletter,
+  Subscriber,
 } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
 import { correctHtml } from "@/ai/flows/correct-html-flow";
@@ -460,6 +461,11 @@ export type SendNewsletterState = {
   message: string | null;
 };
 
+function replacePlaceholders(html: string, subscriber: Subscriber): string {
+    return html.replace(/{EMAIL}/g, subscriber.email);
+    // Add more placeholder replacements here, e.g., {NAME}
+}
+
 export async function sendNewsletterAction(
   prevState: SendNewsletterState,
   formData: FormData
@@ -491,29 +497,29 @@ export async function sendNewsletterAction(
       return { success: false, message: "Es wurden keine Abonnenten für die ausgewählten Tags gefunden." };
     }
     
-    const recipientEmails = targetSubscribers.map(s => s.email);
-
     const newsletter = await getNewsletter(newsletterId);
-    if (!newsletter) {
-      return { success: false, message: "Newsletter nicht gefunden." };
+    if (!newsletter || !newsletter.content) {
+      return { success: false, message: "Newsletter nicht gefunden oder hat keinen Inhalt." };
     }
     
     const resend = new Resend(process.env.RESEND_API_KEY);
 
-    const { data, error } = await resend.emails.send({
-      from: 'Hallo Welt <hallo-welt@paulik-reisch.de>',
-      to: recipientEmails,
-      subject: newsletter.subject,
-      html: newsletter.content,
-    });
+    const emailsToSend = targetSubscribers.map(subscriber => ({
+        from: 'Hallo Welt <hallo-welt@paulik-reisch.de>',
+        to: [subscriber.email],
+        subject: newsletter.subject,
+        html: replacePlaceholders(newsletter.content, subscriber),
+    }));
 
-    if (error) {
+    const { data, error } = await resend.batch.send(emailsToSend);
+
+    if (error || !data) {
       console.error("Resend error:", error);
-      return { success: false, message: `Fehler beim E-Mail-Versand: ${error.message}` };
+      return { success: false, message: `Fehler beim E-Mail-Versand: ${error?.message || 'Unbekannter Fehler'}` };
     }
 
     revalidatePath("/admin");
-    return { success: true, message: `Newsletter an ${recipientEmails.length} Empfänger erfolgreich versendet. (Batch-ID: ${data?.id})` };
+    return { success: true, message: `Newsletter-Batch an ${targetSubscribers.length} Empfänger erfolgreich erstellt. (Batch-ID: ${data.id})` };
 
   } catch (e) {
     const error = e as Error;
