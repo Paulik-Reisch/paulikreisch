@@ -7,7 +7,7 @@ import { pfeiferTranslateAction } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Languages, ArrowRightLeft, Copy } from "lucide-react";
+import { Loader2, Languages, Copy } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Skeleton } from "../ui/skeleton";
 
@@ -40,8 +40,6 @@ export function PfeiferTranslator() {
   const { toast } = useToast();
   const [inputText, setInputText] = useState("Der Klassenraum ist leer, denn die Schüler schwänzen alle!");
   const [outputText, setOutputText] = useState("");
-  const [sourceLang, setSourceLang] = useState("Deutsch");
-  const [targetLang, setTargetLang] = useState("Spanisch");
   const formRef = useRef<HTMLFormElement>(null);
 
 
@@ -57,14 +55,6 @@ export function PfeiferTranslator() {
       setOutputText(state.translation);
     }
   }, [state, toast]);
-
-  const handleSwapLanguages = () => {
-    setSourceLang(targetLang);
-    setTargetLang(sourceLang);
-    const currentInput = inputText;
-    setInputText(outputText);
-    setOutputText(currentInput);
-  };
 
   const handleCopyToClipboard = (text: string) => {
     if (!text) return;
@@ -97,8 +87,7 @@ export function PfeiferTranslator() {
             {/* Input Box */}
             <div className="border bg-card rounded-lg p-4 flex flex-col">
               <div className="flex items-center gap-2 mb-2">
-                <Button type="button" variant={sourceLang === "Deutsch" ? "secondary" : "ghost"} size="sm" onClick={() => setSourceLang("Deutsch")}>Deutsch</Button>
-                <Button type="button" variant={sourceLang === "Spanisch" ? "secondary" : "ghost"} size="sm" onClick={() => setSourceLang("Spanisch")}>Spanisch</Button>
+                <Button type="button" variant="ghost" size="sm">Deutsch / Spanisch</Button>
               </div>
               <Textarea
                 name="text"
@@ -143,16 +132,6 @@ export function PfeiferTranslator() {
                     </Button>
                  </div>
                </div>
-
-                <Button 
-                    type="button" 
-                    variant="outline" 
-                    size="icon" 
-                    onClick={handleSwapLanguages} 
-                    className="absolute top-1/2 left-1/2 md:left-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-background border-2 z-10"
-                >
-                    <ArrowRightLeft className="h-5 w-5" />
-                </Button>
             </div>
           </div>
           <TranslateButton />
