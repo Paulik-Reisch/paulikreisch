@@ -1,7 +1,7 @@
 'use client';
 
-import { useActionState, useEffect, useState, useRef } from 'react';
-import { useFormStatus, useFormState } from 'react-dom';
+import { useActionState, useEffect, useState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { pfeiferTranslateAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -11,6 +11,7 @@ import { Skeleton } from '../ui/skeleton';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Label } from '../ui/label';
 import { Slider } from '../ui/slider';
+import Image from 'next/image';
 
 const initialState: {
   translation?: string;
@@ -68,6 +69,7 @@ export function PfeiferTranslator() {
         title: 'Fehler',
         description: state.error,
       });
+      setOutputText(""); // Clear output on error
     }
     if (state.translation) {
       setOutputText(state.translation);
@@ -83,7 +85,14 @@ export function PfeiferTranslator() {
   return (
     <section className="w-full py-12 md:py-16" style={{ backgroundColor: 'hsl(var(--color-bg-light-pink))' }}>
        <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center space-y-2 text-center mb-8">
+          <div className="flex flex-col items-center space-y-4 text-center mb-8">
+            <Image 
+                src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/pfeifer-translate-logo.png?alt=media&token=b9cc1522-b994-43d9-ac64-a034cf323a91"
+                alt="Pfeifer Translate Logo"
+                width={128}
+                height={128}
+                className="rounded-full shadow-lg"
+            />
              <p className="text-sm font-semibold text-primary">La Silbadora Special</p>
             <h1 className="font-headline text-2xl font-bold tracking-tighter">
                 Pfeifer Translate
