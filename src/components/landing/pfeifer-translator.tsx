@@ -84,10 +84,8 @@ export function PfeiferTranslator() {
     toast({ title: "Kopiert!", description: "Der Text wurde in die Zwischenablage kopiert." });
   };
   
-  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleFormAction = (formData: FormData) => {
     setOutputText([]); // Clear previous translation
-    const formData = new FormData(event.currentTarget);
     formData.append('intensity', String(intensity));
     formAction(formData);
   }
@@ -108,7 +106,8 @@ export function PfeiferTranslator() {
             </p>
         </div>
 
-        <form ref={formRef} onSubmit={handleFormSubmit} className="max-w-4xl mx-auto flex flex-col items-center gap-4">
+        <form ref={formRef} action={handleFormAction} className="max-w-4xl mx-auto flex flex-col items-center gap-4">
+           <input type="hidden" name="intensity" value={intensity} />
           <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Input Box */}
             <div className="border bg-card rounded-lg p-4 flex flex-col">
