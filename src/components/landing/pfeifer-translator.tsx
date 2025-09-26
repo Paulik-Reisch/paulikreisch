@@ -70,16 +70,15 @@ export function PfeiferTranslator() {
   }
 
   return (
-    <section className="w-full py-12 md:py-24" style={{ backgroundColor: 'hsl(var(--color-bg-light-pink))' }}>
+    <section className="w-full py-12 md:py-16" style={{ backgroundColor: 'hsl(var(--color-bg-light-pink))' }}>
       <div className="container px-4 md:px-6">
-        <div className="flex flex-col items-center space-y-4 text-center mb-12">
-          <Badge variant="secondary">La Silbadora Special</Badge>
-          <h1 className="font-headline text-2xl font-bold tracking-tighter sm:text-3xl text-balance">
-            Pfeifer Translate
-          </h1>
-          <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl text-balance">
-            Ein Übersetzer, den die Welt nicht braucht, aber verdient hat. Angetrieben von der Genialität und dem Chaos von R. Pfeifer.
-          </p>
+        <div className="flex flex-col items-center space-y-2 text-center mb-8">
+            <h1 className="font-headline text-2xl font-bold tracking-tighter">
+                Pfeifer Translate
+            </h1>
+            <p className="max-w-[700px] text-muted-foreground text-sm">
+                Angetrieben von der Genialität und dem Chaos von R. Pfeifer.
+            </p>
         </div>
 
         <form ref={formRef} onSubmit={handleFormSubmit} className="max-w-4xl mx-auto flex flex-col items-center gap-4">
