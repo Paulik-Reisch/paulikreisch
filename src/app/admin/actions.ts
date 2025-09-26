@@ -61,7 +61,7 @@ export async function loginAction(
 
     // Create session
     const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
-    const session = await encrypt({ expires });
+    const session = await encrypt({ user: { id: 'admin' }, expires });
 
     cookies().set("session", session, { expires, httpOnly: true });
 

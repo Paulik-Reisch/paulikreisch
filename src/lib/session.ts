@@ -2,7 +2,10 @@ import "server-only";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
-const secretKey = process.env.SESSION_SECRET;
+const secretKey = process.env.SESSION_SECRET || 'fallback-secret-key-for-development';
+if (process.env.NODE_ENV === 'production' && secretKey === 'fallback-secret-key-for-development') {
+    console.warn('Warning: Using fallback session secret in production. Please set a strong SESSION_SECRET environment variable.');
+}
 const key = new TextEncoder().encode(secretKey);
 
 export async function encrypt(payload: any) {
@@ -21,6 +24,7 @@ export async function decrypt(input: string): Promise<any> {
     return payload;
   } catch (error) {
     // This can happen if the token is invalid or expired
+    console.error('Failed to decrypt session:', error);
     return null;
   }
 }
