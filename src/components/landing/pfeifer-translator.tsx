@@ -6,9 +6,9 @@ import { pfeiferTranslateAction } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Languages, ArrowRightLeft, Volume2, Copy } from "lucide-react";
+import { Loader2, Languages, ArrowRightLeft, Copy } from "lucide-react";
 import { Badge } from "../ui/badge";
-import { cn } from "@/lib/utils";
+import { Skeleton } from "../ui/skeleton";
 
 const initialState = {
   translation: "",
@@ -41,7 +41,6 @@ export function PfeiferTranslator() {
   const [outputText, setOutputText] = useState("");
   const [sourceLang, setSourceLang] = useState("Deutsch");
   const [targetLang, setTargetLang] = useState("Spanisch");
-  const [showPlaceholder, setShowPlaceholder] = useState(true);
   const formRef = useRef<HTMLFormElement>(null);
 
 
@@ -55,7 +54,6 @@ export function PfeiferTranslator() {
     }
     if (state.translation) {
       setOutputText(state.translation);
-      setShowPlaceholder(false);
     }
   }, [state, toast]);
 
@@ -65,7 +63,6 @@ export function PfeiferTranslator() {
     const currentInput = inputText;
     setInputText(outputText);
     setOutputText(currentInput);
-    setShowPlaceholder(outputText === "");
   };
 
   const handleCopyToClipboard = (text: string) => {
@@ -76,7 +73,7 @@ export function PfeiferTranslator() {
   
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setShowPlaceholder(true);
+    setOutputText(""); // Clear previous translation
     const formData = new FormData(event.currentTarget);
     formAction(formData);
   }
@@ -90,7 +87,7 @@ export function PfeiferTranslator() {
             Pfeifer Translate
           </h1>
           <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl text-balance">
-            Ein Übersetzer, der die Welt nicht braucht, aber verdient hat. Angetrieben von der Genialität und dem Chaos von R. Pfeifer.
+            Ein Übersetzer, den die Welt nicht braucht, aber verdient hat. Angetrieben von der Genialität und dem Chaos von R. Pfeifer.
           </p>
         </div>
 
@@ -113,9 +110,6 @@ export function PfeiferTranslator() {
               <div className="flex justify-between items-center mt-2">
                 <span className="text-xs text-muted-foreground">{inputText.length} / 500</span>
                 <div className="flex gap-2">
-                    <Button type="button" variant="ghost" size="icon" disabled>
-                        <Volume2 className="h-5 w-5" />
-                    </Button>
                     <Button type="button" variant="ghost" size="icon" onClick={() => handleCopyToClipboard(inputText)}>
                         <Copy className="h-5 w-5" />
                     </Button>
@@ -129,10 +123,12 @@ export function PfeiferTranslator() {
                  <Button type="button" variant="secondary" size="sm">Pfeiferisch</Button>
                </div>
                <div className="flex-grow p-2 text-lg min-h-[224px] text-left">
-                    {useFormStatus().pending && showPlaceholder ? (
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                            <Loader2 className="h-5 w-5 animate-spin" />
-                            <span>Pfeife und übersetze...</span>
+                    {useFormStatus().pending ? (
+                         <div className="space-y-3">
+                            <Skeleton className="h-5 w-4/5" />
+                            <Skeleton className="h-5 w-full" />
+                            <Skeleton className="h-5 w-3/4" />
+                            <Skeleton className="h-5 w-5/6" />
                         </div>
                     ) : (
                         outputText || <span className="text-muted-foreground">Übersetzung erscheint hier...</span>
@@ -141,9 +137,6 @@ export function PfeiferTranslator() {
                <div className="flex justify-between items-center mt-2">
                  <span className="text-xs text-muted-foreground"></span>
                  <div className="flex gap-2">
-                    <Button type="button" variant="ghost" size="icon" disabled>
-                        <Volume2 className="h-5 w-5" />
-                    </Button>
                     <Button type="button" variant="ghost" size="icon" onClick={() => handleCopyToClipboard(outputText)}>
                         <Copy className="h-5 w-5" />
                     </Button>
