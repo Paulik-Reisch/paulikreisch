@@ -1,5 +1,4 @@
 
-
 "use server";
 
 import { app } from "@/app/firebase";
@@ -536,7 +535,7 @@ function generateComponentHTML(component: NewsletterComponent): string {
 }
 
 function generateEmailHTML(components: NewsletterComponent[], subject: string, previewUrl: string, useWrapper: boolean): string {
-    const body = components.map(generateComponentHTML).join('');
+    const body = components.map(generateComponentHTML).join('\n');
 
     if (!useWrapper) {
         return body;
@@ -618,12 +617,13 @@ export async function updateNewsletter(id: string, data: Partial<Omit<Newsletter
              const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || ''}/nl/preview/${id}`;
              finalData.content = generateEmailHTML(data.components, data.subject || existingData.subject, previewUrl, useWrapper);
         }
-    } else if (data.useWrapper !== undefined) {
+    } else if (data.useWrapper !== undefined || data.subject) {
          const docSnap = await getDoc(newsletterRef);
          if (docSnap.exists()) {
             const existingData = docSnap.data();
             const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || ''}/nl/preview/${id}`;
-            finalData.content = generateEmailHTML(existingData.components, data.subject || existingData.subject, previewUrl, data.useWrapper);
+            const useWrapper = data.useWrapper !== undefined ? data.useWrapper : existingData.useWrapper;
+            finalData.content = generateEmailHTML(existingData.components, data.subject || existingData.subject, previewUrl, useWrapper);
         }
     }
 
@@ -639,3 +639,5 @@ export async function deleteNewsletter(id: string) {
     await deleteDoc(newsletterRef);
 }
 
+
+    
