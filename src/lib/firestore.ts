@@ -638,3 +638,4 @@ export async function deleteNewsletter(id: string) {
     const newsletterRef = doc(db, 'newsletters', id);
     await deleteDoc(newsletterRef);
 }
+
