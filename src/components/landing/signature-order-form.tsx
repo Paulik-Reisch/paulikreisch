@@ -16,7 +16,7 @@ import { Checkbox } from "../ui/checkbox";
 import { Textarea } from "../ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
-import { Product, getProducts } from "@/lib/firestore";
+import { Product } from "@/lib/firestore";
 import { useActionState } from "react";
 import { createOrderAction } from "@/app/actions";
 import { HW2PreorderPopup } from "./hw2-preorder-popup";
@@ -53,30 +53,25 @@ const bookPrices = {
     hw2_signature_package: 35.00,
 };
 
+const hw2_static: Product = {
+    id: "hw2",
+    title: "Hallo Welt 2",
+    subtitle: "Wie das Leben funktioniert",
+    price: 12.99,
+    preorderPrice: 9.99,
+    imageSrc: "https://placehold.co/300x450.png",
+    aiHint: "funny book cover",
+    amazonLink: "#",
+    description: "Die Fortsetzung, die niemand wollte. Eine Abrechnung mit Bürokratie, deutschem Internet und Mietenwahnsinn."
+};
+
 
 export function SignatureOrderForm({ book }: { book: Product }) {
   const { toast } = useToast();
-  const [products, setProducts] = useState<{ [key: string]: Product }>({});
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const [state, formAction] = useActionState(createOrderAction, { success: false, error: null });
   
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const fetchedProducts = await getProducts();
-        const productsById = fetchedProducts.reduce((acc, product) => {
-            acc[product.id] = product;
-            return acc;
-        }, {} as { [key: string]: Product });
-        setProducts(productsById);
-      } catch (error) {
-        console.error("Fehler beim Laden der Produkte:", error);
-      }
-    }
-    fetchProducts();
-  }, []);
-
   const {
     register,
     handleSubmit,
@@ -116,7 +111,7 @@ export function SignatureOrderForm({ book }: { book: Product }) {
     let price = 0;
     let originalTotalPrice = 0;
     const hw1 = book;
-    const hw2 = products.hw2;
+    const hw2 = hw2_static;
 
     if (!hw1) return { totalPrice: 0, originalPrice: 0, totalDiscount: 0};
     
@@ -151,11 +146,11 @@ export function SignatureOrderForm({ book }: { book: Product }) {
 
     return { totalPrice: price, originalPrice: originalTotalPrice, totalDiscount: finalDiscount };
 
-  }, [watchFields, book, products.hw2]);
+  }, [watchFields, book]);
 
   const onFormSubmit = (data: SignatureFormValues) => {
     const hw1 = book;
-    const hw2 = products.hw2;
+    const hw2 = hw2_static;
     const items = [];
     if (hw1) {
         items.push({
@@ -261,12 +256,12 @@ export function SignatureOrderForm({ book }: { book: Product }) {
                 )}
             </div>
             
-            {products.hw2 && (
+            {hw2_static && (
             <Alert className={cn("border-2 border-primary text-primary transition-all duration-500", watchFields.acceptComboDeal && "bg-primary/10")}>
                 <Sparkles className="h-4 w-4" />
                 <AlertTitle className="font-headline text-xl">KRISE? Sparen Sie jetzt!</AlertTitle>
                 <AlertDescription className="text-primary/90 text-base">
-                    Aktivieren Sie dieses Angebot und sparen Sie <span className="font-bold">80% auf "Hallo Welt"</span>, indem Sie "Hallo Welt 2" (inkl. Signatur) für nur {(bookPrices.hw2_signature_package + (products.hw2.preorderPrice || 0)).toFixed(2)}€ VORBESTELLEN!
+                    Aktivieren Sie dieses Angebot und sparen Sie <span className="font-bold">80% auf "Hallo Welt"</span>, indem Sie "Hallo Welt 2" (inkl. Signatur) für nur {(bookPrices.hw2_signature_package + (hw2_static.preorderPrice || 0)).toFixed(2)}€ VORBESTELLEN!
                 </AlertDescription>
                  <div className="flex items-center space-x-3 p-2 rounded-md mt-4">
                     <Controller
@@ -388,7 +383,7 @@ export function SignatureOrderForm({ book }: { book: Product }) {
                 {watchFields.hw1_hasDedication && <div className="flex justify-between"><span>Persönliche Widmung (HW1)</span><span>{bookPrices.hw1_dedication.toFixed(2)} €</span></div>}
                 {watchFields.hw1_hasDedication && watchFields.hw1_provideDedication && <div className="flex justify-between"><span>Wunsch-Text (HW1)</span><span>{bookPrices.hw1_custom_dedication.toFixed(2)} €</span></div>}
                 
-                {watchFields.acceptComboDeal && products.hw2 ? (
+                {watchFields.acceptComboDeal && hw2_static ? (
                     <>
                         <div className="flex justify-between text-destructive">
                             <span>Rabatt (80% auf HW1)</span>
@@ -397,13 +392,13 @@ export function SignatureOrderForm({ book }: { book: Product }) {
                         <Separator className="my-2"/>
                          <div className="flex justify-between font-semibold">
                             <span>"Hallo Welt 2" Vorbesteller-Paket</span>
-                             <span>{((products.hw2.preorderPrice || 0) + bookPrices.hw2_signature_package).toFixed(2)} €</span>
+                             <span>{((hw2_static.preorderPrice || 0) + bookPrices.hw2_signature_package).toFixed(2)} €</span>
                         </div>
                          <div className="flex justify-between pl-4 text-xs">
-                            <span>(Buch: {(products.hw2.preorderPrice || 0).toFixed(2)}€, Signatur-Paket: {bookPrices.hw2_signature_package.toFixed(2)}€)</span>
+                            <span>(Buch: {(hw2_static.preorderPrice || 0).toFixed(2)}€, Signatur-Paket: {bookPrices.hw2_signature_package.toFixed(2)}€)</span>
                         </div>
                          <div className="flex justify-between pl-4 text-xs text-destructive">
-                            <span>(Ersparnis Buch: {((products.hw2.price || 0) - (products.hw2.preorderPrice || 0)).toFixed(2)}€)</span>
+                            <span>(Ersparnis Buch: {((hw2_static.price || 0) - (hw2_static.preorderPrice || 0)).toFixed(2)}€)</span>
                         </div>
                         <Separator className="my-2"/>
                         <div className="flex justify-between">
@@ -461,3 +456,5 @@ export function SignatureOrderForm({ book }: { book: Product }) {
     </DialogContent>
   );
 }
+
+    
