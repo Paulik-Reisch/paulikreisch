@@ -1,3 +1,4 @@
+
 'use server';
 
 import { z } from "zod";
@@ -307,7 +308,7 @@ export async function subscribeToNewsletterAction(
     
     try {
         await addSubscriber(validatedFields.data.email, validatedFields.data.source);
-        return { success: true, message: `Wir haben eine Bestätigungs-E-Mail an ${validatedFields.data.email} gesendet. (Nicht wirklich, aber danke für's Mitmachen!)` };
+        return { success: true, message: `Wir haben eine Bestätigungs-E-Mail an ${validatedFields.data.email} gesendet.` };
     } catch (e) {
         console.error(e);
         const error = e as Error;
