@@ -4,12 +4,9 @@
 
 import { z } from "zod";
 import {
-  addProduct,
-  updateProduct,
-  deleteProduct,
-  addNewsletter,
   updateNewsletter,
   deleteNewsletter,
+  addNewsletter,
   duplicateNewsletter,
   getAdminPassword,
   addTagsToSubscribers,
@@ -69,97 +66,6 @@ export async function loginAction(
 export async function logoutAction() {
     cookies().set("session", "", { expires: new Date(0) });
     redirect('/admin/login');
-}
-
-
-// Products
-const ProductSchema = z.object({
-  title: z.string().min(1, "Titel ist erforderlich."),
-  subtitle: z.string().optional(),
-  price: z.coerce.number().min(0, "Preis muss positiv sein."),
-  preorderPrice: z.coerce.number().optional(),
-  amazonLink: z.string().url("Gültige URL erforderlich."),
-  imageSrc: z.string().url("Gültige URL erforderlich."),
-  aiHint: z.string().optional(),
-  description: z.string().optional(),
-});
-
-export type AdminProductState = {
-  success: boolean;
-  error: string | null;
-  message?: string;
-};
-
-const initialProductState: AdminProductState = { success: false, error: null };
-
-export async function addProductAction(
-  prevState: AdminProductState,
-  formData: FormData
-): Promise<AdminProductState> {
-  const validatedFields = ProductSchema.safeParse(Object.fromEntries(formData.entries()));
-
-  if (!validatedFields.success) {
-    const errorMessages = validatedFields.error.errors.map((e) => e.message).join(". ");
-    return { success: false, error: errorMessages };
-  }
-
-  try {
-    await addProduct(validatedFields.data);
-    revalidatePath("/admin");
-    revalidatePath("/buchhandlung-paulik-reisch");
-    return { success: true, message: "Produkt erfolgreich hinzugefügt." };
-  } catch (e) {
-    const error = e as Error;
-    return { success: false, error: error.message };
-  }
-}
-
-export async function updateProductAction(
-  prevState: AdminProductState,
-  formData: FormData
-): Promise<AdminProductState> {
-  const productId = formData.get("productId") as string;
-  const productDataString = formData.get("productData") as string;
-
-  if (!productId || !productDataString) {
-    return { success: false, error: "Produkt-ID oder Daten fehlen." };
-  }
-  
-  try {
-    const productData = JSON.parse(productDataString);
-    await updateProduct(productId, productData);
-    revalidatePath("/admin");
-    revalidatePath("/buchhandlung-paulik-reisch");
-    return { success: true, message: "Produkt erfolgreich aktualisiert." };
-  } catch (e) {
-    const error = e as Error;
-    return { success: false, error: "Fehler beim Aktualisieren: " + error.message };
-  }
-}
-
-const DeleteProductSchema = z.object({
-  productId: z.string(),
-});
-
-export async function deleteProductAction(
-  prevState: AdminProductState,
-  formData: FormData
-): Promise<AdminProductState> {
-  const validatedFields = DeleteProductSchema.safeParse(Object.fromEntries(formData.entries()));
-
-  if (!validatedFields.success) {
-    return { success: false, error: "Ungültige Produkt-ID." };
-  }
-
-  try {
-    await deleteProduct(validatedFields.data.productId);
-    revalidatePath("/admin");
-    revalidatePath("/buchhandlung-paulik-reisch");
-    return { success: true, message: "Produkt wurde gelöscht." };
-  } catch (e) {
-    const error = e as Error;
-    return { success: false, error: "Fehler beim Löschen: " + error.message };
-  }
 }
 
 const CorrectHtmlSchema = z.object({

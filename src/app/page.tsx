@@ -1,3 +1,4 @@
+
 import { Header } from "@/components/landing/header";
 import { Hero } from "@/components/landing/hero";
 import { TopicLPs } from "@/components/landing/topic-lps";
@@ -10,12 +11,20 @@ import { CtaBanner } from "@/components/landing/cta-banner";
 import { RandomTeaser } from "@/components/landing/random-teaser";
 import { HW2Teaser } from "@/components/landing/hw2-teaser";
 import { Footer } from "@/components/landing/footer";
-import { getProducts } from "@/lib/firestore";
+import { Product } from "@/lib/firestore";
+
+const hw1: Product = {
+    id: "hw1",
+    title: "Hallo Welt",
+    subtitle: "Erhebliche Kritik am unerhörten Bildungsgang der Lernvollzugsanstalt SK-S",
+    price: 10.99,
+    imageSrc: "https://m.media-amazon.com/images/I/61hB6jTD-CL._SY466_.jpg",
+    aiHint: "book cover satire",
+    amazonLink: "https://www.amazon.de/Hallo-Welt-unerh%C3%B6rten-Bildungsgang-Lernvollzugsanstalt/dp/3982548803",
+    description: "Die satirische Abrechnung mit dem Schulsystem, Lehrern als Beamtenrobotern und dem täglichen Wahnsinn des Erwachsenwerdens."
+};
 
 export default async function Home() {
-  const products = await getProducts();
-  const hw1 = products.find(p => p.id === 'hw1');
-
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background text-foreground overflow-x-hidden">
       <Header />

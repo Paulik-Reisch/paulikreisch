@@ -2,7 +2,7 @@
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import { AdminDashboard } from "@/components/admin/dashboard";
-import { getLegalPages, getProducts, getNewsletters, getSubscribers, getCampaigns } from "@/lib/firestore";
+import { getLegalPages, getNewsletters, getSubscribers, getCampaigns } from "@/lib/firestore";
 import { Button } from "@/components/ui/button";
 import { logoutAction } from "./actions";
 import { LogOut } from "lucide-react";
@@ -17,7 +17,6 @@ export default async function AdminPage() {
   }
 
   // Fetch initial data on the server
-  const initialProducts = await getProducts();
   const initialLegalPages = await getLegalPages();
   const initialNewsletters = await getNewsletters();
   const initialSubscribers = await getSubscribers();
@@ -40,7 +39,6 @@ export default async function AdminPage() {
               </form>
             </div>
             <AdminDashboard 
-              initialProducts={initialProducts}
               initialLegalPages={initialLegalPages}
               initialNewsletters={initialNewsletters}
               initialSubscribers={initialSubscribers}

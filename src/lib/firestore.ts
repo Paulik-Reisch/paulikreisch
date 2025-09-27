@@ -19,18 +19,6 @@ import {
     arrayUnion
 } from "firebase/firestore";
 
-export interface Product {
-    id: string;
-    title: string;
-    subtitle: string;
-    price: number;
-    preorderPrice?: number;
-    imageSrc: string;
-    aiHint: string;
-    amazonLink: string;
-    description: string;
-}
-
 export interface Order {
     id: string;
     [key: string]: any;
@@ -93,34 +81,20 @@ export interface Campaign {
     resendBatchId?: string;
 }
 
+export interface Product {
+    id: string;
+    title: string;
+    subtitle: string;
+    price: number;
+    preorderPrice?: number;
+    imageSrc: string;
+    aiHint: string;
+    amazonLink: string;
+    description: string;
+}
+
 
 const db = getFirestore(app);
-
-// In a real app, this would fetch from Firestore.
-// For this prototype, we return mock data to avoid empty states.
-const defaultProducts: Product[] = [
-    {
-        id: "hw1",
-        title: "Hallo Welt",
-        subtitle: "Erhebliche Kritik am unerhörten Bildungsgang der Lernvollzugsanstalt SK-S",
-        price: 10.99,
-        imageSrc: "https://m.media-amazon.com/images/I/61hB6jTD-CL._SY466_.jpg",
-        aiHint: "book cover satire",
-        amazonLink: "https://www.amazon.de/Hallo-Welt-unerh%C3%B6rten-Bildungsgang-Lernvollzugsanstalt/dp/3982548803",
-        description: "Die satirische Abrechnung mit dem Schulsystem, Lehrern als Beamtenrobotern und dem täglichen Wahnsinn des Erwachsenwerdens."
-    },
-    {
-        id: "hw2",
-        title: "Hallo Welt 2",
-        subtitle: "Wie das Leben funktioniert",
-        price: 12.99,
-        preorderPrice: 9.99,
-        imageSrc: "https://placehold.co/300x450.png",
-        aiHint: "funny book cover",
-        amazonLink: "#",
-        description: "Die Fortsetzung, die niemand wollte. Eine Abrechnung mit Bürokratie, deutschem Internet und Mietenwahnsinn."
-    }
-];
 
 export async function getAdminPassword(): Promise<string | null> {
     try {
@@ -137,38 +111,6 @@ export async function getAdminPassword(): Promise<string | null> {
         console.error("Error fetching admin password:", error);
         return null;
     }
-}
-
-export async function getProducts(): Promise<Product[]> {
-    try {
-        const productsCol = collection(db, 'products');
-        const productSnapshot = await getDocs(productsCol);
-        if (productSnapshot.empty) {
-            console.log("No products found in Firestore, returning default products.");
-            return defaultProducts;
-        }
-        const productList = productSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
-        return productList;
-    } catch (error) {
-        console.error("Error fetching products from Firestore, returning default products:", error);
-        return defaultProducts;
-    }
-}
-
-
-export async function addProduct(data: Omit<Product, 'id'>) {
-    const productsCol = collection(db, 'products');
-    await addDoc(productsCol, data);
-}
-
-export async function updateProduct(productId: string, data: Partial<Product>) {
-    const productRef = doc(db, 'products', productId);
-    await updateDoc(productRef, data);
-}
-
-export async function deleteProduct(productId: string) {
-    const productRef = doc(db, 'products', productId);
-    await deleteDoc(productRef);
 }
 
 export async function getOrders(): Promise<Order[]> {
@@ -677,5 +619,3 @@ export async function getCampaigns(): Promise<Campaign[]> {
         } as Campaign;
     });
 }
-
-    

@@ -6,7 +6,6 @@ import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { 
-    Product, 
     Newsletter,
     Subscriber,
     Campaign,
@@ -14,9 +13,6 @@ import {
     getSubscribers,
 } from "@/lib/firestore";
 import {
-    addProductAction,
-    updateProductAction,
-    deleteProductAction,
     addNewsletterAction,
     deleteNewsletterAction,
     duplicateNewsletterAction,
@@ -38,7 +34,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus, History } from "lucide-react";
+import { Loader2, RefreshCw, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus, History } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -258,186 +254,6 @@ function LeadsTable({ initialSubscribers }: { initialSubscribers: Subscriber[] }
                                     </TableCell>
                                 </TableRow>
                             ))
-                        )}
-                    </TableBody>
-                </Table>
-            </div>
-        </div>
-    );
-}
-
-type AdminProductState = {
-  success: boolean;
-  error: string | null;
-  message?: string;
-};
-
-const initialProductState: AdminProductState = { success: false, error: null };
-
-function ProductsManager({ initialProducts }: { initialProducts: Product[] }) {
-    const [products, setProducts] = useState<Product[]>(initialProducts);
-    const [editingProducts, setEditingProducts] = useState<{ [key: string]: Partial<Product> }>({});
-    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-    const { toast } = useToast();
-
-    const [addState, addFormAction] = useActionState(addProductAction, initialProductState);
-    const [updateState, updateFormAction] = useActionState(updateProductAction, initialProductState);
-    const [deleteState, deleteFormAction] = useActionState(deleteProductAction, initialProductState);
-
-     useEffect(() => {
-        setProducts(initialProducts);
-    }, [initialProducts]);
-    
-    useEffect(() => {
-        if (addState.success) {
-            toast({ title: "Erfolg", description: addState.message });
-            setIsAddDialogOpen(false);
-        }
-        if (addState.error) {
-            toast({ variant: "destructive", title: "Fehler", description: addState.error });
-        }
-    }, [addState, toast]);
-    
-    useEffect(() => {
-        if (updateState.success) {
-            toast({ title: "Erfolg", description: updateState.message });
-            setEditingProducts({});
-        }
-        if (updateState.error) {
-            toast({ variant: "destructive", title: "Fehler", description: updateState.error });
-        }
-    }, [updateState, toast]);
-
-    useEffect(() => {
-        if (deleteState.success) {
-            toast({ title: "Erfolg", description: deleteState.message });
-        }
-        if (deleteState.error) {
-            toast({ variant: "destructive", title: "Fehler", description: deleteState.error });
-        }
-    }, [deleteState, toast]);
-
-
-    const handleInputChange = (productId: string, field: keyof Product, value: string | number) => {
-        setEditingProducts(prev => ({
-            ...prev,
-            [productId]: { ...prev[productId], [field]: value }
-        }));
-    };
-
-    return (
-        <div>
-             <div className="flex justify-between items-center mb-4">
-                <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-                    <DialogTrigger asChild>
-                        <Button variant="outline"><PlusCircle className="mr-2 h-4 w-4" /> Neues Produkt</Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <form action={addFormAction}>
-                            <DialogHeader>
-                                <DialogTitle>Neues Produkt hinzufügen</DialogTitle>
-                            </DialogHeader>
-                            <div className="grid gap-4 py-4">
-                                <Input name="title" placeholder="Titel" required />
-                                <Input name="subtitle" placeholder="Untertitel" />
-                                <Input name="price" type="number" step="0.01" placeholder="Preis (z.B. 10.99)" required />
-                                <Input name="preorderPrice" type="number" step="0.01" placeholder="Vorbestell-Preis (optional)" />
-                                <Input name="amazonLink" placeholder="Amazon Link" required />
-                                <Input name="imageSrc" placeholder="Bild-URL (z.B. https://picsum.photos/...)" required />
-                                <Input name="aiHint" placeholder="AI-Hint für Bild (z.B. book cover)" />
-                                <Textarea name="description" placeholder="Beschreibung" />
-                            </div>
-                            <DialogFooter>
-                                <DialogClose asChild><Button type="button" variant="secondary">Abbrechen</Button></DialogClose>
-                                <Button type="submit">Speichern</Button>
-                            </DialogFooter>
-                        </form>
-                    </DialogContent>
-                </Dialog>
-            </div>
-            <div className="border rounded-lg overflow-hidden">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Produkt</TableHead>
-                            <TableHead>Preis</TableHead>
-                            <TableHead>Vorbestell-Preis</TableHead>
-                            <TableHead>Amazon Link</TableHead>
-                            <TableHead className="text-right">Aktionen</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {products.length === 0 ? (
-                             <TableRow>
-                                <TableCell colSpan={5} className="text-center py-12">
-                                    <p>Keine Produkte gefunden.</p>
-                                </TableCell>
-                            </TableRow>
-                        ) : (
-                            products.map((product) => {
-                                const currentProduct = { ...product, ...editingProducts[product.id] };
-                                return (
-                                <TableRow key={product.id}>
-                                    <TableCell className="font-medium">{currentProduct.title}</TableCell>
-                                    <TableCell>
-                                        <Input
-                                            type="number"
-                                            value={currentProduct.price ?? ''}
-                                            onChange={(e) => handleInputChange(product.id, 'price', parseFloat(e.target.value))}
-                                            className="w-24"
-                                        />
-                                    </TableCell>
-                                    <TableCell>
-                                         <Input
-                                            type="number"
-                                            value={currentProduct.preorderPrice ?? ''}
-                                            onChange={(e) => handleInputChange(product.id, 'preorderPrice', parseFloat(e.target.value))}
-                                            className="w-24"
-                                            placeholder="N/A"
-                                        />
-                                    </TableCell>
-                                    <TableCell>
-                                        <Input
-                                            value={currentProduct.amazonLink}
-                                            onChange={(e) => handleInputChange(product.id, 'amazonLink', e.target.value)}
-                                            className="w-full"
-                                        />
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                        <div className="flex gap-2 justify-end">
-                                            <form action={updateFormAction}>
-                                                <input type="hidden" name="productId" value={product.id} />
-                                                <input type="hidden" name="productData" value={JSON.stringify(editingProducts[product.id] || {})} />
-                                                <Button type="submit" disabled={!editingProducts[product.id]} size="sm" variant="outline">
-                                                    <Save className="h-4 w-4" />
-                                                </Button>
-                                            </form>
-                                            <AlertDialog>
-                                                <AlertDialogTrigger asChild>
-                                                    <Button size="sm" variant="destructive">
-                                                        <Trash2 className="h-4 w-4" />
-                                                    </Button>
-                                                </AlertDialogTrigger>
-                                                <AlertDialogContent>
-                                                    <form action={deleteFormAction}>
-                                                        <input type="hidden" name="productId" value={product.id} />
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogTitle>Sind Sie sicher?</AlertDialogTitle>
-                                                            <AlertDialogDescription>
-                                                                Diese Aktion kann nicht rückgängig gemacht werden. Das Produkt wird dauerhaft gelöscht.
-                                                            </AlertDialogDescription>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel>Abbrechen</AlertDialogCancel>
-                                                            <AlertDialogAction type="submit">Löschen</AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                    </form>
-                                                </AlertDialogContent>
-                                            </AlertDialog>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            )})
                         )}
                     </TableBody>
                 </Table>
@@ -839,13 +655,11 @@ function CampaignsManager({ initialNewsletters, initialSubscribers, initialCampa
 }
 
 function OverviewTab({
-    products,
     newsletters,
     subscribers,
     legalPages,
     onTabChange
 } : {
-    products: Product[],
     newsletters: Newsletter[],
     subscribers: Subscriber[],
     legalPages: LegalPage[],
@@ -857,12 +671,6 @@ function OverviewTab({
             value: subscribers.length,
             icon: Users,
             link: "leads"
-        },
-        {
-            title: "Produkte",
-            value: products.length,
-            icon: Book,
-            link: "products"
         },
         {
             title: "Newsletter",
@@ -912,15 +720,11 @@ function OverviewTab({
                             <Send className="mr-2 h-4 w-4" />
                             Neue Kampagne
                         </Button>
-                        <Button variant="outline" onClick={() => onTabChange('products')}>
-                             <PlusCircle className="mr-2 h-4 w-4" />
-                            Neues Produkt
-                        </Button>
                     </CardContent>
                 </Card>
                  <Card className="flex flex-col justify-center items-center p-6 text-center bg-muted/40">
                     <h3 className="font-headline text-lg font-semibold">"Hallo Welt" Admin-Bereich</h3>
-                    <p className="text-sm text-muted-foreground mt-1">Verwalten Sie hier die Inhalte, Produkte und Abonnenten. Gehen Sie mit großer Macht weise um.</p>
+                    <p className="text-sm text-muted-foreground mt-1">Verwalten Sie hier die Inhalte und Abonnenten. Gehen Sie mit großer Macht weise um.</p>
                 </Card>
             </div>
         </div>
@@ -928,13 +732,11 @@ function OverviewTab({
 }
 
 export function AdminDashboard({
-    initialProducts,
     initialLegalPages,
     initialNewsletters,
     initialSubscribers,
     initialCampaigns
 }: {
-    initialProducts: Product[];
     initialLegalPages: LegalPage[];
     initialNewsletters: Newsletter[];
     initialSubscribers: Subscriber[];
@@ -944,17 +746,15 @@ export function AdminDashboard({
 
     return (
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-6 h-auto">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 h-auto">
                 <TabsTrigger value="übersicht"><LayoutDashboard className="mr-2 h-4 w-4" />Übersicht</TabsTrigger>
                 <TabsTrigger value="leads"><Users className="mr-2 h-4 w-4" />Leads</TabsTrigger>
-                <TabsTrigger value="products">Produkte</TabsTrigger>
                 <TabsTrigger value="dynamic-lps">Dynamische LPs</TabsTrigger>
                 <TabsTrigger value="newsletters">Newsletter</TabsTrigger>
                 <TabsTrigger value="campaigns"><Send className="mr-2 h-4 w-4" />Kampagnen</TabsTrigger>
             </TabsList>
             <TabsContent value="übersicht" className="mt-6">
                 <OverviewTab 
-                    products={initialProducts}
                     newsletters={initialNewsletters}
                     subscribers={initialSubscribers}
                     legalPages={initialLegalPages}
@@ -963,9 +763,6 @@ export function AdminDashboard({
             </TabsContent>
             <TabsContent value="leads" className="mt-6">
                 <LeadsTable initialSubscribers={initialSubscribers} />
-            </TabsContent>
-            <TabsContent value="products" className="mt-6">
-                <ProductsManager initialProducts={initialProducts} />
             </TabsContent>
              <TabsContent value="dynamic-lps" className="mt-6">
                 <LegalPagesManager initialLegalPages={initialLegalPages} />
