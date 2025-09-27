@@ -1,3 +1,4 @@
+
 import { getLegalPage } from "@/lib/firestore";
 import { notFound } from "next/navigation";
 import { EditorClient } from "./editor-client";

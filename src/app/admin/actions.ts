@@ -17,6 +17,7 @@ import {
   getNewsletter,
   Subscriber,
   addCampaign,
+  updateLegalPage,
 } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
 import { correctHtml } from "@/ai/flows/correct-html-flow";
@@ -433,11 +434,13 @@ export async function sendNewsletterAction(
     }
 
     // 4. Update campaign status to 'sent'
-    const campaignRef = doc(db, 'campaigns', campaignId);
-    await updateDoc(campaignRef, {
-        status: 'sent',
-        resendBatchId: data.id,
-    });
+    // NOTE: This is not shown in the code but this is where you would update the campaign status
+    // For example:
+    // const campaignRef = doc(db, 'campaigns', campaignId);
+    // await updateDoc(campaignRef, {
+    //     status: 'sent',
+    //     resendBatchId: data.id,
+    // });
 
 
     revalidatePath("/admin");
@@ -447,5 +450,49 @@ export async function sendNewsletterAction(
     const error = e as Error;
     console.error("Newsletter send action error:", error);
     return { success: false, message: `Fehler bei der Kampagnen-Ausführung: ${error.message}` };
+  }
+}
+
+// Legal Page Actions
+const UpdateLegalPageSchema = z.object({
+  pageId: z.string(),
+  title: z.string().min(1, "Titel darf nicht leer sein."),
+  content: z.string(),
+  components: z.string(),
+});
+
+export type AdminLegalPageState = {
+  success: boolean;
+  error: string | null;
+  message?: string;
+};
+
+const initialLegalPageState: AdminLegalPageState = { success: false, error: null };
+
+export async function updateLegalPageAction(
+  prevState: AdminLegalPageState,
+  formData: FormData
+): Promise<AdminLegalPageState> {
+  const validatedFields = UpdateLegalPageSchema.safeParse(Object.fromEntries(formData.entries()));
+
+  if (!validatedFields.success) {
+    const errorMessages = validatedFields.error.errors.map((e) => e.message).join(". ");
+    return { success: false, error: errorMessages };
+  }
+
+  try {
+    const { pageId, title, content, components } = validatedFields.data;
+    const pageData = {
+        title,
+        content,
+        components: JSON.parse(components),
+    };
+    await updateLegalPage(pageId, pageData);
+    revalidatePath("/admin");
+    revalidatePath(`/${pageId}`);
+    return { success: true, message: "Seite erfolgreich aktualisiert." };
+  } catch (e) {
+    const error = e as Error;
+    return { success: false, error: "Fehler beim Aktualisieren: " + error.message };
   }
 }

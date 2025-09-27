@@ -267,6 +267,77 @@ export async function addTagsToSubscribers(subscriberIds: string[], tags: string
 }
 
 
+// --- LEGAL PAGES ---
+const defaultLegalPages: LegalPage[] = [
+    { id: 'impressum', title: 'Impressum', content: '<p>Hier steht das Impressum.</p>', components: [], lastUpdated: new Date().toISOString() },
+    { id: 'datenschutz', title: 'Datenschutzerklärung', content: '<p>Hier steht die Datenschutzerklärung.</p>', components: [], lastUpdated: new Date().toISOString() },
+    { id: 'agb', title: 'AGB', content: '<p>Hier stehen die AGB.</p>', components: [], lastUpdated: new Date().toISOString() },
+    { id: 'cookie-richtlinie', title: 'Cookie-Richtlinie', content: '<p>Hier stehen die Cookie-Richtlinien.</p>', components: [], lastUpdated: new Date().toISOString() },
+    { id: 'lizenz', title: 'Lizenz', content: '<p>Hier stehen die Lizenzinformationen.</p>', components: [], lastUpdated: new Date().toISOString() },
+];
+
+
+export async function getLegalPages(): Promise<LegalPage[]> {
+    try {
+        const legalCol = collection(db, 'legal');
+        const legalSnapshot = await getDocs(legalCol);
+        if (legalSnapshot.empty) {
+            // If the collection is empty, create the default pages.
+            for (const page of defaultLegalPages) {
+                const pageRef = doc(db, 'legal', page.id);
+                await setDoc(pageRef, { title: page.title, content: page.content, components: page.components, lastUpdated: Timestamp.now() });
+            }
+            return defaultLegalPages;
+        }
+        return legalSnapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+                id: doc.id,
+                title: data.title,
+                content: data.content,
+                components: data.components || [],
+                lastUpdated: (data.lastUpdated as Timestamp).toDate().toISOString(),
+            } as LegalPage;
+        });
+    } catch (error) {
+        console.error("Error fetching legal pages, returning defaults:", error);
+        return defaultLegalPages;
+    }
+}
+
+export async function getLegalPage(slug: string): Promise<LegalPage | null> {
+    try {
+        const docRef = doc(db, 'legal', slug);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            return {
+                id: docSnap.id,
+                title: data.title,
+                content: data.content,
+                components: data.components || [],
+                lastUpdated: (data.lastUpdated as Timestamp).toDate().toISOString(),
+            } as LegalPage;
+        } else {
+            console.log(`No legal page found for slug: ${slug}`);
+            return null;
+        }
+    } catch (error) {
+        console.error(`Error fetching legal page for slug ${slug}:`, error);
+        return null;
+    }
+}
+
+export async function updateLegalPage(pageId: string, data: Partial<Omit<LegalPage, 'id'>>) {
+    const pageRef = doc(db, 'legal', pageId);
+    await updateDoc(pageRef, {
+        ...data,
+        lastUpdated: Timestamp.now(),
+    });
+}
+
+
 // --- Newsletter Functions ---
 
 export async function getNewsletters(): Promise<Newsletter[]> {

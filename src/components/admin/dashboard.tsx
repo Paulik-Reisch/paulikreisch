@@ -10,6 +10,7 @@ import {
     Newsletter,
     Subscriber,
     Campaign,
+    LegalPage,
     getSubscribers,
 } from "@/lib/firestore";
 import {
@@ -445,6 +446,54 @@ function ProductsManager({ initialProducts }: { initialProducts: Product[] }) {
     );
 }
 
+function LegalPagesManager({ initialLegalPages }: { initialLegalPages: LegalPage[] }) {
+    return (
+        <div>
+            <div className="border rounded-lg overflow-hidden">
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Titel</TableHead>
+                            <TableHead>Slug</TableHead>
+                            <TableHead>Zuletzt aktualisiert</TableHead>
+                            <TableHead className="text-right">Aktionen</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {initialLegalPages.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={4} className="text-center py-12 text-muted-foreground">
+                                    <FileText className="mx-auto h-8 w-8 mb-2" />
+                                    Keine Seiten gefunden.
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            initialLegalPages.map((page) => (
+                                <TableRow key={page.id}>
+                                    <TableCell className="font-medium">{page.title}</TableCell>
+                                    <TableCell className="text-muted-foreground">/{page.id}</TableCell>
+                                    <TableCell className="text-muted-foreground">
+                                        {format(new Date(page.lastUpdated), "dd.MM.yyyy HH:mm", { locale: de })}
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        <div className="flex gap-2 justify-end">
+                                            <Link href={`/admin/editor/${page.id}`}>
+                                                <Button size="sm" variant="outline">
+                                                    <Edit className="h-4 w-4" />
+                                                </Button>
+                                            </Link>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+        </div>
+    );
+}
+
 type AdminNewsletterState = {
   success: boolean;
   error?: string | null;
@@ -793,11 +842,13 @@ function OverviewTab({
     products,
     newsletters,
     subscribers,
+    legalPages,
     onTabChange
 } : {
     products: Product[],
     newsletters: Newsletter[],
     subscribers: Subscriber[],
+    legalPages: LegalPage[],
     onTabChange: (value: string) => void;
 }) {
     const stats = [
@@ -818,6 +869,12 @@ function OverviewTab({
             value: newsletters.length,
             icon: Newspaper,
             link: "newsletters"
+        },
+        {
+            title: "Dynamische LPs",
+            value: legalPages.length,
+            icon: FileText,
+            link: "dynamic-lps"
         },
     ]
 
@@ -872,12 +929,13 @@ function OverviewTab({
 
 export function AdminDashboard({
     initialProducts,
+    initialLegalPages,
     initialNewsletters,
     initialSubscribers,
     initialCampaigns
 }: {
     initialProducts: Product[];
-    initialLegalPages: any[]; // Kept for prop compatibility, but not used
+    initialLegalPages: LegalPage[];
     initialNewsletters: Newsletter[];
     initialSubscribers: Subscriber[];
     initialCampaigns: Campaign[];
@@ -886,10 +944,11 @@ export function AdminDashboard({
 
     return (
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-5 h-auto">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-6 h-auto">
                 <TabsTrigger value="übersicht"><LayoutDashboard className="mr-2 h-4 w-4" />Übersicht</TabsTrigger>
                 <TabsTrigger value="leads"><Users className="mr-2 h-4 w-4" />Leads</TabsTrigger>
                 <TabsTrigger value="products">Produkte</TabsTrigger>
+                <TabsTrigger value="dynamic-lps">Dynamische LPs</TabsTrigger>
                 <TabsTrigger value="newsletters">Newsletter</TabsTrigger>
                 <TabsTrigger value="campaigns"><Send className="mr-2 h-4 w-4" />Kampagnen</TabsTrigger>
             </TabsList>
@@ -898,6 +957,7 @@ export function AdminDashboard({
                     products={initialProducts}
                     newsletters={initialNewsletters}
                     subscribers={initialSubscribers}
+                    legalPages={initialLegalPages}
                     onTabChange={setActiveTab}
                 />
             </TabsContent>
@@ -906,6 +966,9 @@ export function AdminDashboard({
             </TabsContent>
             <TabsContent value="products" className="mt-6">
                 <ProductsManager initialProducts={initialProducts} />
+            </TabsContent>
+             <TabsContent value="dynamic-lps" className="mt-6">
+                <LegalPagesManager initialLegalPages={initialLegalPages} />
             </TabsContent>
             <TabsContent value="newsletters" className="mt-6">
                 <NewsletterManager initialNewsletters={initialNewsletters} onTabChange={setActiveTab} />

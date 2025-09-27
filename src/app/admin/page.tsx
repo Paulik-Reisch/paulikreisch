@@ -1,3 +1,4 @@
+
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import { AdminDashboard } from "@/components/admin/dashboard";
@@ -17,6 +18,7 @@ export default async function AdminPage() {
 
   // Fetch initial data on the server
   const initialProducts = await getProducts();
+  const initialLegalPages = await getLegalPages();
   const initialNewsletters = await getNewsletters();
   const initialSubscribers = await getSubscribers();
   const initialCampaigns = await getCampaigns();
@@ -39,7 +41,7 @@ export default async function AdminPage() {
             </div>
             <AdminDashboard 
               initialProducts={initialProducts}
-              initialLegalPages={[]}
+              initialLegalPages={initialLegalPages}
               initialNewsletters={initialNewsletters}
               initialSubscribers={initialSubscribers}
               initialCampaigns={initialCampaigns}
