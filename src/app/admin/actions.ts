@@ -7,20 +7,16 @@ import {
   addProduct,
   updateProduct,
   deleteProduct,
-  addLegalPage,
-  updateLegalPage,
-  deleteLegalPage,
-  Product,
   addNewsletter,
   updateNewsletter,
   deleteNewsletter,
   duplicateNewsletter,
-  PageComponent,
   getAdminPassword,
   addTagsToSubscribers,
   getSubscribers,
   getNewsletter,
   Subscriber,
+  addCampaign,
 } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
 import { correctHtml } from "@/ai/flows/correct-html-flow";
@@ -163,105 +159,6 @@ export async function deleteProductAction(
     const error = e as Error;
     return { success: false, error: "Fehler beim Löschen: " + error.message };
   }
-}
-
-
-// Legal Pages
-const LegalPageSchema = z.object({
-    pageId: z.string().min(2, "Seiten-ID ist erforderlich.").regex(/^[a-z0-9-]+$/, "ID darf nur Kleinbuchstaben, Zahlen und Bindestriche enthalten."),
-    title: z.string().min(1, "Titel ist erforderlich."),
-    content: z.string(), // This will be the generated HTML from components
-    components: z.string(), // This will be a JSON string of components
-});
-
-export type AdminLegalPageState = {
-    success: boolean;
-    error: string | null;
-    message?: string;
-};
-
-const initialLegalPageState: AdminLegalPageState = { success: false, error: null };
-
-
-export async function addLegalPageAction(
-    prevState: AdminLegalPageState,
-    formData: FormData
-): Promise<AdminLegalPageState> {
-    const validatedFields = LegalPageSchema.safeParse(Object.fromEntries(formData.entries()));
-
-    if (!validatedFields.success) {
-        const errorMessages = validatedFields.error.errors.map((e) => e.message).join(". ");
-        return { success: false, error: errorMessages };
-    }
-
-    try {
-        const { pageId, title, content } = validatedFields.data;
-        const components: PageComponent[] = JSON.parse(validatedFields.data.components);
-        await addLegalPage(pageId, { title, content, components });
-        revalidatePath("/admin");
-        revalidatePath(`/${pageId}`);
-        return { success: true, message: "Seite erfolgreich erstellt." };
-    } catch (e) {
-        const error = e as Error;
-        return { success: false, error: error.message };
-    }
-}
-
-const UpdateLegalPageSchema = z.object({
-    pageId: z.string(),
-    title: z.string().min(1, "Titel darf nicht leer sein."),
-    content: z.string(),
-    components: z.string(),
-});
-
-export async function updateLegalPageAction(
-    prevState: AdminLegalPageState,
-    formData: FormData
-): Promise<AdminLegalPageState> {
-    const validatedFields = UpdateLegalPageSchema.safeParse(Object.fromEntries(formData.entries()));
-
-     if (!validatedFields.success) {
-        const errorMessages = validatedFields.error.errors.map((e) => e.message).join(". ");
-        return { success: false, error: errorMessages };
-    }
-
-    try {
-        const { pageId, title, content } = validatedFields.data;
-        const components = JSON.parse(validatedFields.data.components);
-        await updateLegalPage(pageId, { title, content, components });
-        revalidatePath("/admin");
-        revalidatePath(`/${pageId}`);
-        return { success: true, message: "Seite erfolgreich aktualisiert." };
-    } catch (e) {
-        const error = e as Error;
-        return { success: false, error: "Fehler beim Aktualisieren: " + error.message };
-    }
-}
-
-const DeleteLegalPageSchema = z.object({
-  pageId: z.string(),
-});
-
-export async function deleteLegalPageAction(
-    prevState: AdminLegalPageState,
-    formData: FormData
-): Promise<AdminLegalPageState> {
-    const validatedFields = DeleteLegalPageSchema.safeParse(Object.fromEntries(formData.entries()));
-
-    if (!validatedFields.success) {
-        return { success: false, error: "Ungültige Seiten-ID." };
-    }
-    
-    try {
-        await deleteLegalPage(validatedFields.data.pageId);
-        revalidatePath("/admin");
-        // We can't easily revalidate a dynamic slug that no longer exists,
-        // but revalidating /admin is the most important part.
-        return { success: true, message: "Seite wurde gelöscht." };
-    } catch (e) {
-        const error = e as Error;
-        return { success: false, error: "Fehler beim Löschen: " + error.message };
-    }
 }
 
 const CorrectHtmlSchema = z.object({
@@ -492,6 +389,12 @@ export async function sendNewsletterAction(
   }
 
   try {
+    // 1. Get newsletter and subscribers
+    const newsletter = await getNewsletter(newsletterId);
+    if (!newsletter || !newsletter.content) {
+      return { success: false, message: "Newsletter nicht gefunden oder hat keinen Inhalt." };
+    }
+    
     const allSubscribers = await getSubscribers();
     const targetSubscribers = allSubscribers.filter(s => 
         tags.every(tag => s.tags?.includes(tag))
@@ -501,13 +404,19 @@ export async function sendNewsletterAction(
       return { success: false, message: "Es wurden keine Abonnenten für die ausgewählten Tags gefunden." };
     }
     
-    const newsletter = await getNewsletter(newsletterId);
-    if (!newsletter || !newsletter.content) {
-      return { success: false, message: "Newsletter nicht gefunden oder hat keinen Inhalt." };
-    }
-    
-    const resend = new Resend(process.env.RESEND_API_KEY);
+    // 2. Create campaign record
+    const campaignData = {
+        newsletterId: newsletter.id,
+        newsletterName: newsletter.name,
+        newsletterSubject: newsletter.subject,
+        recipientCount: targetSubscribers.length,
+        tags,
+        status: 'pending' as const,
+    };
+    const campaignId = await addCampaign(campaignData);
 
+    // 3. Send emails
+    const resend = new Resend(process.env.RESEND_API_KEY);
     const emailsToSend = targetSubscribers.map(subscriber => ({
         from: 'Hallo Welt <hallo-welt@paulik-reisch.de>',
         to: [subscriber.email],
@@ -519,11 +428,20 @@ export async function sendNewsletterAction(
 
     if (error || !data) {
       console.error("Resend error:", error);
+      // TODO: Update campaign status to 'failed'
       return { success: false, message: `Fehler beim E-Mail-Versand: ${error?.message || 'Unbekannter Fehler'}` };
     }
 
+    // 4. Update campaign status to 'sent'
+    const campaignRef = doc(db, 'campaigns', campaignId);
+    await updateDoc(campaignRef, {
+        status: 'sent',
+        resendBatchId: data.id,
+    });
+
+
     revalidatePath("/admin");
-    return { success: true, message: `Newsletter-Batch an ${targetSubscribers.length} Empfänger erfolgreich erstellt. (Batch-ID: ${data.id})` };
+    return { success: true, message: `Kampagne erfolgreich erstellt und Versand an ${targetSubscribers.length} Empfänger gestartet.` };
 
   } catch (e) {
     const error = e as Error;

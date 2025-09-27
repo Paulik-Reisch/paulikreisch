@@ -7,17 +7,15 @@ import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { 
     Product, 
-    LegalPage, 
     Newsletter,
     Subscriber,
+    Campaign,
     getSubscribers,
 } from "@/lib/firestore";
 import {
     addProductAction,
     updateProductAction,
     deleteProductAction,
-    addLegalPageAction,
-    deleteLegalPageAction,
     addNewsletterAction,
     deleteNewsletterAction,
     duplicateNewsletterAction,
@@ -39,7 +37,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus } from "lucide-react";
+import { Loader2, RefreshCw, Save, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus, History } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -447,158 +445,6 @@ function ProductsManager({ initialProducts }: { initialProducts: Product[] }) {
     );
 }
 
-type AdminLegalPageState = {
-  success: boolean;
-  error: string | null;
-  message?: string;
-};
-const initialLegalPageState: AdminLegalPageState = { success: false, error: null };
-
-function LegalPagesManager({ initialPages }: { initialPages: LegalPage[] }) {
-    const [pages, setPages] = useState<LegalPage[]>(initialPages);
-    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-    const { toast } = useToast();
-
-    const [addState, addFormAction] = useActionState(addLegalPageAction, initialLegalPageState);
-    const [deleteState, deleteFormAction] = useActionState(deleteLegalPageAction, initialLegalPageState);
-    
-    const [newContent, setNewContent] = useState("<h1 class=\"text-4xl font-bold\">Neuer Seitentitel</h1>\n<p class=\"mt-4\">Dies ist der Inhalt Ihrer neuen Seite.</p>");
-
-    useEffect(() => {
-        setPages(initialPages);
-    }, [initialPages]);
-
-    useEffect(() => {
-        if (addState.success) {
-            toast({ title: "Erfolg", description: addState.message });
-            setIsAddDialogOpen(false);
-            setNewContent("<h1 class=\"text-4xl font-bold\">Neuer Seitentitel</h1>\n<p class=\"mt-4\">Dies ist der Inhalt Ihrer neuen Seite.</p>");
-        }
-        if (addState.error) {
-            toast({ variant: "destructive", title: "Fehler", description: addState.error });
-        }
-    }, [addState, toast]);
-
-    useEffect(() => {
-        if (deleteState.success) {
-            toast({ title: "Erfolg", description: deleteState.message });
-        }
-        if (deleteState.error) {
-            toast({ variant: "destructive", title: "Fehler", description: deleteState.error });
-        }
-    }, [deleteState, toast]);
-    
-    const handleAddFormSubmit = (formData: FormData) => {
-        formData.set('content', newContent);
-        formData.set('components', '[]'); // Start with empty components for new pages
-        addFormAction(formData);
-    }
-
-    return (
-        <div>
-            <div className="flex justify-between items-center mb-4">
-                 <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-                    <DialogTrigger asChild>
-                        <Button variant="outline"><PlusCircle className="mr-2 h-4 w-4" /> Neue Dynamische LP</Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-4xl max-h-[90vh] flex flex-col">
-                        <form onSubmit={(e) => { e.preventDefault(); handleAddFormSubmit(new FormData(e.currentTarget)); }} className="flex flex-col min-h-0 flex-grow">
-                            <DialogHeader>
-                                <DialogTitle>Neue Dynamische LP hinzufügen</DialogTitle>
-                                <DialogDescription>Erstellen Sie hier eine neue Seite.</DialogDescription>
-                            </DialogHeader>
-                            <div className="grid gap-4 py-4 flex-grow min-h-0">
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div>
-                                        <Label htmlFor="pageId">Seiten-ID (slug)</Label>
-                                        <Input id="pageId" name="pageId" placeholder="z.B. 'neue-seite'" required />
-                                    </div>
-                                     <div>
-                                        <Label htmlFor="title">Seitentitel</Label>
-                                        <Input id="title" name="title" placeholder="Seitentitel für Browser-Tab" required />
-                                    </div>
-                                </div>
-                               
-                            </div>
-                            <DialogFooter>
-                                <DialogClose asChild><Button type="button" variant="secondary">Abbrechen</Button></DialogClose>
-                                <Button type="submit">Erstellen & Bearbeiten</Button>
-                            </DialogFooter>
-                        </form>
-                    </DialogContent>
-                </Dialog>
-            </div>
-             <div className="border rounded-lg overflow-hidden">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Titel</TableHead>
-                            <TableHead>URL-Slug</TableHead>
-                            <TableHead>Zuletzt aktualisiert</TableHead>
-                            <TableHead className="text-right">Aktionen</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {pages.length === 0 ? (
-                             <TableRow>
-                                <TableCell colSpan={4} className="text-center py-12 text-muted-foreground">
-                                    <FileText className="mx-auto h-8 w-8 mb-2" />
-                                    Keine Seiten gefunden.
-                                </TableCell>
-                            </TableRow>
-                        ) : (
-                            pages.map((page) => (
-                                <TableRow key={page.id}>
-                                    <TableCell className="font-medium">{page.title}</TableCell>
-                                    <TableCell>
-                                        <Link href={`/${page.id}`} target="_blank" className="text-muted-foreground hover:text-primary underline">
-                                            /{page.id}
-                                        </Link>
-                                    </TableCell>
-                                    <TableCell className="text-muted-foreground">
-                                        {page.lastUpdated ? format(new Date(page.lastUpdated), "dd.MM.yyyy HH:mm", { locale: de }) : 'N/A'}
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                        <div className="flex gap-2 justify-end">
-                                            <Link href={`/admin/editor/${page.id}`}>
-                                                <Button size="sm" variant="outline">
-                                                    <Edit className="h-4 w-4" />
-                                                </Button>
-                                            </Link>
-                                            <AlertDialog>
-                                                <AlertDialogTrigger asChild>
-                                                    <Button size="sm" variant="destructive">
-                                                        <Trash2 className="h-4 w-4" />
-                                                    </Button>
-                                                </AlertDialogTrigger>
-                                                <AlertDialogContent>
-                                                    <AlertDialogHeader>
-                                                        <AlertDialogTitle>Sind Sie sicher?</AlertDialogTitle>
-                                                        <AlertDialogDescription>
-                                                            Diese Aktion kann nicht rückgängig gemacht werden. Die Seite /{page.id} wird dauerhaft gelöscht.
-                                                        </AlertDialogDescription>
-                                                    </AlertDialogHeader>
-                                                    <AlertDialogFooter>
-                                                        <AlertDialogCancel>Abbrechen</AlertDialogCancel>
-                                                        <form action={deleteFormAction}>
-                                                            <input type="hidden" name="pageId" value={page.id} />
-                                                            <AlertDialogAction type="submit">Löschen</AlertDialogAction>
-                                                        </form>
-                                                    </AlertDialogFooter>
-                                                </AlertDialogContent>
-                                            </AlertDialog>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        )}
-                    </TableBody>
-                </Table>
-            </div>
-        </div>
-    )
-}
-
 type AdminNewsletterState = {
   success: boolean;
   error?: string | null;
@@ -781,7 +627,7 @@ function NewsletterManager({ initialNewsletters, onTabChange }: { initialNewslet
     )
 }
 
-function CampaignsManager({ initialNewsletters, initialSubscribers }: { initialNewsletters: Newsletter[], initialSubscribers: Subscriber[] }) {
+function CampaignsManager({ initialNewsletters, initialSubscribers, initialCampaigns }: { initialNewsletters: Newsletter[], initialSubscribers: Subscriber[], initialCampaigns: Campaign[] }) {
     const { toast } = useToast();
     const [sendState, sendFormAction] = useActionState(sendNewsletterAction, { success: false, message: null });
 
@@ -816,95 +662,140 @@ function CampaignsManager({ initialNewsletters, initialSubscribers }: { initialN
     };
 
     return (
-        <form action={sendFormAction}>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="space-y-6 p-6 border rounded-lg">
-                    <h3 className="font-headline text-2xl font-bold">1. Newsletter auswählen</h3>
-                    <Select name="newsletterId" required onValueChange={setSelectedNewsletter} value={selectedNewsletter}>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Wählen Sie einen Newsletter..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {initialNewsletters.map(nl => (
-                                <SelectItem key={nl.id} value={nl.id}>{nl.name} - ({nl.subject})</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+        <div className="space-y-12">
+            <form action={sendFormAction}>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div className="space-y-6 p-6 border rounded-lg">
+                        <h3 className="font-headline text-2xl font-bold">1. Newsletter auswählen</h3>
+                        <Select name="newsletterId" required onValueChange={setSelectedNewsletter} value={selectedNewsletter}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Wählen Sie einen Newsletter..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {initialNewsletters.map(nl => (
+                                    <SelectItem key={nl.id} value={nl.id}>{nl.name} - ({nl.subject})</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
 
-                    <h3 className="font-headline text-2xl font-bold mt-8">2. Zielgruppe definieren</h3>
-                    <p className="text-sm text-muted-foreground">Wählen Sie einen oder mehrere Tags aus. Die Kampagne wird an alle Abonnenten gesendet, die **alle** ausgewählten Tags besitzen.</p>
-                     <div className="flex flex-wrap gap-2">
-                        {allTags.length === 0 ? (
-                            <p className="text-sm text-muted-foreground">Noch keine Tags vorhanden. Weisen Sie im "Leads"-Tab welche zu.</p>
-                        ) : allTags.map(tag => (
-                            <Button 
-                                key={tag} 
-                                type="button"
-                                variant={selectedTags.includes(tag) ? "default" : "outline"}
-                                onClick={() => handleTagClick(tag)}
-                            >
-                                {tag}
-                            </Button>
-                        ))}
+                        <h3 className="font-headline text-2xl font-bold mt-8">2. Zielgruppe definieren</h3>
+                        <p className="text-sm text-muted-foreground">Wählen Sie einen oder mehrere Tags aus. Die Kampagne wird an alle Abonnenten gesendet, die **alle** ausgewählten Tags besitzen.</p>
+                        <div className="flex flex-wrap gap-2">
+                            {allTags.length === 0 ? (
+                                <p className="text-sm text-muted-foreground">Noch keine Tags vorhanden. Weisen Sie im "Leads"-Tab welche zu.</p>
+                            ) : allTags.map(tag => (
+                                <Button 
+                                    key={tag} 
+                                    type="button"
+                                    variant={selectedTags.includes(tag) ? "default" : "outline"}
+                                    onClick={() => handleTagClick(tag)}
+                                >
+                                    {tag}
+                                </Button>
+                            ))}
+                        </div>
+                        {/* Hidden input to pass tags to server action */}
+                        <input type="hidden" name="tags" value={JSON.stringify(selectedTags)} />
                     </div>
-                    {/* Hidden input to pass tags to server action */}
-                    <input type="hidden" name="tags" value={JSON.stringify(selectedTags)} />
-                </div>
-                <div className="space-y-6 p-6 border rounded-lg bg-muted/50">
-                    <h3 className="font-headline text-2xl font-bold">3. Vorschau & Versand</h3>
-                     <Alert>
-                        <Send className="h-4 w-4" />
-                        <AlertTitle>Zusammenfassung</AlertTitle>
-                        <AlertDescription>
-                            <p>Newsletter: <strong>{initialNewsletters.find(nl => nl.id === selectedNewsletter)?.name || 'Keiner ausgewählt'}</strong></p>
-                            <p>Ziel-Tags: {selectedTags.length > 0 ? selectedTags.map(t => <Badge key={t} className="mr-1">{t}</Badge>) : 'Keine'}</p>
-                            <p className="mt-2 text-lg">Abonnenten, die erreicht werden: <strong className="text-primary">{matchingSubscribers}</strong></p>
-                        </AlertDescription>
-                    </Alert>
-                    
-                    <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                             <Button size="lg" className="w-full" disabled={!selectedNewsletter || selectedTags.length === 0 || matchingSubscribers === 0}>
-                                <Send className="mr-2 h-5 w-5" />
-                                Kampagne starten
-                            </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>Sind Sie absolut sicher?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    Sie sind dabei, den Newsletter "{initialNewsletters.find(nl => nl.id === selectedNewsletter)?.name}" an {matchingSubscribers} Empfänger zu senden.
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>Abbrechen</AlertDialogCancel>
-                                <AlertDialogAction type="submit">Ja, jetzt versenden</AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
-                    {sendState.success === false && sendState.message && (
-                         <Alert variant="destructive">
-                            <AlertTitle>Fehler beim Versand</AlertTitle>
+                    <div className="space-y-6 p-6 border rounded-lg bg-muted/50">
+                        <h3 className="font-headline text-2xl font-bold">3. Vorschau & Versand</h3>
+                        <Alert>
+                            <Send className="h-4 w-4" />
+                            <AlertTitle>Zusammenfassung</AlertTitle>
                             <AlertDescription>
-                                {sendState.message}
+                                <p>Newsletter: <strong>{initialNewsletters.find(nl => nl.id === selectedNewsletter)?.name || 'Keiner ausgewählt'}</strong></p>
+                                <p>Ziel-Tags: {selectedTags.length > 0 ? selectedTags.map(t => <Badge key={t} className="mr-1">{t}</Badge>) : 'Keine'}</p>
+                                <p className="mt-2 text-lg">Abonnenten, die erreicht werden: <strong className="text-primary">{matchingSubscribers}</strong></p>
                             </AlertDescription>
                         </Alert>
-                    )}
+                        
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button size="lg" className="w-full" disabled={!selectedNewsletter || selectedTags.length === 0 || matchingSubscribers === 0}>
+                                    <Send className="mr-2 h-5 w-5" />
+                                    Kampagne starten
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Sind Sie absolut sicher?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        Sie sind dabei, den Newsletter "{initialNewsletters.find(nl => nl.id === selectedNewsletter)?.name}" an {matchingSubscribers} Empfänger zu senden.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+                                    <AlertDialogAction type="submit">Ja, jetzt versenden</AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                        {sendState.success === false && sendState.message && (
+                            <Alert variant="destructive">
+                                <AlertTitle>Fehler beim Versand</AlertTitle>
+                                <AlertDescription>
+                                    {sendState.message}
+                                </AlertDescription>
+                            </Alert>
+                        )}
+                    </div>
+                </div>
+            </form>
+
+            <div>
+                <h3 className="font-headline text-2xl font-bold mb-4 flex items-center gap-2"><History className="h-6 w-6"/>Versand-Verlauf</h3>
+                <div className="border rounded-lg overflow-hidden">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Newsletter</TableHead>
+                                <TableHead>Betreff</TableHead>
+                                <TableHead>Empfänger</TableHead>
+                                <TableHead>Tags</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead>Datum</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {initialCampaigns.length === 0 ? (
+                                <TableRow>
+                                    <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
+                                        <History className="mx-auto h-8 w-8 mb-2" />
+                                        Bisher keine Kampagnen versendet.
+                                    </TableCell>
+                                </TableRow>
+                            ) : (
+                                initialCampaigns.map((campaign) => (
+                                    <TableRow key={campaign.id}>
+                                        <TableCell className="font-medium">{campaign.newsletterName}</TableCell>
+                                        <TableCell className="text-muted-foreground">{campaign.newsletterSubject}</TableCell>
+                                        <TableCell className="text-muted-foreground">{campaign.recipientCount}</TableCell>
+                                        <TableCell>
+                                            {campaign.tags.map(tag => <Badge key={tag} variant="secondary" className="mr-1">{tag}</Badge>)}
+                                        </TableCell>
+                                        <TableCell>
+                                            <Badge variant={campaign.status === 'sent' ? 'default' : 'destructive'}>{campaign.status}</Badge>
+                                        </TableCell>
+                                        <TableCell className="text-muted-foreground">
+                                            {format(new Date(campaign.sentAt), "dd.MM.yyyy HH:mm", { locale: de })}
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            )}
+                        </TableBody>
+                    </Table>
                 </div>
             </div>
-        </form>
+        </div>
     );
 }
 
 function OverviewTab({
     products,
-    legalPages,
     newsletters,
     subscribers,
     onTabChange
 } : {
     products: Product[],
-    legalPages: LegalPage[],
     newsletters: Newsletter[],
     subscribers: Subscriber[],
     onTabChange: (value: string) => void;
@@ -928,12 +819,6 @@ function OverviewTab({
             icon: Newspaper,
             link: "newsletters"
         },
-        {
-            title: "Dynamische LPs",
-            value: legalPages.length,
-            icon: LayoutDashboard,
-            link: "legal"
-        }
     ]
 
     return (
@@ -970,10 +855,6 @@ function OverviewTab({
                             <Send className="mr-2 h-4 w-4" />
                             Neue Kampagne
                         </Button>
-                        <Button variant="outline" onClick={() => onTabChange('legal')}>
-                            <FilePlus className="mr-2 h-4 w-4" />
-                            Neue LP Seite
-                        </Button>
                         <Button variant="outline" onClick={() => onTabChange('products')}>
                              <PlusCircle className="mr-2 h-4 w-4" />
                             Neues Produkt
@@ -991,31 +872,30 @@ function OverviewTab({
 
 export function AdminDashboard({
     initialProducts,
-    initialLegalPages,
     initialNewsletters,
     initialSubscribers,
+    initialCampaigns
 }: {
     initialProducts: Product[];
-    initialLegalPages: LegalPage[];
+    initialLegalPages: any[]; // Kept for prop compatibility, but not used
     initialNewsletters: Newsletter[];
     initialSubscribers: Subscriber[];
+    initialCampaigns: Campaign[];
 }) {
     const [activeTab, setActiveTab] = useState("übersicht");
 
     return (
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 md:grid-cols-6 h-auto">
+            <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-5 h-auto">
                 <TabsTrigger value="übersicht"><LayoutDashboard className="mr-2 h-4 w-4" />Übersicht</TabsTrigger>
                 <TabsTrigger value="leads"><Users className="mr-2 h-4 w-4" />Leads</TabsTrigger>
                 <TabsTrigger value="products">Produkte</TabsTrigger>
-                <TabsTrigger value="legal">Dynamische LPs</TabsTrigger>
                 <TabsTrigger value="newsletters">Newsletter</TabsTrigger>
                 <TabsTrigger value="campaigns"><Send className="mr-2 h-4 w-4" />Kampagnen</TabsTrigger>
             </TabsList>
             <TabsContent value="übersicht" className="mt-6">
                 <OverviewTab 
                     products={initialProducts}
-                    legalPages={initialLegalPages}
                     newsletters={initialNewsletters}
                     subscribers={initialSubscribers}
                     onTabChange={setActiveTab}
@@ -1027,17 +907,16 @@ export function AdminDashboard({
             <TabsContent value="products" className="mt-6">
                 <ProductsManager initialProducts={initialProducts} />
             </TabsContent>
-            <TabsContent value="legal" className="mt-6">
-                <LegalPagesManager initialPages={initialLegalPages} />
-            </TabsContent>
             <TabsContent value="newsletters" className="mt-6">
                 <NewsletterManager initialNewsletters={initialNewsletters} onTabChange={setActiveTab} />
             </TabsContent>
              <TabsContent value="campaigns" className="mt-6">
-                <CampaignsManager initialNewsletters={initialNewsletters} initialSubscribers={initialSubscribers} />
+                <CampaignsManager 
+                    initialNewsletters={initialNewsletters} 
+                    initialSubscribers={initialSubscribers}
+                    initialCampaigns={initialCampaigns}
+                />
             </TabsContent>
         </Tabs>
     )
 }
-
-    

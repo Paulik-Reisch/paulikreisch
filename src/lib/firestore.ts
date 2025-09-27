@@ -1,4 +1,5 @@
 
+
 "use server";
 
 import { app } from "@/app/firebase";
@@ -78,6 +79,18 @@ export interface Newsletter {
     content: string; // Storing the final HTML
     lastUpdated: string;
     useWrapper?: boolean;
+}
+
+export interface Campaign {
+    id: string;
+    newsletterId: string;
+    newsletterName: string;
+    newsletterSubject: string;
+    recipientCount: number;
+    tags: string[];
+    sentAt: string;
+    status: 'sent' | 'pending' | 'failed';
+    resendBatchId?: string;
 }
 
 
@@ -251,77 +264,6 @@ export async function addTagsToSubscribers(subscriberIds: string[], tags: string
         }));
     }
     await Promise.all(batch);
-}
-
-
-// --- Legal Pages CMS Functions ---
-
-export async function getLegalPages(): Promise<LegalPage[]> {
-    const legalCol = collection(db, 'legal_pages');
-    const legalSnapshot = await getDocs(legalCol);
-    if (legalSnapshot.empty) {
-        return [];
-    }
-    const pageList = legalSnapshot.docs.map(doc => {
-        const data = doc.data();
-        const lastUpdated = data.lastUpdated;
-        return { 
-            id: doc.id, 
-            title: data.title,
-            content: data.content || '',
-            components: data.components || [],
-            lastUpdated: lastUpdated ? (lastUpdated as Timestamp).toDate().toISOString() : new Date().toISOString(),
-        } as LegalPage;
-    });
-    return pageList;
-}
-
-export async function getLegalPage(slug: string): Promise<LegalPage | null> {
-    const docRef = doc(db, "legal_pages", slug);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-        const data = docSnap.data();
-        const lastUpdated = data.lastUpdated;
-        return {
-            id: docSnap.id,
-            title: data.title,
-            content: data.content || '',
-            components: data.components || [],
-            lastUpdated: lastUpdated ? (lastUpdated as Timestamp).toDate().toISOString() : new Date().toISOString(),
-        } as LegalPage;
-    } else {
-        return null;
-    }
-}
-
-export async function addLegalPage(pageId: string, data: { title: string; content: string, components: PageComponent[] }) {
-    if (!pageId) throw new Error("Page ID (slug) is required.");
-    const pageRef = doc(db, 'legal_pages', pageId);
-    const docSnap = await getDoc(pageRef);
-
-    if (docSnap.exists()) {
-        throw new Error(`Eine Seite mit der ID "${pageId}" existiert bereits.`);
-    }
-
-    await setDoc(pageRef, { 
-        ...data,
-        lastUpdated: Timestamp.now() 
-    });
-}
-
-
-export async function updateLegalPage(pageId: string, data: Partial<Omit<LegalPage, 'id'>>) {
-    const pageRef = doc(db, 'legal_pages', pageId);
-    await setDoc(pageRef, { 
-        ...data,
-        lastUpdated: Timestamp.now() 
-    }, { merge: true });
-}
-
-export async function deleteLegalPage(pageId: string) {
-    const pageRef = doc(db, 'legal_pages', pageId);
-    await deleteDoc(pageRef);
 }
 
 
@@ -639,5 +581,30 @@ export async function deleteNewsletter(id: string) {
     await deleteDoc(newsletterRef);
 }
 
+
+// --- CAMPAIGNS ---
+export async function addCampaign(data: Omit<Campaign, 'id' | 'sentAt'>): Promise<string> {
+    const campaignsCol = collection(db, 'campaigns');
+    const docRef = await addDoc(campaignsCol, {
+        ...data,
+        sentAt: Timestamp.now(),
+    });
+    return docRef.id;
+}
+
+
+export async function getCampaigns(): Promise<Campaign[]> {
+    const campaignsCol = collection(db, 'campaigns');
+    const q = query(campaignsCol, orderBy("sentAt", "desc"));
+    const campaignSnapshot = await getDocs(q);
+    return campaignSnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+            id: doc.id,
+            ...data,
+            sentAt: (data.sentAt as Timestamp).toDate().toISOString(),
+        } as Campaign;
+    });
+}
 
     
