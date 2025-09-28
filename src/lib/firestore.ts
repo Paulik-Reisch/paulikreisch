@@ -93,6 +93,17 @@ export interface Product {
     description: string;
 }
 
+export interface Palabrota {
+    id: string;
+    de: string;
+    es: string;
+    wortart: string;
+    anwendung: string;
+    synonyme: string;
+    beispiel: string;
+    pfeiferFaktor: number;
+}
+
 
 const db = getFirestore(app);
 
@@ -618,4 +629,108 @@ export async function getCampaigns(): Promise<Campaign[]> {
             sentAt: (data.sentAt as Timestamp).toDate().toISOString(),
         } as Campaign;
     });
+}
+
+// --- PALABROTAS ---
+
+const defaultPalabrotas = [
+    { 
+        de: "Arschloch", 
+        es: "el cabrón / el capullo",
+        wortart: "Nomen, maskulin, inflationär verwendet",
+        anwendung: "Universell einsetzbar für sympathische Mitmenschen, die einem gerade die Vorfahrt oder den letzten Nerv geraubt haben.",
+        synonyme: "Charakter-Vakuum, Nervensäge, Grund für den Glaubensverlust an die Menschheit",
+        beispiel: "Dieser cabrón hat den letzten Parkplatz genommen!",
+        pfeiferFaktor: 4
+    },
+    { 
+        de: "Wichser", 
+        es: "el pendejo",
+        wortart: "Nomen, maskulin, stark pejorativ",
+        anwendung: "Für Personen, deren Arroganz nur von ihrer Inkompetenz übertroffen wird. Oft in Kombination mit teuren Autos und schlechtem Musikgeschmack anzutreffen.",
+        synonyme: "Luftpumpe, Geltungsdrang-Opfer, menschlicher Blinddarm",
+        beispiel: "Mira este pendejo con su coche ruidoso.",
+        pfeiferFaktor: 5
+    },
+    {
+        de: "Hurensohn", 
+        es: "el hijo de puta",
+        wortart: "Nomen, maskulin, Eskalationsstufe Rot",
+        anwendung: "Fortgeschrittenes Vokabular für den fortgeschrittenen Frust. Wenn 'Arschloch' einfach nicht mehr ausreicht. Nicht für den Gebrauch im Büro empfohlen, es sei denn, Ihr Chef ist es.",
+        synonyme: "Genetischer Unfall, Produkt eines bedauerlichen Zwischenfalls",
+        beispiel: "¡Ese árbitro es un hijo de puta!",
+        pfeiferFaktor: 5
+    },
+    { 
+        de: "Scheiße", 
+        es: "la mierda",
+        wortart: "Interjektion / Nomen, feminin",
+        anwendung: "Ein zeitloser Klassiker. Passt immer, wenn etwas nicht nach Plan läuft – vom verschütteten Kaffee bis zur globalen Finanzkrise.",
+        synonyme: "Exkrement, Desaster, 'Oh, nein, nicht schon wieder!'",
+        beispiel: "¡Mierda! He olvidado las llaves.",
+        pfeiferFaktor: 1
+    },
+    { 
+        de: "Mistkerl", 
+        es: "el gilipollas",
+        wortart: "Nomen, maskulin, alltagstauglich",
+        anwendung: "Für den liebenswerten Idioten von nebenan. Weniger aggressiv als 'cabrón', aber mit einer klaren Botschaft der Missbilligung.",
+        synonyme: "Vollpfosten, intellektuelles Flachland, menschgewordener Montagmorgen",
+        beispiel: "Mi vecino es un completo gilipollas, pone la música a tope.",
+        pfeiferFaktor: 4
+    },
+    { 
+        de: "Fotze", 
+        es: "el coño",
+        wortart: "Nomen, maskulin (ja, wirklich!), vulgär",
+        anwendung: "Sehr vielseitig. Kann als Ausdruck des Schmerzes ('¡Coño, mi dedo!'), der Überraschung ('¡Coño, qué sorpresa!') oder als allgemeine Beleidigung verwendet werden.",
+        synonyme: "Siehe weibliches Geschlechtsorgan",
+        beispiel: "¡Coño! ¿Pero qué haces?",
+        pfeiferFaktor: 5
+    },
+    { 
+        de: "Schlampe", 
+        es: "la zorra",
+        wortart: "Nomen, feminin, toxisch",
+        anwendung: "Für eine besonders raffinierte weibliche Nervensäge, die ihre Intrigen mit einem Lächeln serviert.",
+        synonyme: "Intrigantin, Giftschlange, Drama-Queen",
+        beispiel: "No te fíes de ella, es una zorra.",
+        pfeiferFaktor: 4
+    },
+];
+
+export async function getPalabrotas(): Promise<Palabrota[]> {
+    try {
+        const col = collection(db, 'palabrotas');
+        const q = query(col, orderBy("de", "asc"));
+        const snapshot = await getDocs(q);
+        if (snapshot.empty) {
+            // Initialize with default data
+            for (const palabra of defaultPalabrotas) {
+                await addDoc(col, palabra);
+            }
+            const newSnapshot = await getDocs(q);
+            return newSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Palabrota));
+        }
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Palabrota));
+    } catch (error) {
+        console.error("Error fetching palabrotas:", error);
+        return [];
+    }
+}
+
+export async function addPalabrota(data: Omit<Palabrota, 'id'>): Promise<string> {
+    const col = collection(db, 'palabrotas');
+    const docRef = await addDoc(col, data);
+    return docRef.id;
+}
+
+export async function updatePalabrota(id: string, data: Partial<Omit<Palabrota, 'id'>>) {
+    const docRef = doc(db, 'palabrotas', id);
+    await updateDoc(docRef, data);
+}
+
+export async function deletePalabrota(id: string) {
+    const docRef = doc(db, 'palabrotas', id);
+    await deleteDoc(docRef);
 }

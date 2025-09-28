@@ -15,6 +15,9 @@ import {
   Subscriber,
   addCampaign,
   updateLegalPage,
+  addPalabrota,
+  updatePalabrota,
+  deletePalabrota
 } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
 import { correctHtml } from "@/ai/flows/correct-html-flow";
@@ -400,5 +403,99 @@ export async function updateLegalPageAction(
   } catch (e) {
     const error = e as Error;
     return { success: false, error: "Fehler beim Aktualisieren: " + error.message };
+  }
+}
+
+
+// Palabrotas Actions
+export type PalabrotaState = {
+  success: boolean;
+  error: string | null;
+  message?: string;
+};
+
+const initialPalabrotaState: PalabrotaState = { success: false, error: null };
+
+const PalabrotaSchema = z.object({
+  id: z.string().optional(),
+  de: z.string().min(1, "Deutsches Wort ist erforderlich."),
+  es: z.string().min(1, "Spanisches Wort ist erforderlich."),
+  wortart: z.string().min(1, "Wortart ist erforderlich."),
+  anwendung: z.string().min(1, "Anwendung ist erforderlich."),
+  synonyme: z.string().min(1, "Synonyme sind erforderlich."),
+  beispiel: z.string().min(1, "Beispiel ist erforderlich."),
+  pfeiferFaktor: z.coerce.number().min(1).max(5),
+});
+
+export async function addPalabrotaAction(
+  prevState: PalabrotaState,
+  formData: FormData
+): Promise<PalabrotaState> {
+  const validatedFields = PalabrotaSchema.omit({ id: true }).safeParse(Object.fromEntries(formData.entries()));
+
+  if (!validatedFields.success) {
+    const errorMessages = validatedFields.error.errors.map((e) => e.message).join(". ");
+    return { success: false, error: errorMessages, message: null };
+  }
+
+  try {
+    await addPalabrota(validatedFields.data);
+    revalidatePath("/admin");
+    revalidatePath("/lp-palabrotas");
+    return { success: true, error: null, message: "Wort erfolgreich hinzugefügt." };
+  } catch (e) {
+    const error = e as Error;
+    return { success: false, error: `Fehler beim Hinzufügen: ${error.message}`, message: null };
+  }
+}
+
+export async function updatePalabrotaAction(
+  prevState: PalabrotaState,
+  formData: FormData
+): Promise<PalabrotaState> {
+  const validatedFields = PalabrotaSchema.safeParse(Object.fromEntries(formData.entries()));
+
+  if (!validatedFields.success) {
+    const errorMessages = validatedFields.error.errors.map((e) => e.message).join(". ");
+    return { success: false, error: errorMessages, message: null };
+  }
+
+  try {
+    const { id, ...dataToUpdate } = validatedFields.data;
+    if (!id) {
+        return { success: false, error: "ID ist erforderlich.", message: null };
+    }
+    await updatePalabrota(id, dataToUpdate);
+    revalidatePath("/admin");
+    revalidatePath("/lp-palabrotas");
+    return { success: true, error: null, message: "Wort erfolgreich aktualisiert." };
+  } catch (e) {
+    const error = e as Error;
+    return { success: false, error: `Fehler beim Aktualisieren: ${error.message}`, message: null };
+  }
+}
+
+const DeletePalabrotaSchema = z.object({
+  id: z.string(),
+});
+
+export async function deletePalabrotaAction(
+  prevState: PalabrotaState,
+  formData: FormData
+): Promise<PalabrotaState> {
+  const validatedFields = DeletePalabrotaSchema.safeParse(Object.fromEntries(formData.entries()));
+
+  if (!validatedFields.success) {
+    return { success: false, error: "Ungültige ID.", message: null };
+  }
+
+  try {
+    await deletePalabrota(validatedFields.data.id);
+    revalidatePath("/admin");
+    revalidatePath("/lp-palabrotas");
+    return { success: true, error: null, message: "Wort erfolgreich gelöscht." };
+  } catch (e) {
+    const error = e as Error;
+    return { success: false, error: `Fehler beim Löschen: ${error.message}`, message: null };
   }
 }

@@ -10,7 +10,9 @@ import {
     Subscriber,
     Campaign,
     LegalPage,
+    Palabrota,
     getSubscribers,
+    getPalabrotas,
 } from "@/lib/firestore";
 import {
     addNewsletterAction,
@@ -18,6 +20,9 @@ import {
     duplicateNewsletterAction,
     tagSubscribersAction,
     sendNewsletterAction,
+    addPalabrotaAction,
+    updatePalabrotaAction,
+    deletePalabrotaAction,
 } from "@/app/admin/actions";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -34,7 +39,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, RefreshCw, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus, History } from "lucide-react";
+import { Loader2, RefreshCw, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus, History, Flame } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -60,7 +65,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import Link from "next/link";
-import { CodeEditor } from "./code-editor";
 import {
   Select,
   SelectContent,
@@ -654,6 +658,173 @@ function CampaignsManager({ initialNewsletters, initialSubscribers, initialCampa
     );
 }
 
+function PalabrotasManager({ initialPalabrotas }: { initialPalabrotas: Palabrota[] }) {
+    const [palabrotas, setPalabrotas] = useState<Palabrota[]>(initialPalabrotas);
+    const [loading, setLoading] = useState(false);
+    const { toast } = useToast();
+
+    const fetchPalabrotas = async () => {
+        setLoading(true);
+        try {
+            const fetched = await getPalabrotas();
+            setPalabrotas(fetched);
+        } catch (error) {
+            console.error("Error fetching palabrotas:", error);
+            toast({ variant: "destructive", title: "Fehler", description: "Vokabular konnte nicht geladen werden." });
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+    useEffect(() => {
+        setPalabrotas(initialPalabrotas);
+    }, [initialPalabrotas]);
+
+    return (
+        <div>
+            <div className="flex justify-between items-center mb-4">
+                <PalabrotaForm fetchPalabrotas={fetchPalabrotas} />
+                 <Button onClick={fetchPalabrotas} disabled={loading} variant="outline">
+                    {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
+                    Aktualisieren
+                </Button>
+            </div>
+            <div className="border rounded-lg overflow-hidden">
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Deutsch</TableHead>
+                            <TableHead>Spanisch</TableHead>
+                            <TableHead>Pfeifer-Faktor</TableHead>
+                            <TableHead className="text-right">Aktionen</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {palabrotas.map((item) => (
+                            <TableRow key={item.id}>
+                                <TableCell className="font-medium">{item.de}</TableCell>
+                                <TableCell className="italic text-muted-foreground">{item.es}</TableCell>
+                                <TableCell>
+                                    <div className="flex">
+                                        {Array.from({ length: 5 }).map((_, i) => (
+                                            <Flame key={i} className={cn('h-4 w-4', i < item.pfeiferFaktor ? 'text-red-500 fill-current' : 'text-gray-300')} />
+                                        ))}
+                                    </div>
+                                </TableCell>
+                                <TableCell className="text-right">
+                                    <div className="flex gap-2 justify-end">
+                                        <PalabrotaForm isEditMode={true} palabra={item} fetchPalabrotas={fetchPalabrotas}>
+                                            <Button size="sm" variant="outline"><Edit className="h-4 w-4" /></Button>
+                                        </PalabrotaForm>
+                                        <DeletePalabrotaAlert id={item.id} name={item.de} fetchPalabrotas={fetchPalabrotas} />
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </div>
+        </div>
+    );
+}
+
+function PalabrotaForm({
+  isEditMode = false,
+  palabra,
+  fetchPalabrotas,
+  children
+}: {
+  isEditMode?: boolean;
+  palabra?: Palabrota;
+  fetchPalabrotas: () => void;
+  children?: React.ReactNode;
+}) {
+    const { toast } = useToast();
+    const [isOpen, setIsOpen] = useState(false);
+    const formAction = isEditMode ? updatePalabrotaAction : addPalabrotaAction;
+    const [state, action] = useActionState(formAction, { success: false, error: null, message: null });
+
+    useEffect(() => {
+        if (state.success) {
+            toast({ title: "Erfolg", description: state.message });
+            setIsOpen(false);
+            fetchPalabrotas();
+        }
+        if (state.error) {
+            toast({ variant: "destructive", title: "Fehler", description: state.error });
+        }
+    }, [state, toast, fetchPalabrotas]);
+
+    return (
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+                {children ? children : <Button variant="outline"><PlusCircle className="mr-2 h-4 w-4" /> Wort hinzufügen</Button>}
+            </DialogTrigger>
+            <DialogContent className="max-h-[90vh] overflow-y-auto">
+                <form action={action}>
+                    <DialogHeader>
+                        <DialogTitle>{isEditMode ? 'Wort bearbeiten' : 'Neues Wort hinzufügen'}</DialogTitle>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        {isEditMode && <input type="hidden" name="id" value={palabra?.id} />}
+                        <Input name="de" placeholder="Deutsches Wort" defaultValue={palabra?.de} required />
+                        <Input name="es" placeholder="Spanisches Wort" defaultValue={palabra?.es} required />
+                        <Input name="wortart" placeholder="Wortart" defaultValue={palabra?.wortart} required />
+                        <Textarea name="anwendung" placeholder="Anwendung" defaultValue={palabra?.anwendung} required />
+                        <Textarea name="synonyme" placeholder="Synonyme" defaultValue={palabra?.synonyme} required />
+                        <Textarea name="beispiel" placeholder="Beispielsatz" defaultValue={palabra?.beispiel} required />
+                        <div>
+                            <Label>Pfeifer-Faktor™</Label>
+                            <Input name="pfeiferFaktor" type="number" min="1" max="5" defaultValue={palabra?.pfeiferFaktor || 3} required />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <DialogClose asChild><Button type="button" variant="secondary">Abbrechen</Button></DialogClose>
+                        <Button type="submit">{isEditMode ? 'Speichern' : 'Hinzufügen'}</Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+    );
+}
+
+function DeletePalabrotaAlert({ id, name, fetchPalabrotas }: { id: string, name: string, fetchPalabrotas: () => void }) {
+    const { toast } = useToast();
+    const [state, action] = useActionState(deletePalabrotaAction, { success: false, error: null, message: null });
+
+    useEffect(() => {
+        if (state.success) {
+            toast({ title: "Erfolg", description: state.message });
+            fetchPalabrotas();
+        }
+        if (state.error) {
+            toast({ variant: "destructive", title: "Fehler", description: state.error });
+        }
+    }, [state, toast, fetchPalabrotas]);
+
+    return (
+        <AlertDialog>
+            <AlertDialogTrigger asChild>
+                <Button size="sm" variant="destructive"><Trash2 className="h-4 w-4" /></Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <form action={action}>
+                    <input type="hidden" name="id" value={id} />
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Wort "{name}" wirklich löschen?</AlertDialogTitle>
+                        <AlertDialogDescription>Diese Aktion kann nicht rückgängig gemacht werden.</AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+                        <AlertDialogAction type="submit">Ja, löschen</AlertDialogAction>
+                    </AlertDialogFooter>
+                </form>
+            </AlertDialogContent>
+        </AlertDialog>
+    );
+}
+
+
 function OverviewTab({
     newsletters,
     subscribers,
@@ -735,22 +906,25 @@ export function AdminDashboard({
     initialLegalPages,
     initialNewsletters,
     initialSubscribers,
-    initialCampaigns
+    initialCampaigns,
+    initialPalabrotas,
 }: {
     initialLegalPages: LegalPage[];
     initialNewsletters: Newsletter[];
     initialSubscribers: Subscriber[];
     initialCampaigns: Campaign[];
+    initialPalabrotas: Palabrota[];
 }) {
     const [activeTab, setActiveTab] = useState("übersicht");
 
     return (
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 h-auto">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-6 h-auto">
                 <TabsTrigger value="übersicht"><LayoutDashboard className="mr-2 h-4 w-4" />Übersicht</TabsTrigger>
                 <TabsTrigger value="leads"><Users className="mr-2 h-4 w-4" />Leads</TabsTrigger>
                 <TabsTrigger value="dynamic-lps">Dynamische LPs</TabsTrigger>
                 <TabsTrigger value="newsletters">Newsletter</TabsTrigger>
+                 <TabsTrigger value="palabrotas">Palabrotas</TabsTrigger>
                 <TabsTrigger value="campaigns"><Send className="mr-2 h-4 w-4" />Kampagnen</TabsTrigger>
             </TabsList>
             <TabsContent value="übersicht" className="mt-6">
@@ -769,6 +943,9 @@ export function AdminDashboard({
             </TabsContent>
             <TabsContent value="newsletters" className="mt-6">
                 <NewsletterManager initialNewsletters={initialNewsletters} onTabChange={setActiveTab} />
+            </TabsContent>
+            <TabsContent value="palabrotas" className="mt-6">
+                <PalabrotasManager initialPalabrotas={initialPalabrotas} />
             </TabsContent>
              <TabsContent value="campaigns" className="mt-6">
                 <CampaignsManager 
