@@ -61,7 +61,7 @@ export function HW2Teaser() {
                 </Card>
             ))}
         </div>
-        <div className="mt-8 text-center space-y-4">
+        <div className="mt-8 text-center space-y-8">
             <p className="max-w-2xl mx-auto text-muted-foreground md:text-lg text-balance">
                 Viele dieser gesellschaftlichen Missstände und noch mehr Absurditäten häufen sich geradezu im neuen Buch ...
             </p>
