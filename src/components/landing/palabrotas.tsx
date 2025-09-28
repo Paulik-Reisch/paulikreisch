@@ -1,92 +1,89 @@
+
 "use client";
 
 import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableHead,
-  TableCell,
-} from "@/components/ui/table";
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
+import { Book, Flame, Star } from "lucide-react";
 
 const vocabulary = [
-    { de: "Fotze", es: "el coño" },
-    { de: "Arsch", es: "el culo" },
-    { de: "Dummkopf", es: "el tonto" },
-    { de: "Arschloch", es: "el cabrón" },
-    { de: "Mistkerl", es: "el gilipollas" },
-    { de: "Arschkriecher", es: "el lameculos" },
-    { de: "Schwuchtel", es: "el maricón" },
-    { de: "Hure", es: "la puta" },
-    { de: "Hurensohn", es: "el hijo de puta" },
-    { de: "verdammt", es: "maldito" },
-    { de: "ficken", es: "follar" },
-    { de: "gefickt", es: "follado" },
-    { de: "Scheiße", es: "la mierda" },
-    { de: "Alter", es: "el tío" },
-    { de: "Idiot", es: "el idiota" },
-    { de: "Trottel", es: "el imbécil" },
-    { de: "Wichser", es: "el pendejo" },
-    { de: "Feigling", es: "el cobarde" },
-    { de: "Bastard", es: "el capullo" },
-    { de: "Schwanzlutscher", es: "el chupapollas" },
-    { de: "behindert", es: "discapacitado" },
-    { de: "ekelhaft", es: "asqueroso" },
-    { de: "Streber", es: "el empollón" },
-    { de: "Schlampe", es: "la zorra" },
-    { de: "Lümmel", es: "el patán" },
-    { de: "dumme Kuh", es: "la vaca ignorante" },
-    { de: "Clown", es: "el payaso" },
-    { de: "Nutte", es: "la ramera" },
-    { de: "Kanake", es: "el sudaca" },
-    { de: "Schnarchsack", es: "el roncador" },
-    { de: "Stinkstiefel", es: "el apestoso" },
-    { de: "Zigeuner", es: "el gitano" },
-    { de: "Schlawiner", es: "el pillo" },
-    { de: "Lesbe", es: "la lesbiana" },
-    { de: "Missgeburt", es: "la monsquerta" },
-    { de: "Kumpel", es: "el güey" },
-    { de: "Fettsack", es: "el barrigón" },
-    { de: "Hurenbock", es: "el putero" },
-    { de: "Kotzbrocken", es: "el tipo asqueroso" },
-    { de: "Blödmann", es: "el estúpido" },
-    { de: "Rotzlöffel", es: "el mocoso" },
-    { de: "Affe", es: "el mono" },
-    { de: "Luder", es: "la pícara" },
-    { de: "Drecksack", es: "el guache" },
-    { de: "Hexe", es: "la bruja" },
-    { de: "Nichtsnutz", es: "el ablandahígos" },
-    { de: "Schwachkopf", es: "el tarado" },
-    { de: "Hodenkobold", es: "el duende de los testículos" },
-    { de: "Schurke", es: "el malnacido" },
-    { de: "Zwitter", es: "el hermafrodita" },
-    { de: "Köter", es: "el chucho" },
-    { de: "Schleimscheißer", es: "el ñoño" },
-    { de: "Ficker", es: "el chingón" },
-    { de: "Vielfraß", es: "el tragón" },
-    { de: "Tölpel", es: "el papanatas" },
-    { de: "Knirps", es: "el renacuajo" },
-    { de: "Weichei", es: "el blandengue" },
-    { de: "Miststück", es: "el canallas" },
-    { de: "verfickt", es: "pinche" },
-    { de: "lutschen", es: "chupar" },
-    { de: "hässlich", es: "feo" },
-    { de: "verrückt", es: "loco" },
-    { de: "Penner", es: "el vagabundo" },
-    { de: "schmutzig", es: "sucio" },
-    { de: "fett", es: "gordo" },
-    { de: "Schweinehund", es: "el hijo de perra" },
-    { de: "Pechvogel", es: "el gafe" },
-    { de: "Hinterwäldler", es: "el paleto" },
-    { de: "Klugscheißer", es: "el listillo" },
-    { de: "Schwätzer", es: "el bocachancla" },
-    { de: "hirnlos", es: "descerebrado" },
-    { de: "Fresser", es: "el zampabollos" },
-    { de: "Holzkopf", es: "el cafre" },
-    { de: "Dieb", es: "el ladrón" },
-    { de: "Schmarotzer", es: "el gorrón" },
+    { 
+        de: "Arschloch", 
+        es: "el cabrón / el capullo",
+        wortart: "Nomen, maskulin, inflationär verwendet",
+        anwendung: "Universell einsetzbar für sympathische Mitmenschen, die einem gerade die Vorfahrt oder den letzten Nerv geraubt haben.",
+        synonyme: "Charakter-Vakuum, Nervensäge, Grund für den Glaubensverlust an die Menschheit",
+        beispiel: "Dieser cabrón hat den letzten Parkplatz genommen!",
+        pfeiferFaktor: 4
+    },
+    { 
+        de: "Wichser", 
+        es: "el pendejo",
+        wortart: "Nomen, maskulin, stark pejorativ",
+        anwendung: "Für Personen, deren Arroganz nur von ihrer Inkompetenz übertroffen wird. Oft in Kombination mit teuren Autos und schlechtem Musikgeschmack anzutreffen.",
+        synonyme: "Luftpumpe, Geltungsdrang-Opfer, menschlicher Blinddarm",
+        beispiel: "Mira este pendejo con su coche ruidoso.",
+        pfeiferFaktor: 5
+    },
+    {
+        de: "Hurensohn", 
+        es: "el hijo de puta",
+        wortart: "Nomen, maskulin, Eskalationsstufe Rot",
+        anwendung: "Fortgeschrittenes Vokabular für den fortgeschrittenen Frust. Wenn 'Arschloch' einfach nicht mehr ausreicht. Nicht für den Gebrauch im Büro empfohlen, es sei denn, Ihr Chef ist es.",
+        synonyme: "Genetischer Unfall, Produkt eines bedauerlichen Zwischenfalls",
+        beispiel: "¡Ese árbitro es un hijo de puta!",
+        pfeiferFaktor: 5
+    },
+    { 
+        de: "Scheiße", 
+        es: "la mierda",
+        wortart: "Interjektion / Nomen, feminin",
+        anwendung: "Ein zeitloser Klassiker. Passt immer, wenn etwas nicht nach Plan läuft – vom verschütteten Kaffee bis zur globalen Finanzkrise.",
+        synonyme: "Exkrement, Desaster, 'Oh, nein, nicht schon wieder!'",
+        beispiel: "¡Mierda! He olvidado las llaves.",
+        pfeiferFaktor: 3
+    },
+    { 
+        de: "Mistkerl", 
+        es: "el gilipollas",
+        wortart: "Nomen, maskulin, alltagstauglich",
+        anwendung: "Für den liebenswerten Idioten von nebenan. Weniger aggressiv als 'cabrón', aber mit einer klaren Botschaft der Missbilligung.",
+        synonyme: "Vollpfosten, intellektuelles Flachland, menschgewordener Montagmorgen",
+        beispiel: "Mi vecino es un completo gilipollas, pone la música a tope.",
+        pfeiferFaktor: 4
+    },
+    { 
+        de: "Fotze", 
+        es: "el coño",
+        wortart: "Nomen, maskulin (ja, wirklich!), vulgär",
+        anwendung: "Sehr vielseitig. Kann als Ausdruck des Schmerzes ('¡Coño, mi dedo!'), der Überraschung ('¡Coño, qué sorpresa!') oder als allgemeine Beleidigung verwendet werden.",
+        synonyme: "Siehe weibliches Geschlechtsorgan",
+        beispiel: "¡Coño! ¿Pero qué haces?",
+        pfeiferFaktor: 5
+    },
+    { 
+        de: "Schlampe", 
+        es: "la zorra",
+        wortart: "Nomen, feminin, toxisch",
+        anwendung: "Für eine besonders raffinierte weibliche Nervensäge, die ihre Intrigen mit einem Lächeln serviert.",
+        synonyme: "Intrigantin, Giftschlange, Drama-Queen",
+        beispiel: "No te fíes de ella, es una zorra.",
+        pfeiferFaktor: 4
+    },
 ];
+
+const PfeiferRating = ({ rating }: { rating: number }) => (
+    <div className="flex items-center gap-1">
+        {Array.from({ length: 5 }).map((_, i) => (
+            <Flame key={i} className={i < rating ? 'text-red-500 fill-current' : 'text-gray-300'}/>
+        ))}
+    </div>
+)
+
 
 export function Palabrotas() {
   return (
@@ -95,7 +92,7 @@ export function Palabrotas() {
         <div className="flex flex-col items-center space-y-6 text-center">
             <Badge>Pfeifer's Vermächtnis</Badge>
             <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl xl:text-8xl/none text-balance">
-              Die ultimative "Palabrotas"-Liste
+              Der "Palabrotas"-Duden
             </h1>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl text-balance">
               Ein essenzieller Wortschatz für den modernen Weltbürger. Präsentiert von der R. Pfeifer Akademie für angewandte Linguistik und zwischenmenschliche Eskalation.
@@ -103,25 +100,49 @@ export function Palabrotas() {
         </div>
 
         <div className="max-w-4xl mx-auto mt-12">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="font-semibold text-lg">Deutsch</TableHead>
-                <TableHead className="font-semibold text-lg">Spanisch</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {vocabulary.map((word) => (
-                <TableRow key={word.de}>
-                  <TableCell className="font-medium text-base">{word.de}</TableCell>
-                  <TableCell className="italic text-base">{word.es}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+            <Accordion type="single" collapsible className="w-full space-y-4">
+                {vocabulary.map((word) => (
+                    <AccordionItem key={word.de} value={word.de} className="border-b-0">
+                        <AccordionTrigger className="text-xl font-semibold hover:no-underline border rounded-lg p-4 bg-card data-[state=open]:rounded-b-none data-[state=open]:bg-muted/50 transition-all">
+                           <div className="flex items-center justify-between w-full">
+                             <span>{word.de}</span>
+                             <span className="text-lg italic text-primary font-normal">{word.es}</span>
+                           </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="p-6 border border-t-0 rounded-b-lg bg-card text-base">
+                           <div className="space-y-4">
+                                <div>
+                                    <h4 className="font-bold text-sm text-muted-foreground">Wortart</h4>
+                                    <p>{word.wortart}</p>
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-sm text-muted-foreground">Anwendung</h4>
+                                    <p>{word.anwendung}</p>
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-sm text-muted-foreground">Synonyme</h4>
+                                    <p className="italic">{word.synonyme}</p>
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-sm text-muted-foreground">Beispielsatz</h4>
+                                    <blockquote className="border-l-4 border-primary pl-4 py-1 my-2">
+                                        {word.beispiel}
+                                    </blockquote>
+                                </div>
+                                 <div className="flex items-center gap-4 pt-2">
+                                    <h4 className="font-bold text-sm text-muted-foreground">Pfeifer-Faktor™:</h4>
+                                    <PfeiferRating rating={word.pfeiferFaktor} />
+                                </div>
+                           </div>
+                        </AccordionContent>
+                    </AccordionItem>
+                ))}
+            </Accordion>
            <p className="text-xs text-center text-muted-foreground mt-4">*Haftungsausschluss: Die Autoren übernehmen keine Verantwortung für daraus resultierende soziale oder diplomatische Verwicklungen.</p>
         </div>
       </div>
     </section>
   );
 }
+
+    
