@@ -1,6 +1,5 @@
 
 import { Button } from '@/components/ui/button';
-import { AlarmClockOff } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -12,8 +11,9 @@ export function HeroSchulzeitenGenickbruch() {
           <div className="space-y-4">
             <img
               src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/schulzeiten.png?alt=media&token=63d97151-7333-4241-85ea-96e6973d71f3"
-              width="200px"
-              className="mx-auto rounded-[25px]"
+              width="200"
+              height="200"
+              className="mx-auto rounded-[25px] object-cover"
               alt="Schulzeiten"
             />
             <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl xl:text-8xl/none text-balance">
