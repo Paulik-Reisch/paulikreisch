@@ -499,3 +499,51 @@ export async function deletePalabrotaAction(
     return { success: false, error: `Fehler beim Löschen: ${error.message}`, message: null };
   }
 }
+
+const BulkAddPalabrotasSchema = z.object({
+  wordList: z.string().min(1, "Die Wortliste darf nicht leer sein."),
+});
+
+export async function bulkAddPalabrotasAction(
+  prevState: PalabrotaState,
+  formData: FormData
+): Promise<PalabrotaState> {
+    const validatedFields = BulkAddPalabrotasSchema.safeParse(Object.fromEntries(formData.entries()));
+    if (!validatedFields.success) {
+        const errorMessages = validatedFields.error.errors.map((e) => e.message).join(". ");
+        return { success: false, error: errorMessages, message: null };
+    }
+
+    try {
+        const { wordList } = validatedFields.data;
+        const pairs = wordList.split(';').map(p => p.trim()).filter(p => p);
+        let addedCount = 0;
+
+        for (const pair of pairs) {
+            const parts = pair.split(' ').map(p => p.trim());
+            if (parts.length >= 2) {
+                const de = parts[0];
+                const es = parts.slice(1).join(' '); // Spanish part can have spaces
+
+                const newPalabrota = {
+                    de,
+                    es,
+                    wortart: "N/A",
+                    anwendung: "N/A",
+                    synonyme: "N/A",
+                    beispiel: "N/A",
+                    pfeiferFaktor: 3,
+                };
+                await addPalabrota(newPalabrota);
+                addedCount++;
+            }
+        }
+        revalidatePath("/admin");
+        revalidatePath("/lp-palabrotas");
+        return { success: true, error: null, message: `${addedCount} Wörter erfolgreich per Massen-Import hinzugefügt.` };
+
+    } catch (e) {
+        const error = e as Error;
+        return { success: false, error: `Fehler beim Massen-Import: ${error.message}`, message: null };
+    }
+}

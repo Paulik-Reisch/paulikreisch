@@ -23,6 +23,7 @@ import {
     addPalabrotaAction,
     updatePalabrotaAction,
     deletePalabrotaAction,
+    bulkAddPalabrotasAction,
 } from "@/app/admin/actions";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -39,7 +40,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, RefreshCw, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus, History, Flame } from "lucide-react";
+import { Loader2, RefreshCw, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus, History, Flame, Upload } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -682,8 +683,11 @@ function PalabrotasManager({ initialPalabrotas }: { initialPalabrotas: Palabrota
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-4">
-                <PalabrotaForm fetchPalabrotas={fetchPalabrotas} />
+            <div className="flex justify-between items-center mb-4 gap-4">
+                <div className="flex gap-2">
+                    <PalabrotaForm fetchPalabrotas={fetchPalabrotas} />
+                    <BulkPalabrotaForm fetchPalabrotas={fetchPalabrotas} />
+                </div>
                  <Button onClick={fetchPalabrotas} disabled={loading} variant="outline">
                     {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
                     Aktualisieren
@@ -728,6 +732,53 @@ function PalabrotasManager({ initialPalabrotas }: { initialPalabrotas: Palabrota
     );
 }
 
+function BulkPalabrotaForm({ fetchPalabrotas }: { fetchPalabrotas: () => void; }) {
+    const { toast } = useToast();
+    const [isOpen, setIsOpen] = useState(false);
+    const [state, action] = useActionState(bulkAddPalabrotasAction, { success: false, error: null, message: null });
+
+    useEffect(() => {
+        if (state.success) {
+            toast({ title: "Erfolg", description: state.message });
+            setIsOpen(false);
+            fetchPalabrotas();
+        }
+        if (state.error) {
+            toast({ variant: "destructive", title: "Fehler", description: state.error });
+        }
+    }, [state, toast, fetchPalabrotas]);
+
+    return (
+         <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+                <Button variant="outline"><Upload className="mr-2 h-4 w-4" /> Massen-Import</Button>
+            </DialogTrigger>
+            <DialogContent>
+                 <form action={action}>
+                    <DialogHeader>
+                        <DialogTitle>Palabrotas per Liste importieren</DialogTitle>
+                        <DialogDescription>
+                            Fügen Sie eine Liste von Wörtern ein. Jedes Paar muss im Format "Deutsch Spanisch" sein und durch ein Semikolon getrennt werden.
+                        </DialogDescription>
+                    </DialogHeader>
+                     <div className="grid gap-4 py-4">
+                        <Textarea 
+                            name="wordList"
+                            placeholder="z.B. Wort1 Spanisch1; Wort2 Spanisch2; ..."
+                            className="h-48"
+                            required
+                        />
+                    </div>
+                    <DialogFooter>
+                        <DialogClose asChild><Button type="button" variant="secondary">Abbrechen</Button></DialogClose>
+                        <Button type="submit">Importieren</Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+    );
+}
+
 function PalabrotaForm({
   isEditMode = false,
   palabra,
@@ -744,16 +795,20 @@ function PalabrotaForm({
     const formAction = isEditMode ? updatePalabrotaAction : addPalabrotaAction;
     const [state, action] = useActionState(formAction, { success: false, error: null, message: null });
 
+    const handleFetchPalabrotas = useCallback(() => {
+      fetchPalabrotas();
+    }, [fetchPalabrotas]);
+
     useEffect(() => {
         if (state.success) {
             toast({ title: "Erfolg", description: state.message });
             setIsOpen(false);
-            fetchPalabrotas();
+            handleFetchPalabrotas();
         }
         if (state.error) {
             toast({ variant: "destructive", title: "Fehler", description: state.error });
         }
-    }, [state, toast, fetchPalabrotas]);
+    }, [state, toast, handleFetchPalabrotas]);
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -792,15 +847,20 @@ function DeletePalabrotaAlert({ id, name, fetchPalabrotas }: { id: string, name:
     const { toast } = useToast();
     const [state, action] = useActionState(deletePalabrotaAction, { success: false, error: null, message: null });
 
+    const handleFetchPalabrotas = useCallback(() => {
+      fetchPalabrotas();
+    }, [fetchPalabrotas]);
+
+
     useEffect(() => {
         if (state.success) {
             toast({ title: "Erfolg", description: state.message });
-            fetchPalabrotas();
+            handleFetchPalabrotas();
         }
         if (state.error) {
             toast({ variant: "destructive", title: "Fehler", description: state.error });
         }
-    }, [state, toast, fetchPalabrotas]);
+    }, [state, toast, handleFetchPalabrotas]);
 
     return (
         <AlertDialog>
