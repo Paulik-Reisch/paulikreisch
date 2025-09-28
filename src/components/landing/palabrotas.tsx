@@ -8,7 +8,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Book, Flame, Star } from "lucide-react";
+import { Flame } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Palabrota } from "@/lib/firestore";
 
@@ -18,7 +18,7 @@ const PfeiferRating = ({ rating }: { rating: number }) => (
             <Flame 
                 key={i}
                 className={cn(
-                    'transition-colors',
+                    'transition-colors h-5 w-5',
                     i < rating ? 'text-red-500 fill-current animate-flame-in' : 'text-gray-300'
                 )}
                 style={{ animationDelay: `${i * 100}ms` }}
@@ -26,6 +26,15 @@ const PfeiferRating = ({ rating }: { rating: number }) => (
         ))}
     </div>
 );
+
+function DetailRow({ label, children }: { label: string; children: React.ReactNode }) {
+    return (
+        <div className="grid grid-cols-[150px_1fr] items-start gap-4">
+            <span className="text-sm text-muted-foreground font-medium">{label}</span>
+            <div>{children}</div>
+        </div>
+    )
+}
 
 export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
   return (
@@ -45,34 +54,30 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
             <Accordion type="single" collapsible className="w-full space-y-4">
                 {vocabulary.map((word) => (
                     <AccordionItem key={word.id} value={word.id} className="border-b-0">
-                        <AccordionTrigger className="text-xl font-semibold hover:no-underline border rounded-lg p-4 bg-card data-[state=open]:rounded-b-none data-[state=open]:bg-muted/50 transition-all">
-                           <div className="flex items-center justify-between w-full">
-                             <span>{word.de}</span>
-                             <span className="text-lg italic text-primary font-normal">{word.es}</span>
+                        <AccordionTrigger className="text-xl font-semibold hover:no-underline border rounded-lg p-4 bg-card data-[state=open]:rounded-b-none data-[state=open]:bg-muted/50 transition-all text-left">
+                           <div className="flex flex-col items-start w-full">
+                             <span className="font-headline text-2xl md:text-3xl font-bold">{word.de}</span>
+                             <span className="text-lg italic text-muted-foreground font-normal">{word.es}</span>
                            </div>
                         </AccordionTrigger>
                         <AccordionContent className="p-6 border border-t-0 rounded-b-lg bg-card text-base">
-                           <div className="space-y-4">
-                                <div>
-                                    <h4 className="font-bold text-sm text-muted-foreground">Wortart</h4>
+                           <div className="space-y-6">
+                                <DetailRow label="Wortart">
                                     <p>{word.wortart}</p>
-                                </div>
-                                <div>
-                                    <h4 className="font-bold text-sm text-muted-foreground">Anwendung</h4>
+                                </DetailRow>
+                                <DetailRow label="Anwendung">
                                     <p>{word.anwendung}</p>
-                                </div>
-                                <div>
-                                    <h4 className="font-bold text-sm text-muted-foreground">Synonyme</h4>
+                                </DetailRow>
+                                <DetailRow label="Synonyme">
                                     <p className="italic">{word.synonyme}</p>
-                                </div>
-                                <div>
-                                    <h4 className="font-bold text-sm text-muted-foreground">Beispielsatz</h4>
-                                    <blockquote className="border-l-4 border-primary pl-4 py-1 my-2">
+                                </DetailRow>
+                                <DetailRow label="Beispielsatz">
+                                    <blockquote className="border-l-4 border-primary/50 pl-4 py-1 my-0">
                                         {word.beispiel}
                                     </blockquote>
-                                </div>
+                                </DetailRow>
                                  <div className="flex items-center gap-4 pt-2">
-                                    <h4 className="font-bold text-sm text-muted-foreground">Pfeifer-Faktor™:</h4>
+                                    <h4 className="font-bold text-sm text-muted-foreground w-[134px]">Pfeifer-Faktor™</h4>
                                     <PfeiferRating rating={word.pfeiferFaktor} />
                                 </div>
                            </div>
