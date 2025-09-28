@@ -9,12 +9,12 @@ export function HeroSchulzeitenGenickbruch() {
       <div className="container px-4 md:px-6 relative z-10">
         <div className="flex flex-col items-center space-y-8 text-center">
           <div className="space-y-4">
-            <div className="w-[200px] h-[200px] mx-auto">
+            <div className="w-[200px] mx-auto aspect-square">
                 <Image
                     src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/schulzeiten.png?alt=media&token=63d97151-7333-4241-85ea-96e6973d71f3"
                     width="200"
                     height="200"
-                    className="rounded-[25px] object-cover w-full h-full aspect-square"
+                    className="rounded-[25px] object-cover w-full h-full"
                     alt="Schulzeiten"
                 />
             </div>
