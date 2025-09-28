@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Book, Flame, Star } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const vocabulary = [
     { 
@@ -45,7 +46,7 @@ const vocabulary = [
         anwendung: "Ein zeitloser Klassiker. Passt immer, wenn etwas nicht nach Plan läuft – vom verschütteten Kaffee bis zur globalen Finanzkrise.",
         synonyme: "Exkrement, Desaster, 'Oh, nein, nicht schon wieder!'",
         beispiel: "¡Mierda! He olvidado las llaves.",
-        pfeiferFaktor: 3
+        pfeiferFaktor: 1
     },
     { 
         de: "Mistkerl", 
@@ -77,12 +78,19 @@ const vocabulary = [
 ];
 
 const PfeiferRating = ({ rating }: { rating: number }) => (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-1" aria-label={`Pfeifer-Faktor: ${rating} von 5`}>
         {Array.from({ length: 5 }).map((_, i) => (
-            <Flame key={i} className={i < rating ? 'text-red-500 fill-current' : 'text-gray-300'}/>
+            <Flame 
+                key={i}
+                className={cn(
+                    'transition-colors',
+                    i < rating ? 'text-red-500 fill-current animate-flame-in' : 'text-gray-300'
+                )}
+                style={{ animationDelay: `${i * 100}ms` }}
+            />
         ))}
     </div>
-)
+);
 
 
 export function Palabrotas() {
@@ -144,5 +152,3 @@ export function Palabrotas() {
     </section>
   );
 }
-
-    
