@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { 
@@ -102,7 +102,7 @@ function LeadsTable({ initialSubscribers }: { initialSubscribers: Subscriber[] }
         });
     }, [subscribers, searchTerm, selectedTags]);
 
-    const fetchLeads = async () => {
+    const fetchLeads = useCallback(async () => {
         setLoading(true);
         try {
             const fetchedSubscribers = await getSubscribers();
@@ -113,7 +113,7 @@ function LeadsTable({ initialSubscribers }: { initialSubscribers: Subscriber[] }
         } finally {
             setLoading(false);
         }
-    };
+    }, [toast]);
     
     useEffect(() => {
         setSubscribers(initialSubscribers);
@@ -129,7 +129,7 @@ function LeadsTable({ initialSubscribers }: { initialSubscribers: Subscriber[] }
         if (tagState.error) {
             toast({ variant: "destructive", title: "Fehler", description: tagState.error });
         }
-    }, [tagState, toast]);
+    }, [tagState, toast, fetchLeads]);
 
     const handleSelectAll = (checked: boolean | 'indeterminate') => {
         if (checked === true) {
@@ -663,7 +663,7 @@ function PalabrotasManager({ initialPalabrotas }: { initialPalabrotas: Palabrota
     const [loading, setLoading] = useState(false);
     const { toast } = useToast();
 
-    const fetchPalabrotas = async () => {
+    const fetchPalabrotas = useCallback(async () => {
         setLoading(true);
         try {
             const fetched = await getPalabrotas();
@@ -674,7 +674,7 @@ function PalabrotasManager({ initialPalabrotas }: { initialPalabrotas: Palabrota
         } finally {
             setLoading(false);
         }
-    };
+    }, [toast]);
     
     useEffect(() => {
         setPalabrotas(initialPalabrotas);
