@@ -830,7 +830,7 @@ function PalabrotaForm({
                         <Textarea name="beispiel" placeholder="Beispielsatz" defaultValue={palabra?.beispiel} required />
                         <div>
                             <Label>Pfeifer-Faktor™</Label>
-                            <Input name="pfeiferFaktor" type="number" min="1" max="5" defaultValue={palabra?.pfeiferFaktor || 3} required />
+                            <Input name="pfeiferFaktor" type="number" min="0" max="5" defaultValue={palabra?.pfeiferFaktor ?? 3} required />
                         </div>
                     </div>
                     <DialogFooter>

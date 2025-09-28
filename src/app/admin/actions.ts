@@ -424,7 +424,7 @@ const PalabrotaSchema = z.object({
   anwendung: z.string().min(1, "Anwendung ist erforderlich."),
   synonyme: z.string().min(1, "Synonyme sind erforderlich."),
   beispiel: z.string().min(1, "Beispiel ist erforderlich."),
-  pfeiferFaktor: z.coerce.number().min(1).max(5),
+  pfeiferFaktor: z.coerce.number().min(0).max(5),
 });
 
 export async function addPalabrotaAction(
