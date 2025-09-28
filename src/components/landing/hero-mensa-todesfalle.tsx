@@ -5,14 +5,13 @@ import Image from 'next/image';
 
 export function HeroMensaTodesfalle() {
   return (
-    <section className="w-full py-20 md:py-32 lg:py-40 bg-destructive text-destructive-foreground relative">
-        <Image
-            alt="Abstraktes, unappetitliches Essen"
-            src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/mensa.png?alt=media&token=4e17cbe9-5f6e-4d4f-b919-e3917f961601"
-            data-ai-hint="disgusting food abstract"
-            layout="fill"
-            objectFit="cover"
-            className="absolute inset-0 -z-10 brightness-50 opacity-50"
+<section className="w-full py-12 md:py-24 lg:py-32 relative">
+       <Image
+          alt="Schulgebäude als Gefängnis"
+          className="absolute inset-0 w-full h-full object-cover opacity-30"
+          data-ai-hint="vergammelter fra&szlig; mit gift als beilage"
+          layout="fill"
+          src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/mensa.png?alt=media&token=4e17cbe9-5f6e-4d4f-b919-e3917f961601"
         />
       <div className="container px-4 md:px-6 z-10 relative">
         <div className="flex flex-col items-center space-y-6 text-center">

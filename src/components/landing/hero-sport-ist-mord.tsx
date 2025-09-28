@@ -22,10 +22,10 @@ export function HeroSportIstMord() {
                     className="mx-auto aspect-square overflow-hidden rounded-xl object-contain sm:w-full"
                     data-ai-hint="fitness poster parody"
                     height="550"
-                    src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/sport.png?alt=media&token=81c3dfa8-3b76-4b30-a0d3-96ff219145ce"
+                    src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/sport.png?alt=media&token=81c3dfa8-3b76-4b30-a0d3-96ff219145ce"
                     width="550"
                 />
-                 <p className="absolute bottom-4 right-4 bg-destructive text-destructive-foreground p-2 rounded-md transform -rotate-6 font-bold shadow-lg">JETZT MIT NOCH MEHR VERLETZUNGEN!</p>
+                 <p className="absolute bottom-7 right-4 bg-destructive text-destructive-foreground p-2 rounded-md transform -rotate-6 font-bold shadow-lg">JETZT MIT NOCH MEHR GENICKBRÜCHEN!</p>
             </div>
         </div>
     </section>
