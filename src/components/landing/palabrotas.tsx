@@ -66,24 +66,25 @@ function AgeVerification({ onConfirm }: { onConfirm: () => void }) {
         onConfirm();
       }
     } else {
-      onConfirm();
+        // Fallback for empty input, should not happen due to 'required'
+        onConfirm();
     }
   };
 
   return (
     <div className="max-w-md mx-auto my-12 md:my-24">
-       <Card>
+       <Card className="bg-white">
             <CardHeader className="text-center">
                 <CardTitle className="font-headline text-2xl">Bestätige dein Alter</CardTitle>
             </CardHeader>
             <CardContent className="text-center space-y-6">
                 <p className="text-muted-foreground">
-                    Diese Seite enthält sensible Inhalte. Um fortzufahren, bestätigen Sie bitte Ihr Alter.
+                    Diese Seite enthält sensible Inhalte. Um fortzufahren, bestätige bitte dein Alter.
                 </p>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <Input type="date" name="birthdate" required className="text-center"/>
                     <Button type="submit" size="lg">
-                        Alter bestätigen
+                        Alter bestätigen & fortfahren
                     </Button>
                      <Button asChild variant="link" size="sm">
                         <Link href="/lp-palabrotas/mehr-erfahren">Mehr zu sensiblen Inhalten</Link>
