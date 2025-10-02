@@ -12,7 +12,6 @@ import { HW2Teaser } from "@/components/landing/hw2-teaser";
 import { Footer } from "@/components/landing/footer";
 import { Product } from "@/lib/firestore";
 import { CountdownBanner } from "@/components/landing/countdown-banner";
-import { Separator } from "@/components/ui/separator";
 
 const hw1: Product = {
     id: "hw1",
@@ -33,7 +32,6 @@ export default async function Home() {
         <Hero product={hw1} />
         <TopicLPs />
         <HW2Teaser />
-        <Separator className="my-8" />
         <Authors />
         <Features />
         <LP2Teaser />
