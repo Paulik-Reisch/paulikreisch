@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 
 export function Authors() {
   return (
-    <section id="authors" className="w-full py-12 md:py-16 lg:py-20" style={{ backgroundColor: 'hsl(var(--color-bg-light-pink))' }}>
+    <section id="authors" className="w-full py-12 md:py-16 lg:py-20">
       <div className="container px-4 md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">

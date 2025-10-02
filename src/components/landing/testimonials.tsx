@@ -1,3 +1,4 @@
+
 import { Star, PawPrint } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
 
