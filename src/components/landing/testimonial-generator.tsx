@@ -55,7 +55,7 @@ export function TestimonialGenerator() {
         <CardHeader>
           <CardTitle className="font-headline">Testimonial-Generator</CardTitle>
           <CardDescription>
-            Erstellen Sie Ihre eigene preisgekrönte*, völlig unvoreingenommene* Bewertung für unser Buch.
+            Erstellen Sie Ihre eigene unvoreingenommene Bewertung für unser Buch.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

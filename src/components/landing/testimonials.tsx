@@ -24,8 +24,8 @@ export function Testimonials() {
                 <Star className="w-5 h-5 fill-primary text-primary" />
                 <Star className="w-5 h-5 fill-muted stroke-muted-foreground" />
               </div>
-              <p className="text-sm text-left italic">"Ich habe gelacht, ich habe geweint, ich habe meine Lebensentscheidungen in Frage gestellt. Meistens das Letzte."</p>
-              <p className="text-right mt-2 font-semibold">- Ein verwirrter Leser</p>
+              <p className="text-sm text-left italic">"Ich habe gelacht, ich habe geweint, ich habe meine Lebensentscheidungen in Frage gestellt. Meistens letzteres."</p>
+              <p className="text-right mt-2 font-semibold">– Ein verwirrter Leser</p>
             </CardContent>
           </Card>
           <Card className="transform transition-transform hover:scale-105 -rotate-2">
@@ -37,8 +37,8 @@ export function Testimonials() {
                     <Star className="w-5 h-5 fill-primary text-primary" />
                     <Star className="w-5 h-5 fill-primary text-primary" />
                 </div>
-              <p className="text-sm text-left italic">"Dieses Buch ist eine Gefahr. Ich habe meinen Kaffee verschüttet, weil ich zu sehr gelacht habe."</p>
-              <p className="text-right mt-2 font-semibold">- Opfer der Komödie</p>
+              <p className="text-sm text-left italic">"Dieses Buch ist eine Gefahr! Ich habe meinen Kaffee verschüttet, weil ich zu sehr gelacht habe."</p>
+              <p className="text-right mt-2 font-semibold">– Opfer der Komödie</p>
             </CardContent>
           </Card>
           <Card className="transform transition-transform hover:scale-105 rotate-1">
@@ -46,12 +46,12 @@ export function Testimonials() {
               <div className="flex mb-2">
                 <Star className="w-5 h-5 fill-primary text-primary" />
                 <Star className="w-5 h-5 fill-primary text-primary" />
-                <Star className="w-5 h-5 fill-muted stroke-muted-foreground" />
-                <Star className="w-5 h-5 fill-muted stroke-muted-foreground" />
+                <Star className="w-5 h-5 fill-primary text-primary" />
+                <Star className="w-5 h-5 fill-primary text-primary" />
                 <Star className="w-5 h-5 fill-muted stroke-muted-foreground" />
               </div>
-              <p className="text-sm text-left italic">"Meine Katze gibt fünf Pfoten nach oben. Auch wenn sie es vorzieht, darauf zu schlafen."</p>
-              <p className="text-right mt-2 font-semibold">- Ein Haustierbesitzer</p>
+              <p className="text-sm text-left italic">"Meine Katze gibt fünf Pfoten nach oben! Auch wenn sie es vorzieht, darauf zu schlafen ..."</p>
+              <p className="text-right mt-2 font-semibold">– Ein Haustierbesitzer</p>
             </CardContent>
           </Card>
         </div>
