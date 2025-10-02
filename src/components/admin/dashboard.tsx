@@ -48,7 +48,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, RefreshCw, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus, History, Flame, Upload, MessageSquareQuote, ToggleLeft, ToggleRight, BookOpen } from "lucide-react";
+import { Loader2, RefreshCw, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus, History, Flame, Upload, MessageSquareQuote, ToggleLeft, ToggleRight, BookOpen, ArrowUpRight } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -1071,22 +1071,18 @@ function ExcerptsManager({ initialExcerpts }: { initialExcerpts: Excerpt[] }) {
     const [excerpts, setExcerpts] = useState(initialExcerpts);
 
     const [state, formAction] = useActionState(updateExcerptAction, { success: false, error: null, message: null });
-
-    const handleToggle = (slug: string, currentStatus: boolean) => {
-        const formData = new FormData();
-        formData.set('slug', slug);
-        formData.set('isPublished', String(!currentStatus));
-        formAction(formData);
-    };
     
     useEffect(() => {
         if (state.success) {
             toast({ title: "Erfolg", description: state.message || "Status aktualisiert." });
-            // Optimistic update or refetch
-            const updatedSlug = (state as any).slug; // A bit hacky, depends on action returning it
-            setExcerpts(prev => prev.map(e => e.slug === updatedSlug ? { ...e, isPublished: !e.isPublished } : e));
-            // Or just refetch
-            getExcerpts().then(setExcerpts);
+            // This is an optimistic update. A better way would be to refetch.
+            const formData = (state as any).formData as FormData;
+            if(formData) {
+                const slug = formData.get('slug');
+                setExcerpts(prev => prev.map(e => e.slug === slug ? { ...e, isPublished: !e.isPublished } : e));
+            } else {
+                 getExcerpts().then(setExcerpts);
+            }
         }
         if (state.error) {
             toast({ variant: "destructive", title: "Fehler", description: state.error });
@@ -1116,12 +1112,21 @@ function ExcerptsManager({ initialExcerpts }: { initialExcerpts: Excerpt[] }) {
                                 <TableCell className="font-medium">{excerpt.chapterNumber}</TableCell>
                                 <TableCell>{excerpt.title}</TableCell>
                                 <TableCell>
-                                    <Badge variant={excerpt.isPublished ? "default" : "secondary"}>
-                                        {excerpt.isPublished ? "Veröffentlicht" : "Entwurf"}
-                                    </Badge>
+                                    <div className="flex items-center gap-2">
+                                        <Badge variant={excerpt.isPublished ? "default" : "secondary"}>
+                                            {excerpt.isPublished ? "Veröffentlicht" : "Entwurf"}
+                                        </Badge>
+                                        {excerpt.isPublished && (
+                                            <Link href={`/exzerpt/${excerpt.slug}`} target="_blank" title="Live-Seite ansehen">
+                                                <Button variant="ghost" size="icon" className="h-6 w-6">
+                                                    <ArrowUpRight className="h-4 w-4" />
+                                                </Button>
+                                            </Link>
+                                        )}
+                                    </div>
                                 </TableCell>
                                 <TableCell className="text-right">
-                                    <form action={formAction} className="inline-flex gap-2">
+                                    <form action={formAction} className="inline-flex gap-2 items-center">
                                         <input type="hidden" name="slug" value={excerpt.slug} />
                                         <input type="hidden" name="isPublished" value={String(!excerpt.isPublished)} />
                                         <Button 
