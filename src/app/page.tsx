@@ -32,7 +32,6 @@ export default async function Home() {
         <Hero product={hw1} />
         <TopicLPs />
         <HW2Teaser />
-        <div className="py-12" />
         <Authors />
         <Features />
         <LP2Teaser />
