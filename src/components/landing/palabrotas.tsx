@@ -61,7 +61,7 @@ function AgeVerification({ onConfirm }: { onConfirm: () => void }) {
       }
 
       if (age < 18) {
-        router.push('/lp-palabrotas/mehr-erfahren');
+        router.push('/lp-palabrotas/mehr-erfahren#minderjaehrig');
       } else {
         onConfirm();
       }
