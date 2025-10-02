@@ -50,7 +50,7 @@ export function Testimonials() {
                 <Star className="w-5 h-5 fill-muted stroke-muted-foreground" />
                 <Star className="w-5 h-5 fill-muted stroke-muted-foreground" />
               </div>
-              <p className="text-sm text-left italic">"Meine Katze gibt zwei Pfoten nach unten. Sie hat es vorgezogen, darauf zu schlafen."</p>
+              <p className="text-sm text-left italic">"Meine Katze gibt fünf Pfoten nach oben. Auch wenn sie es vorzieht, darauf zu schlafen."</p>
               <p className="text-right mt-2 font-semibold">- Ein Haustierbesitzer</p>
             </CardContent>
           </Card>
