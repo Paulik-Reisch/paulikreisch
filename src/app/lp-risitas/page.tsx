@@ -1,11 +1,17 @@
 
+"use client";
+
+import { useState } from 'react';
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { Button } from '@/components/ui/button';
+import { ShieldCheck } from 'lucide-react';
 
 export default function RisitasPage() {
   const videoId = "Dlcs89fVw2Y";
+  const [consentGiven, setConsentGiven] = useState(false);
 
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
@@ -36,14 +42,27 @@ export default function RisitasPage() {
             </div>
 
             <div className="relative aspect-video w-full rounded-xl overflow-hidden shadow-2xl border">
-              <iframe
-                src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&showinfo=0&rel=0`}
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="absolute top-0 left-0 w-full h-full"
-              ></iframe>
+              {!consentGiven ? (
+                <div className="absolute inset-0 bg-muted/50 flex flex-col items-center justify-center p-8 text-center">
+                    <ShieldCheck className="w-12 h-12 text-muted-foreground mb-4" />
+                    <h3 className="font-semibold text-lg">Externer Inhalt von YouTube</h3>
+                    <p className="text-sm text-muted-foreground mt-2 max-w-md">
+                        Um dieses Video anzuzeigen, müssen Sie der Datenübertragung an YouTube (Google) zustimmen. Dabei werden möglicherweise Cookies gesetzt und persönliche Daten verarbeitet.
+                    </p>
+                    <Button onClick={() => setConsentGiven(true)} className="mt-6">
+                        Video anzeigen und zustimmen
+                    </Button>
+                </div>
+              ) : (
+                <iframe
+                    src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&loop=1&playlist=${videoId}&controls=0&showinfo=0&rel=0`}
+                    title="YouTube video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="absolute top-0 left-0 w-full h-full"
+                ></iframe>
+              )}
             </div>
             
           </div>
