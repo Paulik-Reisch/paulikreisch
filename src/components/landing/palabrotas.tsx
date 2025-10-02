@@ -36,9 +36,9 @@ const PfeiferRating = ({ rating }: { rating: number }) => (
 
 function DetailRow({ label, children }: { label: string; children: React.ReactNode }) {
     return (
-        <div className="grid grid-cols-[120px_1fr] items-start gap-4">
-            <span className="text-sm text-muted-foreground font-medium">{label}</span>
-            <div>{children}</div>
+        <div>
+            <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">{label}</span>
+            <div className="mt-1">{children}</div>
         </div>
     )
 }
@@ -66,6 +66,7 @@ function AgeVerification({ onConfirm }: { onConfirm: () => void }) {
         onConfirm();
       }
     } else {
+        // Allow proceeding if no date is entered, for users who don't want to provide it.
         onConfirm();
     }
   };
@@ -85,11 +86,9 @@ function AgeVerification({ onConfirm }: { onConfirm: () => void }) {
                     <Button type="submit" size="lg">
                         Alter bestätigen & fortfahren
                     </Button>
-                    <Link href="/lp-palabrotas/mehr-erfahren">
-                        <Button asChild variant="link" size="sm">
-                            <a>Mehr zu sensiblen Inhalten</a>
-                        </Button>
-                    </Link>
+                    <Button asChild variant="link" size="sm">
+                       <Link href="/lp-palabrotas/mehr-erfahren">Mehr zu sensiblen Inhalten</Link>
+                    </Button>
                 </form>
             </CardContent>
        </Card>
@@ -183,16 +182,23 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
                             </div>
                         </AccordionTrigger>
                         <AccordionContent className="p-6 border border-t-0 rounded-b-lg bg-card text-base">
-                            <div className="space-y-6">
-                                <DetailRow label="Wortart"><p>{word.wortart}</p></DetailRow>
-                                <DetailRow label="Anwendung"><p>{word.anwendung}</p></DetailRow>
-                                <DetailRow label="Synonyme"><p className="italic">{word.synonyme}</p></DetailRow>
-                                <DetailRow label="Beispielsatz">
-                                    <blockquote className="border-l-4 border-primary/50 pl-4 py-1 my-0">{word.beispiel}</blockquote>
+                            <div className="grid md:grid-cols-2 gap-x-8 gap-y-6">
+                                <DetailRow label="Wortart">
+                                    <p className="font-semibold">{word.wortart}</p>
                                 </DetailRow>
-                                <div className="flex items-center gap-4 pt-2">
-                                    <h4 className="font-bold text-sm text-muted-foreground w-[104px]">Pfeifer-Faktor™</h4>
+                                <DetailRow label="Pfeifer-Faktor™">
                                     <PfeiferRating rating={word.pfeiferFaktor} />
+                                </DetailRow>
+                                <DetailRow label="Anwendung">
+                                    <p>{word.anwendung}</p>
+                                </DetailRow>
+                                <DetailRow label="Synonyme">
+                                    <p className="italic">{word.synonyme}</p>
+                                </DetailRow>
+                                <div className="md:col-span-2">
+                                     <DetailRow label="Beispielsatz">
+                                        <blockquote className="border-l-4 border-primary/50 pl-4 py-1 my-0 text-lg">"{word.beispiel}"</blockquote>
+                                    </DetailRow>
                                 </div>
                             </div>
                         </AccordionContent>
