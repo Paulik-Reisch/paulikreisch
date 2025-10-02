@@ -30,7 +30,7 @@ const topics = [
 
 export function HW2Teaser() {
   return (
-    <section id="hw2-teaser" className="w-full py-12 md:py-16 lg:py-20" style={{ backgroundColor: '#ff69b4' }}>
+    <section id="hw2-teaser" className="w-full py-12 md:py-16 lg:py-20" style={{ backgroundColor: '#14b8a6' }}>
       <div className="container px-4 md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
@@ -67,7 +67,7 @@ export function HW2Teaser() {
                 Viele dieser gesellschaftlichen Missstände und noch mehr Absurditäten häufen sich im neuen Buch.
             </p>
             <Link href="/lp2">
-                <Button size="lg" variant="secondary" className="bg-white text-[#ff69b4] hover:bg-gray-100 h-12 text-lg animate-sway mt-3">
+                <Button size="lg" variant="secondary" className="bg-white text-[#14b8a6] hover:bg-gray-100 h-12 text-lg animate-sway mt-3">
                     Mehr über Hallo Welt 2 erfahren <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
             </Link>
