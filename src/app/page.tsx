@@ -34,13 +34,7 @@ export default async function Home() {
         <TopicLPs />
         <HW2Teaser />
         <Authors />
-        <div className="py-8">
-            <Separator className="w-1/4 mx-auto" />
-        </div>
         <Features />
-        <div className="py-8">
-            <Separator className="w-1/4 mx-auto" />
-        </div>
         <LP2Teaser />
         <Testimonials />
         <CtaBanner />
