@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -91,7 +92,7 @@ export function CountdownBanner() {
                 className={cn(
                     "font-mono text-5xl md:text-6xl font-bold tracking-tighter transition-all duration-500 text-yellow-300",
                     isPulsing && "scale-110",
-                    isBlinking && "text-red-400 animate-ping"
+                    isBlinking && "text-red-400 animate-flash"
                 )}
             >
                 {format(timeLeft.hours)}:{format(timeLeft.minutes)}:{format(timeLeft.seconds)}
