@@ -34,8 +34,8 @@ export function HW2Teaser() {
       <div className="container px-4 md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Hallo Welt 2: Wir müssen reden!</h2>
-            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
+            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl text-white">Hallo Welt 2: Wir müssen reden!</h2>
+            <p className="max-w-[900px] text-white/90 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
               Die Fortsetzung befasst sich mit den wirklich wichtigen Themen des Lebens – hier ein kleiner Vorgeschmack.
             </p>
           </div>
@@ -63,11 +63,11 @@ export function HW2Teaser() {
             ))}
         </div>
         <div className="mt-8 text-center space-y-8">
-            <p className="max-w-2xl mx-auto text-muted-foreground md:text-lg text-balance">
+            <p className="max-w-2xl mx-auto text-white/90 md:text-lg text-balance">
                 Viele dieser gesellschaftlichen Missstände und noch mehr Absurditäten häufen sich im neuen Buch.
             </p>
             <Link href="/lp2">
-                <Button size="lg" className="animate-sway mt-3">
+                <Button size="lg" variant="secondary" className="bg-white text-[#ff69b4] hover:bg-gray-100 h-12 text-lg animate-sway mt-3">
                     Mehr über Hallo Welt 2 erfahren <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
             </Link>
