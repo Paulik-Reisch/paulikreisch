@@ -1,9 +1,9 @@
-import { Star } from 'lucide-react';
+import { Star, PawPrint } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
 
 export function Testimonials() {
   return (
-    <section id="testimonials" className="w-full py-12 md:py-20 lg:py-24">
+    <section id="testimonials" className="w-full py-12 md:py-16 lg:py-20">
       <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="space-y-3">
           <h2 className="text-3xl font-bold font-headline tracking-tighter md:text-4xl/tight">
@@ -43,11 +43,11 @@ export function Testimonials() {
           <Card className="transform transition-transform hover:scale-105 rotate-1">
             <CardContent className="p-6">
               <div className="flex mb-2">
-                <Star className="w-5 h-5 fill-primary text-primary" />
-                <Star className="w-5 h-5 fill-primary text-primary" />
-                <Star className="w-5 h-5 fill-primary text-primary" />
-                <Star className="w-5 h-5 fill-primary text-primary" />
-                <Star className="w-5 h-5 fill-muted stroke-muted-foreground" />
+                <PawPrint className="w-5 h-5 fill-primary text-primary" />
+                <PawPrint className="w-5 h-5 fill-primary text-primary" />
+                <PawPrint className="w-5 h-5 fill-primary text-primary" />
+                <PawPrint className="w-5 h-5 fill-primary text-primary" />
+                <PawPrint className="w-5 h-5 fill-muted stroke-muted-foreground" />
               </div>
               <p className="text-sm text-left italic">"Meine Katze gibt vier Pfoten nach oben! Auch wenn sie es vorzieht, darauf zu schlafen ..."</p>
               <p className="text-right mt-2 font-semibold">– Ein Haustierbesitzer</p>
