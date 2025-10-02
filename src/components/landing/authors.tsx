@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
@@ -44,7 +45,7 @@ export function Authors() {
                 className="mx-auto mb-4 rounded-full"
                 data-ai-hint="weird portrait"
                 height="120"
-                src="https://picsum.photos/seed/autor2_new_v2/120/120"
+                src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/max-avatar.jpg?alt=media&token=7d7574a9-0f76-431b-b8d3-b608332e7a20"
                 style={{
                   aspectRatio: "120/120",
                   objectFit: "cover",
