@@ -21,7 +21,7 @@ export function Authors() {
                 className="mx-auto mb-4 rounded-full"
                 data-ai-hint="funny portrait"
                 height="120"
-                src="https://picsum.photos/seed/autor1_final/120/120"
+                src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/philipp-avatar.jpg?alt=media&token=ec373eaf-5786-43b9-ac60-b582cb13fac3"
                 style={{
                   aspectRatio: "120/120",
                   objectFit: "cover",
@@ -44,7 +44,7 @@ export function Authors() {
                 className="mx-auto mb-4 rounded-full"
                 data-ai-hint="weird portrait"
                 height="120"
-                src="https://picsum.photos/seed/autor2_new/120/120"
+                src="https://picsum.photos/seed/autor2_new_v2/120/120"
                 style={{
                   aspectRatio: "120/120",
                   objectFit: "cover",
