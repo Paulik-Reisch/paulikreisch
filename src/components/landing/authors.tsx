@@ -22,7 +22,7 @@ export function Authors() {
                 className="mx-auto mb-4 rounded-full"
                 data-ai-hint="funny portrait"
                 height="120"
-                src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/philipp-avatar.jpg?alt=media&token=ec373eaf-5786-43b9-ac60-b582cb13fac3"
+                src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/paulik.png?alt=media&token=7d4dfeb1-5f87-4426-9890-868ed2a089bf"
                 style={{
                   aspectRatio: "120/120",
                   objectFit: "cover",
@@ -45,7 +45,7 @@ export function Authors() {
                 className="mx-auto mb-4 rounded-full"
                 data-ai-hint="weird portrait"
                 height="120"
-                src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/max-avatar.jpg?alt=media&token=7d7574a9-0f76-431b-b8d3-b608332e7a20"
+                src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/reisch.png?alt=media&token=5aa20eee-967e-4912-9bfe-3f0b6861a316"
                 style={{
                   aspectRatio: "120/120",
                   objectFit: "cover",
