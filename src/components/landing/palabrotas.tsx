@@ -86,9 +86,11 @@ function AgeVerification({ onConfirm }: { onConfirm: () => void }) {
                     <Button type="submit" size="lg">
                         Alter bestätigen & fortfahren
                     </Button>
-                    <Button asChild variant="link" size="sm">
-                       <Link href="/lp-palabrotas/mehr-erfahren">Mehr zu sensiblen Inhalten</Link>
-                    </Button>
+                    <Link href="/lp-palabrotas/mehr-erfahren">
+                        <Button asChild variant="link" size="sm">
+                           <a>Mehr zu sensiblen Inhalten</a>
+                        </Button>
+                    </Link>
                 </form>
             </CardContent>
        </Card>
@@ -177,8 +179,8 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
                                 {/* Mobile layout */}
                                 <div className="w-full md:hidden flex flex-col items-center py-3">
                                   <div className="text-lg font-semibold">{word.de}</div>
-                                  <ChevronDown className="h-6 w-6 text-muted-foreground transition-transform duration-300 group-data-[state=open]:rotate-180 my-1" />
-                                  <div className="text-lg italic text-muted-foreground">{word.es}</div>
+                                  <div className="text-lg italic text-muted-foreground my-1">{word.es}</div>
+                                  <ChevronDown className="h-6 w-6 text-muted-foreground transition-transform duration-300 group-data-[state=open]:rotate-180" />
                                 </div>
                                 {/* Desktop layout */}
                                 <div className="hidden md:flex flex-1 items-center w-full">
