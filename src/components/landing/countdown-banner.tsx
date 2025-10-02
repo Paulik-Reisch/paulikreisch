@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { Timer } from 'lucide-react';
+import Image from 'next/image';
 
 const calculateTimeLeft = (target: Date) => {
     const difference = +target - +new Date();
@@ -86,7 +86,14 @@ export function CountdownBanner() {
     return (
         <div className="flex flex-col items-center justify-center space-y-2 text-center">
             <h3 className="font-bold font-headline tracking-tighter text-2xl sm:text-3xl flex items-center gap-2 text-primary-foreground/90">
-                <Timer className="h-6 w-6"/>
+                <Image 
+                    src="https://cdn.pixabay.com/animation/2023/08/10/06/24/06-24-17-858_512.gif"
+                    alt="Animierte Stoppuhr"
+                    width={24}
+                    height={24}
+                    className="h-6 w-6"
+                    unoptimized
+                />
                 Verbleibende Angebotszeit:
             </h3>
             <div 
