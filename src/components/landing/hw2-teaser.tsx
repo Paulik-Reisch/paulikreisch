@@ -35,7 +35,7 @@ export function HW2Teaser() {
           <div className="space-y-2">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Hallo Welt 2: Wir müssen reden!</h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-              Die Fortsetzung befasst sich mit den wirklich wichtigen Themen des Lebens. Hier ein kleiner Vorgeschmack.
+              Die Fortsetzung befasst sich mit den wirklich wichtigen Themen des Lebens – hier ein kleiner Vorgeschmack.
             </p>
           </div>
         </div>
@@ -63,7 +63,7 @@ export function HW2Teaser() {
         </div>
         <div className="mt-8 text-center space-y-8">
             <p className="max-w-2xl mx-auto text-muted-foreground md:text-lg text-balance">
-                Viele dieser gesellschaftlichen Missstände und noch mehr Absurditäten häufen sich geradezu im neuen Buch ...
+                Viele dieser gesellschaftlichen Missstände und noch mehr Absurditäten häufen sich im neuen Buch.
             </p>
             <Link href="/lp2">
                 <Button size="lg" className="animate-pulse mt-3">
