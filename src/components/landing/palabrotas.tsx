@@ -87,8 +87,8 @@ function AgeVerification({ onConfirm }: { onConfirm: () => void }) {
                         Alter bestätigen & fortfahren
                     </Button>
                     <Link href="/lp-palabrotas/mehr-erfahren">
-                        <Button asChild variant="link" size="sm">
-                           <a>Mehr zu sensiblen Inhalten</a>
+                        <Button variant="link" size="sm">
+                           Mehr zu sensiblen Inhalten
                         </Button>
                     </Link>
                 </form>
@@ -173,11 +173,15 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
 
             <Accordion type="single" collapsible className="w-full space-y-2">
                 {filteredVocabulary.map((word) => (
-                    <AccordionItem key={word.id} value={word.id} className="border-b-0">
-                        <AccordionTrigger className="text-xl font-semibold hover:no-underline rounded-lg p-0 bg-white data-[state=open]:rounded-b-none transition-all text-left group">
+                    <AccordionItem 
+                        key={word.id} 
+                        value={word.id} 
+                        className="border-none overflow-hidden rounded-lg data-[state=open]:border data-[state=open]:shadow-md"
+                    >
+                        <AccordionTrigger className="text-xl font-semibold hover:no-underline p-0 bg-white text-left group data-[state=open]:border-b">
                             <div className="flex flex-col md:flex-row items-center w-full">
                                 {/* Mobile layout */}
-                                <div className="w-full md:hidden flex flex-col items-center py-3">
+                                <div className="w-full md:hidden flex flex-col items-center py-3 px-4">
                                   <div className="text-lg font-semibold">{word.de}</div>
                                   <div className="text-lg italic text-muted-foreground my-1">{word.es}</div>
                                   <ChevronDown className="h-6 w-6 text-muted-foreground transition-transform duration-300 group-data-[state=open]:rotate-180" />
@@ -192,7 +196,7 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
                                 </div>
                             </div>
                         </AccordionTrigger>
-                        <AccordionContent className="p-6 border border-t-0 rounded-b-lg bg-white text-base">
+                        <AccordionContent className="p-6 bg-white text-base">
                             <div className="grid md:grid-cols-2 gap-x-8 gap-y-6">
                                 <DetailRow label="Wortart">
                                     <p className="font-semibold">{word.wortart}</p>
