@@ -4,9 +4,9 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Lock, Cookie } from 'lucide-react';
+import { Cookie } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Card } from '../ui/card';
 
 const COOKIE_NAME = 'hallowelt_cookie_consent';
 
@@ -43,12 +43,11 @@ export function CookieBanner() {
   return (
     <div className="fixed bottom-4 inset-x-0 z-50 flex justify-center">
         <Card className={cn(
-            "w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl shadow-2xl transition-all duration-300 animate-in slide-in-from-bottom-5",
+            "w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl shadow-2xl transition-all duration-300 animate-in slide-in-from-bottom-5 border-transparent rounded-[1.3125rem]",
              isExpanded ? 'p-6' : 'p-3'
             )}>
             <div className={cn("flex items-center transition-all duration-300", isExpanded && "hidden")}>
-                <Lock className="h-5 w-5 mr-3 shrink-0"/>
-                <p className="text-sm text-muted-foreground mr-auto">
+                <p className="text-sm text-muted-foreground mr-auto pl-3">
                    Wir benutzen Cookies.{' '}
                    <button onClick={() => setIsExpanded(true)} className="underline font-semibold hover:text-primary">
                      Mehr erfahren
