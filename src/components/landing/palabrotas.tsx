@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from 'next/navigation';
 import {
   Accordion,
@@ -10,7 +10,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Flame } from "lucide-react";
+import { Flame, Plus, Search, FilterX } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Palabrota } from "@/lib/firestore";
 import { Button } from "../ui/button";
@@ -36,7 +36,7 @@ const PfeiferRating = ({ rating }: { rating: number }) => (
 
 function DetailRow({ label, children }: { label: string; children: React.ReactNode }) {
     return (
-        <div className="grid grid-cols-[150px_1fr] items-start gap-4">
+        <div className="grid grid-cols-[120px_1fr] items-start gap-4">
             <span className="text-sm text-muted-foreground font-medium">{label}</span>
             <div>{children}</div>
         </div>
@@ -66,33 +66,29 @@ function AgeVerification({ onConfirm }: { onConfirm: () => void }) {
         onConfirm();
       }
     } else {
-      // Default to confirm if no date is entered
       onConfirm();
     }
   };
 
   return (
     <div className="max-w-md mx-auto my-12 md:my-24">
-       <Card className="bg-white">
+       <Card>
             <CardHeader className="text-center">
-                <CardTitle className="font-headline text-2xl">Bestätige dein Alter, um fortzufahren</CardTitle>
+                <CardTitle className="font-headline text-2xl">Bestätige dein Alter</CardTitle>
             </CardHeader>
             <CardContent className="text-center space-y-6">
                 <p className="text-muted-foreground">
-                    Diese Seite enthält Inhalte, die eventuell nicht für alle Altersklassen geeignet sind. Bitte gib dein Geburtsdatum ein, um fortzufahren.
+                    Diese Seite enthält sensible Inhalte. Um fortzufahren, bestätigen Sie bitte Ihr Alter.
                 </p>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <Input type="date" name="birthdate" required className="text-center"/>
                     <Button type="submit" size="lg">
-                        Alter bestätigen & fortfahren
+                        Alter bestätigen
                     </Button>
-                    <Button asChild variant="ghost" size="lg">
+                     <Button asChild variant="link" size="sm">
                         <Link href="/lp-palabrotas/mehr-erfahren">Mehr zu sensiblen Inhalten</Link>
                     </Button>
                 </form>
-                 <p className="text-xs text-muted-foreground pt-4">
-                    Indem du fortfährst, stimmst du zu, dass wir deine Daten (imaginär) sammeln, um dein Nutzererlebnis (vermutlich) zu verbessern.
-                </p>
             </CardContent>
        </Card>
     </div>
@@ -101,6 +97,23 @@ function AgeVerification({ onConfirm }: { onConfirm: () => void }) {
 
 export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
   const [isVerified, setIsVerified] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [pfeiferFilter, setPfeiferFilter] = useState<number | null>(null);
+
+  const filteredVocabulary = useMemo(() => {
+    return vocabulary
+      .filter((word) => {
+        if (!searchTerm) return true;
+        return (
+          word.de.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          word.es.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      })
+      .filter((word) => {
+        if (pfeiferFilter === null) return true;
+        return word.pfeiferFaktor === pfeiferFilter;
+      });
+  }, [vocabulary, searchTerm, pfeiferFilter]);
 
   if (!isVerified) {
     return (
@@ -112,7 +125,7 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
 
   return (
     <section className="w-full">
-        <div className="py-12 md:py-16 text-center container px-4 md:px-6">
+        <div className="py-12 md:py-16 text-center container px-4 md:px-6 bg-muted/50 border-b">
             <Badge>Pfeifer's Vermächtnis</Badge>
             <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl mt-4 text-balance">
             Der "Palabrotas"-Duden
@@ -122,42 +135,76 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
             </p>
         </div>
 
-        <div className="max-w-4xl mx-auto pb-12 md:pb-24 container px-4 md:px-6">
-            <Accordion type="single" collapsible className="w-full space-y-4">
-                {vocabulary.map((word) => (
+        <div className="max-w-4xl mx-auto py-12 md:py-16 container px-4 md:px-6">
+            <div className="mb-8 space-y-4">
+                <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input 
+                        placeholder="Suchen nach Deutsch oder Spanisch..."
+                        className="pl-10 h-12 text-lg"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
+                 <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-sm font-medium">Filter nach Pfeifer-Faktor™:</span>
+                    {Array.from({ length: 5 }).map((_, i) => (
+                        <Button 
+                            key={i}
+                            variant={pfeiferFilter === i + 1 ? 'default' : 'outline'}
+                            size="sm"
+                            onClick={() => setPfeiferFilter(pfeiferFilter === i + 1 ? null : i + 1)}
+                            className="flex items-center gap-1"
+                        >
+                            {i + 1} <Flame className="h-4 w-4"/>
+                        </Button>
+                    ))}
+                    {pfeiferFilter !== null && (
+                         <Button variant="ghost" size="sm" onClick={() => setPfeiferFilter(null)} className="h-7 text-muted-foreground">
+                            <FilterX className="mr-2 h-4 w-4"/>
+                            Filter zurücksetzen
+                        </Button>
+                    )}
+                </div>
+            </div>
+
+            <Accordion type="single" collapsible className="w-full space-y-2">
+                {filteredVocabulary.map((word) => (
                     <AccordionItem key={word.id} value={word.id} className="border-b-0">
-                        <AccordionTrigger className="text-xl font-semibold hover:no-underline border rounded-lg p-4 bg-card data-[state=open]:rounded-b-none data-[state=open]:bg-muted/50 transition-all text-left">
-                        <div className="flex flex-col items-start w-full">
-                            <span className="font-headline text-2xl md:text-3xl font-bold">{word.de}</span>
-                            <span className="text-lg italic text-muted-foreground font-normal">{word.es}</span>
-                        </div>
+                        <AccordionTrigger className="text-xl font-semibold hover:no-underline rounded-lg p-0 bg-card data-[state=open]:rounded-b-none data-[state=open]:bg-muted/50 transition-all text-left group">
+                            <div className="flex items-center w-full">
+                                <div className="flex-1 px-4 py-3 text-lg font-semibold">{word.de}</div>
+                                <div className="flex-1 px-4 py-3 text-lg italic text-muted-foreground border-l border-r">{word.es}</div>
+                                <div className="px-4 py-3">
+                                    <Plus className="h-6 w-6 text-muted-foreground transition-transform duration-300 group-data-[state=open]:rotate-45" />
+                                </div>
+                            </div>
                         </AccordionTrigger>
                         <AccordionContent className="p-6 border border-t-0 rounded-b-lg bg-card text-base">
-                        <div className="space-y-6">
-                                <DetailRow label="Wortart">
-                                    <p>{word.wortart}</p>
-                                </DetailRow>
-                                <DetailRow label="Anwendung">
-                                    <p>{word.anwendung}</p>
-                                </DetailRow>
-                                <DetailRow label="Synonyme">
-                                    <p className="italic">{word.synonyme}</p>
-                                </DetailRow>
+                            <div className="space-y-6">
+                                <DetailRow label="Wortart"><p>{word.wortart}</p></DetailRow>
+                                <DetailRow label="Anwendung"><p>{word.anwendung}</p></DetailRow>
+                                <DetailRow label="Synonyme"><p className="italic">{word.synonyme}</p></DetailRow>
                                 <DetailRow label="Beispielsatz">
-                                    <blockquote className="border-l-4 border-primary/50 pl-4 py-1 my-0">
-                                        {word.beispiel}
-                                    </blockquote>
+                                    <blockquote className="border-l-4 border-primary/50 pl-4 py-1 my-0">{word.beispiel}</blockquote>
                                 </DetailRow>
                                 <div className="flex items-center gap-4 pt-2">
-                                    <h4 className="font-bold text-sm text-muted-foreground w-[134px]">Pfeifer-Faktor™</h4>
+                                    <h4 className="font-bold text-sm text-muted-foreground w-[104px]">Pfeifer-Faktor™</h4>
                                     <PfeiferRating rating={word.pfeiferFaktor} />
                                 </div>
-                        </div>
+                            </div>
                         </AccordionContent>
                     </AccordionItem>
                 ))}
             </Accordion>
-        <p className="text-xs text-center text-muted-foreground mt-4">*Haftungsausschluss: Die Autoren übernehmen keine Verantwortung für daraus resultierende soziale oder diplomatische Verwicklungen.</p>
+            {filteredVocabulary.length === 0 && (
+                <div className="text-center py-12 text-muted-foreground">
+                    <Search className="mx-auto h-12 w-12 mb-4"/>
+                    <h3 className="text-xl font-semibold">Keine Ergebnisse</h3>
+                    <p>Für Ihre Suche oder Filter wurde kein passendes Wort gefunden.</p>
+                </div>
+            )}
+        <p className="text-xs text-center text-muted-foreground mt-8">*Haftungsausschluss: Die Autoren übernehmen keine Verantwortung für daraus resultierende soziale oder diplomatische Verwicklungen.</p>
         </div>
     </section>
   );
