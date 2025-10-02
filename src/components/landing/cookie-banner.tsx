@@ -42,19 +42,19 @@ export function CookieBanner() {
   return (
     <div className="fixed bottom-4 inset-x-0 z-50 flex justify-center">
         <Card className={cn(
-            "w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl shadow-2xl transition-all duration-300 animate-in slide-in-from-bottom-5",
+            "group w-auto max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl shadow-2xl transition-all duration-300 animate-in slide-in-from-bottom-5 border-border/20 rounded-2xl md:group-hover:w-full",
              isExpanded ? 'p-6' : 'p-3'
             )}>
-            <div className={cn("flex items-center transition-all duration-300", isExpanded && "hidden")}>
+            <div className={cn("flex items-center transition-all duration-300 md:group-hover:hidden", isExpanded && "hidden")}>
                 <p className="text-sm text-muted-foreground mr-auto pl-3">
                    Wir benutzen Cookies.{' '}
-                   <button onClick={() => setIsExpanded(true)} className="underline font-semibold hover:text-primary">
+                   <button onClick={() => setIsExpanded(true)} className="underline font-semibold hover:text-primary md:hidden">
                      Mehr erfahren
                    </button>.
                 </p>
                 <Button onClick={handleAccept} size="sm" className="shrink-0">Okay</Button>
             </div>
-            <div className={cn("space-y-4", !isExpanded && "hidden")}>
+            <div className={cn("space-y-4 hidden md:group-hover:block", isExpanded && "!block")}>
                 <h3 className="font-bold font-headline text-lg">Die Verwendung von Cookies durch Hallo Welt</h3>
                 <p className="text-sm text-muted-foreground">
                     Wir verwenden Cookies, um Benutzern die bestmögliche Nutzer-Erfahrung zu ermöglichen. Bitte lesen Sie unsere <Link href="/cookie-richtlinie" className="underline hover:text-primary font-semibold">Cookie-Richtlinie</Link>. Indem Sie akzeptieren, stimmen Sie der Speicherung von absolut nutzlosen, aber technisch notwendigen Cookies auf Ihrem Gerät zu.
