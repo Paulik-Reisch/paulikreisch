@@ -21,7 +21,7 @@ export function Authors() {
                 className="mx-auto mb-4 rounded-full"
                 data-ai-hint="funny portrait"
                 height="120"
-                src="https://picsum.photos/seed/paulik/120/120"
+                src="https://picsum.photos/seed/autor1/120/120"
                 style={{
                   aspectRatio: "120/120",
                   objectFit: "cover",
@@ -44,7 +44,7 @@ export function Authors() {
                 className="mx-auto mb-4 rounded-full"
                 data-ai-hint="weird portrait"
                 height="120"
-                src="https://picsum.photos/seed/reisch/120/120"
+                src="https://picsum.photos/seed/autor2/120/120"
                 style={{
                   aspectRatio: "120/120",
                   objectFit: "cover",
