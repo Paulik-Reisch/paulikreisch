@@ -6,10 +6,7 @@ export function Features() {
       <div className="container px-4 md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Warum dieses Buch Ihr Leben verändern wird*</h2>
-            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-              (*Im Guten wie im Schlechten. Keine Rückerstattung.)
-            </p>
+            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Warum dieses Buch Ihr Leben verändern wird</h2>
           </div>
         </div>
         <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3 lg:gap-12">
@@ -31,7 +28,7 @@ export function Features() {
             <Feather className="h-10 w-10 mx-auto text-primary" />
             <h3 className="text-xl font-bold font-headline">Satirisches Genie</h3>
             <p className="text-sm text-muted-foreground text-balance">
-              Witzige Kommentare zum modernen Leben, die so scharf sind, dass Sie sich einen Papierschnitt holen könnten.
+              Witzige Kommentare zum modernen Leben, die so scharf sind, dass jede Chili Schote vor Neid erblassen würde.
             </p>
           </div>
         </div>

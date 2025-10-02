@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 
 export function LP2Teaser() {
   return (
-    <section id="teaser-lp2" className="w-full py-20 md:py-32 lg:py-40" style={{ backgroundColor: 'hsl(var(--color-bg-light-orange))' }}>
+    <section id="teaser-lp2" className="w-full py-12 md:py-16 lg:py-20" style={{ backgroundColor: 'hsl(var(--color-bg-light-orange))' }}>
       <div className="container px-4 md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="flex flex-col items-center justify-center space-y-6 text-center">
           <div className="space-y-4">

@@ -8,11 +8,10 @@ export function Header() {
       <div className="container mx-auto flex items-center justify-between">
         <a className="flex items-center justify-center gap-2" href="/">
            <Image 
-            src="https://picsum.photos/seed/halloweltlogo/28/28"
+            src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522"
             alt="Hallo Welt Logo"
             width={28}
             height={28}
-            className="rounded-sm"
           />
           <span className="font-headline font-semibold text-lg">Hallo Welt</span>
         </a>
