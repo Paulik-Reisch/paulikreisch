@@ -86,14 +86,15 @@ export function CountdownBanner() {
     return (
         <div className="flex flex-col items-center justify-center space-y-2 text-center">
             <h3 className="font-bold font-headline tracking-tighter text-2xl sm:text-3xl flex items-center gap-2 text-primary-foreground/90">
-                <Image 
-                    src="https://cdn.pixabay.com/animation/2023/08/10/06/24/06-24-17-858_512.gif"
-                    alt="Animierte Stoppuhr"
-                    width={24}
-                    height={24}
-                    className="h-6 w-6"
-                    unoptimized
-                />
+                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" className="h-6 w-6">
+                    <path fill="currentColor" d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,20a9,9,0,1,1,9-9A9,9,0,0,1,12,21Z" />
+                    <rect width="2" height="7" x="11" y="6" fill="currentColor" rx="1">
+                        <animateTransform attributeName="transform" dur="9s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12" />
+                    </rect>
+                    <rect width="2" height="9" x="11" y="11" fill="currentColor" rx="1">
+                        <animateTransform attributeName="transform" dur="0.75s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12" />
+                    </rect>
+                </svg>
                 Verbleibende Angebotszeit:
             </h3>
             <div 
