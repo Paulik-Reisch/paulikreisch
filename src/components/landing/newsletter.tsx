@@ -46,23 +46,23 @@ export function Newsletter() {
   }, [state, toast]);
 
   return (
-    <section id="newsletter" className="w-full py-12 md:py-16 lg:py-20">
+    <section id="newsletter" className="w-full py-12 md:py-16 lg:py-20 bg-background">
       <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="space-y-3">
           <h2 className="text-3xl font-bold font-headline tracking-tighter md:text-4xl">Treten Sie der Gemeinschaft der Verwirrten bei</h2>
           <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-            Erhalten Sie exklusive Inhalte, Updates und weitere fragwürdige Lebensratschläge direkt in Ihren Posteingang. Wir versprechen, Sie nicht zuzuspammen. Kaum.
+            Erhalten Sie exklusive Inhalte und Updates direkt in Ihren Posteingang. Wir versprechen, Sie nicht zuzuspammen.
           </p>
         </div>
         <div className="mx-auto w-full max-w-sm space-y-2 relative">
           <form ref={formRef} action={formAction} className="flex space-x-2">
-            <Input name="email" className="max-w-lg flex-1" placeholder="Ihre E-Mail-Adresse eingeben" type="email" required />
+            <Input name="email" className="max-w-lg flex-1" placeholder="E-Mail-Adresse eingeben" type="email" required />
             <input type="hidden" name="source" value="footer-newsletter" />
             <SubmitButton />
           </form>
            {showConfetti && <Confetti onComplete={() => setShowConfetti(false)} />}
           <p className="text-xs text-muted-foreground">
-            Melden Sie sich an, um benachrichtigt zu werden, wenn wir etwas Neues veröffentlichen. Wir werden Ihre E-Mail niemals weitergeben. Wahrscheinlich.
+            Melden Sie sich an, um benachrichtigt zu werden, wenn wir etwas Neues veröffentlichen. Wir werden Ihre E-Mail wahrscheinlich niemals weitergeben.
           </p>
         </div>
       </div>
