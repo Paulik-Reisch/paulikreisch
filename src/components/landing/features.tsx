@@ -1,5 +1,6 @@
 
 import { BookOpen, Drama, Feather } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 
 export function Features() {
   return (
@@ -8,31 +9,36 @@ export function Features() {
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Warum dieses Buch Ihr Leben verändern wird</h2>
-            <hr className="w-24 mx-auto my-4 border-white/50" />
           </div>
         </div>
         <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3 lg:gap-12">
-          <div className="grid gap-1 text-center p-4 rounded-lg transition-all hover:bg-white/10 hover:scale-105 transform -rotate-1">
-            <Drama className="h-10 w-10 mx-auto" />
-            <h3 className="text-xl font-bold font-headline">Unvergessliche Charaktere</h3>
-            <p className="text-sm text-white/80 text-balance">
-              Treffen Sie eine Besetzung von Charakteren, die so bizarr sind, dass sie für immer mietfrei in Ihrem Kopf leben werden.
-            </p>
-          </div>
-          <div className="grid gap-1 text-center p-4 rounded-lg transition-all hover:bg-white/10 hover:scale-105 transform rotate-2">
-            <BookOpen className="h-10 w-10 mx-auto" />
-            <h3 className="text-xl font-bold font-headline">Fesselnde Handlung</h3>
-            <p className="text-sm text-white/80 text-balance">
-              Eine Handlung mit mehr Drehungen und Wendungen als eine Brezelfabrik. Sie werden das Ende nicht kommen sehen.
-            </p>
-          </div>
-          <div className="grid gap-1 text-center p-4 rounded-lg transition-all hover:bg-white/10 hover:scale-105 transform -rotate-1">
-            <Feather className="h-10 w-10 mx-auto" />
-            <h3 className="text-xl font-bold font-headline">Satirisches Genie</h3>
-            <p className="text-sm text-white/80 text-balance">
-              Witzige Kommentare zum modernen Leben, die so scharf sind, dass jede Chili Schote vor Neid erblassen würde.
-            </p>
-          </div>
+          <Card className="bg-white/10 border-0 text-white transform transition-transform hover:scale-105 -rotate-1">
+            <CardContent className="p-6 text-center grid gap-1">
+              <Drama className="h-10 w-10 mx-auto" />
+              <h3 className="text-xl font-bold font-headline">Unvergessliche Charaktere</h3>
+              <p className="text-sm text-white/80 text-balance">
+                Treffen Sie eine Besetzung von Charakteren, die so bizarr sind, dass sie für immer mietfrei in Ihrem Kopf leben werden.
+              </p>
+            </CardContent>
+          </Card>
+          <Card className="bg-white/10 border-0 text-white transform transition-transform hover:scale-105 rotate-2">
+            <CardContent className="p-6 text-center grid gap-1">
+              <BookOpen className="h-10 w-10 mx-auto" />
+              <h3 className="text-xl font-bold font-headline">Fesselnde Handlung</h3>
+              <p className="text-sm text-white/80 text-balance">
+                Eine Handlung mit mehr Drehungen und Wendungen als eine Brezelfabrik. Sie werden das Ende nicht kommen sehen.
+              </p>
+            </CardContent>
+          </Card>
+          <Card className="bg-white/10 border-0 text-white transform transition-transform hover:scale-105 -rotate-1">
+            <CardContent className="p-6 text-center grid gap-1">
+              <Feather className="h-10 w-10 mx-auto" />
+              <h3 className="text-xl font-bold font-headline">Satirisches Genie</h3>
+              <p className="text-sm text-white/80 text-balance">
+                Witzige Kommentare zum modernen Leben, die so scharf sind, dass jede Chili Schote vor Neid erblassen würde.
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </section>
