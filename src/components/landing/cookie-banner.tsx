@@ -4,16 +4,8 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Cookie } from 'lucide-react';
 
 const COOKIE_NAME = 'hallowelt_cookie_consent';
 
@@ -42,34 +34,32 @@ export function CookieBanner() {
     setShowBanner(false);
   };
   
+  if (!showBanner) {
+      return null;
+  }
+
   return (
-    <AlertDialog open={showBanner}>
-      <AlertDialogContent className="max-w-lg">
-        <AlertDialogHeader>
-          <AlertDialogTitle className="font-headline text-2xl">
-            Die Verwendung von Cookies durch Eñje - DSGVO 2023
-          </AlertDialogTitle>
-          <AlertDialogDescription className="text-base text-muted-foreground pt-4 space-y-4">
-            <p>
-              Wir (Das Unternehmen „Eñje" & die Betreiber dieser Webseite*) verwenden Cookies, um Benutzern die bestmögliche Nutzer-Erfahrung zu ermöglichen. Dabei wird § 23 (Art. 23) der DSGVO für Deutschland berücksichtigt.
-            </p>
-            <p>
-              Bitte lesen Sie unsere <Link href="/cookie-richtlinie" className="underline hover:text-primary font-semibold">Cookie-Richtlinie</Link>, um die genaue Verwendung unserer Cookies zu erfahren.
-            </p>
-            <p>
-              Mit dem Klicken auf „Cookies akzeptieren" werden die Cookies von Ihnen vollumfänglich genehmigt. Das Widerrufen der Cookies ist <Link href="/impressum" className="underline hover:text-primary font-semibold">hier</Link> möglich. Bitte beachten Sie, dass das Ablehnen von Cookies möglicherweise die Funktionalität dieser Webseite beeinträchtigt.
-            </p>
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter className="flex-col gap-2 sm:flex-col sm:space-x-0">
-          <AlertDialogAction onClick={handleAccept} className="w-full h-12 text-lg">
-            Cookies akzeptieren
-          </AlertDialogAction>
-          <AlertDialogCancel onClick={handleDecline} className="w-full h-12 text-lg">
-            Cookies ablehnen
-          </AlertDialogCancel>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <div className="fixed bottom-4 left-4 z-50">
+        <Popover open={showBanner} onOpenChange={setShowBanner}>
+            <PopoverTrigger asChild>
+                <Button variant="outline" className="shadow-lg">
+                    <Cookie className="mr-2 h-4 w-4"/>
+                    Cookie-Einstellungen
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-96" side="top">
+                 <div className="space-y-4">
+                    <h3 className="font-bold font-headline text-lg">Die Verwendung von Cookies durch Eñje - DSGVO 2023</h3>
+                    <p className="text-sm text-muted-foreground">
+                        Wir (Das Unternehmen „Eñje" & die Betreiber dieser Webseite*) verwenden Cookies, um Benutzern die bestmögliche Nutzer-Erfahrung zu ermöglichen. Bitte lesen Sie unsere <Link href="/cookie-richtlinie" className="underline hover:text-primary font-semibold">Cookie-Richtlinie</Link>.
+                    </p>
+                    <div className="flex gap-2">
+                        <Button onClick={handleAccept} className="flex-1">Akzeptieren</Button>
+                        <Button onClick={handleDecline} variant="secondary" className="flex-1">Ablehnen</Button>
+                    </div>
+                </div>
+            </PopoverContent>
+        </Popover>
+    </div>
   );
 }

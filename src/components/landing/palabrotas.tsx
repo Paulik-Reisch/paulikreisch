@@ -1,6 +1,7 @@
 
 "use client";
 
+import { useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -8,9 +9,10 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Flame } from "lucide-react";
+import { Flame, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Palabrota } from "@/lib/firestore";
+import { Button } from "../ui/button";
 
 const PfeiferRating = ({ rating }: { rating: number }) => (
     <div className="flex items-center gap-1" aria-label={`Pfeifer-Faktor: ${rating} von 5`}>
@@ -36,7 +38,34 @@ function DetailRow({ label, children }: { label: string; children: React.ReactNo
     )
 }
 
+function AgeVerification({ onConfirm }: { onConfirm: () => void }) {
+  return (
+    <div className="max-w-2xl mx-auto my-12 md:my-24 flex flex-col items-center justify-center text-center p-8 border-2 border-dashed border-destructive rounded-lg bg-destructive/10">
+        <AlertTriangle className="w-16 h-16 text-destructive mb-4" />
+        <h2 className="text-2xl font-bold font-headline">Warnung: Sensible Inhalte</h2>
+        <p className="mt-2 text-muted-foreground">
+            Die folgende Seite enthält eine Sammlung von Schimpfwörtern und vulgären Ausdrücken für rein satirische und Bildungszwecke im Stil des Buches "Hallo Welt". Wenn Sie empfindlich auf solche Sprache reagieren oder sich leicht beleidigt fühlen, sollten Sie diese Seite nicht betreten.
+        </p>
+        <Button onClick={onConfirm} className="mt-6" variant="destructive">
+            Ich bin alt genug & nicht zartbesaitet
+        </Button>
+    </div>
+  )
+}
+
 export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
+  const [isVerified, setIsVerified] = useState(false);
+
+  if (!isVerified) {
+    return (
+        <section className="w-full">
+            <div className="container px-4 md:px-6">
+                <AgeVerification onConfirm={() => setIsVerified(true)} />
+            </div>
+        </section>
+    );
+  }
+
   return (
     <section className="w-full">
       <div className="container px-4 md:px-6">
