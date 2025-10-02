@@ -1,6 +1,7 @@
 
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { SchnickSchnackSchnuck } from "./SchnickSchnackSchnuck";
 
 export function Authors() {
   return (
@@ -11,7 +12,7 @@ export function Authors() {
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Treffen Sie die verdrehten Köpfe</h2>
           </div>
         </div>
-        <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-2 md:gap-12 lg:max-w-none lg:grid-cols-2 mt-12">
+        <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-1 md:gap-12 lg:max-w-none lg:grid-cols-3 mt-12">
           <Card className="transform transition-transform duration-500 hover:scale-105 hover:-rotate-1 -rotate-2">
             <CardHeader className="text-center">
               <Image
@@ -35,6 +36,9 @@ export function Authors() {
               </p>
             </CardContent>
           </Card>
+
+          <SchnickSchnackSchnuck />
+
           <Card className="transform transition-transform duration-500 hover:scale-105 hover:rotate-1 rotate-2">
             <CardHeader className="text-center">
               <Image
