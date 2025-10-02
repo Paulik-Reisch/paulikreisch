@@ -33,6 +33,7 @@ export default async function Home() {
         <Hero product={hw1} />
         <TopicLPs />
         <HW2Teaser />
+        <Separator className="my-8" />
         <Authors />
         <Features />
         <LP2Teaser />
