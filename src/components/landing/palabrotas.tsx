@@ -125,7 +125,7 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
   }
 
   return (
-    <section className="w-full" style={{ backgroundColor: '#d4eafc' }}>
+    <section className="w-full" style={{ backgroundColor: '#e9f5ff' }}>
         <div className="py-12 md:py-16 text-center container px-4 md:px-6 border-b">
             <Badge>Pfeifer's Vermächtnis</Badge>
             <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl mt-4 text-balance">
