@@ -16,7 +16,8 @@ import {
     getDoc,
     setDoc,
     deleteDoc,
-    arrayUnion
+    arrayUnion,
+    writeBatch
 } from "firebase/firestore";
 
 export interface Order {
@@ -111,6 +112,16 @@ export interface Chiste {
     erklaerung: string;
     pfeiferFaktor: number;
     kategorie: string;
+}
+
+export interface Excerpt {
+    id: string;
+    title: string;
+    slug: string;
+    chapterNumber: number;
+    isPublished: boolean;
+    content: string;
+    lastUpdated: string;
 }
 
 
@@ -796,4 +807,78 @@ export async function updateChiste(id: string, data: Partial<Omit<Chiste, 'id'>>
 export async function deleteChiste(id: string) {
     const docRef = doc(db, 'chistes', id);
     await deleteDoc(docRef);
+}
+
+// --- EXCERPTS ---
+
+async function initializeExcerpts() {
+    const batch = writeBatch(db);
+    const excerptsCol = collection(db, 'excerpts');
+    const snapshot = await getDocs(excerptsCol);
+
+    if (snapshot.empty) {
+        console.log("Initializing 36 excerpts...");
+        for (let i = 1; i <= 36; i++) {
+            const slug = `kapitel-${i}`;
+            const docRef = doc(db, 'excerpts', slug);
+            batch.set(docRef, {
+                chapterNumber: i,
+                title: `Kapitel ${i}`,
+                slug: slug,
+                content: `<p>Inhalt für Kapitel ${i} kommt hierher...</p>`,
+                isPublished: false,
+                lastUpdated: Timestamp.now()
+            });
+        }
+        await batch.commit();
+        console.log("Excerpts initialized.");
+    }
+}
+
+
+export async function getExcerpts(): Promise<Excerpt[]> {
+    await initializeExcerpts(); // Ensure excerpts exist
+    const excerptsCol = collection(db, 'excerpts');
+    const q = query(excerptsCol, orderBy("chapterNumber", "asc"));
+    const excerptSnapshot = await getDocs(q);
+    return excerptSnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+            id: doc.id,
+            title: data.title,
+            slug: data.slug,
+            chapterNumber: data.chapterNumber,
+            isPublished: data.isPublished,
+            content: data.content,
+            lastUpdated: (data.lastUpdated as Timestamp).toDate().toISOString(),
+        } as Excerpt;
+    });
+}
+
+export async function getPublishedExcerpts(): Promise<Excerpt[]> {
+    const allExcerpts = await getExcerpts();
+    return allExcerpts.filter(e => e.isPublished);
+}
+
+
+export async function getExcerpt(slug: string): Promise<Excerpt | null> {
+    const docRef = doc(db, 'excerpts', slug);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+        const data = docSnap.data();
+        return {
+            id: docSnap.id,
+            ...data
+        } as Excerpt;
+    }
+    return null;
+}
+
+export async function updateExcerpt(slug: string, data: Partial<Omit<Excerpt, 'id'>>) {
+    const docRef = doc(db, 'excerpts', slug);
+    await updateDoc(docRef, {
+        ...data,
+        lastUpdated: Timestamp.now(),
+    });
 }

@@ -12,9 +12,11 @@ import {
     LegalPage,
     Palabrota,
     Chiste,
+    Excerpt,
     getSubscribers,
     getPalabrotas,
     getChistes,
+    getExcerpts
 } from "@/lib/firestore";
 import {
     addNewsletterAction,
@@ -29,6 +31,7 @@ import {
     addChisteAction,
     updateChisteAction,
     deleteChisteAction,
+    updateExcerptAction
 } from "@/app/admin/actions";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -45,7 +48,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, RefreshCw, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus, History, Flame, Upload, MessageSquareQuote } from "lucide-react";
+import { Loader2, RefreshCw, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus, History, Flame, Upload, MessageSquareQuote, ToggleLeft, ToggleRight, BookOpen } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -81,6 +84,7 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { cn } from "@/lib/utils";
+import { Switch } from "../ui/switch";
 
 
 function LeadsTable({ initialSubscribers }: { initialSubscribers: Subscriber[] }) {
@@ -1062,6 +1066,88 @@ function DeleteChisteAlert({ id, name, fetchChistes }: { id: string, name: strin
     );
 }
 
+function ExcerptsManager({ initialExcerpts }: { initialExcerpts: Excerpt[] }) {
+    const { toast } = useToast();
+    const [excerpts, setExcerpts] = useState(initialExcerpts);
+
+    const [state, formAction] = useActionState(updateExcerptAction, { success: false, error: null, message: null });
+
+    const handleToggle = (slug: string, currentStatus: boolean) => {
+        const formData = new FormData();
+        formData.set('slug', slug);
+        formData.set('isPublished', String(!currentStatus));
+        formAction(formData);
+    };
+    
+    useEffect(() => {
+        if (state.success) {
+            toast({ title: "Erfolg", description: state.message || "Status aktualisiert." });
+            // Optimistic update or refetch
+            const updatedSlug = (state as any).slug; // A bit hacky, depends on action returning it
+            setExcerpts(prev => prev.map(e => e.slug === updatedSlug ? { ...e, isPublished: !e.isPublished } : e));
+            // Or just refetch
+            getExcerpts().then(setExcerpts);
+        }
+        if (state.error) {
+            toast({ variant: "destructive", title: "Fehler", description: state.error });
+        }
+    }, [state, toast]);
+
+    useEffect(() => {
+        setExcerpts(initialExcerpts);
+    }, [initialExcerpts]);
+
+    return (
+        <div className="space-y-4">
+            <p className="text-muted-foreground">Verwalten Sie hier die 36 Exzerpt-Kapitel. Veröffentlichte Kapitel erscheinen auf der <Link href="/exzerpte" className="underline" target="_blank">Exzerpte-Übersichtsseite</Link>.</p>
+            <div className="border rounded-lg overflow-hidden">
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Kapitel</TableHead>
+                            <TableHead>Titel</TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead className="text-right">Aktionen</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {excerpts.map((excerpt) => (
+                            <TableRow key={excerpt.id}>
+                                <TableCell className="font-medium">{excerpt.chapterNumber}</TableCell>
+                                <TableCell>{excerpt.title}</TableCell>
+                                <TableCell>
+                                    <Badge variant={excerpt.isPublished ? "default" : "secondary"}>
+                                        {excerpt.isPublished ? "Veröffentlicht" : "Entwurf"}
+                                    </Badge>
+                                </TableCell>
+                                <TableCell className="text-right">
+                                    <form action={updateExcerptAction} className="inline-flex gap-2">
+                                        <input type="hidden" name="slug" value={excerpt.slug} />
+                                        <input type="hidden" name="isPublished" value={String(!excerpt.isPublished)} />
+                                        <Button 
+                                            type="submit"
+                                            size="sm" 
+                                            variant="ghost" 
+                                            title={excerpt.isPublished ? "Veröffentlichung zurückziehen" : "Veröffentlichen"}
+                                        >
+                                            {excerpt.isPublished ? <ToggleRight className="h-5 w-5 text-green-600"/> : <ToggleLeft className="h-5 w-5 text-gray-400"/>}
+                                        </Button>
+                                    </form>
+                                    <Link href={`/admin/exzerpt/${excerpt.slug}`} className="inline-flex">
+                                        <Button size="sm" variant="outline">
+                                            <Edit className="h-4 w-4" />
+                                        </Button>
+                                    </Link>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </div>
+        </div>
+    );
+}
+
 
 function OverviewTab({
     newsletters,
@@ -1147,6 +1233,7 @@ export function AdminDashboard({
     initialCampaigns,
     initialPalabrotas,
     initialChistes,
+    initialExcerpts,
 }: {
     initialLegalPages: LegalPage[];
     initialNewsletters: Newsletter[];
@@ -1154,15 +1241,17 @@ export function AdminDashboard({
     initialCampaigns: Campaign[];
     initialPalabrotas: Palabrota[];
     initialChistes: Chiste[];
+    initialExcerpts: Excerpt[];
 }) {
     const [activeTab, setActiveTab] = useState("übersicht");
 
     return (
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-7 h-auto">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-8 h-auto">
                 <TabsTrigger value="übersicht"><LayoutDashboard className="mr-2 h-4 w-4" />Übersicht</TabsTrigger>
                 <TabsTrigger value="leads"><Users className="mr-2 h-4 w-4" />Leads</TabsTrigger>
                 <TabsTrigger value="dynamic-lps">Dynamische LPs</TabsTrigger>
+                <TabsTrigger value="excerpts"><BookOpen className="mr-2 h-4 w-4" />Exzerpte</TabsTrigger>
                 <TabsTrigger value="newsletters">Newsletter</TabsTrigger>
                  <TabsTrigger value="palabrotas">Palabrotas</TabsTrigger>
                  <TabsTrigger value="chistes">Chistes</TabsTrigger>
@@ -1181,6 +1270,9 @@ export function AdminDashboard({
             </TabsContent>
              <TabsContent value="dynamic-lps" className="mt-6">
                 <LegalPagesManager initialLegalPages={initialLegalPages} />
+            </TabsContent>
+            <TabsContent value="excerpts" className="mt-6">
+                <ExcerptsManager initialExcerpts={initialExcerpts} />
             </TabsContent>
             <TabsContent value="newsletters" className="mt-6">
                 <NewsletterManager initialNewsletters={initialNewsletters} onTabChange={setActiveTab} />

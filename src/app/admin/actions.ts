@@ -21,6 +21,7 @@ import {
   addChiste,
   updateChiste,
   deleteChiste,
+  updateExcerpt,
 } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
 import { correctHtml } from "@/ai/flows/correct-html-flow";
@@ -637,5 +638,55 @@ export async function deleteChisteAction(
   } catch (e) {
     const error = e as Error;
     return { success: false, error: `Fehler beim Löschen: ${error.message}`, message: null };
+  }
+}
+
+// --- Excerpt Actions ---
+export type AdminExcerptState = {
+  success: boolean;
+  error?: string | null;
+  message?: string;
+};
+
+const UpdateExcerptSchema = z.object({
+  slug: z.string(),
+  title: z.string().optional(),
+  content: z.string().optional(),
+  isPublished: z.boolean().optional(),
+});
+
+export async function updateExcerptAction(
+  prevState: AdminExcerptState,
+  formData: FormData
+): Promise<AdminExcerptState> {
+  const isPublished = formData.get("isPublished") === "true";
+  const slug = formData.get("slug");
+  
+  if (typeof slug !== 'string') {
+      return { success: false, error: "Ungültiger Slug." };
+  }
+
+  const validatedFields = UpdateExcerptSchema.safeParse({
+      slug: slug,
+      title: formData.get("title"),
+      content: formData.get("content"),
+      isPublished: isPublished
+  });
+
+  if (!validatedFields.success) {
+    const errorMessages = validatedFields.error.errors.map((e) => e.message).join(". ");
+    return { success: false, error: errorMessages };
+  }
+
+  try {
+    const { slug: excerptSlug, ...dataToUpdate } = validatedFields.data;
+    await updateExcerpt(excerptSlug, dataToUpdate);
+    revalidatePath("/admin");
+    revalidatePath(`/exzerpt/${excerptSlug}`);
+    revalidatePath('/exzerpte');
+    return { success: true, message: "Exzerpt erfolgreich aktualisiert." };
+  } catch (e) {
+    const error = e as Error;
+    return { success: false, error: "Fehler beim Aktualisieren: " + error.message };
   }
 }
