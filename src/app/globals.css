@@ -127,4 +127,14 @@
   .animate-flash {
     animation: flash 0.7s ease-in-out;
   }
+
+  @keyframes pulse-fast {
+    0%, 100% { transform: scale(1); }
+    10%, 30%, 50% { transform: scale(1.05); }
+    20%, 40% { transform: scale(1); }
+  }
+
+  .animate-pulse-fast {
+    animation: pulse-fast 0.8s ease-in-out;
+  }
 }

@@ -45,6 +45,7 @@ export function CountdownBanner() {
     const [targetDate, setTargetDate] = useState<Date | null>(null);
     const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
     const [isBlinking, setIsBlinking] = useState(false);
+    const [isPulsing, setIsPulsing] = useState(false);
 
     useEffect(() => {
         // Run only on client
@@ -57,9 +58,16 @@ export function CountdownBanner() {
         const timer = setTimeout(() => {
             const newTimeLeft = calculateTimeLeft(targetDate);
             setTimeLeft(newTimeLeft);
+            const currentSeconds = newTimeLeft.seconds;
+
+            // Pulse every 5 seconds
+            if (currentSeconds % 5 === 0 && currentSeconds !== 0) {
+                setIsPulsing(true);
+                setTimeout(() => setIsPulsing(false), 800); // duration of the pulse animation
+            }
 
             // Blink every 10 seconds
-            if (newTimeLeft.seconds % 10 === 0) {
+            if (currentSeconds % 10 === 0 && currentSeconds !== 0) {
                 setIsBlinking(true);
                 setTimeout(() => setIsBlinking(false), 700); // duration of the flash animation
             }
@@ -84,7 +92,8 @@ export function CountdownBanner() {
             <div 
                 className={cn(
                     "font-mono text-5xl md:text-6xl font-bold tracking-tighter transition-colors duration-500 text-yellow-300",
-                    isBlinking && "text-red-400 animate-flash"
+                    isBlinking && "text-red-400 animate-flash",
+                    isPulsing && "animate-pulse-fast",
                 )}
             >
                 {format(timeLeft.hours)}:{format(timeLeft.minutes)}:{format(timeLeft.seconds)}
@@ -92,4 +101,3 @@ export function CountdownBanner() {
         </div>
     );
 }
-
