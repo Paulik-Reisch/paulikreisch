@@ -1,12 +1,13 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { subscribeToNewsletterAction } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import { Confetti } from "./confetti";
 
 const initialState = { success: undefined, error: undefined, message: undefined };
 
@@ -28,15 +29,18 @@ function SubmitButton() {
 export function Newsletter() {
   const formRef = useRef<HTMLFormElement>(null);
   const [state, formAction] = useActionState(subscribeToNewsletterAction, initialState);
+  const [showConfetti, setShowConfetti] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     if (state.success) {
       toast({ title: "Fast geschafft!", description: state.message });
       formRef.current?.reset();
+      setShowConfetti(true);
     }
     if (state.error) {
       toast({ variant: "destructive", title: "Fehler", description: state.error });
+      setShowConfetti(false);
     }
   }, [state, toast]);
 
@@ -49,12 +53,13 @@ export function Newsletter() {
             Erhalten Sie exklusive Inhalte, Updates und weitere fragwürdige Lebensratschläge direkt in Ihren Posteingang. Wir versprechen, Sie nicht zuzuspammen. Kaum.
           </p>
         </div>
-        <div className="mx-auto w-full max-w-sm space-y-2">
+        <div className="mx-auto w-full max-w-sm space-y-2 relative">
           <form ref={formRef} action={formAction} className="flex space-x-2">
             <Input name="email" className="max-w-lg flex-1" placeholder="Ihre E-Mail-Adresse eingeben" type="email" required />
             <input type="hidden" name="source" value="footer-newsletter" />
             <SubmitButton />
           </form>
+           {showConfetti && <Confetti onComplete={() => setShowConfetti(false)} />}
           <p className="text-xs text-muted-foreground">
             Melden Sie sich an, um benachrichtigt zu werden, wenn wir etwas Neues veröffentlichen. Wir werden Ihre E-Mail niemals weitergeben. Wahrscheinlich.
           </p>
