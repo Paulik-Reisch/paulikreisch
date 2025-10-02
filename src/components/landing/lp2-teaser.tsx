@@ -10,7 +10,7 @@ export function LP2Teaser() {
         <div className="flex flex-col items-center justify-center space-y-6 text-center">
           <div className="space-y-4">
             <h2 className="text-4xl font-bold font-headline tracking-tighter sm:text-6xl text-balance">
-              Gierig auf mehr? Hallo Welt 2 kommt!
+              Gierig auf mehr? <span className="block">Hallo Welt 2 kommt!</span>
             </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
               Wir legen noch eine Schippe drauf. Mehr Absurdität, mehr Chaos und mehr Sätze, die man dreimal lesen muss. Seien Sie unter den Ersten, die einen exklusiven Blick darauf werfen.

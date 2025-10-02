@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { SchnickSchnackSchnuck } from "./SchnickSchnackSchnuck";
 import { cn } from "@/lib/utils";
 
-type GameState = "idle" | "playing" | "result";
+type GameState = "idle" | "playing" | "result" | "bomb";
 
 export function Authors() {
   const [gameState, setGameState] = useState<GameState>("idle");

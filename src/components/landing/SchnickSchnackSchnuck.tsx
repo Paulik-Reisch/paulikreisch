@@ -4,12 +4,12 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Gamepad2, Award } from "lucide-react";
+import { Gamepad2, Award, Bomb } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Choice = "✊" | "✋" | "✌️";
 type Player = "Paulik" | "Reisch";
-type GameState = "idle" | "playing" | "result";
+type GameState = "idle" | "playing" | "result" | "bomb";
 
 const choices: Choice[] = ["✊", "✋", "✌️"];
 
@@ -56,6 +56,16 @@ export function SchnickSchnackSchnuck({ onGameStateChange }: { onGameStateChange
       }, 500);
       return () => clearTimeout(timer);
     } else {
+      // Small chance for a bomb
+      if (Math.random() < 0.2) {
+          setGameState("bomb");
+          setTimeout(() => {
+              setGameState("idle");
+          }, 1000); // Bomb effect duration
+          setCountdown(null);
+          return;
+      }
+
       const pChoice = choices[Math.floor(Math.random() * choices.length)];
       const rChoice = choices[Math.floor(Math.random() * choices.length)];
       setPaulikChoice(pChoice);
@@ -90,6 +100,13 @@ export function SchnickSchnackSchnuck({ onGameStateChange }: { onGameStateChange
                       )}
                   </div>
               );
+          case 'bomb':
+                return (
+                    <div className="text-center h-24 flex flex-col justify-center items-center">
+                        <Bomb className="h-16 w-16 text-destructive" />
+                        <p className="font-bold text-destructive mt-2">ALLES GEHT HOCH!</p>
+                    </div>
+                );
           case 'idle':
           default:
               return (
@@ -102,7 +119,7 @@ export function SchnickSchnackSchnuck({ onGameStateChange }: { onGameStateChange
   }
 
   return (
-    <Card className="transform transition-transform duration-500 hover:scale-105 z-10">
+    <Card className={cn("transform transition-transform duration-500 hover:scale-105 z-10", gameState === 'bomb' && "animate-shake border-destructive bg-red-500/20")}>
       <CardHeader className="text-center pb-2">
         <CardTitle className="font-headline">Schnick Schnack Schnuck</CardTitle>
         <CardDescription>Paulik vs. Reisch</CardDescription>
@@ -110,7 +127,7 @@ export function SchnickSchnackSchnuck({ onGameStateChange }: { onGameStateChange
       <CardContent className="text-center">
         {renderContent()}
         <Button onClick={startGame} className="mt-4 w-full">
-            {gameState === 'result' ? "Nochmal spielen" : "Start"}
+            {gameState === 'result' || gameState === 'bomb' ? "Nochmal spielen" : "Start"}
         </Button>
       </CardContent>
     </Card>

@@ -83,7 +83,7 @@
   }
 
   .animate-shake {
-    animation: shake-horizontal 0.5s ease-in-out infinite;
+    animation: shake-horizontal 0.5s ease-in-out;
   }
 
   @keyframes slot-reel-scroll {
