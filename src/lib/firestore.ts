@@ -104,6 +104,15 @@ export interface Palabrota {
     pfeiferFaktor: number;
 }
 
+export interface Chiste {
+    id: string;
+    witz: string;
+    uebersetzung: string;
+    erklaerung: string;
+    pfeiferFaktor: number;
+    kategorie: string;
+}
+
 
 const db = getFirestore(app);
 
@@ -740,5 +749,51 @@ export async function updatePalabrota(id: string, data: Partial<Omit<Palabrota, 
 
 export async function deletePalabrota(id: string) {
     const docRef = doc(db, 'palabrotas', id);
+    await deleteDoc(docRef);
+}
+
+
+// --- CHISTES ---
+
+const defaultChistes: Omit<Chiste, 'id'>[] = [
+    { witz: "¿Qué le dice un semáforo a otro? — ¡No me mires, que me estoy cambiando!", uebersetzung: "Was sagt eine Ampel zur anderen? — Schau mich nicht an, ich ziehe mich gerade um!", erklaerung: "Wortspiel: 'cambiar' bedeutet sowohl 'sich umziehen' als auch '(Farbe) wechseln'.", pfeiferFaktor: 2, kategorie: "Wortspiel" },
+    { witz: "¿Cuál es el último animal que subió al arca de Noé? — El del-fín.", uebersetzung: "Welches ist das letzte Tier, das die Arche Noah bestieg? — Der Del-phin.", erklaerung: "Wortspiel: 'del fin' klingt wie 'delfín' (Delphin) und bedeutet 'vom Ende'.", pfeiferFaktor: 3, kategorie: "Wortspiel" },
+    { witz: "Papá, ¿qué se siente tener un hijo tan guapo? — No sé, hijo, pregúntale a tu abuelo.", uebersetzung: "Papa, wie fühlt es sich an, einen so gutaussehenden Sohn zu haben? — Ich weiß nicht, mein Sohn, frag deinen Großvater.", erklaerung: "Der Vater gibt das 'Kompliment' indirekt an sich selbst weiter.", pfeiferFaktor: 4, kategorie: "Familie" },
+    { witz: "Entra un hombre a una pajarería y pregunta: ¿Cuánto cuesta el loro? — 6.000 euros. — ¡Caramba! ¿Y qué hace? — Habla 7 idiomas y sabe de computación. — ¡Me lo llevo! Al día siguiente, vuelve: ¡El loro no ha dicho ni una palabra! — Es que es muy tímido. ¡Usted háblele primero!", uebersetzung: "Ein Mann geht in eine Tierhandlung und fragt: Was kostet der Papagei? - 6.000 Euro. - Wow! Was kann er denn? - Er spricht 7 Sprachen und kennt sich mit Computern aus. - Ich nehme ihn! Am nächsten Tag kommt er zurück: Der Papagei hat kein Wort gesagt! - Er ist nur sehr schüchtern. Sprechen Sie ihn einfach zuerst an!", erklaerung: "Eine klassische Pointe, die die hohe Erwartung mit einer banalen Ausrede bricht.", pfeiferFaktor: 5, kategorie: "Tiere" },
+    { witz: "¿Cómo se llama el campeón de buceo japonés? — Tokofondo.", uebersetzung: "Wie heißt der japanische Meister im Tauchen? — Tokofondo.", erklaerung: "Klingt wie ein japanischer Name, bedeutet aber wörtlich 'Ich berühre den Grund' (toco fondo).", pfeiferFaktor: 3, kategorie: "International" },
+    { witz: "¿Qué le dice un pez a otro? — ¡Nada!", uebersetzung: "Was sagt ein Fisch zum anderen? — Nichts! / Schwimm!", erklaerung: "Wortspiel: 'Nada' bedeutet 'nichts' und ist auch die Imperativform von 'nadar' (schwimmen).", pfeiferFaktor: 2, kategorie: "Wortspiel" },
+];
+
+export async function getChistes(): Promise<Chiste[]> {
+    try {
+        const chistesCol = collection(db, 'chistes');
+        const chistesSnapshot = await getDocs(chistesCol);
+        if (chistesSnapshot.empty) {
+            // If the collection is empty, create the default entries.
+            for (const item of defaultChistes) {
+                await addDoc(chistesCol, item);
+            }
+             const newSnapshot = await getDocs(chistesCol);
+             return newSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Chiste)).sort((a,b) => a.witz.localeCompare(b.witz));
+        }
+        return chistesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Chiste)).sort((a,b) => a.witz.localeCompare(b.witz));
+    } catch (error) {
+        console.error("Error fetching chistes, returning defaults:", error);
+        return defaultChistes.map((p, i) => ({ id: `default-${i}`, ...p })).sort((a,b) => a.witz.localeCompare(b.witz));
+    }
+}
+
+export async function addChiste(data: Omit<Chiste, 'id'>) {
+    const chistesCol = collection(db, 'chistes');
+    await addDoc(chistesCol, data);
+}
+
+export async function updateChiste(id: string, data: Partial<Omit<Chiste, 'id'>>) {
+    const docRef = doc(db, 'chistes', id);
+    await updateDoc(docRef, data);
+}
+
+export async function deleteChiste(id: string) {
+    const docRef = doc(db, 'chistes', id);
     await deleteDoc(docRef);
 }
