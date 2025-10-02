@@ -67,7 +67,7 @@ export function HW2Teaser() {
                 Viele dieser gesellschaftlichen Missstände und noch mehr Absurditäten häufen sich im neuen Buch.
             </p>
             <Link href="/lp2">
-                <Button size="lg" className="animate-pulse mt-3">
+                <Button size="lg" className="animate-sway mt-3">
                     Mehr über Hallo Welt 2 erfahren <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
             </Link>
