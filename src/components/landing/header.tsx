@@ -36,7 +36,7 @@ export function Header() {
               height={32}
               className="rounded-full"
             />
-             <span className="font-headline font-semibold text-lg">Paulik & Reisch</span>
+             <span className="font-headline font-semibold text-lg hidden">Paulik & Reisch</span>
           </div>
         </a>
         <Link href="/buchhandlung-paulik-reisch">
