@@ -1121,7 +1121,7 @@ function ExcerptsManager({ initialExcerpts }: { initialExcerpts: Excerpt[] }) {
                                     </Badge>
                                 </TableCell>
                                 <TableCell className="text-right">
-                                    <form action={updateExcerptAction} className="inline-flex gap-2">
+                                    <form action={formAction} className="inline-flex gap-2">
                                         <input type="hidden" name="slug" value={excerpt.slug} />
                                         <input type="hidden" name="isPublished" value={String(!excerpt.isPublished)} />
                                         <Button 
