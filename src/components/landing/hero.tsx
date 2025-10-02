@@ -26,7 +26,7 @@ export function Hero({ product }: { product?: Product }) {
               </Link>
             </div>
           </div>
-          <div className="relative w-full max-w-sm mx-auto md:max-w-none animate-in fade-in zoom-in-50 duration-1000">
+          <div className="relative w-full max-w-sm mx-auto md:max-w-md lg:max-w-md animate-in fade-in zoom-in-50 duration-1000">
              <Image
                 alt="Buchcover"
                 className="mx-auto overflow-hidden rounded-xl object-contain transform -rotate-3 transition-transform duration-500 hover:rotate-0 hover:scale-105"
