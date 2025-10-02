@@ -34,9 +34,9 @@ export default async function Home() {
         <Features />
         <Authors />
         <HW2Teaser />
-        <LP2Teaser />
         <Testimonials />
         <CtaBanner />
+        <LP2Teaser />
         <Newsletter />
       </main>
       <Footer />
