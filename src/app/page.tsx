@@ -11,6 +11,7 @@ import { CtaBanner } from "@/components/landing/cta-banner";
 import { HW2Teaser } from "@/components/landing/hw2-teaser";
 import { Footer } from "@/components/landing/footer";
 import { Product } from "@/lib/firestore";
+import { CountdownBanner } from "@/components/landing/countdown-banner";
 
 const hw1: Product = {
     id: "hw1",
@@ -35,6 +36,7 @@ export default async function Home() {
         <Features />
         <LP2Teaser />
         <Testimonials />
+        <CountdownBanner />
         <CtaBanner />
         <Newsletter />
       </main>
