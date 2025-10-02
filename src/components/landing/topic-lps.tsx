@@ -72,20 +72,20 @@ export function TopicLPs() {
         </div>
         
         <div className="mx-auto max-w-3xl">
-            <Accordion type="single" collapsible className="w-full">
+            <Accordion type="single" collapsible className="w-full space-y-2">
                 {topics.map((topic) => (
-                    <AccordionItem value={topic.title} key={topic.title} className="border-secondary-foreground/20">
-                        <AccordionTrigger className="text-xl font-headline hover:no-underline">
+                    <AccordionItem value={topic.title} key={topic.title} className="border-b-0 rounded-lg overflow-hidden bg-background text-foreground">
+                        <AccordionTrigger className="text-xl font-headline hover:no-underline px-6 py-4">
                             <div className="flex items-center gap-4">
                                 <topic.icon className={`h-6 w-6 ${topic.color}`} />
                                 {topic.title}
                             </div>
                         </AccordionTrigger>
-                        <AccordionContent className="pt-2">
-                           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                                <p className="text-base flex-grow">{topic.description}</p>
+                        <AccordionContent className="pt-0 px-6 pb-4">
+                           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pl-10">
+                                <p className="text-base text-muted-foreground flex-grow">{topic.description}</p>
                                 <Link href={topic.link} className="shrink-0">
-                                    <Button variant="outline" className="bg-secondary text-secondary-foreground hover:bg-secondary/80">
+                                    <Button variant="outline">
                                         Mehr erfahren <ArrowRight className="ml-2 h-4 w-4" />
                                     </Button>
                                 </Link>
