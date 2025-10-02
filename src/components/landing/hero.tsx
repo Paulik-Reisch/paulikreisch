@@ -8,7 +8,7 @@ export function Hero({ product }: { product?: Product }) {
   const imageHint = product?.aiHint || "book cover";
 
   return (
-    <section className="w-full py-12 md:py-24 lg:py-32">
+    <section className="w-full py-12 md:py-16 lg:py-20">
       <div className="container px-4 md:px-6">
         <div className="grid items-center gap-6 md:grid-cols-2 lg:gap-12">
           <div className="flex flex-col justify-center space-y-4 text-center md:text-left">
@@ -26,10 +26,10 @@ export function Hero({ product }: { product?: Product }) {
               </Link>
             </div>
           </div>
-          <div className="relative w-full max-w-sm mx-auto md:max-w-md lg:max-w-md animate-in fade-in zoom-in-50 duration-1000">
+          <div className="relative w-full max-w-sm mx-auto md:max-w-none animate-in fade-in zoom-in-50 duration-1000">
              <Image
                 alt="Buchcover"
-                className="mx-auto overflow-hidden rounded-xl object-contain transform -rotate-3 transition-transform duration-500 hover:rotate-0 hover:scale-105"
+                className="mx-auto overflow-hidden rounded-xl object-contain transform transition-transform duration-500 hover:rotate-0 hover:scale-105"
                 data-ai-hint={imageHint}
                 height="974"
                 src={imageSrc}

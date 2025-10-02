@@ -41,7 +41,7 @@ export function Newsletter() {
   }, [state, toast]);
 
   return (
-    <section id="newsletter" className="w-full py-12 md:py-24 lg:py-32" style={{ backgroundColor: 'hsl(var(--color-bg-light-pink))' }}>
+    <section id="newsletter" className="w-full py-12 md:py-16 lg:py-20" style={{ backgroundColor: 'hsl(var(--color-bg-light-pink))' }}>
       <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="space-y-3">
           <h2 className="text-3xl font-bold font-headline tracking-tighter md:text-4xl">Treten Sie der Gemeinschaft der Verwirrten bei</h2>
