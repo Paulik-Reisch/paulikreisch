@@ -31,9 +31,9 @@ export default async function Home() {
       <main className="flex-1">
         <Hero product={hw1} />
         <TopicLPs />
-        <HW2Teaser />
-        <Authors />
         <Features />
+        <Authors />
+        <HW2Teaser />
         <LP2Teaser />
         <Testimonials />
         <CtaBanner />
