@@ -66,7 +66,6 @@ function AgeVerification({ onConfirm }: { onConfirm: () => void }) {
         onConfirm();
       }
     } else {
-        // Fallback for empty input, should not happen due to 'required'
         onConfirm();
     }
   };
@@ -86,9 +85,11 @@ function AgeVerification({ onConfirm }: { onConfirm: () => void }) {
                     <Button type="submit" size="lg">
                         Alter bestätigen & fortfahren
                     </Button>
-                     <Button asChild variant="link" size="sm">
-                        <Link href="/lp-palabrotas/mehr-erfahren">Mehr zu sensiblen Inhalten</Link>
-                    </Button>
+                    <Link href="/lp-palabrotas/mehr-erfahren">
+                        <Button asChild variant="link" size="sm">
+                            <a>Mehr zu sensiblen Inhalten</a>
+                        </Button>
+                    </Link>
                 </form>
             </CardContent>
        </Card>
@@ -125,8 +126,8 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
   }
 
   return (
-    <section className="w-full">
-        <div className="py-12 md:py-16 text-center container px-4 md:px-6 bg-muted/50 border-b">
+    <section className="w-full" style={{ backgroundColor: '#d4eafc' }}>
+        <div className="py-12 md:py-16 text-center container px-4 md:px-6 border-b">
             <Badge>Pfeifer's Vermächtnis</Badge>
             <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl mt-4 text-balance">
             Der "Palabrotas"-Duden
@@ -142,7 +143,7 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                     <Input 
                         placeholder="Suchen nach Deutsch oder Spanisch..."
-                        className="pl-10 h-12 text-lg"
+                        className="pl-10 h-12 text-lg bg-white"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -155,7 +156,7 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
                             variant={pfeiferFilter === i + 1 ? 'default' : 'outline'}
                             size="sm"
                             onClick={() => setPfeiferFilter(pfeiferFilter === i + 1 ? null : i + 1)}
-                            className="flex items-center gap-1"
+                            className="flex items-center gap-1 bg-white/50"
                         >
                             {i + 1} <Flame className="h-4 w-4"/>
                         </Button>
