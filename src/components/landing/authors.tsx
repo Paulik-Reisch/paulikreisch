@@ -13,7 +13,7 @@ export function Authors() {
   const [gameState, setGameState] = useState<GameState>("idle");
 
   return (
-    <section id="authors" className="w-full pb-12 md:pb-16 lg:pb-20 bg-subtle-yellow">
+    <section id="authors" className="w-full py-12 md:py-24 lg:py-32 bg-subtle-yellow">
       <div className="container px-4 md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
