@@ -31,19 +31,11 @@ export default function RisitasPage() {
             
             <div className="mt-4 text-center max-w-3xl mx-auto prose dark:prose-invert">
                 <p className="lead">
-                    Möchtest Du ein unterhaltsames und herausforderndes Hörverständnis-Erlebnis mit Audio- und Videomaterialien erleben? Dann bist Du hier genau richtig!
+                    So witzig wie unser Buch <Link href="/buchhandlung-paulik-reisch">Hallo Welt</Link> ist auch dieses legendäre Interview mit El Risitas. Ein unterhaltsames und herausforderndes Hörverständnis-Erlebnis!
                 </p>
                 <p>
-                    Bereite Dich auf 7 Minuten reine Freude und sprachliche Finesse in perfekter Kombination vor. Lass Dich von unserem Material mitreißen und verbessere gleichzeitig Deine Sprachkenntnisse auf spielerische Weise. Worauf wartest Du noch? Tauche ein in die Welt des Hörverstehens und habe Spaß dabei!
+                    Bereite Dich auf 7 Minuten reine Freude und sprachliche Finesse vor. Worauf wartest Du noch? Tauche ein und habe Spaß dabei! <Link href="/lp-risitas/biografie" className="text-primary underline">Hier mehr über Risitas erfahren...</Link>
                 </p>
-                <div className="not-prose mt-8">
-                    <Link href="/lp-risitas/biografie">
-                        <Button variant="outline">
-                            <BookUser className="mr-2 h-4 w-4" />
-                            Biografie von Risitas lesen
-                        </Button>
-                    </Link>
-                </div>
             </div>
 
             <div className="relative aspect-video w-full rounded-xl overflow-hidden shadow-2xl border mt-12">
