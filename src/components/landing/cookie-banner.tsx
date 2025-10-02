@@ -42,7 +42,7 @@ export function CookieBanner() {
   return (
     <div className="fixed bottom-4 inset-x-0 z-50 flex justify-center">
         <Card className={cn(
-            "w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl shadow-2xl transition-all duration-300 animate-in slide-in-from-bottom-5 border-transparent",
+            "w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl shadow-2xl transition-all duration-300 animate-in slide-in-from-bottom-5",
              isExpanded ? 'p-6' : 'p-3'
             )}>
             <div className={cn("flex items-center transition-all duration-300", isExpanded && "hidden")}>
