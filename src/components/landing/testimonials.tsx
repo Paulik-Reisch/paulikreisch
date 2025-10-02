@@ -1,17 +1,16 @@
-import { Star, MessageSquareQuote } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
-import { TestimonialGenerator } from "@/components/landing/testimonial-generator";
 
 export function Testimonials() {
   return (
-    <section id="testimonials" className="w-full py-12 md:py-16 lg:py-20">
+    <section id="testimonials" className="w-full py-12 md:py-20 lg:py-24">
       <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="space-y-3">
           <h2 className="text-3xl font-bold font-headline tracking-tighter md:text-4xl/tight">
             Begeisterte Kritiken von unseren "Fans"
           </h2>
           <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-            Verlassen Sie sich nicht nur auf unser Wort. Hier ist, was einige definitiv echte Leute sagen. Oder generieren Sie unten Ihre eigene gefälschte Bewertung!
+            Verlassen Sie sich nicht nur auf unser Wort. Hier ist, was einige definitiv echte Leute sagen.
           </p>
         </div>
         <div className="grid w-full grid-cols-1 lg:grid-cols-3 gap-6 pt-8">
@@ -54,9 +53,6 @@ export function Testimonials() {
               <p className="text-right mt-2 font-semibold">– Ein Haustierbesitzer</p>
             </CardContent>
           </Card>
-        </div>
-        <div className="mt-12">
-            <TestimonialGenerator />
         </div>
       </div>
     </section>

@@ -65,7 +65,7 @@ export function TestimonialGenerator() {
               <Input id="topic" name="topic" placeholder="z.B. 'Der Sinn des Lebens'" defaultValue="Das Buch 'Hallo Welt'" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="customerType">Geschrieben von einem...</Label>
+              <Label htmlFor="customerType">Geschrieben von einem ...</Label>
               <Input id="customerType" name="customerType" placeholder="z.B. 'mürrische Katze'" defaultValue="Philosoph" />
             </div>
           </div>
