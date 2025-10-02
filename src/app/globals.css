@@ -109,4 +109,13 @@
     animation: flame-in 0.3s ease-out forwards;
     opacity: 0; /* Start as invisible */
   }
+
+  .text-link {
+    @apply font-medium text-foreground underline decoration-dotted underline-offset-4 decoration-gray-400;
+  }
+
+  .text-link::after {
+    content: ' ↗';
+    @apply text-gray-400;
+  }
 }

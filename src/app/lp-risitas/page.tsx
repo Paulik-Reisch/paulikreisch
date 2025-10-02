@@ -31,10 +31,10 @@ export default function RisitasPage() {
             
             <div className="mt-4 text-center max-w-3xl mx-auto prose dark:prose-invert">
                 <p className="lead">
-                    So witzig wie unser Buch <Link href="/buchhandlung-paulik-reisch">Hallo Welt</Link> ist auch dieses legendäre Interview mit El Risitas. Ein unterhaltsames und herausforderndes Hörverständnis-Erlebnis!
+                    So witzig wie unser Buch <Link href="/buchhandlung-paulik-reisch" className="text-link">Hallo Welt</Link> ist auch dieses legendäre Interview mit El Risitas. Ein unterhaltsames und herausforderndes Hörverständnis-Erlebnis!
                 </p>
                 <p>
-                    Bereite Dich auf 7 Minuten reine Freude und sprachliche Finesse vor. Worauf wartest Du noch? Tauche ein und habe Spaß dabei! <Link href="/lp-risitas/biografie" className="text-primary underline">Hier mehr über Risitas erfahren...</Link>
+                    Bereite Dich auf 7 Minuten reine Freude und sprachliche Finesse vor. Worauf wartest Du noch? Tauche ein und habe Spaß dabei! <Link href="/lp-risitas/biografie" className="text-link">Hier mehr über Risitas erfahren</Link>
                 </p>
             </div>
 
