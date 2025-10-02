@@ -1,3 +1,4 @@
+
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import Link from "next/link";
@@ -18,6 +19,21 @@ export default function RisitasPage() {
                 Risitas está riéndose
               </h1>
             </div>
+            
+            <div className="mt-4 text-center max-w-3xl mx-auto prose dark:prose-invert">
+                <p className="lead">
+                    Möchtest Du ein unterhaltsames und herausforderndes Hörverständnis-Erlebnis mit Audio- und Videomaterialien erleben? Dann bist Du hier genau richtig!
+                </p>
+                <p>
+                    Bereite Dich auf 7 Minuten reine Freude und sprachliche Finesse in perfekter Kombination vor. Lass Dich von unserem Material mitreißen und verbessere gleichzeitig Deine Sprachkenntnisse auf spielerische Weise. Worauf wartest Du noch? Tauche ein in die Welt des Hörverstehens und habe Spaß dabei!
+                </p>
+            </div>
+            <div className="text-center my-8">
+                <Link href="/lp-risitas/legales" className="text-xs text-muted-foreground hover:underline">
+                    Rechtsbelehrung – Externe Medien
+                </Link>
+                <p className="text-xs text-muted-foreground mt-1">© RAVE_ZERO — YouTube</p>
+            </div>
 
             <div className="relative aspect-video w-full rounded-xl overflow-hidden shadow-2xl border">
               <iframe
@@ -30,19 +46,6 @@ export default function RisitasPage() {
               ></iframe>
             </div>
             
-            <div className="mt-12 text-center max-w-3xl mx-auto prose dark:prose-invert">
-                <p className="lead">
-                    Möchtest Du ein unterhaltsames und herausforderndes Hörverständnis-Erlebnis mit Audio- und Videomaterialien erleben? Dann bist Du hier genau richtig!
-                </p>
-                <p>
-                    Bereite Dich auf 7 Minuten reine Freude und sprachliche Finesse in perfekter Kombination vor. Lass Dich von unserem Material mitreißen und verbessere gleichzeitig Deine Sprachkenntnisse auf spielerische Weise. Worauf wartest Du noch? Tauche ein in die Welt des Hörverstehens und habe Spaß dabei!
-                </p>
-            </div>
-            <div className="text-center mt-8">
-                <Link href="/lp-risitas/legales" className="text-xs text-muted-foreground hover:underline">
-                    Rechtsbelehrung – Externe Medien
-                </Link>
-            </div>
           </div>
         </div>
       </main>
