@@ -84,13 +84,11 @@ function AgeVerification({ onConfirm }: { onConfirm: () => void }) {
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <Input type="date" name="birthdate" required className="text-center"/>
                     <Button type="submit" size="lg">
-                        Alter bestätigen
+                        Alter bestätigen & fortfahren
                     </Button>
-                     <Link href="/lp-palabrotas/mehr-erfahren" passHref>
-                        <Button asChild variant="ghost" size="lg">
-                           <a>Mehr zu sensiblen Inhalten</a>
-                        </Button>
-                    </Link>
+                    <Button asChild variant="ghost" size="lg">
+                        <Link href="/lp-palabrotas/mehr-erfahren">Mehr zu sensiblen Inhalten</Link>
+                    </Button>
                 </form>
                  <p className="text-xs text-muted-foreground pt-4">
                     Indem du fortfährst, stimmst du zu, dass wir deine Daten (imaginär) sammeln, um dein Nutzererlebnis (vermutlich) zu verbessern.
@@ -114,8 +112,7 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
 
   return (
     <section className="w-full">
-    <div className="container px-4 md:px-6">
-        <div className="py-12 md:py-16 text-center">
+        <div className="py-12 md:py-16 text-center container px-4 md:px-6">
             <Badge>Pfeifer's Vermächtnis</Badge>
             <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl mt-4 text-balance">
             Der "Palabrotas"-Duden
@@ -125,7 +122,7 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
             </p>
         </div>
 
-        <div className="max-w-4xl mx-auto pb-12 md:pb-24">
+        <div className="max-w-4xl mx-auto pb-12 md:pb-24 container px-4 md:px-6">
             <Accordion type="single" collapsible className="w-full space-y-4">
                 {vocabulary.map((word) => (
                     <AccordionItem key={word.id} value={word.id} className="border-b-0">
@@ -162,7 +159,6 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
             </Accordion>
         <p className="text-xs text-center text-muted-foreground mt-4">*Haftungsausschluss: Die Autoren übernehmen keine Verantwortung für daraus resultierende soziale oder diplomatische Verwicklungen.</p>
         </div>
-    </div>
     </section>
   );
 }
