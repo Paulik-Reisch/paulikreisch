@@ -16,7 +16,7 @@ function ChiquitoName() {
   } else if (p === '2') {
     name = 'Philipp';
   } else {
-    name = 'nadie es';
+    name = 'Nadie';
   }
 
   return (
@@ -35,7 +35,7 @@ function ChiquitoPageContent() {
   );
 }
 
-export default function FelipeElChiquitoPage() {
+export default function MaxElChiquitoPage() {
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
       <Header />
