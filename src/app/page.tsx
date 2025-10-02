@@ -36,7 +36,6 @@ export default async function Home() {
         <Features />
         <LP2Teaser />
         <Testimonials />
-        <CountdownBanner />
         <CtaBanner />
         <Newsletter />
       </main>

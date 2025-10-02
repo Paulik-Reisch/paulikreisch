@@ -82,24 +82,20 @@ export function CountdownBanner() {
     const format = (num: number) => String(num).padStart(2, '0');
 
     return (
-        <section id="countdown-banner" className="w-full py-6 md:py-8 bg-background">
-            <div className="container px-4 md:px-6">
-                <div className="flex flex-col items-center justify-center space-y-2 text-center">
-                    <h3 className="font-bold font-headline tracking-tighter text-2xl sm:text-3xl flex items-center gap-2">
-                        <Timer className="h-6 w-6 text-primary"/>
-                        Verbleibende Angebotszeit:
-                    </h3>
-                    <div 
-                        className={cn(
-                            "font-mono text-5xl md:text-6xl font-bold tracking-tighter transition-all duration-500 text-yellow-500",
-                            isPulsing && "scale-110",
-                            isBlinking && "text-red-500 animate-ping"
-                        )}
-                    >
-                        {format(timeLeft.hours)}:{format(timeLeft.minutes)}:{format(timeLeft.seconds)}
-                    </div>
-                </div>
+        <div className="flex flex-col items-center justify-center space-y-2 text-center">
+            <h3 className="font-bold font-headline tracking-tighter text-2xl sm:text-3xl flex items-center gap-2 text-primary-foreground/90">
+                <Timer className="h-6 w-6"/>
+                Verbleibende Angebotszeit:
+            </h3>
+            <div 
+                className={cn(
+                    "font-mono text-5xl md:text-6xl font-bold tracking-tighter transition-all duration-500 text-yellow-300",
+                    isPulsing && "scale-110",
+                    isBlinking && "text-red-400 animate-ping"
+                )}
+            >
+                {format(timeLeft.hours)}:{format(timeLeft.minutes)}:{format(timeLeft.seconds)}
             </div>
-        </section>
+        </div>
     );
 }
