@@ -60,12 +60,12 @@ const topics = [
 
 export function TopicLPs() {
   return (
-    <section id="topic-lps" className="w-full py-12 md:py-16 lg:py-20 bg-subtle-yellow">
+    <section id="topic-lps" className="w-full py-12 md:py-16 lg:py-20 bg-secondary text-secondary-foreground">
       <div className="container px-4 md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
           <div className="space-y-2">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Was dich interessieren könnte:</h2>
-            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
+            <p className="max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
               Unser Buch hat viele Facetten. Welche spricht dich am meisten an? Finde es heraus!
             </p>
           </div>
@@ -74,7 +74,7 @@ export function TopicLPs() {
         <div className="mx-auto max-w-3xl">
             <Accordion type="single" collapsible className="w-full">
                 {topics.map((topic) => (
-                    <AccordionItem value={topic.title} key={topic.title}>
+                    <AccordionItem value={topic.title} key={topic.title} className="border-secondary-foreground/20">
                         <AccordionTrigger className="text-xl font-headline hover:no-underline">
                             <div className="flex items-center gap-4">
                                 <topic.icon className={`h-6 w-6 ${topic.color}`} />
@@ -83,9 +83,9 @@ export function TopicLPs() {
                         </AccordionTrigger>
                         <AccordionContent className="pt-2">
                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                                <p className="text-muted-foreground text-base flex-grow">{topic.description}</p>
+                                <p className="text-base flex-grow">{topic.description}</p>
                                 <Link href={topic.link} className="shrink-0">
-                                    <Button variant="outline">
+                                    <Button variant="outline" className="bg-secondary text-secondary-foreground hover:bg-secondary/80">
                                         Mehr erfahren <ArrowRight className="ml-2 h-4 w-4" />
                                     </Button>
                                 </Link>
