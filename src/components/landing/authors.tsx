@@ -10,7 +10,7 @@ export function Authors() {
           <div className="space-y-2">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Treffen Sie die verdrehten Köpfe</h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-              Zwei Autoren, ein fragwürdiger Sinn für Humor. Wahrscheinlich haben sie das irgendwo in einem Keller geschrieben.
+              Zwei Autoren, ein fragwürdiger Sinn für Humor.
             </p>
           </div>
         </div>
