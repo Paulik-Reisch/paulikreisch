@@ -8,7 +8,6 @@ import { LP2Teaser } from "@/components/landing/lp2-teaser";
 import { Testimonials } from "@/components/landing/testimonials";
 import { Newsletter } from "@/components/landing/newsletter";
 import { CtaBanner } from "@/components/landing/cta-banner";
-import { RandomTeaser } from "@/components/landing/random-teaser";
 import { HW2Teaser } from "@/components/landing/hw2-teaser";
 import { Footer } from "@/components/landing/footer";
 import { Product } from "@/lib/firestore";
@@ -37,7 +36,6 @@ export default async function Home() {
         <LP2Teaser />
         <Testimonials />
         <CtaBanner />
-        <RandomTeaser />
         <Newsletter />
       </main>
       <Footer />
