@@ -7,10 +7,10 @@ export function Testimonials() {
       <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="space-y-3">
           <h2 className="text-3xl font-bold font-headline tracking-tighter md:text-4xl/tight">
-            Begeisterte Kritiken von unseren "Fans"
+            Begeisterte Kritiken von unseren Fans
           </h2>
           <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-            Verlassen Sie sich nicht nur auf unser Wort. Hier ist, was einige definitiv echte Leute sagen.
+            Verlassen Sie sich nicht nur auf unser Wort.
           </p>
         </div>
         <div className="grid w-full grid-cols-1 lg:grid-cols-3 gap-6 pt-8">
