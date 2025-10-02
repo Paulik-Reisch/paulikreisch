@@ -25,12 +25,17 @@ const getWinner = (choice1: Choice, choice2: Choice): Player | "unentschieden" =
   return "Reisch";
 };
 
-export function SchnickSchnackSchnuck() {
+export function SchnickSchnackSchnuck({ onGameStateChange }: { onGameStateChange: (state: GameState) => void; }) {
   const [gameState, setGameState] = useState<GameState>("idle");
   const [paulikChoice, setPaulikChoice] = useState<Choice | null>(null);
   const [reischChoice, setReischChoice] = useState<Choice | null>(null);
   const [winner, setWinner] = useState<Player | "unentschieden" | null>(null);
   const [countdown, setCountdown] = useState<number | null>(null);
+
+  useEffect(() => {
+    onGameStateChange(gameState);
+  }, [gameState, onGameStateChange]);
+
 
   const startGame = () => {
     setGameState("playing");
@@ -99,7 +104,7 @@ export function SchnickSchnackSchnuck() {
   return (
     <Card className="transform transition-transform duration-500 hover:scale-105 z-10">
       <CardHeader className="text-center pb-2">
-        <CardTitle className="font-headline">Schnick-Schnack-Schnuck</CardTitle>
+        <CardTitle className="font-headline">Schnick Schnack Schnuck</CardTitle>
         <CardDescription>Paulik vs. Reisch</CardDescription>
       </CardHeader>
       <CardContent className="text-center">

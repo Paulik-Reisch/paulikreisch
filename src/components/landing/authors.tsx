@@ -1,11 +1,19 @@
 
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { SchnickSchnackSchnuck } from "./SchnickSchnackSchnuck";
+import { cn } from "@/lib/utils";
+
+type GameState = "idle" | "playing" | "result";
 
 export function Authors() {
+  const [gameState, setGameState] = useState<GameState>("idle");
+
   return (
-    <section id="authors" className="w-full py-12 md:py-16 lg:py-20 bg-background">
+    <section id="authors" className="w-full py-12 md:py-16 lg:py-20 bg-subtle-yellow">
       <div className="container px-4 md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
@@ -13,7 +21,7 @@ export function Authors() {
           </div>
         </div>
         <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-1 md:gap-12 lg:max-w-none lg:grid-cols-3 mt-12">
-          <Card className="transform transition-transform duration-500 hover:scale-105 hover:-rotate-1 -rotate-2">
+          <Card className={cn("transform transition-transform duration-500 hover:scale-105 hover:-rotate-1 -rotate-2", gameState === 'playing' && "animate-sway")}>
             <CardHeader className="text-center">
               <Image
                 alt="Autor Paulik"
@@ -37,9 +45,9 @@ export function Authors() {
             </CardContent>
           </Card>
 
-          <SchnickSchnackSchnuck />
+          <SchnickSchnackSchnuck onGameStateChange={setGameState} />
 
-          <Card className="transform transition-transform duration-500 hover:scale-105 hover:rotate-1 rotate-2">
+          <Card className={cn("transform transition-transform duration-500 hover:scale-105 hover:rotate-1 rotate-2", gameState === 'playing' && "animate-sway")} style={{ animationDelay: '0.1s' }}>
             <CardHeader className="text-center">
               <Image
                 alt="Autor Reisch"

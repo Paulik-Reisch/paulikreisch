@@ -64,9 +64,9 @@ export function TopicLPs() {
       <div className="container px-4 md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Was dich interessieren könnte:</h2>
+            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Was dich interessieren könnte</h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-              Unser Buch hat viele Facetten. Welche spricht dich am meisten an? Finde es heraus!
+              Unser Buch hat viele Facetten. Welche spricht dich am meisten an?
             </p>
           </div>
         </div>
