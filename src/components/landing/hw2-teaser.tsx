@@ -6,8 +6,8 @@ import { FileWarning, WifiOff, Home, ArrowRight } from 'lucide-react';
 
 const topics = [
     {
-        title: "Bürokratie Simulator 3000",
-        description: "Füllen Sie den Antrag auf Beantragung eines Antragsformulars aus. Digital, effizient, zum Verzweifeln.",
+        title: "Bürokratie Simulator",
+        description: "Füllen Sie den Antrag auf Beantragung eines Antragsformulars aus. Digital, effizient – zum Verzweifeln.",
         link: "/lp-buerokratie-simulator",
         icon: FileWarning,
         cta: "Zum Antrag",
@@ -21,7 +21,7 @@ const topics = [
     },
     {
         title: "Der Mietenwahnsinn",
-        description: "10m² für 1.000€. Konfigurieren Sie Ihr Luxus-WG-Zimmer mit unserem Preisrechner.",
+        description: "10 m² für 1.000 €. Konfigurieren Sie Ihr Luxus-WG-Zimmer mit unserem Preisrechner.",
         link: "/lp-mietenwahnsinn",
         icon: Home,
         cta: "Miete berechnen",
@@ -30,7 +30,7 @@ const topics = [
 
 export function HW2Teaser() {
   return (
-    <section id="hw2-teaser" className="w-full py-12 md:py-16 lg:py-20" style={{ backgroundColor: 'hsl(var(--color-bg-light-pink))' }}>
+    <section id="hw2-teaser" className="w-full py-12 md:py-16 lg:py-20" style={{ backgroundColor: '#ff69b4' }}>
       <div className="container px-4 md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
