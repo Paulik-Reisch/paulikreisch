@@ -10,7 +10,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Flame, Plus, Search, FilterX } from "lucide-react";
+import { Flame, Plus, Search, FilterX, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Palabrota } from "@/lib/firestore";
 import { Button } from "../ui/button";
@@ -172,17 +172,25 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
             <Accordion type="single" collapsible className="w-full space-y-2">
                 {filteredVocabulary.map((word) => (
                     <AccordionItem key={word.id} value={word.id} className="border-b-0">
-                        <AccordionTrigger className="text-xl font-semibold hover:no-underline rounded-lg p-0 bg-card data-[state=open]:rounded-b-none transition-all text-left group">
+                        <AccordionTrigger className="text-xl font-semibold hover:no-underline rounded-lg p-0 bg-white data-[state=open]:rounded-b-none transition-all text-left group">
                             <div className="flex flex-col md:flex-row items-center w-full">
-                                <div className="flex-1 px-4 py-3 text-lg font-semibold w-full text-center md:text-left">{word.de}</div>
-                                <hr className="w-full md:hidden" />
-                                <div className="flex-1 px-4 py-3 text-lg italic text-muted-foreground w-full text-center md:text-left md:border-l md:border-r">{word.es}</div>
-                                <div className="px-4 py-3 hidden md:block">
-                                    <Plus className="h-6 w-6 text-muted-foreground transition-transform duration-300 group-data-[state=open]:rotate-45" />
+                                {/* Mobile layout */}
+                                <div className="w-full md:hidden flex flex-col items-center py-3">
+                                  <div className="text-lg font-semibold">{word.de}</div>
+                                  <ChevronDown className="h-6 w-6 text-muted-foreground transition-transform duration-300 group-data-[state=open]:rotate-180 my-1" />
+                                  <div className="text-lg italic text-muted-foreground">{word.es}</div>
+                                </div>
+                                {/* Desktop layout */}
+                                <div className="hidden md:flex flex-1 items-center w-full">
+                                  <div className="flex-1 px-4 py-3 text-lg font-semibold">{word.de}</div>
+                                  <div className="flex-1 px-4 py-3 text-lg italic text-muted-foreground border-l border-r">{word.es}</div>
+                                  <div className="px-4 py-3">
+                                      <Plus className="h-6 w-6 text-muted-foreground transition-transform duration-300 group-data-[state=open]:rotate-45" />
+                                  </div>
                                 </div>
                             </div>
                         </AccordionTrigger>
-                        <AccordionContent className="p-6 border border-t-0 rounded-b-lg bg-card text-base">
+                        <AccordionContent className="p-6 border border-t-0 rounded-b-lg bg-white text-base">
                             <div className="grid md:grid-cols-2 gap-x-8 gap-y-6">
                                 <DetailRow label="Wortart">
                                     <p className="font-semibold">{word.wortart}</p>
