@@ -38,19 +38,19 @@ function DetailRow({ label, children }: { label: string; children: React.ReactNo
 
 export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
   return (
-    <section className="w-full py-12 md:py-24 lg:py-32">
+    <section className="w-full">
       <div className="container px-4 md:px-6">
-        <div className="flex flex-col items-center space-y-6 text-center">
+        <div className="py-12 md:py-16 text-center">
             <Badge>Pfeifer's Vermächtnis</Badge>
-            <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl xl:text-8xl/none text-balance">
+            <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl mt-4 text-balance">
               Der "Palabrotas"-Duden
             </h1>
-            <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl text-balance">
+            <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl mt-4 text-balance">
               Ein essenzieller Wortschatz für den modernen Weltbürger. Präsentiert von der R. Pfeifer Akademie für angewandte Linguistik und zwischenmenschliche Eskalation.
             </p>
         </div>
 
-        <div className="max-w-4xl mx-auto mt-12">
+        <div className="max-w-4xl mx-auto pb-12 md:pb-24">
             <Accordion type="single" collapsible className="w-full space-y-4">
                 {vocabulary.map((word) => (
                     <AccordionItem key={word.id} value={word.id} className="border-b-0">

@@ -25,7 +25,7 @@ export function HeroCoronaSatire() {
             className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-first transform rotate-3 transition-transform duration-500 hover:rotate-0 hover:scale-105 shadow-2xl"
             data-ai-hint="medical test funny"
             height="310"
-            src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.appspot.com/o/corona.png?alt=media&token=e85455c1-b0c4-4f46-8fac-d9fb346de97d"
+            src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/corona.png?alt=media&token=e85455c1-b0c4-4f46-8fac-d9fb346de97d"
             width="550"
           />
         </div>
