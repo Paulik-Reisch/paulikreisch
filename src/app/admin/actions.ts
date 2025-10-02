@@ -659,19 +659,16 @@ export async function updateExcerptAction(
   prevState: AdminExcerptState,
   formData: FormData
 ): Promise<AdminExcerptState> {
-  const isPublished = formData.get("isPublished") === "true";
-  const slug = formData.get("slug");
   
-  if (typeof slug !== 'string') {
-      return { success: false, error: "Ungültiger Slug." };
-  }
+  const formEntries = Object.fromEntries(formData.entries());
+  
+  const dataToValidate: { [key: string]: any } = {};
+  if (formEntries.slug) dataToValidate.slug = formEntries.slug;
+  if (formEntries.title) dataToValidate.title = formEntries.title;
+  if (formEntries.content) dataToValidate.content = formEntries.content;
+  if (formEntries.isPublished) dataToValidate.isPublished = formEntries.isPublished === 'true';
 
-  const validatedFields = UpdateExcerptSchema.safeParse({
-      slug: slug,
-      title: formData.get("title"),
-      content: formData.get("content"),
-      isPublished: isPublished
-  });
+  const validatedFields = UpdateExcerptSchema.safeParse(dataToValidate);
 
   if (!validatedFields.success) {
     const errorMessages = validatedFields.error.errors.map((e) => e.message).join(". ");
@@ -679,10 +676,10 @@ export async function updateExcerptAction(
   }
 
   try {
-    const { slug: excerptSlug, ...dataToUpdate } = validatedFields.data;
-    await updateExcerpt(excerptSlug, dataToUpdate);
+    const { slug, ...dataToUpdate } = validatedFields.data;
+    await updateExcerpt(slug, dataToUpdate);
     revalidatePath("/admin");
-    revalidatePath(`/exzerpt/${excerptSlug}`);
+    revalidatePath(`/exzerpt/${slug}`);
     revalidatePath('/exzerpte');
     return { success: true, message: "Exzerpt erfolgreich aktualisiert." };
   } catch (e) {
