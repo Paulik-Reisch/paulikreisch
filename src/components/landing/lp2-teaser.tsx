@@ -17,7 +17,7 @@ export function LP2Teaser() {
             </p>
           </div>
           <Link href="/lp2">
-            <Button size="lg" className="animate-pulse">
+            <Button size="lg" className="animate-shake">
               Zu Hallo Welt 2 <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
