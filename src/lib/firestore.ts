@@ -869,7 +869,8 @@ export async function getExcerpt(slug: string): Promise<Excerpt | null> {
         const data = docSnap.data();
         return {
             id: docSnap.id,
-            ...data
+            ...data,
+            lastUpdated: (data.lastUpdated as Timestamp).toDate().toISOString(),
         } as Excerpt;
     }
     return null;
