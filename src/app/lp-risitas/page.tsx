@@ -7,7 +7,7 @@ import { Footer } from "@/components/landing/footer";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from '@/components/ui/button';
-import { ShieldCheck } from 'lucide-react';
+import { ShieldCheck, BookUser } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 
@@ -36,6 +36,14 @@ export default function RisitasPage() {
                 <p>
                     Bereite Dich auf 7 Minuten reine Freude und sprachliche Finesse in perfekter Kombination vor. Lass Dich von unserem Material mitreißen und verbessere gleichzeitig Deine Sprachkenntnisse auf spielerische Weise. Worauf wartest Du noch? Tauche ein in die Welt des Hörverstehens und habe Spaß dabei!
                 </p>
+                <div className="not-prose mt-8">
+                    <Link href="/lp-risitas/biografie">
+                        <Button variant="outline">
+                            <BookUser className="mr-2 h-4 w-4" />
+                            Biografie von Risitas lesen
+                        </Button>
+                    </Link>
+                </div>
             </div>
 
             <div className="relative aspect-video w-full rounded-xl overflow-hidden shadow-2xl border mt-12">
