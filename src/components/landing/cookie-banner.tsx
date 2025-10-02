@@ -4,7 +4,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Cookie } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Card } from '../ui/card';
 
@@ -43,7 +42,7 @@ export function CookieBanner() {
   return (
     <div className="fixed bottom-4 inset-x-0 z-50 flex justify-center">
         <Card className={cn(
-            "w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl shadow-2xl transition-all duration-300 animate-in slide-in-from-bottom-5 border-transparent rounded-[1.3125rem]",
+            "w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl shadow-2xl transition-all duration-300 animate-in slide-in-from-bottom-5 border-transparent",
              isExpanded ? 'p-6' : 'p-3'
             )}>
             <div className={cn("flex items-center transition-all duration-300", isExpanded && "hidden")}>
@@ -56,7 +55,7 @@ export function CookieBanner() {
                 <Button onClick={handleAccept} size="sm" className="shrink-0">Okay</Button>
             </div>
             <div className={cn("space-y-4", !isExpanded && "hidden")}>
-                <h3 className="font-bold font-headline text-lg flex items-center gap-2"><Cookie/>Die Verwendung von Cookies durch Hallo Welt</h3>
+                <h3 className="font-bold font-headline text-lg">Die Verwendung von Cookies durch Hallo Welt</h3>
                 <p className="text-sm text-muted-foreground">
                     Wir verwenden Cookies, um Benutzern die bestmögliche Nutzer-Erfahrung zu ermöglichen. Bitte lesen Sie unsere <Link href="/cookie-richtlinie" className="underline hover:text-primary font-semibold">Cookie-Richtlinie</Link>. Indem Sie akzeptieren, stimmen Sie der Speicherung von absolut nutzlosen, aber technisch notwendigen Cookies auf Ihrem Gerät zu.
                 </p>
