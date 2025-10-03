@@ -422,7 +422,7 @@ export function EditorClient({ page }: { page: LegalPage }) {
     } else if (page.content) {
         setHasManuallyEditedHtml(true);
     }
-  }, []); // Run only once on mount
+  }, [page.lastUpdated, page.components, page.content]);
 
   useEffect(() => {
       if (!hasManuallyEditedHtml) {
