@@ -63,6 +63,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
+import { Switch } from "@/components/ui/switch";
 
 function generatePageHtml(components: PageComponent[]): string {
     return components.map(component => {
@@ -400,6 +401,9 @@ export function EditorClient({ page }: { page: LegalPage }) {
   const [generatedHtml, setGeneratedHtml] = useState(page.content || '');
   const [hasManuallyEditedHtml, setHasManuallyEditedHtml] = useState(false);
   const [formattedDate, setFormattedDate] = useState<string | null>(null);
+  const [showTitle, setShowTitle] = useState(page.showTitle !== false);
+  const [showDate, setShowDate] = useState(page.showDate !== false);
+
 
   const [updateState, updateFormAction] = useActionState(updateLegalPageAction, initialLegalPageState);
   const [correctState, correctFormAction] = useActionState(correctHtmlAction, { correctedHtml: undefined, error: undefined });
@@ -452,6 +456,8 @@ export function EditorClient({ page }: { page: LegalPage }) {
     startSavingTransition(() => {
         formData.set('pageId', page.id);
         formData.set('title', title);
+        formData.set('showTitle', String(showTitle));
+        formData.set('showDate', String(showDate));
         
         if(hasManuallyEditedHtml) {
             formData.set('content', generatedHtml);
@@ -540,6 +546,28 @@ export function EditorClient({ page }: { page: LegalPage }) {
                  <div className="text-sm text-muted-foreground">
                     Zuletzt aktualisiert: {formattedDate || <Skeleton className="h-4 w-32 inline-block" />}
                 </div>
+
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between rounded-lg border p-3">
+                        <div className="space-y-0.5">
+                            <Label>Titel anzeigen</Label>
+                            <p className="text-xs text-muted-foreground">
+                                Zeigt den Titel auf der Live-Seite an.
+                            </p>
+                        </div>
+                        <Switch checked={showTitle} onCheckedChange={setShowTitle} />
+                    </div>
+                     <div className="flex items-center justify-between rounded-lg border p-3">
+                        <div className="space-y-0.5">
+                            <Label>Datum anzeigen</Label>
+                            <p className="text-xs text-muted-foreground">
+                                Zeigt das "Zuletzt aktualisiert"-Datum an.
+                            </p>
+                        </div>
+                        <Switch checked={showDate} onCheckedChange={setShowDate} />
+                    </div>
+                </div>
+
                 <div>
                     <h3 className="text-sm font-medium mb-2">Komponenten</h3>
                      {hasManuallyEditedHtml && (

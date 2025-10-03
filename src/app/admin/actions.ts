@@ -372,6 +372,8 @@ const UpdateLegalPageSchema = z.object({
   title: z.string().min(1, "Titel darf nicht leer sein."),
   content: z.string(),
   components: z.string(),
+  showTitle: z.boolean(),
+  showDate: z.boolean(),
 });
 
 export type AdminLegalPageState = {
@@ -386,7 +388,12 @@ export async function updateLegalPageAction(
   prevState: AdminLegalPageState,
   formData: FormData
 ): Promise<AdminLegalPageState> {
-  const validatedFields = UpdateLegalPageSchema.safeParse(Object.fromEntries(formData.entries()));
+  const rawData = Object.fromEntries(formData.entries());
+  const validatedFields = UpdateLegalPageSchema.safeParse({
+      ...rawData,
+      showTitle: rawData.showTitle === 'true',
+      showDate: rawData.showDate === 'true',
+  });
 
   if (!validatedFields.success) {
     const errorMessages = validatedFields.error.errors.map((e) => e.message).join(". ");
@@ -394,13 +401,12 @@ export async function updateLegalPageAction(
   }
 
   try {
-    const { pageId, title, content, components } = validatedFields.data;
-    const pageData = {
-        title,
-        content,
-        components: JSON.parse(components),
+    const { pageId, ...pageData } = validatedFields.data;
+    const finalData = {
+        ...pageData,
+        components: JSON.parse(pageData.components),
     };
-    await updateLegalPage(pageId, pageData);
+    await updateLegalPage(pageId, finalData);
     revalidatePath("/admin");
     revalidatePath(`/${pageId}`);
     return { success: true, message: "Seite erfolgreich aktualisiert." };
@@ -646,6 +652,7 @@ export type AdminExcerptState = {
   success: boolean;
   error?: string | null;
   message?: string;
+  formData?: FormData;
 };
 
 const UpdateExcerptSchema = z.object({
@@ -681,7 +688,7 @@ export async function updateExcerptAction(
     revalidatePath("/admin");
     revalidatePath(`/exzerpt/${slug}`);
     revalidatePath('/exzerpte');
-    return { success: true, message: "Exzerpt erfolgreich aktualisiert." };
+    return { success: true, message: "Exzerpt erfolgreich aktualisiert.", formData };
   } catch (e) {
     const error = e as Error;
     return { success: false, error: "Fehler beim Aktualisieren: " + error.message };

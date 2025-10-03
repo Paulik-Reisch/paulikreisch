@@ -50,6 +50,8 @@ export interface LegalPage {
     content: string; // Will store the generated HTML for preview, components are the source of truth
     components: PageComponent[];
     lastUpdated: string;
+    showTitle?: boolean;
+    showDate?: boolean;
 }
 
 export interface NewsletterComponent {
@@ -242,11 +244,11 @@ export async function addTagsToSubscribers(subscriberIds: string[], tags: string
 
 // --- LEGAL PAGES ---
 const defaultLegalPages: LegalPage[] = [
-    { id: 'impressum', title: 'Impressum', content: '<p>Hier steht das Impressum.</p>', components: [], lastUpdated: new Date().toISOString() },
-    { id: 'datenschutz', title: 'Datenschutzerklärung', content: '<p>Hier steht die Datenschutzerklärung.</p>', components: [], lastUpdated: new Date().toISOString() },
-    { id: 'agb', title: 'AGB', content: '<p>Hier stehen die AGB.</p>', components: [], lastUpdated: new Date().toISOString() },
-    { id: 'cookie-richtlinie', title: 'Cookie-Richtlinie', content: '<p>Hier stehen die Cookie-Richtlinien.</p>', components: [], lastUpdated: new Date().toISOString() },
-    { id: 'lizenz', title: 'Lizenz', content: '<p>Hier stehen die Lizenzinformationen.</p>', components: [], lastUpdated: new Date().toISOString() },
+    { id: 'impressum', title: 'Impressum', content: '<p>Hier steht das Impressum.</p>', components: [], lastUpdated: new Date().toISOString(), showTitle: true, showDate: true },
+    { id: 'datenschutz', title: 'Datenschutzerklärung', content: '<p>Hier steht die Datenschutzerklärung.</p>', components: [], lastUpdated: new Date().toISOString(), showTitle: true, showDate: true },
+    { id: 'agb', title: 'AGB', content: '<p>Hier stehen die AGB.</p>', components: [], lastUpdated: new Date().toISOString(), showTitle: true, showDate: true },
+    { id: 'cookie-richtlinie', title: 'Cookie-Richtlinie', content: '<p>Hier stehen die Cookie-Richtlinien.</p>', components: [], lastUpdated: new Date().toISOString(), showTitle: true, showDate: true },
+    { id: 'lizenz', title: 'Lizenz', content: '<h2 class="font-headline">Software-Lizenz (MIT)</h2><p>Die Software und der Quellcode dieser Webseite sind unter der MIT-Lizenz veröffentlicht. Das bedeutet, Sie können damit tun, was immer Sie wollen, solange Sie den ursprünglichen Copyright-Hinweis beibehalten. Wenn Sie einen Fehler finden, dürfen Sie ihn behalten.</p><h2 class="font-headline mt-8">Inhalts-Lizenz (CC BY-NC-ND 4.0)</h2><p>Alle kreativen Inhalte – Texte, Bilder, satirische Ergüsse – sind urheberrechtlich geschützt und unterliegen der <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.de" target="_blank" rel="noopener noreferrer" class="underline">Creative Commons Namensnennung-NichtKommerziell-KeineBearbeitung 4.0 International Lizenz</a>. Das heißt im Klartext: Sie dürfen unsere Genialität gerne teilen, solange Sie uns als Urheber nennen, kein Geld damit verdienen und nichts daran verändern. Wer unsere Texte klaut und als seine eigenen verkauft, den verklagen wir bis ins literarische Jenseits.</p>', components: [], lastUpdated: new Date().toISOString(), showTitle: true, showDate: true },
 ];
 
 
@@ -258,7 +260,7 @@ export async function getLegalPages(): Promise<LegalPage[]> {
             // If the collection is empty, create the default pages.
             for (const page of defaultLegalPages) {
                 const pageRef = doc(db, 'legal', page.id);
-                await setDoc(pageRef, { title: page.title, content: page.content, components: page.components, lastUpdated: Timestamp.now() });
+                await setDoc(pageRef, { title: page.title, content: page.content, components: page.components, lastUpdated: Timestamp.now(), showTitle: page.showTitle, showDate: page.showDate });
             }
             return defaultLegalPages;
         }
@@ -270,6 +272,8 @@ export async function getLegalPages(): Promise<LegalPage[]> {
                 content: data.content,
                 components: data.components || [],
                 lastUpdated: (data.lastUpdated as Timestamp).toDate().toISOString(),
+                showTitle: data.showTitle,
+                showDate: data.showDate,
             } as LegalPage;
         });
     } catch (error) {
@@ -291,6 +295,8 @@ export async function getLegalPage(slug: string): Promise<LegalPage | null> {
                 content: data.content,
                 components: data.components || [],
                 lastUpdated: (data.lastUpdated as Timestamp).toDate().toISOString(),
+                showTitle: data.showTitle,
+                showDate: data.showDate,
             } as LegalPage;
         } else {
             console.log(`No legal page found for slug: ${slug}`);
