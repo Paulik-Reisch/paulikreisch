@@ -97,7 +97,7 @@
         @apply bg-gray-100 text-gray-800 border-gray-300 rounded-sm shadow-none h-8 px-3 text-xs font-normal hover:bg-gray-200 active:scale-100;
     }
     .internal-dashboard .gcp-button-primary {
-         @apply bg-primary text-primary-foreground border-transparent rounded-sm shadow-none h-8 px-3 text-xs font-normal hover:bg-primary/90 active:scale-100;
+         @apply bg-blue-600 text-white border-transparent rounded-sm shadow-none h-8 px-3 text-xs font-medium hover:bg-blue-700 active:scale-100;
     }
     .internal-dashboard .gcp-icon-button {
         @apply text-gray-500 hover:text-gray-800 hover:bg-gray-100 rounded-sm h-8 w-8 shadow-none border-transparent;
