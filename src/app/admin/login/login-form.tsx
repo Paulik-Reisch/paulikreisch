@@ -45,28 +45,44 @@ export function LoginForm() {
 
 
   return (
-    <form action={formAction} className="w-full max-w-sm space-y-4">
-        <div className="space-y-2">
-            <Label htmlFor="username">Benutzer</Label>
+    <form action={formAction} className="w-full max-w-sm space-y-8">
+        <div className="relative group">
             <Input 
               id="username" 
               name="username" 
               type="text" 
               required 
               autoComplete="username" 
-              className="rounded-sm bg-gray-100"
+              className="peer rounded-sm bg-gray-100 h-12 pt-4"
+              placeholder=" "
             />
+            <Label 
+                htmlFor="username" 
+                className="absolute left-3 top-3.5 text-gray-500 transition-all duration-300 transform 
+                           peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base 
+                           peer-focus:top-1.5 peer-focus:text-xs peer-focus:text-gray-600
+                           peer-[:not(:placeholder-shown)]:top-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-600">
+                Benutzer
+            </Label>
         </div>
-        <div className="space-y-2">
-             <Label htmlFor="password">Passwort</Label>
+        <div className="relative group">
              <Input 
               id="password" 
               name="password" 
               type="password" 
               required 
               autoComplete="current-password" 
-              className="rounded-sm bg-gray-100"
+              className="peer rounded-sm bg-gray-100 h-12 pt-4"
+              placeholder=" "
             />
+            <Label 
+                htmlFor="password" 
+                className="absolute left-3 top-3.5 text-gray-500 transition-all duration-300 transform 
+                           peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base 
+                           peer-focus:top-1.5 peer-focus:text-xs peer-focus:text-gray-600
+                           peer-[:not(:placeholder-shown)]:top-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-600">
+                Passwort
+            </Label>
         </div>
         
         {state.error && (
