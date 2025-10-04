@@ -19,6 +19,7 @@ import {
   updatePalabrota,
   deletePalabrota,
   updateExcerpt,
+  addLog,
 } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
 import { correctHtml } from "@/ai/flows/correct-html-flow";
