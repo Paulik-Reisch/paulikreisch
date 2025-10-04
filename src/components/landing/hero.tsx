@@ -17,7 +17,7 @@ export function Hero({ product }: { product?: Product }) {
                 Ein Buch, das allen Konventionen trotzt.
               </h1>
               <p className="max-w-[600px] text-muted-foreground md:text-xl mx-auto md:mx-0 animate-in fade-in slide-in-from-top-16 duration-1000">
-                Willkommen bei "Hallo Welt". Eine literarische Reise – so tiefgründig, dass Sie alles in Frage stellen werden, was Sie über Bücher zu wissen glaubten. Und über die Realität.
+                Willkommen bei "Hallo Welt". Eine literarische Reise in die Abgründe der Schule – und die Realität.
               </p>
             </div>
             <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center md:justify-start animate-in fade-in slide-in-from-top-20 duration-1000">
