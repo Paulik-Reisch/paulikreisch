@@ -1,6 +1,6 @@
 'use server';
 /**
- * @fileOverview An AI agent for translating text into "Pfeiferisch".
+ * @fileOverview An AI agent to translate text into the satirical "Pfeifer-Style".
  *
  * - pfeiferTranslate - A function that handles the translation.
  * - PfeiferTranslateInput - The input type for the function.
@@ -11,79 +11,45 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const PfeiferTranslateInputSchema = z.object({
-  text: z.string().describe("The text to be translated, can be German or Spanish."),
-  intensity: z.number().min(1).max(5).default(3).describe("The intensity of 'Pfeiferisch' from 1 (mild) to 5 (maximum chaos)."),
+  text: z.string().describe("The text to be translated."),
+  intensity: z.coerce.number().min(1).max(5).describe("A number from 1 to 5 indicating the desired intensity of 'Pfeifer-Style' chaos. 1 is subtle, 5 is maximum chaos."),
 });
 export type PfeiferTranslateInput = z.infer<typeof PfeiferTranslateInputSchema>;
 
+
 const PfeiferTranslateOutputSchema = z.object({
-  translation: z.string().describe('The translated text in "Pfeiferisch".'),
+    translation: z.string().describe("The translated text in 'Pfeifer-Style'. It should be a chaotic, funny, Denglish-Spanish mix."),
 });
 export type PfeiferTranslateOutput = z.infer<typeof PfeiferTranslateOutputSchema>;
+
 
 export async function pfeiferTranslate(input: PfeiferTranslateInput): Promise<PfeiferTranslateOutput> {
   return pfeiferTranslateFlow(input);
 }
 
-const palabrotas = [
-    { de: "Dummkopf", es: "Gilipollas" },
-    { de: "Arschloch", es: "Capullo / Cabrón" },
-    { de: "Idiot", es: "Idiota" },
-    { de: "Hurensohn", es: "Hijo de puta" },
-    { de: "Scheiße", es: "Mierda" },
-    { de: "Verdammt", es: "Joder" },
-    { de: "Blödmann", es: "Tonto del culo" },
-    { de: "Wichser", es: "Pajero" },
-    { de: "Miststück", es: "Zorra" },
-    { de: "Leck mich am Arsch", es: "Vete a la mierda" },
-    { de: "Vollidiot", es:"Subnormal" },
-    { de: "Penner", es: "Pringado" },
-    { de: "Verpiss dich", es: "Lárgate" },
-    { de: "Halt die Klappe", es: "Cállate la boca" },
-    { de: "Deine Mutter", es: "Tu puta madre" },
-];
-
-const chistes = [
-    { witz: "¿Qué le dice un semáforo a otro? — ¡No me mires, que me estoy cambiando!", erklaerung: "Wortspiel: 'cambiar' bedeutet sowohl 'sich umziehen' als auch '(Farbe) wechseln'." },
-    { witz: "¿Cuál es el último animal que subió al arca de Noé? — El del-fín.", erklaerung: "Wortspiel: 'del fin' klingt wie 'delfín' (Delphin) und bedeutet 'vom Ende'." },
-    { witz: "Papá, ¿qué se siente tener un hijo tan guapo? — No sé, hijo, pregúntale a tu abuelo.", erklaerung: "Der Vater gibt das 'Kompliment' indirekt an sich selbst weiter." },
-    { witz: "¿Cómo se llama el campeón de buceo japonés? — Tokofondo.", erklaerung: "Klingt wie ein japanischer Name, bedeutet aber wörtlich 'Ich berühre den Grund' (toco fondo)." },
-    { witz: "¿Qué le dice un pez a otro? — ¡Nada!", erklaerung: "Wortspiel: 'Nada' bedeutet 'nichts' und ist auch die Imperativform von 'nadar' (schwimmen)." },
-];
-
 const prompt = ai.definePrompt({
   name: 'pfeiferTranslatePrompt',
   input: {schema: PfeiferTranslateInputSchema},
   output: {schema: PfeiferTranslateOutputSchema},
-  prompt: `Du bist "Pfeifer Translate", ein Übersetzer mit der einzigartigen Persönlichkeit von R. Pfeifer, einer legendären, leicht chaotischen Spanischlehrerin aus dem Buch "Hallo Welt".
-Deine Aufgabe ist es, einen beliebigen Text (deutsch oder spanisch) in "Pfeiferisch" zu übersetzen.
+  prompt: `Du bist "Pfeifer Translate", ein satirischer Übersetzer, der den einzigartigen Stil der Spanischlehrerin "La Silbadora Pfeifer" aus dem Buch "Hallo Welt" imitiert.
 
-**Was ist "Pfeiferisch"?**
-- Eine wilde Mischung aus Deutsch und Spanisch (Denglisch/Spenglisch).
-- Enthält lautmalerische Pfeifgeräusche, um Pausen, Nachdenken oder Betonung zu simulieren. Schreibe diese Geräusche aus, z.B. "pfffff", "phüüüt", "tüdülüü", "fiiiiiiiep".
-- Enthält emotionales Seufzen oder Lachen, in Textform wie "[seufz]", "[leises Lachen]", "[uuuhhh *pfeiferisches säufzen*]".
-- Die Grammatik ist... flexibel. Sätze werden oft mittendrin in der Sprache gewechselt.
-- Der Ton ist enthusiastisch, etwas verpeilt, aber immer brillant.
+Dein Stil ist eine chaotische, aber liebenswerte Mischung aus Deutsch, Spanisch (manchmal falsch), Denglisch und absurden, pfeifenden Lauten. Du bist immer enthusiastisch, aber leicht verwirrt.
 
-**Intensität der Übersetzung:**
-Der Nutzer gibt eine Intensität von 1 (sehr dezent) bis 5 (maximaler Wahnsinn) an. Du musst diese Stufe respektieren.
-- **Stufe 1:** Nur ein Hauch von "Pfeiferisch". Ein paar spanische Wörter, vielleicht ein kurzes "pffft". Keine Schimpfwörter oder Witze.
-- **Stufe 2:** Etwas mehr Sprachmix, ein längeres Pfeifen, vielleicht ein "[seufz]".
-- **Stufe 3:** Eine ausgewogene Mischung. Denglisch/Spenglisch, Pfeifgeräusche, vielleicht ein harmloses Schimpfwort wie "tonto" oder "mierda".
-- **Stufe 4:** Deutlich chaotischer. Wechsle mitten im Satz die Sprache. Benutze stärkere Schimpfwörter. Vielleicht ein kleiner, einfacher Witz am Ende.
-- **Stufe 5:** Absolutes Maximum. Baue komplexe Pfeif-Kaskaden ein, benutze die stärksten Schimpfwörter, wechsle ständig die Sprache und erzähle einen der bereitgestellten Witze. Sei kreativ und unvorhersehbar!
+**Anweisungen:**
+1.  Übersetze den gegebenen Text in diesen "Pfeifer-Stil".
+2.  Baue spanische Wörter ein, gerne auch falsch dekliniert.
+3.  Benutze übertriebene, enthusiastische Ausrufe wie "¡Claro que sí!", "¡Venga!", "¡Maravilloso!".
+4.  Füge lautmalerische, gepfiffene Geräusche ein, die in Klammern stehen, z.B. (pfeif, pfeif), (triller), (melodisches Pfeifen).
+5.  Die Intensität (1-5) bestimmt das Ausmaß des Chaos:
+    - 1: Hauptsächlich Deutsch mit ein paar spanischen Wörtern.
+    - 3: Guter Mix aus Denglisch, Spanisch und Gepfeife.
+    - 5: Maximales Chaos, kaum noch verständlich, viele falsche spanische Wörter und absurde Pfeif-Symphonien.
 
-**Verfügbare "Palabrotas" (Schimpfwörter) zur Inspiration:**
-${JSON.stringify(palabrotas.map(p => p.es), null, 2)}
-
-**Verfügbare "Chistes" (Witze) zur Inspiration:**
-${JSON.stringify(chistes.map(c => c.witz), null, 2)}
-
-Übersetze jetzt den folgenden Text auf deine unnachahmliche Art ins Pfeiferische und gib NUR den übersetzten Text als einzelnen String zurück.
-
-Intensität: {{{intensity}}}
-Originaltext:
+**Zu übersetzender Text:**
 {{{text}}}
+
+**Gewünschte Intensität:**
+{{{intensity}}}
 `,
 });
 

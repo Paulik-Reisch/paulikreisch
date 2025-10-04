@@ -129,19 +129,24 @@ export interface Excerpt {
 
 const db = getFirestore(app);
 
-export async function getAdminPassword(): Promise<string | null> {
+export async function getAdminCredentials(): Promise<Record<string, string> | null> {
     try {
         const docRef = doc(db, "settings", "admin");
         const docSnap = await getDoc(docRef);
 
-        if (docSnap.exists() && docSnap.data().password) {
-            return docSnap.data().password as string;
+        if (docSnap.exists()) {
+            return docSnap.data() as Record<string, string>;
         } else {
-            console.warn("Admin password not found in Firestore under settings/admin.");
-            return null;
+            console.warn("Admin credentials not found in Firestore under settings/admin. Creating default credentials.");
+            const defaultCredentials = {
+                'ppaulik': 'AtrIpl;gebes!ud3',
+                'mreisch': 'eifrigEnorm!arT2',
+            };
+            await setDoc(docRef, defaultCredentials);
+            return defaultCredentials;
         }
     } catch (error) {
-        console.error("Error fetching admin password:", error);
+        console.error("Error fetching admin credentials:", error);
         return null;
     }
 }
@@ -657,164 +662,6 @@ export async function getCampaigns(): Promise<Campaign[]> {
     });
 }
 
-// --- PALABROTAS ---
-
-const defaultPalabrotas: Omit<Palabrota, 'id'>[] = [
-    { de: "Fotze", es: "el coño", pfeiferFaktor: 5, wortart: "Nomen", anwendung: "Starke vulgäre Beleidigung.", synonyme: "Muschi", beispiel: "¡Coño, qué dolor!" },
-    { de: "Arsch", es: "el culo", pfeiferFaktor: 3, wortart: "Nomen", anwendung: "Umgangssprachlich für Gesäß.", synonyme: "Hintern", beispiel: "Mueve el culo." },
-    { de: "Dummkopf", es: "el tonto", pfeiferFaktor: 2, wortart: "Nomen", anwendung: "Für eine dumme Person.", synonyme: "Idiot", beispiel: "No seas tonto." },
-    { de: "Arschloch", es: "el cabrón", pfeiferFaktor: 5, wortart: "Nomen", anwendung: "Starke Beleidigung, auch für einen gerissenen Kerl.", synonyme: "Mistkerl", beispiel: "¡Qué cabrón eres!" },
-    { de: "Mistkerl", es: "el gilipollas", pfeiferFaktor: 4, wortart: "Nomen", anwendung: "Starke Beleidigung für einen Idioten.", synonyme: "Vollidiot", beispiel: "Eres un gilipollas." },
-    { de: "Arschkriecher", es: "el lameculos", pfeiferFaktor: 4, wortart: "Nomen", anwendung: "Für einen Schleimer.", synonyme: "Speichellecker", beispiel: "Es un lameculos del jefe." },
-    { de: "Schwuchtel", es: "el maricón", pfeiferFaktor: 5, wortart: "Nomen", anwendung: "Abfällige Bezeichnung für einen homosexuellen Mann.", synonyme: "Schwuler", beispiel: "¡Qué maricón!" },
-    { de: "Hure", es: "la puta", pfeiferFaktor: 5, wortart: "Nomen", anwendung: "Starke Beleidigung, kann auch verstärkend genutzt werden.", synonyme: "Schlampe", beispiel: "¡De puta madre!" },
-    { de: "Hurensohn", es: "el hijo de puta", pfeiferFaktor: 5, wortart: "Nomen", anwendung: "Eine der stärksten Beleidigungen.", synonyme: "Bastard", beispiel: "Ese hijo de puta me engañó." },
-    { de: "verdammt", es: "maldito", pfeiferFaktor: 2, wortart: "Adjektiv", anwendung: "Um Ärger auszudrücken.", synonyme: "verflucht", beispiel: "Este maldito coche no arranca." },
-    { de: "ficken", es: "follar", pfeiferFaktor: 4, wortart: "Verb", anwendung: "Vulgärer Ausdruck für Sex.", synonyme: "vögeln", beispiel: "Vamos a follar." },
-    { de: "gefickt", es: "follado", pfeiferFaktor: 4, wortart: "Partizip", anwendung: "Am Ende sein, ruiniert.", synonyme: "am Arsch", beispiel: "Estoy follado." },
-    { de: "Scheiße", es: "la mierda", pfeiferFaktor: 1, wortart: "Nomen", anwendung: "Ausdruck von Ekel oder Ärger.", synonyme: "Mist", beispiel: "¡Qué mierda!" },
-    { de: "Alter", es: "el tío", pfeiferFaktor: 1, wortart: "Nomen", anwendung: "Umgangssprachlich für 'Typ' oder 'Kerl'.", synonyme: "Kerl", beispiel: "¿Qué pasa, tío?" },
-    { de: "Idiot", es: "el idiota", pfeiferFaktor: 3, wortart: "Nomen", anwendung: "Gängige Beleidigung.", synonyme: "Dummkopf", beispiel: "¡No seas idiota!" },
-    { de: "Trottel", es: "el imbécil", pfeiferFaktor: 3, wortart: "Nomen", anwendung: "Stärkere Form von Idiot.", synonyme: "Schwachkopf", beispiel: "Eres un imbécil." },
-    { de: "Wichser", es: "el pendejo", pfeiferFaktor: 4, wortart: "Nomen", anwendung: "Starke Beleidigung, besonders in Lateinamerika.", synonyme: "Idiot", beispiel: "¡Qué pendejo!" },
-    { de: "Feigling", es: "el cobarde", pfeiferFaktor: 2, wortart: "Nomen", anwendung: "Für eine ängstliche Person.", synonyme: "Angsthase", beispiel: "No seas cobarde." },
-    { de: "Bastard", es: "el capullo", pfeiferFaktor: 4, wortart: "Nomen", anwendung: "Starke Beleidigung.", synonyme: "Arschloch", beispiel: "¡Vaya capullo!" },
-    { de: "Schwanzlutscher", es: "el chupapollas", pfeiferFaktor: 5, wortart: "Nomen", anwendung: "Sehr vulgäre Beleidigung.", synonyme: "Arschkriecher", beispiel: "Ese tío es un chupapollas." },
-    { de: "behindert", es: "discapacitado", pfeiferFaktor: 1, wortart: "Adjektiv", anwendung: "Medizinischer Begriff, oft als Beleidigung missbraucht.", synonyme: "eingeschränkt", beispiel: "Das ist eine behinderte Regelung." },
-    { de: "Blödmann", es: "el estúpido", pfeiferFaktor: 3, wortart: "Nomen", anwendung: "Für jemanden, der dumm handelt.", synonyme: "Dummkopf", beispiel: "Hör auf, so ein Blödmann zu sein." },
-    { de: "Clown", es: "el payaso", pfeiferFaktor: 2, wortart: "Nomen", anwendung: "Für jemanden, der sich lächerlich macht.", synonyme: "Witzbold", beispiel: "Spiel nicht den Clown." },
-    { de: "Dieb", es: "el ladrón", pfeiferFaktor: 3, wortart: "Nomen", anwendung: "Jemand, der stiehlt.", synonyme: "Gauner", beispiel: "Haltet den Dieb!" },
-    { de: "Drecksack", es: "el guache", pfeiferFaktor: 4, wortart: "Nomen", anwendung: "Sehr abfällige Bezeichnung.", synonyme: "Mistkerl", beispiel: "Was für ein Drecksack!" },
-    { de: "dumme Kuh", es: "la vaca ignorante", pfeiferFaktor: 3, wortart: "Phrase", anwendung: "Beleidigung für eine dumme Frau.", synonyme: "dumme Gans", beispiel: "Diese dumme Kuh versteht nichts." },
-    { de: "ekelhaft", es: "asqueroso", pfeiferFaktor: 3, wortart: "Adjektiv", anwendung: "Für etwas sehr Widerliches.", synonyme: "widerwärtig", beispiel: "Das Essen schmeckt asqueroso." },
-    { de: "Fettsack", es: "el barrigón", pfeiferFaktor: 4, wortart: "Nomen", anwendung: "Stark abfällige Bezeichnung für eine dicke Person.", synonyme: "Dickwanst", beispiel: "Dieser Fettsack isst schon wieder." },
-    { de: "Ficker", es: "el chingón", pfeiferFaktor: 5, wortart: "Nomen", anwendung: "Eine Person, die gut im Bett ist (kann auch positiv sein).", synonyme: "Stecher", beispiel: "Er ist ein echter chingón." },
-    { de: "Fresser", es: "el zampabollos", pfeiferFaktor: 3, wortart: "Nomen", anwendung: "Für jemanden, der viel und schnell isst.", synonyme: "Vielfraß", beispiel: "Dieser Fresser hat alles aufgegessen." },
-    { de: "hässlich", es: "feo", pfeiferFaktor: 2, wortart: "Adjektiv", anwendung: "Beschreibung von etwas Unansehnlichem.", synonyme: "unschön", beispiel: "Der Pullover ist hässlich." },
-    { de: "Hexe", es: "la bruja", pfeiferFaktor: 2, wortart: "Nomen", anwendung: "Für eine böse, alte Frau.", synonyme: "Zauberin", beispiel: "Die alte Hexe von nebenan." },
-    { de: "Hinterwäldler", es: "el paleto", pfeiferFaktor: 3, wortart: "Nomen", anwendung: "Für eine ungebildete Person vom Land.", synonyme: "Landei", beispiel: "Was für ein Paleto!" },
-    { de: "hirnlos", es: "descerebrado", pfeiferFaktor: 4, wortart: "Adjektiv", anwendung: "Für jemanden ohne Verstand.", synonyme: "dumm", beispiel: "Eine hirnlose Aktion." },
-    { de: "Hodenkobold", es: "el duende de los testículos", pfeiferFaktor: 5, wortart: "Phrase", anwendung: "Kreative und absurde Beleidigung.", synonyme: "seltsamer Kauz", beispiel: "Du Hodenkobold!" },
-    { de: "Holzkopf", es: "el cafre", pfeiferFaktor: 3, wortart: "Nomen", anwendung: "Für eine dumme, ungeschickte Person.", synonyme: "Dummkopf", beispiel: "Dieser Holzkopf hat alles kaputt gemacht." },
-    { de: "Hurenbock", es: "el putero", pfeiferFaktor: 5, wortart: "Nomen", anwendung: "Mann, der häufig Prostituierte aufsucht.", synonyme: "Freier", beispiel: "Er ist ein alter Hurenbock." },
-    { de: "Kanake", es: "el sudaca", pfeiferFaktor: 5, wortart: "Nomen", anwendung: "Abfällige Bezeichnung für Südamerikaner.", synonyme: "-", beispiel: "Dieser sudaca nervt." },
-    { de: "Klugscheißer", es: "el listillo", pfeiferFaktor: 2, wortart: "Nomen", anwendung: "Für einen Besserwisser.", synonyme: "Neunmalkluger", beispiel: "Sei nicht so ein listillo." },
-    { de: "Knirps", es: "el renacuajo", pfeiferFaktor: 2, wortart: "Nomen", anwendung: "Für ein kleines Kind oder eine kleine Person.", synonyme: "Zwerg", beispiel: "Was will dieser Knirps?" },
-    { de: "Köter", es: "el chucho", pfeiferFaktor: 2, wortart: "Nomen", anwendung: "Abfällig für einen Hund.", synonyme: "Töle", beispiel: "Nimm deinen Köter an die Leine." },
-    { de: "Kotzbrocken", es: "el tipo asqueroso", pfeiferFaktor: 4, wortart: "Phrase", anwendung: "Für eine widerliche Person.", synonyme: "Ekel", beispiel: "Was für ein Kotzbrocken." },
-    { de: "Kumpel", es: "el güey", pfeiferFaktor: 1, wortart: "Nomen", anwendung: "Umgangssprachlich (Mexiko) für 'Typ', 'Alter'.", synonyme: "Freund", beispiel: "¡Órale, güey!" },
-    { de: "Lesbe", es: "la lesbiana", pfeiferFaktor: 1, wortart: "Nomen", anwendung: "Bezeichnung für eine homosexuelle Frau.", synonyme: "-", beispiel: "Sie ist Lesbe." },
-    { de: "Lümmel", es: "el patán", pfeiferFaktor: 3, wortart: "Nomen", anwendung: "Für einen unhöflichen, ungehobelten Mann.", synonyme: "Flegel", beispiel: "Sei kein Lümmel." },
-    { de: "lutschen", es: "chupar", pfeiferFaktor: 2, wortart: "Verb", anwendung: "Saugen, kann auch vulgär verwendet werden.", synonyme: "saugen", beispiel: "Den Lutscher lutschen." },
-    { de: "Missgeburt", es: "la monsquerta", pfeiferFaktor: 5, wortart: "Nomen", anwendung: "Extrem starke Beleidigung.", synonyme: "Monster", beispiel: "¡Qué monsquerta!" },
-    { de: "Miststück", es: "el canallas", pfeiferFaktor: 4, wortart: "Nomen", anwendung: "Für eine gemeine, hinterhältige Person.", synonyme: "Schurke", beispiel: "Er ist ein echtes Miststück." },
-    { de: "Nichtsnutz", es: "el ablandahígos", pfeiferFaktor: 3, wortart: "Nomen", anwendung: "Für eine faule, nutzlose Person.", synonyme: "Taugenichts", beispiel: "Dieser Nichtsnutz tut nichts." },
-    { de: "Nutte", es: "la ramera", pfeiferFaktor: 5, wortart: "Nomen", anwendung: "Starke Beleidigung, ähnlich wie Hure.", synonyme: "Hure", beispiel: "¡Cállate, ramera!" },
-    { de: "Pechvogel", es: "el gafe", pfeiferFaktor: 2, wortart: "Nomen", anwendung: "Jemand, der Unglück bringt.", synonyme: "Unglücksrabe", beispiel: "Du bist ein echter Pechvogel." },
-    { de: "Penner", es: "el vagabundo", pfeiferFaktor: 2, wortart: "Nomen", anwendung: "Für einen Obdachlosen oder eine heruntergekommene Person.", synonyme: "Landstreicher", beispiel: "Der Penner schläft auf der Parkbank." },
-    { de: "Rotzlöffel", es: "el mocoso", pfeiferFaktor: 2, wortart: "Nomen", anwendung: "Für ein freches, ungezogenes Kind.", synonyme: "Gör", beispiel: "Hör zu, du kleiner Rotzlöffel!" },
-    { de: "Schlampe", es: "la zorra", pfeiferFaktor: 5, wortart: "Nomen", anwendung: "Starke Beleidigung für eine Frau.", synonyme: "Hure", beispiel: "Was für eine Schlampe!" },
-    { de: "Schlawiner", es: "el pillo", pfeiferFaktor: 1, wortart: "Nomen", anwendung: "Für einen kleinen Gauner oder Schelm.", synonyme: "Spitzbube", beispiel: "So ein kleiner Schlawiner!" },
-    { de: "Schleimscheißer", es: "el ñoño", pfeiferFaktor: 4, wortart: "Nomen", anwendung: "Für eine übertrieben brave oder langweilige Person.", synonyme: "Langweiler", beispiel: "Sei kein Schleimscheißer." },
-    { de: "Schmarotzer", es: "el gorrón", pfeiferFaktor: 3, wortart: "Nomen", anwendung: "Jemand, der auf Kosten anderer lebt.", synonyme: "Parasit", beispiel: "Er ist ein echter Schmarotzer." },
-    { de: "schmutzig", es: "sucio", pfeiferFaktor: 1, wortart: "Adjektiv", anwendung: "Nicht sauber.", synonyme: "dreckig", beispiel: "Deine Hände sind schmutzig." },
-    { de: "Schnarchsack", es: "el roncador", pfeiferFaktor: 2, wortart: "Nomen", anwendung: "Für jemanden, der laut schnarcht.", synonyme: "Schnarcher", beispiel: "Du alter Schnarchsack!" },
-    { de: "Schurke", es: "el malnacido", pfeiferFaktor: 4, wortart: "Nomen", anwendung: "Starke Beleidigung, wörtlich 'schlecht geboren'.", synonyme: "Mistkerl", beispiel: "¡Malnacido!" },
-    { de: "Schwätzer", es: "el bocachancla", pfeiferFaktor: 2, wortart: "Nomen", anwendung: "Jemand, der viel und Unsinn redet.", synonyme: "Quasselstrippe", beispiel: "Was für ein Schwätzer!" },
-    { de: "Schwachkopf", es: "el tarado", pfeiferFaktor: 4, wortart: "Nomen", anwendung: "Für eine geistig zurückgebliebene Person (stark beleidigend).", synonyme: "Idiot", beispiel: "Er ist ein tarado." },
-    { de: "Schweinehund", es: "el hijo de perra", pfeiferFaktor: 5, wortart: "Phrase", anwendung: "Ähnlich wie 'Hurensohn', sehr starke Beleidigung.", synonyme: "Mistkerl", beispiel: "¡Hijo de perra!" },
-    { de: "Stinkstiefel", es: "el apestoso", pfeiferFaktor: 2, wortart: "Nomen", anwendung: "Für eine übellaunige Person.", synonyme: "Miesepeter", beispiel: "Sei kein Stinkstiefel." },
-    { de: "Streber", es: "el empollón", pfeiferFaktor: 1, wortart: "Nomen", anwendung: "Für einen sehr fleißigen Schüler.", synonyme: "Büffler", beispiel: "Er ist der größte Streber der Klasse." },
-    { de: "Tölpel", es: "el papanatas", pfeiferFaktor: 2, wortart: "Nomen", anwendung: "Für eine naive, einfältige Person.", synonyme: "Einfaltspinsel", beispiel: "Was für ein Tölpel!" },
-    { de: "verfickt", es: "pinche", pfeiferFaktor: 4, wortart: "Adjektiv", anwendung: "Verstärkendes Wort (Mexiko), ähnlich wie 'verdammt'.", synonyme: "verdammt", beispiel: "¡Pinche coche!" },
-    { de: "verrückt", es: "loco", pfeiferFaktor: 1, wortart: "Adjektiv", anwendung: "Nicht bei Verstand.", synonyme: "irre", beispiel: "Estás loco." },
-    { de: "Vielfraß", es: "el tragón", pfeiferFaktor: 2, wortart: "Nomen", anwendung: "Jemand, der sehr viel isst.", synonyme: "Fresser", beispiel: "Mein Bruder ist ein echter Vielfraß." },
-    { de: "Weichei", es: "el blandengue", pfeiferFaktor: 3, wortart: "Nomen", anwendung: "Für eine schwache, memmenhafte Person.", synonyme: "Memme", beispiel: "Sei kein Weichei." },
-    { de: "Zigeuner", es: "el gitano", pfeiferFaktor: 3, wortart: "Nomen", anwendung: "Bezeichnung für Roma, oft abfällig verwendet.", synonyme: "-", beispiel: "Er lebt wie ein Zigeuner." },
-    { de: "Zwitter", es: "el hermafrodita", pfeiferFaktor: 2, wortart: "Nomen", anwendung: "Biologischer Begriff, kann beleidigend sein.", synonyme: "Zwitter", beispiel: "Diese Schnecke ist ein Zwitter." }
-];
-
-
-export async function getPalabrotas(): Promise<Palabrota[]> {
-    try {
-        const vocabCol = collection(db, 'palabrotas');
-        const vocabSnapshot = await getDocs(vocabCol);
-        if (vocabSnapshot.empty) {
-            // If the collection is empty, create the default entries.
-            for (const item of defaultPalabrotas) {
-                await addDoc(vocabCol, item);
-            }
-             const newSnapshot = await getDocs(vocabCol);
-             return newSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Palabrota)).sort((a,b) => a.de.localeCompare(b.de));
-        }
-        return vocabSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Palabrota)).sort((a,b) => a.de.localeCompare(b.de));
-    } catch (error) {
-        console.error("Error fetching palabrotas, returning defaults:", error);
-        return defaultPalabrotas.map((p, i) => ({ id: `default-${i}`, ...p })).sort((a,b) => a.de.localeCompare(b.de));
-    }
-}
-
-export async function addPalabrota(data: Omit<Palabrota, 'id'>) {
-    const vocabCol = collection(db, 'palabrotas');
-    await addDoc(vocabCol, data);
-}
-
-export async function updatePalabrota(id: string, data: Partial<Omit<Palabrota, 'id'>>) {
-    const docRef = doc(db, 'palabrotas', id);
-    await updateDoc(docRef, data);
-}
-
-export async function deletePalabrota(id: string) {
-    const docRef = doc(db, 'palabrotas', id);
-    await deleteDoc(docRef);
-}
-
-
-// --- CHISTES ---
-
-const defaultChistes: Omit<Chiste, 'id'>[] = [
-    { witz: "¿Qué le dice un semáforo a otro? — ¡No me mires, que me estoy cambiando!", uebersetzung: "Was sagt eine Ampel zur anderen? — Schau mich nicht an, ich ziehe mich gerade um!", erklaerung: "Wortspiel: 'cambiar' bedeutet sowohl 'sich umziehen' als auch '(Farbe) wechseln'.", pfeiferFaktor: 2, kategorie: "Wortspiel" },
-    { witz: "¿Cuál es el último animal que subió al arca de Noé? — El del-fín.", uebersetzung: "Welches ist das letzte Tier, das die Arche Noah bestieg? — Der Del-phin.", erklaerung: "Wortspiel: 'del fin' klingt wie 'delfín' (Delphin) und bedeutet 'vom Ende'.", pfeiferFaktor: 3, kategorie: "Wortspiel" },
-    { witz: "Papá, ¿qué se siente tener un hijo tan guapo? — No sé, hijo, pregúntale a tu abuelo.", uebersetzung: "Papa, wie fühlt es sich an, einen so gutaussehenden Sohn zu haben? — Ich weiß nicht, mein Sohn, frag deinen Großvater.", erklaerung: "Der Vater gibt das 'Kompliment' indirekt an sich selbst weiter.", pfeiferFaktor: 4, kategorie: "Familie" },
-    { witz: "Entra un hombre a una pajarería y pregunta: ¿Cuánto cuesta el loro? — 6.000 euros. — ¡Caramba! ¿Y qué hace? — Habla 7 idiomas y sabe de computación. — ¡Me lo llevo! Al día siguiente, vuelve: ¡El loro no ha dicho ni una palabra! — Es que es muy tímido. ¡Usted háblele primero!", uebersetzung: "Ein Mann geht in eine Tierhandlung und fragt: Was kostet der Papagei? - 6.000 Euro. - Wow! Was kann er denn? - Er spricht 7 Sprachen und kennt sich mit Computern aus. - Ich nehme ihn! Am nächsten Tag kommt er zurück: Der Papagei hat kein Wort gesagt! - Er ist nur sehr schüchtern. Sprechen Sie ihn einfach zuerst an!", erklaerung: "Eine klassische Pointe, die die hohe Erwartung mit einer banalen Ausrede bricht.", pfeiferFaktor: 5, kategorie: "Tiere" },
-    { witz: "¿Cómo se llama el campeón de buceo japonés? — Tokofondo.", uebersetzung: "Wie heißt der japanische Meister im Tauchen? — Tokofondo.", erklaerung: "Klingt wie ein japanischer Name, bedeutet aber wörtlich 'Ich berühre den Grund' (toco fondo).", pfeiferFaktor: 3, kategorie: "International" },
-    { witz: "¿Qué le dice un pez a otro? — ¡Nada!", uebersetzung: "Was sagt ein Fisch zum anderen? — Nichts! / Schwimm!", erklaerung: "Wortspiel: 'Nada' bedeutet 'nichts' und ist auch die Imperativform von 'nadar' (schwimmen).", pfeiferFaktor: 2, kategorie: "Wortspiel" },
-];
-
-export async function getChistes(): Promise<Chiste[]> {
-    try {
-        const chistesCol = collection(db, 'chistes');
-        const chistesSnapshot = await getDocs(chistesCol);
-        if (chistesSnapshot.empty) {
-            // If the collection is empty, create the default entries.
-            for (const item of defaultChistes) {
-                await addDoc(chistesCol, item);
-            }
-             const newSnapshot = await getDocs(chistesCol);
-             return newSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Chiste)).sort((a,b) => a.witz.localeCompare(b.witz));
-        }
-        return chistesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Chiste)).sort((a,b) => a.witz.localeCompare(b.witz));
-    } catch (error) {
-        console.error("Error fetching chistes, returning defaults:", error);
-        return defaultChistes.map((p, i) => ({ id: `default-${i}`, ...p })).sort((a,b) => a.witz.localeCompare(b.witz));
-    }
-}
-
-export async function addChiste(data: Omit<Chiste, 'id'>) {
-    const chistesCol = collection(db, 'chistes');
-    await addDoc(chistesCol, data);
-}
-
-export async function updateChiste(id: string, data: Partial<Omit<Chiste, 'id'>>) {
-    const docRef = doc(db, 'chistes', id);
-    await updateDoc(docRef, data);
-}
-
-export async function deleteChiste(id: string) {
-    const docRef = doc(db, 'chistes', id);
-    await deleteDoc(docRef);
-}
-
 // --- EXCERPTS ---
 
 async function initializeExcerpts() {
@@ -888,4 +735,46 @@ export async function updateExcerpt(slug: string, data: Partial<Omit<Excerpt, 'i
         ...data,
         lastUpdated: Timestamp.now(),
     });
+}
+
+// Palabrotas
+export async function getPalabrotas(): Promise<Palabrota[]> {
+    const palabrotasCol = collection(db, 'palabrotas');
+    const q = query(palabrotasCol, orderBy("de", "asc"));
+    const snapshot = await getDocs(q);
+    if (snapshot.empty) {
+        return [];
+    }
+    return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    } as Palabrota));
+}
+
+export async function addPalabrota(data: Omit<Palabrota, 'id'>) {
+    await addDoc(collection(db, 'palabrotas'), data);
+}
+
+export async function updatePalabrota(id: string, data: Partial<Omit<Palabrota, 'id'>>) {
+    const docRef = doc(db, 'palabrotas', id);
+    await updateDoc(docRef, data);
+}
+
+export async function deletePalabrota(id: string) {
+    const docRef = doc(db, 'palabrotas', id);
+    await deleteDoc(docRef);
+}
+
+// Chistes
+export async function getChistes(): Promise<Chiste[]> {
+    const chistesCol = collection(db, 'chistes');
+    const q = query(chistesCol, orderBy("witz", "asc"));
+    const snapshot = await getDocs(q);
+    if (snapshot.empty) {
+        return [];
+    }
+    return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    } as Chiste));
 }

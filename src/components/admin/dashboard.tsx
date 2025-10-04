@@ -11,11 +11,9 @@ import {
     Campaign,
     LegalPage,
     Palabrota,
-    Chiste,
     Excerpt,
     getSubscribers,
     getPalabrotas,
-    getChistes,
     getExcerpts
 } from "@/lib/firestore";
 import {
@@ -28,9 +26,6 @@ import {
     updatePalabrotaAction,
     deletePalabrotaAction,
     bulkAddPalabrotasAction,
-    addChisteAction,
-    updateChisteAction,
-    deleteChisteAction,
     updateExcerptAction
 } from "@/app/admin/actions";
 import { useToast } from "@/hooks/use-toast";
@@ -893,179 +888,6 @@ function DeletePalabrotaAlert({ id, name, fetchPalabrotas }: { id: string, name:
     );
 }
 
-function ChistesManager({ initialChistes }: { initialChistes: Chiste[] }) {
-    const [chistes, setChistes] = useState<Chiste[]>(initialChistes);
-    const [loading, setLoading] = useState(false);
-    const { toast } = useToast();
-
-    const fetchChistes = useCallback(async () => {
-        setLoading(true);
-        try {
-            const fetched = await getChistes();
-            setChistes(fetched);
-        } catch (error) {
-            console.error("Error fetching chistes:", error);
-            toast({ variant: "destructive", title: "Fehler", description: "Witze konnten nicht geladen werden." });
-        } finally {
-            setLoading(false);
-        }
-    }, [toast]);
-    
-    useEffect(() => {
-        setChistes(initialChistes);
-    }, [initialChistes]);
-
-    return (
-        <div>
-            <div className="flex justify-between items-center mb-4 gap-4">
-                <ChisteForm fetchChistes={fetchChistes} />
-                 <Button onClick={fetchChistes} disabled={loading} variant="outline">
-                    {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
-                    Aktualisieren
-                </Button>
-            </div>
-            <div className="border rounded-lg overflow-hidden">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Witz</TableHead>
-                            <TableHead>Kategorie</TableHead>
-                            <TableHead>Pfeifer-Faktor</TableHead>
-                            <TableHead className="text-right">Aktionen</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {chistes.map((item) => (
-                            <TableRow key={item.id}>
-                                <TableCell className="font-medium max-w-md truncate">{item.witz}</TableCell>
-                                <TableCell><Badge variant="secondary">{item.kategorie}</Badge></TableCell>
-                                <TableCell>
-                                    <div className="flex">
-                                        {Array.from({ length: 5 }).map((_, i) => (
-                                            <Flame key={i} className={cn('h-4 w-4', i < item.pfeiferFaktor ? 'text-red-500 fill-current' : 'text-gray-300')} />
-                                        ))}
-                                    </div>
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    <div className="flex gap-2 justify-end">
-                                        <ChisteForm isEditMode={true} chiste={item} fetchChistes={fetchChistes}>
-                                            <Button size="sm" variant="outline"><Edit className="h-4 w-4" /></Button>
-                                        </ChisteForm>
-                                        <DeleteChisteAlert id={item.id} name={item.witz} fetchChistes={fetchChistes} />
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </div>
-        </div>
-    );
-}
-
-function ChisteForm({
-  isEditMode = false,
-  chiste,
-  fetchChistes,
-  children
-}: {
-  isEditMode?: boolean;
-  chiste?: Chiste;
-  fetchChistes: () => void;
-  children?: React.ReactNode;
-}) {
-    const { toast } = useToast();
-    const [isOpen, setIsOpen] = useState(false);
-    const formAction = isEditMode ? updateChisteAction : addChisteAction;
-    const [state, action] = useActionState(formAction, { success: false, error: null, message: null });
-
-    const handleFetch = useCallback(() => {
-      fetchChistes();
-    }, [fetchChistes]);
-
-    useEffect(() => {
-        if (state.success) {
-            toast({ title: "Erfolg", description: state.message });
-            setIsOpen(false);
-            handleFetch();
-        }
-        if (state.error) {
-            toast({ variant: "destructive", title: "Fehler", description: state.error });
-        }
-    }, [state, toast, handleFetch]);
-
-    return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
-                {children ? children : <Button variant="outline"><PlusCircle className="mr-2 h-4 w-4" /> Witz hinzufügen</Button>}
-            </DialogTrigger>
-            <DialogContent className="max-h-[90vh] overflow-y-auto">
-                <form action={action}>
-                    <DialogHeader>
-                        <DialogTitle>{isEditMode ? 'Witz bearbeiten' : 'Neuen Witz hinzufügen'}</DialogTitle>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                        {isEditMode && <input type="hidden" name="id" value={chiste?.id} />}
-                        <Textarea name="witz" placeholder="Witz" defaultValue={chiste?.witz} required />
-                        <Textarea name="uebersetzung" placeholder="Übersetzung" defaultValue={chiste?.uebersetzung} required />
-                        <Textarea name="erklaerung" placeholder="Erklärung" defaultValue={chiste?.erklaerung} required />
-                        <Input name="kategorie" placeholder="Kategorie" defaultValue={chiste?.kategorie} required />
-                        <div>
-                            <Label>Pfeifer-Faktor™</Label>
-                            <Input name="pfeiferFaktor" type="number" min="0" max="5" defaultValue={chiste?.pfeiferFaktor ?? 3} required />
-                        </div>
-                    </div>
-                    <DialogFooter>
-                        <DialogClose asChild><Button type="button" variant="secondary">Abbrechen</Button></DialogClose>
-                        <Button type="submit">{isEditMode ? 'Speichern' : 'Hinzufügen'}</Button>
-                    </DialogFooter>
-                </form>
-            </DialogContent>
-        </Dialog>
-    );
-}
-
-function DeleteChisteAlert({ id, name, fetchChistes }: { id: string, name: string, fetchChistes: () => void }) {
-    const { toast } = useToast();
-    const [state, action] = useActionState(deleteChisteAction, { success: false, error: null, message: null });
-
-    const handleFetch = useCallback(() => {
-      fetchChistes();
-    }, [fetchChistes]);
-
-
-    useEffect(() => {
-        if (state.success) {
-            toast({ title: "Erfolg", description: state.message });
-            handleFetch();
-        }
-        if (state.error) {
-            toast({ variant: "destructive", title: "Fehler", description: state.error });
-        }
-    }, [state, toast, handleFetch]);
-
-    return (
-        <AlertDialog>
-            <AlertDialogTrigger asChild>
-                <Button size="sm" variant="destructive"><Trash2 className="h-4 w-4" /></Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-                <form action={action}>
-                    <input type="hidden" name="id" value={id} />
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Witz wirklich löschen?</AlertDialogTitle>
-                        <AlertDialogDescription>"{name.substring(0, 50)}..." wird dauerhaft gelöscht.</AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Abbrechen</AlertDialogCancel>
-                        <AlertDialogAction type="submit">Ja, löschen</AlertDialogAction>
-                    </AlertDialogFooter>
-                </form>
-            </AlertDialogContent>
-        </AlertDialog>
-    );
-}
-
 function ExcerptsManager({ initialExcerpts }: { initialExcerpts: Excerpt[] }) {
     const { toast } = useToast();
     const [excerpts, setExcerpts] = useState(initialExcerpts);
@@ -1237,7 +1059,6 @@ export function AdminDashboard({
     initialSubscribers,
     initialCampaigns,
     initialPalabrotas,
-    initialChistes,
     initialExcerpts,
 }: {
     initialLegalPages: LegalPage[];
@@ -1245,21 +1066,19 @@ export function AdminDashboard({
     initialSubscribers: Subscriber[];
     initialCampaigns: Campaign[];
     initialPalabrotas: Palabrota[];
-    initialChistes: Chiste[];
     initialExcerpts: Excerpt[];
 }) {
     const [activeTab, setActiveTab] = useState("übersicht");
 
     return (
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-8 h-auto">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-7 h-auto">
                 <TabsTrigger value="übersicht"><LayoutDashboard className="mr-2 h-4 w-4" />Übersicht</TabsTrigger>
                 <TabsTrigger value="leads"><Users className="mr-2 h-4 w-4" />Leads</TabsTrigger>
                 <TabsTrigger value="dynamic-lps">Dynamische LPs</TabsTrigger>
                 <TabsTrigger value="excerpts"><BookOpen className="mr-2 h-4 w-4" />Exzerpte</TabsTrigger>
                 <TabsTrigger value="newsletters">Newsletter</TabsTrigger>
                  <TabsTrigger value="palabrotas">Palabrotas</TabsTrigger>
-                 <TabsTrigger value="chistes">Chistes</TabsTrigger>
                 <TabsTrigger value="campaigns"><Send className="mr-2 h-4 w-4" />Kampagnen</TabsTrigger>
             </TabsList>
             <TabsContent value="übersicht" className="mt-6">
@@ -1284,9 +1103,6 @@ export function AdminDashboard({
             </TabsContent>
             <TabsContent value="palabrotas" className="mt-6">
                 <PalabrotasManager initialPalabrotas={initialPalabrotas} />
-            </TabsContent>
-            <TabsContent value="chistes" className="mt-6">
-                <ChistesManager initialChistes={initialChistes} />
             </TabsContent>
              <TabsContent value="campaigns" className="mt-6">
                 <CampaignsManager 

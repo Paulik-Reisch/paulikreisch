@@ -3,7 +3,7 @@
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import { AdminDashboard } from "@/components/admin/dashboard";
-import { getLegalPages, getNewsletters, getSubscribers, getCampaigns, getPalabrotas, getChistes, getExcerpts } from "@/lib/firestore";
+import { getLegalPages, getNewsletters, getSubscribers, getCampaigns, getPalabrotas, getExcerpts } from "@/lib/firestore";
 import { Button } from "@/components/ui/button";
 import { logoutAction } from "./actions";
 import { LogOut } from "lucide-react";
@@ -23,7 +23,6 @@ export default async function AdminPage() {
   const initialSubscribers = await getSubscribers();
   const initialCampaigns = await getCampaigns();
   const initialPalabrotas = await getPalabrotas();
-  const initialChistes = await getChistes();
   const initialExcerpts = await getExcerpts();
 
   return (
@@ -48,7 +47,6 @@ export default async function AdminPage() {
               initialSubscribers={initialSubscribers}
               initialCampaigns={initialCampaigns}
               initialPalabrotas={initialPalabrotas}
-              initialChistes={initialChistes}
               initialExcerpts={initialExcerpts}
             />
         </div>

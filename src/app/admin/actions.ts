@@ -8,7 +8,7 @@ import {
   deleteNewsletter,
   addNewsletter,
   duplicateNewsletter,
-  getAdminPassword,
+  getAdminCredentials,
   addTagsToSubscribers,
   getSubscribers,
   getNewsletter,
@@ -18,9 +18,6 @@ import {
   addPalabrota,
   updatePalabrota,
   deletePalabrota,
-  addChiste,
-  updateChiste,
-  deleteChiste,
   updateExcerpt,
 } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
@@ -32,7 +29,8 @@ import { Resend } from 'resend';
 
 
 const LoginSchema = z.object({
-    password: z.string(),
+    username: z.string().min(1, "Benutzername ist erforderlich."),
+    password: z.string().min(1, "Passwort ist erforderlich."),
 });
 
 export type LoginState = {
@@ -47,22 +45,26 @@ export async function loginAction(
     const validatedFields = LoginSchema.safeParse(Object.fromEntries(formData.entries()));
 
     if (!validatedFields.success) {
-        return { success: false, error: "Ungültige Eingabe." };
+        const errorMessages = validatedFields.error.errors.map(e => e.message).join('. ');
+        return { success: false, error: errorMessages };
     }
     
-    const adminPassword = await getAdminPassword();
+    const { username, password } = validatedFields.data;
+    const credentials = await getAdminCredentials();
 
-    if (!adminPassword) {
-        return { success: false, error: "Admin-Passwort ist in der Datenbank nicht konfiguriert." };
+    if (!credentials) {
+        return { success: false, error: "Admin-Zugangsdaten sind in der Datenbank nicht konfiguriert." };
     }
 
-    if (validatedFields.data.password !== adminPassword) {
-        return { success: false, error: "Falsches Passwort." };
+    const userPassword = credentials[username];
+
+    if (!userPassword || userPassword !== password) {
+        return { success: false, error: "Falscher Benutzername oder Passwort." };
     }
 
     // Create session
     const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
-    const session = await encrypt({ user: { id: 'admin' }, expires });
+    const session = await encrypt({ user: { id: username }, expires });
 
     cookies().set("session", session, { expires, httpOnly: true });
 
@@ -556,95 +558,6 @@ export async function bulkAddPalabrotasAction(
         const error = e as Error;
         return { success: false, error: `Fehler beim Massen-Import: ${error.message}`, message: null };
     }
-}
-
-// Chistes Actions
-export type ChisteState = {
-  success: boolean;
-  error: string | null;
-  message?: string;
-};
-
-const ChisteSchema = z.object({
-  id: z.string().optional(),
-  witz: z.string().min(1, "Witz ist erforderlich."),
-  uebersetzung: z.string().min(1, "Übersetzung ist erforderlich."),
-  erklaerung: z.string().min(1, "Erklärung ist erforderlich."),
-  kategorie: z.string().min(1, "Kategorie ist erforderlich."),
-  pfeiferFaktor: z.coerce.number().min(0).max(5),
-});
-
-export async function addChisteAction(
-  prevState: ChisteState,
-  formData: FormData
-): Promise<ChisteState> {
-  const validatedFields = ChisteSchema.omit({ id: true }).safeParse(Object.fromEntries(formData.entries()));
-
-  if (!validatedFields.success) {
-    const errorMessages = validatedFields.error.errors.map((e) => e.message).join(". ");
-    return { success: false, error: errorMessages, message: null };
-  }
-
-  try {
-    await addChiste(validatedFields.data);
-    revalidatePath("/admin");
-    revalidatePath("/lp-chistes");
-    return { success: true, error: null, message: "Witz erfolgreich hinzugefügt." };
-  } catch (e) {
-    const error = e as Error;
-    return { success: false, error: `Fehler beim Hinzufügen: ${error.message}`, message: null };
-  }
-}
-
-export async function updateChisteAction(
-  prevState: ChisteState,
-  formData: FormData
-): Promise<ChisteState> {
-  const validatedFields = ChisteSchema.safeParse(Object.fromEntries(formData.entries()));
-
-  if (!validatedFields.success) {
-    const errorMessages = validatedFields.error.errors.map((e) => e.message).join(". ");
-    return { success: false, error: errorMessages, message: null };
-  }
-
-  try {
-    const { id, ...dataToUpdate } = validatedFields.data;
-    if (!id) {
-        return { success: false, error: "ID ist erforderlich.", message: null };
-    }
-    await updateChiste(id, dataToUpdate);
-    revalidatePath("/admin");
-    revalidatePath("/lp-chistes");
-    return { success: true, error: null, message: "Witz erfolgreich aktualisiert." };
-  } catch (e) {
-    const error = e as Error;
-    return { success: false, error: `Fehler beim Aktualisieren: ${error.message}`, message: null };
-  }
-}
-
-const DeleteChisteSchema = z.object({
-  id: z.string(),
-});
-
-export async function deleteChisteAction(
-  prevState: ChisteState,
-  formData: FormData
-): Promise<ChisteState> {
-  const validatedFields = DeleteChisteSchema.safeParse(Object.fromEntries(formData.entries()));
-
-  if (!validatedFields.success) {
-    return { success: false, error: "Ungültige ID.", message: null };
-  }
-
-  try {
-    await deleteChiste(validatedFields.data.id);
-    revalidatePath("/admin");
-    revalidatePath("/lp-chistes");
-    return { success: true, error: null, message: "Witz erfolgreich gelöscht." };
-  } catch (e) {
-    const error = e as Error;
-    return { success: false, error: `Fehler beim Löschen: ${error.message}`, message: null };
-  }
 }
 
 // --- Excerpt Actions ---

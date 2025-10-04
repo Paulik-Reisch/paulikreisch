@@ -41,7 +41,7 @@ export function LoginForm() {
         description: state.error,
       });
     }
-  }, [state.error, toast]);
+  }, [state, toast]);
 
 
   return (
