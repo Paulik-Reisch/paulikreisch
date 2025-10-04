@@ -13,13 +13,14 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
-import { LogOut, LayoutDashboard, Database, HardDrive, Users, Home, BrainCircuit, TestTube2, Palette, Navigation, Cloud, Component } from "lucide-react"
+import { LogOut, LayoutDashboard, Database, HardDrive, Users, Home, BrainCircuit, TestTube2, Palette, Navigation, Cloud, Component, LineChart } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { logoutAction } from "@/app/admin/actions"
 import Link from "next/link"
 
 const isdmItems = [
   { href: "/internal/isdm/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/internal/isdm/analytics", label: "Analytics", icon: LineChart },
   { href: "/internal/isdm/auth", label: "Benutzer", icon: Users },
   { href: "/internal/isdm/database", label: "Firestore DB", icon: Database },
   { href: "/internal/isdm/storage", label: "Cloud Storage", icon: HardDrive },
@@ -42,7 +43,7 @@ export function InternalSidebar() {
     <Sidebar>
       <SidebarHeader>
         <div className="flex items-center gap-2">
-           <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-primary/20 text-primary">
+           <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-accent text-accent-foreground">
                 <Component className="h-5 w-5"/>
            </div>
            <span className="text-base font-semibold text-gray-800 group-data-[collapsible=icon]:hidden">

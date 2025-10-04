@@ -1,7 +1,9 @@
+
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Database, HardDrive, Cloud, ExternalLink, ArrowRight, Users, BrainCircuit, TestTube2, Palette, Navigation } from "lucide-react";
+import { Database, HardDrive, Cloud, ExternalLink, ArrowRight, Users, BrainCircuit, TestTube2, Palette, Navigation, LineChart, BarChart } from "lucide-react";
 import Link from "next/link";
+import { AnalyticsDashboard } from "./analytics/dashboard";
 
 const dashboardLinks = [
     {
@@ -56,34 +58,42 @@ const dashboardLinks = [
 
 export function InternalDashboard() {
   return (
-    <div>
-        <header className="mb-8">
-            <h1 className="text-2xl font-medium text-gray-900">Management Dashboard</h1>
+    <div className="space-y-8">
+        <header>
+            <h1 className="text-2xl font-medium text-gray-900">ISDM Dashboard</h1>
             <p className="text-sm text-gray-500 mt-1">Übersicht über Ihre Backend- und Frontend-Ressourcen.</p>
         </header>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {dashboardLinks.map(link => (
-                <Card key={link.title} className="gcp-card flex flex-col">
-                    <CardHeader>
-                        <div className="flex items-center gap-3">
-                            <div className="bg-primary/10 text-primary p-2 rounded-sm">
-                                <link.icon className="h-5 w-5"/>
+
+        <div>
+            <AnalyticsDashboard />
+        </div>
+
+        <div>
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Management-Tools</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {dashboardLinks.map(link => (
+                    <Card key={link.title} className="gcp-card flex flex-col">
+                        <CardHeader>
+                            <div className="flex items-center gap-3">
+                                <div className="bg-accent text-accent-foreground p-2 rounded-sm">
+                                    <link.icon className="h-5 w-5"/>
+                                </div>
+                                <CardTitle className="text-sm font-medium">{link.title}</CardTitle>
                             </div>
-                            <CardTitle className="text-sm font-medium">{link.title}</CardTitle>
-                        </div>
-                    </CardHeader>
-                    <CardContent className="flex-grow">
-                        <CardDescription className="text-xs">{link.description}</CardDescription>
-                    </CardContent>
-                    <CardContent>
-                         <Link href={link.href}>
-                            <Button className="gcp-button w-full justify-start text-left">
-                                Öffnen 
-                            </Button>
-                        </Link>
-                    </CardContent>
-                </Card>
-            ))}
+                        </CardHeader>
+                        <CardContent className="flex-grow">
+                            <CardDescription className="text-xs">{link.description}</CardDescription>
+                        </CardContent>
+                        <CardContent>
+                            <Link href={link.href}>
+                                <Button className="gcp-button w-full justify-start text-left">
+                                    Öffnen 
+                                </Button>
+                            </Link>
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
         </div>
     </div>
   );
