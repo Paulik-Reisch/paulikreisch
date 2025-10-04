@@ -62,7 +62,7 @@ export default async function LandingPageManager() {
                                         <TableCell className="font-medium">{page.title}</TableCell>
                                         <TableCell className="text-muted-foreground font-mono text-xs">/{page.id}</TableCell>
                                         <TableCell className="text-right">
-                                            <Link href={`/admin/editor/${page.id}`}>
+                                            <Link href={`/internal/idx/lp/editor/${page.id}`}>
                                                 <Button className="gcp-button" size="sm">
                                                     <Edit className="mr-2 h-3 w-3"/> Bearbeiten
                                                 </Button>
