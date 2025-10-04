@@ -141,7 +141,7 @@ export function DocumentEditor({
     }, [document, schema]);
 
     useEffect(() => {
-        if (state.success) {
+        if (state.success && !isPending) {
             toast({ title: "Erfolg", description: state.message });
             setIsOpen(false);
             onSave();
@@ -149,7 +149,7 @@ export function DocumentEditor({
         if (state.error) {
             toast({ variant: "destructive", title: "Fehler", description: state.error });
         }
-    }, [state, toast, onSave]);
+    }, [state, toast, onSave, isPending]);
 
     const handleFieldChange = (field: string, value: any) => {
         setFormData((prev: any) => ({ ...prev, [field]: value }));

@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Table, TableBody, TableCell, TableHeader, TableHead, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -94,14 +94,14 @@ export function CollectionView({ collectionId, documents, schema, onRefresh }: {
     }
     
     React.useEffect(() => {
-        if(deleteState.success) {
+        if (deleteState.success && !isDeleting) {
             toast({ title: "Erfolg", description: deleteState.message });
             onRefresh();
         }
         if (deleteState.error) {
             toast({ variant: "destructive", title: "Fehler", description: deleteState.error });
         }
-    }, [deleteState, toast, onRefresh]);
+    }, [deleteState, toast, onRefresh, isDeleting]);
 
     return (
         <div className="space-y-4">
