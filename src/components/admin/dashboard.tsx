@@ -48,7 +48,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, RefreshCw, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus, History, Flame, Upload, MessageSquareQuote, ToggleLeft, ToggleRight, BookOpen, ArrowUpRight } from "lucide-react";
+import { Loader2, RefreshCw, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus, History, Flame, Upload, MessageSquareQuote, ToggleLeft, ToggleRight, BookOpen, ArrowUpRight, DatabaseZap } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -1207,19 +1207,19 @@ function OverviewTab({
             </div>
 
             <div className="mt-8 grid gap-4 md:grid-cols-2">
-                <Card>
+                 <Card>
                     <CardHeader>
-                        <CardTitle className="font-headline text-xl">Schnellzugriff</CardTitle>
+                        <CardTitle className="font-headline text-xl flex items-center gap-2"><DatabaseZap className="h-5 w-5"/>Datenbank & Storage</CardTitle>
                     </CardHeader>
-                    <CardContent className="grid grid-cols-2 gap-4">
-                        <Button variant="outline" onClick={() => onTabChange('newsletters')}>
-                            <PlusCircle className="mr-2 h-4 w-4" />
-                            Neuer Newsletter
-                        </Button>
-                        <Button variant="outline" onClick={() => onTabChange('campaigns')}>
-                            <Send className="mr-2 h-4 w-4" />
-                            Neue Kampagne
-                        </Button>
+                    <CardContent>
+                        <p className="text-sm text-muted-foreground mb-4">
+                           Verwaltung von Datenbankregeln und Frontend-Speicher.
+                        </p>
+                        <Link href="/internal">
+                            <Button variant="outline">
+                                Zum IDSM <ArrowRight className="ml-2 h-4 w-4" />
+                            </Button>
+                        </Link>
                     </CardContent>
                 </Card>
                  <Card className="flex flex-col justify-center items-center p-6 text-center bg-muted/40">
