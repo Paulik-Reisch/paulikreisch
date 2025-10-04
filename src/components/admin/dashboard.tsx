@@ -1031,15 +1031,16 @@ function OverviewTab({
             <div className="mt-8 grid gap-4 md:grid-cols-2">
                  <Card>
                     <CardHeader>
-                        <CardTitle className="font-headline text-xl flex items-center gap-2"><DatabaseZap className="h-5 w-5"/>Datenbank & Storage</CardTitle>
+                        <CardTitle className="font-headline text-xl flex items-center gap-2"><DatabaseZap className="h-5 w-5"/>IMCORE</CardTitle>
+                        <CardDescription>(Internal Management Core)</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <p className="text-sm text-muted-foreground mb-4">
-                           Verwaltung von Datenbankregeln und Frontend-Speicher.
+                           Erweiterte Verwaltung von Datenbank, Storage, Analytics und KI-Flows.
                         </p>
                         <Link href="/internal">
                             <Button variant="outline">
-                                Zum IDSM <ArrowRight className="ml-2 h-4 w-4" />
+                                Zum IMCORE <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
                         </Link>
                     </CardContent>

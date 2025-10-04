@@ -24,7 +24,7 @@ export default async function AdminLoginPage() {
               <AdminIcon />
               <h1 className="font-semibold text-2xl mt-4">Paulik & Reisch</h1>
               <p className="text-3xl font-bold tracking-tighter mt-1">IDSM/IFEM/IWFM</p>
-              <p className="text-3xl font-bold tracking-tighter">ADMIN</p>
+              <p className="text-3xl font-bold tracking-tighter">IMCORE</p>
           </div>
           <LoginForm />
           <div className="mt-12 text-xs text-muted-foreground space-y-2 max-w-lg">
