@@ -2,6 +2,7 @@
 
 "use client"
 
+import * as React from "react"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { LineChart as LineChartIcon, Users, BarChart, Map, Link as LinkIcon, ExternalLink, TrendingUp, TrendingDown, ArrowRight, Smartphone, Globe, Clock, Sparkles, ShieldCheck, UserCheck, CalendarDays, Activity } from "lucide-react";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
