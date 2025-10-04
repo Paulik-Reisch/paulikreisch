@@ -12,7 +12,10 @@ import {
     LegalPage,
     Palabrota,
     Excerpt,
+    getNewsletters,
+    getLegalPages,
     getSubscribers,
+    getCampaigns,
     getPalabrotas,
     getExcerpts
 } from "@/lib/firestore";
@@ -1054,22 +1057,61 @@ function OverviewTab({
     )
 }
 
-export function AdminDashboard({
-    initialLegalPages,
-    initialNewsletters,
-    initialSubscribers,
-    initialCampaigns,
-    initialPalabrotas,
-    initialExcerpts,
-}: {
-    initialLegalPages: LegalPage[];
-    initialNewsletters: Newsletter[];
-    initialSubscribers: Subscriber[];
-    initialCampaigns: Campaign[];
-    initialPalabrotas: Palabrota[];
-    initialExcerpts: Excerpt[];
-}) {
+export function AdminDashboard() {
     const [activeTab, setActiveTab] = useState("übersicht");
+    const [loading, setLoading] = useState(true);
+    const [initialData, setInitialData] = useState({
+        legalPages: [] as LegalPage[],
+        newsletters: [] as Newsletter[],
+        subscribers: [] as Subscriber[],
+        campaigns: [] as Campaign[],
+        palabrotas: [] as Palabrota[],
+        excerpts: [] as Excerpt[],
+    });
+
+    useEffect(() => {
+        async function loadData() {
+            setLoading(true);
+            try {
+                const [
+                    legalPages,
+                    newsletters,
+                    subscribers,
+                    campaigns,
+                    palabrotas,
+                    excerpts,
+                ] = await Promise.all([
+                    getLegalPages(),
+                    getNewsletters(),
+                    getSubscribers(),
+                    getCampaigns(),
+                    getPalabrotas(),
+                    getExcerpts(),
+                ]);
+                setInitialData({
+                    legalPages,
+                    newsletters,
+                    subscribers,
+                    campaigns,
+                    palabrotas,
+                    excerpts,
+                });
+            } catch (error) {
+                console.error("Failed to load admin dashboard data:", error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        loadData();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-64">
+                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            </div>
+        )
+    }
 
     return (
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -1084,32 +1126,32 @@ export function AdminDashboard({
             </TabsList>
             <TabsContent value="übersicht" className="mt-6">
                 <OverviewTab 
-                    newsletters={initialNewsletters}
-                    subscribers={initialSubscribers}
-                    legalPages={initialLegalPages}
+                    newsletters={initialData.newsletters}
+                    subscribers={initialData.subscribers}
+                    legalPages={initialData.legalPages}
                     onTabChange={setActiveTab}
                 />
             </TabsContent>
             <TabsContent value="leads" className="mt-6">
-                <LeadsTable initialSubscribers={initialSubscribers} />
+                <LeadsTable initialSubscribers={initialData.subscribers} />
             </TabsContent>
              <TabsContent value="dynamic-lps" className="mt-6">
-                <LegalPagesManager initialLegalPages={initialLegalPages} />
+                <LegalPagesManager initialLegalPages={initialData.legalPages} />
             </TabsContent>
             <TabsContent value="excerpts" className="mt-6">
-                <ExcerptsManager initialExcerpts={initialExcerpts} />
+                <ExcerptsManager initialExcerpts={initialData.excerpts} />
             </TabsContent>
             <TabsContent value="newsletters" className="mt-6">
-                <NewsletterManager initialNewsletters={initialNewsletters} onTabChange={setActiveTab} />
+                <NewsletterManager initialNewsletters={initialData.newsletters} onTabChange={setActiveTab} />
             </TabsContent>
             <TabsContent value="palabrotas" className="mt-6">
-                <PalabrotasManager initialPalabrotas={initialPalabrotas} />
+                <PalabrotasManager initialPalabrotas={initialData.palabrotas} />
             </TabsContent>
              <TabsContent value="campaigns" className="mt-6">
                 <CampaignsManager 
-                    initialNewsletters={initialNewsletters} 
-                    initialSubscribers={initialSubscribers}
-                    initialCampaigns={initialCampaigns}
+                    initialNewsletters={initialData.newsletters} 
+                    initialSubscribers={initialData.subscribers}
+                    initialCampaigns={initialData.campaigns}
                 />
             </TabsContent>
         </Tabs>

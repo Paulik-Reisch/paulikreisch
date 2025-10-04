@@ -3,7 +3,6 @@
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import { AdminDashboard } from "@/components/admin/dashboard";
-import { getLegalPages, getNewsletters, getSubscribers, getCampaigns, getPalabrotas, getExcerpts } from "@/lib/firestore";
 import { Button } from "@/components/ui/button";
 import { logoutAction } from "./actions";
 import { LogOut } from "lucide-react";
@@ -16,14 +15,6 @@ export default async function AdminPage() {
   if (!session) {
     redirect("/login");
   }
-
-  // Fetch initial data on the server
-  const initialLegalPages = await getLegalPages();
-  const initialNewsletters = await getNewsletters();
-  const initialSubscribers = await getSubscribers();
-  const initialCampaigns = await getCampaigns();
-  const initialPalabrotas = await getPalabrotas();
-  const initialExcerpts = await getExcerpts();
 
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
@@ -41,14 +32,7 @@ export default async function AdminPage() {
                 </Button>
               </form>
             </div>
-            <AdminDashboard 
-              initialLegalPages={initialLegalPages}
-              initialNewsletters={initialNewsletters}
-              initialSubscribers={initialSubscribers}
-              initialCampaigns={initialCampaigns}
-              initialPalabrotas={initialPalabrotas}
-              initialExcerpts={initialExcerpts}
-            />
+            <AdminDashboard />
         </div>
       </main>
       <Footer />
