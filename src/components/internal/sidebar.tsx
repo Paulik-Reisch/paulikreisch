@@ -1,3 +1,4 @@
+
 "use client"
 
 import {
@@ -12,7 +13,7 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
-import { LogOut, LayoutDashboard, Database, HardDrive, Users, Home, BrainCircuit, TestTube2, Palette, Navigation, Cloud } from "lucide-react"
+import { LogOut, LayoutDashboard, Database, HardDrive, Users, Home, BrainCircuit, TestTube2, Palette, Navigation, Cloud, Component } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { logoutAction } from "@/app/admin/actions"
 import Link from "next/link"
@@ -42,7 +43,7 @@ export function InternalSidebar() {
       <SidebarHeader>
         <div className="flex items-center gap-2">
            <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-primary/20 text-primary">
-                <Database className="h-5 w-5"/>
+                <Component className="h-5 w-5"/>
            </div>
            <span className="text-base font-semibold text-gray-800 group-data-[collapsible=icon]:hidden">
                 M-Dashboard

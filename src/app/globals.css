@@ -61,19 +61,19 @@
 
   .internal-dashboard {
     --radius: 0.25rem;
-    --primary: 240 5% 34%; /* neutral-700 */
-    --primary-foreground: 240 5% 95%;
+    --primary: 240 4% 60%; /* #999999 */
+    --primary-foreground: 240 5% 98%;
     --accent: 240 5% 96%;
     --accent-foreground: 240 10% 3.9%;
-    --ring: 240 5% 34%;
+    --ring: 240 4% 60%;
   }
 
   .dark .internal-dashboard {
-    --primary: 240 5% 83%; /* neutral-300 */
+    --primary: 240 4% 60%; /* #999999 */
     --primary-foreground: 240 5% 10%;
     --accent: 240 4% 15%;
     --accent-foreground: 0 0% 98%;
-    --ring: 240 5% 83%;
+    --ring: 240 4% 60%;
   }
 
 }
