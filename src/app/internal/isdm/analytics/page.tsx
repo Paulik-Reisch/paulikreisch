@@ -8,7 +8,7 @@ export default function AnalyticsPage() {
                 <h1 className="text-2xl font-medium text-gray-900">Analytics</h1>
                 <p className="text-sm text-gray-500 mt-1">Detaillierte Analyse der Webseiten-Nutzung.</p>
             </header>
-            <AnalyticsDashboard isDetailed={true} />
+            <AnalyticsDashboard />
         </div>
     );
 }

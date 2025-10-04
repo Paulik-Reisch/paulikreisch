@@ -1,9 +1,10 @@
 
+
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Database, HardDrive, Cloud, ExternalLink, ArrowRight, Users, BrainCircuit, TestTube2, Palette, Navigation, LineChart, BarChart } from "lucide-react";
 import Link from "next/link";
-import { AnalyticsDashboard } from "./analytics/dashboard";
+import { AnalyticsSummary } from "./analytics/summary";
 
 const dashboardLinks = [
     {
@@ -65,7 +66,7 @@ export function InternalDashboard() {
         </header>
 
         <div>
-            <AnalyticsDashboard />
+            <AnalyticsSummary />
         </div>
 
         <div>

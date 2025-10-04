@@ -1,111 +1,158 @@
 
+
 "use client"
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { LineChart, BarChart, Users, TrafficCone, MousePointerClick, ArrowRight } from "lucide-react";
+import { LineChart, Users, BarChart, Map, Link as LinkIcon, ExternalLink, TrendingUp, TrendingDown, ArrowRight } from "lucide-react";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { Line, XAxis, YAxis, CartesianGrid, Tooltip, Bar, ComposedChart } from "recharts";
+import { Line, XAxis, YAxis, CartesianGrid, Bar } from "recharts";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableHeader, TableHead, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 
-const chartData = [
-  { date: "2024-04-01", visitors: 240, sources: { organic: 120, direct: 80, referral: 40 } },
-  { date: "2024-04-02", visitors: 310, sources: { organic: 150, direct: 100, referral: 60 } },
-  { date: "2024-04-03", visitors: 280, sources: { organic: 140, direct: 90, referral: 50 } },
-  { date: "2024-04-04", visitors: 450, sources: { organic: 250, direct: 120, referral: 80 } },
-  { date: "2024-04-05", visitors: 420, sources: { organic: 220, direct: 150, referral: 50 } },
-  { date: "2024-04-06", visitors: 510, sources: { organic: 280, direct: 160, referral: 70 } },
-  { date: "2024-04-07", visitors: 480, sources: { organic: 260, direct: 140, referral: 80 } },
+const chartData = Array.from({ length: 30 }, (_, i) => {
+    const date = new Date();
+    date.setDate(date.getDate() - (29 - i));
+    return {
+        date: date.toISOString().split('T')[0],
+        visitors: Math.floor(Math.random() * (500 - 150 + 1)) + 150,
+        pageviews: Math.floor(Math.random() * (2000 - 800 + 1)) + 800,
+    };
+});
+
+const topPages = [
+    { path: "/", views: "12,402", change: "+15.2%" },
+    { path: "/buchhandlung-paulik-reisch", views: "9,871", change: "+8.1%" },
+    { path: "/lp-pfeifer", views: "7,123", change: "+22.4%" },
+    { path: "/lp-satire-typ-test", views: "5,432", change: "-2.3%" },
+    { path: "/exzerpte", views: "3,109", change: "+5.9%" },
 ];
 
+const topRegions = [
+    { country: "Deutschland", flag: "🇩🇪", users: "28,456", percentage: 75 },
+    { country: "Österreich", flag: "🇦🇹", users: "3,789", percentage: 10 },
+    { country: "Schweiz", flag: "🇨🇭", users: "2,273", percentage: 6 },
+    { country: "USA", flag: "🇺🇸", users: "1,136", percentage: 3 },
+    { country: "Niederlande", flag: "🇳🇱", users: "758", percentage: 2 },
+];
+
+
 const chartConfig = {
-  visitors: {
-    label: "Besucher",
-    color: "hsl(var(--primary))",
-  },
-  organic: {
-      label: "Organisch",
-      color: "#22c55e",
-  },
-  direct: {
-      label: "Direkt",
-      color: "#3b82f6",
-  },
-  referral: {
-      label: "Verweis",
-      color: "#f97316",
-  }
+  visitors: { label: "Besucher", color: "hsl(var(--primary))" },
+  pageviews: { label: "Seitenaufrufe", color: "#82ca9d" },
 };
 
-export function AnalyticsDashboard({ isDetailed = false }: { isDetailed?: boolean }) {
-    
-    if (!isDetailed) {
-        return (
-             <Card className="gcp-card">
-                <CardHeader>
-                    <CardTitle className="text-base font-medium flex items-center justify-between">
-                       <span>Analytics-Übersicht</span>
-                        <Link href="/internal/isdm/analytics">
-                            <Button className="gcp-button h-7">
-                                Mehr Details <ArrowRight className="ml-2 h-3 w-3" />
-                            </Button>
-                        </Link>
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                     <div className="h-48">
-                         <ChartContainer config={chartConfig}>
-                            <ComposedChart data={chartData}>
-                                <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(value) => new Date(value).toLocaleDateString("de-DE", { month: "short", day: "numeric" })} hide />
-                                <ChartTooltip content={<ChartTooltipContent indicator="line" />} />
-                                <Line type="monotone" dataKey="visitors" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
-                            </ComposedChart>
-                        </ChartContainer>
-                    </div>
-                </CardContent>
-            </Card>
-        )
-    }
-
+function StatCard({ title, value, change, icon: Icon }: { title: string; value: string; change: string; icon: React.ElementType }) {
+    const isPositive = change.startsWith('+');
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        <Card className="gcp-card">
+            <CardHeader className="pb-2">
+                <div className="flex items-center justify-between">
+                    <CardTitle className="text-sm font-medium">{title}</CardTitle>
+                    <Icon className="h-4 w-4 text-muted-foreground" />
+                </div>
+            </CardHeader>
+            <CardContent>
+                <div className="text-2xl font-bold">{value}</div>
+                <p className={`text-xs ${isPositive ? 'text-green-600' : 'text-destructive'}`}>{change} vs. Vormonat</p>
+            </CardContent>
+        </Card>
+    );
+}
+
+export function AnalyticsDashboard() {
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+            <div className="xl:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <StatCard title="Besucher (30 Tage)" value="38,4K" change="+12.5%" icon={Users} />
+                <StatCard title="Sitzungen" value="52,1K" change="+9.8%" icon={BarChart} />
+                <StatCard title="Absprungrate" value="42.3%" change="-5.1%" icon={TrendingDown} />
+                <StatCard title="Durchschn. Sitzungsdauer" value="2m 45s" change="+3.2%" icon={TrendingUp} />
+            </div>
+            
             <Card className="gcp-card xl:col-span-2">
                 <CardHeader>
-                    <CardTitle className="text-base font-medium flex items-center gap-2"><Users className="h-5 w-5"/>Besucher pro Tag</CardTitle>
+                    <CardTitle className="text-base font-medium">Besucher & Seitenaufrufe (letzte 30 Tage)</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="h-72">
                          <ChartContainer config={chartConfig}>
-                            <ComposedChart data={chartData}>
+                            <LineChart data={chartData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
                                 <CartesianGrid vertical={false} />
-                                <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(value) => new Date(value).toLocaleDateString("de-DE", { month: "short", day: "numeric" })} />
-                                <YAxis />
+                                <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(value) => new Date(value).toLocaleDateString("de-DE", { day: "numeric" })} />
+                                <YAxis yAxisId="left" stroke={chartConfig.visitors.color} />
+                                <YAxis yAxisId="right" orientation="right" stroke={chartConfig.pageviews.color} />
                                 <ChartTooltip content={<ChartTooltipContent indicator="line" />} />
-                                <Line type="monotone" dataKey="visitors" stroke="hsl(var(--primary))" strokeWidth={2} dot={true} />
-                            </ComposedChart>
+                                <Line yAxisId="left" type="monotone" dataKey="visitors" stroke={chartConfig.visitors.color} strokeWidth={2} dot={false} name="Besucher"/>
+                                <Line yAxisId="right" type="monotone" dataKey="pageviews" stroke={chartConfig.pageviews.color} strokeWidth={2} dot={false} name="Seitenaufrufe"/>
+                            </LineChart>
                         </ChartContainer>
                     </div>
                 </CardContent>
             </Card>
-            <Card className="gcp-card">
+
+            <Card className="gcp-card xl:col-span-1">
                 <CardHeader>
-                    <CardTitle className="text-base font-medium flex items-center gap-2"><TrafficCone className="h-5 w-5"/>Traffic-Quellen</CardTitle>
+                    <CardTitle className="text-base font-medium flex items-center justify-between">
+                       <span>Top Seiten</span>
+                       <LinkIcon className="h-4 w-4 text-muted-foreground" />
+                    </CardTitle>
                 </CardHeader>
                 <CardContent>
-                     <div className="h-72">
-                         <ChartContainer config={chartConfig}>
-                            <ComposedChart data={chartData} layout="vertical">
-                                <XAxis type="number" hide />
-                                <YAxis dataKey="date" type="category" tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(value) => new Date(value).toLocaleDateString("de-DE", { weekday: "short" })} />
-                                <ChartTooltip content={<ChartTooltipContent indicator="line" />} />
-                                <Bar dataKey="sources.organic" name="Organisch" stackId="a" fill={chartConfig.organic.color} radius={[0, 4, 4, 0]}/>
-                                <Bar dataKey="sources.direct" name="Direkt" stackId="a" fill={chartConfig.direct.color} />
-                                <Bar dataKey="sources.referral" name="Verweis" stackId="a" fill={chartConfig.referral.color} radius={[4, 0, 0, 4]}/>
-                            </ComposedChart>
-                        </ChartContainer>
-                    </div>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Pfad</TableHead>
+                                <TableHead className="text-right">Aufrufe</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {topPages.map((page) => (
+                                <TableRow key={page.path}>
+                                    <TableCell className="font-medium text-xs truncate">{page.path}</TableCell>
+                                    <TableCell className="text-right">{page.views}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
                 </CardContent>
             </Card>
+
+            <Card className="gcp-card xl:col-span-1">
+                 <CardHeader>
+                    <CardTitle className="text-base font-medium flex items-center justify-between">
+                       <span>Top Regionen</span>
+                       <Map className="h-4 w-4 text-muted-foreground" />
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    {topRegions.map((region) => (
+                        <div key={region.country} className="flex items-center justify-between text-sm mb-3">
+                            <div className="flex items-center gap-2">
+                               <span>{region.flag}</span>
+                               <span>{region.country}</span>
+                            </div>
+                            <span className="font-medium">{region.users}</span>
+                        </div>
+                    ))}
+                </CardContent>
+            </Card>
+            
+            <Card className="gcp-card xl:col-span-4 bg-primary text-primary-foreground">
+                <CardHeader>
+                    <CardTitle>Firebase Analytics ist nicht verbunden</CardTitle>
+                    <CardDescription className="text-primary-foreground/80">
+                        Diese Daten sind aktuell nur Platzhalter. Um echte Nutzerdaten zu sehen, müssen Sie Firebase Analytics in Ihrer App einrichten und mit diesem Dashboard verbinden.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                     <Button variant="secondary" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90">
+                        Firebase Analytics verbinden (demnächst) <ExternalLink className="ml-2 h-4 w-4"/>
+                    </Button>
+                </CardContent>
+            </Card>
+
         </div>
     )
 }
