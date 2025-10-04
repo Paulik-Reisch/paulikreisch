@@ -1,7 +1,5 @@
 
 
-"use server";
-
 import { app } from "@/app/firebase";
 import { 
     getFirestore, 
@@ -126,9 +124,46 @@ export interface Excerpt {
     lastUpdated: string;
 }
 
+export interface Log {
+    id: string;
+    user: string;
+    action: string;
+    details: string;
+    timestamp: string;
+}
 
 const db = getFirestore(app);
 
+// --- LOGGING ---
+export async function addLog(user: string, action: string, details: string) {
+    try {
+        const logsCol = collection(db, 'logs');
+        await addDoc(logsCol, {
+            user,
+            action,
+            details,
+            timestamp: Timestamp.now(),
+        });
+    } catch (e) {
+        console.error("Error writing log:", e);
+    }
+}
+
+export async function getLogs(): Promise<Log[]> {
+    const logsCol = collection(db, 'logs');
+    const q = query(logsCol, orderBy("timestamp", "desc"));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+            id: doc.id,
+            ...data,
+            timestamp: (data.timestamp as Timestamp).toDate().toISOString(),
+        } as Log;
+    });
+}
+
+// --- ADMIN ---
 export async function getAdminCredentials(): Promise<Record<string, string> | null> {
     try {
         const docRef = doc(db, "settings", "admin");
@@ -167,29 +202,29 @@ export async function getOrders(): Promise<Order[]> {
     return orderList;
 }
 
-export async function addOrder(orderData: any) {
+export async function addOrder(orderData: any, user: string) {
     const ordersCol = collection(db, 'orders');
     const dataWithTimestamp = {
         ...orderData,
         timestamp: Timestamp.now()
     };
     await addDoc(ordersCol, dataWithTimestamp);
+    await addLog(user, 'Bestellung erstellt', `Bestell-Typ: ${orderData.orderType || 'N/A'}`);
     
     // Also add to subscribers if not already there
     if (orderData.email) {
-        await addSubscriber(orderData.email, orderData.orderType || 'Order');
+        await addSubscriber(orderData.email, orderData.orderType || 'Order', user);
     }
 }
 
 // --- SUBSCRIBERS ---
-export async function addSubscriber(email: string, source?: string) {
+export async function addSubscriber(email: string, source: string | undefined, user: string) {
     const docId = email.toLowerCase();
     const subscriberRef = doc(db, 'subscribers', docId);
     const docSnap = await getDoc(subscriberRef);
 
     if (docSnap.exists()) {
         // If the subscriber already exists, update the source array
-        // Make sure `source` field is an array.
         const existingData = docSnap.data();
         const existingSources = existingData.source || [];
         const newSources = Array.isArray(existingSources) ? existingSources : [existingSources];
@@ -198,8 +233,8 @@ export async function addSubscriber(email: string, source?: string) {
             await updateDoc(subscriberRef, {
                 source: arrayUnion(source)
             });
+             await addLog(user, 'Abonnent aktualisiert', `Neue Quelle '${source}' für ${email} hinzugefügt`);
         }
-        throw new Error(`Ein Abonnent mit der E-Mail "${email}" existiert bereits.`);
     } else {
         await setDoc(subscriberRef, { 
             email: email,
@@ -207,6 +242,7 @@ export async function addSubscriber(email: string, source?: string) {
             subscribedAt: Timestamp.now(),
             tags: [],
         });
+        await addLog(user, 'Abonnent hinzugefügt', `${email} über Quelle '${source}'`);
     }
 }
 
@@ -232,7 +268,7 @@ export async function getSubscribers(): Promise<Subscriber[]> {
     return subsList;
 }
 
-export async function addTagsToSubscribers(subscriberIds: string[], tags: string[]) {
+export async function addTagsToSubscribers(subscriberIds: string[], tags: string[], user: string) {
     if (!subscriberIds || subscriberIds.length === 0 || !tags || tags.length === 0) {
         throw new Error("Subscriber IDs and tags are required.");
     }
@@ -244,6 +280,7 @@ export async function addTagsToSubscribers(subscriberIds: string[], tags: string
         }));
     }
     await Promise.all(batch);
+    await addLog(user, 'Tags zugewiesen', `${tags.join(', ')} zu ${subscriberIds.length} Abonnenten`);
 }
 
 
@@ -313,12 +350,13 @@ export async function getLegalPage(slug: string): Promise<LegalPage | null> {
     }
 }
 
-export async function updateLegalPage(pageId: string, data: Partial<Omit<LegalPage, 'id'>>) {
+export async function updateLegalPage(pageId: string, data: Partial<Omit<LegalPage, 'id'>>, user: string) {
     const pageRef = doc(db, 'legal', pageId);
     await updateDoc(pageRef, {
         ...data,
         lastUpdated: Timestamp.now(),
     });
+    await addLog(user, 'LP aktualisiert', `Seite: /${pageId}`);
 }
 
 
@@ -362,7 +400,7 @@ export async function getNewsletter(id: string): Promise<Newsletter | null> {
     }
 }
 
-export async function addNewsletter(data: { name: string; subject: string }): Promise<string> {
+export async function addNewsletter(data: { name: string; subject: string }, user: string): Promise<string> {
     const newslettersCol = collection(db, 'newsletters');
     const docRef = await addDoc(newslettersCol, {
         ...data,
@@ -371,10 +409,11 @@ export async function addNewsletter(data: { name: string; subject: string }): Pr
         lastUpdated: Timestamp.now(),
         useWrapper: true,
     });
+    await addLog(user, 'Newsletter erstellt', `Name: ${data.name}`);
     return docRef.id;
 }
 
-export async function duplicateNewsletter(id: string): Promise<string> {
+export async function duplicateNewsletter(id: string, user: string): Promise<string> {
     const originalNewsletter = await getNewsletter(id);
     if (!originalNewsletter) {
         throw new Error("Original newsletter not found.");
@@ -392,258 +431,36 @@ export async function duplicateNewsletter(id: string): Promise<string> {
         useWrapper: originalNewsletter.useWrapper,
     });
     
+    await addLog(user, 'Newsletter dupliziert', `Neue Kopie von '${originalNewsletter.name}'`);
     return newNewsletterRef.id;
 }
 
 
-function generateComponentHTML(component: NewsletterComponent): string {
-    const props = component.props;
-    const align = props.alignment as 'left' | 'center' | 'right' || 'left';
-
-    switch(component.type) {
-        case 'heading':
-            return `
-                <tr>
-                    <td align="${align}" style="padding: 10px 20px; text-align: ${align};">
-                        <h1 style="font-family: Arial, sans-serif; font-size: ${props.fontSize || '24px'}; color: ${props.color || '#000000'}; margin: 0;">${props.text || ''}</h1>
-                    </td>
-                </tr>
-            `;
-        case 'text':
-             return `
-                 <tr>
-                    <td align="${align}" style="padding: 10px 20px; text-align: ${align};">
-                        <p style="font-family: Arial, sans-serif; font-size: ${props.fontSize || '16px'}; color: ${props.color || '#333333'}; margin: 0; line-height: 1.5;">${(props.text || '').replace(/\n/g, '<br />')}</p>
-                    </td>
-                </tr>
-            `;
-        case 'button':
-            return `
-                <tr>
-                    <td align="${align}" style="padding: 20px; text-align: ${align};">
-                      <table border="0" cellspacing="0" cellpadding="0" role="presentation" align="${align}" style="margin-left: ${align === 'center' ? 'auto' : '0'}; margin-right: ${align === 'center' ? 'auto' : '0'};">
-                        <tr>
-                          <td align="center" style="background-color:${props.backgroundColor || '#007bff'};" bgcolor="${props.backgroundColor || '#007bff'}">
-                            <a href="${props.href || '#'}" target="_blank" style="font-size: ${props.fontSize || '16px'}; font-family: Arial, sans-serif; color: ${props.color || '#ffffff'}; text-decoration: none; padding: 10px 25px; border: 1px solid ${props.backgroundColor || '#007bff'}; display: inline-block; font-weight: bold;">
-                              ${props.text || ''}
-                            </a>
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                </tr>
-            `;
-        case 'image':
-            const width = props.width ? parseInt(props.width, 10) : 600;
-            return `
-                <tr>
-                    <td align="${align}" style="padding: 10px 20px;">
-                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" align="${align}" style="max-width: 100%; margin-left: ${align === 'center' ? 'auto' : '0'}; margin-right: ${align === 'center' ? 'auto' : '0'};">
-                            <tr>
-                                <td>
-                                    <img src="${props.src || 'https://placehold.co/600x400'}" alt="${props.alt || ''}" style="width: 100%; height: auto; display: block; max-width: ${width}px;" width="${width}" />
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            `;
-        case 'separator':
-            return `
-                <tr>
-                    <td style="padding: ${props.padding || 10}px 20px;">
-                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                            <tr>
-                                <td height="1" style="border-bottom: ${props.thickness || 1}px ${props.style || 'solid'} ${props.color || '#cccccc'};"></td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            `;
-        case 'spacer':
-            return `
-                <tr>
-                    <td style="height: ${props.height || 20}px; line-height: ${props.height || 20}px; font-size: 1px;">&nbsp;</td>
-                </tr>
-            `;
-        case 'two-columns':
-            return `
-                <tr>
-                    <td style="padding: 10px 20px;">
-                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                            <tr>
-                                <td valign="top" width="50%" style="padding-right: 10px;">
-                                    <p style="font-family: Arial, sans-serif; font-size: 14px; color: #333333; margin: 0; line-height: 1.5;">${(props.text1 || '').replace(/\n/g, '<br />')}</p>
-                                </td>
-                                <td valign="top" width="50%" style="padding-left: 10px;">
-                                    <p style="font-family: Arial, sans-serif; font-size: 14px; color: #333333; margin: 0; line-height: 1.5;">${(props.text2 || '').replace(/\n/g, '<br />')}</p>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            `;
-        case 'image-text':
-            const imageOrder = props.layout === 'image-right' ? 2 : 1;
-            const textOrder = props.layout === 'image-right' ? 1 : 2;
-            const widths = (props.columnWidth || '50/50').split('/');
-            const imageWidthPercent = widths[imageOrder - 1];
-            const textWidthPercent = widths[textOrder - 1];
-            
-            const imageContent = `
-                <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                    <tr>
-                        <td align="center" style="padding: 5px;">
-                             <img src="${props.src || 'https://placehold.co/300x200'}" alt="${props.alt || ''}" style="width: 100%; height: auto; display: block;" width="100%" />
-                        </td>
-                    </tr>
-                </table>`;
-
-            const textContent = `
-                <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                    <tr>
-                        <td align="left" style="padding: 5px;">
-                            <p style="font-family: Arial, sans-serif; font-size: 14px; color: #333333; margin: 0; line-height: 1.5;">${(props.text || '').replace(/\n/g, '<br />')}</p>
-                        </td>
-                    </tr>
-                </table>`;
-
-            return `
-                <tr>
-                    <td style="padding: 10px;">
-                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                            <tr>
-                                <td valign="top" width="${imageWidthPercent}%" style="${textOrder === 1 ? 'padding-right:10px;' : 'padding-left:10px;'}">
-                                    ${imageOrder === 1 ? imageContent : textContent}
-                                </td>
-                                <td valign="top" width="${textWidthPercent}%" style="${imageOrder === 1 ? 'padding-left:10px;' : 'padding-right:10px;'}">
-                                    ${textOrder === 2 ? textContent : imageContent}
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            `;
-        case 'customHtml':
-            return props.html || '';
-        default:
-            return '';
-    }
-}
-
-function generateEmailHTML(components: NewsletterComponent[], subject: string, previewUrl: string, useWrapper: boolean): string {
-    const body = components.map(generateComponentHTML).join('\n');
-
-    if (!useWrapper) {
-        return body;
-    }
-
-    return `
-        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-        <html xmlns="http://www.w3.org/1999/xhtml">
-        <head>
-            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-            <title>${subject}</title>
-            <style type="text/css">
-                body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
-                table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
-                img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
-                table { border-collapse: collapse !important; }
-                body { height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; }
-            </style>
-        </head>
-        <body style="margin: 0 !important; padding: 0 !important; background-color: #f4f4f4;">
-            <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                <tr>
-                    <td align="center" style="background-color: #f4f4f4;">
-                        <!--[if (gte mso 9)|(IE)]>
-                        <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
-                        <tr>
-                        <td align="center" valign="top" width="600">
-                        <![endif]-->
-                        <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="max-width: 600px; width: 100%;">
-                            <tr>
-                                <td align="center" valign="top" style="font-size: 11px; font-family: Arial, sans-serif; color: #888888; padding: 10px;">
-                                    E-Mail wird nicht korrekt angezeigt? <a href="${previewUrl}" target="_blank" style="color: #888888; text-decoration: underline;">Online ansehen</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="center" valign="top" style="background-color: #ffffff;">
-                                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
-                                        ${body}
-                                    </table>
-                                </td>
-                            </tr>
-                            <!-- Footer -->
-                            <tr>
-                                <td align="center" style="padding:20px; background-color:#f4f4f4; font-size:12px; line-height:18px; color:#666666; font-family: Arial, sans-serif;">
-                                    <p style="margin:0 0 8px 0;">Die satirische "Hallo Welt"-Bücherserie ist eine Idee und Kreation von Philipp Paulik (Autor), Maximilian Reisch (Autor), Luin Schiffbauer (Illustrator) und weiteren Mitwirkenden. Veröffentlicht und produziert durch Kindle Direct Publishing (KDP) der Amazon Distribution GmbH, Leipzig sowie ggf. weitere Verlags- und Produktionspartner.
-                                    </p>
-                                    <p style="margin:0 0 8px 0;">Du möchtest keine weiteren E‑Mails erhalten?
-                                    <a href="/nl/unsubscribe" target="_blank" style="color:#0A5EBF; text-decoration:underline;">Hier abmelden</a>.
-                                    </p>
-                                    <p style="margin:0;">&copy; ${new Date().getFullYear()} Hallo Welt – Philipp Paulik & Maximilian Reisch</p>
-                                </td>
-                            </tr>
-                        </table>
-                        <!--[if (gte mso 9)|(IE)]>
-                        </td>
-                        </tr>
-                        </table>
-                        <![endif]-->
-                    </td>
-                </tr>
-            </table>
-        </body>
-        </html>
-    `;
-}
-
-export async function updateNewsletter(id: string, data: Partial<Omit<Newsletter, 'id'>>) {
+export async function updateNewsletter(id: string, data: Partial<Omit<Newsletter, 'id'>>, user: string) {
     const newsletterRef = doc(db, 'newsletters', id);
     
-    let finalData: any = { ...data };
-
-    // If components are being updated, we need to regenerate the HTML content
-    if (data.components) {
-        const docSnap = await getDoc(newsletterRef);
-        if (docSnap.exists()) {
-             const existingData = docSnap.data();
-             const useWrapper = data.useWrapper !== undefined ? data.useWrapper : existingData.useWrapper !== false;
-             const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || ''}/nl/preview/${id}`;
-             finalData.content = generateEmailHTML(data.components, data.subject || existingData.subject, previewUrl, useWrapper);
-        }
-    } else if (data.useWrapper !== undefined || data.subject) {
-         const docSnap = await getDoc(newsletterRef);
-         if (docSnap.exists()) {
-            const existingData = docSnap.data();
-            const previewUrl = `${process.env.NEXT_PUBLIC_BASE_URL || ''}/nl/preview/${id}`;
-            const useWrapper = data.useWrapper !== undefined ? data.useWrapper : existingData.useWrapper;
-            finalData.content = generateEmailHTML(existingData.components, data.subject || existingData.subject, previewUrl, useWrapper);
-        }
-    }
-
-
     await updateDoc(newsletterRef, {
-        ...finalData,
+        ...data,
         lastUpdated: Timestamp.now(),
     });
+    await addLog(user, 'Newsletter aktualisiert', `ID: ${id}`);
 }
 
-export async function deleteNewsletter(id: string) {
+export async function deleteNewsletter(id: string, user: string) {
     const newsletterRef = doc(db, 'newsletters', id);
     await deleteDoc(newsletterRef);
+    await addLog(user, 'Newsletter gelöscht', `ID: ${id}`);
 }
 
 
 // --- CAMPAIGNS ---
-export async function addCampaign(data: Omit<Campaign, 'id' | 'sentAt'>): Promise<string> {
+export async function addCampaign(data: Omit<Campaign, 'id' | 'sentAt'>, user: string): Promise<string> {
     const campaignsCol = collection(db, 'campaigns');
     const docRef = await addDoc(campaignsCol, {
         ...data,
         sentAt: Timestamp.now(),
     });
+    await addLog(user, 'Kampagne gestartet', `Newsletter: ${data.newsletterName}, ${data.recipientCount} Empfänger`);
     return docRef.id;
 }
 
@@ -729,12 +546,13 @@ export async function getExcerpt(slug: string): Promise<Excerpt | null> {
     return null;
 }
 
-export async function updateExcerpt(slug: string, data: Partial<Omit<Excerpt, 'id'>>) {
+export async function updateExcerpt(slug: string, data: Partial<Omit<Excerpt, 'id'>>, user: string) {
     const docRef = doc(db, 'excerpts', slug);
     await updateDoc(docRef, {
         ...data,
         lastUpdated: Timestamp.now(),
     });
+    await addLog(user, 'Exzerpt aktualisiert', `Slug: ${slug}, Änderungen: ${Object.keys(data).join(', ')}`);
 }
 
 // Palabrotas
@@ -751,18 +569,21 @@ export async function getPalabrotas(): Promise<Palabrota[]> {
     } as Palabrota));
 }
 
-export async function addPalabrota(data: Omit<Palabrota, 'id'>) {
+export async function addPalabrota(data: Omit<Palabrota, 'id'>, user: string) {
     await addDoc(collection(db, 'palabrotas'), data);
+    await addLog(user, 'Palabrota hinzugefügt', `Wort: ${data.de}`);
 }
 
-export async function updatePalabrota(id: string, data: Partial<Omit<Palabrota, 'id'>>) {
+export async function updatePalabrota(id: string, data: Partial<Omit<Palabrota, 'id'>>, user: string) {
     const docRef = doc(db, 'palabrotas', id);
     await updateDoc(docRef, data);
+    await addLog(user, 'Palabrota aktualisiert', `ID: ${id}`);
 }
 
-export async function deletePalabrota(id: string) {
+export async function deletePalabrota(id: string, user: string) {
     const docRef = doc(db, 'palabrotas', id);
     await deleteDoc(docRef);
+    await addLog(user, 'Palabrota gelöscht', `ID: ${id}`);
 }
 
 // Chistes

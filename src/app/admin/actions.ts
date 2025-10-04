@@ -23,7 +23,7 @@ import {
 import { revalidatePath } from "next/cache";
 import { correctHtml } from "@/ai/flows/correct-html-flow";
 import { cookies } from "next/headers";
-import { encrypt } from "@/lib/session";
+import { encrypt, getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { Resend } from 'resend';
 
@@ -122,6 +122,11 @@ export async function addNewsletterAction(
   prevState: AdminNewsletterState,
   formData: FormData
 ): Promise<AdminNewsletterState> {
+  const session = await getSession();
+  if (!session) {
+    return { success: false, error: "Nicht authentifiziert" };
+  }
+
   const validatedFields = AddNewsletterSchema.safeParse(Object.fromEntries(formData.entries()));
 
   if (!validatedFields.success) {
@@ -130,7 +135,7 @@ export async function addNewsletterAction(
   }
 
   try {
-    const newId = await addNewsletter(validatedFields.data);
+    const newId = await addNewsletter(validatedFields.data, session.user.id);
     revalidatePath("/admin");
     return { success: true, message: "Newsletter erfolgreich erstellt.", newNewsletterId: newId };
   } catch (e) {
@@ -152,6 +157,11 @@ export async function updateNewsletterAction(
   prevState: AdminNewsletterState,
   formData: FormData
 ): Promise<AdminNewsletterState> {
+   const session = await getSession();
+   if (!session) {
+    return { success: false, error: "Nicht authentifiziert" };
+   }
+
   const validatedFields = UpdateNewsletterSchema.safeParse(Object.fromEntries(formData.entries()));
 
   if (!validatedFields.success) {
@@ -170,7 +180,7 @@ export async function updateNewsletterAction(
         dataToUpdate.useWrapper = useWrapper === 'true';
     }
     
-    await updateNewsletter(id, dataToUpdate);
+    await updateNewsletter(id, dataToUpdate, session.user.id);
     revalidatePath("/admin");
     revalidatePath(`/admin/nle/${id}`);
     revalidatePath(`/nl/preview/${id}`);
@@ -190,6 +200,11 @@ export async function deleteNewsletterAction(
   prevState: AdminNewsletterState,
   formData: FormData
 ): Promise<AdminNewsletterState> {
+  const session = await getSession();
+  if (!session) {
+    return { success: false, error: "Nicht authentifiziert" };
+  }
+
   const validatedFields = DeleteNewsletterSchema.safeParse(Object.fromEntries(formData.entries()));
 
   if (!validatedFields.success) {
@@ -197,7 +212,7 @@ export async function deleteNewsletterAction(
   }
   
   try {
-    await deleteNewsletter(validatedFields.data.id);
+    await deleteNewsletter(validatedFields.data.id, session.user.id);
     revalidatePath("/admin");
     return { success: true, message: "Newsletter wurde gelöscht." };
   } catch (e) {
@@ -214,12 +229,17 @@ export async function duplicateNewsletterAction(
     prevState: AdminNewsletterState,
     formData: FormData
 ): Promise<AdminNewsletterState> {
+    const session = await getSession();
+    if (!session) {
+      return { success: false, error: "Nicht authentifiziert" };
+    }
+
     const validatedFields = DuplicateNewsletterSchema.safeParse(Object.fromEntries(formData.entries()));
     if (!validatedFields.success) {
         return { success: false, error: "Ungültige Newsletter-ID." };
     }
     try {
-        await duplicateNewsletter(validatedFields.data.id);
+        await duplicateNewsletter(validatedFields.data.id, session.user.id);
         revalidatePath("/admin");
         return { success: true, message: "Newsletter erfolgreich dupliziert." };
     } catch (e) {
@@ -243,6 +263,11 @@ export async function tagSubscribersAction(
     prevState: TaggingState,
     formData: FormData
 ): Promise<TaggingState> {
+    const session = await getSession();
+    if (!session) {
+      return { success: false, error: "Nicht authentifiziert" };
+    }
+
     const validatedFields = TagSubscribersSchema.safeParse(Object.fromEntries(formData.entries()));
 
     if (!validatedFields.success) {
@@ -257,7 +282,7 @@ export async function tagSubscribersAction(
              return { success: false, error: "Keine Abonnenten ausgewählt." };
         }
 
-        await addTagsToSubscribers(subscriberIds, tags);
+        await addTagsToSubscribers(subscriberIds, tags, session.user.id);
         revalidatePath("/admin");
         return { success: true, error: null };
     } catch (e) {
@@ -287,6 +312,11 @@ export async function sendNewsletterAction(
   prevState: SendNewsletterState,
   formData: FormData
 ): Promise<SendNewsletterState> {
+   const session = await getSession();
+   if (!session) {
+    return { success: false, message: "Nicht authentifiziert" };
+   }
+
   const validatedFields = SendNewsletterSchema.safeParse(Object.fromEntries(formData.entries()));
 
   if (!validatedFields.success) {
@@ -329,7 +359,7 @@ export async function sendNewsletterAction(
         tags,
         status: 'pending' as const,
     };
-    const campaignId = await addCampaign(campaignData);
+    const campaignId = await addCampaign(campaignData, session.user.id);
 
     // 3. Send emails
     const resend = new Resend(process.env.RESEND_API_KEY);
@@ -347,16 +377,6 @@ export async function sendNewsletterAction(
       // TODO: Update campaign status to 'failed'
       return { success: false, message: `Fehler beim E-Mail-Versand: ${error?.message || 'Unbekannter Fehler'}` };
     }
-
-    // 4. Update campaign status to 'sent'
-    // NOTE: This is not shown in the code but this is where you would update the campaign status
-    // For example:
-    // const campaignRef = doc(db, 'campaigns', campaignId);
-    // await updateDoc(campaignRef, {
-    //     status: 'sent',
-    //     resendBatchId: data.id,
-    // });
-
 
     revalidatePath("/admin");
     return { success: true, message: `Kampagne erfolgreich erstellt und Versand an ${targetSubscribers.length} Empfänger gestartet.` };
@@ -390,6 +410,11 @@ export async function updateLegalPageAction(
   prevState: AdminLegalPageState,
   formData: FormData
 ): Promise<AdminLegalPageState> {
+  const session = await getSession();
+   if (!session) {
+    return { success: false, error: "Nicht authentifiziert" };
+   }
+
   const rawData = Object.fromEntries(formData.entries());
   const validatedFields = UpdateLegalPageSchema.safeParse({
       ...rawData,
@@ -408,7 +433,7 @@ export async function updateLegalPageAction(
         ...pageData,
         components: JSON.parse(pageData.components),
     };
-    await updateLegalPage(pageId, finalData);
+    await updateLegalPage(pageId, finalData, session.user.id);
     revalidatePath("/admin");
     revalidatePath(`/${pageId}`);
     return { success: true, message: "Seite erfolgreich aktualisiert." };
@@ -443,6 +468,10 @@ export async function addPalabrotaAction(
   prevState: PalabrotaState,
   formData: FormData
 ): Promise<PalabrotaState> {
+  const session = await getSession();
+  if (!session) {
+    return { success: false, error: "Nicht authentifiziert", message: null };
+  }
   const validatedFields = PalabrotaSchema.omit({ id: true }).safeParse(Object.fromEntries(formData.entries()));
 
   if (!validatedFields.success) {
@@ -451,7 +480,7 @@ export async function addPalabrotaAction(
   }
 
   try {
-    await addPalabrota(validatedFields.data);
+    await addPalabrota(validatedFields.data, session.user.id);
     revalidatePath("/admin");
     revalidatePath("/lp-palabrotas");
     return { success: true, error: null, message: "Wort erfolgreich hinzugefügt." };
@@ -465,6 +494,10 @@ export async function updatePalabrotaAction(
   prevState: PalabrotaState,
   formData: FormData
 ): Promise<PalabrotaState> {
+  const session = await getSession();
+  if (!session) {
+    return { success: false, error: "Nicht authentifiziert", message: null };
+  }
   const validatedFields = PalabrotaSchema.safeParse(Object.fromEntries(formData.entries()));
 
   if (!validatedFields.success) {
@@ -477,7 +510,7 @@ export async function updatePalabrotaAction(
     if (!id) {
         return { success: false, error: "ID ist erforderlich.", message: null };
     }
-    await updatePalabrota(id, dataToUpdate);
+    await updatePalabrota(id, dataToUpdate, session.user.id);
     revalidatePath("/admin");
     revalidatePath("/lp-palabrotas");
     return { success: true, error: null, message: "Wort erfolgreich aktualisiert." };
@@ -495,6 +528,10 @@ export async function deletePalabrotaAction(
   prevState: PalabrotaState,
   formData: FormData
 ): Promise<PalabrotaState> {
+  const session = await getSession();
+  if (!session) {
+    return { success: false, error: "Nicht authentifiziert", message: null };
+  }
   const validatedFields = DeletePalabrotaSchema.safeParse(Object.fromEntries(formData.entries()));
 
   if (!validatedFields.success) {
@@ -502,7 +539,7 @@ export async function deletePalabrotaAction(
   }
 
   try {
-    await deletePalabrota(validatedFields.data.id);
+    await deletePalabrota(validatedFields.data.id, session.user.id);
     revalidatePath("/admin");
     revalidatePath("/lp-palabrotas");
     return { success: true, error: null, message: "Wort erfolgreich gelöscht." };
@@ -520,6 +557,10 @@ export async function bulkAddPalabrotasAction(
   prevState: PalabrotaState,
   formData: FormData
 ): Promise<PalabrotaState> {
+    const session = await getSession();
+    if (!session) {
+        return { success: false, error: "Nicht authentifiziert", message: null };
+    }
     const validatedFields = BulkAddPalabrotasSchema.safeParse(Object.fromEntries(formData.entries()));
     if (!validatedFields.success) {
         const errorMessages = validatedFields.error.errors.map((e) => e.message).join(". ");
@@ -546,7 +587,7 @@ export async function bulkAddPalabrotasAction(
                     beispiel: "N/A",
                     pfeiferFaktor: 3,
                 };
-                await addPalabrota(newPalabrota);
+                await addPalabrota(newPalabrota, session.user.id);
                 addedCount++;
             }
         }
@@ -579,6 +620,10 @@ export async function updateExcerptAction(
   prevState: AdminExcerptState,
   formData: FormData
 ): Promise<AdminExcerptState> {
+  const session = await getSession();
+  if (!session) {
+    return { success: false, error: "Nicht authentifiziert" };
+  }
   
   const formEntries = Object.fromEntries(formData.entries());
   
@@ -597,7 +642,7 @@ export async function updateExcerptAction(
 
   try {
     const { slug, ...dataToUpdate } = validatedFields.data;
-    await updateExcerpt(slug, dataToUpdate);
+    await updateExcerpt(slug, dataToUpdate, session.user.id);
     revalidatePath("/admin");
     revalidatePath(`/exzerpt/${slug}`);
     revalidatePath('/exzerpte');

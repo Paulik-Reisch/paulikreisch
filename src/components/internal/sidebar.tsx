@@ -1,4 +1,5 @@
 
+
 "use client"
 
 import {
@@ -13,7 +14,7 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
-import { LogOut, LayoutDashboard, Database, HardDrive, Users, Home, BrainCircuit, TestTube2, Palette, Navigation, Cloud, Component, LineChart } from "lucide-react"
+import { LogOut, LayoutDashboard, Database, HardDrive, Users, Home, BrainCircuit, TestTube2, Palette, Navigation, Cloud, Component, LineChart, History } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { logoutAction } from "@/app/admin/actions"
 import Link from "next/link"
@@ -26,6 +27,7 @@ const isdmItems = [
   { href: "/internal/isdm/storage", label: "Cloud Storage", icon: HardDrive },
   { href: "/internal/isdm/genkit", label: "Genkit AI", icon: BrainCircuit },
   { href: "/internal/isdm/cloud", label: "Google Cloud", icon: Cloud },
+  { href: "/internal/logs", label: "Logs", icon: History },
 ];
 
 const femItems = [

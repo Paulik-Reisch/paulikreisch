@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { z } from "zod";
@@ -9,8 +10,9 @@ import { generateBureaucracyResponse } from "@/ai/flows/generate-bureaucracy-flo
 import { generateDbExcuse } from "@/ai/flows/generate-db-excuse-flow";
 import { generateSatireType } from "@/ai/flows/generate-satire-type-flow";
 import { pfeiferTranslate, PfeiferTranslateOutput } from "@/ai/flows/pfeifer-translate-flow";
-import { addOrder, addSubscriber } from "@/lib/firestore";
+import { addOrder, addSubscriber, addLog } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
+import { getSession } from "@/lib/session";
 
 const chapterSchema = z.object({
   chapterText: z.string().min(20, { message: "Das Kapitel muss mindestens 20 Zeichen lang sein, um fortgesetzt zu werden." }),
@@ -226,6 +228,11 @@ export async function createOrderAction(
   prevState: any,
   formData: FormData
 ) {
+  const session = await getSession();
+  if (!session) {
+    return { success: false, error: "Nicht authentifiziert" };
+  }
+
   const validatedFields = OrderSchema.safeParse({
     payload: formData.get("payload"),
   });
@@ -236,7 +243,7 @@ export async function createOrderAction(
 
   try {
     const orderData = JSON.parse(validatedFields.data.payload);
-    await addOrder(orderData);
+    await addOrder(orderData, session.user.id);
     revalidatePath("/admin");
     return { success: true, error: null };
   } catch (e) {
@@ -258,6 +265,9 @@ export async function subscribeToNewsletterAction(
     },
     formData: FormData
 ) {
+    const session = await getSession();
+    const user = session?.user?.id || 'Gast';
+
     const validatedFields = SubscriberSchema.safeParse({
         email: formData.get("email"),
         source: formData.get("source"),
@@ -271,7 +281,7 @@ export async function subscribeToNewsletterAction(
     }
     
     try {
-        await addSubscriber(validatedFields.data.email, validatedFields.data.source);
+        await addSubscriber(validatedFields.data.email, validatedFields.data.source, user);
         return { success: true, message: `Wir haben eine Bestätigungs-E-Mail an ${validatedFields.data.email} gesendet.` };
     } catch (e) {
         console.error(e);
