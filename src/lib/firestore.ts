@@ -42,7 +42,7 @@ export interface Subscriber {
 
 export interface PageComponent {
     id: string;
-    type: 'heading' | 'text' | 'button' | 'image' | 'spacer' | 'separator' | 'columns' | 'customHtml';
+    type: 'heading' | 'text' | 'button' | 'image' | 'spacer' | 'separator' | 'columns' | 'customHtml' | 'card' | 'video';
     props: {
         [key: string]: any;
     };

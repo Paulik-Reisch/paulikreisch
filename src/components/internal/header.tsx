@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { usePathname } from "next/navigation";
@@ -135,12 +136,12 @@ export function InternalHeader() {
             </Link>
           <DropdownMenuSeparator />
           <form action={logoutAction} className="w-full">
-            <DropdownMenuItem asChild>
-                <button type="submit" className="w-full">
+             <button type="submit" className="w-full">
+                <DropdownMenuItem>
                     <LogOut className="mr-2 h-4 w-4" />
                     Abmelden
-                </button>
-            </DropdownMenuItem>
+                </DropdownMenuItem>
+            </button>
           </form>
         </DropdownMenuContent>
       </DropdownMenu>

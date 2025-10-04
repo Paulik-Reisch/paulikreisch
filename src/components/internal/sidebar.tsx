@@ -120,10 +120,12 @@ export function InternalSidebar() {
             </SidebarMenuItem>
             <SidebarMenuItem>
                 <form action={logoutAction} className="w-full">
-                    <SidebarMenuButton tooltip="Abmelden" variant="ghost" className="justify-start hover:bg-gray-100 rounded-sm">
-                        <LogOut/>
-                        <span>Abmelden</span>
-                    </SidebarMenuButton>
+                    <button type="submit" className="w-full">
+                        <SidebarMenuButton tooltip="Abmelden" variant="ghost" className="justify-start hover:bg-gray-100 rounded-sm w-full">
+                            <LogOut/>
+                            <span>Abmelden</span>
+                        </SidebarMenuButton>
+                    </button>
                 </form>
             </SidebarMenuItem>
         </SidebarMenu>

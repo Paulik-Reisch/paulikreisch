@@ -1,5 +1,6 @@
 
-import { SidebarProvider } from "@/components/ui/sidebar";
+
+import { SidebarProvider, Sidebar, SidebarRail, SidebarInset } from "@/components/ui/sidebar";
 import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { InternalSidebar } from "@/components/internal/sidebar";
@@ -18,15 +19,16 @@ export default async function InternalLayout({
 
   return (
     <SidebarProvider>
-      <div className="internal-dashboard flex h-screen bg-gray-100 dark:bg-gray-900">
+      <div className="internal-dashboard bg-gray-100 dark:bg-gray-900">
         <InternalSidebar />
-        <div className="flex flex-col flex-1 overflow-y-auto">
-          <InternalHeader />
-          <main className="flex-1 p-4 sm:px-6 sm:py-4">
-            {children}
-          </main>
-          <InternalFooter />
-        </div>
+        <SidebarRail />
+        <SidebarInset>
+            <InternalHeader />
+            <main className="flex-1 p-4 sm:px-6 sm:py-4">
+                {children}
+            </main>
+            <InternalFooter />
+        </SidebarInset>
       </div>
     </SidebarProvider>
   );

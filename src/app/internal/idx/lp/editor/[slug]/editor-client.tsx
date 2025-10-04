@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import React, { useState, useEffect, useActionState, useTransition } from "react";
@@ -32,7 +33,9 @@ import {
   Columns,
   AlignVerticalJustifyStart,
   AlignVerticalJustifyCenter,
-  AlignVerticalJustifyEnd
+  AlignVerticalJustifyEnd,
+  Square,
+  Youtube
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -140,6 +143,24 @@ function generatePageHtml(components: PageComponent[]): string {
                 }).join('\n');
 
                 return `<div class="${columnClasses} my-6" style="gap: ${gap};">${columnsHtml}</div>`
+            }
+            case 'card': {
+                const align = props.alignment || 'left';
+                const textAlignClass = `text-${align}`;
+                return `<div class="p-6 border rounded-lg bg-card text-card-foreground shadow-sm ${textAlignClass}">
+                            <h3 class="text-2xl font-semibold leading-none tracking-tight">${props.title || ''}</h3>
+                            <p class="text-sm text-muted-foreground mt-2">${props.description || ''}</p>
+                        </div>`
+            }
+            case 'video': {
+                let embedUrl = '';
+                if(props.provider === 'youtube' && props.videoId) {
+                    embedUrl = `https://www.youtube.com/embed/${props.videoId}`;
+                } else if (props.provider === 'vimeo' && props.videoId) {
+                    embedUrl = `https://player.vimeo.com/video/${props.videoId}`;
+                }
+                if (!embedUrl) return '<div>Video-Fehler: Ungültiger Provider oder ID</div>';
+                return `<div class="aspect-video w-full my-6"><iframe src="${embedUrl}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen class="w-full h-full rounded-lg shadow-md"></iframe></div>`
             }
             case 'customHtml': {
                 return props.html || '';
@@ -341,11 +362,14 @@ function PageComponentEditor({ component, onUpdate, onDelete, onMove }: { compon
                         {Array.from({ length: component.props.numColumns || 2 }).map((_, index) => (
                             <div key={index} className="p-3 border rounded-sm bg-gray-50/50 space-y-2">
                                 <h4 className="text-xs font-semibold">Spalte {index + 1}</h4>
+                                {renderColorInput(`col${index}_bgColor`, 'Hintergrundfarbe', '#ffffff')}
+                                {renderField(`col${index}_padding`, 'Innenabstand', 'text', '1rem')}
+                                {renderField(`col${index}_borderRadius`, 'Rundung', 'text', '0.5rem')}
                                 <div>
                                     <Label htmlFor={`${component.id}-col-${index}-content`} className="text-xs">Inhalt (HTML)</Label>
                                     <Textarea
                                         id={`${component.id}-col-${index}-content`}
-                                        value={component.props.columns?.[index]?.content || ''}
+                                        value={(component.props.columns || [])[index]?.content || ''}
                                         onChange={(e) => updateColumnProp(index, 'content', e.target.value)}
                                         className="text-xs font-mono gcp-input"
                                         rows={6}
@@ -354,6 +378,30 @@ function PageComponentEditor({ component, onUpdate, onDelete, onMove }: { compon
                             </div>
                         ))}
                     </div>
+                </div>
+            );
+            case 'card': return (
+                 <div className="space-y-4">
+                    {renderField('title', 'Titel')}
+                    {renderTextarea('description', 'Beschreibung')}
+                    {renderAlignmentSelector()}
+                </div>
+            );
+            case 'video': return (
+                <div className="space-y-4">
+                    <div className="flex-1">
+                        <Label htmlFor={`${component.id}-provider`} className="text-xs">Provider</Label>
+                         <Select onValueChange={(v) => updateProp('provider', v)} defaultValue={component.props.provider || 'youtube'}>
+                            <SelectTrigger className="h-8 gcp-input">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="youtube">YouTube</SelectItem>
+                                <SelectItem value="vimeo">Vimeo</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    {renderField('videoId', 'Video ID')}
                 </div>
             );
             case 'customHtml': return (
@@ -374,6 +422,8 @@ function PageComponentEditor({ component, onUpdate, onDelete, onMove }: { compon
         separator: <Minus className="h-4 w-4" />,
         columns: <Columns className="h-4 w-4" />,
         customHtml: <Code className="h-4 w-4" />,
+        card: <Square className="h-4 w-4" />,
+        video: <Youtube className="h-4 w-4" />,
     }
 
     return (
@@ -482,6 +532,9 @@ export function EditorClient({ page }: { page: LegalPage }) {
       let props = {};
       if (type === 'columns') {
         props = { numColumns: 2, columns: Array.from({length: 2}, () => ({ content: ''})), gap: '1rem', verticalAlignment: 'start' }
+      }
+      if (type === 'video') {
+        props = { provider: 'youtube' };
       }
       const newComponent: PageComponent = {
           id: `${type}-${Date.now()}`,
@@ -596,6 +649,8 @@ export function EditorClient({ page }: { page: LegalPage }) {
                     <Button className="gcp-button" onClick={() => addComponent('spacer')} disabled={hasManuallyEditedHtml}><Rows className="mr-2 h-4 w-4"/>Abstand</Button>
                     <Button className="gcp-button" onClick={() => addComponent('separator')} disabled={hasManuallyEditedHtml}><Minus className="mr-2 h-4 w-4"/>Trennlinie</Button>
                     <Button className="gcp-button" onClick={() => addComponent('columns')} disabled={hasManuallyEditedHtml}><Columns className="mr-2 h-4 w-4"/>Spalten</Button>
+                    <Button className="gcp-button" onClick={() => addComponent('card')} disabled={hasManuallyEditedHtml}><Square className="mr-2 h-4 w-4"/>Karte</Button>
+                    <Button className="gcp-button" onClick={() => addComponent('video')} disabled={hasManuallyEditedHtml}><Youtube className="mr-2 h-4 w-4"/>Video</Button>
                     <Button className="gcp-button" onClick={() => addComponent('customHtml')} disabled={hasManuallyEditedHtml}><Code className="mr-2 h-4 w-4"/>Custom HTML</Button>
                 </div>
                 <form action={handleFormSubmit}>
@@ -625,7 +680,7 @@ export function EditorClient({ page }: { page: LegalPage }) {
                 </TabsList>
                 <TabsContent value="preview" className="mt-4 flex-grow bg-gray-100 p-4 rounded-sm">
                      <iframe
-                        srcDoc={`<html><head><link href="/globals.css" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-background text-foreground"><div class="p-4 space-y-6">${generatedHtml}</div></body></html>`}
+                        srcDoc={`<html><head><link href="/globals.css" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-background text-foreground"><div class="p-4">${generatedHtml}</div></body></html>`}
                         title="Seiten-Vorschau"
                         className="w-full h-full border bg-white"
                     />
