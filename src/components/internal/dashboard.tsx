@@ -58,28 +58,27 @@ export function InternalDashboard() {
   return (
     <div>
         <header className="mb-8">
-            <h1 className="text-4xl font-bold font-headline tracking-tighter">Management Dashboard</h1>
-            <p className="text-muted-foreground mt-1">Übersicht über Ihre Backend- und Frontend-Ressourcen.</p>
+            <h1 className="text-2xl font-medium text-gray-900">Management Dashboard</h1>
+            <p className="text-sm text-gray-500 mt-1">Übersicht über Ihre Backend- und Frontend-Ressourcen.</p>
         </header>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {dashboardLinks.map(link => (
-                <Card key={link.title} className="flex flex-col">
+                <Card key={link.title} className="gcp-card flex flex-col">
                     <CardHeader>
-                        <div className="flex items-center gap-4">
-                            <div className="bg-primary/10 text-primary p-3 rounded-lg">
-                                <link.icon className="h-6 w-6"/>
+                        <div className="flex items-center gap-3">
+                            <div className="bg-blue-100 text-blue-600 p-2 rounded-sm">
+                                <link.icon className="h-5 w-5"/>
                             </div>
-                            <CardTitle>{link.title}</CardTitle>
+                            <CardTitle className="text-sm font-medium">{link.title}</CardTitle>
                         </div>
                     </CardHeader>
                     <CardContent className="flex-grow">
-                        <CardDescription>{link.description}</CardDescription>
+                        <CardDescription className="text-xs">{link.description}</CardDescription>
                     </CardContent>
                     <CardContent>
                          <Link href={link.href}>
-                            <Button className="w-full">
+                            <Button className="gcp-button w-full justify-start text-left">
                                 Öffnen 
-                                <ArrowRight className="ml-2 h-4 w-4"/>
                             </Button>
                         </Link>
                     </CardContent>

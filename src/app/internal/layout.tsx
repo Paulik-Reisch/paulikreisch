@@ -18,7 +18,7 @@ export default async function InternalLayout({
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen bg-muted/40">
+      <div className="internal-dashboard flex h-screen bg-gray-100 dark:bg-gray-900">
         <InternalSidebar />
         <div className="flex flex-col flex-1 overflow-y-auto">
           <InternalHeader />

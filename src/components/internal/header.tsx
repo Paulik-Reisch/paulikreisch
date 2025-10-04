@@ -53,8 +53,6 @@ function BreadcrumbNav() {
     const pathname = usePathname();
     const parts = pathname.split('/').filter(p => p);
     
-    // ['internal', 'isdm', 'dashboard']
-
     return (
          <Breadcrumb className="hidden md:flex">
             <BreadcrumbList>
@@ -88,31 +86,31 @@ export function InternalHeader() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-      <SidebarTrigger className="sm:hidden" />
+    <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-white px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+      <SidebarTrigger className="sm:hidden gcp-icon-button" />
       
       <BreadcrumbNav />
 
       <div className="relative ml-auto flex-1 md:grow-0">
-        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
         <Input
           type="search"
           placeholder="Suchen..."
-          className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
+          className="w-full rounded-sm bg-gray-100 pl-8 md:w-[200px] lg:w-[320px] h-9"
         />
       </div>
-      <Button variant="ghost" size="icon" className="text-muted-foreground">
+      <Button variant="ghost" size="icon" className="gcp-icon-button">
         <HelpCircle className="h-5 w-5" />
       </Button>
-       <Button variant="ghost" size="icon" className="text-muted-foreground">
+       <Button variant="ghost" size="icon" className="gcp-icon-button">
         <Bell className="h-5 w-5" />
       </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            variant="outline"
+            variant="ghost"
             size="icon"
-            className="overflow-hidden rounded-full"
+            className="gcp-icon-button rounded-full"
           >
             <User className="h-5 w-5" />
           </Button>

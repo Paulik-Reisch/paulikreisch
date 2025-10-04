@@ -41,10 +41,10 @@ export function InternalSidebar() {
     <Sidebar>
       <SidebarHeader>
         <div className="flex items-center gap-2">
-           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+           <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-blue-600 text-white">
                 <Database className="h-5 w-5"/>
            </div>
-           <span className="text-base font-semibold text-primary group-data-[collapsible=icon]:hidden">
+           <span className="text-base font-semibold text-gray-800 group-data-[collapsible=icon]:hidden">
                 M-Dashboard
            </span>
         </div>
@@ -56,7 +56,7 @@ export function InternalSidebar() {
           {isdmItems.map((item) => (
             <SidebarMenuItem key={item.href}>
               <Link href={item.href} className="w-full">
-                <SidebarMenuButton isActive={pathname === item.href} tooltip={item.label}>
+                <SidebarMenuButton isActive={pathname === item.href} tooltip={item.label} variant="ghost" className="justify-start data-[active=true]:bg-blue-100 data-[active=true]:text-blue-700 data-[active=true]:font-semibold hover:bg-gray-100 rounded-sm">
                   <item.icon />
                   <span>{item.label}</span>
                 </SidebarMenuButton>
@@ -72,7 +72,7 @@ export function InternalSidebar() {
            {femItems.map((item) => (
             <SidebarMenuItem key={item.href}>
               <Link href={item.href} className="w-full">
-                <SidebarMenuButton isActive={pathname === item.href} tooltip={item.label}>
+                <SidebarMenuButton isActive={pathname === item.href} tooltip={item.label} variant="ghost" className="justify-start data-[active=true]:bg-blue-100 data-[active=true]:text-blue-700 data-[active=true]:font-semibold hover:bg-gray-100 rounded-sm">
                   <item.icon />
                   <span>{item.label}</span>
                 </SidebarMenuButton>
@@ -87,7 +87,7 @@ export function InternalSidebar() {
         <SidebarMenu>
             <SidebarMenuItem>
                  <Link href="/admin" className="w-full">
-                    <SidebarMenuButton tooltip="Zum Admin Dashboard">
+                    <SidebarMenuButton tooltip="Zum Admin Dashboard" variant="ghost" className="justify-start hover:bg-gray-100 rounded-sm">
                         <Home/>
                         <span>Admin</span>
                     </SidebarMenuButton>
@@ -95,7 +95,7 @@ export function InternalSidebar() {
             </SidebarMenuItem>
             <SidebarMenuItem>
                 <form action={logoutAction} className="w-full">
-                    <SidebarMenuButton tooltip="Abmelden">
+                    <SidebarMenuButton tooltip="Abmelden" variant="ghost" className="justify-start hover:bg-gray-100 rounded-sm">
                         <LogOut/>
                         <span>Abmelden</span>
                     </SidebarMenuButton>
