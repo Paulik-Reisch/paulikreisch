@@ -14,7 +14,8 @@ import {
     setDoc,
     deleteDoc,
     arrayUnion,
-    writeBatch
+    writeBatch,
+    documentId
 } from "firebase/firestore";
 import { 
     getStorage,
@@ -182,14 +183,14 @@ export async function getLogs(): Promise<Log[]> {
 
 // --- ADMIN ---
 export async function getAdminCredentials(): Promise<Record<string, string>> {
-    const docRef = doc(db, 'admin', 'credentials');
+    const docRef = doc(db, 'settings', 'admin');
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-        return docSnap.data() as Record<string, string>;
+        return docSnap.data().credentials as Record<string, string>;
     } else {
         console.warn("Admin credentials not found. Creating default: admin/password");
-        await setDoc(docRef, { admin: 'password' });
+        await setDoc(docRef, { credentials: { admin: 'password' } });
         return { admin: 'password' };
     }
 }
@@ -611,7 +612,7 @@ export async function getChistes(): Promise<Chiste[]> {
 export async function getCollectionData(collectionId: string): Promise<any[]> {
     const colRef = collection(db, collectionId);
     // Simple query, can be expanded later
-    const q = query(colRef, orderBy(Timestamp.documentId()));
+    const q = query(colRef, orderBy(documentId()));
     const snapshot = await getDocs(q);
     return snapshot.docs.map(doc => {
         const data = doc.data();
