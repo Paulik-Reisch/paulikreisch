@@ -20,7 +20,7 @@ const initialState = {
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending} variant="outline" className="w-full sm:w-auto">
+    <Button type="submit" disabled={pending} className="gcp-button-primary w-full sm:w-auto">
       {pending ? (
         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
       ) : null}
@@ -45,52 +45,39 @@ export function LoginForm() {
 
 
   return (
-    <form action={formAction} className="w-full max-w-sm space-y-8">
-        <div className="relative">
+    <form action={formAction} className="w-full max-w-sm space-y-4">
+        <div className="space-y-2">
+            <Label htmlFor="username">Benutzer</Label>
             <Input 
               id="username" 
               name="username" 
               type="text" 
               required 
               autoComplete="username" 
-              placeholder=" " 
-              className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-2 border-gray-500 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
+              className="rounded-sm bg-gray-100"
             />
-            <Label 
-              htmlFor="username" 
-              className="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-muted/20 px-2 peer-focus:px-2 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
-            >
-              Benutzer
-            </Label>
         </div>
-        <div className="relative">
+        <div className="space-y-2">
+             <Label htmlFor="password">Passwort</Label>
              <Input 
               id="password" 
               name="password" 
               type="password" 
               required 
               autoComplete="current-password" 
-              placeholder=" " 
-              className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-2 border-gray-500 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
+              className="rounded-sm bg-gray-100"
             />
-            <Label 
-              htmlFor="password" 
-              className="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-muted/20 px-2 peer-focus:px-2 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
-            >
-              Passwort
-            </Label>
         </div>
         
         {state.error && (
-            <Alert variant="destructive" className="mt-4">
+            <Alert variant="destructive" className="mt-4 rounded-sm">
                 <AlertTitle>Fehler</AlertTitle>
                 <AlertDescription>{state.error}</AlertDescription>
             </Alert>
         )}
-        <div className="flex justify-center">
+        <div className="flex justify-center pt-4">
             <SubmitButton />
         </div>
     </form>
   );
 }
-
