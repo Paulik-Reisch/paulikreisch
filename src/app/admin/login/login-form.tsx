@@ -4,11 +4,10 @@ import { useActionState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { loginAction } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, LogIn } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 
@@ -20,12 +19,10 @@ const initialState = {
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending} className="w-full">
+    <Button type="submit" disabled={pending} variant="outline" className="w-full sm:w-auto">
       {pending ? (
         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-      ) : (
-        <LogIn className="mr-2 h-4 w-4" />
-      )}
+      ) : null}
       Anmelden
     </Button>
   );
@@ -47,28 +44,25 @@ export function LoginForm() {
 
 
   return (
-    <form action={formAction}>
-        <Card>
-            <CardHeader>
-                <CardTitle>Anmeldung</CardTitle>
-                <CardDescription>Geben Sie das Admin-Passwort ein.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <div className="space-y-2">
-                    <Label htmlFor="password">Passwort</Label>
-                    <Input id="password" name="password" type="password" required />
-                </div>
-                 {state.error && (
-                    <Alert variant="destructive" className="mt-4">
-                        <AlertTitle>Fehler</AlertTitle>
-                        <AlertDescription>{state.error}</AlertDescription>
-                    </Alert>
-                )}
-            </CardContent>
-            <CardFooter>
-                <SubmitButton />
-            </CardFooter>
-        </Card>
+    <form action={formAction} className="w-full max-w-sm space-y-8">
+        <div className="space-y-2">
+            <Label htmlFor="username">Benutzer</Label>
+            <Input id="username" name="username" type="text" required autoComplete="username"/>
+        </div>
+        <div className="space-y-2">
+            <Label htmlFor="password">Passwort</Label>
+            <Input id="password" name="password" type="password" required autoComplete="current-password"/>
+        </div>
+        
+        {state.error && (
+            <Alert variant="destructive" className="mt-4">
+                <AlertTitle>Fehler</AlertTitle>
+                <AlertDescription>{state.error}</AlertDescription>
+            </Alert>
+        )}
+        <div className="flex justify-center">
+            <SubmitButton />
+        </div>
     </form>
   );
 }
