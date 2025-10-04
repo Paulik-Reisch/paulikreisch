@@ -2,6 +2,8 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { InternalSidebar } from "@/components/internal/sidebar";
+import { InternalHeader } from "@/components/internal/header";
+import { InternalFooter } from "@/components/internal/footer";
 
 export default async function InternalLayout({
   children,
@@ -15,12 +17,16 @@ export default async function InternalLayout({
 
   return (
     <SidebarProvider>
+      <div className="flex h-screen w-full flex-col bg-muted/40">
         <InternalSidebar />
-        <main className="lg:pl-[16rem]">
-            <div className="p-4 sm:p-6 lg:p-8">
-                {children}
-            </div>
-        </main>
+        <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+          <InternalHeader />
+          <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 overflow-auto">
+            {children}
+          </main>
+          <InternalFooter />
+        </div>
+      </div>
     </SidebarProvider>
   );
 }
