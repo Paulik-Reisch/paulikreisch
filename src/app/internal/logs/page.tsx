@@ -17,9 +17,11 @@ export default async function LogsPage() {
     const logs = await getLogs();
 
     const getActionVariant = (action: string) => {
-        if (action.toLowerCase().includes('delete') || action.toLowerCase().includes('löschen')) return 'destructive';
-        if (action.toLowerCase().includes('add') || action.toLowerCase().includes('erstellen')) return 'default';
-        if (action.toLowerCase().includes('update') || action.toLowerCase().includes('aktualisiert')) return 'secondary';
+        if (!action) return 'outline'; // Handle undefined or null action
+        const lowerCaseAction = action.toLowerCase();
+        if (lowerCaseAction.includes('delete') || lowerCaseAction.includes('löschen')) return 'destructive';
+        if (lowerCaseAction.includes('add') || lowerCaseAction.includes('erstellen')) return 'default';
+        if (lowerCaseAction.includes('update') || lowerCaseAction.includes('aktualisiert')) return 'secondary';
         return 'outline';
     }
 
@@ -52,7 +54,7 @@ export default async function LogsPage() {
                                     <TableCell>{format(new Date(log.timestamp), "dd.MM.yyyy, HH:mm:ss 'Uhr'", { locale: de })}</TableCell>
                                     <TableCell className="font-medium">{log.user}</TableCell>
                                     <TableCell>
-                                        <Badge variant={getActionVariant(log.action)}>{log.action}</Badge>
+                                        <Badge variant={getActionVariant(log.action)}>{log.action || 'Unbekannt'}</Badge>
                                     </TableCell>
                                     <TableCell className="text-sm text-muted-foreground font-mono">{log.details}</TableCell>
                                 </TableRow>
