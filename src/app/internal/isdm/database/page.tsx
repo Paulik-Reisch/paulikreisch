@@ -1,9 +1,16 @@
+
+import { DatabaseExplorer } from "@/components/internal/database/database-explorer";
+
 export default function DatabasePage() {
     return (
-        <div>
-            <h1 className="text-4xl font-bold font-headline tracking-tighter">Firestore Database</h1>
-            <p className="text-muted-foreground mt-1">Verwalten Sie hier Ihre Datenbankinhalte.</p>
-            {/* Hier kommen die Inhalte für die Datenbankverwaltung hin */}
+        <div className="h-full flex flex-col">
+            <header className="mb-6">
+                <h1 className="text-2xl font-medium text-gray-900">Firestore Database Explorer</h1>
+                <p className="text-sm text-gray-500 mt-1">Verwalten Sie hier Ihre Datenbankinhalte.</p>
+            </header>
+            <main className="flex-grow min-h-0">
+                <DatabaseExplorer />
+            </main>
         </div>
     );
 }

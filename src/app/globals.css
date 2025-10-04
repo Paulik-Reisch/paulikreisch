@@ -90,6 +90,9 @@
 }
 
 @layer components {
+    .gcp-input {
+      @apply h-9 rounded-sm border-gray-300 focus-visible:ring-offset-0 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-blue-500;
+    }
     .internal-dashboard .gcp-button {
         @apply bg-gray-100 text-gray-800 border-gray-300 rounded-sm shadow-none h-8 px-3 text-xs font-normal hover:bg-gray-200 active:scale-100;
     }

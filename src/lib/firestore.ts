@@ -1,5 +1,4 @@
 
-
 import { app } from "@/app/firebase";
 import { 
     getFirestore, 
@@ -23,8 +22,6 @@ import {
     listAll,
     getDownloadURL,
     getMetadata,
-    deleteObject,
-    uploadBytesResumable
 } from "firebase/storage";
 
 export interface Order {
@@ -178,33 +175,25 @@ export async function getLogs(): Promise<Log[]> {
         return {
             id: doc.id,
             ...data,
-            timestamp: (data.timestamp as Timestamp).toDate().toISOString(),
+            timestamp: (data.timestamp as Timestamp)?.toDate().toISOString(),
         } as Log;
     });
 }
 
 // --- ADMIN ---
-export async function getAdminCredentials(): Promise<Record<string, string> | null> {
-    try {
-        const docRef = doc(db, "settings", "admin");
-        const docSnap = await getDoc(docRef);
+export async function getAdminCredentials(): Promise<Record<string, string>> {
+    const docRef = doc(db, 'admin', 'credentials');
+    const docSnap = await getDoc(docRef);
 
-        if (docSnap.exists()) {
-            return docSnap.data() as Record<string, string>;
-        } else {
-            console.warn("Admin credentials not found in Firestore under settings/admin. Creating default credentials.");
-            const defaultCredentials = {
-                'ppaulik': 'AtrIpl;gebes!ud3',
-                'mreisch': 'eifrigEnorm!arT2',
-            };
-            await setDoc(docRef, defaultCredentials);
-            return defaultCredentials;
-        }
-    } catch (error) {
-        console.error("Error fetching admin credentials:", error);
-        return null;
+    if (docSnap.exists()) {
+        return docSnap.data() as Record<string, string>;
+    } else {
+        console.warn("Admin credentials not found. Creating default: admin/password");
+        await setDoc(docRef, { admin: 'password' });
+        return { admin: 'password' };
     }
 }
+
 
 export async function getOrders(): Promise<Order[]> {
     const ordersCol = collection(db, 'orders');
@@ -320,10 +309,12 @@ export async function getLegalPages(): Promise<LegalPage[]> {
         const legalSnapshot = await getDocs(legalCol);
         if (legalSnapshot.empty) {
             // If the collection is empty, create the default pages.
+            const batch = writeBatch(db);
             for (const page of defaultLegalPages) {
                 const pageRef = doc(db, 'legal', page.id);
-                await setDoc(pageRef, { title: page.title, content: page.content, components: page.components, lastUpdated: Timestamp.now(), showTitle: page.showTitle, showDate: page.showDate });
+                batch.set(pageRef, { title: page.title, content: page.content, components: page.components, lastUpdated: Timestamp.now(), showTitle: page.showTitle, showDate: page.showDate });
             }
+            await batch.commit();
             return defaultLegalPages;
         }
         return legalSnapshot.docs.map(doc => {
@@ -502,11 +493,11 @@ export async function getCampaigns(): Promise<Campaign[]> {
 // --- EXCERPTS ---
 
 async function initializeExcerpts() {
-    const batch = writeBatch(db);
     const excerptsCol = collection(db, 'excerpts');
-    const snapshot = await getDocs(excerptsCol);
+    const snapshot = await getDocs(query(excerptsCol));
 
     if (snapshot.empty) {
+        const batch = writeBatch(db);
         console.log("Initializing 36 excerpts...");
         for (let i = 1; i <= 36; i++) {
             const slug = `kapitel-${i}`;
@@ -535,11 +526,7 @@ export async function getExcerpts(): Promise<Excerpt[]> {
         const data = doc.data();
         return {
             id: doc.id,
-            title: data.title,
-            slug: data.slug,
-            chapterNumber: data.chapterNumber,
-            isPublished: data.isPublished,
-            content: data.content,
+            ...data,
             lastUpdated: (data.lastUpdated as Timestamp).toDate().toISOString(),
         } as Excerpt;
     });
@@ -575,7 +562,7 @@ export async function updateExcerpt(slug: string, data: Partial<Omit<Excerpt, 'i
     await addLog(user, 'Exzerpt aktualisiert', `Slug: ${slug}, Änderungen: ${Object.keys(data).join(', ')}`);
 }
 
-// Palabrotas
+// --- PALABROTAS ---
 export async function getPalabrotas(): Promise<Palabrota[]> {
     const palabrotasCol = collection(db, 'palabrotas');
     const q = query(palabrotasCol, orderBy("de", "asc"));
@@ -606,7 +593,7 @@ export async function deletePalabrota(id: string, user: string) {
     await addLog(user, 'Palabrota gelöscht', `ID: ${id}`);
 }
 
-// Chistes
+// --- CHISTES ---
 export async function getChistes(): Promise<Chiste[]> {
     const chistesCol = collection(db, 'chistes');
     const q = query(chistesCol, orderBy("witz", "asc"));
@@ -619,6 +606,43 @@ export async function getChistes(): Promise<Chiste[]> {
         ...doc.data()
     } as Chiste));
 }
+
+// --- GENERIC DB ---
+export async function getCollectionData(collectionId: string): Promise<any[]> {
+    const colRef = collection(db, collectionId);
+    // Simple query, can be expanded later
+    const q = query(colRef, orderBy(Timestamp.documentId()));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => {
+        const data = doc.data();
+        // Convert Timestamps to ISO strings for serialization
+        Object.keys(data).forEach(key => {
+            if (data[key] instanceof Timestamp) {
+                data[key] = (data[key] as Timestamp).toDate().toISOString();
+            }
+        });
+        return { id: doc.id, ...data };
+    });
+}
+
+export async function updateDocument(collectionId: string, documentId: string, data: any, user: string) {
+    const docRef = doc(db, collectionId, documentId);
+    await updateDoc(docRef, data);
+    await addLog(user, `Dokument aktualisiert in '${collectionId}'`, `ID: ${documentId}`);
+}
+
+export async function addDocument(collectionId: string, data: any, user: string) {
+    const colRef = collection(db, collectionId);
+    const newDoc = await addDoc(colRef, data);
+    await addLog(user, `Dokument hinzugefügt zu '${collectionId}'`, `Neue ID: ${newDoc.id}`);
+}
+
+export async function deleteDocument(collectionId: string, documentId: string, user: string) {
+    const docRef = doc(db, collectionId, documentId);
+    await deleteDoc(docRef);
+    await addLog(user, `Dokument gelöscht aus '${collectionId}'`, `ID: ${documentId}`);
+}
+
 
 // --- STORAGE ---
 export async function listFiles(path: string = '/'): Promise<StorageFile[]> {
@@ -639,26 +663,4 @@ export async function listFiles(path: string = '/'): Promise<StorageFile[]> {
     }));
 
     return files.sort((a, b) => new Date(b.updated).getTime() - new Date(a.updated).getTime());
-}
-
-export async function deleteFileFromStorage(filePath: string): Promise<void> {
-  const fileRef = ref(storage, filePath);
-  await deleteObject(fileRef);
-}
-
-// This function is for use in server actions. Client-side uploads will use the SDK directly.
-export async function uploadFileToServer(file: File): Promise<StorageFile> {
-    const storageRef = ref(storage, file.name);
-    const snapshot = await uploadBytesResumable(storageRef, file);
-    const downloadUrl = await getDownloadURL(snapshot.ref);
-    const metadata = await getMetadata(snapshot.ref);
-    
-    return {
-        name: metadata.name,
-        fullPath: metadata.fullPath,
-        size: metadata.size,
-        contentType: metadata.contentType || 'application/octet-stream',
-        updated: metadata.updated,
-        downloadUrl,
-    };
 }
