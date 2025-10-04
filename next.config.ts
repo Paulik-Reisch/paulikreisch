@@ -43,6 +43,7 @@ const nextConfig: NextConfig = {
       }
     ],
   },
+  serverComponentsExternalPackages: ['firebase-admin'],
   turbo: {
     resolveAlias: {
       // This is to suppress a warning from a dependency of a dependency (handlebars).

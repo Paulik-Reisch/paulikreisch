@@ -17,6 +17,15 @@ import {
     arrayUnion,
     writeBatch
 } from "firebase/firestore";
+import { 
+    getStorage,
+    ref,
+    listAll,
+    getDownloadURL,
+    getMetadata,
+    deleteObject,
+    uploadBytesResumable
+} from "firebase/storage";
 
 export interface Order {
     id: string;
@@ -132,7 +141,18 @@ export interface Log {
     timestamp: string;
 }
 
+export interface StorageFile {
+    name: string;
+    fullPath: string;
+    size: number;
+    contentType: string;
+    updated: string;
+    downloadUrl: string;
+}
+
+
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 // --- LOGGING ---
 export async function addLog(user: string, action: string, details: string) {
@@ -598,4 +618,47 @@ export async function getChistes(): Promise<Chiste[]> {
         id: doc.id,
         ...doc.data()
     } as Chiste));
+}
+
+// --- STORAGE ---
+export async function listFiles(path: string = '/'): Promise<StorageFile[]> {
+    const listRef = ref(storage, path);
+    const res = await listAll(listRef);
+    
+    const files = await Promise.all(res.items.map(async (itemRef) => {
+        const metadata = await getMetadata(itemRef);
+        const downloadUrl = await getDownloadURL(itemRef);
+        return {
+            name: metadata.name,
+            fullPath: metadata.fullPath,
+            size: metadata.size,
+            contentType: metadata.contentType || 'application/octet-stream',
+            updated: metadata.updated,
+            downloadUrl,
+        };
+    }));
+
+    return files.sort((a, b) => new Date(b.updated).getTime() - new Date(a.updated).getTime());
+}
+
+export async function deleteFileFromStorage(filePath: string): Promise<void> {
+  const fileRef = ref(storage, filePath);
+  await deleteObject(fileRef);
+}
+
+// This function is for use in server actions. Client-side uploads will use the SDK directly.
+export async function uploadFileToServer(file: File): Promise<StorageFile> {
+    const storageRef = ref(storage, file.name);
+    const snapshot = await uploadBytesResumable(storageRef, file);
+    const downloadUrl = await getDownloadURL(snapshot.ref);
+    const metadata = await getMetadata(snapshot.ref);
+    
+    return {
+        name: metadata.name,
+        fullPath: metadata.fullPath,
+        size: metadata.size,
+        contentType: metadata.contentType || 'application/octet-stream',
+        updated: metadata.updated,
+        downloadUrl,
+    };
 }
