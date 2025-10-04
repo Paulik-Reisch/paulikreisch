@@ -7,21 +7,31 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarFooter,
-  SidebarTrigger,
+  SidebarGroup,
+  SidebarGroupLabel,
 } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
-import { Button } from "@/components/ui/button"
-import { LogOut, LayoutDashboard, Database, HardDrive, Cloud, Home } from "lucide-react"
-import { usePathname, useRouter } from "next/navigation"
+import { LogOut, LayoutDashboard, Database, HardDrive, Users, Home, BrainCircuit, TestTube2, Palette, Navigation, Cloud } from "lucide-react"
+import { usePathname } from "next/navigation"
 import { logoutAction } from "@/app/admin/actions"
 import Link from "next/link"
 
-const menuItems = [
-  { href: "/internal", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/internal/database", label: "Firestore DB", icon: Database },
-  { href: "/internal/storage", label: "Cloud Storage", icon: HardDrive },
-  { href: "/internal/cloud", label: "Google Cloud", icon: Cloud },
-]
+const isdmItems = [
+  { href: "/internal/isdm/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/internal/isdm/auth", label: "Benutzer", icon: Users },
+  { href: "/internal/isdm/database", label: "Firestore DB", icon: Database },
+  { href: "/internal/isdm/storage", label: "Cloud Storage", icon: HardDrive },
+  { href: "/internal/isdm/genkit", label: "Genkit AI", icon: BrainCircuit },
+  { href: "/internal/isdm/cloud", label: "Google Cloud", icon: Cloud },
+];
+
+const femItems = [
+  { href: "/internal/fem/content", label: "Content", icon: Cloud },
+  { href: "/internal/fem/ab-testing", label: "A/B-Tests", icon: TestTube2 },
+  { href: "/internal/fem/navigation", label: "Navigation", icon: Navigation },
+  { href: "/internal/fem/theme", label: "Theme", icon: Palette },
+];
+
 
 export function InternalSidebar() {
   const pathname = usePathname()
@@ -34,22 +44,41 @@ export function InternalSidebar() {
                 <Database className="h-5 w-5"/>
            </div>
            <span className="text-base font-semibold text-primary group-data-[collapsible=icon]:hidden">
-                IDSM
+                M-Dashboard
            </span>
         </div>
       </SidebarHeader>
       
       <SidebarMenu>
-        {menuItems.map((item) => (
-          <SidebarMenuItem key={item.href}>
-            <Link href={item.href} className="w-full">
-              <SidebarMenuButton isActive={pathname === item.href} tooltip={item.label}>
-                <item.icon />
-                <span>{item.label}</span>
-              </SidebarMenuButton>
-            </Link>
-          </SidebarMenuItem>
-        ))}
+        <SidebarGroup>
+          <SidebarGroupLabel>ISDM</SidebarGroupLabel>
+          {isdmItems.map((item) => (
+            <SidebarMenuItem key={item.href}>
+              <Link href={item.href} className="w-full">
+                <SidebarMenuButton isActive={pathname === item.href} tooltip={item.label}>
+                  <item.icon />
+                  <span>{item.label}</span>
+                </SidebarMenuButton>
+              </Link>
+            </SidebarMenuItem>
+          ))}
+        </SidebarGroup>
+        
+        <SidebarSeparator />
+
+        <SidebarGroup>
+           <SidebarGroupLabel>FEM</SidebarGroupLabel>
+           {femItems.map((item) => (
+            <SidebarMenuItem key={item.href}>
+              <Link href={item.href} className="w-full">
+                <SidebarMenuButton isActive={pathname === item.href} tooltip={item.label}>
+                  <item.icon />
+                  <span>{item.label}</span>
+                </SidebarMenuButton>
+              </Link>
+            </SidebarMenuItem>
+          ))}
+        </SidebarGroup>
       </SidebarMenu>
       
       <SidebarFooter>
