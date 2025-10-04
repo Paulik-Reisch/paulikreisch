@@ -58,6 +58,24 @@
     --bg-subtle-yellow: 45 95% 10%;
     --bg-subtle-blue: 220 95% 10%;
   }
+
+  .internal-dashboard {
+    --radius: 0.25rem;
+    --primary: 240 5% 34%; /* neutral-700 */
+    --primary-foreground: 240 5% 95%;
+    --accent: 240 5% 96%;
+    --accent-foreground: 240 10% 3.9%;
+    --ring: 240 5% 34%;
+  }
+
+  .dark .internal-dashboard {
+    --primary: 240 5% 83%; /* neutral-300 */
+    --primary-foreground: 240 5% 10%;
+    --accent: 240 4% 15%;
+    --accent-foreground: 0 0% 98%;
+    --ring: 240 5% 83%;
+  }
+
 }
 
 @layer base {
@@ -76,7 +94,7 @@
         @apply bg-gray-100 text-gray-800 border-gray-300 rounded-sm shadow-none h-8 px-3 text-xs font-normal hover:bg-gray-200 active:scale-100;
     }
     .internal-dashboard .gcp-button-primary {
-         @apply bg-blue-600 text-white border-blue-700 rounded-sm shadow-none h-8 px-3 text-xs font-normal hover:bg-blue-700 active:scale-100;
+         @apply bg-primary text-primary-foreground border-transparent rounded-sm shadow-none h-8 px-3 text-xs font-normal hover:bg-primary/90 active:scale-100;
     }
     .internal-dashboard .gcp-icon-button {
         @apply text-gray-500 hover:text-gray-800 hover:bg-gray-100 rounded-sm h-8 w-8 shadow-none border-transparent;

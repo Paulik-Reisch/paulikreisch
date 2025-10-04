@@ -41,7 +41,7 @@ export function InternalSidebar() {
     <Sidebar>
       <SidebarHeader>
         <div className="flex items-center gap-2">
-           <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-blue-600 text-white">
+           <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-primary/20 text-primary">
                 <Database className="h-5 w-5"/>
            </div>
            <span className="text-base font-semibold text-gray-800 group-data-[collapsible=icon]:hidden">
@@ -56,7 +56,7 @@ export function InternalSidebar() {
           {isdmItems.map((item) => (
             <SidebarMenuItem key={item.href}>
               <Link href={item.href} className="w-full">
-                <SidebarMenuButton isActive={pathname === item.href} tooltip={item.label} variant="ghost" className="justify-start data-[active=true]:bg-blue-100 data-[active=true]:text-blue-700 data-[active=true]:font-semibold hover:bg-gray-100 rounded-sm">
+                <SidebarMenuButton isActive={pathname === item.href} tooltip={item.label} variant="ghost" className="justify-start data-[active=true]:bg-accent data-[active=true]:text-accent-foreground data-[active=true]:font-semibold hover:bg-gray-100 rounded-sm">
                   <item.icon />
                   <span>{item.label}</span>
                 </SidebarMenuButton>
@@ -72,7 +72,7 @@ export function InternalSidebar() {
            {femItems.map((item) => (
             <SidebarMenuItem key={item.href}>
               <Link href={item.href} className="w-full">
-                <SidebarMenuButton isActive={pathname === item.href} tooltip={item.label} variant="ghost" className="justify-start data-[active=true]:bg-blue-100 data-[active=true]:text-blue-700 data-[active=true]:font-semibold hover:bg-gray-100 rounded-sm">
+                <SidebarMenuButton isActive={pathname === item.href} tooltip={item.label} variant="ghost" className="justify-start data-[active=true]:bg-accent data-[active=true]:text-accent-foreground data-[active=true]:font-semibold hover:bg-gray-100 rounded-sm">
                   <item.icon />
                   <span>{item.label}</span>
                 </SidebarMenuButton>

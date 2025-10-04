@@ -66,7 +66,7 @@ export function InternalDashboard() {
                 <Card key={link.title} className="gcp-card flex flex-col">
                     <CardHeader>
                         <div className="flex items-center gap-3">
-                            <div className="bg-blue-100 text-blue-600 p-2 rounded-sm">
+                            <div className="bg-primary/10 text-primary p-2 rounded-sm">
                                 <link.icon className="h-5 w-5"/>
                             </div>
                             <CardTitle className="text-sm font-medium">{link.title}</CardTitle>
