@@ -18,11 +18,11 @@ export default async function InternalLayout({
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen w-full flex-col bg-muted/40">
+      <div className="flex h-screen bg-muted/40">
         <InternalSidebar />
-        <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+        <div className="flex flex-col flex-1 overflow-y-auto">
           <InternalHeader />
-          <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 overflow-auto">
+          <main className="flex-1 p-4 sm:px-6 sm:py-4">
             {children}
           </main>
           <InternalFooter />
