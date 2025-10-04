@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect, useCallback, useTransition } from 'react';
@@ -10,7 +11,7 @@ import { Table, TableBody, TableCell, TableHeader, TableHead, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
-import { UploadCloud, File, Trash2, Copy, RefreshCw, HardDrive, Loader2 } from 'lucide-react';
+import { UploadCloud, File, Trash2, Copy, RefreshCw, HardDrive, Loader2, ExternalLink } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { deleteFileAction, getUploadUrlAction, getDownloadUrlAction } from '@/app/internal/storage/actions';
 import {
@@ -138,6 +139,15 @@ export function FileManager() {
              toast({ variant: "destructive", title: "Fehler", description: error });
         }
     };
+    
+    const openUrl = async (fullPath: string) => {
+        const { url, error } = await getDownloadUrlAction(fullPath);
+        if (url) {
+            window.open(url, '_blank');
+        } else {
+             toast({ variant: "destructive", title: "Fehler", description: error });
+        }
+    }
 
 
     return (
@@ -196,15 +206,18 @@ export function FileManager() {
                             files.map(file => (
                                 <TableRow key={file.fullPath}>
                                     <TableCell className="font-medium truncate max-w-sm">
-                                        <a href={file.downloadUrl} target="_blank" rel="noopener noreferrer" className="hover:underline flex items-center gap-2">
+                                        <button onClick={() => openUrl(file.fullPath)} className="hover:underline flex items-center gap-2">
                                             <File className="h-4 w-4 shrink-0 text-gray-500"/>
                                             {file.name}
-                                        </a>
+                                        </button>
                                     </TableCell>
                                     <TableCell>{formatBytes(file.size)}</TableCell>
                                     <TableCell><Badge variant="outline">{file.contentType}</Badge></TableCell>
                                     <TableCell>{format(new Date(file.updated), "dd.MM.yyyy HH:mm", { locale: de })}</TableCell>
                                     <TableCell className="text-right">
+                                        <Button size="icon" variant="ghost" className="gcp-icon-button" onClick={() => openUrl(file.fullPath)} title="Datei in neuem Tab öffnen">
+                                            <ExternalLink className="h-4 w-4"/>
+                                        </Button>
                                         <Button size="icon" variant="ghost" className="gcp-icon-button" onClick={() => handleCopyUrl(file.fullPath)} title="Download-URL kopieren">
                                             <Copy className="h-4 w-4"/>
                                         </Button>

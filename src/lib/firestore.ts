@@ -1,4 +1,5 @@
 
+
 import { app } from "@/app/firebase";
 import { 
     getFirestore, 
@@ -21,7 +22,6 @@ import {
     getStorage,
     ref,
     listAll,
-    getDownloadURL,
     getMetadata,
 } from "firebase/storage";
 
@@ -145,7 +145,6 @@ export interface StorageFile {
     size: number;
     contentType: string;
     updated: string;
-    downloadUrl: string;
 }
 
 
@@ -183,15 +182,15 @@ export async function getLogs(): Promise<Log[]> {
 
 // --- ADMIN ---
 export async function getAdminCredentials(): Promise<Record<string, string>> {
-    const docRef = doc(db, 'settings', 'admin');
+    const docRef = doc(db, 'admin', 'credentials');
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-        return docSnap.data().credentials as Record<string, string>;
+        // This is insecure, but per user request
+        return docSnap.data() as Record<string, string>;
     } else {
-        console.warn("Admin credentials not found. Creating default: admin/password");
-        await setDoc(docRef, { credentials: { admin: 'password' } });
-        return { admin: 'password' };
+        console.warn("Admin credentials not found in collection 'admin'.");
+        return {};
     }
 }
 
@@ -652,14 +651,12 @@ export async function listFiles(path: string = '/'): Promise<StorageFile[]> {
     
     const files = await Promise.all(res.items.map(async (itemRef) => {
         const metadata = await getMetadata(itemRef);
-        const downloadUrl = await getDownloadURL(itemRef);
         return {
             name: metadata.name,
             fullPath: metadata.fullPath,
             size: metadata.size,
             contentType: metadata.contentType || 'application/octet-stream',
             updated: metadata.updated,
-            downloadUrl,
         };
     }));
 
