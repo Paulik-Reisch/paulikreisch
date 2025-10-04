@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 export default async function EditorPage({ params }: { params: { slug: string } }) {
   const session = await getSession();
   if (!session) {
-    redirect("/admin/login");
+    redirect("/login");
   }
 
   const { slug } = params;

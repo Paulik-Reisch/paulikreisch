@@ -74,7 +74,7 @@ export async function loginAction(
 
 export async function logoutAction() {
     cookies().set("session", "", { expires: new Date(0) });
-    redirect('/admin/login');
+    redirect('/login');
 }
 
 const CorrectHtmlSchema = z.object({

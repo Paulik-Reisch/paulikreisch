@@ -13,7 +13,7 @@ export default async function InternalLayout({
 }) {
   const session = await getSession();
   if (!session) {
-    redirect("/admin/login");
+    redirect("/login");
   }
 
   return (

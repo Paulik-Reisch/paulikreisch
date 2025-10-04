@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 export default async function NewsletterEditorPage({ params }: { params: { slug: string } }) {
   const session = await getSession();
   if (!session) {
-    redirect("/admin/login");
+    redirect("/login");
   }
   
   const newsletter = await getNewsletter(params.slug);
