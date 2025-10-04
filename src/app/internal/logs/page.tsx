@@ -19,8 +19,8 @@ export default async function LogsPage() {
     const getActionVariant = (action: string) => {
         if (!action) return 'outline'; // Handle undefined or null action
         const lowerCaseAction = action.toLowerCase();
-        if (lowerCaseAction.includes('delete') || lowerCaseAction.includes('löschen')) return 'destructive';
-        if (lowerCaseAction.includes('add') || lowerCaseAction.includes('erstellen')) return 'default';
+        if (lowerCaseAction.includes('delete') || lowerCaseAction.includes('löschen') || lowerCaseAction.includes('fehlgeschlagen')) return 'destructive';
+        if (lowerCaseAction.includes('add') || lowerCaseAction.includes('erstellen') || lowerCaseAction.includes('login')) return 'default';
         if (lowerCaseAction.includes('update') || lowerCaseAction.includes('aktualisiert')) return 'secondary';
         return 'outline';
     }
@@ -66,3 +66,5 @@ export default async function LogsPage() {
         </div>
     );
 }
+
+    

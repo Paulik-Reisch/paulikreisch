@@ -60,6 +60,7 @@ export async function loginAction(
     const userPassword = credentials[username];
 
     if (!userPassword || userPassword !== password) {
+        await addLog(username, 'Login fehlgeschlagen', `Falsches Passwort für Benutzer '${username}'`);
         return { success: false, error: "Falscher Benutzername oder Passwort." };
     }
 
@@ -69,12 +70,16 @@ export async function loginAction(
 
     cookies().set("session", session, { expires, httpOnly: true });
 
+    await addLog(username, 'Login erfolgreich', `Benutzer '${username}' hat sich angemeldet.`);
     revalidatePath("/admin");
     redirect('/admin');
 }
 
 export async function logoutAction() {
+    const session = await getSession();
+    const user = session?.user.id || 'Unbekannt';
     cookies().set("session", "", { expires: new Date(0) });
+    await addLog(user, 'Logout', `Benutzer '${user}' hat sich abgemeldet.`);
     redirect('/login');
 }
 
@@ -86,6 +91,11 @@ export async function correctHtmlAction(
     prevState: { correctedHtml?: string; error?: string },
     formData: FormData
 ) {
+    const session = await getSession();
+    if (!session) {
+        return { error: "Nicht authentifiziert" };
+    }
+
     const validatedFields = CorrectHtmlSchema.safeParse({
         html: formData.get("html"),
     });
@@ -96,6 +106,7 @@ export async function correctHtmlAction(
 
     try {
         const result = await correctHtml(validatedFields.data);
+        await addLog(session.user.id, 'KI-Aktion: HTML korrigiert', `Länge: ${result.correctedHtml.length} Zeichen`);
         return { correctedHtml: result.correctedHtml };
     } catch (e) {
         console.error(e);
@@ -653,3 +664,5 @@ export async function updateExcerptAction(
     return { success: false, error: "Fehler beim Aktualisieren: " + error.message };
   }
 }
+
+    
