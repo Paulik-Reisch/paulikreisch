@@ -331,7 +331,7 @@ type AdminNewsletterState = {
 
 const initialNewsletterState: AdminNewsletterState = { success: false };
 
-function NewsletterManager({ initialNewsletters, onTabChange }: { initialNewsletters: Newsletter[], onTabChange: (value: string) => void; }) {
+export function NewsletterManager({ initialNewsletters, onTabChange }: { initialNewsletters: Newsletter[], onTabChange: (value: string) => void; }) {
     const router = useRouter();
     const [newsletters, setNewsletters] = useState(initialNewsletters);
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -1041,7 +1041,7 @@ function OverviewTab({
                         <p className="text-sm text-muted-foreground mb-4">
                            Erweiterte Verwaltung von Datenbank, Storage, Analytics und KI-Flows.
                         </p>
-                        <Link href="/internal">
+                        <Link href="/internal/isdm/dashboard">
                             <Button variant="outline">
                                 Zum IMCORE <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
@@ -1057,8 +1057,8 @@ function OverviewTab({
     )
 }
 
-export function AdminDashboard() {
-    const [activeTab, setActiveTab] = useState("übersicht");
+export function AdminDashboard({ defaultTab = "übersicht" }: { defaultTab?: string }) {
+    const [activeTab, setActiveTab] = useState(defaultTab);
     const [loading, setLoading] = useState(true);
     const [initialData, setInitialData] = useState({
         legalPages: [] as LegalPage[],

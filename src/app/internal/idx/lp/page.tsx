@@ -3,10 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getLegalPages, getPublishedExcerpts } from "@/lib/firestore";
-import { Edit, FileText, PlusCircle } from "lucide-react";
+import { Edit, PlusCircle } from "lucide-react";
 import Link from "next/link";
-import { promises as fs } from 'fs';
-import path from 'path';
 
 // This is a simplified representation. In a real app, this might come from a DB or a more complex source.
 const staticLPs = [

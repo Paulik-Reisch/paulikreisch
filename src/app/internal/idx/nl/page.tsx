@@ -1,20 +1,17 @@
 
-import { NewsletterManager } from "@/components/admin/dashboard";
-import { getNewsletters } from "@/lib/firestore";
-import { Newspaper } from "lucide-react";
+import { AdminDashboard } from "@/components/admin/dashboard";
+
 
 export default async function NewsletterManagerPage() {
-    const newsletters = await getNewsletters();
-    
     return (
          <div className="space-y-8">
             <header>
                 <h1 className="text-2xl font-medium text-gray-900">Newsletter Management (IDX-NL)</h1>
-                <p className="text-sm text-gray-500 mt-1">Erstellen, bearbeiten und verwalten Sie alle Ihre Newsletter.</p>
+                <p className="text-sm text-gray-500 mt-1">Erstellen, bearbeiten und verwalten Sie alle Ihre Newsletter und Kampagnen.</p>
             </header>
             
-            <div className="p-6 border bg-white rounded-lg">
-                 <NewsletterManager initialNewsletters={newsletters} onTabChange={() => {}}/>
+            <div className="bg-white rounded-lg p-0 md:p-6 md:border">
+                 <AdminDashboard defaultTab="newsletters" />
             </div>
         </div>
     );
