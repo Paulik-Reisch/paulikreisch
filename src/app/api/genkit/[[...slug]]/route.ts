@@ -1,5 +1,4 @@
-import {createApiRoute} from '@genkit-ai/next';
-import * =>>
+import { createApiRoute } from '@genkit-ai/next/server';
 import '@/ai/flows/continue-chapter-flow';
 import '@/ai/flows/correct-html-flow';
 import '@/ai/flows/generate-bureaucracy-flow';

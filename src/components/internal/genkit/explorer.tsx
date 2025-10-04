@@ -1,53 +1,38 @@
 'use client';
 
-import 'json-formatter-js/dist/style.css';
-import {GenkitDevUi} from 'genkit/dev-ui';
-import {useEffect} from 'react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Loader2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 
 export function GenkitExplorer() {
+  const [isMounted, setIsMounted] = useState(false);
+
   useEffect(() => {
-    // This is a workaround for a bug in json-formatter-js that causes
-    // an error when rendering in a strict mode environment.
-    const consoleError = console.error;
-    const SUPPRESSED_WARNINGS = [
-      'Warning: Using the `defaultValue` or `value` props on <input> without an `onChange` handler. This will render a read-only field. If the field should be mutable use `defaultChecked`. Otherwise, set either `onChange` or `readOnly`.',
-    ];
-    console.error = function filterWarnings(msg, ...args) {
-      if (
-        !SUPPRESSED_WARNINGS.some((warning) =>
-          typeof msg === 'string' ? msg.includes(warning) : false
-        )
-      ) {
-        consoleError(msg, ...args);
-      }
-    };
-    return () => {
-      console.error = consoleError;
-    };
+    // This component will only render on the client, so we can safely use client-side APIs.
+    setIsMounted(true);
   }, []);
 
+  if (!isMounted) {
+    return (
+      <div className="flex items-center justify-center h-full bg-white border rounded-lg">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
   return (
-    <div className="h-full w-full bg-white">
-        <GenkitDevUi
-            // By default, the Dev UI is configured to make API calls to the same
-            // origin as the page is being served from.
-            //
-            // If the API is being served from a different origin, you can configure it here.
-            // For example, if the API is being served from http://localhost:3400, you would
-            // configure it like this:
-            //
-            // api={'http://localhost:3400/api/genkit'}
-            //
-            api={'/api/genkit'}
-            //
-            // By default, the Dev UI will use the path `/`. If you are mounting the Dev UI
-            // at a different path, you can configure it here.
-            //
-            // For example, if you are mounting the Dev UI at `/tools/genkit`, you would
-            // configure it like this:
-            //
-            // basePath={'/tools/genkit'}
-        />
+    <div className="h-full w-full bg-white border rounded-lg overflow-hidden">
+      <Alert className="m-4 max-w-md">
+        <AlertTitle>Genkit Dev UI</AlertTitle>
+        <AlertDescription>
+            Stellen Sie sicher, dass der Genkit-Entwicklungsserver mit `npm run genkit:watch` läuft, um die UI zu sehen.
+        </AlertDescription>
+      </Alert>
+      <iframe
+        src="http://127.0.0.1:4000/"
+        className="w-full h-full border-0"
+        title="Genkit Dev UI"
+      />
     </div>
   );
 }
