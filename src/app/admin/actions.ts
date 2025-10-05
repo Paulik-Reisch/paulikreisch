@@ -618,7 +618,8 @@ export type AdminExcerptState = {
   success: boolean;
   error?: string | null;
   message?: string;
-  formData?: FormData;
+  slug?: string;
+  isPublished?: boolean;
 };
 
 const UpdateExcerptSchema = z.object({
@@ -658,7 +659,12 @@ export async function updateExcerptAction(
     revalidatePath("/admin");
     revalidatePath(`/exzerpt/${slug}`);
     revalidatePath('/exzerpte');
-    return { success: true, message: "Exzerpt erfolgreich aktualisiert.", formData };
+    return { 
+        success: true, 
+        message: "Exzerpt erfolgreich aktualisiert.", 
+        slug: slug,
+        isPublished: dataToUpdate.isPublished
+    };
   } catch (e) {
     const error = e as Error;
     return { success: false, error: "Fehler beim Aktualisieren: " + error.message };

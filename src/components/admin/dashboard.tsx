@@ -895,16 +895,15 @@ function ExcerptsManager({ initialExcerpts }: { initialExcerpts: Excerpt[] }) {
     const { toast } = useToast();
     const [excerpts, setExcerpts] = useState(initialExcerpts);
 
-    const [state, formAction] = useActionState(updateExcerptAction, { success: false, error: null, message: null });
-    
+    const [state, formAction] = useActionState(updateExcerptAction, { success: false, error: null });
+
     useEffect(() => {
         if (state.success) {
             toast({ title: "Erfolg", description: state.message || "Status aktualisiert." });
-            // This is an optimistic update. A better way would be to refetch.
-            const formData = (state as any).formData as FormData;
-            if(formData) {
-                const slug = formData.get('slug');
-                setExcerpts(prev => prev.map(e => e.slug === slug ? { ...e, isPublished: !e.isPublished } : e));
+            const slug = state.slug;
+            const newIsPublished = state.isPublished;
+            if (slug !== undefined && newIsPublished !== undefined) {
+                setExcerpts(prev => prev.map(e => e.slug === slug ? { ...e, isPublished: newIsPublished } : e));
             } else {
                  getExcerpts().then(setExcerpts);
             }
