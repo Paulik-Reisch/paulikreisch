@@ -13,7 +13,7 @@ const products: Product[] = [
         price: 10.99,
         imageSrc: "https://m.media-amazon.com/images/I/61hB6jTD-CL._SY466_.jpg",
         aiHint: "book cover satire",
-        amazonLink: "https://www.amazon.de/Hallo-Welt-unerh%C3%B6rten-Bildungsgang-Lernvollzugsanstalt/dp/3982548803",
+        amazonLink: "https://amzn.eu/d/0CdFeZ3",
         description: "Die satirische Abrechnung mit dem Schulsystem, Lehrern als Beamtenrobotern und dem täglichen Wahnsinn des Erwachsenwerdens."
     },
     {
