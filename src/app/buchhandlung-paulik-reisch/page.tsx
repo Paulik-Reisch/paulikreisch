@@ -34,8 +34,8 @@ export default async function BookShopPage() {
     <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
       <BookShopHeader />
       <main className="flex-1">
-        <BookShopHero />
         <BookShop initialProducts={products} />
+        <BookShopHero />
       </main>
       <Footer />
     </div>
