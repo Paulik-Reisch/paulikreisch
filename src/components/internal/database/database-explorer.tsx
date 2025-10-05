@@ -117,7 +117,7 @@ export function DatabaseExplorer() {
                     />
                 ) : (
                     <div className="flex items-center justify-center h-64 border-2 border-dashed rounded-lg">
-                        <p className="text-gray-500">Wählen Sie eine Collection aus, um die Dokumente anzuzeigen.</p>
+                        <p className="text-gray-500">Wähle eine Collection aus, um die Dokumente anzuzeigen.</p>
                     </div>
                 )}
             </div>

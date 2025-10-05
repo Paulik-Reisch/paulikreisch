@@ -25,7 +25,7 @@ export function GenkitExplorer() {
       <Alert className="m-4 max-w-md">
         <AlertTitle>Genkit Dev UI</AlertTitle>
         <AlertDescription>
-            Stellen Sie sicher, dass der Genkit-Entwicklungsserver mit `npm run genkit:watch` läuft, um die UI zu sehen.
+            Stelle sicher, dass der Genkit-Entwicklungsserver mit `npm run genkit:watch` läuft, um die UI zu sehen.
         </AlertDescription>
       </Alert>
       <iframe

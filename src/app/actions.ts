@@ -106,7 +106,7 @@ export async function createReportCardAction(
 }
 
 const bureaucracySchema = z.object({
-    problem: z.string().min(5, { message: "Ihr Problem muss mindestens 5 Zeichen haben." }).max(200),
+    problem: z.string().min(5, { message: "Dein Problem muss mindestens 5 Zeichen haben." }).max(200),
 });
 
 export async function createBureaucracyResponseAction(
@@ -149,11 +149,11 @@ export async function createDbExcuseAction(
 
 
 const GenerateSatireTypeInputSchema = z.object({
-    q1: z.string().min(1, "Bitte beantworten Sie alle Fragen."),
-    q2: z.string().min(1, "Bitte beantworten Sie alle Fragen."),
-    q3: z.string().min(1, "Bitte beantworten Sie alle Fragen."),
-    q4: z.string().min(1, "Bitte beantworten Sie alle Fragen."),
-    q5: z.string().min(1, "Bitte beantworten Sie alle Fragen."),
+    q1: z.string().min(1, "Bitte beantworte alle Fragen."),
+    q2: z.string().min(1, "Bitte beantworte alle Fragen."),
+    q3: z.string().min(1, "Bitte beantworte alle Fragen."),
+    q4: z.string().min(1, "Bitte beantworte alle Fragen."),
+    q5: z.string().min(1, "Bitte beantworte alle Fragen."),
 });
 
 export async function createSatireTypeAction(
@@ -187,7 +187,7 @@ export async function createSatireTypeAction(
 }
 
 const pfeiferTranslateSchema = z.object({
-  text: z.string().min(1, "Bitte geben Sie einen Text ein.").max(500, "Der Text darf maximal 500 Zeichen lang sein."),
+  text: z.string().min(1, "Bitte gib einen Text ein.").max(500, "Der Text darf maximal 500 Zeichen lang sein."),
   intensity: z.coerce.number().min(1).max(5).default(3),
 });
 
@@ -248,12 +248,12 @@ export async function createOrderAction(
     return { success: true, error: null };
   } catch (e) {
     console.error(e);
-    return { success: false, error: "Bestellung konnte nicht gespeichert werden. Bitte versuchen Sie es erneut." };
+    return { success: false, error: "Bestellung konnte nicht gespeichert werden. Bitte versuche es erneut." };
   }
 }
 
 const SubscriberSchema = z.object({
-    email: z.string().email("Bitte geben Sie eine gültige E-Mail Adresse ein."),
+    email: z.string().email("Bitte gib eine gültige E-Mail-Adresse ein."),
     source: z.string().optional(),
 });
 
@@ -287,7 +287,7 @@ export async function subscribeToNewsletterAction(
         console.error(e);
         const error = e as Error;
         if (error.message.includes("existiert bereits")) {
-            return { success: true, message: `Diese E-Mail ist bereits registriert. Sie bleiben auf dem Laufenden!` };
+            return { success: true, message: `Diese E-Mail ist bereits registriert. Du bleibst auf dem Laufenden!` };
         }
         return { error: "Anmeldung fehlgeschlagen. Das Internet ist wahrscheinlich wieder kaputt." };
     }

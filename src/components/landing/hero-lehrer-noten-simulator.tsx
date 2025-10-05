@@ -116,7 +116,7 @@ export function HeroLehrerNotenSimulator() {
               Der Lehrer-Noten-Simulator
             </h1>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl text-balance">
-              Geben Sie Ihren Namen ein und erhalten Sie ein völlig absurdes Schulzeugnis. Ihre wahren Talente – wie Pausenbrot-Management – werden endlich gewürdigt.
+              Gib Deinen Namen ein und erhalte ein völlig absurdes Schulzeugnis. Deine wahren Talente – wie Pausenbrot-Management – werden endlich gewürdigt.
             </p>
           </div>
         </div>

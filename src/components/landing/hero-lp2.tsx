@@ -53,7 +53,7 @@ export function HeroLP2() {
               HALLO WELT 2 WIRD NOCH KRASSER ALS HALLO WELT 1
             </h1>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl animate-in fade-in slide-in-from-top-16 duration-1000">
-              Sie dachten, es geht nicht schlimmer? Oh, doch. Seien Sie der Erste, der einen exklusiven Auszug liest. Geben Sie einfach Ihre E-Mail-Adresse ein und bereiten Sie sich mental vor.
+              Du dachtest, es geht nicht schlimmer? Oh, doch. Sei der Erste, der einen exklusiven Auszug liest. Gib einfach Deine E-Mail-Adresse ein und bereite Dich mental vor.
             </p>
           </div>
           <div className="w-full max-w-md space-y-2 animate-in fade-in slide-in-from-top-20 duration-1000">
@@ -61,7 +61,7 @@ export function HeroLP2() {
               <Input
                 name="email"
                 className="max-w-lg flex-1"
-                placeholder="Ihre E-Mail-Adresse"
+                placeholder="Deine E-Mail-Adresse"
                 type="email"
                 required
               />
@@ -69,7 +69,7 @@ export function HeroLP2() {
               <SubmitButton />
             </form>
             <p className="text-xs text-muted-foreground">
-              Wir schicken Ihnen den Auszug und vielleicht den ein oder anderen schlechten Witz. Abmeldung jederzeit möglich (emotional vielleicht nicht).
+              Wir schicken Dir den Auszug und vielleicht den ein oder anderen schlechten Witz. Abmeldung jederzeit möglich (emotional vielleicht nicht).
             </p>
           </div>
         </div>

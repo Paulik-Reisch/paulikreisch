@@ -86,7 +86,7 @@ export function PfeiferTranslator() {
   const handleCopyToClipboard = (text: string) => {
     if (!text) return;
     navigator.clipboard.writeText(text);
-    toast({ title: 'Kopiert!', description: 'Der Text wurde in die Zwischenablage kopiert.' });
+    toast({ title: 'Kopiert!', description: 'Der Text wurde in Deine Zwischenablage kopiert.' });
   };
   
   return (

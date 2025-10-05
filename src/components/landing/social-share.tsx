@@ -20,7 +20,7 @@ export function SocialShare({shareUrlPath = "/buchhandlung-paulik-reisch"}: {sha
       navigator.clipboard.writeText(`${shareText} ${fullUrl}`);
       toast({
           title: "Kopiert!",
-          description: "Der Text zum Teilen wurde in die Zwischenablage kopiert.",
+          description: "Der Text zum Teilen wurde in Deine Zwischenablage kopiert.",
       })
     }
   }
@@ -32,7 +32,7 @@ export function SocialShare({shareUrlPath = "/buchhandlung-paulik-reisch"}: {sha
           <div className="space-y-2">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Verbreite das Chaos!</h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-              Dein frisch geschriebenes Kapitel ist zu gut, um es für dich zu behalten. Teile es mit der Welt (und sorge für maximale Verwirrung).
+              Dein frisch geschriebenes Kapitel ist zu gut, um es für Dich zu behalten. Teile es mit der Welt (und sorge für maximale Verwirrung).
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
