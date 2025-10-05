@@ -54,7 +54,7 @@ export function FootnoteGenerator() {
         <CardHeader>
           <CardTitle className="font-headline">Fußnoten-Generator</CardTitle>
           <CardDescription>
-            Geben Sie ein beliebiges Wort ein und die KI erstellt eine passende, absolut überflüssige Erklärung.
+            Gib ein beliebiges Wort ein und die KI erstellt eine passende, absolut überflüssige Erklärung.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

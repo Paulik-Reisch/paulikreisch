@@ -31,7 +31,7 @@ const topics = [
     },
     {
         title: "Busfahren = Mutprobe",
-        description: "Der tägliche Nahverkehr als Gladiatorenkampf. Hol dir den Survival Guide.",
+        description: "Der tägliche Nahverkehr als Gladiatorenkampf. Hol Dir den Survival Guide.",
         link: "/lp-busfahren-mutprobe",
         icon: Bus,
         color: "text-yellow-500"
@@ -66,9 +66,9 @@ export function TopicLPs() {
         <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
           <div className="space-y-4">
             <Separator className="max-w-80 mx-auto" />
-            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl pt-4">Was dich interessieren könnte</h2>
+            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl pt-4">Was Dich interessieren könnte</h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-              Unser Buch hat viele Facetten. Welche spricht dich am meisten an?
+              Unser Buch hat viele Facetten. Welche spricht Dich am meisten an?
             </p>
           </div>
         </div>

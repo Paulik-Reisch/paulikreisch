@@ -108,7 +108,7 @@ export function DbExcuseGenerator() {
               Der Deutsche Bahn Ausreden-Bot
             </h1>
             <p className="mx-auto max-w-[700px] text-gray-300 md:text-xl text-balance">
-              Warum hat Ihr Zug Verspätung? Ziehen Sie am Hebel und erhalten Sie eine 100% authentische*, garantiert absurde Ausrede.
+              Warum hat Dein Zug Verspätung? Ziehe am Hebel und erhalte eine 100% authentische*, garantiert absurde Ausrede.
             </p>
           </div>
         </div>

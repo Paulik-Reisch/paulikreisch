@@ -9,7 +9,7 @@ export function SeriesCta() {
           <div className="space-y-2">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Bereit für die volle Dosis?</h2>
             <p className="max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-              Sichern Sie sich die komplette "Hallo Welt"-Saga und tauchen Sie ein in eine Welt, aus der Sie vielleicht nie wieder auftauchen wollen (oder können).
+              Sichere Dir die komplette "Hallo Welt"-Saga und tauche ein in eine Welt, aus der Du vielleicht nie wieder auftauchen willst (oder kannst).
             </p>
           </div>
            <div className="flex flex-col sm:flex-row gap-4">

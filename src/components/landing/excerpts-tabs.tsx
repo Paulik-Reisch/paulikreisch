@@ -16,7 +16,7 @@ const excerpt1 = (
 const excerpt2 = (
     <div className="space-y-4 text-muted-foreground leading-relaxed">
         <h3 className="text-2xl font-bold font-headline tracking-tight text-foreground">KAPITEL 15: Eine der größten Hürden: Die Schulzeiten</h3>
-        <p>Wie Sie selbst sicherlich noch aus Ihrer eigenen Jugend wissen, startet der von Eintönigkeit geprägte Schulalltag für den eifrigen Gefolgsmann des deutschen Bürokratievollstreckers zu einer überaus unpassenden Zeit.</p>
+        <p>Wie Du selbst sicherlich noch aus Deiner eigenen Jugend weißt, startet der von Eintönigkeit geprägte Schulalltag für den eifrigen Gefolgsmann des deutschen Bürokratievollstreckers zu einer überaus unpassenden Zeit.</p>
         <p>Um es präziser auszudrücken, in unserem Falle zehn Minuten vor acht Uhr morgens. Dies ist für viele, wenn nicht sogar alle Schülerinnen und Schüler, wie man so schön sagt, ein schwerer Schlag ins Gesicht. Dadurch, dass die Schule so enorm früh startet, müssen Betroffene logischerweise noch viel früher aufstehen. Jedoch kann es oftmals schwer sein, noch gefühlt mitten in der Nacht das heimische Bett zu verlassen und den Schulweg anzutreten, da die Leistungsfähigkeit so früh am Morgen kaum zu unterbieten ist.</p>
         <p>In der Folge daraus resultierend sind Schülerinnen und Schüler in den ersten beiden Unterrichtsstunden meist noch so müde, dass sie schlichtweg ihre Rübe, auch Kopf genannt, auf dem Schultisch ablegen möchten.</p>
         <p>Da die Tische aber oftmals mit Kaugummis oder derlei Unannehmlichkeiten übersät sind, bereitet sich diese Aktivität als ungemein schwierig. Zudem gibt es immer wieder Lehrkräfte, die mit dem Dämmerzustand der Lernenden nicht einverstanden zu sein scheinen und sie schlicht rücksichtslos wecken und ihnen mittels dieser barbarischen Taktik ihres unweigerlich dringend verdienten und notwendigen Schlafes berauben. Möglicherweise aber erleiden die Lernenden dadurch einen erneuten Schock beziehungsweise ein physisches Trauma, sodass sie schlagartig die Kraft verlässt, sie vom Stuhl kippen und sich beim Aufprall auf den nicht allzu weichen (und keineswegs sauberen) Boden das Genick brechen könnten.</p>
@@ -31,7 +31,7 @@ export function ExcerptsTabs() {
           <div className="space-y-2">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Immer noch nicht überzeugt?</h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-              Hier sind zwei weitere Gründe, warum Sie dieses Buch brauchen. Lesen Sie kostenlos Auszüge aus zwei verschiedenen, absolut chaotischen Kapiteln.
+              Hier sind zwei weitere Gründe, warum Du dieses Buch brauchst. Lies kostenlos Auszüge aus zwei verschiedenen, absolut chaotischen Kapiteln.
             </p>
           </div>
         </div>

@@ -6,9 +6,9 @@ export function WhyBoth() {
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Warum Sie beide Bücher brauchen</h2>
+            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Warum Du beide Bücher brauchen</h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-              Nur ein Buch zu lesen ist wie nur einen Schuh anzuziehen. Es funktioniert, aber jeder wird Sie komisch ansehen.
+              Nur ein Buch zu lesen ist wie nur einen Schuh anzuziehen. Es funktioniert, aber jeder wird Dich komisch ansehen.
             </p>
           </div>
         </div>
@@ -17,21 +17,21 @@ export function WhyBoth() {
             <CheckCircle className="h-12 w-12 mx-auto text-primary" />
             <h3 className="text-xl font-bold font-headline">Vollständige Verwirrung</h3>
             <p className="text-sm text-muted-foreground text-balance">
-              Verstehen Sie das ganze Ausmaß des Chaos. Die Handlungsstränge sind so lose verknüpft, dass Sie sich fragen werden, ob es überhaupt welche gibt.
+              Verstehe das ganze Ausmaß des Chaos. Die Handlungsstränge sind so lose verknüpft, dass Du Dich fragen wirst, ob es überhaupt welche gibt.
             </p>
           </div>
           <div className="grid gap-4 text-center p-4">
             <PlusCircle className="h-12 w-12 mx-auto text-primary" />
             <h3 className="text-xl font-bold font-headline">Doppelte Dosis Sarkasmus</h3>
             <p className="text-sm text-muted-foreground text-balance">
-              Verdoppeln Sie die Anzahl der inneren Monologe und sarkastischen Bemerkungen. Ihr Zynismus-Level wird es Ihnen danken.
+              Verdopple die Anzahl der inneren Monologe und sarkastischen Bemerkungen. Dein Zynismus-Level wird es Dir danken.
             </p>
           </div>
           <div className="grid gap-4 text-center p-4">
             <SmilePlus className="h-12 w-12 mx-auto text-primary" />
-            <h3 className="text-xl font-bold font-headline">Unterstützen Sie die Autoren</h3>
+            <h3 className="text-xl font-bold font-headline">Unterstütze die Autoren</h3>
             <p className="text-sm text-muted-foreground text-balance">
-              Helfen Sie Philipp und Max, ihre Sucht nach überteuertem Kaffee zu finanzieren, damit sie noch mehr von diesem Unsinn schreiben können.
+              Hilf Philipp und Max, ihre Sucht nach überteuertem Kaffee zu finanzieren, damit sie noch mehr von diesem Unsinn schreiben können.
             </p>
           </div>
         </div>

@@ -28,8 +28,8 @@ export default async function AdminLoginPage() {
           </div>
           <LoginForm />
           <div className="mt-12 text-xs text-muted-foreground space-y-2 max-w-lg">
-              <p>Ihre Administrationsdaten sind in der Datenbank hinterlegt.</p>
-              <p>All ihre IDSM*/IFEM**/IWFM*** Änderungen werden zuordbar auf Ihren Namen verbucht.</p>
+              <p>Deine Administrationsdaten sind in der Datenbank hinterlegt.</p>
+              <p>Alle Deine IDSM*/IFEM**/IWFM*** Änderungen werden zuordbar auf Deinen Namen verbucht.</p>
               <p className="pt-2">
                   *IDSM (Internes Data & Storage Management), **IFEM (Internes Frontend Management), ***IWFM (Internes Workflow Management)
               </p>

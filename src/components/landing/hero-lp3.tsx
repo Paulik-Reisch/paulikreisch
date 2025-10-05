@@ -56,7 +56,7 @@ export function HeroLP3() {
                         Das Buch ist ÖFFENTLICH!
                     </h1>
                     <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-                        Worauf warten Sie noch? Holen Sie sich Ihre Dosis literarischen Wahnsinns. Sofort.
+                        Worauf wartest Du noch? Hol Dir Deine Dosis literarischen Wahnsinns. Sofort.
                     </p>
                      <Link href="/buchhandlung-paulik-reisch">
                         <Button size="lg" className="animate-pulse">Jetzt zuschlagen!</Button>

@@ -13,7 +13,7 @@ export function LP2Teaser() {
               Gierig auf mehr? <span className="block">Hallo Welt 2 kommt!</span>
             </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-              Wir legen noch eine Schippe drauf. Mehr Absurdität, mehr Chaos und mehr Sätze, die man dreimal lesen muss. Seien Sie unter den Ersten, die einen exklusiven Blick darauf werfen.
+              Wir legen noch eine Schippe drauf. Mehr Absurdität, mehr Chaos und mehr Sätze, die man dreimal lesen muss. Sei unter den Ersten, die einen exklusiven Blick darauf werfen.
             </p>
           </div>
           <Link href="/lp2">
