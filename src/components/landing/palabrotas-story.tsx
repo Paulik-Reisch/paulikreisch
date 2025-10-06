@@ -7,6 +7,7 @@ import { Palabrota } from "@/lib/firestore";
 import { X, ChevronLeft, ChevronRight, Volume2, Pause, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { Badge } from "../ui/badge";
 
 type View = "word" | "sentence";
 
@@ -14,16 +15,20 @@ function ProgressBar({ count, current, onSegmentClick, isPaused, onAnimationComp
   const controls = useAnimationControls();
   
   useEffect(() => {
-    if (!isPaused) {
-      controls.set({ width: "0%" });
-      controls.start({
-        width: "100%",
-        transition: { duration: 5, ease: "linear" }
-      });
-    } else {
+    if (isPaused) {
       controls.stop();
+    } else {
+      // Trigger animation only for the current bar
+      if (current < count) {
+        controls.set({ width: "0%" }); // Reset before starting
+        controls.start({
+          width: "100%",
+          transition: { duration: 5, ease: "linear" }
+        });
+      }
     }
-  }, [current, isPaused, controls]);
+  }, [current, isPaused, controls, count]);
+
 
   return (
     <div className="flex w-full gap-1 px-4 pt-4">
@@ -35,13 +40,13 @@ function ProgressBar({ count, current, onSegmentClick, isPaused, onAnimationComp
         >
           <motion.div
             className="h-full rounded-full bg-white"
-            initial={false}
+            initial={{ width: i < current ? '100%' : '0%'}}
             animate={
                 i < current
-                ? { width: '100%', transition: { duration: 0 } }
+                ? { width: '100%' }
                 : i === current
                 ? controls
-                : { width: '0%', transition: { duration: 0 } }
+                : { width: '0%' }
             }
             onAnimationComplete={() => {
                 if (i === current && !isPaused) {
@@ -84,6 +89,8 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
   const [isSpeaking, setIsSpeaking] = useState(false);
   
   const currentWord = words[currentIndex];
+  const currentColor = `hsl(${currentIndex * 10}, 80%, 70%)`;
+
 
   const paginate = useCallback((newDirection: number) => {
     let newIndex = currentIndex + newDirection;
@@ -168,7 +175,7 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
               onAnimationComplete={() => paginate(1)} 
             />
              <div className="flex items-center justify-between p-4">
-                 <div className="flex items-center gap-2">
+                 <div className="flex items-center gap-3">
                     <Image
                       src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522"
                       alt="Paulik & Reisch Logo"
@@ -177,6 +184,12 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
                       className="rounded-full"
                     />
                     <span className="hidden sm:block font-headline font-semibold text-white">Paulik & Reisch</span>
+                     <Badge
+                        style={{ backgroundColor: currentColor, color: 'black' }}
+                        className="border-none transition-colors duration-300"
+                    >
+                        BETA
+                    </Badge>
                 </div>
                 <button onClick={onClose} className="text-white/50 hover:text-white">
                     <X size={32} />
@@ -219,7 +232,7 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
                     <>
                         <p className="text-2xl text-white/70">{currentWord.de}</p>
                         <div className="relative overflow-hidden my-4">
-                            <h1 className="text-7xl md:text-8xl font-bold tracking-tighter text-balance" style={{ color: `hsl(${currentIndex * 10}, 80%, 70%)` }}>
+                            <h1 className="text-7xl md:text-8xl font-bold tracking-tighter text-balance" style={{ color: currentColor }}>
                                 {currentWord.es}
                             </h1>
                             {isSpeaking && <GlareEffect />}
