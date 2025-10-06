@@ -6,7 +6,7 @@ import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
 import { textToSpeechAction } from "@/app/admin/actions";
 import { useActionState } from "react";
 import { Palabrota } from "@/lib/firestore";
-import { X, ChevronLeft, ChevronRight, Volume2, Loader2 } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, Volume2, Loader2, Pause, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type View = "word" | "sentence";
@@ -219,6 +219,13 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
 
 
         <footer className="w-full max-w-sm mx-auto p-4 z-20 flex items-center justify-center gap-4">
+             <button
+                onClick={() => setIsPaused(!isPaused)}
+                className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+                title={isPaused ? "Play" : "Pause"}
+            >
+                {isPaused ? <Play size={20} className="ml-0.5" /> : <Pause size={20} />}
+            </button>
             <button
                 onClick={handlePlaySound}
                 className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-colors"
