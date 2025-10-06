@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useActionState, useEffect, useRef } from "react";
@@ -22,21 +21,21 @@ import { Loader2, Mail } from "lucide-react";
 
 
 const schimpfwoerter = [
-    { de: "Dummkopf", es: "Gilipollas", anwendung: "Für Personen, deren Gehirn im Standby-Modus steckt." },
-    { de: "Arschloch", es: "Capullo / Cabrón", anwendung: "Universell einsetzbar für sympathische Mitmenschen." },
-    { de: "Idiot", es: "Idiota", anwendung: "Wenn 'Dummkopf' die Situation untertreibt." },
-    { de: "Hurensohn", es: "Hijo de puta", anwendung: "Fortgeschrittenes Vokabular für den fortgeschrittenen Frust." },
-    { de: "Scheiße", es: "Mierda", anwendung: "Klassiker. Passt immer, wenn etwas nicht nach Plan läuft." },
-    { de: "Verdammt", es: "Joder", anwendung: "Das spanische 'Verdammt' - ein echter Alleskönner." },
-    { de: "Blödmann", es: "Tonto del culo", anwendung: "Für den ganz besonderen Blödmann in Ihrem Leben." },
-    { de: "Wichser", es: "Pajero", anwendung: "Wenn jemand ein selbstverliebtes Ekelpaket ist." },
-    { de: "Miststück", es: "Zorra", anwendung: "Für eine besonders raffinierte weibliche Nervensäge." },
-    { de: "Leck mich am Arsch", es: "Vete a la mierda", anwendung: "Höfliche Aufforderung, sich zu entfernen." },
-    { de: "Vollidiot", es:"Subnormal", anwendung: "Die Steigerung von 'Idiot'. Eskalationsstufe Rot." },
-    { de: "Penner", es: "Pringado", anwendung: "Für den sympathischen Verlierertypen von nebenan." },
-    { de: "Verpiss dich", es: "Lárgate", anwendung: "Wenn nonverbale Hinweise nicht mehr ausreichen." },
-    { de: "Halt die Klappe", es: "Cállate la boca", anwendung: "Die freundliche Bitte um akustische Ruhe." },
-    { de: "Deine Mutter", es: "Tu puta madre", anwendung: "Letztes Mittel. Nur für absolute Notfälle." },
+    { de: "Dummkopf", es: "gilipollas", anwendung: "Für Personen, deren Gehirn im Standby-Modus steckt." },
+    { de: "Arschloch", es: "capullo / cabrón", anwendung: "Universell einsetzbar für sympathische Mitmenschen." },
+    { de: "Idiot", es: "idiota", anwendung: "Wenn 'Dummkopf' die Situation untertreibt." },
+    { de: "Hurensohn", es: "hijo de puta", anwendung: "Fortgeschrittenes Vokabular für den fortgeschrittenen Frust." },
+    { de: "Scheiße", es: "mierda", anwendung: "Klassiker. Passt immer, wenn etwas nicht nach Plan läuft." },
+    { de: "Verdammt", es: "joder", anwendung: "Das spanische 'Verdammt' - ein echter Alleskönner." },
+    { de: "Blödmann", es: "tonto del culo", anwendung: "Für den ganz besonderen Blödmann in Ihrem Leben." },
+    { de: "Wichser", es: "pajero", anwendung: "Wenn jemand ein selbstverliebtes Ekelpaket ist." },
+    { de: "Miststück", es: "zorra", anwendung: "Für eine besonders raffinierte weibliche Nervensäge." },
+    { de: "Leck mich am Arsch!", es: "¡Vete a la mierda!", anwendung: "Höfliche Aufforderung, sich zu entfernen." },
+    { de: "Vollidiot", es:"subnormal", anwendung: "Die Steigerung von 'Idiot'. Eskalationsstufe Rot." },
+    { de: "Penner", es: "pringado", anwendung: "Für den sympathischen Verlierertypen von nebenan." },
+    { de: "Verpiss dich!", es: "¡Lárgate!", anwendung: "Wenn nonverbale Hinweise nicht mehr ausreichen." },
+    { de: "Halt die Klappe!", es: "¡Cállate la boca!", anwendung: "Die freundliche Bitte um akustische Ruhe." },
+    { de: "deine Mutter", es: "tu puta madre", anwendung: "Letztes Mittel. Nur für absolute Notfälle." },
 ];
 
 const witze = [
@@ -73,7 +72,7 @@ function SubmitButton() {
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
         </>
       ) : (
-        "Benachrichtigt mich!"
+        "Benachrichtigen Sie mich!"
       )}
     </Button>
   );
@@ -101,7 +100,7 @@ function HW2LeadForm({ title, description, source }: { title: string, descriptio
                 {description}
             </p>
             <form ref={formRef} action={formAction} className="mt-4 flex flex-col sm:flex-row gap-2 max-w-sm mx-auto">
-                <Input name="email" className="flex-1" placeholder="deine.email@provider.de" type="email" required />
+                <Input name="email" className="flex-1" placeholder="meine.email@provider.de" type="email" required />
                 <input type="hidden" name="source" value={source} />
                 <SubmitButton />
             </form>
@@ -120,7 +119,7 @@ export function HeroPfeifer() {
               Hallo Welt & das Mysterium der "La Silbadora Pfeifer"
             </h1>
             <p className="text-xl text-muted-foreground mt-4 text-balance">
-              Eine redaktionelle Analyse eines Phänomens, das die Grundpfeiler
+              Die redaktionelle Analyse eines Phänomens, das die Grundpfeiler
               unserer Gesellschaft erschüttert.
             </p>
           </header>
@@ -138,21 +137,21 @@ export function HeroPfeifer() {
           <p>
             In den verrauchten Amtsstuben und schlecht beleuchteten
             Universitätskorridoren flüstert man ihren Namen nur:{" "}
-            <span className="font-semibold italic">La Silbadora Pfeifer</span>.
+            <span className="font-semibold italic">La Silbadora</span>.
             Ein Phantom. Eine Frau, deren pfeifende Melodien die
-            Gesetze der Physik außer Kraft setzen. Doch was steckt wirklich hinter diesem Mythos?
+            Gesetze der Physik außer Kraft zu setzen vermögen. Doch was steckt wirklich hinter diesem Mythos?
             Unsere Recherche führt uns zurück in die heiligen Hallen der Lernvollzugsanstalt Siebenkirchen-Seelscheid.
           </p>
           <p>
-            Die Legende hat einen Namen: Rabea Pfeifer. Im Buch <Link href="/buchhandlung-paulik-reisch" className="text-link">"Hallo Welt"</Link> als <strong className="font-headline">R. Pfeffer</strong> verewigt, war sie die Spanischlehrerin, die den jungen Autoren den Weg wies. Nicht den Weg zur Grammatik – nein, den Weg zu den wirklich wichtigen Dingen im Leben. Frau Pfeifer, eine Frau, deren Begeisterung für die spanische Sprache nur von ihrer Abneigung gegen Mathematik und funktionierende Technik übertroffen wurde.
+            Die Legende hat einen Namen: Rabea Pfeifer. Im Buch <Link href="/buchhandlung-paulik-reisch" className="text-link">Hallo Welt</Link> als <strong className="font-headline">R. Pfeffer</strong> verewigt, war sie die Spanischlehrerin, die den jungen Autoren den Weg wies. Nicht den Weg zur Grammatik – nein, den Weg zu den wirklich wichtigen Dingen im Leben. Frau Pfeifer – eine Frau, deren Begeisterung für die spanische Sprache nur von ihrer Abneigung gegen Mathematik und funktionierende Technik übertroffen wird.
           </p>
           
            <blockquote>
-            "Sie sprang mit heuchlerischem Enthusiasmus vor die Tafel", erinnert sich einer der Autoren, "und lehrte uns die ersten wirklich nützlichen Wörter. Nicht 'hola', nicht 'gracias'. Sie lehrte uns das, was man braucht, wenn der Bus zu spät kommt oder das Mensaessen wieder nach atomarer Kernschmelze schmeckt - beides natürlich ausführlich in <Link href="/buchhandlung-paulik-reisch" className="text-link">Hallo Welt</Link> beschrieben."
+            »Sie sprang mit heuchlerischem Enthusiasmus vor die Tafel«, erinnert sich einer der Autoren, »und lehrte uns die ersten wirklich nützlichen Wörter.« Nicht »hola«, nicht »gracias«. Sie lehrte uns das, was man braucht, wenn der Bus zu spät kommt oder das Mensaessen wieder nach atomarer Kernschmelze schmeckt - beides natürlich ausführlich in <Link href="/buchhandlung-paulik-reisch" className="text-link">Hallo Welt</Link> beschrieben.
           </blockquote>
 
           <p>
-            Es war nach der 8. Klasse, als unsere Helden unter die Fittiche von La Silbadora kamen. Sie lernten, dass Sprache mehr ist als nur Kommunikation. Sie ist eine <Link href="/lp-palabrotas" className="text-link">Waffe</Link>. Ein Werkzeug. Eine Kunstform. Insbesondere die Kunstform der gepflegten Beleidigung. Frau Pfeifer vermittelte ihnen die wertvollsten Lektionen ihres Lebens in Form von handverlesenen <Link href="/lp-palabrotas" className="text-link">"palabrotas" – Schimpfwörtern</Link>.
+            Es war nach der 8. Klasse, als unsere Helden unter die Fittiche von La Silbadora kamen. Sie lernten, dass Sprache mehr ist als nur Kommunikation. Sie ist eine <Link href="/lp-palabrotas" className="text-link">Waffe</Link>. Ein Werkzeug. Eine Kunstform. Insbesondere die Kunstform der gepflegten Beleidigung. Frau Pfeifer vermittelte ihnen die wertvollsten Lektionen ihres Lebens in Form von handverlesenen <Link href="/lp-palabrotas" className="text-link">»palabrotas« – Schimpfwörtern</Link>.
           </p>
 
             <div className="my-12 not-prose">
@@ -193,10 +192,10 @@ export function HeroPfeifer() {
             />
 
             <p>
-                Neueste Berichte aus dem inneren Zirkel besagen, dass La Silbadora kürzlich ein Exemplar von "Hallo Welt" in die Hände bekam. Zeugen berichten von einem unkontrollierbaren Lachanfall, der durch die Gänge der Lernvollzugsanstalt hallte. Sie konnte sich nicht mehr halten und stürzte – so die dramatische Schilderung – die berüchtigten Treppen des Schulgebäudes hinab. <Link href="/buchhandlung-paulik-reisch" className="text-link">Wer das Buch gelesen hat</Link>, weiß, was das normalerweise zur Folge hat: einen Genickbruch!
+                Neueste Berichte aus dem inneren Zirkel besagen, dass La Silbadora kürzlich ein Exemplar von »Hallo Welt« in die Hände bekam. Zeugen berichten von einem unkontrollierbaren Lachanfall, der durch die Gänge der Lernvollzugsanstalt hallte. Sie konnte sich nicht mehr halten und stürzte – so die dramatische Schilderung – die berüchtigten Treppen des Schulgebäudes hinab. <Link href="/buchhandlung-paulik-reisch" className="text-link">Wer das Buch gelesen hat</Link>, weiß, was das normalerweise zur Folge hat: einen Genickbruch!
             </p>
             <p>
-                Doch dann geschah das Wunder: In einer Bewegung, die man nur als übernatürlich beschreiben kann, schnipste La Silbadora im freien Fall mit den Fingern. Wie von Geisterhand materialisierte sich ein Exemplar von <Link href="/buchhandlung-paulik-reisch" className="text-link">"Hallo Welt 1"</Link> direkt unter ihr und federte den Aufprall ab. Sie landete weich; ihr Genick blieb intakt.
+                Doch dann geschah ein schieres Wunder: In einer Bewegung, die man nur als übernatürlich beschreiben kann, schnipste La Silbadora im freien Fall mit den Fingern. Wie von Geisterhand materialisierte sich ein Exemplar von <Link href="/buchhandlung-paulik-reisch" className="text-link">"Hallo Welt 1"</Link> direkt unter ihr und federte den Aufprall ab. Sie landete weich; ihr Genick blieb intakt.
             </p>
              <p>
                 Ende gut, alles gut. Selbst das Buch war nicht zerknickt. Denn das ist gedruckte und geschriebene Qualität, die Leben rettet.
@@ -205,7 +204,7 @@ export function HeroPfeifer() {
           <div className="text-center my-12 py-12 border-t border-b border-dashed not-prose">
             <h2 className="font-headline text-3xl font-bold">Erleben Sie das Pfeifkonzert selbst!</h2>
             <p className="mt-4 text-muted-foreground">
-                "Hallo Welt" ist die Anleitung zum Überleben in einer Welt, die den Verstand verloren hat. Oder der schnellste Weg, ihn selbst zu verlieren.
+              »Hallo Welt« ist die Anleitung zum Überleben in einer Welt, die den Verstand verloren hat. Oder der schnellste Weg, ihn selbst zu verlieren.
             </p>
             <Link href="/buchhandlung-paulik-reisch" className="mt-6 inline-block">
                 <Button size="lg" className="animate-pulse" variant="default">Jetzt dem Wahnsinn stellen</Button>
@@ -219,7 +218,7 @@ export function HeroPfeifer() {
                 Die Autoren Philipp und Max wussten um diese heimliche Leidenschaft. In einem Anflug jugendlicher Genialität (oder war es doch nur Prokrastination vor den Spanisch-Hausaufgaben?) erschufen sie ein digitales Denkmal für ihre Mentorin. Ein Ort, an dem der Witz regiert und die Ernsthaftigkeit draußen bleiben muss. Eine Ode an das, was Frau Pfeifer ihnen wirklich beigebracht hat: das Leben nicht ganz so ernst zu nehmen.
             </p>
             <p>
-                Diese Webseite trug den klangvollen Namen "eñje". Sie mag heute zwar so verstaubt sein wie die Kreide unter der Tafel, aber es ist uns gelungen, einige der besten Artefakte aus den digitalen Trümmern zu bergen. Eine Sammlung von Witzen, die einst das Herz (und das Zwerchfell) von La Silbadora erfreuten.
+                Diese Webseite trug den klangvollen Namen »eñje«. Sie mag heute zwar so verstaubt sein wie die Kreide unter der Tafel, aber es ist uns gelungen, einige der besten Artefakte aus den digitalen Trümmern zu bergen. Eine Sammlung von Witzen, die einst das Herz (und das Zwerchfell) von La Silbadora erfreuten.
             </p>
 
             <div className="my-12 not-prose">

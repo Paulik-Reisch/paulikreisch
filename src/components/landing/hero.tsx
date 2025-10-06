@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Product } from "@/lib/firestore";
 
 export function Hero({ product }: { product?: Product }) {
-  const imageSrc = product?.imageSrc || "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/cover-mockup-1.png?alt=media&token=d329e833-08e5-466e-978e-0f01cc77a8df";
+  const imageSrc = product?.imageSrc || "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/cover-mockup-1.png?alt=media&token=2c8772ba-04f9-479f-9855-027099fcbc13";
   const imageHint = product?.aiHint || "book cover";
 
   return (
