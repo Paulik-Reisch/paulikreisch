@@ -2,10 +2,10 @@
 
 "use client";
 
-import { useState, useEffect, useMemo, useCallback, useTransition } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
 import { Palabrota } from "@/lib/firestore";
-import { X, ChevronLeft, ChevronRight, Volume2, Loader2, Pause, Play } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, Volume2, Pause, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
@@ -15,9 +15,9 @@ function ProgressBar({ count, current, onSegmentClick, isPaused, onAnimationComp
   const controls = useAnimationControls();
   
   useEffect(() => {
-    if (isPaused) {
-      controls.stop();
-    } else {
+    controls.stop(); // Stop any previous animation
+    controls.set({ width: "0%" }); // Reset width
+    if (!isPaused) {
       controls.start({
         width: "100%",
         transition: { duration: 5, ease: "linear" }
@@ -35,9 +35,8 @@ function ProgressBar({ count, current, onSegmentClick, isPaused, onAnimationComp
         >
           <motion.div
             className="h-full rounded-full bg-white"
-            initial={{ width: i < current ? "100%" : "0%" }}
+            initial={{ width: "0%"}}
             animate={ i === current ? controls : { width: i < current ? "100%" : "0%" }}
-            transition={ i < current ? { duration: 0.1, ease: "linear" } : undefined}
             onAnimationComplete={() => {
                 if (i === current && !isPaused) {
                     onAnimationComplete();
@@ -165,11 +164,11 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
               count={words.length} 
               current={currentIndex} 
               onSegmentClick={handleSegmentClick} 
-              isPaused={isPaused}
+              isPaused={isPaused || isSpeaking}
               onAnimationComplete={() => paginate(1)} 
             />
              <div className="flex items-center justify-between p-4">
-                <div className="flex items-center gap-2">
+                 <div className="flex items-center gap-2">
                     <Image
                       src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522"
                       alt="Paulik & Reisch Logo"
@@ -186,8 +185,8 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
         </header>
 
         {/* Mobile Navigation Tappable Areas */}
-        <div className="md:hidden absolute top-12 left-0 h-full w-1/2 z-10" onClick={() => paginate(-1)}></div>
-        <div className="md:hidden absolute top-12 right-0 h-full w-1/2 z-10" onClick={() => paginate(1)}></div>
+        <div className="md:hidden absolute top-12 left-0 h-full w-1/2 z-10" onMouseDown={() => setIsPaused(true)} onMouseUp={() => setIsPaused(false)} onTouchStart={() => setIsPaused(true)} onTouchEnd={() => setIsPaused(false)} onClick={() => paginate(-1)}></div>
+        <div className="md:hidden absolute top-12 right-0 h-full w-1/2 z-10" onMouseDown={() => setIsPaused(true)} onMouseUp={() => setIsPaused(false)} onTouchStart={() => setIsPaused(true)} onTouchEnd={() => setIsPaused(false)} onClick={() => paginate(1)}></div>
         
         {/* Desktop Navigation Arrows */}
         <div className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 z-20">
@@ -225,6 +224,7 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
                             </h1>
                             {isSpeaking && <GlareEffect />}
                         </div>
+                        {currentWord.phonetik && <p className="text-lg text-white/50 italic">{currentWord.phonetik}</p>}
                     </>
                 ) : (
                     <div className="relative overflow-hidden">
@@ -248,9 +248,8 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
             <button
                 onClick={handlePlaySound}
                 className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-colors"
-                disabled={false}
             >
-                {isSpeaking ? <Loader2 className="animate-spin" size={28}/> : <Volume2 size={28} />}
+                <Volume2 size={28} />
             </button>
             <div className="flex items-center bg-black/30 rounded-full p-1">
                 <button

@@ -105,6 +105,7 @@ export interface Palabrota {
     id: string;
     de: string;
     es: string;
+    phonetik?: string;
     wortart: string;
     anwendung: string;
     synonyme: string;

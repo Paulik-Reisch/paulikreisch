@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -7,9 +8,9 @@ import { GraduationCap, Volume2 } from 'lucide-react';
 import Image from 'next/image';
 
 const mockWords: Partial<Palabrota>[] = [
-    { de: "Dummkopf", es: "Gilipollas" },
-    { de: "Scheiße", es: "Mierda" },
-    { de: "Verdammt", es: "Joder" },
+    { de: "Dummkopf", es: "Gilipollas", phonetik: "chili-poy-yas" },
+    { de: "Scheiße", es: "Mierda", phonetik: "mjer-da" },
+    { de: "Verdammt", es: "Joder", phonetik: "cho-der" },
 ];
 
 export function PalabrotasStoryMockup() {
@@ -67,6 +68,7 @@ export function PalabrotasStoryMockup() {
                             <h2 className="text-5xl font-bold tracking-tighter text-balance" style={{ color: `hsl(${currentIndex * 60}, 80%, 70%)` }}>
                                 {currentWord.es}
                             </h2>
+                            <p className="text-md text-white/50 italic mt-2">{currentWord.phonetik}</p>
                         </motion.div>
                     </AnimatePresence>
                 </div>
