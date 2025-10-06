@@ -144,11 +144,11 @@ export function HeroPfeifer() {
             Unsere Recherche führt uns zurück in die heiligen Hallen der Lernvollzugsanstalt Siebenkirchen-Seelscheid.
           </p>
           <p>
-            Die Legende hat einen Namen: Rabea Pfeifer. Im Buch <Link href="/buchhandlung-paulik-reisch" className="font-bold underline">"Hallo Welt"</Link> als <strong className="font-headline">R. Pfeffer</strong> verewigt, war sie die Spanischlehrerin, die den jungen Autoren den Weg wies. Nicht den Weg zur Grammatik – nein, den Weg zu den wirklich wichtigen Dingen im Leben. Frau Pfeifer, eine Frau, deren Begeisterung für die spanische Sprache nur von ihrer Abneigung gegen Mathematik und funktionierende Technik übertroffen wurde, war eine Institution.
+            Die Legende hat einen Namen: Rabea Pfeifer. Im Buch <Link href="/buchhandlung-paulik-reisch" className="text-link">"Hallo Welt"</Link> als <strong className="font-headline">R. Pfeffer</strong> verewigt, war sie die Spanischlehrerin, die den jungen Autoren den Weg wies. Nicht den Weg zur Grammatik – nein, den Weg zu den wirklich wichtigen Dingen im Leben. Frau Pfeifer, eine Frau, deren Begeisterung für die spanische Sprache nur von ihrer Abneigung gegen Mathematik und funktionierende Technik übertroffen wurde, war eine Institution.
           </p>
           
            <blockquote>
-            "Sie sprang mit ollem Enthusiasmus vor die Tafel", erinnert sich einer der Autoren, "und lehrte uns die ersten wirklich nützlichen Wörter. Nicht 'hola', nicht 'gracias'. Sie lehrte uns das, was man braucht, wenn der Bus zu spät kommt oder das Mensaessen wieder nach atomarer Kernschmelze schmeckt - beides natürlich ausführlich in <Link href="/buchhandlung-paulik-reisch" className="font-bold underline">Hallo Welt</Link> beschrieben."
+            "Sie sprang mit ollem Enthusiasmus vor die Tafel", erinnert sich einer der Autoren, "und lehrte uns die ersten wirklich nützlichen Wörter. Nicht 'hola', nicht 'gracias'. Sie lehrte uns das, was man braucht, wenn der Bus zu spät kommt oder das Mensaessen wieder nach atomarer Kernschmelze schmeckt - beides natürlich ausführlich in <Link href="/buchhandlung-paulik-reisch" className="text-link">Hallo Welt</Link> beschrieben."
           </blockquote>
 
           <p>
@@ -193,10 +193,10 @@ export function HeroPfeifer() {
             />
 
             <p>
-                Neueste Berichte aus dem inneren Zirkel der Autorität besagen, dass La Silbadora kürzlich ein Exemplar von "Hallo Welt" in die Hände bekam. Zeugen berichten von einem unkontrollierbaren Lachanfall, der durch die Gänge der Lernvollzugsanstalt hallte. Sie konnte sich nicht mehr halten und stürzte – so die dramatische Schilderung – die berüchtigten Treppen des Schulgebäudes hinab. <Link href="/buchhandlung-paulik-reisch" className="font-bold underline">Wer das Buch gelesen hat</Link>, weiß, was das normalerweise zur Folge hat: ein Genickbruch.
+                Neueste Berichte aus dem inneren Zirkel der Autorität besagen, dass La Silbadora kürzlich ein Exemplar von "Hallo Welt" in die Hände bekam. Zeugen berichten von einem unkontrollierbaren Lachanfall, der durch die Gänge der Lernvollzugsanstalt hallte. Sie konnte sich nicht mehr halten und stürzte – so die dramatische Schilderung – die berüchtigten Treppen des Schulgebäudes hinab. <Link href="/buchhandlung-paulik-reisch" className="text-link">Wer das Buch gelesen hat</Link>, weiß, was das normalerweise zur Folge hat: ein Genickbruch.
             </p>
             <p>
-                Doch dann geschah das Wunder: In einer Bewegung, die man nur als übernatürlich beschreiben kann, schnipste La Silbadora im freien Fall mit den Fingern. Wie von Geisterhand materialisierte sich ein Exemplar von <Link href="/buchhandlung-paulik-reisch" className="font-bold underline">"Hallo Welt 1"</Link> direkt unter ihr und federte den Aufprall ab. Sie landete weich. Ihr Genick blieb intakt.
+                Doch dann geschah das Wunder: In einer Bewegung, die man nur als übernatürlich beschreiben kann, schnipste La Silbadora im freien Fall mit den Fingern. Wie von Geisterhand materialisierte sich ein Exemplar von <Link href="/buchhandlung-paulik-reisch" className="text-link">"Hallo Welt 1"</Link> direkt unter ihr und federte den Aufprall ab. Sie landete weich. Ihr Genick blieb intakt.
             </p>
              <p>
                 Ende gut, alles gut. Selbst das Buch war nicht zerknickt. Denn das, meine Damen und Herren, ist gedruckte und geschriebene Qualität. Eine Qualität, die Leben rettet.
@@ -258,7 +258,7 @@ export function HeroPfeifer() {
 
             <HW2LeadForm
                 title="Die Geschichte geht weiter..."
-                description="Gefällt Ihnen, was Sie lesen? 'Hallo Welt 2' setzt dem Ganzen die Krone auf. Tragen Sie sich ein und erfahren Sie als Erster, wann das nächste Kapitel des Wahnsinns beginnt."
+                description="Gefällt Dir, was Du liest? 'Hallo Welt 2' setzt dem Ganzen die Krone auf. Trage Dich ein und erfahre als Erster, wann das nächste Kapitel des Wahnsinns beginnt."
                 source="Pfeifer-lead-2"
             />
         </article>
