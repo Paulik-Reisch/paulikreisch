@@ -5,10 +5,10 @@ export function HeroLP4() {
           <div className="flex flex-col items-center space-y-6 text-center">
             <div className="space-y-4">
               <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl xl:text-8xl/none text-balance animate-in fade-in slide-in-from-top-12 duration-1000">
-                Schreibe mit uns!
+                Schreiben Sie mit uns!
               </h1>
               <p className="mx-auto max-w-[700px] md:text-xl animate-in fade-in slide-in-from-top-16 duration-1000 text-balance">
-                Werde Teil von 'Hallo Welt'. Deine Ideen, dein Stil, unser Chaos. Starte den HalloWeltGPT und schreibe das nächste, absolut glorreiche Kapitel.
+                Werden Sie Teil von 'Hallo Welt'. Ihre Ideen, Ihr Stil, unser Chaos. Starten Sie HalloWeltGPT und schreiben Sie das nächste Kapitel.
               </p>
             </div>
           </div>

@@ -18,7 +18,7 @@ function SubmitButton() {
             {pending ? (
                 <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Wird gespeichert...
+                    Wird gespeichert ...
                 </>
             ) : "EXZERPT LESEN"
             }
@@ -50,10 +50,10 @@ export function HeroLP2() {
         <div className="flex flex-col items-center space-y-6 text-center">
           <div className="space-y-4">
             <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl xl:text-8xl/none text-balance animate-in fade-in slide-in-from-top-12 duration-1000">
-              HALLO WELT 2 WIRD NOCH KRASSER ALS HALLO WELT 1
+              Hallo Welt 2 wird noch krasser als Hallo Welt 1
             </h1>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl animate-in fade-in slide-in-from-top-16 duration-1000">
-              Du dachtest, es geht nicht schlimmer? Oh, doch. Sei der Erste, der einen exklusiven Auszug liest. Gib einfach Deine E-Mail-Adresse ein und bereite Dich mental vor.
+              Sie dachten, es geht nicht schlimmer? Oh, doch. Sei Sie der Erste, der einen exklusiven Auszug liest. Geben Sie hier Ihre E-Mail-Adresse ein.
             </p>
           </div>
           <div className="w-full max-w-md space-y-2 animate-in fade-in slide-in-from-top-20 duration-1000">
@@ -61,7 +61,7 @@ export function HeroLP2() {
               <Input
                 name="email"
                 className="max-w-lg flex-1"
-                placeholder="Deine E-Mail-Adresse"
+                placeholder="Ihre E-Mail-Adresse"
                 type="email"
                 required
               />
@@ -69,7 +69,7 @@ export function HeroLP2() {
               <SubmitButton />
             </form>
             <p className="text-xs text-muted-foreground">
-              Wir schicken Dir den Auszug und vielleicht den ein oder anderen schlechten Witz. Abmeldung jederzeit möglich (emotional vielleicht nicht).
+              Wir schicken Ihnen den Auszug. Abmeldung jederzeit möglich.
             </p>
           </div>
         </div>

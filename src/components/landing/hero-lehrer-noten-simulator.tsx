@@ -30,7 +30,7 @@ function SubmitButton() {
       {pending ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Noten werden gewürfelt...
+          Noten werden gewürfelt ...
         </>
       ) : (
         <>
@@ -116,18 +116,18 @@ export function HeroLehrerNotenSimulator() {
               Der Lehrer-Noten-Simulator
             </h1>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl text-balance">
-              Gib Deinen Namen ein und erhalte ein völlig absurdes Schulzeugnis. Deine wahren Talente – wie Pausenbrot-Management – werden endlich gewürdigt.
+              Geben Sie Ihren Namen ein und erhalten Sie ein absurdes Schulzeugnis. Ihre wahren Talente – wie Pausenbrot-Management – werden endlich gewürdigt.
             </p>
           </div>
         </div>
         <div className="max-w-md mx-auto mt-12">
           <form action={formAction} className="flex flex-col sm:flex-row items-center gap-4">
             <div className="w-full flex-grow">
-              <Label htmlFor="studentName" className="sr-only">Dein Name</Label>
+              <Label htmlFor="studentName" className="sr-only">Ihr Name</Label>
               <Input
                 id="studentName"
                 name="studentName"
-                placeholder="Dein Name..."
+                placeholder="Dein Name ..."
                 required
                 className="h-12 text-lg text-center sm:text-left"
               />
@@ -141,7 +141,7 @@ export function HeroLehrerNotenSimulator() {
         {state.reportCard && (
             <div className="text-center mt-12 animate-in fade-in slide-in-from-bottom-8 duration-500">
                  <Link href="/buchhandlung-paulik-reisch">
-                    <Button size="lg" variant="secondary">Dein Zeugnis ist lächerlich – das Buch noch mehr.</Button>
+                    <Button size="lg" variant="secondary">Ihr Zeugnis ist lächerlich – das Buch noch mehr!</Button>
                 </Link>
             </div>
         )}
