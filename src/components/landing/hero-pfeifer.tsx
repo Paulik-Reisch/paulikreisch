@@ -152,7 +152,7 @@ export function HeroPfeifer() {
           </blockquote>
 
           <p>
-            Es war nach der 8. Klasse, als unsere Helden unter die Fittiche von La Silbadora kamen. Sie lernten, dass Sprache mehr ist als nur Kommunikation. Sie ist eine Waffe. Ein Werkzeug. Eine Kunstform. Insbesondere die Kunstform der gepflegten Beleidigung. Frau Pfeifer vermittelte ihnen die wertvollsten Lektionen ihres Lebens in Form von handverlesenen "palabrotas" – Schimpfwörtern.
+            Es war nach der 8. Klasse, als unsere Helden unter die Fittiche von La Silbadora kamen. Sie lernten, dass Sprache mehr ist als nur Kommunikation. Sie ist eine <Link href="/lp-palabrotas" className="text-link">Waffe</Link>. Ein Werkzeug. Eine Kunstform. Insbesondere die Kunstform der gepflegten Beleidigung. Frau Pfeifer vermittelte ihnen die wertvollsten Lektionen ihres Lebens in Form von handverlesenen <Link href="/lp-palabrotas" className="text-link">"palabrotas" – Schimpfwörtern</Link>.
           </p>
 
             <div className="my-12 not-prose">
@@ -201,7 +201,7 @@ export function HeroPfeifer() {
              <p>
                 Ende gut, alles gut. Selbst das Buch war nicht zerknickt. Denn das, meine Damen und Herren, ist gedruckte und geschriebene Qualität. Eine Qualität, die Leben rettet.
             </p>
-            
+          
           <div className="text-center my-12 py-12 border-t border-b border-dashed not-prose">
             <h2 className="font-headline text-3xl font-bold">Erleben Sie das Pfeifkonzert selbst!</h2>
             <p className="mt-4 text-muted-foreground">
