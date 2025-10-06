@@ -1,4 +1,4 @@
-import { createApiRoute } from '@genkit-ai/next';
+import { createGenkitApiRoute } from '@genkit-ai/next';
 import '@/ai/flows/continue-chapter-flow';
 import '@/ai/flows/correct-html-flow';
 import '@/ai/flows/generate-bureaucracy-flow';
@@ -10,4 +10,4 @@ import '@/ai/flows/generate-testimonial';
 import '@/ai/flows/pfeifer-translate-flow';
 
 
-export const {GET, POST} = createApiRoute();
+export const {GET, POST} = createGenkitApiRoute();
