@@ -22,7 +22,6 @@ import {
   addLog,
 } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
-import { correctHtml } from "@/ai/flows/correct-html-flow";
 import { textToSpeech } from "@/ai/flows/tts-flow";
 import { cookies } from "next/headers";
 import { encrypt, getSession } from "@/lib/session";
@@ -82,37 +81,6 @@ export async function logoutAction() {
     cookies().set("session", "", { expires: new Date(0) });
     await addLog(user, 'Logout', `Benutzer '${user}' hat sich abgemeldet.`);
     redirect('/login');
-}
-
-const CorrectHtmlSchema = z.object({
-  html: z.string(),
-});
-
-export async function correctHtmlAction(
-    prevState: { correctedHtml?: string; error?: string },
-    formData: FormData
-) {
-    const session = await getSession();
-    if (!session) {
-        return { error: "Nicht authentifiziert" };
-    }
-
-    const validatedFields = CorrectHtmlSchema.safeParse({
-        html: formData.get("html"),
-    });
-
-    if (!validatedFields.success) {
-        return { error: "Ungültige Eingabe." };
-    }
-
-    try {
-        const result = await correctHtml(validatedFields.data);
-        await addLog(session.user.id, 'KI-Aktion: HTML korrigiert', `Länge: ${result.correctedHtml.length} Zeichen`);
-        return { correctedHtml: result.correctedHtml };
-    } catch (e) {
-        console.error(e);
-        return { error: "HTML konnte nicht korrigiert werden. Die KI ist möglicherweise im Urlaub." };
-    }
 }
 
 const TextToSpeechSchema = z.object({
