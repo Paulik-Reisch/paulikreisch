@@ -4,7 +4,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { textToSpeechAction } from "@/app/admin/actions";
-import { useActionState } from "react-dom";
+import { useActionState } from "react";
 import { Palabrota } from "@/lib/firestore";
 import { X, ChevronLeft, ChevronRight, Volume2, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
