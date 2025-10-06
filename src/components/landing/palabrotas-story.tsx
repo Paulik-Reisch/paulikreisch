@@ -15,7 +15,7 @@ function ProgressBar({ count, current, onSegmentClick, isPaused, onAnimationComp
   
   useEffect(() => {
     if (!isPaused) {
-      controls.set({ width: "0%" }); // Reset only for the new animation
+      controls.set({ width: "0%" });
       controls.start({
         width: "100%",
         transition: { duration: 5, ease: "linear" }
@@ -23,7 +23,7 @@ function ProgressBar({ count, current, onSegmentClick, isPaused, onAnimationComp
     } else {
       controls.stop();
     }
-  }, [isPaused, controls, current]); // Rerun effect when current index or paused state changes
+  }, [current, isPaused, controls]);
 
   return (
     <div className="flex w-full gap-1 px-4 pt-4">
@@ -35,8 +35,14 @@ function ProgressBar({ count, current, onSegmentClick, isPaused, onAnimationComp
         >
           <motion.div
             className="h-full rounded-full bg-white"
-            initial={{ width: 0 }}
-            animate={i === current ? controls : { width: i < current ? "100%" : "0%" }}
+            initial={false}
+            animate={
+                i < current
+                ? { width: '100%', transition: { duration: 0 } }
+                : i === current
+                ? controls
+                : { width: '0%', transition: { duration: 0 } }
+            }
             onAnimationComplete={() => {
                 if (i === current && !isPaused) {
                     onAnimationComplete();
