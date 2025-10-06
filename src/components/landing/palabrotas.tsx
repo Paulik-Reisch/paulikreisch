@@ -150,7 +150,10 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
             Der "Palabrotas"-Duden
             </h1>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl mt-4 text-balance">
-            Ein essenzieller Wortschatz für den modernen Weltbürger. Präsentiert von der R. Pfeifer Akademie für angewandte Linguistik und zwischenmenschliche Eskalation.
+            Ein essenzieller Wortschatz für den modernen Weltbürger.{' '}
+            <Link href="/lp-pfeifer" className="underline hover:text-primary">
+                Präsentiert von der R. Pfeifer Akademie für angewandte Linguistik und zwischenmenschliche Eskalation.
+            </Link>
             </p>
             <PalabrotasStoryMockup />
             <div className="mt-8 text-center">
