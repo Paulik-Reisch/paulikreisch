@@ -177,10 +177,10 @@ export function HeroPfeifer() {
                 </Table>
                 <p className="text-xs text-center text-muted-foreground mt-2">Haftungsausschluss: Die Verwendung dieser Vokabeln erfolgt auf eigene Gefahr. Kann zu blauen Augen oder diplomatischen Krisen führen.</p>
                 <div className="text-center mt-6">
-                    <Link href="/lp-pfeifer-translate">
+                    <Link href="/lp-palabrotas">
                         <Button size="lg" variant="outline" className="h-14 text-lg">
                             <Image src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/pfeifer-translate-logo.png?alt=media&token=b9cc1522-b994-43d9-ac64-a034cf323a91" alt="Pfeifer Translate Logo" width={28} height={28} className="mr-3 rounded-full"/>
-                            Teste Pfeifer Translate
+                            Zum Palabrotas-Duden
                         </Button>
                     </Link>
                 </div>
@@ -243,7 +243,7 @@ export function HeroPfeifer() {
                     </TableBody>
                 </Table>
                 <div className="text-center mt-6">
-                    <Link href="/lp-pfeifer-translate">
+                    <Link href="/lp-palabrotas">
                          <Button size="lg" variant="secondary">
                             <Image src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/pfeifer-translate-logo.png?alt=media&token=b9cc1522-b994-43d9-ac64-a034cf323a91" alt="Pfeifer Translate Logo" width={24} height={24} className="mr-2 rounded-full"/>
                             Mehr Witze erzählt bekommen
