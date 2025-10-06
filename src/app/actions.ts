@@ -3,7 +3,6 @@
 'use server';
 
 import { z } from "zod";
-import { continueChapter } from "@/ai/flows/continue-chapter-flow";
 import { generateFootnote } from "@/ai/flows/generate-footnote-flow";
 import { generateReportCard } from "@/ai/flows/generate-report-card-flow";
 import { generateBureaucracyResponse } from "@/ai/flows/generate-bureaucracy-flow";
@@ -13,37 +12,6 @@ import { pfeiferTranslate, PfeiferTranslateOutput } from "@/ai/flows/pfeifer-tra
 import { addOrder, addSubscriber, addLog } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/session";
-
-const chapterSchema = z.object({
-  chapterText: z.string().min(20, { message: "Das Kapitel muss mindestens 20 Zeichen lang sein, um fortgesetzt zu werden." }),
-});
-
-export async function continueChapterAction(
-  prevState: {
-    chapterContinuation?: string;
-    error?: string;
-  },
-  formData: FormData
-) {
-  const validatedFields = chapterSchema.safeParse({
-    chapterText: formData.get("chapterText"),
-  });
-
-  if (!validatedFields.success) {
-    const errorMessages = validatedFields.error.errors.map(e => e.message).join('. ');
-    return {
-      error: errorMessages,
-    };
-  }
-
-  try {
-    const result = await continueChapter(validatedFields.data);
-    return { chapterContinuation: result.continuation };
-  } catch (e) {
-    console.error(e);
-    return { error: "Kapitel konnte nicht fortgesetzt werden. Der KI sind die Worte ausgegangen." };
-  }
-}
 
 const footnoteSchema = z.object({
   topic: z.string().min(2, { message: "Das Thema muss mindestens 2 Zeichen lang sein." }).max(50),

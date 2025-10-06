@@ -43,7 +43,7 @@ const ideas = [
     icon: BrainCircuit,
     title: "Lehrer-Noten-Simulator",
     description:
-      "Geben Sie Ihren Namen ein und erhalten Sie ein völlig absurdes Schulzeugnis, das Ihre wahren Talente (wie Pausenbrot-Management) würdigt.",
+      "Geben Sie Ihren Namen ein und erhalten Sie ein wahnwitziges Schulzeugnis, das Ihre wahren Talente (wie Pausenbrot-Management) würdigt.",
     link: "/lp-lehrer-noten-simulator",
     cta: "Zeugnis erhalten",
     book: "Hallo Welt",
@@ -58,7 +58,7 @@ const ideas = [
     icon: Train,
     title: "Deutsche Bahn Ausreden-Bot",
     description:
-      "Warum hat Ihr Zug Verspätung? Unser Bot liefert Ihnen die kreativsten und absurdesten Ausreden, direkt aus der Konzernzentrale.",
+      "Warum hat Ihr Zug Verspätung? Unser Bot liefert Ihnen die kreativsten Ausreden, direkt aus der Konzernzentrale.",
     link: "/lp-db-ausreden-bot",
     cta: "Ausrede würfeln",
     book: "Hallo Welt 2",
@@ -88,7 +88,7 @@ const ideas = [
     icon: Home,
     title: "Mietenwahnsinn-Rechner",
     description:
-      "Was kostet ein 4qm-Zimmer ohne Fenster in Ihrer Stadt? Finden Sie es heraus (und weinen Sie leise).",
+      "Was kostet ein 4qm-Zimmer ohne Fenster in Ihrer Stadt? Finden Sie es heraus.",
     link: "/lp-mietenwahnsinn",
     cta: "Miete berechnen",
     book: "Hallo Welt 2",
