@@ -68,7 +68,7 @@ export function HW2Teaser() {
             </p>
             <Link href="/lp2">
                 <Button size="lg" variant="secondary" className="bg-white text-[#14b8a6] hover:bg-gray-100 h-12 text-lg animate-sway mt-3">
-                    Mehr über Hallo Welt 2 erfahren <ArrowRight className="ml-2 h-5 w-5" />
+                    Mehr erfahren <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
             </Link>
         </div>
