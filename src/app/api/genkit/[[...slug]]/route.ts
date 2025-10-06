@@ -1,5 +1,7 @@
 
-import { createGenkitApiRoute } from '@genkit-ai/next';
+'use server';
+
+import { createApiRoute } from '@genkit-ai/next';
 import { ai } from '@/ai/genkit';
 
 // Flows importieren (werden bei Build & Runtime automatisch registriert)
@@ -13,4 +15,4 @@ import '@/ai/flows/generate-satire-type-flow';
 import '@/ai/flows/generate-testimonial';
 import '@/ai/flows/pfeifer-translate-flow';
 
-export const { GET, POST } = createGenkitApiRoute({ ai });
+export const { GET, POST } = createApiRoute({ ai });

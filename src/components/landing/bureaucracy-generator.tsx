@@ -107,7 +107,7 @@ export function BureaucracyGenerator() {
               Der Bürokratie-Generator
             </h1>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl text-balance">
-              Schildere uns Dein Problem. Wir garantieren eine Antwort, die Dir garantiert nicht weiterhilft. Effizienz, wie sie im Buche steht.
+              Schildere uns Dein Problem. Wir garantieren eine Antwort, die garantiert nicht weiterhilft. Effizienz, wie sie im Buche steht!
             </p>
           </div>
         </div>
