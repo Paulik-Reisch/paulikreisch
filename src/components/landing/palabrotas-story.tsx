@@ -1,8 +1,7 @@
 
-
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useTransition } from "react";
 import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
 import { Palabrota } from "@/lib/firestore";
 import { X, ChevronLeft, ChevronRight, Volume2, Pause, Play } from "lucide-react";
@@ -15,15 +14,16 @@ function ProgressBar({ count, current, onSegmentClick, isPaused, onAnimationComp
   const controls = useAnimationControls();
   
   useEffect(() => {
-    controls.stop(); // Stop any previous animation
-    controls.set({ width: "0%" }); // Reset width
     if (!isPaused) {
+      controls.set({ width: "0%" }); // Reset only for the new animation
       controls.start({
         width: "100%",
         transition: { duration: 5, ease: "linear" }
       });
+    } else {
+      controls.stop();
     }
-  }, [isPaused, controls, current]); // Rerun effect when current index changes to restart animation
+  }, [isPaused, controls, current]); // Rerun effect when current index or paused state changes
 
   return (
     <div className="flex w-full gap-1 px-4 pt-4">
@@ -35,8 +35,8 @@ function ProgressBar({ count, current, onSegmentClick, isPaused, onAnimationComp
         >
           <motion.div
             className="h-full rounded-full bg-white"
-            initial={{ width: "0%"}}
-            animate={ i === current ? controls : { width: i < current ? "100%" : "0%" }}
+            initial={{ width: 0 }}
+            animate={i === current ? controls : { width: i < current ? "100%" : "0%" }}
             onAnimationComplete={() => {
                 if (i === current && !isPaused) {
                     onAnimationComplete();
@@ -91,7 +91,6 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
     setDirection(newDirection);
     setCurrentIndex(newIndex);
     setView('word');
-    setIsPaused(false);
     window.speechSynthesis.cancel();
     setIsSpeaking(false);
   }, [currentIndex, words.length, onClose]);
@@ -100,7 +99,6 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
     if (isSpeaking) {
         window.speechSynthesis.cancel();
         setIsSpeaking(false);
-        setIsPaused(false);
         return;
     }
 
@@ -109,17 +107,14 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
     utterance.lang = 'es-ES';
     
     utterance.onstart = () => {
-        setIsPaused(true);
         setIsSpeaking(true);
     };
 
     utterance.onend = () => {
-        setIsPaused(false);
         setIsSpeaking(false);
     };
     
     utterance.onerror = () => {
-        setIsPaused(false);
         setIsSpeaking(false);
     }
     
@@ -130,7 +125,6 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
     setDirection(index > currentIndex ? 1 : -1);
     setCurrentIndex(index);
     setView('word');
-    setIsPaused(false);
     window.speechSynthesis.cancel();
     setIsSpeaking(false);
   }
