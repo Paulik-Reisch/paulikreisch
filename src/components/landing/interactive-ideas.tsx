@@ -103,7 +103,7 @@ const ideas = [
     icon: Clock,
     title: "Beamten-Wartezeiten-Simulator",
     description:
-      "Erleben Sie die beruhigende Wirkung einer endlosen Warteschleife. Ihr Antrag wird geprüft... vielleicht.",
+      "Erleben Sie die beruhigende Wirkung einer endlosen Warteschleife. Ihr Antrag wird geprüft – vielleicht.",
     link: "/lp-beamten-wartezeiten-simulator",
     cta: "Warten starten",
     book: "Hallo Welt 2",
@@ -145,7 +145,7 @@ export function InteractiveIdeas() {
             </h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
               Spielen Sie mit unseren verrückten Ideen, die es ins Buch
-              geschafft haben (oder hätten schaffen sollen). Jedes Tool ist ein
+              geschafft haben. Jedes Tool ist ein
               Stück interaktiver Wahnsinn.
             </p>
           </div>

@@ -49,9 +49,9 @@ export function Newsletter() {
     <section id="newsletter" className="w-full py-12 md:py-16 lg:py-20 bg-destructive/60">
       <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="space-y-3">
-          <h2 className="text-3xl font-bold font-headline tracking-tighter md:text-4xl text-black">Tritt der Gemeinschaft der Verwirrten bei</h2>
+          <h2 className="text-3xl font-bold font-headline tracking-tighter md:text-4xl text-black">Treten Sie der Gemeinschaft der Verwirrten bei</h2>
           <p className="mx-auto max-w-[600px] text-black/80 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-            Erhalte exklusive Inhalte und Updates direkt in Deinen Posteingang. Wir versprechen, Dich nicht zuzuspammen.
+            Erhalten Sie exklusive Inhalte und Updates direkt in Ihren Posteingang. Wir versprechen, Sie nicht zuzuspammen.
           </p>
         </div>
         <div className="mx-auto w-full max-w-sm space-y-2 relative">
@@ -62,7 +62,7 @@ export function Newsletter() {
           </form>
            {showConfetti && <Confetti onComplete={() => setShowConfetti(false)} />}
           <p className="text-xs text-black/80">
-            Melde Dich an, um benachrichtigt zu werden, wenn wir etwas Neues veröffentlichen. Wir werden Deine E-Mail wahrscheinlich niemals weitergeben.
+            Melden Dich an, um benachrichtigt zu werden, wenn wir etwas Neues veröffentlichen. Wir werden Deine E-Mail wahrscheinlich niemals weitergeben.
           </p>
         </div>
       </div>
