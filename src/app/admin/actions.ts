@@ -22,7 +22,6 @@ import {
   addLog,
 } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
-import { textToSpeech } from "@/ai/flows/tts-flow";
 import { cookies } from "next/headers";
 import { encrypt, getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
@@ -82,37 +81,6 @@ export async function logoutAction() {
     await addLog(user, 'Logout', `Benutzer '${user}' hat sich abgemeldet.`);
     redirect('/login');
 }
-
-const TextToSpeechSchema = z.object({
-  text: z.string().min(1, "Text darf nicht leer sein."),
-});
-
-export async function textToSpeechAction(
-    prevState: { audio?: string; error?: string },
-    formData: FormData
-) {
-    const session = await getSession();
-    if (!session) {
-        return { error: "Nicht authentifiziert" };
-    }
-
-    const validatedFields = TextToSpeechSchema.safeParse({
-        text: formData.get("text"),
-    });
-
-    if (!validatedFields.success) {
-        return { error: "Ungültige Eingabe." };
-    }
-
-    try {
-        const result = await textToSpeech(validatedFields.data);
-        return { audio: result.audio };
-    } catch (e) {
-        console.error(e);
-        return { error: "Audio konnte nicht generiert werden." };
-    }
-}
-
 
 // Newsletter Editor Actions
 export type AdminNewsletterState = {

@@ -4,11 +4,10 @@
 
 import { useState, useEffect, useMemo, useCallback, useTransition } from "react";
 import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
-import { textToSpeechAction } from "@/app/admin/actions";
-import { useActionState } from "react";
 import { Palabrota } from "@/lib/firestore";
 import { X, ChevronLeft, ChevronRight, Volume2, Loader2, Pause, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 type View = "word" | "sentence";
 
@@ -76,12 +75,9 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
   const [currentIndex, setCurrentIndex] = useState(0);
   const [view, setView] = useState<View>("word");
   const [direction, setDirection] = useState(0);
-  const [audioSrc, setAudioSrc] = useState<string | null>(null);
   const [isPaused, setIsPaused] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   
-  const [ttsState, ttsAction] = useActionState(textToSpeechAction, { audio: undefined, error: undefined });
-  const [isTtsPending, startTtsTransition] = useTransition();
-
   const currentWord = words[currentIndex];
 
   const paginate = useCallback((newDirection: number) => {
@@ -96,38 +92,48 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
     setDirection(newDirection);
     setCurrentIndex(newIndex);
     setView('word');
-    setAudioSrc(null);
     setIsPaused(false);
+    window.speechSynthesis.cancel();
+    setIsSpeaking(false);
   }, [currentIndex, words.length, onClose]);
   
   const handlePlaySound = useCallback(() => {
-    const textToSpeak = view === 'word' ? currentWord.es : currentWord.beispiel;
-    const formData = new FormData();
-    formData.append("text", textToSpeak);
-    startTtsTransition(() => {
-        ttsAction(formData);
-    });
-  }, [view, currentWord, ttsAction]);
-  
-  useEffect(() => {
-    if (ttsState.audio) {
-      setAudioSrc(ttsState.audio);
-      const audio = new Audio(ttsState.audio);
-      setIsPaused(true);
-      audio.play();
-      audio.onended = () => {
-        setAudioSrc(null);
+    if (isSpeaking) {
+        window.speechSynthesis.cancel();
+        setIsSpeaking(false);
         setIsPaused(false);
-      }
+        return;
     }
-  }, [ttsState.audio]);
+
+    const textToSpeak = view === 'word' ? currentWord.es : currentWord.beispiel;
+    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+    utterance.lang = 'es-ES';
+    
+    utterance.onstart = () => {
+        setIsPaused(true);
+        setIsSpeaking(true);
+    };
+
+    utterance.onend = () => {
+        setIsPaused(false);
+        setIsSpeaking(false);
+    };
+    
+    utterance.onerror = () => {
+        setIsPaused(false);
+        setIsSpeaking(false);
+    }
+    
+    window.speechSynthesis.speak(utterance);
+  }, [view, currentWord, isSpeaking]);
   
   const handleSegmentClick = (index: number) => {
     setDirection(index > currentIndex ? 1 : -1);
     setCurrentIndex(index);
     setView('word');
-    setAudioSrc(null);
     setIsPaused(false);
+    window.speechSynthesis.cancel();
+    setIsSpeaking(false);
   }
 
   const variants = {
@@ -154,7 +160,7 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-        <div className="absolute top-0 left-0 right-0 z-20">
+        <header className="absolute top-0 left-0 right-0 z-20">
             <ProgressBar 
               count={words.length} 
               current={currentIndex} 
@@ -162,10 +168,22 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
               isPaused={isPaused}
               onAnimationComplete={() => paginate(1)} 
             />
-            <button onClick={onClose} className="absolute top-6 right-4 text-white/50 hover:text-white">
-                <X size={32} />
-            </button>
-        </div>
+             <div className="flex items-center justify-between p-4">
+                <div className="flex items-center gap-2">
+                    <Image
+                      src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522"
+                      alt="Paulik & Reisch Logo"
+                      width={32}
+                      height={32}
+                      className="rounded-full"
+                    />
+                    <span className="hidden sm:block font-headline font-semibold text-white">Paulik & Reisch</span>
+                </div>
+                <button onClick={onClose} className="text-white/50 hover:text-white">
+                    <X size={32} />
+                </button>
+            </div>
+        </header>
 
         {/* Mobile Navigation Tappable Areas */}
         <div className="md:hidden absolute top-12 left-0 h-full w-1/2 z-10" onClick={() => paginate(-1)}></div>
@@ -205,13 +223,13 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
                             <h1 className="text-7xl md:text-8xl font-bold tracking-tighter text-balance" style={{ color: `hsl(${currentIndex * 10}, 80%, 70%)` }}>
                                 {currentWord.es}
                             </h1>
-                            {audioSrc && <GlareEffect />}
+                            {isSpeaking && <GlareEffect />}
                         </div>
                     </>
                 ) : (
                     <div className="relative overflow-hidden">
                         <p className="text-2xl md:text-3xl italic">"{currentWord.beispiel}"</p>
-                        {audioSrc && <GlareEffect />}
+                        {isSpeaking && <GlareEffect />}
                     </div>
                 )}
                 </motion.div>
@@ -230,9 +248,9 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
             <button
                 onClick={handlePlaySound}
                 className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-colors"
-                disabled={isTtsPending}
+                disabled={false}
             >
-                {isTtsPending ? <Loader2 className="animate-spin" size={28}/> : <Volume2 size={28} />}
+                {isSpeaking ? <Loader2 className="animate-spin" size={28}/> : <Volume2 size={28} />}
             </button>
             <div className="flex items-center bg-black/30 rounded-full p-1">
                 <button
