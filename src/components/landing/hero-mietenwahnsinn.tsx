@@ -43,7 +43,7 @@ export function HeroMietenwahnsinn() {
               Der Mietenwahnsinn ist real.
             </h1>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl text-balance">
-              Finden Sie Ihr Traum-WG-Zimmer! 10 m², zentrale Lage (neben dem Hauptbahnhof), unmöbliert. Ein echtes Schnäppchen.
+              Finden Sie Ihr Traum-WG-Zimmer! 10 m², zentrale Lage neben dem Hauptbahnhof, unmöbliert. Ein echtes Schnäppchen.
             </p>
           </div>
         </div>

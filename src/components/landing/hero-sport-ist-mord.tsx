@@ -25,7 +25,7 @@ export function HeroSportIstMord() {
                     src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/sport.png?alt=media&token=81c3dfa8-3b76-4b30-a0d3-96ff219145ce"
                     width="550"
                 />
-                 <p className="absolute bottom-7 right-4 bg-destructive text-destructive-foreground p-2 rounded-md transform -rotate-6 font-bold shadow-lg">JETZT MIT NOCH MEHR GENICKBRÜCHEN!</p>
+                 <p className="absolute bottom-7 right-4 bg-destructive text-destructive-foreground p-2 rounded-md transform -rotate-6 font-bold shadow-lg">Jetzt mit noch mehr Genickbrüchen!</p>
             </div>
         </div>
     </section>

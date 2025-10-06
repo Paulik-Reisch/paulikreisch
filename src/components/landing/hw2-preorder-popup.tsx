@@ -25,11 +25,11 @@ const COUNTDOWN_SECONDS = (11 * 60) + 32;
 const preorderSchema = z.object({
   firstName: z.string().min(1, "Vorname ist ein Pflichtfeld."),
   lastName: z.string().min(1, "Nachname ist ein Pflichtfeld."),
-  email: z.string().email("Bitte gib eine gültige E-Mail-Adresse ein."),
+  email: z.string().email("Bitte geben Sie eine gültige E-Mail-Adresse ein."),
   phone: z.string().optional(),
   street: z.string().min(1, "Straße ist ein Pflichtfeld."),
   houseNumber: z.string().min(1, "Hausnummer ist ein Pflichtfeld."),
-  zip: z.string().min(4, "Bitte gib eine gültige PLZ ein."),
+  zip: z.string().min(4, "Bitte geben Sie eine gültige PLZ ein."),
   city: z.string().min(1, "Ort ist ein Pflichtfeld."),
   country: z.string().default("Deutschland"),
   
@@ -81,8 +81,8 @@ export function HW2PreorderPopup({ book, children }: { book: Product, children: 
   useEffect(() => {
       if (state.success) {
         toast({
-            title: "Herzlichen Glückwunsch (oder Beileid?)",
-            description: "Deine unverbindliche, aber moralisch verpflichtende Bestellung wurde registriert.",
+            title: "Herzlichen Glückwunsch!",
+            description: "Ihre unverbindliche Bestellung wurde registriert.",
         });
         reset();
         setIsDialogOpen(false);
@@ -143,10 +143,10 @@ export function HW2PreorderPopup({ book, children }: { book: Product, children: 
         <form onSubmit={handleSubmit(onFormSubmit)}>
             <DialogHeader>
                 <DialogTitle className="font-headline text-3xl text-center">
-                    Deine EXKLUSIVE Vorbesteller-Chance!
+                    Ihre EXKLUSIVE Vorbesteller-Chance!
                 </DialogTitle>
                 <DialogDescription className="text-center text-base">
-                    Dieses Angebot ist so flüchtig wie die Motivation eines Beamten am Freitagnachmittag. Nur hier, nur jetzt.
+                    Dieses Angebot ist so flüchtig wie die Motivation eines Beamten am Freitagnachmittag.
                 </DialogDescription>
             </DialogHeader>
 
@@ -162,7 +162,7 @@ export function HW2PreorderPopup({ book, children }: { book: Product, children: 
 
             <div className="my-8 space-y-8">
                  <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
-                    <h3 className="text-xl font-headline font-semibold">1. Konfiguration Deines persönlichen Unikats</h3>
+                    <h3 className="text-xl font-headline font-semibold">1. Konfiguration Ihres persönlichen Unikats</h3>
                     <div className="flex items-center space-x-3 p-2 rounded-md bg-background/50">
                         <Checkbox id="hasSignature" checked={true} disabled />
                         <Label htmlFor="hasSignature" className="font-semibold text-base cursor-pointer">Originalsignatur der Autoren</Label>
@@ -189,13 +189,13 @@ export function HW2PreorderPopup({ book, children }: { book: Product, children: 
                                 <div className="pl-2">
                                     <Textarea 
                                         {...register("customDedication")} 
-                                        placeholder="Dein Wunschtext für die Nachwelt (max. 150 Zeichen)..."
+                                        placeholder="Ihr Wunschtext für die Nachwelt (max. 150 Zeichen) ..."
                                         maxLength={150}
                                     />
                                 </div>
                             )}
                             {!watchFields.provideDedication && (
-                                <p className="text-xs text-muted-foreground pl-2 italic">Wenn Du nichts vorgibst, lassen wir uns etwas furchtbar Passendes für Dich einfallen.</p>
+                                <p className="text-xs text-muted-foreground pl-2 italic">Wenn Sie nichts vorgeben, lassen wir uns etwas Furchtbares einfallen!</p>
                             )}
                         </div>
                     )}
@@ -255,7 +255,7 @@ export function HW2PreorderPopup({ book, children }: { book: Product, children: 
             </div>
 
             <div className="p-4 bg-muted/50 rounded-lg space-y-4 mb-6">
-                <h4 className="font-headline text-lg font-semibold">3. Zusammenfassung Deiner Bestellung</h4>
+                <h4 className="font-headline text-lg font-semibold">3. Zusammenfassung Ihrer Bestellung</h4>
                 <div className="space-y-3 text-sm">
                     <div className="space-y-1">
                         <div className="flex justify-between">
@@ -299,7 +299,7 @@ export function HW2PreorderPopup({ book, children }: { book: Product, children: 
             <div className="mt-8 flex flex-col items-center">
                 <Button type="submit" size="lg" className="w-full text-lg h-14" disabled={isSubmitting || (timeLeft === 0)}>
                     {isSubmitting 
-                        ? <><Loader2 className="mr-2 h-6 w-6 animate-spin" />Wird geprüft...</>
+                        ? <><Loader2 className="mr-2 h-6 w-6 animate-spin" />Wird geprüft ...</>
                         : <><CheckCircle className="mr-2 h-6 w-6" />Jetzt unwiderruflich kostenpflichtig bestellen!</>
                     }
                 </Button>

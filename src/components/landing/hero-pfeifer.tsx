@@ -258,7 +258,7 @@ export function HeroPfeifer() {
 
             <HW2LeadForm
                 title="Die Geschichte geht weiter ..."
-                description="Gefällt Ihnen, was Sie lesen? 'Hallo Welt 2' setzt dem Ganzen die Krone auf. Tragen Sie sich ein und erfahre als Erster, wann das nächste Kapitel des Wahnsinns beginnt."
+                description="Gefällt Ihnen, was Sie lesen? 'Hallo Welt 2' setzt dem Ganzen die Krone auf. Tragen Sie sich ein und erfahren Sie als Erster, wann das nächste Kapitel des Wahnsinns beginnt."
                 source="Pfeifer-lead-2"
             />
         </article>

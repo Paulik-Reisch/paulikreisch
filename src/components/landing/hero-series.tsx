@@ -18,13 +18,13 @@ export function HeroSeries() {
               Die komplette Saga des Wahnsinns
             </h1>
             <p className="mx-auto max-w-[800px] text-muted-foreground md:text-xl text-balance animate-in fade-in slide-in-from-top-16 duration-1000">
-              Ein Buch war nur der Anfang. Zwei sind eine Lebenseinstellung. Entdecken Sie das "Hallo Welt"-Universum in seiner ganzen glorreichen und katastrophalen Vollendung.
+              Ein Buch war nur der Anfang. Zwei sind eine Lebenseinstellung. Entdecken Sie das "Hallo Welt"-Universum in seiner ganzen glorreichen Vollendung.
             </p>
           </div>
           <div className="animate-in fade-in slide-in-from-top-20 duration-1000">
              <a href="#book-showcase">
                 <Button size="lg" className="animate-pulse">
-                    Jetzt die ganze Wahrheit entdecken
+                    Jetzt die ganze Wahrheit herausfinden
                 </Button>
             </a>
           </div>
