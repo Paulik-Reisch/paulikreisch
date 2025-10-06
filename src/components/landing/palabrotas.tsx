@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useMemo } from "react";
@@ -10,13 +11,14 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Flame, Plus, Search, FilterX, ChevronDown } from "lucide-react";
+import { Flame, Plus, Search, FilterX, ChevronDown, GraduationCap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Palabrota } from "@/lib/firestore";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
 import Link from "next/link";
+import { PalabrotasStory } from "./palabrotas-story";
 
 
 const PfeiferRating = ({ rating }: { rating: number }) => (
@@ -102,6 +104,13 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
   const [isVerified, setIsVerified] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [pfeiferFilter, setPfeiferFilter] = useState<number | null>(null);
+  const [isStoryOpen, setIsStoryOpen] = useState(false);
+
+  const top40Palabrotas = useMemo(() => {
+    return [...vocabulary]
+      .sort((a, b) => b.pfeiferFaktor - a.pfeiferFaktor)
+      .slice(0, 40);
+  }, [vocabulary]);
 
   const filteredVocabulary = useMemo(() => {
     return vocabulary
@@ -136,6 +145,12 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl mt-4 text-balance">
             Ein essenzieller Wortschatz für den modernen Weltbürger. Präsentiert von der R. Pfeifer Akademie für angewandte Linguistik und zwischenmenschliche Eskalation.
             </p>
+            <div className="mt-8">
+                 <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground h-12 text-base animate-pulse" onClick={() => setIsStoryOpen(true)}>
+                    <GraduationCap className="mr-3 h-5 w-5"/>
+                    Top 40 Palabrotas mit Beispielsätzen lernen
+                </Button>
+            </div>
         </div>
 
         <div className="max-w-4xl mx-auto py-12 md:py-16 container px-4 md:px-6">
@@ -229,6 +244,7 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
             )}
         <p className="text-xs text-center text-muted-foreground mt-8">Haftungsausschluss: Die Autoren übernehmen keine Verantwortung für daraus resultierende soziale oder diplomatische Verwicklungen.</p>
         </div>
+        {isStoryOpen && <PalabrotasStory words={top40Palabrotas} onClose={() => setIsStoryOpen(false)} />}
     </section>
   );
 }

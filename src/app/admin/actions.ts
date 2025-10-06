@@ -22,6 +22,8 @@ import {
   addLog,
 } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
+import { correctHtml } from "@/ai/flows/correct-html-flow";
+import { textToSpeech } from "@/ai/flows/tts-flow";
 import { cookies } from "next/headers";
 import { encrypt, getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
@@ -85,6 +87,64 @@ export async function logoutAction() {
 const CorrectHtmlSchema = z.object({
   html: z.string(),
 });
+
+export async function correctHtmlAction(
+    prevState: { correctedHtml?: string; error?: string },
+    formData: FormData
+) {
+    const session = await getSession();
+    if (!session) {
+        return { error: "Nicht authentifiziert" };
+    }
+
+    const validatedFields = CorrectHtmlSchema.safeParse({
+        html: formData.get("html"),
+    });
+
+    if (!validatedFields.success) {
+        return { error: "Ungültige Eingabe." };
+    }
+
+    try {
+        const result = await correctHtml(validatedFields.data);
+        await addLog(session.user.id, 'KI-Aktion: HTML korrigiert', `Länge: ${result.correctedHtml.length} Zeichen`);
+        return { correctedHtml: result.correctedHtml };
+    } catch (e) {
+        console.error(e);
+        return { error: "HTML konnte nicht korrigiert werden. Die KI ist möglicherweise im Urlaub." };
+    }
+}
+
+const TextToSpeechSchema = z.object({
+  text: z.string().min(1, "Text darf nicht leer sein."),
+});
+
+export async function textToSpeechAction(
+    prevState: { audio?: string; error?: string },
+    formData: FormData
+) {
+    const session = await getSession();
+    if (!session) {
+        return { error: "Nicht authentifiziert" };
+    }
+
+    const validatedFields = TextToSpeechSchema.safeParse({
+        text: formData.get("text"),
+    });
+
+    if (!validatedFields.success) {
+        return { error: "Ungültige Eingabe." };
+    }
+
+    try {
+        const result = await textToSpeech(validatedFields.data);
+        return { audio: result.audio };
+    } catch (e) {
+        console.error(e);
+        return { error: "Audio konnte nicht generiert werden." };
+    }
+}
+
 
 // Newsletter Editor Actions
 export type AdminNewsletterState = {
