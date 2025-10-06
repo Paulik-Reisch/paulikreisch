@@ -1,4 +1,8 @@
+
 import { createGenkitApiRoute } from '@genkit-ai/next';
+import { ai } from '@/ai/genkit';
+
+// Flows importieren (werden bei Build & Runtime automatisch registriert)
 import '@/ai/flows/continue-chapter-flow';
 import '@/ai/flows/correct-html-flow';
 import '@/ai/flows/generate-bureaucracy-flow';
@@ -9,5 +13,4 @@ import '@/ai/flows/generate-satire-type-flow';
 import '@/ai/flows/generate-testimonial';
 import '@/ai/flows/pfeifer-translate-flow';
 
-
-export const {GET, POST} = createGenkitApiRoute();
+export const { GET, POST } = createGenkitApiRoute({ ai });
