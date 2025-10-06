@@ -63,7 +63,7 @@ export function ShopNewsletter() {
                         </div>
                         <h3 className="font-headline text-2xl font-bold">Nichts verpassen</h3>
                         <p className="text-muted-foreground mt-2 mb-6 max-w-sm text-balance">
-                            Erhalte eine Benachrichtigung, wenn das Buch online geht.
+                            Benachrichtigung erhalten, wenn das Buch online geht.
                         </p>
                          <form ref={formRef} action={formAction} className="w-full max-w-sm flex gap-2">
                             <Input type="email" name="email" placeholder="deine-email@adresse.de" required className="flex-grow"/>

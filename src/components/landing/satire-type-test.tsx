@@ -27,11 +27,11 @@ const initialState: InitialState = {
 };
 
 const questions = [
-    { id: "q1", label: "Der Wecker klingelt um 7:00 Uhr. Deine erste Reaktion?", options: ["Snooze. Immer Snooze.", "Ich war schon um 6 wach und habe die Welt verflucht.", "Direkt aus dem Bett, der Tag muss optimiert werden.", "Wecker? Ich stehe auf, wenn die Angst mich weckt."] },
-    { id: "q2", label: "Die Bahn meldet 'unbestimmte Verspätung'. Du denkst:", options: ["'Großartig, mehr Zeit für existenzielle Krisen.'", "'Ich wusste es! Ich hätte mein eigenes Gleis verlegen sollen.'", "'Das stört meine präzise getaktete Tagesplanung!'", "'Ich setze mich auf den Boden und werde eins mit dem Chaos.'"] },
-    { id: "q3", label: "Du musst ein kompliziertes Formular ausfüllen. Du...", options: ["...fängst an zu weinen und benutzt die Tränen als Tinte.", "...analysierst es, findest 3 Fehler im Amtsdeutsch und reichst eine Korrektur ein.", "...füllst es mit absurden Antworten aus, um das System zu testen.", "...schiebst es so lange auf, bis es von selbst vergilbt."] },
-    { id: "q4", label: "Dein Chef bittet um 'proaktives Engagement'. Du...", options: ["...nickst verständnisvoll und änderst absolut nichts.", "...erstellst eine 30-seitige Präsentation über die Ineffizienz von Meetings.", "...gründest ein Komitee zur Definierung von 'proaktiv'.", "...versteckst Dich auf der Toilette."] },
-    { id: "q5", label: "Dein Lebensmotto lautet:", options: ["'Warum einfach, wenn es auch umständlich geht?'", "'Es ist nicht alles schlecht, aber fast.'", "'Läuft bei mir. Zwar rückwärts und bergab, aber läuft.'", "'Optimismus ist nur ein Mangel an Information.'"] },
+    { id: "q1", label: "Der Wecker klingelt um 7:00 Uhr. Ihre erste Reaktion?", options: ["Snooze. Immer Snooze.", "Ich war schon um 6 wach und habe die Welt verflucht.", "Direkt aus dem Bett, der Tag muss optimiert werden.", "Wecker? Ich stehe auf, wenn die Angst mich weckt."] },
+    { id: "q2", label: "Die Bahn meldet 'unbestimmte Verspätung'. Sie denken:", options: ["'Großartig, mehr Zeit für existenzielle Krisen.'", "'Ich wusste es! Ich hätte mein eigenes Gleis verlegen sollen.'", "'Das stört meine präzise getaktete Tagesplanung!'", "'Ich setze mich auf den Boden und werde eins mit dem Chaos.'"] },
+    { id: "q3", label: "Sie müssen ein kompliziertes Formular ausfüllen. Sie ...", options: ["... fangen an zu weinen und benutzen die Tränen als Tinte.", "... analysieren es, finden 3 Fehler im Amtsdeutsch und reichen eine Korrektur ein.", "... füllen es mit absurden Antworten aus, um das System zu testen.", "... schieben es so lange auf, bis es von selbst vergilbt."] },
+    { id: "q4", label: "Ihr Chef bittet um 'proaktives Engagement'. Sie ...", options: ["... nicken verständnisvoll und ändern absolut nichts.", "... erstellen eine 30-seitige Präsentation über die Ineffizienz von Meetings.", "... gründen ein Komitee zur Definierung von 'proaktiv'.", "... verstecken sich auf der Toilette."] },
+    { id: "q5", label: "Ihr Lebensmotto lautet:", options: ["'Warum einfach, wenn es auch umständlich geht?'", "'Es ist nicht alles schlecht, aber fast.'", "'Läuft bei mir. Zwar rückwärts und bergab, aber läuft.'", "'Optimismus ist nur ein Mangel an Information.'"] },
 ];
 
 function SubmitButton() {
@@ -56,7 +56,7 @@ function SubmitButton() {
 function SocialShareButtons({ text }: { text: string }) {
     const { toast } = useToast();
     const shareUrl = "https://hallowelt-buch.de/lp-satire-typ-test";
-    const fullText = `${text} Finde Deinen Typ heraus: #HalloWelt #SatireTypTest`;
+    const fullText = `${text} Finden Sie Ihren Typ heraus: #HalloWelt #SatireTypTest`;
 
     const handleCopy = () => {
         navigator.clipboard.writeText(`${fullText} ${shareUrl}`);
@@ -94,7 +94,7 @@ function ResultCard({ data }: { data: GenerateSatireTypeOutput }) {
     return (
         <Card className="max-w-2xl mx-auto w-full animate-in fade-in zoom-in-95 mt-12 transform -rotate-1 shadow-2xl">
             <CardHeader className="text-center items-center">
-                <p className="text-sm font-semibold text-primary">Dein offizielles Ergebnis</p>
+                <p className="text-sm font-semibold text-primary">Ihr offizielles Ergebnis</p>
                 <CardTitle className="font-headline text-4xl">{data.title}</CardTitle>
             </CardHeader>
             <CardContent className="text-center space-y-6">
@@ -115,7 +115,7 @@ function ResultCard({ data }: { data: GenerateSatireTypeOutput }) {
                 </div>
             </CardContent>
              <CardFooter className="flex-col gap-4 text-center">
-                <p className="text-sm text-muted-foreground">Gefällt Dir Dein Ergebnis? Im Buch findest Du noch mehr davon.</p>
+                <p className="text-sm text-muted-foreground">Gefällt Ihnen das Ergebnis? Im Buch finden Sie noch mehr davon.</p>
                 <Link href="/buchhandlung-paulik-reisch">
                     <Button variant="secondary">Alle Typen im Buch kennenlernen</Button>
                 </Link>
@@ -145,10 +145,10 @@ export function SatireTypeTest() {
           <Badge className="py-1 px-4 text-base"><Sparkles className="mr-2"/>Persönlichkeitstest</Badge>
           <div className="space-y-4">
             <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl xl:text-8xl/none text-balance">
-              Welche Katastrophenfigur bist Du?
+              Welche Katastrophenfigur sind Sie?
             </h1>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl text-balance">
-              Beantworte diese 5 absolut wissenschaftlichen Fragen und finde heraus, welcher Charakter aus dem "Hallo Welt"-Universum tief in Deiner Seele schlummert.
+              Beantworten Sie diese 5 wissenschaftlichen Fragen und finden Sie heraus, welcher Charakter aus dem "Hallo Welt"-Universum tief in Ihrer Seele schlummert.
             </p>
           </div>
         </div>
@@ -163,7 +163,7 @@ export function SatireTypeTest() {
                         <Label htmlFor={q.id} className="text-lg font-semibold text-left">{index + 1}. {q.label}</Label>
                         <Select name={q.id} required>
                             <SelectTrigger id={q.id} className="w-full h-12 text-base">
-                                <SelectValue placeholder="Wähle Deine Wahrheit..." />
+                                <SelectValue placeholder="Wahrheit wählen ..." />
                             </SelectTrigger>
                             <SelectContent>
                                 {q.options.map((opt) => (

@@ -26,7 +26,7 @@ const reviews = [
     },
     {
         stars: 3,
-        text: "Ich bin mir nicht sicher, was ich da gelesen habe, aber ich konnte nicht aufhören. Ist das eine Sekte?",
+        text: "Ich bin mir nicht sicher, was ich da gelesen habe, aber ich konnte nicht aufhören.",
         author: "Verwirrt, aber fasziniert",
     },
     {
@@ -48,7 +48,7 @@ export function Reviews() {
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Die Leute schreien (vor Lachen)</h2>
+            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Die Leute schreien vor Lachen</h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
               Was unsere Leser sagen, wenn sie wieder zu Atem gekommen sind.
             </p>

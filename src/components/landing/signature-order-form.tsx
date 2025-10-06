@@ -92,8 +92,8 @@ export function SignatureOrderForm({ book }: { book: Product }) {
    useEffect(() => {
       if (state.success) {
         toast({
-            title: "Herzlichen Glückwunsch (oder Beileid?)",
-            description: "Ihre unverbindliche, aber moralisch verpflichtende Bestellung wurde registriert.",
+            title: "Herzlichen Glückwunsch!",
+            description: "Ihre Bestellung wurde registriert.",
         });
         reset();
         setIsDialogOpen(false);
@@ -198,7 +198,7 @@ export function SignatureOrderForm({ book }: { book: Product }) {
                 Sonderbestellung: {book.title}
             </DialogTitle>
             <DialogDescription className="text-center text-base">
-                Stellen Sie sich Ihre persönliche, von den Autoren gequälte Ausgabe zusammen. Ein Unikat, genau wie Ihre Probleme.
+                Stellen Sie sich Ihre persönliche, von den Autoren gequälte Ausgabe zusammen. Ein Unikat.
             </DialogDescription>
         </DialogHeader>
 
