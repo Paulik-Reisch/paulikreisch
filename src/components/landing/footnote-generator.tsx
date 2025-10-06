@@ -1,7 +1,7 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
-import { useFormStatus } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
+import { useEffect } from "react";
 import { createFootnoteAction } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,7 +35,7 @@ function SubmitButton() {
 }
 
 export function FootnoteGenerator() {
-  const [state, formAction] = useActionState(createFootnoteAction, initialState);
+  const [state, formAction] = useFormState(createFootnoteAction, initialState);
   const { toast } = useToast();
 
   useEffect(() => {

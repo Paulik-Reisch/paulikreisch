@@ -1,7 +1,7 @@
 "use client";
 
-import { useActionState, useState, useEffect, useRef } from "react";
-import { useFormStatus } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
+import { useState, useEffect, useRef } from "react";
 import { continueChapterAction } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,7 +35,7 @@ function SubmitButton() {
 }
 
 export function ChapterWriter() {
-  const [state, formAction] = useActionState(continueChapterAction, initialState);
+  const [state, formAction] = useFormState(continueChapterAction, initialState);
   const { toast } = useToast();
   const [chapterText, setChapterText] = useState("KAPITEL 42: Der Tag, an dem das Internet verschwand und die Menschheit gezwungen war, miteinander zu reden. Es war eine Katastrophe.");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
