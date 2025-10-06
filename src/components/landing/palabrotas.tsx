@@ -2,8 +2,8 @@
 
 "use client";
 
-import { useState, useMemo } from "react";
-import { useRouter } from 'next/navigation';
+import { useState, useMemo, useEffect } from "react";
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Accordion,
   AccordionContent,
@@ -101,10 +101,19 @@ function AgeVerification({ onConfirm }: { onConfirm: () => void }) {
 }
 
 export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
-  const [isVerified, setIsVerified] = useState(false);
+  const searchParams = useSearchParams();
+  const skipVerification = searchParams.get('skip-age-verification') === 'true';
+
+  const [isVerified, setIsVerified] = useState(skipVerification);
   const [searchTerm, setSearchTerm] = useState("");
   const [pfeiferFilter, setPfeiferFilter] = useState<number | null>(null);
   const [isStoryOpen, setIsStoryOpen] = useState(false);
+  
+  useEffect(() => {
+    if (skipVerification) {
+        setIsVerified(true);
+    }
+  }, [skipVerification]);
 
   const top40Palabrotas = useMemo(() => {
     return [...vocabulary]
@@ -248,3 +257,5 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
     </section>
   );
 }
+
+    
