@@ -107,14 +107,14 @@ export function BureaucracyGenerator() {
               Der Bürokratie-Generator
             </h1>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl text-balance">
-              Schildere uns Dein Problem. Wir garantieren eine Antwort, die garantiert nicht weiterhilft. Effizienz, wie sie im Buche steht!
+              Schilderen Sie uns Ihr Problem. Wir garantieren eine Antwort, die garantiert nicht weiterhilft. Effizienz, wie sie im Buche steht!
             </p>
           </div>
         </div>
         <div className="max-w-2xl mx-auto mt-12">
           <form action={formAction} className="flex flex-col items-center gap-4">
             <div className="w-full">
-              <Label htmlFor="problem" className="sr-only">Dein Problem</Label>
+              <Label htmlFor="problem" className="sr-only">Ihr Problem</Label>
               <Textarea
                 id="problem"
                 name="problem"
@@ -132,7 +132,7 @@ export function BureaucracyGenerator() {
         {state.response && (
             <div className="text-center mt-12 animate-in fade-in slide-in-from-bottom-8 duration-500">
                  <Link href="/buchhandlung-paulik-reisch">
-                    <Button size="lg" variant="secondary">Noch mehr Amtswahnsinn findest Du im Buch.</Button>
+                    <Button size="lg" variant="secondary">Noch mehr Amtswahnsinn finden Sie im Buch.</Button>
                 </Link>
             </div>
         )}

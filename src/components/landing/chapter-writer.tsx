@@ -69,7 +69,7 @@ export function ChapterWriter() {
     navigator.clipboard.writeText(chapterText);
     toast({
         title: "Kopiert!",
-        description: "Das Kapitel wurde in Deine Zwischenablage kopiert.",
+        description: "Das Kapitel wurde in die Zwischenablage kopiert.",
     })
   }
 
@@ -79,9 +79,9 @@ export function ChapterWriter() {
             <Card className="max-w-4xl mx-auto shadow-2xl transform rotate-1">
                 <form action={formAction}>
                     <CardHeader>
-                    <CardTitle className="font-headline text-3xl">Schreibe Dein eigenes Kapitel</CardTitle>
+                    <CardTitle className="font-headline text-3xl">Schreiben Sie Ihr eigenes Kapitel</CardTitle>
                     <CardDescription>
-                        Gib dem HalloWeltGPT einen Anfang und sieh zu, wie die Magie (oder das Chaos) passiert.
+                        Geben Sie dem HalloWeltGPT einen Anfang und sehen Sie zu, wie die Magie (oder das Chaos) passiert.
                     </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">

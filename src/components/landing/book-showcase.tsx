@@ -24,7 +24,7 @@ export function BookShowcase() {
                 />
             </div>
             <p className="max-w-md mt-6 text-muted-foreground text-balance">
-                Die satirische Abrechnung mit dem Schulsystem, Lehrern als Beamtenrobotern und dem täglichen Wahnsinn des Erwachsenwerdens.
+                Die satirische Abrechnung mit dem Schulsystem – Lehrer als Beamtenroboter und der tägliche Wahnsinn des Erwachsenwerdens.
             </p>
             <Link href="/buchhandlung-paulik-reisch" className="mt-6">
                 <Button variant="secondary">Band 1 kaufen</Button>
@@ -46,7 +46,7 @@ export function BookShowcase() {
                 />
             </div>
             <p className="max-w-md mt-6 text-muted-foreground text-balance">
-                Die Fortsetzung, die niemand wollte. Eine Abrechnung mit Bürokratie, deutschem Internet und Mietenwahnsinn.
+                Die Fortsetzung, die niemand wollte. Eine Abrechnung mit Bürokratie, deutschem Internet und Mietenchaos.
             </p>
              <Link href="/buchhandlung-paulik-reisch" className="mt-6">
                 <Button variant="secondary">Band 2 kaufen</Button>

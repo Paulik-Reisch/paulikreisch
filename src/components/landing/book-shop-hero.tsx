@@ -16,14 +16,14 @@ import Link from "next/link"
 const heroItems = [
     {
         type: 'quote',
-        text: 'Ich habe gelacht, ich habe geweint, ich habe meine Lebensentscheidungen in Frage gestellt.',
+        text: 'Ich habe gelacht, geweint und meine Lebensentscheidungen in Frage gestellt.',
         author: 'Ein verwirrter Leser',
         color: 'bg-pink-100 dark:bg-pink-900/30'
     },
     {
         type: 'lp_promo',
-        title: 'Welche Katastrophenfigur bist du?',
-        description: 'Mach den satirischen Persönlichkeitstest und finde es heraus.',
+        title: 'Welche Katastrophenfigur sind Sie?',
+        description: 'Machen Sie den satirischen Persönlichkeitstest, um es herauszufinden.',
         link: '/lp-satire-typ-test',
         icon: Sparkles,
         color: 'bg-blue-100 dark:bg-blue-900/30'
@@ -37,14 +37,14 @@ const heroItems = [
     {
         type: 'lp_promo',
         title: 'Der Bürokratie-Generator',
-        description: 'Erhalte auf Knopfdruck ein absurd langes und sinnloses Behörden-Antwortschreiben.',
+        description: 'Erhalten Sie auf Knopfdruck ein absurd langes und sinnloses Behörden-Antwortschreiben.',
         link: '/lp-buerokratie-generator',
         icon: Book,
         color: 'bg-green-100 dark:bg-green-900/30'
     },
      {
         type: 'quote',
-        text: 'Endlich ein Buch, das so denkt wie ich! Jetzt fühle ich mich weniger allein.',
+        text: 'Endlich ein Buch, das so denkt wie ich! Jetzt fühle ich mich weniger alleine.',
         author: 'Ein Seelenverwandter',
         color: 'bg-indigo-100 dark:bg-indigo-900/30'
     },
