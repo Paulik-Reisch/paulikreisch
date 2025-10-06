@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback, useTransition } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
 import { textToSpeechAction } from "@/app/admin/actions";
 import { useActionState } from "react";
 import { Palabrota } from "@/lib/firestore";
@@ -11,7 +11,20 @@ import { cn } from "@/lib/utils";
 
 type View = "word" | "sentence";
 
-function ProgressBar({ count, current, onSegmentClick, onAnimationComplete }: { count: number; current: number; onSegmentClick: (index: number) => void, onAnimationComplete: () => void; }) {
+function ProgressBar({ count, current, onSegmentClick, isPaused, onAnimationComplete }: { count: number; current: number; onSegmentClick: (index: number) => void; isPaused: boolean; onAnimationComplete: () => void; }) {
+  const controls = useAnimationControls();
+  
+  useEffect(() => {
+    if (isPaused) {
+      controls.stop();
+    } else {
+      controls.start({
+        width: "100%",
+        transition: { duration: 5, ease: "linear" }
+      });
+    }
+  }, [isPaused, controls, current]); // Rerun effect when current index changes to restart animation
+
   return (
     <div className="flex w-full gap-1 px-4 pt-4">
       {Array.from({ length: count }).map((_, i) => (
@@ -23,15 +36,20 @@ function ProgressBar({ count, current, onSegmentClick, onAnimationComplete }: { 
           <motion.div
             className="h-full rounded-full bg-white"
             initial={{ width: i < current ? "100%" : "0%" }}
-            animate={{ width: i === current ? "100%" : (i < current ? "100%" : "0%") }}
-            transition={i === current ? { duration: 5, ease: "linear" } : { duration: 0.1, ease: "linear" }}
-            onAnimationComplete={i === current ? onAnimationComplete : undefined}
+            animate={ i === current ? controls : { width: i < current ? "100%" : "0%" }}
+            transition={ i < current ? { duration: 0.1, ease: "linear" } : undefined}
+            onAnimationComplete={() => {
+                if (i === current) {
+                    onAnimationComplete();
+                }
+            }}
           />
         </div>
       ))}
     </div>
   );
 }
+
 
 function GlareEffect() {
     return (
@@ -52,11 +70,13 @@ function GlareEffect() {
     )
 }
 
+
 export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClose: () => void }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [view, setView] = useState<View>("word");
   const [direction, setDirection] = useState(0);
   const [audioSrc, setAudioSrc] = useState<string | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
   
   const [ttsState, ttsAction] = useActionState(textToSpeechAction, { audio: undefined, error: undefined });
   const [isTtsPending, startTtsTransition] = useTransition();
@@ -67,6 +87,7 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
     let newIndex = currentIndex + newDirection;
     if (newIndex < 0) {
       newIndex = 0;
+      return;
     } else if (newIndex >= words.length) {
       onClose(); // Close story when it ends
       return;
@@ -75,6 +96,7 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
     setCurrentIndex(newIndex);
     setView('word');
     setAudioSrc(null);
+    setIsPaused(false);
   }, [currentIndex, words.length, onClose]);
   
   const handlePlaySound = useCallback(() => {
@@ -84,14 +106,18 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
     startTtsTransition(() => {
         ttsAction(formData);
     });
-  }, [view, currentWord, ttsAction, startTtsTransition]);
+  }, [view, currentWord, ttsAction]);
   
   useEffect(() => {
     if (ttsState.audio) {
       setAudioSrc(ttsState.audio);
       const audio = new Audio(ttsState.audio);
+      setIsPaused(true);
       audio.play();
-      audio.onended = () => setAudioSrc(null);
+      audio.onended = () => {
+        setAudioSrc(null);
+        setIsPaused(false);
+      }
     }
   }, [ttsState.audio]);
   
@@ -100,6 +126,7 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
     setCurrentIndex(index);
     setView('word');
     setAudioSrc(null);
+    setIsPaused(false);
   }
 
   const variants = {
@@ -127,7 +154,13 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
       exit={{ opacity: 0 }}
     >
         <div className="absolute top-0 left-0 right-0 z-20">
-            <ProgressBar count={words.length} current={currentIndex} onSegmentClick={handleSegmentClick} onAnimationComplete={() => paginate(1)} />
+            <ProgressBar 
+              count={words.length} 
+              current={currentIndex} 
+              onSegmentClick={handleSegmentClick} 
+              isPaused={isPaused}
+              onAnimationComplete={() => paginate(1)} 
+            />
             <button onClick={onClose} className="absolute top-6 right-4 text-white/50 hover:text-white">
                 <X size={32} />
             </button>
@@ -144,7 +177,7 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
             </button>
         </div>
         <div className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 z-20">
-            <button onClick={() => paginate(1)} className="p-4 text-white/50 hover:text-white" disabled={currentIndex === words.length - 1}>
+            <button onClick={() => paginate(1)} className="p-4 text-white/50 hover:text-white">
                 <ChevronRight size={48} />
             </button>
         </div>
