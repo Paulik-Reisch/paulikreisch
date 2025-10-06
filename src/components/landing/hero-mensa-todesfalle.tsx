@@ -24,7 +24,7 @@ export function HeroMensaTodesfalle() {
             </p>
           </div>
           <Link href="/buchhandlung-paulik-reisch">
-            <Button size="lg" variant="secondary" className="animate-pulse">Lies das Menü der Hölle</Button>
+            <Button size="lg" variant="secondary" className="animate-pulse">Lesen Sie das Menü der Hölle</Button>
           </Link>
         </div>
       </div>

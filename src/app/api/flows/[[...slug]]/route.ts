@@ -1,3 +1,4 @@
+'use server';
 // KEIN 'use server' - das ist für Server Actions, nicht für API Routes!
 import { nextApiRoute } from '@genkit-ai/next';
 import { ai } from '@/ai/genkit';

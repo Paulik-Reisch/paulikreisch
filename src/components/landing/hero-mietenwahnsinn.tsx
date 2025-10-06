@@ -43,7 +43,7 @@ export function HeroMietenwahnsinn() {
               Der Mietenwahnsinn ist real.
             </h1>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl text-balance">
-              Finden Sie Ihr Traum-WG-Zimmer! 10m², zentrale Lage (neben dem Hauptbahnhof), unmöbliert. Ein echtes Schnäppchen.
+              Finden Sie Ihr Traum-WG-Zimmer! 10 m², zentrale Lage (neben dem Hauptbahnhof), unmöbliert. Ein echtes Schnäppchen.
             </p>
           </div>
         </div>
@@ -57,7 +57,7 @@ export function HeroMietenwahnsinn() {
               <div className='space-y-4'>
                 <h3 className="font-semibold flex items-center gap-2"><BedDouble /> Grundmiete (kalt, ohne alles)</h3>
                 <p className="text-2xl font-bold">1.000,00 €</p>
-                <p className='text-xs text-muted-foreground'>Für 10m² puren Luxus. Tageslicht optional und gegen Aufpreis.</p>
+                <p className='text-xs text-muted-foreground'>Für 10 m² puren Luxus. Tageslicht optional und gegen Aufpreis.</p>
               </div>
               <div className="space-y-4">
                 <h3 className="font-semibold">Wählen Sie Ihre Luxus-Ausstattung:</h3>
@@ -81,8 +81,8 @@ export function HeroMietenwahnsinn() {
                 <p className="text-3xl font-bold font-mono text-primary animate-pulse">{totalRent.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</p>
               </div>
               <div className="text-center mt-6">
-                <Button size="lg">Mietvertrag jetzt unterschreiben (unwiderruflich)</Button>
-                <p className="text-xs text-muted-foreground mt-2">*Ihre Seele wird als Kaution einbehalten.</p>
+                <Button size="lg">Mietvertrag jetzt unterschreiben</Button>
+                <p className="text-xs text-muted-foreground mt-2">Ihre Seele wird als Kaution einbehalten.</p>
               </div>
             </div>
           </CardContent>
