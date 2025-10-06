@@ -111,7 +111,15 @@ export interface Palabrota {
     synonyme: string;
     beispiel: string;
     pfeiferFaktor: number;
+    // New fields for the "Hyper-Duden"
+    geschlecht?: 'm' | 'w' | 'n' | 'p'; // männlich, weiblich, neutral, plural
+    artikel?: string; // el, la, los, las
+    mehrzahl?: string; // Plural form
+    region?: string; // z.B. Spanien, Lateinamerika, Allgemein
+    kontext?: string; // Zusätzlicher Kontext
+    steigerung?: string; // z.B. für Adjektive
 }
+
 
 export interface Chiste {
     id: string;

@@ -3,7 +3,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { AnimatePresence, motion, useAnimationControls, useDragControls } from "framer-motion";
+import { AnimatePresence, motion, useDragControls } from "framer-motion";
 import { Palabrota } from "@/lib/firestore";
 import { X, ChevronLeft, ChevronRight, Volume2, Pause, Play, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -19,21 +19,16 @@ function ProgressBar({ count, current, onSegmentClick, isPaused, onAnimationComp
           onClick={() => onSegmentClick(i)}
           className="h-1 rounded-full flex-1 cursor-pointer bg-white/30 overflow-hidden"
         >
-          <motion.div
-            className="h-full rounded-full bg-white"
-            initial={{ width: i < current ? '100%' : '0%'}}
-            animate={
-                i < current
-                ? { width: '100%' }
-                : i === current && !isPaused
-                ? { width: '100%', transition: { duration: 5, ease: "linear" }}
-                : { width: i === current && isPaused ? '0%' : '0%' } // Keep current paused bar at its current state. Will be handled by stopping. Let's restart on pause.
-            }
-            onAnimationComplete={() => {
-                if (i === current && !isPaused) {
-                    onAnimationComplete();
-                }
-            }}
+           <motion.div
+              className="h-full rounded-full bg-white"
+              initial={{ width: i < current ? '100%' : '0%' }}
+              animate={i === current && !isPaused ? { width: '100%' } : { width: i < current ? '100%' : '0%' }}
+              transition={i === current && !isPaused ? { duration: 5, ease: "linear" } : { duration: 0 }}
+              onAnimationComplete={() => {
+                  if (i === current && !isPaused) {
+                      onAnimationComplete();
+                  }
+              }}
           />
         </div>
       ))}
@@ -62,6 +57,7 @@ function GlareEffect() {
 }
 
 function DetailRow({ label, children }: { label: string; children: React.ReactNode }) {
+    if (!children) return null;
     return (
         <div>
             <span className="text-xs text-neutral-400 font-semibold uppercase tracking-wider">{label}</span>
@@ -101,6 +97,20 @@ function InfoSheet({ word, onClose }: { word: Palabrota, onClose: () => void }) 
                 <DetailRow label="Wortart">
                     <p className="font-semibold">{word.wortart}</p>
                 </DetailRow>
+                 <div className="grid grid-cols-2 gap-4">
+                    <DetailRow label="Geschlecht">
+                      <p>{word.geschlecht === 'm' ? 'Männlich' : word.geschlecht === 'w' ? 'Weiblich' : word.geschlecht || ''}</p>
+                    </DetailRow>
+                    <DetailRow label="Artikel">
+                      <p>{word.artikel}</p>
+                    </DetailRow>
+                </div>
+                <DetailRow label="Mehrzahl">
+                    <p>{word.mehrzahl}</p>
+                </DetailRow>
+                <DetailRow label="Region">
+                    <p>{word.region}</p>
+                </DetailRow>
                  <DetailRow label="Anwendung">
                     <p>{word.anwendung}</p>
                 </DetailRow>
@@ -109,6 +119,12 @@ function InfoSheet({ word, onClose }: { word: Palabrota, onClose: () => void }) 
                 </DetailRow>
                 <DetailRow label="Beispielsatz">
                     <blockquote className="border-l-4 border-white/30 pl-4 py-1 my-0 text-lg">"{word.beispiel}"</blockquote>
+                </DetailRow>
+                <DetailRow label="Kontext & Nuancen">
+                    <p>{word.kontext}</p>
+                </DetailRow>
+                 <DetailRow label="Steigerung">
+                    <p>{word.steigerung}</p>
                 </DetailRow>
             </div>
         </motion.div>

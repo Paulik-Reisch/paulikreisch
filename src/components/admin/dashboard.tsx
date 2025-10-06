@@ -831,10 +831,29 @@ function PalabrotaForm({
                         {isEditMode && <input type="hidden" name="id" value={palabra?.id} />}
                         <Input name="de" placeholder="Deutsches Wort" defaultValue={palabra?.de} required />
                         <Input name="es" placeholder="Spanisches Wort" defaultValue={palabra?.es} required />
+                        <Input name="phonetik" placeholder="Phonetische Schreibweise (z.B. chili-poy-yas)" defaultValue={palabra?.phonetik} />
                         <Input name="wortart" placeholder="Wortart" defaultValue={palabra?.wortart} required />
+                        <div className="grid grid-cols-2 gap-4">
+                           <Input name="artikel" placeholder="Artikel (el, la...)" defaultValue={palabra?.artikel} />
+                           <Select name="geschlecht" defaultValue={palabra?.geschlecht}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Geschlecht" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="m">Männlich</SelectItem>
+                                    <SelectItem value="w">Weiblich</SelectItem>
+                                    <SelectItem value="n">Neutral</SelectItem>
+                                    <SelectItem value="p">Plural</SelectItem>
+                                </SelectContent>
+                           </Select>
+                        </div>
+                        <Input name="mehrzahl" placeholder="Mehrzahl" defaultValue={palabra?.mehrzahl} />
                         <Textarea name="anwendung" placeholder="Anwendung" defaultValue={palabra?.anwendung} required />
                         <Textarea name="synonyme" placeholder="Synonyme" defaultValue={palabra?.synonyme} required />
                         <Textarea name="beispiel" placeholder="Beispielsatz" defaultValue={palabra?.beispiel} required />
+                        <Textarea name="kontext" placeholder="Zusätzlicher Kontext/Nuancen" defaultValue={palabra?.kontext} />
+                        <Input name="region" placeholder="Region (z.B. Spanien, Lateinamerika)" defaultValue={palabra?.region} />
+                        <Input name="steigerung" placeholder="Steigerung (für Adjektive)" defaultValue={palabra?.steigerung} />
                         <div>
                             <Label>Pfeifer-Faktor™</Label>
                             <Input name="pfeiferFaktor" type="number" min="0" max="5" defaultValue={palabra?.pfeiferFaktor ?? 3} required />
