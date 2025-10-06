@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
@@ -154,11 +155,12 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
             Ein essenzieller Wortschatz für den modernen Weltbürger. Präsentiert von der R. Pfeifer Akademie für angewandte Linguistik und zwischenmenschliche Eskalation.
             </p>
             <PalabrotasStoryMockup />
-            <div className="mt-8">
+            <div className="mt-8 text-center">
                  <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground h-12 text-base animate-pulse" onClick={() => setIsStoryOpen(true)}>
                     <GraduationCap className="mr-3 h-5 w-5"/>
-                    Top 40 Palabrotas mit Beispielsätzen lernen
+                    Jetzt im Story-Mode lernen!
                 </Button>
+                <p className="text-sm text-gray-500 mt-2">Unsere Bibliothek inkludiert ÜBER 180 spanische Schimpfwörter!</p>
             </div>
         </div>
 
