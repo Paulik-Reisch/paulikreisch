@@ -151,12 +151,12 @@
   }
 
   .text-link {
-    @apply font-medium text-foreground underline decoration-dotted underline-offset-4 decoration-gray-400;
+    @apply font-medium text-primary underline decoration-dotted underline-offset-4 decoration-primary/50;
   }
 
   .text-link::after {
     content: ' ↗';
-    @apply text-gray-400;
+    @apply text-primary/50;
   }
 
   @keyframes flash {
