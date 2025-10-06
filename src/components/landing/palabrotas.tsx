@@ -151,7 +151,7 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
             </h1>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl mt-4 text-balance">
             Ein essenzieller Wortschatz für den modernen Weltbürger.{' '}
-            <Link href="/lp-pfeifer" className="underline hover:text-primary">
+            <Link href="/lp-pfeifer" className="text-link">
                 Präsentiert von der R. Pfeifer Akademie für angewandte Linguistik und zwischenmenschliche Eskalation.
             </Link>
             </p>
