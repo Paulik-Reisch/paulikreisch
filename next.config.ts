@@ -43,14 +43,6 @@ const nextConfig: NextConfig = {
       }
     ],
   },
-  serverComponentsExternalPackages: ['firebase-admin'],
-  turbo: {
-    resolveAlias: {
-      // This is to suppress a warning from a dependency of a dependency (handlebars).
-      // It's not a critical error, but it's good to keep the build logs clean.
-      'handlebars': 'next/dist/server/noop.js',
-    }
-  }
 };
 
 export default nextConfig;
