@@ -14,14 +14,14 @@ const initialMessages = [
     "Bitte haben Sie einen Augenblick Geduld.",
     "Der zuständige Sachbearbeiter macht gerade Kaffeepause.",
     "Das System wird gerade neugestartet.",
-    "Bitte warten...",
+    "Bitte warten ...",
 ];
 
 const absurdInstructions = [
     "Bitte begeben Sie sich zu Zimmer 42a, Korridor B, Untergeschoss 3.",
     "Setzen Sie sich auf Stuhl 7, Reihe C, Wartebereich 'Hoffnungslos'.",
     "Ihr Ticket wurde storniert. Bitte ziehen Sie ein neues.",
-    "Füllen Sie bitte Formular B-12 aus. Sie finden es in Zimmer -1.",
+    "Füllen Sie bitte Formular A-38 aus. Sie finden es in Zimmer -1.",
     "Der Aufzug ist außer Betrieb. Bitte nutzen Sie die Treppe.",
     "Atmen ist bis auf Weiteres nur mit schriftlicher Genehmigung gestattet.",
     "Ihr Sachbearbeiter wurde versetzt. Auf einen anderen Planeten.",
@@ -112,7 +112,7 @@ export function HeroBeamtenWartezeitenSimulator() {
                 </Card>
                  <div className='text-center mt-8'>
                      <Link href="/buchhandlung-paulik-reisch">
-                        <Button variant="secondary" size="lg">Im Buch geht's schneller (oder auch nicht).</Button>
+                        <Button variant="secondary" size="lg">Im Buch geht es schneller.</Button>
                     </Link>
                 </div>
             </div>

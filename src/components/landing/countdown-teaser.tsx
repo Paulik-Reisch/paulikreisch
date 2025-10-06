@@ -71,17 +71,17 @@ export function CountdownTeaser() {
 
         toast({
             title: "Zeit gelöscht!",
-            description: `Du hast den Autoren ${reductionText} Zeit geklaut! Weiter so!`,
+            description: `Sie haben den Autoren ${reductionText} Zeit geklaut! Weiter so!`,
         });
     };
 
     const handleShare = () => {
-        const shareText = "Hilf mit, den Autoren von 'Hallo Welt' Feuer unterm Hintern zu machen! Jeder Klick verkürzt ihre Zeit für Teil 2. #HalloWelt2 #AutorenQuälen";
+        const shareText = "Helfen Sie mit, den Autoren von 'Hallo Welt' Feuer unterm Hintern zu machen! Jeder Klick verkürzt die Wartezeit auf Teil 2. #HalloWelt2 #AutorenQuälen";
         const shareUrl = window.location.href;
         navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
         toast({
             title: "Kopiert!",
-            description: "Der Text zum Teilen wurde in die Zwischenablage kopiert. Mobilisiere die Massen!",
+            description: "Der Text zum Teilen wurde in die Zwischenablage kopiert.",
         });
     }
 
@@ -91,10 +91,10 @@ export function CountdownTeaser() {
         <div className="flex flex-col items-center justify-center space-y-6 text-center">
           <div className="space-y-4">
             <h2 className="text-4xl font-bold font-headline tracking-tighter sm:text-5xl md:text-6xl text-balance">
-              Hallo Welt 2 braucht... noch etwas.
+              Hallo Welt 2 braucht ... noch etwas.
             </h2>
             <p className="max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-                Die Autoren sind langsam. Sehr langsam. Hilf uns, ihnen Dampf zu machen und verkürze die Wartezeit auf das nächste Meisterwerk des literarischen Unsinns.
+                Die Autoren sind langsam. Helfen Sie uns, ihnen Dampf zu machen und so die Wartezeit auf das nächste Meisterwerk des literarischen Unsinns zu verkürzen.
             </p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
@@ -106,7 +106,7 @@ export function CountdownTeaser() {
             ))}
           </div>
           <div className='text-center space-y-4 pt-6'>
-            <p className='font-semibold'>Mach den Autoren Philipp und Max Dampf unter den Ärschen und verkürze deren Zeit:</p>
+            <p className='font-semibold'>Machen Sie den Autoren Philipp und Max Dampf unter den Ärschen:</p>
             <div className='flex flex-col sm:flex-row gap-4 justify-center'>
                  <Button size="lg" onClick={reduceTime}>
                     <Zap className="mr-2" />

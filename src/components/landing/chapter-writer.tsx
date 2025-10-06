@@ -94,7 +94,7 @@ export function ChapterWriter() {
                                 className="w-full text-base p-4 min-h-[200px] resize-none overflow-hidden"
                                 value={chapterText}
                                 onChange={(e) => setChapterText(e.target.value)}
-                                placeholder="Beginne hier Dein Kapitel..."
+                                placeholder="Beginnen Sie hier Ihr Kapitel ..."
                             />
                         </div>
                     </CardContent>

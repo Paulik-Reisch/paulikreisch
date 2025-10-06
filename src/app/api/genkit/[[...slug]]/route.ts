@@ -1,7 +1,5 @@
-
-'use server';
-
-import { createApiRoute } from '@genkit-ai/next';
+// KEIN 'use server' - das ist für Server Actions, nicht für API Routes!
+import { nextApiRoute } from '@genkit-ai/next';
 import { ai } from '@/ai/genkit';
 
 // Flows importieren (werden bei Build & Runtime automatisch registriert)
@@ -15,4 +13,5 @@ import '@/ai/flows/generate-satire-type-flow';
 import '@/ai/flows/generate-testimonial';
 import '@/ai/flows/pfeifer-translate-flow';
 
-export const { GET, POST } = createApiRoute({ ai });
+// Korrekte Export-Syntax für Next.js App Router
+export const { GET, POST } = nextApiRoute({ ai });

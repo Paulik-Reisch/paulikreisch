@@ -25,10 +25,10 @@ export function HeroBuerokratieSimulator() {
         <div className="flex flex-col items-center space-y-6 text-center">
           <div className="space-y-4">
             <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl xl:text-8xl/none text-balance">
-              Willkommen im Bürokratie-Simulator 3000
+              Willkommen im Bürokratie-Simulator
             </h1>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl text-balance">
-              Füllen Sie den Antrag auf Beantragung eines Antragsformulars aus. Einfach, digital und absolut effizient.
+              Füllen Sie den Antrag auf Beantragung eines Antragsformulars aus. Einfach, digital und effizient.
             </p>
           </div>
         </div>
@@ -69,7 +69,7 @@ export function HeroBuerokratieSimulator() {
                     <Button onClick={handleDisabledClick}><FilePlus className="mr-2"/>Speichern</Button>
                     <Button onClick={handleDisabledClick} variant="destructive"><FileMinus className="mr-2"/>Löschen</Button>
                 </div>
-                 <p className="text-xs text-muted-foreground pt-4">*Hinweis: Keiner dieser Buttons hat eine Funktion. Dies ist eine Simulation deutscher Effizienz.</p>
+                 <p className="text-xs text-muted-foreground pt-4">Hinweis: Keiner dieser Buttons hat eine Funktion. Dies ist eine Simulation!</p>
             </form>
         </div>
       </div>

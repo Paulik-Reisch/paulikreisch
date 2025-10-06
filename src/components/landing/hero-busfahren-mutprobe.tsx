@@ -18,7 +18,7 @@ export function HeroBusfahrenMutprobe() {
           Busfahren = Tägliche Mutprobe
         </h1>
         <p className="max-w-[700px] text-lg md:text-xl">
-          Der Nahverkehr als moderner Gladiatorenkampf. Nur die Stärksten bekommen einen Sitzplatz. Die anderen? Ein unvergessliches Aroma-Erlebnis.
+          Der Nahverkehr als moderner Gladiatorenkampf. Nur die Stärksten bekommen einen Sitzplatz – die anderen ein unvergessliches Erlebnis.
         </p>
         <Button size="lg">
           <Download className="mr-2" />

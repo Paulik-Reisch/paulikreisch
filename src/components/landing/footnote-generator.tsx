@@ -22,7 +22,7 @@ function SubmitButton() {
       {pending ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Wird generiert...
+          Wird generiert ...
         </>
       ) : (
         <>
@@ -54,7 +54,7 @@ export function FootnoteGenerator() {
         <CardHeader>
           <CardTitle className="font-headline">Fußnoten-Generator</CardTitle>
           <CardDescription>
-            Gib ein beliebiges Wort ein und die KI erstellt eine passende, absolut überflüssige Erklärung.
+            Geben Sie ein beliebiges Wort ein und die KI erstellt eine passende und absolut überflüssige Erklärung.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

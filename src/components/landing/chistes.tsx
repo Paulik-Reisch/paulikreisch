@@ -76,7 +76,7 @@ export function Chistes({ chistes }: { chistes: Chiste[] }) {
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                     <Input 
-                        placeholder="Suchen nach Witz, Übersetzung oder Erklärung..."
+                        placeholder="Suchen nach Witz, Übersetzung oder Erklärung ..."
                         className="pl-10 h-12 text-lg bg-white"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
