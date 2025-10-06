@@ -22,7 +22,6 @@ import {
   addLog,
 } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
-import { correctHtml } from "@/ai/flows/correct-html-flow";
 import { cookies } from "next/headers";
 import { encrypt, getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
@@ -86,34 +85,6 @@ export async function logoutAction() {
 const CorrectHtmlSchema = z.object({
   html: z.string(),
 });
-
-export async function correctHtmlAction(
-    prevState: { correctedHtml?: string; error?: string },
-    formData: FormData
-) {
-    const session = await getSession();
-    if (!session) {
-        return { error: "Nicht authentifiziert" };
-    }
-
-    const validatedFields = CorrectHtmlSchema.safeParse({
-        html: formData.get("html"),
-    });
-
-    if (!validatedFields.success) {
-        return { error: "Ungültige Eingabe." };
-    }
-
-    try {
-        const result = await correctHtml(validatedFields.data);
-        await addLog(session.user.id, 'KI-Aktion: HTML korrigiert', `Länge: ${result.correctedHtml.length} Zeichen`);
-        return { correctedHtml: result.correctedHtml };
-    } catch (e) {
-        console.error(e);
-        return { error: "HTML konnte nicht korrigiert werden. Die KI ist möglicherweise im Urlaub." };
-    }
-}
-
 
 // Newsletter Editor Actions
 export type AdminNewsletterState = {
@@ -641,10 +612,10 @@ export async function updateExcerptAction(
   const formEntries = Object.fromEntries(formData.entries());
   
   const dataToValidate: { [key: string]: any } = {};
-  if (formEntries.slug) dataToValidate.slug = formEntries.slug;
-  if (formEntries.title) dataToValidate.title = formEntries.title;
-  if (formEntries.content) dataToValidate.content = formEntries.content;
-  if (formEntries.isPublished) dataToValidate.isPublished = formEntries.isPublished === 'true';
+  if ('slug' in formEntries) dataToValidate.slug = formEntries.slug;
+  if ('title' in formEntries) dataToValidate.title = formEntries.title;
+  if ('content' in formEntries) dataToValidate.content = formEntries.content;
+  if ('isPublished' in formEntries) dataToValidate.isPublished = formEntries.isPublished === 'true';
 
   const validatedFields = UpdateExcerptSchema.safeParse(dataToValidate);
 
@@ -670,5 +641,3 @@ export async function updateExcerptAction(
     return { success: false, error: "Fehler beim Aktualisieren: " + error.message };
   }
 }
-
-    

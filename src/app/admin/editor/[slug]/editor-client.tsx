@@ -2,10 +2,11 @@
 
 "use client";
 
-import { useState, useEffect, useActionState, useTransition } from "react";
+import { useState, useEffect, useTransition } from "react";
+import { useFormState } from "react-dom";
 import Link from "next/link";
 import { LegalPage, PageComponent } from "@/lib/firestore";
-import { updateLegalPageAction, correctHtmlAction } from "@/app/admin/actions";
+import { updateLegalPageAction } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -405,12 +406,10 @@ export function EditorClient({ page }: { page: LegalPage }) {
   const [showDate, setShowDate] = useState(page.showDate !== false);
 
 
-  const [updateState, updateFormAction] = useActionState(updateLegalPageAction, initialLegalPageState);
-  const [correctState, correctFormAction] = useActionState(correctHtmlAction, { correctedHtml: undefined, error: undefined });
+  const [updateState, updateFormAction] = useFormState(updateLegalPageAction, initialLegalPageState);
 
   const { toast } = useToast();
   const [isSaving, startSavingTransition] = useTransition();
-  const [isCorrecting, startCorrectingTransition] = useTransition();
 
   useEffect(() => {
     // This effect runs only on the client, after hydration
@@ -440,17 +439,6 @@ export function EditorClient({ page }: { page: LegalPage }) {
     }
   }, [updateState, toast]);
 
-   useEffect(() => {
-    if (correctState.correctedHtml) {
-        setGeneratedHtml(correctState.correctedHtml);
-        setHasManuallyEditedHtml(true);
-        toast({ title: "KI-Korrektur", description: "Der HTML-Code wurde von der KI optimiert." });
-    }
-    if (correctState.error) {
-        toast({ variant: "destructive", title: "Fehler", description: correctState.error });
-    }
-  }, [correctState, toast]);
-
 
   const handleFormSubmit = (formData: FormData) => {
     startSavingTransition(() => {
@@ -468,14 +456,6 @@ export function EditorClient({ page }: { page: LegalPage }) {
             formData.set('components', JSON.stringify(components));
         }
         updateFormAction(formData);
-    });
-  };
-
-  const handleCorrectHtml = () => {
-    startCorrectingTransition(() => {
-        const formData = new FormData();
-        formData.set('html', generatedHtml);
-        correctFormAction(formData);
     });
   };
   
@@ -637,28 +617,6 @@ export function EditorClient({ page }: { page: LegalPage }) {
                             value={generatedHtml}
                             onChange={handleHtmlChange}
                         />
-                    </div>
-                    <div className="pt-2 flex justify-end">
-                        <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                                <Button variant="outline" size="sm" disabled={isCorrecting}>
-                                {isCorrecting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
-                                KI-Korrektur
-                                </Button>
-                            </AlertDialogTrigger>
-                             <AlertDialogContent>
-                                <AlertDialogHeader>
-                                <AlertDialogTitle>HTML mit KI korrigieren?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    Diese Aktion analysiert den aktuellen HTML-Code und versucht, ihn zu bereinigen und zu verbessern, ohne den Inhalt zu verändern. Bestehende Komponenten-Struktur geht verloren. Fortfahren?
-                                </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                <AlertDialogCancel>Abbrechen</AlertDialogCancel>
-                                <AlertDialogAction onClick={handleCorrectHtml}>Ja, korrigieren</AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
                     </div>
                 </TabsContent>
             </Tabs>

@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -151,38 +152,6 @@ export function InteractiveIdeas() {
           </div>
         </div>
         <div className="mt-16 space-y-24">
-          {ideas.map((idea, i) => (
-            <div
-              key={idea.title}
-              className="grid lg:grid-cols-2 gap-12 items-center"
-            >
-              <div
-                className={cn("relative aspect-square max-w-lg mx-auto w-full", i % 2 === 1 && "lg:order-last")}
-              >
-                {idea.shape}
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8 text-black">
-                    <idea.icon className="h-16 w-16 mb-4" />
-                    <h3 className="font-headline text-3xl font-bold text-balance">
-                        {idea.title}
-                    </h3>
-                     <Badge variant="secondary" className="mt-2 text-sm">{idea.book}</Badge>
-                </div>
-              </div>
-              <div className="space-y-6">
-                <h3 className="text-4xl font-bold font-headline tracking-tight">
-                  {idea.title}
-                </h3>
-                <p className="text-muted-foreground text-lg leading-relaxed text-balance">
-                  {idea.description}
-                </p>
-                <Link href={idea.link}>
-                  <Button size="lg">
-                    {idea.cta} <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          ))}
         </div>
       </div>
     </section>
