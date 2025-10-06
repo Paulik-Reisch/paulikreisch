@@ -11,12 +11,12 @@ import {
 const reviews = [
     {
         stars: 5,
-        text: "Ich dachte, ich hätte schon alles gelesen. Dann kam 'Hallo Welt' und hat mein Gehirn neu verkabelt. Aua. Aber gut.",
+        text: "Ich dachte, ich hätte schon alles gelesen. Dann kam 'Hallo Welt' und hat mein Gehirn neu verkabelt.",
         author: "Ein Literaturkritiker",
     },
     {
         stars: 4,
-        text: "Dieses Buch hat mir gezeigt, dass mein Leben gar nicht so chaotisch ist. Danke?",
+        text: "Dieses Buch hat mir gezeigt, dass mein Leben gar nicht so chaotisch ist.",
         author: "Eine dankbare Leserin",
     },
     {

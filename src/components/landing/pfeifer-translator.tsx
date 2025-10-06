@@ -29,7 +29,7 @@ function TranslateButton() {
       {pending ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Pfeife...
+          Pfeife ...
         </>
       ) : (
         <>
@@ -86,7 +86,7 @@ export function PfeiferTranslator() {
   const handleCopyToClipboard = (text: string) => {
     if (!text) return;
     navigator.clipboard.writeText(text);
-    toast({ title: 'Kopiert!', description: 'Der Text wurde in Deine Zwischenablage kopiert.' });
+    toast({ title: 'Kopiert!', description: 'Der Text wurde in die Zwischenablage kopiert.' });
   };
   
   return (
@@ -127,7 +127,7 @@ export function PfeiferTranslator() {
                 name="text"
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
-                placeholder="Hier Text eingeben..."
+                placeholder="Hier Text eingeben ..."
                 className="flex-grow bg-transparent border-0 focus-visible:ring-0 resize-none text-lg p-2"
                 rows={8}
               />
@@ -182,7 +182,7 @@ export function PfeiferTranslator() {
                     ) : outputText ? (
                         <p>{outputText}</p>
                     ) : (
-                        <span className="text-muted-foreground">Übersetzung erscheint hier...</span>
+                        <span className="text-muted-foreground">Übersetzung erscheint hier ...</span>
                     )}
                </div>
                <div className="flex justify-between items-center mt-2 px-2">

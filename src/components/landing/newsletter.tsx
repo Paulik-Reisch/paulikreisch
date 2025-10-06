@@ -62,7 +62,7 @@ export function Newsletter() {
           </form>
            {showConfetti && <Confetti onComplete={() => setShowConfetti(false)} />}
           <p className="text-xs text-black/80">
-            Melden Dich an, um benachrichtigt zu werden, wenn wir etwas Neues veröffentlichen. Wir werden Deine E-Mail wahrscheinlich niemals weitergeben.
+            Jetzt anmelden, um benachrichtigt zu werden, wenn wir etwas Neues veröffentlichen. Wir werden Ihre E-Mail wahrscheinlich niemals weitergeben.
           </p>
         </div>
       </div>

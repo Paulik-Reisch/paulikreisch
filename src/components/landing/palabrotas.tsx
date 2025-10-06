@@ -75,11 +75,11 @@ function AgeVerification({ onConfirm }: { onConfirm: () => void }) {
     <div className="max-w-md mx-auto my-12 md:my-24">
        <Card className="bg-white">
             <CardHeader className="text-center">
-                <CardTitle className="font-headline text-2xl">Bestätige dein Alter</CardTitle>
+                <CardTitle className="font-headline text-2xl">Bestätigen Sie Alter</CardTitle>
             </CardHeader>
             <CardContent className="text-center space-y-6">
                 <p className="text-muted-foreground">
-                    Diese Seite enthält sensible Inhalte. Um fortzufahren, bestätige bitte dein Alter.
+                    Diese Seite enthält sensible Inhalte. Um fortzufahren, bestätigen Sie bitte Ihr Alter.
                 </p>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <Input type="date" name="birthdate" required className="text-center"/>
@@ -143,7 +143,7 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                     <Input 
-                        placeholder="Suchen nach Deutsch oder Spanisch..."
+                        placeholder="Suchen nach Deutsch oder Spanisch ..."
                         className="pl-10 h-12 text-lg bg-white"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -227,7 +227,7 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
                     <p>Für Ihre Suche oder Filter wurde kein passendes Wort gefunden.</p>
                 </div>
             )}
-        <p className="text-xs text-center text-muted-foreground mt-8">*Haftungsausschluss: Die Autoren übernehmen keine Verantwortung für daraus resultierende soziale oder diplomatische Verwicklungen.</p>
+        <p className="text-xs text-center text-muted-foreground mt-8">Haftungsausschluss: Die Autoren übernehmen keine Verantwortung für daraus resultierende soziale oder diplomatische Verwicklungen.</p>
         </div>
     </section>
   );
