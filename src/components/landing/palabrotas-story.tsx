@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useEffect, useMemo, useCallback, useTransition } from "react";
@@ -39,7 +40,7 @@ function ProgressBar({ count, current, onSegmentClick, isPaused, onAnimationComp
             animate={ i === current ? controls : { width: i < current ? "100%" : "0%" }}
             transition={ i < current ? { duration: 0.1, ease: "linear" } : undefined}
             onAnimationComplete={() => {
-                if (i === current) {
+                if (i === current && !isPaused) {
                     onAnimationComplete();
                 }
             }}
