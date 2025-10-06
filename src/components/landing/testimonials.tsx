@@ -11,7 +11,7 @@ export function Testimonials() {
             Begeisterte Kritiken von unseren Fans
           </h2>
           <p className="mx-auto max-w-[600px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-            Verlass Dich nicht nur auf unser Wort.
+            Verlassen Sie sich nicht nur auf unser Wort.
           </p>
         </div>
         <div className="grid w-full grid-cols-1 lg:grid-cols-3 gap-6 pt-8">

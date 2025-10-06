@@ -244,13 +244,13 @@ export function SignatureOrderForm({ book }: { book: Product }) {
                              <div className="pl-2">
                                 <Textarea 
                                     {...register("hw1_customDedication")} 
-                                    placeholder="Ihr Wunschtext für die Nachwelt (max. 150 Zeichen)..."
+                                    placeholder="Ihr Wunschtext für die Nachwelt (max. 150 Zeichen) ..."
                                     maxLength={150}
                                 />
                              </div>
                         )}
                          {!watchFields.hw1_provideDedication && (
-                                <p className="text-xs text-muted-foreground pl-2 italic">Wenn Sie nichts vorgeben, lassen wir uns etwas furchtbar Passendes für Sie einfallen.</p>
+                                <p className="text-xs text-muted-foreground pl-2 italic">Wenn Sie nichts vorgeben, lassen wir uns etwas Furchtbares für Sie einfallen.</p>
                             )}
                     </div>
                 )}
@@ -313,13 +313,13 @@ export function SignatureOrderForm({ book }: { book: Product }) {
                                  <div className="pl-2">
                                     <Textarea 
                                         {...register("hw2_customDedication")} 
-                                        placeholder="Ihr Wunschtext für die Nachwelt (max. 150 Zeichen)..."
+                                        placeholder="Ihr Wunschtext für die Nachwelt (max. 150 Zeichen) ..."
                                         maxLength={150}
                                     />
                                  </div>
                             )}
                              {!watchFields.hw2_provideDedication && (
-                                <p className="text-xs text-muted-foreground pl-2 italic">Wenn Sie nichts vorgeben, lassen wir uns etwas furchtbar Passendes für Sie einfallen.</p>
+                                <p className="text-xs text-muted-foreground pl-2 italic">Wenn Sie nichts vorgeben, lassen wir uns etwas Furchtbares für Sie einfallen.</p>
                             )}
                         </div>
                     )}
@@ -434,8 +434,8 @@ export function SignatureOrderForm({ book }: { book: Product }) {
         <div className="mt-8 flex flex-col items-center gap-4">
              <Button type="submit" size="lg" className="w-full text-lg h-14" disabled={isSubmitting}>
                 {isSubmitting 
-                    ? <><Loader2 className="mr-2 h-6 w-6 animate-spin" />Wird geprüft...</>
-                    : <><CheckCircle className="mr-2 h-6 w-6" />Jetzt unwiderruflich kostenpflichtig bestellen!</>
+                    ? <><Loader2 className="mr-2 h-6 w-6 animate-spin" />Wird geprüft ...</>
+                    : <><CheckCircle className="mr-2 h-6 w-6" />Jetzt bestellen!</>
                 }
             </Button>
             <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="w-full">
