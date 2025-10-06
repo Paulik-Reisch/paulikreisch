@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useTransition } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { textToSpeechAction } from "@/app/admin/actions";
 import { useActionState } from "react";
@@ -56,8 +56,9 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
   const [view, setView] = useState<View>("word");
   const [direction, setDirection] = useState(0);
   const [audioSrc, setAudioSrc] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
   
-  const [ttsState, ttsAction, isTtsPending] = useActionState(textToSpeechAction, { audio: undefined, error: undefined });
+  const [ttsState, ttsAction] = useActionState(textToSpeechAction, { audio: undefined, error: undefined });
 
   const currentWord = words[currentIndex];
 
@@ -75,8 +76,10 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
     const textToSpeak = view === 'word' ? currentWord.es : currentWord.beispiel;
     const formData = new FormData();
     formData.append("text", textToSpeak);
-    ttsAction(formData);
-  }, [view, currentWord, ttsAction]);
+    startTransition(() => {
+        ttsAction(formData);
+    });
+  }, [view, currentWord, ttsAction, startTransition]);
   
   useEffect(() => {
     if (ttsState.audio) {
@@ -178,9 +181,9 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
         <button
             onClick={handlePlaySound}
             className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white/20"
-            disabled={isTtsPending}
+            disabled={isPending}
         >
-            {isTtsPending ? <Loader2 className="animate-spin" size={28}/> : <Volume2 size={28} />}
+            {isPending ? <Loader2 className="animate-spin" size={28}/> : <Volume2 size={28} />}
         </button>
         <div className="flex items-center bg-black/30 rounded-full p-1">
             <button
