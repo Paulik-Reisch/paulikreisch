@@ -1,35 +1,16 @@
 
+
 "use client";
 
-import { useState, useEffect, useMemo, useCallback, useTransition } from "react";
-import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { AnimatePresence, motion, useAnimationControls, useDragControls } from "framer-motion";
 import { Palabrota } from "@/lib/firestore";
-import { X, ChevronLeft, ChevronRight, Volume2, Pause, Play } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, Volume2, Pause, Play, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Badge } from "../ui/badge";
 
-type View = "word" | "sentence";
-
 function ProgressBar({ count, current, onSegmentClick, isPaused, onAnimationComplete }: { count: number; current: number; onSegmentClick: (index: number) => void; isPaused: boolean; onAnimationComplete: () => void; }) {
-  const controls = useAnimationControls();
-  
-  useEffect(() => {
-    if (isPaused) {
-      controls.stop();
-    } else {
-      // Trigger animation only for the current bar
-      if (current < count) {
-        controls.set({ width: "0%" }); // Reset before starting
-        controls.start({
-          width: "100%",
-          transition: { duration: 5, ease: "linear" }
-        });
-      }
-    }
-  }, [current, isPaused, controls, count]);
-
-
   return (
     <div className="flex w-full gap-1 px-4 pt-4">
       {Array.from({ length: count }).map((_, i) => (
@@ -44,9 +25,9 @@ function ProgressBar({ count, current, onSegmentClick, isPaused, onAnimationComp
             animate={
                 i < current
                 ? { width: '100%' }
-                : i === current
-                ? controls
-                : { width: '0%' }
+                : i === current && !isPaused
+                ? { width: '100%', transition: { duration: 5, ease: "linear" }}
+                : { width: i === current && isPaused ? '0%' : '0%' } // Keep current paused bar at its current state. Will be handled by stopping. Let's restart on pause.
             }
             onAnimationComplete={() => {
                 if (i === current && !isPaused) {
@@ -80,13 +61,67 @@ function GlareEffect() {
     )
 }
 
+function DetailRow({ label, children }: { label: string; children: React.ReactNode }) {
+    return (
+        <div>
+            <span className="text-xs text-neutral-400 font-semibold uppercase tracking-wider">{label}</span>
+            <div className="mt-1 text-white">{children}</div>
+        </div>
+    )
+}
+
+function InfoSheet({ word, onClose }: { word: Palabrota, onClose: () => void }) {
+    const controls = useDragControls();
+    
+    return (
+         <motion.div
+            className="absolute bottom-0 left-0 right-0 h-[85%] bg-neutral-900 rounded-t-3xl shadow-2xl z-30"
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            drag="y"
+            dragControls={controls}
+            dragListener={false}
+            dragConstraints={{ top: 0, bottom: 0 }}
+            dragElastic={{ top: 0, bottom: 0.5 }}
+            onDragEnd={(event, info) => {
+              if (info.offset.y > 100) {
+                onClose();
+              }
+            }}
+        >
+            <div 
+                className="w-full h-8 flex justify-center items-center cursor-grab touch-none"
+                onPointerDown={(e) => controls.start(e)}
+            >
+                <div className="w-10 h-1.5 bg-neutral-700 rounded-full"/>
+            </div>
+            <div className="p-6 pt-0 space-y-6 overflow-y-auto h-[calc(100%-2rem)]">
+                <DetailRow label="Wortart">
+                    <p className="font-semibold">{word.wortart}</p>
+                </DetailRow>
+                 <DetailRow label="Anwendung">
+                    <p>{word.anwendung}</p>
+                </DetailRow>
+                 <DetailRow label="Synonyme">
+                    <p className="italic">{word.synonyme}</p>
+                </DetailRow>
+                <DetailRow label="Beispielsatz">
+                    <blockquote className="border-l-4 border-white/30 pl-4 py-1 my-0 text-lg">"{word.beispiel}"</blockquote>
+                </DetailRow>
+            </div>
+        </motion.div>
+    )
+}
+
 
 export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClose: () => void }) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [view, setView] = useState<View>("word");
   const [direction, setDirection] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
   
   const currentWord = words[currentIndex];
   const currentColor = `hsl(${currentIndex * 10}, 80%, 70%)`;
@@ -103,7 +138,7 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
     }
     setDirection(newDirection);
     setCurrentIndex(newIndex);
-    setView('word');
+    setIsInfoOpen(false);
     window.speechSynthesis.cancel();
     setIsSpeaking(false);
   }, [currentIndex, words.length, onClose]);
@@ -115,7 +150,7 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
         return;
     }
 
-    const textToSpeak = view === 'word' ? currentWord.es : currentWord.beispiel;
+    const textToSpeak = currentWord.es;
     const utterance = new SpeechSynthesisUtterance(textToSpeak);
     utterance.lang = 'es-ES';
     
@@ -132,12 +167,12 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
     }
     
     window.speechSynthesis.speak(utterance);
-  }, [view, currentWord, isSpeaking]);
+  }, [currentWord, isSpeaking]);
   
   const handleSegmentClick = (index: number) => {
     setDirection(index > currentIndex ? 1 : -1);
     setCurrentIndex(index);
-    setView('word');
+    setIsInfoOpen(false);
     window.speechSynthesis.cancel();
     setIsSpeaking(false);
   }
@@ -171,7 +206,7 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
               count={words.length} 
               current={currentIndex} 
               onSegmentClick={handleSegmentClick} 
-              isPaused={isPaused || isSpeaking}
+              isPaused={isPaused || isSpeaking || isInfoOpen}
               onAnimationComplete={() => paginate(1)} 
             />
              <div className="flex items-center justify-between p-4">
@@ -228,7 +263,6 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
                 }}
                 className="absolute flex flex-col justify-center items-center text-white text-center px-12 w-full"
                 >
-                {view === "word" ? (
                     <>
                         <p className="text-2xl text-white/70">{currentWord.de}</p>
                         <div className="relative overflow-hidden my-4">
@@ -239,16 +273,9 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
                         </div>
                         {currentWord.phonetik && <p className="text-lg text-white/50 italic">{currentWord.phonetik}</p>}
                     </>
-                ) : (
-                    <div className="relative overflow-hidden">
-                        <p className="text-2xl md:text-3xl italic">"{currentWord.beispiel}"</p>
-                        {isSpeaking && <GlareEffect />}
-                    </div>
-                )}
                 </motion.div>
             </AnimatePresence>
         </div>
-
 
         <footer className="w-full max-w-sm mx-auto p-4 z-20 flex items-center justify-center gap-4">
              <button
@@ -264,21 +291,18 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
             >
                 <Volume2 size={28} />
             </button>
-            <div className="flex items-center bg-black/30 rounded-full p-1">
-                <button
-                onClick={() => setView("word")}
-                className={cn("px-6 py-2 rounded-full text-white/70 font-semibold transition-colors", view === "word" && "bg-white/20 text-white")}
-                >
-                Wort
-                </button>
-                <button
-                onClick={() => setView("sentence")}
-                className={cn("px-6 py-2 rounded-full text-white/70 font-semibold transition-colors", view === "sentence" && "bg-white/20 text-white")}
-                >
-                Satz
-                </button>
-            </div>
+            <button
+                onClick={() => setIsInfoOpen(!isInfoOpen)}
+                className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+                title="Info"
+            >
+                <Info size={20} />
+            </button>
         </footer>
+
+        <AnimatePresence>
+            {isInfoOpen && <InfoSheet word={currentWord} onClose={() => setIsInfoOpen(false)} />}
+        </AnimatePresence>
     </motion.div>
   );
 }
