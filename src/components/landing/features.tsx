@@ -17,7 +17,7 @@ export function Features() {
               <Drama className="h-10 w-10 mx-auto" />
               <h3 className="text-xl font-bold font-headline">Unvergessliche Charaktere</h3>
               <p className="text-sm text-white/80 text-balance">
-                Treffen Sie eine Besetzung von Charakteren, die so bizarr ist, dass sie für immer mietfrei in Ihrem Kopf leben wird.
+                Treffen Sie Charaktere, die so bizarr sind, dass sie für immer mietfrei in Ihrem Kopf leben werden.
               </p>
             </CardContent>
           </Card>
