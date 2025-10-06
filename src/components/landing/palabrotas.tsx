@@ -115,10 +115,8 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
     }
   }, [skipVerification]);
 
-  const top40Palabrotas = useMemo(() => {
-    return [...vocabulary]
-      .sort((a, b) => b.pfeiferFaktor - a.pfeiferFaktor)
-      .slice(0, 40);
+  const allPalabrotasSorted = useMemo(() => {
+    return [...vocabulary].sort((a, b) => b.pfeiferFaktor - a.pfeiferFaktor);
   }, [vocabulary]);
 
   const filteredVocabulary = useMemo(() => {
@@ -255,7 +253,7 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
             )}
         <p className="text-xs text-center text-muted-foreground mt-8">Haftungsausschluss: Die Autoren übernehmen keine Verantwortung für daraus resultierende soziale oder diplomatische Verwicklungen.</p>
         </div>
-        {isStoryOpen && <PalabrotasStory words={top40Palabrotas} onClose={() => setIsStoryOpen(false)} />}
+        {isStoryOpen && <PalabrotasStory words={allPalabrotasSorted} onClose={() => setIsStoryOpen(false)} />}
     </section>
   );
 }
