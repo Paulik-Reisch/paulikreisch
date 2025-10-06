@@ -618,7 +618,8 @@ export type AdminExcerptState = {
   success: boolean;
   error?: string | null;
   message?: string;
-  formData?: FormData;
+  slug?: string;
+  isPublished?: boolean;
 };
 
 const UpdateExcerptSchema = z.object({
@@ -640,10 +641,10 @@ export async function updateExcerptAction(
   const formEntries = Object.fromEntries(formData.entries());
   
   const dataToValidate: { [key: string]: any } = {};
-  if (formEntries.slug) dataToValidate.slug = formEntries.slug;
-  if (formEntries.title) dataToValidate.title = formEntries.title;
-  if (formEntries.content) dataToValidate.content = formEntries.content;
-  if (formEntries.isPublished) dataToValidate.isPublished = formEntries.isPublished === 'true';
+  if ('slug' in formEntries) dataToValidate.slug = formEntries.slug;
+  if ('title' in formEntries) dataToValidate.title = formEntries.title;
+  if ('content' in formEntries) dataToValidate.content = formEntries.content;
+  if ('isPublished' in formEntries) dataToValidate.isPublished = formEntries.isPublished === 'true';
 
   const validatedFields = UpdateExcerptSchema.safeParse(dataToValidate);
 
@@ -658,7 +659,12 @@ export async function updateExcerptAction(
     revalidatePath("/admin");
     revalidatePath(`/exzerpt/${slug}`);
     revalidatePath('/exzerpte');
-    return { success: true, message: "Exzerpt erfolgreich aktualisiert.", formData };
+    return { 
+        success: true, 
+        message: "Exzerpt erfolgreich aktualisiert.", 
+        slug: slug,
+        isPublished: dataToUpdate.isPublished
+    };
   } catch (e) {
     const error = e as Error;
     return { success: false, error: "Fehler beim Aktualisieren: " + error.message };
