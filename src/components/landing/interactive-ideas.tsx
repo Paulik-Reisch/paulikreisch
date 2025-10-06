@@ -145,9 +145,7 @@ export function InteractiveIdeas() {
               Interaktive Experimente aus dem "Hallo Welt"-Labor
             </h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-              Spielen Sie mit unseren verrückten Ideen, die es ins Buch
-              geschafft haben. Jedes Tool ist ein
-              Stück interaktiver Wahnsinn.
+              Spielen Sie mit unseren verrückten Ideen, die es ins Buch geschafft haben. Jedes Tool ist ein Stück interaktiver Wahnsinn.
             </p>
           </div>
         </div>

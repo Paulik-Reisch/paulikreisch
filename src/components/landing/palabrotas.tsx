@@ -157,7 +157,7 @@ export function Palabrotas({ vocabulary }: { vocabulary: Palabrota[] }) {
             </p>
             <PalabrotasStoryMockup />
             <div className="mt-8 text-center">
-                 <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground h-12 text-base animate-pulse" onClick={() => setIsStoryOpen(true)}>
+                 <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground h-12 text-base" onClick={() => setIsStoryOpen(true)}>
                     <GraduationCap className="mr-3 h-5 w-5"/>
                     Jetzt im Story-Mode lernen!
                 </Button>
