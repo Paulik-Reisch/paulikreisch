@@ -53,7 +53,7 @@ export function HeroLP2() {
               Hallo Welt 2 wird noch krasser als Hallo Welt 1
             </h1>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl animate-in fade-in slide-in-from-top-16 duration-1000">
-              Sie dachten, es geht nicht schlimmer? Oh, doch. Sei Sie der Erste, der einen exklusiven Auszug liest. Geben Sie hier Ihre E-Mail-Adresse ein.
+              Sie dachten, es geht nicht schlimmer? Oh, doch. Seien Sie der Erste, der einen exklusiven Auszug liest. Geben Sie hier Ihre E-Mail-Adresse ein.
             </p>
           </div>
           <div className="w-full max-w-md space-y-2 animate-in fade-in slide-in-from-top-20 duration-1000">
