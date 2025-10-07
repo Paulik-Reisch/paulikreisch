@@ -36,7 +36,7 @@ export default function RootLayout({
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className="font-body antialiased">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="light">
           {children}
           <Toaster />
           <CookieBanner />
