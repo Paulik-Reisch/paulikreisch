@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -36,6 +37,7 @@ export function Footer() {
             <Link href="/cookie-richtlinie" className="hover:underline">Cookie-Richtlinie</Link>
             <Link href="/agb" className="hover:underline">AGB</Link>
             <Link href="/lizenz" className="hover:underline">Lizenz</Link>
+            <Link href="/agb2" className="hover:underline">AGB2</Link>
             <div className="flex items-center space-x-2">
                 <Label htmlFor="theme-toggle" className="cursor-pointer text-xs w-[75px] text-left">
                     Whitemode
@@ -67,6 +69,7 @@ export function Footer() {
           <Link href="/cookie-richtlinie" className="hover:underline">Cookie-Richtlinie</Link>
           <Link href="/agb" className="hover:underline">AGB</Link>
           <Link href="/lizenz" className="hover:underline">Lizenz</Link>
+          <Link href="/agb2" className="hover:underline">AGB2</Link>
            <div className="flex items-center space-x-2">
             <Label htmlFor="theme-toggle" className="cursor-pointer text-xs w-[75px] text-left">
                 {currentLabel}
