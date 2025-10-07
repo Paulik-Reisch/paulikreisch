@@ -191,7 +191,7 @@ export async function getLogs(): Promise<Log[]> {
 
 // --- ADMIN ---
 export async function getAdminCredentials(): Promise<Record<string, string> | null> {
-    const docRef = doc(db, 'settings', 'credentials');
+    const docRef = doc(db, 'settings', 'admin');
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
