@@ -79,7 +79,7 @@ export function HeroMietenwahnsinn() {
             <div className="mt-8 pt-4 border-t-2 border-dashed">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
                 <h3 className="text-xl font-bold font-headline mb-2 sm:mb-0">Gesamtmiete pro Monat:</h3>
-                <p className="text-3xl font-bold font-mono text-primary animate-pulse">{totalRent.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</p>
+                <p className="text-3xl font-bold font-mono text-primary">{totalRent.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</p>
               </div>
               <div className="text-center mt-6">
                 <Button size="lg">Mietvertrag jetzt unterschreiben</Button>
