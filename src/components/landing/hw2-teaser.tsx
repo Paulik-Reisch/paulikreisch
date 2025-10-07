@@ -54,7 +54,7 @@ export function HW2Teaser() {
                     </CardContent>
                     <CardFooter className="justify-center">
                          <Link href={topic.link}>
-                            <Button variant="outline">
+                            <Button>
                                 {topic.cta} <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
                         </Link>
