@@ -65,11 +65,11 @@ export function HeroBuerokratieSimulator() {
                     </div>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 pt-4">
-                    <Button onClick={handleDisabledClick}><Send className="mr-2 h-5 w-5"/>Abschicken</Button>
-                    <Button onClick={handleDisabledClick}><Printer className="mr-2 h-5 w-5"/>Drucken</Button>
-                    <Button onClick={handleDisabledClick}><Upload className="mr-2 h-5 w-5"/>Hochladen</Button>
-                    <Button onClick={handleDisabledClick}><FilePlus className="mr-2 h-6 w-6"/>Speichern</Button>
-                    <Button onClick={handleDisabledClick} variant="destructive"><FileMinus className="mr-2 h-5 w-5"/>Löschen</Button>
+                    <Button onClick={handleDisabledClick}><Send className="mr-2 h-5 w-5 md:hidden"/>Abschicken</Button>
+                    <Button onClick={handleDisabledClick}><Printer className="mr-2 h-5 w-5 md:hidden"/>Drucken</Button>
+                    <Button onClick={handleDisabledClick}><Upload className="mr-2 h-5 w-5 md:hidden"/>Hochladen</Button>
+                    <Button onClick={handleDisabledClick}><FilePlus className="mr-2 h-6 w-6 md:hidden"/>Speichern</Button>
+                    <Button onClick={handleDisabledClick} variant="destructive"><FileMinus className="mr-2 h-5 w-5 md:hidden"/>Löschen</Button>
                 </div>
                  <p className="text-xs text-muted-foreground pt-4">Hinweis: Keiner dieser Buttons hat eine Funktion. Dies ist eine Simulation!</p>
             </form>
