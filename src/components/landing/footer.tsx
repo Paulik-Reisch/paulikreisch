@@ -1,6 +1,16 @@
+"use client";
+
 import Link from "next/link";
+import { useTheme } from "next-themes";
+import { Button } from "../ui/button";
 
 export function Footer() {
+  const { theme, setTheme } = useTheme();
+
+  const toggleTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
+  }
+
   return (
     <footer className="w-full border-t py-6 md:py-8 bg-muted/40">
       <div className="container mx-auto text-center flex flex-col items-center justify-center">
@@ -16,6 +26,9 @@ export function Footer() {
           <Link href="/cookie-richtlinie" className="hover:underline">Cookie-Richtlinie</Link>
           <Link href="/agb" className="hover:underline">AGB</Link>
           <Link href="/lizenz" className="hover:underline">Lizenz</Link>
+           <button onClick={toggleTheme} className="hover:underline">
+            Theme-Einstellung
+          </button>
         </div>
       </div>
     </footer>

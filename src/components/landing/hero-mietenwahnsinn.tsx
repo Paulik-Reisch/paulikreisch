@@ -9,13 +9,13 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Home, BedDouble, Heater, Wind, DoorOpen, KeyRound, Soup, BrickWall, Sparkles } from 'lucide-react';
 
 const extras = [
-  { id: 'heizung', label: 'Funktionierende Heizung', price: 250, icon: Heater },
-  { id: 'fenster', label: 'Ganze Fenster (nicht nur Scherben)', price: 150, icon: Wind },
-  { id: 'tuer', label: 'Eigene Tür', price: 100, icon: DoorOpen },
-  { id: 'tuerschloss', label: 'Türschloss (funktionsfähig)', price: 75, icon: KeyRound },
+  { id: 'heizung', label: 'intakte Heizung', price: 250, icon: Heater },
+  { id: 'fenster', label: 'ganze Fenster (nicht nur Scherben)', price: 150, icon: Wind },
+  { id: 'tuer', label: 'eigene Haustür', price: 100, icon: DoorOpen },
+  { id: 'tuerschloss', label: 'funktionsfähiges Türschloss', price: 75, icon: KeyRound },
   { id: 'kueche', label: 'Küchenmitbenutzung (Mo-Di, 03-04 Uhr)', price: 200, icon: Soup },
-  { id: 'waende', label: 'Alle vier Wände vorhanden', price: 400, icon: BrickWall },
-  { id: 'sauber', label: 'Professionell von Kakerlaken befreit', price: 125, icon: Sparkles },
+  { id: 'waende', label: 'alle vier Wände vorhanden', price: 400, icon: BrickWall },
+  { id: 'sauber', label: 'professionell von Kakerlaken befreit', price: 125, icon: Sparkles },
 ];
 
 export function HeroMietenwahnsinn() {
@@ -56,7 +56,7 @@ export function HeroMietenwahnsinn() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-x-8 gap-y-8 md:gap-y-4">
               <div className='space-y-4'>
-                <h3 className="font-semibold flex items-center gap-2"><BedDouble /> Grundmiete (kalt, ohne alles)</h3>
+                <h3 className="font-semibold flex items-center gap-2"><BedDouble /> Grundmiete</h3>
                 <p className="text-2xl font-bold">1.000,00 €</p>
                 <p className='text-xs text-muted-foreground'>Für 10 m² puren Luxus. Tageslicht optional und gegen Aufpreis.</p>
               </div>
@@ -69,7 +69,7 @@ export function HeroMietenwahnsinn() {
                       <Label htmlFor={id} className="flex items-center gap-2 text-sm cursor-pointer w-full">
                         <Icon className="h-5 w-5 text-primary"/>
                         <span className="flex-grow whitespace-nowrap">{label}</span>
-                        <span className="font-mono text-xs text-muted-foreground">(+ {price}€)</span>
+                        <span className="font-mono text-xs text-muted-foreground">(+{price}€)</span>
                       </Label>
                     </div>
                   ))}
