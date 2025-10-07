@@ -4,13 +4,21 @@ import Link from "next/link";
 import { useTheme } from "next-themes";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { useEffect, useState } from "react";
 
 export function Footer() {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleThemeChange = (checked: boolean) => {
     setTheme(checked ? 'dark' : 'light');
   }
+  
+  const currentLabel = theme === 'dark' ? 'Darkmode' : 'White';
 
   return (
     <footer className="w-full border-t py-6 md:py-8 bg-muted/40">
@@ -29,12 +37,13 @@ export function Footer() {
           <Link href="/lizenz" className="hover:underline">Lizenz</Link>
            <div className="flex items-center space-x-2">
             <Label htmlFor="theme-toggle" className="cursor-pointer text-xs">
-                {theme === 'dark' ? 'Darkmode' : 'White'}
+                {mounted ? currentLabel : 'White'}
             </Label>
             <Switch
               id="theme-toggle"
               checked={theme === 'dark'}
               onCheckedChange={handleThemeChange}
+              disabled={!mounted}
               className="h-4 w-7 [&>span]:h-3 [&>span]:w-3 [&>span]:data-[state=checked]:translate-x-3"
             />
           </div>
