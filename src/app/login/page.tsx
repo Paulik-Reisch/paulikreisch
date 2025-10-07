@@ -23,17 +23,8 @@ export default async function AdminLoginPage() {
           <div className="flex flex-col items-center justify-center text-center mb-12">
               <AdminIcon />
               <h1 className="font-semibold text-2xl mt-4">Paulik & Reisch</h1>
-              <p className="text-3xl font-bold tracking-tighter mt-1">IDSM/IFEM/IWFM</p>
-              <p className="text-3xl font-bold tracking-tighter">IMCORE</p>
           </div>
           <LoginForm />
-          <div className="mt-12 text-xs text-muted-foreground space-y-2 max-w-lg">
-              <p>Deine Administrationsdaten sind in der Datenbank hinterlegt.</p>
-              <p>Alle Deine IDSM*/IFEM**/IWFM*** Änderungen werden zuordbar auf Deinen Namen verbucht.</p>
-              <p className="pt-2">
-                  *IDSM (Internes Data & Storage Management), **IFEM (Internes Frontend Management), ***IWFM (Internes Workflow Management)
-              </p>
-          </div>
         </div>
       </div>
     </div>

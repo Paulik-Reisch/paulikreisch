@@ -190,16 +190,15 @@ export async function getLogs(): Promise<Log[]> {
 }
 
 // --- ADMIN ---
-export async function getAdminCredentials(): Promise<Record<string, string>> {
-    const docRef = doc(db, 'admin', 'credentials');
+export async function getAdminCredentials(): Promise<Record<string, string> | null> {
+    const docRef = doc(db, 'settings', 'credentials');
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-        // This is insecure, but per user request
         return docSnap.data() as Record<string, string>;
     } else {
-        console.warn("Admin credentials not found in collection 'admin'.");
-        return {};
+        console.warn("Admin credentials document not found in 'settings' collection.");
+        return null;
     }
 }
 
