@@ -5,6 +5,7 @@ import { Authors } from "@/components/landing/authors";
 import { Testimonials } from "@/components/landing/testimonials";
 import { Footer } from "@/components/landing/footer";
 import { FeaturesLP2 } from "@/components/landing/features-lp2";
+import { MaxEsFeo } from "@/components/landing/max-es-feo";
 
 export default function LP2() {
   return (
@@ -13,6 +14,7 @@ export default function LP2() {
       <main className="flex-1">
         <HeroLP2 />
         <FeaturesLP2 />
+        <MaxEsFeo />
         <Authors />
         <Testimonials />
       </main>
