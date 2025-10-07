@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useMemo } from 'react';
@@ -53,7 +54,7 @@ export function HeroMietenwahnsinn() {
             <CardDescription>Stellen Sie sich Ihr individuelles Luxuspaket zusammen.</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8 md:gap-y-4">
               <div className='space-y-4'>
                 <h3 className="font-semibold flex items-center gap-2"><BedDouble /> Grundmiete (kalt, ohne alles)</h3>
                 <p className="text-2xl font-bold">1.000,00 €</p>
@@ -76,8 +77,8 @@ export function HeroMietenwahnsinn() {
               </div>
             </div>
             <div className="mt-8 pt-4 border-t-2 border-dashed">
-              <div className="flex justify-between items-center">
-                <h3 className="text-xl font-bold font-headline">Gesamtmiete pro Monat:</h3>
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                <h3 className="text-xl font-bold font-headline mb-2 sm:mb-0">Gesamtmiete pro Monat:</h3>
                 <p className="text-3xl font-bold font-mono text-primary animate-pulse">{totalRent.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</p>
               </div>
               <div className="text-center mt-6">

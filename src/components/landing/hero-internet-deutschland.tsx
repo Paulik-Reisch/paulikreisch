@@ -23,7 +23,7 @@ export function HeroInternetDeutschland() {
             </div>
           <div className="space-y-4">
             <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-balance">
-              Verbindung wird hergestellt{dots}
+              Verbindung wird hergestellt {dots}
             </h1>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl text-balance">
               Willkommen im deutschen Internet. Bitte warten Sie einen Moment. Oder zwei. Oder bis zum nächsten Jahrzehnt.
