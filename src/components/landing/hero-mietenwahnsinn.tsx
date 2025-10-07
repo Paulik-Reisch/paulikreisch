@@ -54,7 +54,7 @@ export function HeroMietenwahnsinn() {
             <CardDescription>Stellen Sie sich Ihr individuelles Luxuspaket zusammen.</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8 md:gap-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-[40%_60%] gap-x-8 gap-y-8 md:gap-y-4">
               <div className='space-y-4'>
                 <h3 className="font-semibold flex items-center gap-2"><BedDouble /> Grundmiete (kalt, ohne alles)</h3>
                 <p className="text-2xl font-bold">1.000,00 €</p>
@@ -68,7 +68,7 @@ export function HeroMietenwahnsinn() {
                       <Checkbox id={id} onCheckedChange={() => handleCheckboxChange(id)} />
                       <Label htmlFor={id} className="flex items-center gap-2 text-sm cursor-pointer w-full">
                         <Icon className="h-5 w-5 text-primary"/>
-                        <span className="flex-grow">{label}</span>
+                        <span className="flex-grow whitespace-nowrap">{label}</span>
                         <span className="font-mono text-xs text-muted-foreground">(+ {price}€)</span>
                       </Label>
                     </div>
