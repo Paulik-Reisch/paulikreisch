@@ -61,7 +61,7 @@ export function LoginForm() {
                            peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base 
                            peer-focus:top-1.5 peer-focus:text-xs peer-focus:text-gray-600
                            peer-[:not(:placeholder-shown)]:top-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-600">
-                Benutzer
+                Benutzername
             </Label>
         </div>
         <div className="relative group">
