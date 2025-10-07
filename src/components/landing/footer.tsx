@@ -34,8 +34,8 @@ export function Footer() {
             <p>© {new Date().getFullYear()} Paulik & Reisch. Alle Rechte vorbehalten.</p>
             <Link href="/impressum" className="hover:underline">Impressum</Link>
             <Link href="/datenschutz" className="hover:underline">Datenschutz</Link>
-            <Link href="/cookie-richtlinie" className="hover:underline">Cookie-Richtlinie</Link>
             <Link href="/agb" className="hover:underline">AGB</Link>
+            <Link href="/cookie-richtlinie" className="hover:underline">Cookie-Richtlinie</Link>
             
             <div className="flex items-center space-x-2">
                 <Label htmlFor="theme-toggle" className="cursor-pointer text-xs w-[75px] text-left">
@@ -65,8 +65,8 @@ export function Footer() {
           <p>© {new Date().getFullYear()} Paulik & Reisch. Alle Rechte vorbehalten.</p>
           <Link href="/impressum" className="hover:underline">Impressum</Link>
           <Link href="/datenschutz" className="hover:underline">Datenschutz</Link>
-          <Link href="/cookie-richtlinie" className="hover:underline">Cookie-Richtlinie</Link>
           <Link href="/agb" className="hover:underline">AGB</Link>
+          <Link href="/cookie-richtlinie" className="hover:underline">Cookie-Richtlinie</Link>
           
            <div className="flex items-center space-x-2">
             <Label htmlFor="theme-toggle" className="cursor-pointer text-xs w-[75px] text-left">
