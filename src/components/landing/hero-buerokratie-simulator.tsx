@@ -43,11 +43,11 @@ export function HeroBuerokratieSimulator() {
                     </div>
                      <div className='space-y-2'>
                         <Label htmlFor='antragsgrund'>Grund des Antrags (max. 3 Wörter)</Label>
-                        <Input id='antragsgrund' placeholder='Weil es so ist' disabled/>
+                        <Input id='antragsgrund' placeholder='Darum' disabled/>
                     </div>
                 </div>
                  <div className='space-y-2'>
-                    <Label>Zusätzliche Anlagen (bitte ankreuzen, was nicht zutrifft)</Label>
+                    <Label>Zusätzliche Anlagen (nur ankreuzen, was nicht zutrifft)</Label>
                     <div className='space-y-2 pl-2'>
                         <div className="flex items-center space-x-2">
                             <Checkbox id="anlage1" disabled defaultChecked/>
