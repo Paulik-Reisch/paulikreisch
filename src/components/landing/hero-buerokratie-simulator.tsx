@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from '@/components/ui/button';
@@ -66,7 +67,7 @@ export function HeroBuerokratieSimulator() {
                     <Button onClick={handleDisabledClick}><Send className="mr-2"/>Abschicken</Button>
                     <Button onClick={handleDisabledClick}><Printer className="mr-2"/>Drucken</Button>
                     <Button onClick={handleDisabledClick}><Upload className="mr-2"/>Hochladen</Button>
-                    <Button onClick={handleDisabledClick}><FilePlus className="mr-2"/>Speichern</Button>
+                    <Button onClick={handleDisabledClick}><FilePlus className="mr-2 h-6 w-6"/>Speichern</Button>
                     <Button onClick={handleDisabledClick} variant="destructive"><FileMinus className="mr-2"/>Löschen</Button>
                 </div>
                  <p className="text-xs text-muted-foreground pt-4">Hinweis: Keiner dieser Buttons hat eine Funktion. Dies ist eine Simulation!</p>
