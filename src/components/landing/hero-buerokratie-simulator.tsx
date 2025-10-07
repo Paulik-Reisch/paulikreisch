@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { Printer, Upload, Send, FilePlus, FileMinus } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export function HeroBuerokratieSimulator() {
   const { toast } = useToast();
@@ -64,11 +65,11 @@ export function HeroBuerokratieSimulator() {
                     </div>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 pt-4">
-                    <Button onClick={handleDisabledClick}><Send className="mr-2"/>Abschicken</Button>
-                    <Button onClick={handleDisabledClick}><Printer className="mr-2"/>Drucken</Button>
-                    <Button onClick={handleDisabledClick}><Upload className="mr-2"/>Hochladen</Button>
-                    <Button onClick={handleDisabledClick}><FilePlus className="mr-2 h-6 w-6"/>Speichern</Button>
-                    <Button onClick={handleDisabledClick} variant="destructive"><FileMinus className="mr-2"/>Löschen</Button>
+                    <Button onClick={handleDisabledClick} className="w-full h-10"><Send className="mr-2 h-4 w-4"/>Abschicken</Button>
+                    <Button onClick={handleDisabledClick} className="w-full h-10"><Printer className="mr-2 h-4 w-4"/>Drucken</Button>
+                    <Button onClick={handleDisabledClick} className="w-full h-10"><Upload className="mr-2 h-4 w-4"/>Hochladen</Button>
+                    <Button onClick={handleDisabledClick} className="w-full h-10"><FilePlus className="mr-2 h-4 w-4"/>Speichern</Button>
+                    <Button onClick={handleDisabledClick} variant="destructive" className="w-full h-10"><FileMinus className="mr-2 h-4 w-4"/>Löschen</Button>
                 </div>
                  <p className="text-xs text-muted-foreground pt-4">Hinweis: Keiner dieser Buttons hat eine Funktion. Dies ist eine Simulation!</p>
             </form>
