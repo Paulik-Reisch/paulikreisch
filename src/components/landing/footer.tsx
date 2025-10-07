@@ -28,11 +28,14 @@ export function Footer() {
           <Link href="/agb" className="hover:underline">AGB</Link>
           <Link href="/lizenz" className="hover:underline">Lizenz</Link>
            <div className="flex items-center space-x-2">
-            <Label htmlFor="theme-toggle" className="hover:underline cursor-pointer">Theme-Einstellung</Label>
+            <Label htmlFor="theme-toggle" className="cursor-pointer text-xs">
+                {theme === 'dark' ? 'Darkmode' : 'White'}
+            </Label>
             <Switch
               id="theme-toggle"
               checked={theme === 'dark'}
               onCheckedChange={handleThemeChange}
+              className="h-4 w-7 [&>span]:h-3 [&>span]:w-3 [&>span]:data-[state=checked]:translate-x-3"
             />
           </div>
         </div>
