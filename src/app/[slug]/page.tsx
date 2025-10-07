@@ -1,16 +1,58 @@
+"use client";
 
+import { useState, useEffect } from "react";
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
-import { getLegalPage } from "@/lib/firestore";
+import { getLegalPage, type LegalPage as LegalPageType } from "@/lib/firestore";
 import { notFound } from "next/navigation";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export default async function LegalPage({ params }: { params: { slug: string } }) {
-  const page = await getLegalPage(params.slug);
+export default function LegalPage({ params }: { params: { slug: string } }) {
+  const [page, setPage] = useState<LegalPageType | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getLegalPage(params.slug)
+      .then((data) => {
+        if (!data) {
+          // In a real app, you might want to handle this more gracefully
+          // For now, we'll just not render the content.
+          console.error(`Page not found for slug: ${params.slug}`);
+        }
+        setPage(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching legal page:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [params.slug]);
+  
+  if (loading) {
+    return (
+      <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
+        <Header />
+        <main className="flex-1 py-12 md:py-24">
+          <div className="container px-4 md:px-6">
+            <article className="prose prose-lg dark:prose-invert mx-auto">
+              <Skeleton className="h-12 w-3/4 mb-4" />
+              <Skeleton className="h-4 w-1/2 mb-8" />
+              <Skeleton className="h-6 w-full mb-4" />
+              <Skeleton className="h-6 w-full mb-4" />
+              <Skeleton className="h-6 w-5/6 mb-4" />
+            </article>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!page) {
-    notFound();
+    return notFound();
   }
 
   const lastUpdatedDate = format(new Date(page.lastUpdated), "dd. MMMM yyyy", { locale: de });
