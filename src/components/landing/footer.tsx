@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import { Button } from "../ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 export function Footer() {
   const { theme, setTheme } = useTheme();
 
-  const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
+  const handleThemeChange = (checked: boolean) => {
+    setTheme(checked ? 'dark' : 'light');
   }
 
   return (
@@ -19,16 +20,21 @@ export function Footer() {
           Die satirische "Hallo Welt"-Bücherserie ist eine Idee und Kreation von Philipp Paulik (Autor), Maximilian Reisch (Autor), Luin Schiffbauer (Illustrator) und weiteren Mitwirkenden.
           Veröffentlicht und produziert durch Kindle Direct Publishing (KDP) der Amazon Distribution GmbH, Leipzig sowie ggf. weiteren Verlags- und Produktionspartnern.
         </p>
-        <div className="mt-6 text-xs text-muted-foreground flex flex-wrap gap-x-4 gap-y-2 justify-center">
+        <div className="mt-6 text-xs text-muted-foreground flex flex-wrap gap-x-4 gap-y-2 justify-center items-center">
           <p>© {new Date().getFullYear()} Paulik & Reisch. Alle Rechte vorbehalten.</p>
           <Link href="/impressum" className="hover:underline">Impressum</Link>
           <Link href="/datenschutz" className="hover:underline">Datenschutz</Link>
           <Link href="/cookie-richtlinie" className="hover:underline">Cookie-Richtlinie</Link>
           <Link href="/agb" className="hover:underline">AGB</Link>
           <Link href="/lizenz" className="hover:underline">Lizenz</Link>
-           <button onClick={toggleTheme} className="hover:underline">
-            Theme-Einstellung
-          </button>
+           <div className="flex items-center space-x-2">
+            <Label htmlFor="theme-toggle" className="hover:underline cursor-pointer">Theme-Einstellung</Label>
+            <Switch
+              id="theme-toggle"
+              checked={theme === 'dark'}
+              onCheckedChange={handleThemeChange}
+            />
+          </div>
         </div>
       </div>
     </footer>
