@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { CountdownBanner } from "./countdown-banner";
@@ -16,7 +17,7 @@ export function CtaBanner() {
             </p>
           </div>
           <Link href="/buchhandlung-paulik-reisch">
-            <Button size="lg" variant="secondary">Ja, ich will den Rabatt!</Button>
+            <Button size="lg">Ja, ich will den Rabatt!</Button>
           </Link>
         </div>
       </div>
