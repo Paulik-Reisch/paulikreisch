@@ -50,7 +50,7 @@ export function Testimonials() {
                 <PawPrint className="w-5 h-5 fill-primary text-primary" />
                 <PawPrint className="w-5 h-5 fill-muted stroke-muted-foreground" />
               </div>
-              <p className="text-sm text-left italic">"Meine Katze gibt vier Pfoten nach oben! Auch wenn sie es vorzieht, auf dem Buch zu schlafen ..."</p>
+              <p className="text-sm text-left italic">"Meine Katze gibt vier Pfoten nach oben! Auch wenn sie es vorzieht, auf dem Buch zu schlafen."</p>
               <p className="text-right mt-2 font-semibold">– Ein Haustierbesitzer</p>
             </CardContent>
           </Card>
