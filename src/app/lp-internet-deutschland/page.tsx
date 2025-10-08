@@ -6,9 +6,11 @@ import { HeroInternetDeutschland } from "@/components/landing/hero-internet-deut
 export default function InternetDeutschlandPage() {
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
+      <Header />
       <main className="flex-1 flex items-center justify-center">
         <HeroInternetDeutschland />
       </main>
+      <Footer />
     </div>
   );
 }
