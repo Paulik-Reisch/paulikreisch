@@ -8,7 +8,6 @@ import { getLegalPage, type LegalPage } from "@/lib/firestore";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PromptingGuide } from "@/components/landing/prompting-guide";
 
 export default function DatenschutzClientPage() {
   const [page, setPage] = useState<LegalPage | null>(null);
@@ -69,11 +68,9 @@ export default function DatenschutzClientPage() {
                 {showDate && <p className="text-sm text-muted-foreground">Zuletzt aktualisiert am {lastUpdatedDate}</p>}
                 <div dangerouslySetInnerHTML={{ __html: page.content }} />
             </article>
-            <PromptingGuide />
         </div>
       </main>
       <Footer />
     </div>
   );
 }
-
