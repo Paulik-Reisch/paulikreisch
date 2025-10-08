@@ -36,12 +36,12 @@ export async function createOrderAction(
     return { success: true, error: null };
   } catch (e) {
     console.error(e);
-    return { success: false, error: "Bestellung konnte nicht gespeichert werden. Bitte versuche es erneut." };
+    return { success: false, error: "Bestellung konnte nicht gespeichert werden. Bitte erneut versuchen." };
   }
 }
 
 const SubscriberSchema = z.object({
-    email: z.string().email("Bitte gib eine gültige E-Mail-Adresse ein."),
+    email: z.string().email("Bitte geben Sie eine gültige E-Mail-Adresse ein."),
     source: z.string().optional(),
 });
 
@@ -75,7 +75,7 @@ export async function subscribeToNewsletterAction(
         console.error(e);
         const error = e as Error;
         if (error.message.includes("existiert bereits")) {
-            return { success: true, message: `Diese E-Mail ist bereits registriert. Du bleibst auf dem Laufenden!` };
+            return { success: true, message: `Diese E-Mail-Adresse ist bereits registriert.` };
         }
         return { error: "Anmeldung fehlgeschlagen. Das Internet ist wahrscheinlich wieder kaputt." };
     }

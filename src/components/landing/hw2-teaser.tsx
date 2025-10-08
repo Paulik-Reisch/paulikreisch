@@ -6,7 +6,7 @@ import { FileWarning, WifiOff, Home, ArrowRight } from 'lucide-react';
 
 const topics = [
     {
-        title: "Bürokratie Simulator",
+        title: "Bürokratie-Simulator",
         description: "Füllen Sie den Antrag auf Beantragung eines Antragsformulars aus. Digital, effizient – zum Verzweifeln.",
         link: "/lp-buerokratie-simulator",
         icon: FileWarning,
@@ -20,7 +20,7 @@ const topics = [
         cta: "Verbindung herstellen",
     },
     {
-        title: "Der Mietenwahnsinn",
+        title: "Mietenwahnsinn",
         description: "10 m² ab 1.000,- €. Konfigurieren Sie Ihr Luxus-WG-Zimmer mit unserem Preisrechner.",
         link: "/lp-mietenwahnsinn",
         icon: Home,
