@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -15,10 +15,12 @@ import {
   CarouselItem,
   type CarouselApi,
 } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 function BookCarousel({ book }: { book: Product }) {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
+  const plugin = useRef(Autoplay({ delay: 7000, stopOnInteraction: true }));
 
   useEffect(() => {
     if (!api) return;
@@ -31,13 +33,13 @@ function BookCarousel({ book }: { book: Product }) {
   const images = [book.imageSrc, book.imageBackSrc].filter(Boolean) as string[];
 
   return (
-    <div>
-      <Carousel setApi={setApi} className="w-full">
+    <div onMouseEnter={plugin.current.stop} onMouseLeave={plugin.current.reset}>
+      <Carousel setApi={setApi} plugins={[plugin.current]} className="w-full">
         <CarouselContent>
           {images.map((src, index) => (
             <CarouselItem key={index}>
               <div className="p-1">
-                <div className="overflow-hidden">
+                <div className="overflow-hidden rounded-md">
                   <div className="relative w-full aspect-[2/3]">
                     <Image
                       alt={`Cover von ${book.title}`}
@@ -147,10 +149,10 @@ export function BookGrid({ initialProducts }: { initialProducts: Product[]}) {
   const hw2 = initialProducts.find(p => p.id === 'hw2');
 
   return (
-    <section className="w-full py-8 md:py-8">
+    <section className="w-full py-12 md:py-12">
       <div className="container px-4 md:px-6">
         <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 sm:grid-cols-2">
+            <div className="mx-auto grid max-w-4xl grid-cols-1 gap-12 sm:grid-cols-2">
                 {initialProducts.length === 0 ? (
                     <>
                         <BookCardSkeleton />
