@@ -9,13 +9,13 @@ import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function LegalPage({ params: { slug } }: { params: { slug: string } }) {
+export default function LegalPage({ params }: { params: { slug: string } }) {
   const [page, setPage] = useState<LegalPageType | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (slug) {
-      getLegalPage(slug)
+    if (params.slug) {
+      getLegalPage(params.slug)
         .then((data) => {
           if (!data) {
             // This console.error was causing noise on 404 pages.
@@ -30,7 +30,7 @@ export default function LegalPage({ params: { slug } }: { params: { slug: string
           setLoading(false);
         });
     }
-  }, [slug]);
+  }, [params.slug]);
   
   if (loading) {
     return (
