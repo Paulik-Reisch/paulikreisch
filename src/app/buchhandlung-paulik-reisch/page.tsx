@@ -5,6 +5,8 @@ import { BookGrid } from "@/components/landing/book-grid";
 import { BookShopHero } from "@/components/landing/book-shop-hero";
 import { ShopNewsletter } from "@/components/landing/shop-newsletter";
 import { Product } from "@/lib/firestore";
+import { WhyBoth } from "@/components/landing/why-both";
+import { SeriesCta } from "@/components/landing/series-cta";
 
 const products: Product[] = [
     {
@@ -39,8 +41,11 @@ export default async function BookShopPage() {
       <main className="flex-1 flex flex-col items-center">
         <BookGrid initialProducts={products} />
         <BookShopHero />
+        <WhyBoth />
         <ShopNewsletter />
+        <SeriesCta />
       </main>
+      <Footer />
     </div>
   );
 }
