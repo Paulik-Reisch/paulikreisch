@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -11,7 +10,6 @@ import {
   Dialog,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { SignatureOrderForm } from "./signature-order-form";
 import { Product } from "@/lib/firestore";
 import { Skeleton } from "../ui/skeleton";
 
@@ -53,15 +51,9 @@ function HW2BookCard({ book }: { book: Product }) {
                         {showDiscount && <p className="text-xs text-destructive font-semibold mt-1 animate-in fade-in duration-500">{book.price && book.preorderPrice ? Math.round((1 - book.preorderPrice / book.price) * 100) : 0}% auf die ersten 50 Exemplare</p>}
                         <span className="text-xs text-muted-foreground">inkl. MwSt.</span>
                     </div>
-                     <Dialog>
-                        <DialogTrigger asChild>
-                            <Button size="lg" className="w-full mt-auto">
-                                <ShoppingCart className="mr-2 h-4 w-4" />
-                                {book.preorderPrice ? "Jetzt vorbestellen" : "Bei Amazon kaufen"}
-                            </Button>
-                        </DialogTrigger>
-                        <SignatureOrderForm book={book}/>
-                    </Dialog>
+                     <Button size="lg" className="w-full mt-auto" disabled>
+                        Noch nicht verfügbar
+                    </Button>
                 </div>
             </CardContent>
         </Card>
