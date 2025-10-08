@@ -25,16 +25,16 @@ export function Footer() {
     return (
         <footer className="w-full border-t py-6 md:py-8 bg-muted/40">
         <div className="container mx-auto text-center flex flex-col items-center justify-center">
-            <h3 className="font-headline text-2xl font-bold">Hallo Welt – Die Bücherserie</h3>
+            <h3 className="font-headline text-2xl font-bold">Hallo Welt – die Bücherserie</h3>
             <p className="mt-2 text-xs text-muted-foreground max-w-2xl text-balance">
             Die satirische "Hallo Welt"-Bücherserie ist eine Idee und Kreation von Philipp Paulik (Autor), Maximilian Reisch (Autor), Luin Schiffbauer (Illustrator) und weiteren Mitwirkenden.
             Veröffentlicht und produziert durch Kindle Direct Publishing (KDP) der Amazon Distribution GmbH, Leipzig sowie ggf. weiteren Verlags- und Produktionspartnern.
             </p>
-             <div className="mt-6 text-xs text-muted-foreground max-w-4xl text-balance border-t pt-4">
+             <div className="mt-6 text-xs text-muted-foreground max-w-4xl text-balance">
                 <p>Amazon Media EU S.à r.l. (registrierter Verkäufer von digitalen Inhalten, die mit „Verkauf durch Amazon Media EU SARL“ gekennzeichnet sind und Betrieb des Amazon Luna Spiele-Streaming-Dienstes):</p>
                 <p>Amazon Media EU S.à r.l. (Société à responsabilité limitée), 38 avenue John F. Kennedy, L-1855 Luxemburg (Stammkapital: 50.000 EUR; registriert beim RCS Luxemburg; Registernummer: 112767; Gewebescheinnummer: 110001; USt-IdNr.: LU 20944528). Das Unternehmen wird gesetzlich vertreten durch Eric King.</p>
             </div>
-            <div className="mt-6 text-xs text-muted-foreground flex flex-wrap gap-x-4 gap-y-2 justify-center items-center">
+            <div className="mt-6 text-xs text-muted-foreground flex flex-wrap gap-x-4 gap-y-2 justify-center items-center border-t pt-4">
             <p>© {new Date().getFullYear()} Paulik & Reisch. Alle Rechte vorbehalten.</p>
             <Link href="/impressum" className="hover:underline">Impressum</Link>
             <Link href="/datenschutz" className="hover:underline">Datenschutz</Link>
@@ -60,7 +60,7 @@ export function Footer() {
   return (
     <footer className="w-full border-t py-6 md:py-8 bg-muted/40">
       <div className="container mx-auto text-center flex flex-col items-center justify-center">
-        <h3 className="font-headline text-2xl font-bold">Hallo Welt – Die Bücherserie</h3>
+        <h3 className="font-headline text-2xl font-bold">Hallo Welt – die Bücherserie</h3>
         <p className="mt-2 text-xs text-muted-foreground max-w-2xl text-balance">
           Die satirische "Hallo Welt"-Bücherserie ist eine Idee und Kreation von Philipp Paulik (Autor), Maximilian Reisch (Autor), Luin Schiffbauer (Illustrator) und weiteren Mitwirkenden.
           Veröffentlicht und produziert durch Kindle Direct Publishing (KDP) der Amazon Distribution GmbH, Leipzig sowie ggf. weiteren Verlags- und Produktionspartnern.
