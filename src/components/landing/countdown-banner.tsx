@@ -85,7 +85,7 @@ export function CountdownBanner() {
 
     return (
         <div className="flex flex-col items-center justify-center space-y-2 text-center">
-             <h3 className="flex items-center justify-center gap-2 font-bold font-headline tracking-tighter text-2xl sm:text-3xl text-primary-foreground/90 text-balance">
+             <h3 className="flex items-center justify-center gap-2 font-bold font-headline tracking-tighter text-2xl sm:text-3xl text-primary-foreground/90 text-balance whitespace-nowrap">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" className="h-6 w-6 text-primary-foreground/90 shrink-0">
                     <path fill="currentColor" d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,20a9,9,0,1,1,9-9A9,9,0,0,1,12,21Z" />
                     <rect width="2" height="7" x="11" y="6" fill="currentColor" rx="1">
