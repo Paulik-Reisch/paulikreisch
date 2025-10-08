@@ -29,7 +29,7 @@ const products: Product[] = [
         price: 12.99,
         preorderPrice: 9.99,
         imageSrc: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/cover-hw2-temp.png?alt=media&token=3b0a318c-e8c1-4e66-be02-858a7b365a44",
-        imageBackSrc: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/back-hw2.png?alt=media&token=c417931f-0361-460d-9b65-629f10928e08",
+        imageBackSrc: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/back-hw2-temp.png?alt=media&token=1441421b-bcad-476b-89d0-117a86e5ffd1",
         aiHint: "funny book cover",
         amazonLink: "#",
         description: "Die Fortsetzung, die niemand wollte. Eine Abrechnung mit Bürokratie, deutschem Internet und Mietenwahnsinn."
