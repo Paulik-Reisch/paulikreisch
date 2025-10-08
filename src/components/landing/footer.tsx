@@ -48,6 +48,10 @@ export function Footer() {
                 />
             </div>
             </div>
+            <div className="mt-6 text-xs text-muted-foreground max-w-4xl text-balance border-t pt-4">
+                <p className="font-semibold">Amazon Media EU S.à r.l. (registrierter Verkäufer von digitalen Inhalten, die mit „Verkauf durch Amazon Media EU SARL“ gekennzeichnet sind und Betrieb des Amazon Luna Spiele-Streaming-Dienstes):</p>
+                <p>Amazon Media EU S.à r.l. (Société à responsabilité limitée), 38 avenue John F. Kennedy, L-1855 Luxemburg (Stammkapital: 50.000 EUR; registriert beim RCS Luxemburg; Registernummer: 112767; Gewebescheinnummer: 110001; USt-IdNr.: LU 20944528). Das Unternehmen wird gesetzlich vertreten durch Eric King.</p>
+            </div>
         </div>
         </footer>
     );
@@ -79,6 +83,10 @@ export function Footer() {
               className="h-4 w-7 [&>span]:h-3 [&>span]:w-3 [&>span]:data-[state=checked]:translate-x-3"
             />
           </div>
+        </div>
+         <div className="mt-6 text-xs text-muted-foreground max-w-4xl text-balance border-t pt-4">
+            <p className="font-semibold">Amazon Media EU S.à r.l. (registrierter Verkäufer von digitalen Inhalten, die mit „Verkauf durch Amazon Media EU SARL“ gekennzeichnet sind und Betrieb des Amazon Luna Spiele-Streaming-Dienstes):</p>
+            <p>Amazon Media EU S.à r.l. (Société à responsabilité limitée), 38 avenue John F. Kennedy, L-1855 Luxemburg (Stammkapital: 50.000 EUR; registriert beim RCS Luxemburg; Registernummer: 112767; Gewebescheinnummer: 110001; USt-IdNr.: LU 20944528). Das Unternehmen wird gesetzlich vertreten durch Eric King.</p>
         </div>
       </div>
     </footer>
