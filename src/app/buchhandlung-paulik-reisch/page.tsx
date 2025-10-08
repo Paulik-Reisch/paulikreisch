@@ -12,7 +12,7 @@ const products: Product[] = [
         title: "Hallo Welt",
         subtitle: "Erhebliche Kritik am unerhörten Bildungsgang der Lernvollzugsanstalt SK-S",
         price: 10.99,
-        imageSrc: "https://m.media-amazon.com/images/I/61hB6jTD-CL._SY466_.jpg",
+        imageSrc: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/cover-hw1.png?alt=media&token=a3c3cb2d-c367-4634-b2b1-944e497f144e",
         imageBackSrc: "https://placehold.co/300x450/222/fff?text=R%C3%BCckseite+HW1",
         aiHint: "book cover satire",
         amazonLink: "https://amzn.eu/d/0CdFeZ3",
@@ -41,7 +41,6 @@ export default async function BookShopPage() {
         <BookShopHero />
         <ShopNewsletter />
       </main>
-      <Footer />
     </div>
   );
 }

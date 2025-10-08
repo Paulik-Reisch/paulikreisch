@@ -23,7 +23,7 @@ const heroItems = [
     },
     {
         type: 'quote',
-        text: 'Seit ich das Buch gelesen habe, sehe ich überall nur noch Bürokratie-Wahnsinn. Sogar mein Toaster will jetzt einen Antrag in dreifacher Ausführung.',
+        text: 'Seit ich das Buch verschlungen habe, sehe ich überall nur noch Bürokratie-Wahnsinn. Sogar mein Toaster will jetzt einen Antrag in dreifacher Ausführung!',
         author: 'ein paranoider Leser',
         color: 'bg-green-100 dark:bg-green-900/30'
     },

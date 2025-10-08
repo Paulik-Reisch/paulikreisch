@@ -42,7 +42,7 @@ function BookCarousel({ book }: { book: Product }) {
                   src={src}
                   data-ai-hint={book.aiHint}
                   fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="object-contain transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
             </CarouselItem>
@@ -69,15 +69,6 @@ function BookCarousel({ book }: { book: Product }) {
 
 
 function HW2BookCard({ book }: { book: Product }) {
-    const [showDiscount, setShowDiscount] = useState(false);
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setShowDiscount(true);
-        }, 1000); // Delay for the animation to start
-        return () => clearTimeout(timer);
-    }, []);
-
     return (
         <Card className="flex flex-col h-full overflow-hidden transition-transform duration-300 hover:-translate-y-2">
             <CardContent className="p-4 md:p-6 flex flex-col h-full">
@@ -87,21 +78,15 @@ function HW2BookCard({ book }: { book: Product }) {
                     <p className="text-xs text-muted-foreground flex-grow mt-1">{book.subtitle}</p>
                     <div className="my-2 h-20">
                         <div className="flex items-baseline gap-2">
-                            <span
-                                className={cn(
-                                    "text-2xl font-bold transition-all duration-500",
-                                    showDiscount ? "text-muted-foreground line-through text-lg" : "text-foreground"
-                                )}
-                            >
+                            <span className="text-2xl font-bold text-muted-foreground line-through">
                                 {book.price.toString().replace('.', ',')} €
                             </span>
-                            {showDiscount && book.preorderPrice && (
+                             {book.preorderPrice && (
                                 <span className="text-2xl font-bold text-destructive animate-in fade-in zoom-in-50 duration-500">
                                     {book.preorderPrice.toString().replace('.', ',')} €
                                 </span>
                             )}
                         </div>
-                        {showDiscount && <p className="text-xs text-destructive font-semibold mt-1 animate-in fade-in duration-500">{book.price && book.preorderPrice ? Math.round((1 - book.preorderPrice / book.price) * 100) : 0}% auf die ersten 50 Exemplare</p>}
                         <span className="text-xs text-muted-foreground">inkl. MwSt.</span>
                     </div>
                      <Button size="lg" className="w-full mt-auto" disabled>
