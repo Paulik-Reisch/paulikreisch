@@ -1,6 +1,6 @@
 
 import Image from "next/image";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import {
   Tooltip,
   TooltipContent,
@@ -12,7 +12,7 @@ const guards = [
     { title: "Oberaufseher K.", specialty: "Spezialgebiet: Spontane Leistungskontrollen und das Zerstören von Träumen.", image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/personal1.png?alt=media&token=044b6a93-3e27-45f9-ba85-aaf3753e3a14", hint: "strict teacher" },
     { title: "Wärterin M.", specialty: "Meisterin des unangekündigten Vokabeltests und der passiv-aggressiven Ermahnung.", image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/personal2.png?alt=media&token=8bfbfe12-09fd-42ae-bfed-47f34e75fbd4", hint: "stern teacher" },
     { title: "Schließer H.", specialty: "Verantwortlich für die pünktliche Verriegelung aller Fluchtwege.", image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/personal3.png?alt=media&token=cfd2bda2-16bf-4aef-ab50-12a2531760b4", hint: "old teacher" },
-    { title: "Aufseherin B.", specialty: "Expertin für die pädagogisch wertvolle Maßnahme des lauten Schweigens.", image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/personal4.png?alt=media&token=f4570b8e-d7a2-4b21-8fda-04b438e299cf", hint: "serious teacher" },
+    { title: "Aufseherin B.", specialty: "Expertin für die pädagogisch wertvolle Maßnahme des lauten Schweigens.", image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/personal4.png?alt=media&token=2a4a33ad-043e-4f1c-a1c8-211758643930", hint: "serious teacher" },
 ];
 
 export function GuardsGallery() {
@@ -34,24 +34,25 @@ export function GuardsGallery() {
                         {guards.map((guard, index) => (
                             <Tooltip key={index}>
                                 <TooltipTrigger asChild>
-                                    <Card className="text-center bg-background/50 hover:scale-105 transition-transform duration-300 overflow-hidden">
-                                        <CardHeader className="p-0">
-                                            <div className="aspect-square relative">
-                                                <Image
-                                                    src={guard.image}
-                                                    alt={`Foto von ${guard.title}`}
-                                                    data-ai-hint={guard.hint}
-                                                    fill
-                                                    className="object-cover"
-                                                />
-                                            </div>
-                                            <div className="p-4">
-                                                <CardTitle className="mt-2 font-headline">{guard.title}</CardTitle>
-                                            </div>
-                                        </CardHeader>
+                                    <Card className="flex flex-col text-center bg-background/50 hover:scale-105 transition-transform duration-300 overflow-hidden">
+                                        <div className="aspect-square relative">
+                                            <Image
+                                                src={guard.image}
+                                                alt={`Foto von ${guard.title}`}
+                                                data-ai-hint={guard.hint}
+                                                fill
+                                                className="object-cover"
+                                            />
+                                        </div>
+                                        <div className="p-4 flex-grow flex flex-col justify-center">
+                                            <CardTitle className="font-headline">{guard.title}</CardTitle>
+                                             <p className="text-xs text-muted-foreground mt-2 md:hidden">
+                                                {guard.specialty}
+                                            </p>
+                                        </div>
                                     </Card>
                                 </TooltipTrigger>
-                                <TooltipContent>
+                                <TooltipContent className="hidden md:block">
                                     <p>{guard.specialty}</p>
                                 </TooltipContent>
                             </Tooltip>
