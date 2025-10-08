@@ -1,7 +1,21 @@
+
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Star } from "lucide-react";
+import { format } from "date-fns";
+import { de } from "date-fns/locale";
+import { useEffect, useState } from "react";
 
 export function ProductDescription() {
+  const [currentDate, setCurrentDate] = useState("");
+
+  useEffect(() => {
+    // This runs only on the client, so we get the user's current date
+    setCurrentDate(format(new Date(), "dd. MMMM yyyy", { locale: de }));
+  }, []);
+
+
   return (
     <section className="w-full py-12 md:py-16 bg-muted/40">
       <div className="container px-4 md:px-6">
@@ -16,29 +30,25 @@ export function ProductDescription() {
               </p>
               <p>Zwischen Euphorie und Überforderung: Fragmente des Schülerdaseins</p>
               <p>
-                "Hallo Welt" ist ein Buch, das die Perspektiven junger Menschen in einem besonderen Ort einfängt – der Schule Es ist keine lineare Erzählung, kein Roman mit fester Handlung, sondern eine Sammlung von einzelnen Episoden. Dadurch entsteht ein vielseitiges Panorama, in dem das Alltägliche und das Außergewöhnliche nebeneinanderstehen.
-              </p>
-              <p>
-                Immer wieder schimmert das Spannungsfeld durch: die Euphorie des Aufbruchs auf der einen Seite, die Überforderung durch die Vielschichtigkeit der allseits gehassten Bildungsinstitution auf der anderen.
+                "Hallo Welt" ist ein Buch, das die Perspektiven und Lebensumstände junger Menschen in einem besonderen Ort einfängt – der Schule. Es ist keine lineare Erzählung, kein Roman mit fester Handlung, sondern eine Sammlung von einzelnen Episoden, die stets mit neuem Stoff aufwarten. Dadurch entsteht ein vielseitiges Panorama, in dem das Alltägliche und das Außergewöhnliche nebeneinanderstehen.
               </p>
             </div>
           </div>
           <div>
             <h3 className="text-2xl font-bold font-headline tracking-tight mb-4">
-              Produktinformation
+              Produktinformationen
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-sm">
                 <div className="space-y-4">
                     <InfoItem label="ASIN" value="B0CVXT9X4J" />
-                    <InfoItem label="Herausgeber" value="Independently published" />
+                    <InfoItem label="Herausgeber" value="Philipp Paulik und Maximilian Reisch" />
                     <InfoItem label="Erscheinungstermin" value="17. Februar 2024" />
                     <InfoItem label="Sprache" value="Deutsch" />
                     <InfoItem label="Seitenzahl der Print-Ausgabe" value="106 Seiten" />
                 </div>
                  <div className="space-y-4">
-                    <InfoItem label="ISBN-13" value="979-8879791693" />
-                    <InfoItem label="Abmessungen" value="12.5 x 0.61 x 19 cm" />
-                    <InfoItem label="Buch 1 von 1" value="Hallo Welt" />
+                    <InfoItem label="ISBN" value="979-8879791693" />
+                    <InfoItem label="Abmessungen" value="12,5 x 0,6 x 19,0 cm" />
                     <InfoItem label="Amazon Bestseller-Rang">
                         <span>Nr. 4.695.821 in Bücher</span>
                         <ul className="list-disc pl-5 text-xs text-muted-foreground/80">
@@ -54,11 +64,14 @@ export function ProductDescription() {
                                     <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                                 ))}
                             </div>
-                            <span>5,0 von 5 Sternen (5 Sternebewertungen)</span>
+                            <span>5,0 von 5 Sternen</span>
                         </div>
                     </InfoItem>
                 </div>
             </div>
+             <p className="text-xs text-muted-foreground mt-6 text-right">
+                Alle Angaben Stand: {currentDate}
+            </p>
           </div>
         </div>
       </div>
