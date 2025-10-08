@@ -37,7 +37,7 @@ function BookCarousel({ book }: { book: Product }) {
           {images.map((src, index) => (
             <CarouselItem key={index}>
               <div className="mb-4">
-                <div className="relative w-full aspect-[2/3] rounded-md overflow-hidden">
+                <div className="relative w-full aspect-[2/3] overflow-hidden">
                   <Image
                     alt={`Cover von ${book.title}`}
                     src={src}
@@ -128,7 +128,7 @@ function BookCardSkeleton() {
     return (
         <Card className="flex flex-col h-full overflow-hidden">
             <CardContent className="p-4 md:p-6 flex flex-col h-full">
-                <Skeleton className="relative aspect-[2/3] w-full mb-4 rounded-md" />
+                <Skeleton className="relative aspect-[2/3] w-full mb-4" />
                 <div className="flex flex-col flex-grow">
                     <Skeleton className="h-6 w-3/4 mb-2" />
                     <Skeleton className="h-4 w-full mb-4" />
