@@ -66,9 +66,9 @@ export function HeroMietenwahnsinn() {
                         <div key={id} className="flex items-center space-x-3 p-2 rounded-md hover:bg-muted/50 transition-colors">
                         <Checkbox id={id} onCheckedChange={() => handleCheckboxChange(id)} />
                         <Label htmlFor={id} className="flex items-center gap-2 text-sm cursor-pointer w-full">
-                            <Icon className="h-5 w-5 text-primary"/>
-                            <span className="flex-grow whitespace-nowrap">{label}</span>
-                            <span className="font-mono text-xs text-muted-foreground">+ {price} €</span>
+                            <Icon className="h-5 w-5 text-primary shrink-0"/>
+                            <span className="flex-grow">{label}</span>
+                            <span className="font-mono text-xs text-muted-foreground whitespace-nowrap">+ {price} €</span>
                         </Label>
                         </div>
                     ))}
