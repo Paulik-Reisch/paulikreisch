@@ -3,7 +3,7 @@ import { Star } from "lucide-react";
 
 export function ProductDescription() {
   return (
-    <section className="w-full py-12 md:py-24 bg-muted/40">
+    <section className="w-full py-12 md:py-16 bg-muted/40">
       <div className="container px-4 md:px-6">
         <div className="mx-auto max-w-4xl grid gap-12">
           <div>

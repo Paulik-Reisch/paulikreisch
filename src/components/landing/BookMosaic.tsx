@@ -12,7 +12,7 @@ export function BookMosaic() {
   ];
 
   return (
-    <section className="w-full py-12 md:py-24 bg-muted/40">
+    <section className="w-full py-12 md:py-16 bg-muted/40">
       <div className="container px-4 md:px-6">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-4">
