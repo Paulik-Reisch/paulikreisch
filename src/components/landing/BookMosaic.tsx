@@ -21,7 +21,7 @@ export function BookMosaic() {
                 </h2>
             </div>
           <div className="space-y-4 max-w-3xl mx-auto text-left">
-             <h3 className="text-2xl font-bold font-headline tracking-tight text-center">
+             <h3 className="text-2xl font-bold font-headline tracking-tight">
                 Darum solltest du Hallo Welt lesen
             </h3>
             <ul className="space-y-3">
