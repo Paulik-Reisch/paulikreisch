@@ -10,9 +10,9 @@ import {
 
 const guards = [
     { title: "Oberaufseher K.", specialty: "Spezialgebiet: Spontane Leistungskontrollen und das Zerstören von Träumen.", image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/personal1.png?alt=media&token=d32360f0-7952-4027-926b-94d808cc5ab9", hint: "strict teacher" },
-    { title: "Wärterin M.", specialty: "Meisterin des unangekündigten Vokabeltests und der passiv-aggressiven Ermahnung.", image: "https://picsum.photos/seed/guard2/200/200", hint: "stern teacher" },
-    { title: "Schließer H.", specialty: "Verantwortlich für die pünktliche Verriegelung aller Fluchtwege (auch bekannt als Türen).", image: "https://picsum.photos/seed/guard3/200/200", hint: "old teacher" },
-    { title: "Aufseher B.", specialty: "Experte für die pädagogisch wertvolle Maßnahme des 'lauten Anschweigens'.", image: "https://picsum.photos/seed/guard4/200/200", hint: "serious teacher" },
+    { title: "Wärterin M.", specialty: "Meisterin des unangekündigten Vokabeltests und der passiv-aggressiven Ermahnung.", image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/personal2.png?alt=media&token=bba11180-2e70-4b25-a3c4-a138cf4f09f4", hint: "stern teacher" },
+    { title: "Schließer H.", specialty: "Verantwortlich für die pünktliche Verriegelung aller Fluchtwege.", image: "https://picsum.photos/seed/guard3/200/200", hint: "old teacher" },
+    { title: "Aufseherin B.", specialty: "Expertin für die pädagogisch wertvolle Maßnahme des lauten Schweigens.", image: "https://picsum.photos/seed/guard4/200/200", hint: "serious teacher" },
 ];
 
 export function GuardsGallery() {
@@ -42,7 +42,7 @@ export function GuardsGallery() {
                                                     alt={`Foto von ${guard.title}`}
                                                     data-ai-hint={guard.hint}
                                                     fill
-                                                    className="object-cover"
+                                                    className="object-contain"
                                                 />
                                             </div>
                                             <div className="p-4">
