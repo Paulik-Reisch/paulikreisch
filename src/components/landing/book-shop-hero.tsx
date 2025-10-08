@@ -17,14 +17,14 @@ import Link from "next/link"
 const heroItems = [
     {
         type: 'quote',
-        text: 'Ich habe das Buch im Zug gelesen und musste so lachen, dass ich meinen Halt verpasst habe. Musste 30km zurücklaufen. Hat sich gelohnt.',
-        author: 'Ein zufriedener Pendler',
+        text: 'Ich habe das Buch im Zug gelesen und war so gefesselt, dass ich meinen Halt verpasste. Musste 30 km zurücklaufen. Aber es hat sich gelohnt!',
+        author: 'ein zufriedener Pendler',
         color: 'bg-yellow-100 dark:bg-yellow-900/30'
     },
      {
         type: 'quote',
         text: 'Endlich ein Buch, das so denkt wie ich! Jetzt fühle ich mich weniger alleine.',
-        author: 'Ein Seelenverwandter',
+        author: 'ein Seelenverwandter',
         color: 'bg-indigo-100 dark:bg-indigo-900/30'
     },
 ]
