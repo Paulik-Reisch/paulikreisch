@@ -58,7 +58,6 @@ export function HeroMietenwahnsinn() {
               <div className='space-y-4'>
                 <h3 className="font-semibold flex items-center gap-2"><BedDouble /> Grundmiete</h3>
                 <p className="text-2xl font-bold">1.000,00 €</p>
-                <p className='text-xs text-muted-foreground'>Für 10 m² puren Luxus. Tageslicht optional und gegen Aufpreis.</p>
               </div>
               <div className="space-y-4">
                 <h3 className="font-semibold">Wählen Sie Ihre Luxus-Ausstattung:</h3>
