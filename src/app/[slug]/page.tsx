@@ -12,24 +12,25 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function LegalPage({ params }: { params: { slug: string } }) {
   const [page, setPage] = useState<LegalPageType | null>(null);
   const [loading, setLoading] = useState(true);
+  const slug = params.slug;
 
   useEffect(() => {
-    getLegalPage(params.slug)
-      .then((data) => {
-        if (!data) {
-          // In a real app, you might want to handle this more gracefully
-          // For now, we'll just not render the content.
-          console.error(`Page not found for slug: ${params.slug}`);
-        }
-        setPage(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching legal page:", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [params.slug]);
+    if (slug) {
+      getLegalPage(slug)
+        .then((data) => {
+          if (!data) {
+            console.error(`Page not found for slug: ${slug}`);
+          }
+          setPage(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching legal page:", error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [slug]);
   
   if (loading) {
     return (
