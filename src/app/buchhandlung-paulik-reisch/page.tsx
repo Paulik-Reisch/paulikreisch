@@ -7,7 +7,6 @@ import { ShopNewsletter } from "@/components/landing/shop-newsletter";
 import { Product } from "@/lib/firestore";
 import { WhyBoth } from "@/components/landing/why-both";
 import { ProductDescription } from "@/components/landing/ProductDescription";
-import { APlusContent } from "@/components/landing/APlusContent";
 import { BookMosaic } from "@/components/landing/BookMosaic";
 
 const products: Product[] = [
@@ -45,7 +44,6 @@ export default async function BookShopPage() {
         <BookShopHero />
         <WhyBoth />
         <ProductDescription />
-        <APlusContent />
         <BookMosaic />
         <ShopNewsletter />
       </main>
