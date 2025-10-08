@@ -18,7 +18,7 @@ export function HeroSchuleStraflager() {
             <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl xl:text-8xl/none text-balance">
               Die Lernvollzugsanstalt hat wieder geöffnet.
             </h1>
-            <p className="mx-auto max-w-[700px] text-gray-200 md:text-xl py-4">
+            <p className="mx-auto text-gray-200 md:text-xl py-4">
               Freistunden sind Fluchtversuche. Lehrer sind Wärter. Der Pausengong ist der Appell. Willkommen zurück im härtesten Straflager von allen: der Schule.
             </p>
           </div>
