@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 
 export function HeroSchuleStraflager() {
   return (
-    <section className="w-full py-12 md:py-20 lg:py-24 relative bg-black text-white">
+    <section className="w-full py-12 md:py-16 relative bg-black text-white">
        <Image
           alt="Schulgebäude als Gefängnis"
           className="absolute inset-0 w-full h-full object-cover opacity-15"
