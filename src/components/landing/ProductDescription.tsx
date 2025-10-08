@@ -22,7 +22,7 @@ export function ProductDescription() {
         <div className="mx-auto max-w-4xl grid gap-12">
           <div>
             <h2 className="text-3xl font-bold font-headline tracking-tight">
-              Produktbeschreibung des Verlags
+              Produktbeschreibung
             </h2>
             <div className="mt-6 space-y-4 text-muted-foreground">
               <p className="font-semibold text-lg">

@@ -98,69 +98,85 @@ function PriceDisplay({ book }: { book: Product }) {
     if (isPreorder) {
       const timer = setTimeout(() => {
         setShowPreorderPrice(true);
-      }, 800);
+      }, 1500); // Increased delay for visibility
       return () => clearTimeout(timer);
     }
   }, [isPreorder]);
 
+  const renderInitialState = () => (
+    <div className="flex flex-col justify-center items-center">
+        <span className="text-2xl font-bold mt-2">{book.price.toString().replace('.', ',')} €</span>
+        <p className="text-xs text-muted-foreground">inkl. MwSt.</p>
+    </div>
+  );
+
+  const renderFinalState = () => (
+     <motion.div
+        key="final"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex flex-col justify-center items-center"
+      >
+        <div className="flex items-baseline justify-center gap-2 mt-2">
+            <span className="text-xl font-bold text-muted-foreground line-through">
+            {book.price.toString().replace('.', ',')} €
+            </span>
+            {book.preorderPrice && (
+            <motion.span
+                initial={{ scale: 0.5, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 200, damping: 10, delay: 0.2 }}
+                className="text-2xl font-bold text-destructive"
+            >
+                {book.preorderPrice.toString().replace('.', ',')} €
+            </motion.span>
+            )}
+        </div>
+        <AnimatePresence>
+            <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="flex flex-col items-center"
+            >
+                <Badge variant="destructive" className="mt-1 text-xs">Spare 23% auf die ersten 50 Exemplare!</Badge>
+                <p className="text-xs text-muted-foreground">inkl. MwSt.</p>
+            </motion.div>
+        </AnimatePresence>
+      </motion.div>
+  );
+
   if (!isPreorder) {
     return (
       <div className="min-h-[70px] flex flex-col justify-center items-center">
-        <span className="text-2xl font-bold mt-2 inline-block">{book.price.toString().replace('.', ',')} €</span>
-        <p className="text-xs text-muted-foreground">inkl. MwSt.</p>
+        {renderInitialState()}
       </div>
     );
   }
 
   return (
     <div className="min-h-[70px] flex flex-col justify-center items-center">
-      <div className="flex items-baseline justify-center gap-2 mt-2">
-        <AnimatePresence>
-          {!showPreorderPrice ? (
-            <motion.span
-              key="initial"
-              initial={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              className="text-2xl font-bold text-muted-foreground"
-            >
-              {book.price.toString().replace('.', ',')} €
-            </motion.span>
-          ) : (
-            <motion.div
-              key="final"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="flex items-baseline justify-center gap-2"
-            >
-              <span className="text-xl font-bold text-muted-foreground line-through">
-                {book.price.toString().replace('.', ',')} €
-              </span>
-              {book.preorderPrice && (
-                <motion.span
-                  initial={{ scale: 0.5, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ type: "spring", stiffness: 200, damping: 10 }}
-                  className="text-2xl font-bold text-destructive"
+        <AnimatePresence mode="wait">
+            {!showPreorderPrice ? (
+                 <motion.div
+                    key="initial"
+                    initial={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{duration: 0.3}}
                 >
-                  {book.preorderPrice.toString().replace('.', ',')} €
-                </motion.span>
-              )}
-            </motion.div>
-          )}
+                    {renderInitialState()}
+                </motion.div>
+            ) : (
+                <motion.div
+                    key="final"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{duration: 0.3}}
+                >
+                    {renderFinalState()}
+                </motion.div>
+            )}
         </AnimatePresence>
-      </div>
-      <AnimatePresence>
-      {showPreorderPrice && (
-         <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-         >
-            <Badge variant="destructive" className="mt-1 text-xs">Spare 23% auf die ersten 50 Exemplare!</Badge>
-            <p className="text-xs text-muted-foreground">inkl. MwSt.</p>
-        </motion.div>
-      )}
-      </AnimatePresence>
     </div>
   );
 }
@@ -172,23 +188,26 @@ function BookCard({ book }: { book: Product }) {
     return (
         <Card className="flex flex-col h-full overflow-hidden transition-transform duration-300 hover:-translate-y-2">
             <CardContent className="p-4 md:p-6 flex flex-col h-full items-center text-center">
-                <div className="w-full max-w-[300px]">
+                <div className="w-full max-w-[250px]">
                     <BookCarousel book={book} />
                 </div>
-                <div className="flex flex-col flex-grow mt-2">
+                <div className="flex flex-col flex-grow mt-1">
                     <h3 className="font-headline text-xl font-bold">{book.title}</h3>
-                    <p className="text-xs text-muted-foreground">{book.subtitle}</p>
+                    <p className="text-xs text-muted-foreground min-h-[30px]">{book.subtitle}</p>
                     
                     <PriceDisplay book={book} />
 
                     <div className="mt-auto pt-1">
                         {isPreorder ? (
-                            <Button size="lg" disabled>
-                                Noch nicht verfügbar
-                            </Button>
+                             <a href="#" className="inline-block w-full">
+                                <Button size="lg" disabled className="w-full max-w-[200px]">
+                                    <ShoppingCart className="mr-2 h-4 w-4" />
+                                    Bald verfügbar
+                                </Button>
+                            </a>
                         ) : (
-                            <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="inline-block w-full max-w-[200px]">
-                                <Button size="lg" variant="secondary" className="w-full">
+                            <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="inline-block w-full">
+                                <Button size="lg" variant="secondary" className="w-full max-w-[200px]">
                                     <ShoppingCart className="mr-2 h-4 w-4" />
                                     Bei Amazon
                                 </Button>
