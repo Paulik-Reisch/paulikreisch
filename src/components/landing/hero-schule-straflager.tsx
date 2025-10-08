@@ -19,8 +19,11 @@ export function HeroSchuleStraflager() {
               Die Lernvollzugsanstalt hat wieder geöffnet.
             </h1>
             <p className="mx-auto text-gray-200 md:text-xl py-4">
-              Freistunden sind Fluchtversuche. Lehrer sind Wärter. Der Pausengong ist der Appell. Willkommen zurück im härtesten Straflager von allen: der Schule.
+              Freistunden sind Fluchtversuche. Lehrer sind Wärter. Der Pausengong ist der Appell.<br />Willkommen zurück im härtesten Straflager von allen: der Schule.
             </p>
+     
+            
+      
           </div>
            <a href="/excerpt-6">
                 <Button size="lg">Leseprobe: Fluchtversuch</Button>
