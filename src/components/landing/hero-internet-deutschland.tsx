@@ -1,37 +1,29 @@
 "use client";
 
 import { WifiOff } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Button } from '../ui/button';
 
 export function HeroInternetDeutschland() {
-  const [dots, setDots] = useState('');
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setDots(prev => (prev.length >= 3 ? '' : prev + '.'));
-    }, 500);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
-    <section className="w-full h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+    <section className="w-full flex items-center justify-center bg-background text-foreground py-20">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center space-y-6 text-center">
             <div className='relative'>
                 <WifiOff className="h-24 w-24 text-destructive animate-pulse" />
             </div>
           <div className="space-y-4">
-            <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-balance">
-              Verbindung wird hergestellt{" "}
-              <span className="relative inline-block w-[1.5em]">
-                <span className="invisible">...</span>
-                <span className="absolute left-0">{dots}</span>
-              </span>
-            </h1>
+            <h1 className="font-headline text-8xl font-extrabold tracking-tighter text-destructive">404</h1>
+            <h2 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl text-balance">
+              Seite nicht gefunden
+            </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl text-balance">
-              Willkommen im deutschen Internet. Bitte warten Sie einen Moment. Oder zwei. Oder auch bis zum nächsten Jahrzehnt.
+              Willkommen im deutschen Internet. Entweder existiert diese Seite nicht, oder das Neuland-Netz hat mal wieder Schluckauf. Beides ist gleich wahrscheinlich.
             </p>
           </div>
+           <Link href="/">
+              <Button variant="secondary">Zurück zur Zivilisation</Button>
+            </Link>
         </div>
       </div>
     </section>

@@ -62,12 +62,12 @@ export function BookShopHeader() {
                 <DropdownMenuSeparator />
                 <Link href="/">
                     <DropdownMenuItem>
-                        Mehr zu 'Hallo Welt 1' erfahren
+                        Mehr zu "Hallo Welt 1" erfahren
                     </DropdownMenuItem>
                 </Link>
                 <Link href="/lp2">
                     <DropdownMenuItem>
-                        Mehr zu 'Hallo Welt 2' erfahren
+                        Mehr zu "Hallo Welt 2" erfahren
                     </DropdownMenuItem>
                 </Link>
             </DropdownMenuContent>
