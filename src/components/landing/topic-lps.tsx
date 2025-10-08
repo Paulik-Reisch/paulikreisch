@@ -78,14 +78,14 @@ export function TopicLPs() {
                 {topics.map((topic) => (
                     <AccordionItem value={topic.title} key={topic.title} className="border bg-background rounded-lg shadow-sm">
                         <AccordionTrigger className="text-xl font-headline hover:no-underline px-6 py-4">
-                            <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-4 text-left">
                                 <topic.icon className={`h-6 w-6 ${topic.color}`} />
                                 {topic.title}
                             </div>
                             <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
                         </AccordionTrigger>
                         <AccordionContent className="pt-0 px-6 pb-4">
-                           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pl-10 border-t pt-4">
+                           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t pt-4">
                                 <p className="text-base text-muted-foreground flex-grow">{topic.description}</p>
                                 <Link href={topic.link} className="shrink-0">
                                     <Button variant="outline">
