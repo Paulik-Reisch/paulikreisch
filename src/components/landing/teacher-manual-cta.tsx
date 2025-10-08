@@ -5,11 +5,11 @@ import Link from 'next/link';
 
 export function TeacherManualCta() {
   return (
-    <section className="w-full py-8 md:py-12 bg-primary text-primary-foreground">
+    <section className="w-full py-12 md:py-16 bg-primary text-primary-foreground">
       <div className="container px-4 md:px-6">
         <div className="grid md:grid-cols-2 gap-8 items-center">
           <div className="space-y-4 text-center md:text-left">
-            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">
+            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl leading-tight">
               Sie haben die Diagnose – jetzt brauchen Sie die Lösung.
             </h2>
             <p className="text-lg text-primary-foreground/80">
