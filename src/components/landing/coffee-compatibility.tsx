@@ -36,7 +36,7 @@ const coffeeEffects = [
 
 export function CoffeeCompatibility() {
   return (
-    <section className="w-full py-8 md:py-12" style={{backgroundColor: 'hsl(var(--color-bg-light-orange))'}}>
+    <section className="w-full py-8 md:py-12" style={{backgroundColor: 'hsl(25 95% 90%)'}}>
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
