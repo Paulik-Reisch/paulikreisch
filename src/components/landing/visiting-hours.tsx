@@ -5,7 +5,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { CheckCircle, XCircle, Clock } from "lucide-react";
+import { CheckCircle, XCircle, Clock, ArrowRight } from "lucide-react";
+import { Button } from "../ui/button";
+import Link from "next/link";
 
 export function VisitingHours() {
   return (
@@ -69,6 +71,13 @@ export function VisitingHours() {
               </ul>
             </div>
           </div>
+        </div>
+        <div className="text-center mt-4">
+            <Link href="/buchhandlung-paulik-reisch">
+                <Button size="lg" variant="outline">
+                    Das vollständige Regelwerk im Buch nachlesen <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+            </Link>
         </div>
       </div>
     </section>
