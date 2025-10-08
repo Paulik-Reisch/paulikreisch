@@ -42,8 +42,8 @@ export function ShopNewsletter() {
     <section className="w-full pb-12 md:pb-24">
         <div className="container px-4 md:px-6">
             <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000">
-                <div className="grid md:grid-cols-2 gap-8">
-                    <Card className="flex flex-col justify-center items-center p-8 text-center bg-muted/50 max-w-md mx-auto">
+                <div className="mx-auto grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-2">
+                    <Card className="flex flex-col justify-center items-center p-8 text-center bg-muted/50">
                          <div className="p-3 bg-primary/10 rounded-full mb-4">
                              <Info className="w-8 h-8 text-primary" />
                         </div>
@@ -57,7 +57,7 @@ export function ShopNewsletter() {
                             </Button>
                         </Link>
                     </Card>
-                     <Card className="flex flex-col justify-center items-center p-8 text-center bg-muted/50 max-w-md mx-auto">
+                     <Card className="flex flex-col justify-center items-center p-8 text-center bg-muted/50">
                          <div className="p-3 bg-primary/10 rounded-full mb-4">
                              <Mail className="w-8 h-8 text-primary" />
                         </div>
