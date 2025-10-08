@@ -139,7 +139,7 @@ function PriceDisplay({ book }: { book: Product }) {
                 transition={{ delay: 0.5 }}
                 className="flex flex-col items-center"
             >
-                <Badge variant="destructive" className="mt-1 text-xs">Spare 23% auf die ersten 50 Exemplare!</Badge>
+                <Badge variant="destructive" className="mt-1 text-xs">23% auf die ersten 50 Exemplare!</Badge>
                 <p className="text-xs text-muted-foreground">inkl. MwSt.</p>
             </motion.div>
         </AnimatePresence>

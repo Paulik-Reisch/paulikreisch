@@ -8,6 +8,7 @@ import { Product } from "@/lib/firestore";
 import { WhyBoth } from "@/components/landing/why-both";
 import { ProductDescription } from "@/components/landing/ProductDescription";
 import { BookMosaic } from "@/components/landing/BookMosaic";
+import { Separator } from "@/components/ui/separator";
 
 const products: Product[] = [
     {
@@ -41,6 +42,7 @@ export default async function BookShopPage() {
       <BookShopHeader />
       <main className="flex-1 flex flex-col items-center">
         <BookGrid initialProducts={products} />
+        <Separator className="my-8 max-w-sm" />
         <BookShopHero />
         <WhyBoth />
         <ProductDescription />
