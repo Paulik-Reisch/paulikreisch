@@ -20,12 +20,11 @@ export function HeroInternetDeutschland() {
         <div className="flex flex-col items-center space-y-6 text-center">
             <div className='relative'>
                 <WifiOff className="h-24 w-24 text-destructive" />
-                <div className="absolute top-0 left-0 w-full h-full bg-gray-100 dark:bg-gray-900 animate-pulse" style={{ animationDuration: '3s'}}></div>
             </div>
           <div className="space-y-4">
             <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-balance">
-              Verbindung wird hergestellt
-              <span className="relative">
+              Verbindung wird hergestellt{" "}
+              <span className="relative inline-block w-[1.5em]">
                 <span className="invisible">...</span>
                 <span className="absolute left-0">{dots}</span>
               </span>
