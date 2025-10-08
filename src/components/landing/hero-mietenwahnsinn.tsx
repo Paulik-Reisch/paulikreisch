@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useMemo } from 'react';
@@ -84,6 +83,7 @@ export function HeroMietenwahnsinn() {
               <div className="text-center mt-6">
                 <Button size="lg">Mietvertrag jetzt unterschreiben</Button>
                 <p className="text-xs text-muted-foreground mt-2">Ihre Seele wird als Kaution einbehalten.</p>
+                <p className="text-xs text-muted-foreground/70 mt-1">(Hinweis: Dies ist eine Simulation. Die Buttons haben keine Funktion.)</p>
               </div>
             </div>
           </CardContent>
