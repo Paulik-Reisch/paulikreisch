@@ -39,7 +39,7 @@ export function ShopNewsletter() {
   }, [state, toast]);
 
   return (
-    <section className="w-full pb-12 md:pb-24">
+    <section className="w-full pt-8 md:pt-8 pb-8 md:pb-12">
         <div className="container px-4 md:px-6">
             <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000">
                 <div className="mx-auto grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-2">

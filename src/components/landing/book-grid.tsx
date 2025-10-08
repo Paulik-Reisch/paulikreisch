@@ -36,15 +36,17 @@ function BookCarousel({ book }: { book: Product }) {
         <CarouselContent>
           {images.map((src, index) => (
             <CarouselItem key={index}>
-              <div className="mb-4">
-                <div className="relative w-full aspect-[2/3] overflow-hidden">
-                  <Image
-                    alt={`Cover von ${book.title}`}
-                    src={src}
-                    data-ai-hint={book.aiHint}
-                    fill
-                    className="object-contain"
-                  />
+              <div className="p-1">
+                <div className="overflow-hidden">
+                  <div className="relative w-full aspect-[2/3]">
+                    <Image
+                      alt={`Cover von ${book.title}`}
+                      src={src}
+                      data-ai-hint={book.aiHint}
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
                 </div>
               </div>
             </CarouselItem>
@@ -145,7 +147,7 @@ export function BookGrid({ initialProducts }: { initialProducts: Product[]}) {
   const hw2 = initialProducts.find(p => p.id === 'hw2');
 
   return (
-    <section className="w-full py-12 md:py-24">
+    <section className="w-full py-8 md:py-8">
       <div className="container px-4 md:px-6">
         <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 sm:grid-cols-2">

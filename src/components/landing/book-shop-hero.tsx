@@ -41,11 +41,11 @@ export function BookShopHero() {
   )
 
   return (
-    <section className="w-full py-12 md:py-16 lg:py-20 bg-muted/40 overflow-hidden">
+    <section className="w-full py-8 md:py-8 bg-muted/40 overflow-hidden">
        <div className="container px-4 md:px-6">
             <Carousel
                 plugins={[plugin.current]}
-                className="w-full"
+                className="w-full max-w-4xl mx-auto"
                 onMouseEnter={plugin.current.stop}
                 onMouseLeave={plugin.current.reset}
             >
