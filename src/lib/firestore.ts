@@ -95,6 +95,7 @@ export interface Product {
     price: number;
     preorderPrice?: number;
     imageSrc: string;
+    imageBackSrc?: string;
     aiHint: string;
     amazonLink: string;
     description: string;

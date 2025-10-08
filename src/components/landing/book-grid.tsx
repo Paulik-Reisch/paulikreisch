@@ -1,14 +1,72 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ShoppingCart, Sparkles, PenSquare } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Product } from "@/lib/firestore";
 import { Skeleton } from "../ui/skeleton";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from "@/components/ui/carousel";
+
+function BookCarousel({ book }: { book: Product }) {
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (!api) return;
+    setCurrent(api.selectedScrollSnap());
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap());
+    });
+  }, [api]);
+
+  const images = [book.imageSrc, book.imageBackSrc].filter(Boolean) as string[];
+
+  return (
+    <div>
+      <Carousel setApi={setApi} className="w-full">
+        <CarouselContent>
+          {images.map((src, index) => (
+            <CarouselItem key={index}>
+              <div className="relative aspect-[2/3] w-full mb-4 rounded-md overflow-hidden">
+                <Image
+                  alt={`Cover von ${book.title}`}
+                  src={src}
+                  data-ai-hint={book.aiHint}
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+      {images.length > 1 && (
+        <div className="flex justify-center gap-2 mt-2">
+          {images.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => api?.scrollTo(index)}
+              className={cn(
+                "h-2 w-2 rounded-full transition-colors",
+                current === index ? "bg-primary" : "bg-muted-foreground/50"
+              )}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 
 function HW2BookCard({ book }: { book: Product }) {
     const [showDiscount, setShowDiscount] = useState(false);
@@ -23,9 +81,7 @@ function HW2BookCard({ book }: { book: Product }) {
     return (
         <Card className="flex flex-col h-full overflow-hidden transition-transform duration-300 hover:-translate-y-2">
             <CardContent className="p-4 md:p-6 flex flex-col h-full">
-                <div className="relative aspect-[2/3] w-full mb-4 rounded-md overflow-hidden">
-                    <Image alt={`Cover von ${book.title}`} src={book.imageSrc} data-ai-hint={book.aiHint} fill className="object-cover transition-transform duration-300 group-hover:scale-105" />
-                </div>
+                <BookCarousel book={book} />
                 <div className="flex flex-col flex-grow">
                     <h3 className="font-headline text-xl font-bold">{book.title}</h3>
                     <p className="text-xs text-muted-foreground flex-grow mt-1">{book.subtitle}</p>
@@ -61,9 +117,7 @@ function BookCard({ book }: { book: Product }) {
     return (
         <Card className="flex flex-col h-full overflow-hidden transition-transform duration-300 hover:-translate-y-2">
             <CardContent className="p-4 md:p-6 flex flex-col h-full">
-                <div className="relative aspect-[2/3] w-full mb-4 rounded-md overflow-hidden">
-                    <Image alt={`Cover von ${book.title}`} src={book.imageSrc} data-ai-hint={book.aiHint} fill className="object-cover transition-transform duration-300 group-hover:scale-105" />
-                </div>
+                <BookCarousel book={book} />
                 <div className="flex flex-col flex-grow">
                     <h3 className="font-headline text-xl font-bold">{book.title}</h3>
                     <p className="text-xs text-muted-foreground flex-grow mt-1">{book.subtitle}</p>
@@ -115,8 +169,8 @@ export function BookGrid({ initialProducts }: { initialProducts: Product[]}) {
                     </>
                 ) : (
                     <>
-                        {hw1 && <div className="max-w-xs w-full"><BookCard book={hw1} /></div>}
-                        {hw2 && <div className="max-w-xs w-full"><HW2BookCard book={hw2} /></div>}
+                        {hw1 && <div className="max-w-xs w-full mx-auto"><BookCard book={hw1} /></div>}
+                        {hw2 && <div className="max-w-xs w-full mx-auto"><HW2BookCard book={hw2} /></div>}
                     </>
                 )}
             </div>

@@ -13,6 +13,7 @@ const products: Product[] = [
         subtitle: "Erhebliche Kritik am unerhörten Bildungsgang der Lernvollzugsanstalt SK-S",
         price: 10.99,
         imageSrc: "https://m.media-amazon.com/images/I/61hB6jTD-CL._SY466_.jpg",
+        imageBackSrc: "https://placehold.co/300x450/222/fff?text=R%C3%BCckseite+HW1",
         aiHint: "book cover satire",
         amazonLink: "https://amzn.eu/d/0CdFeZ3",
         description: "Die satirische Abrechnung mit dem Schulsystem, Lehrern als Beamtenrobotern und dem täglichen Wahnsinn des Erwachsenwerdens."
@@ -24,6 +25,7 @@ const products: Product[] = [
         price: 12.99,
         preorderPrice: 9.99,
         imageSrc: "https://placehold.co/300x450.png",
+        imageBackSrc: "https://placehold.co/300x450/333/eee?text=R%C3%BCckseite+HW2",
         aiHint: "funny book cover",
         amazonLink: "#",
         description: "Die Fortsetzung, die niemand wollte. Eine Abrechnung mit Bürokratie, deutschem Internet und Mietenwahnsinn."
