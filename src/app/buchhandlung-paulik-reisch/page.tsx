@@ -28,7 +28,7 @@ const products: Product[] = [
         subtitle: "Wie das Leben funktioniert",
         price: 12.99,
         preorderPrice: 9.99,
-        imageSrc: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/cover-hw2.png?alt=media&token=963507d4-ea17-4861-8f55-13271a257521",
+        imageSrc: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/cover-hw2-temp.png?alt=media&token=3b0a318c-e8c1-4e66-be02-858a7b365a44",
         imageBackSrc: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/back-hw2.png?alt=media&token=c417931f-0361-460d-9b65-629f10928e08",
         aiHint: "funny book cover",
         amazonLink: "#",
