@@ -42,7 +42,7 @@ export function GuardsGallery() {
                                                     alt={`Foto von ${guard.title}`}
                                                     data-ai-hint={guard.hint}
                                                     fill
-                                                    className="object-contain"
+                                                    className="object-cover"
                                                 />
                                             </div>
                                             <div className="p-4">
