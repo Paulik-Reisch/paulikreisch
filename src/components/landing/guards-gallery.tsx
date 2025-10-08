@@ -1,5 +1,5 @@
-import { UserX } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import Image from "next/image";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Tooltip,
   TooltipContent,
@@ -8,10 +8,10 @@ import {
 } from "@/components/ui/tooltip"
 
 const guards = [
-    { title: "Oberaufseher K.", specialty: "Spezialgebiet: Spontane Leistungskontrollen und das Zerstören von Träumen." },
-    { title: "Wärterin M.", specialty: "Meisterin des unangekündigten Vokabeltests und der passiv-aggressiven Ermahnung." },
-    { title: "Schließer H.", specialty: "Verantwortlich für die pünktliche Verriegelung aller Fluchtwege (auch bekannt als Türen)." },
-    { title: "Aufseher B.", specialty: "Experte für die pädagogisch wertvolle Maßnahme des 'lauten Anschweigens'." },
+    { title: "Oberaufseher K.", specialty: "Spezialgebiet: Spontane Leistungskontrollen und das Zerstören von Träumen.", image: "https://picsum.photos/seed/guard1/200/200", hint: "strict teacher" },
+    { title: "Wärterin M.", specialty: "Meisterin des unangekündigten Vokabeltests und der passiv-aggressiven Ermahnung.", image: "https://picsum.photos/seed/guard2/200/200", hint: "stern teacher" },
+    { title: "Schließer H.", specialty: "Verantwortlich für die pünktliche Verriegelung aller Fluchtwege (auch bekannt als Türen).", image: "https://picsum.photos/seed/guard3/200/200", hint: "old teacher" },
+    { title: "Aufseher B.", specialty: "Experte für die pädagogisch wertvolle Maßnahme des 'lauten Anschweigens'.", image: "https://picsum.photos/seed/guard4/200/200", hint: "serious teacher" },
 ];
 
 export function GuardsGallery() {
@@ -33,10 +33,20 @@ export function GuardsGallery() {
                         {guards.map((guard, index) => (
                             <Tooltip key={index}>
                                 <TooltipTrigger asChild>
-                                    <Card className="text-center bg-background/50 hover:scale-105 transition-transform duration-300">
-                                        <CardHeader>
-                                            <UserX className="h-16 w-16 mx-auto text-muted-foreground" />
-                                            <CardTitle className="mt-4 font-headline">{guard.title}</CardTitle>
+                                    <Card className="text-center bg-background/50 hover:scale-105 transition-transform duration-300 overflow-hidden">
+                                        <CardHeader className="p-0">
+                                            <div className="aspect-square relative">
+                                                <Image
+                                                    src={guard.image}
+                                                    alt={`Foto von ${guard.title}`}
+                                                    data-ai-hint={guard.hint}
+                                                    fill
+                                                    className="object-cover"
+                                                />
+                                            </div>
+                                            <div className="p-4">
+                                                <CardTitle className="mt-2 font-headline">{guard.title}</CardTitle>
+                                            </div>
                                         </CardHeader>
                                     </Card>
                                 </TooltipTrigger>
