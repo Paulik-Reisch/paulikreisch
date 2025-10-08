@@ -29,7 +29,6 @@ function BookCarousel({ book }: { book: Product }) {
     if (!api) return;
     setCurrent(api.selectedScrollSnap());
     
-    // Start autoplay with a random delay to ensure asynchronous switching
     const randomDelay = Math.random() * 1000;
     const timeoutId = setTimeout(() => {
         plugin.current.play();
@@ -108,8 +107,8 @@ function HW2BookCard({ book }: { book: Product }) {
                                 </span>
                             )}
                         </div>
-                        <span className="text-xs text-muted-foreground">inkl. MwSt.</span>
-                         <Badge variant="destructive" className="mt-2 text-sm animate-pulse">Spare 23% auf die ersten 50 Exemplare!</Badge>
+                        <Badge variant="destructive" className="mt-2 text-sm animate-pulse">Spare 23% auf die ersten 50 Exemplare!</Badge>
+                        <p className="text-xs text-muted-foreground mt-1">inkl. MwSt.</p>
                     </div>
                      <Button size="lg" className="w-full mt-auto" disabled>
                         Noch nicht verfügbar
