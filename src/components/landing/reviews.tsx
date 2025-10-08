@@ -1,3 +1,4 @@
+
 import { Star } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -11,32 +12,32 @@ import {
 const reviews = [
     {
         stars: 5,
-        text: "Ich dachte, ich hätte schon alles gelesen. Dann kam 'Hallo Welt' und hat mein Gehirn neu verkabelt.",
+        text: "»Ich dachte, ich hätte schon alles gelesen. Dann kam 'Hallo Welt' und hat mein Gehirn neu verkabelt.«",
         author: "Ein Literaturkritiker",
     },
     {
         stars: 4,
-        text: "Dieses Buch hat mir gezeigt, dass mein Leben gar nicht so chaotisch ist.",
+        text: "»Dieses Buch hat mir gezeigt, dass mein Leben gar nicht so chaotisch ist.«",
         author: "Eine dankbare Leserin",
     },
     {
         stars: 5,
-        text: "Habe beim Lesen so laut gelacht, dass meine Nachbarn die Polizei gerufen haben. 10/10, würde wieder eine Anzeige riskieren.",
+        text: "»Habe beim Lesen so laut gelacht, dass meine Nachbarn die Polizei gerufen haben. 10/10, würde wieder eine Anzeige riskieren.«",
         author: "Lärmbelästiger",
     },
     {
         stars: 3,
-        text: "Ich bin mir nicht sicher, was ich da gelesen habe, aber ich konnte nicht aufhören.",
+        text: "»Ich bin mir nicht sicher, was ich da gelesen habe, aber ich konnte nicht aufhören.«",
         author: "Verwirrt, aber fasziniert",
     },
     {
         stars: 5,
-        text: "Endlich ein Buch, das so denkt wie ich! Jetzt fühle ich mich weniger allein mit meinen seltsamen Gedanken.",
+        text: "»Endlich ein Buch, das so denkt wie ich! Jetzt fühle ich mich weniger allein mit meinen seltsamen Gedanken.«",
         author: "Ein Seelenverwandter",
     },
     {
         stars: 4,
-        text: "Besser als jede Tasse Kaffee, um morgens wach zu werden. Ein Adrenalinschub in Prosaform.",
+        text: "»Besser als jede Tasse Kaffee, um morgens wach zu werden. Ein Adrenalinschub in Prosaform.«",
         author: "Koffein-Junkie",
     }
 ]
@@ -67,7 +68,7 @@ export function Reviews() {
                                             <Star key={i} className={`w-5 h-5 ${i < review.stars ? 'fill-primary text-primary' : 'fill-muted stroke-muted-foreground'}`} />
                                         ))}
                                     </div>
-                                    <p className="text-sm text-left italic">»{review.text}«</p>
+                                    <p className="text-sm text-left italic">{review.text}</p>
                                 </div>
                                 <p className="text-right mt-4 font-semibold">- {review.author}</p>
                                 </CardContent>
