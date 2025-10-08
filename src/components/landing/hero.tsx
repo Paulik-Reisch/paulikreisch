@@ -8,7 +8,7 @@ export function Hero({ product }: { product?: Product }) {
   const imageHint = product?.aiHint || "book cover";
 
   return (
-    <section className="w-full py-12 md:py-16 lg:py-20">
+    <section className="w-full pt-12 md:pt-16 lg:pt-20 pb-6 md:pb-8 lg:pb-10">
       <div className="container px-4 md:px-6">
         <div className="grid items-center gap-6 md:grid-cols-2 lg:gap-12">
           <div className="flex flex-col justify-center space-y-4 text-center md:text-left">
