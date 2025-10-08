@@ -39,7 +39,7 @@ export function ProductDescription() {
               Produktinformationen
             </h3>
             <p className="text-xs text-muted-foreground -mt-2 mb-4">
-                (Alle Angaben Stand: {currentDate})
+                (alle Angaben Stand: {currentDate})
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-sm">
                 <div className="space-y-4">
