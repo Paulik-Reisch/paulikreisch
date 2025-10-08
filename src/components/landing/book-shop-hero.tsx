@@ -17,12 +17,6 @@ import Link from "next/link"
 const heroItems = [
     {
         type: 'quote',
-        text: 'Ich habe gelacht, geweint und meine Lebensentscheidungen in Frage gestellt.',
-        author: 'Ein verwirrter Leser',
-        color: 'bg-pink-100 dark:bg-pink-900/30'
-    },
-    {
-        type: 'quote',
         text: 'Dieses Buch ist eine Gefahr. Ich habe meinen Kaffee verschüttet, weil ich zu sehr gelacht habe.',
         author: 'Opfer der Komödie',
         color: 'bg-yellow-100 dark:bg-yellow-900/30'
