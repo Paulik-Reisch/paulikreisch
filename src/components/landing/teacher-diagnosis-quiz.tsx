@@ -12,11 +12,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const questions = [
   {
-    question: "Reagiert Ihr Lehrer auf technische Probleme mit einem leeren Blick und dem Satz 'Starten Sie das Gerät neu' (auch wenn es sich um ein Buch handelt)?",
+    question: "Reagiert Ihr Lehrer auf technische Probleme mit einem leeren Blick und dem Satz \"Starten Sie das Gerät neu\" (auch wenn es sich um ein Buch handelt)?",
     points: 20,
   },
   {
-    question: "Besteht der Wortschatz Ihres Lehrers zu >50% aus den Worten 'klausurrelevant', 'grundsätzlich' und 'Ruhe'?",
+    question: "Besteht der Wortschatz Ihres Lehrers zu mehr als 50 % aus den Worten \"klausurrelevant\", \"grundsätzlich\" und \"Ruhe\"?",
     points: 20,
   },
   {
@@ -24,11 +24,11 @@ const questions = [
     points: -15, // Negative points for human-like behavior
   },
   {
-    question: "Wird Kaffee als 'Betriebsflüssigkeit' bezeichnet?",
+    question: "Wird Kaffee als \"Betriebsflüssigkeit\" bezeichnet?",
     points: 15,
   },
   {
-    question: "Kann Ihr Lehrer über einen Witz lachen, der nicht im Lehrerhandbuch steht?",
+    question: "Kann Ihr Lehrer über einen Witz lachen, der nicht im Lehrhandbuch steht?",
     points: -20,
   },
   {
@@ -97,7 +97,7 @@ export function TeacherDiagnosisQuiz() {
               Finden Sie mit unserem wissenschaftlich fundierten Test heraus, ob Sie von einem Menschen oder einem Algorithmus unterrichtet werden.
             </p>
         </div>
-        <Card className="max-w-2xl mx-auto mt-12 overflow-hidden">
+        <Card className="max-w-xl mx-auto mt-12 overflow-hidden">
             <AnimatePresence mode="wait">
                 {!isFinished ? (
                     <motion.div
@@ -108,23 +108,23 @@ export function TeacherDiagnosisQuiz() {
                         transition={{ duration: 0.3 }}
                     >
                         <CardHeader>
-                            <CardTitle>Frage {currentStep + 1} von {questions.length}</CardTitle>
+                            <CardTitle className="text-base">Frage {currentStep + 1} von {questions.length}</CardTitle>
                              <Progress value={progress} className="mt-2" />
                         </CardHeader>
-                        <CardContent className="space-y-6">
-                            <p className="font-medium text-balance min-h-[5rem]">{questions[currentStep].question}</p>
+                        <CardContent className="space-y-4">
+                            <p className="font-medium text-sm text-balance min-h-[4rem]">{questions[currentStep].question}</p>
                             <RadioGroup onValueChange={handleAnswer} value={answers[currentStep]} className="flex justify-center gap-8">
                                 <div className="flex items-center space-x-2">
                                     <RadioGroupItem value="yes" id={`q${currentStep}-yes`} />
-                                    <Label htmlFor={`q${currentStep}-yes`} className="text-base">Ja</Label>
+                                    <Label htmlFor={`q${currentStep}-yes`} className="text-sm">Ja</Label>
                                 </div>
                                 <div className="flex items-center space-x-2">
                                     <RadioGroupItem value="no" id={`q${currentStep}-no`} />
-                                    <Label htmlFor={`q${currentStep}-no`} className="text-base">Nein</Label>
+                                    <Label htmlFor={`q${currentStep}-no`} className="text-sm">Nein</Label>
                                 </div>
                             </RadioGroup>
-                             <div className="text-center mt-6">
-                                <Button onClick={handleNext} disabled={!answers[currentStep]}>
+                             <div className="text-center mt-4">
+                                <Button onClick={handleNext} disabled={!answers[currentStep]} size="sm">
                                     {currentStep < questions.length - 1 ? "Nächste Frage" : "Auswerten"}
                                     <ArrowRight className="ml-2 h-4 w-4"/>
                                 </Button>
@@ -142,13 +142,13 @@ export function TeacherDiagnosisQuiz() {
                             <CardTitle>Diagnose abgeschlossen</CardTitle>
                             <CardDescription>Basierend auf Ihren Antworten lautet das Ergebnis:</CardDescription>
                         </CardHeader>
-                         <CardContent className="text-center space-y-6">
+                         <CardContent className="text-center space-y-4">
                              <div className="flex justify-center items-center">
-                                 {React.createElement(getResult().icon, { className: `w-20 h-20 ${getResult().color}` })}
+                                 {React.createElement(getResult().icon, { className: `w-16 h-16 ${getResult().color}` })}
                              </div>
-                             <p className={`text-xl font-bold ${getResult().color}`}>Ihr Lehrer ist zu {Math.max(0, Math.min(100, Math.round((score / 100) * 100)))}% ein Roboter.</p>
-                             <p className="text-base text-muted-foreground">{getResult().text}</p>
-                             <Button onClick={resetQuiz}>
+                             <p className={`text-lg font-bold ${getResult().color}`}>Ihr Lehrer ist zu {Math.max(0, Math.min(100, Math.round((score / 100) * 100)))}% ein Roboter.</p>
+                             <p className="text-sm text-muted-foreground">{getResult().text}</p>
+                             <Button onClick={resetQuiz} size="sm">
                                  <RefreshCw className="mr-2 h-4 w-4"/>
                                  Neue Diagnose starten
                              </Button>

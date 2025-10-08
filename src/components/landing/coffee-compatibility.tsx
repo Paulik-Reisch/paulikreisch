@@ -6,21 +6,21 @@ import { Coffee, Plus, Minus, AlertTriangle, Skull } from "lucide-react";
 const coffeeEffects = [
   {
     type: "Filterkaffee",
-    effect: "+10% Basisfunktion",
-    sideEffect: "Keine nennenswerten Nebenwirkungen. Status: Stabil.",
+    effect: "+ 10 % Basisfunktion",
+    sideEffect: "Keine nennenswerten Nebenwirkungen.",
     icon: Plus,
     color: "text-green-500",
   },
   {
     type: "Espresso",
-    effect: "+50% Sprechgeschwindigkeit",
-    sideEffect: "-20% Geduld. Vorsicht bei Nachfragen.",
+    effect: "+ 50 % Sprechgeschwindigkeit",
+    sideEffect: "- 20 % Geduld. Vorsicht bei Nachfragen.",
     icon: Plus,
     color: "text-green-500",
   },
   {
     type: "Doppelter Espresso",
-    effect: "+30% Lautstärke",
+    effect: "+ 30 % Lautstärke",
     sideEffect: "Erhöhtes Risiko für spontane Monologe über die Jugend von heute.",
     icon: AlertTriangle,
     color: "text-yellow-500",
@@ -54,7 +54,7 @@ export function CoffeeCompatibility() {
                     <Coffee className="h-5 w-5"/>
                     Leistungssteigerung durch Koffein
                 </CardTitle>
-                <CardDescription>Offizielle Herstellerangaben.</CardDescription>
+                <CardDescription>Offizielle Herstellerangaben</CardDescription>
             </CardHeader>
             <CardContent>
                 <Table>

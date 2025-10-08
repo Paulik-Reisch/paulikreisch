@@ -5,15 +5,15 @@ import { AlertTriangle } from "lucide-react";
 const bugs = [
   {
     code: "Error 404: Motivation Not Found",
-    description: "Symptom: Starrer Blick, wiederholt Phrasen wie 'Das brauchen wir für die Klausur'. Lösung: Neustart mit Kaffee.",
+    description: "Symptom: Starrer Blick, wiederholt Phrasen wie \"Das brauchen wir für die Klausur\". Lösung: Neustart mit Kaffee.",
   },
   {
-    code: "Error 502: Bad Gateway (to knowledge)",
-    description: "Symptom: Antwortet auf komplexe Fragen mit 'Das steht im Buch'. Lösung: Externe Wissens-API (Google) konsultieren.",
+    code: "Error 502: Bad Gateway",
+    description: "Symptom: Antwortet auf komplexe Fragen mit \"Das steht im Buch\". Lösung: Externe Wissens-API konsultieren.",
   },
   {
-    code: "Infinite Loop: 'Ruhe jetzt!'",
-    description: "Symptom: Wiederholt den Befehl in steigender Lautstärke, ohne das eigentliche Problem zu lösen. Bekanntes Feature, kein Bug.",
+    code: "Infinite Loop: \"Ruhe jetzt!\"",
+    description: "Symptom: Wiederholt den Befehl in steigender Lautstärke, ohne das eigentliche Problem zu lösen. Weitverbreitetes Phänomen.",
   },
 ];
 
