@@ -54,7 +54,7 @@ function BookCarousel({ book }: { book: Product }) {
           {images.map((src, index) => (
             <CarouselItem key={index}>
               <div className="p-1">
-                <div className="overflow-hidden rounded-md">
+                <div className="overflow-hidden">
                   <Image
                     alt={`Cover von ${book.title}`}
                     src={src}
@@ -95,7 +95,8 @@ function HW2BookCard({ book }: { book: Product }) {
                 <BookCarousel book={book} />
                 <div className="flex flex-col flex-grow mt-4">
                     <h3 className="font-headline text-xl font-bold">{book.title}</h3>
-                    <p className="text-xs text-muted-foreground flex-grow mt-1">{book.subtitle}</p>
+                    <p className="text-xs text-muted-foreground mt-1 min-h-[40px]">{book.subtitle}</p>
+                    <div className="flex-grow"></div>
                     <div className="my-4">
                         <div className="flex items-baseline gap-2">
                             <span className="text-2xl font-bold text-muted-foreground line-through">
@@ -126,7 +127,8 @@ function BookCard({ book }: { book: Product }) {
                 <BookCarousel book={book} />
                 <div className="flex flex-col flex-grow mt-4">
                     <h3 className="font-headline text-xl font-bold">{book.title}</h3>
-                    <p className="text-xs text-muted-foreground flex-grow mt-1">{book.subtitle}</p>
+                    <p className="text-xs text-muted-foreground mt-1 min-h-[40px]">{book.subtitle}</p>
+                    <div className="flex-grow"></div>
                     <div className="my-4">
                          <span className="text-2xl font-bold">{book.price.toString().replace('.', ',')} €</span>
                         <span className="text-xs text-muted-foreground ml-2">inkl. MwSt.</span>
@@ -164,7 +166,7 @@ export function BookGrid({ initialProducts }: { initialProducts: Product[]}) {
   const hw2 = initialProducts.find(p => p.id === 'hw2');
 
   return (
-    <section className="w-full py-12 md:py-8">
+    <section className="w-full py-8 md:py-8">
       <div className="container px-4 md:px-6">
         <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <div className="mx-auto grid max-w-4xl grid-cols-1 gap-12 sm:grid-cols-2">
