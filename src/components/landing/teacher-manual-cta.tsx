@@ -9,10 +9,10 @@ export function TeacherManualCta() {
         <div className="grid md:grid-cols-2 gap-8 items-center">
           <div className="space-y-4 text-center md:text-left">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">
-              Sie haben die Diagnose. Jetzt brauchen Sie die Lösung.
+              Sie haben die Diagnose – jetzt brauchen Sie die Lösung.
             </h2>
             <p className="text-lg text-primary-foreground/80">
-              "Hallo Welt" ist das unverzichtbare Handbuch für den Umgang mit dem modernen Lehrkörper. Verstehen. Überleben. Lachen.
+              "Hallo Welt" ist das unverzichtbare Handbuch für den Umgang mit dem modernen Lehrkörper.
             </p>
             <Link href="/buchhandlung-paulik-reisch">
                 <Button size="lg" variant="secondary" className="mt-4">
