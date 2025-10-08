@@ -24,7 +24,7 @@ export function Testimonials() {
                 <Star className="w-5 h-5 fill-primary text-primary" />
                 <Star className="w-5 h-5 fill-muted stroke-muted-foreground" />
               </div>
-              <p className="text-sm text-left italic">"Ich habe gelacht, ich habe geweint, ich habe meine Lebensentscheidungen in Frage gestellt. Meistens letzteres."</p>
+              <p className="text-sm text-left italic">»Ich habe gelacht, ich habe geweint, ich habe meine Lebensentscheidungen in Frage gestellt. Meistens letzteres.«</p>
               <p className="text-right mt-2 font-semibold">– Ein verwirrter Leser</p>
             </CardContent>
           </Card>
@@ -37,7 +37,7 @@ export function Testimonials() {
                     <Star className="w-5 h-5 fill-primary text-primary" />
                     <Star className="w-5 h-5 fill-primary text-primary" />
                 </div>
-              <p className="text-sm text-left italic">"Dieses Buch ist eine Gefahr! Ich habe meinen Kaffee verschüttet, weil ich zu sehr gelacht habe."</p>
+              <p className="text-sm text-left italic">»Dieses Buch ist eine Gefahr! Ich habe meinen Kaffee verschüttet, weil ich zu sehr gelacht habe.«</p>
               <p className="text-right mt-2 font-semibold">– Opfer der Komödie</p>
             </CardContent>
           </Card>
@@ -50,7 +50,7 @@ export function Testimonials() {
                 <PawPrint className="w-5 h-5 fill-primary text-primary" />
                 <PawPrint className="w-5 h-5 fill-muted stroke-muted-foreground" />
               </div>
-              <p className="text-sm text-left italic">"Meine Katze gibt vier Pfoten nach oben! Auch wenn sie es vorzieht, auf dem Buch zu schlafen."</p>
+              <p className="text-sm text-left italic">»Meine Katze gibt vier Pfoten nach oben! Auch wenn sie es vorzieht, auf dem Buch zu schlafen.«</p>
               <p className="text-right mt-2 font-semibold">– Ein Haustierbesitzer</p>
             </CardContent>
           </Card>
