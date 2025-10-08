@@ -9,7 +9,7 @@ export function WhyBoth() {
           <div className="space-y-2">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Warum Sie beide Bücher brauchen</h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-              Nur ein Buch zu lesen ist wie nur einen Schuh anzuziehen. Es funktioniert, aber jeder wird Sie komisch ansehen.
+              Nur ein Buch zu lesen ist, wie nur einen Schuh anzuziehen. Es funktioniert, aber jeder wird Sie komisch anglotzen.
             </p>
           </div>
         </div>
@@ -18,21 +18,21 @@ export function WhyBoth() {
             <CheckCircle className="h-12 w-12 mx-auto text-primary" />
             <h3 className="text-xl font-bold font-headline">Vollständige Verwirrung</h3>
             <p className="text-sm text-muted-foreground text-balance">
-              Verstehen Sie das ganze Ausmaß des Chaos. Die Handlungsstränge sind so lose verknüpft, dass Sie sich fragen werden, ob es überhaupt welche gibt.
+              Die Handlungsstränge sind derart lose verknüpft, dass Sie sich fragen werden, ob es überhaupt welche gibt.
             </p>
           </div>
           <div className="grid gap-4 text-center p-4">
             <PlusCircle className="h-12 w-12 mx-auto text-primary" />
             <h3 className="text-xl font-bold font-headline">Doppelte Dosis Sarkasmus</h3>
             <p className="text-sm text-muted-foreground text-balance">
-              Verdoppeln Sie die Anzahl der inneren Monologe und sarkastischen Bemerkungen. Ihr Zynismus-Level wird es Ihnen danken.
+              Verdoppeln Sie die Anzahl der chaotischen Beschreibungen und sarkastischen Bemerkungen.
             </p>
           </div>
           <div className="grid gap-4 text-center p-4">
             <SmilePlus className="h-12 w-12 mx-auto text-primary" />
             <h3 className="text-xl font-bold font-headline">Unterstützen Sie die Autoren</h3>
             <p className="text-sm text-muted-foreground text-balance">
-              Helfen Sie Philipp und Max, ihre Sucht nach überteuertem Kaffee zu finanzieren, damit sie noch mehr von diesem Unsinn schreiben können.
+              Helfen Sie Philipp und Max, ihre Sucht nach überteuertem Kaffee zu finanzieren – so können sie noch mehr Unsinn schreiben!
             </p>
           </div>
         </div>

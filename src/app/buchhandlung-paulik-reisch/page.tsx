@@ -6,6 +6,10 @@ import { BookShopHero } from "@/components/landing/book-shop-hero";
 import { ShopNewsletter } from "@/components/landing/shop-newsletter";
 import { Product } from "@/lib/firestore";
 import { WhyBoth } from "@/components/landing/why-both";
+import { ProductDescription } from "@/components/landing/ProductDescription";
+import { APlusContent } from "@/components/landing/APlusContent";
+import { BookMosaic } from "@/components/landing/BookMosaic";
+import { AuthorInfo } from "@/components/landing/AuthorInfo";
 
 const products: Product[] = [
     {
@@ -41,6 +45,10 @@ export default async function BookShopPage() {
         <BookGrid initialProducts={products} />
         <BookShopHero />
         <WhyBoth />
+        <ProductDescription />
+        <APlusContent />
+        <BookMosaic />
+        <AuthorInfo />
         <ShopNewsletter />
       </main>
       <Footer />
