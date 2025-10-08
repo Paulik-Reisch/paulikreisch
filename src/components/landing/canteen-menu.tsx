@@ -1,12 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Utensils, Biohazard } from "lucide-react";
+import { Utensils, Biohazard, Skull, Bomb, Drama, Droplets, FishOff } from "lucide-react";
 
 const menu = [
-    { day: "Montag", dish: "Graue Pampe mit Spurenelementen des gestrigen Tages", side: "dazu ein Glas lauwarmes Leitungswasser." },
-    { day: "Dienstag", dish: "Überraschungs-Auflauf", side: "überraschend ist, dass es schmeckt. Zumindest fast." },
-    { day: "Mittwoch", dish: "Fake-Fleisch-Fantasie in undefinierbarer Soße", side: "serviert mit Kartoffel-ähnlichem Erzeugnis." },
-    { day: "Donnerstag", dish: "Vegetarischer Tag: Gekochtes Wasser", side: "verfeinert mit einem Hauch von Nichts." },
-    { day: "Freitag", dish: "Fischstäbchen-Fragment (Stückzahl: 1)", side: "dazu eine Remoulade aus dem letzten Jahrzehnt." },
+    { day: "Montag", dish: "Graue Pampe mit Spurenelementen des gestrigen Tages", side: "dazu ein Glas lauwarmes Leitungswasser.", icon: Skull },
+    { day: "Dienstag", dish: "Überraschungs-Auflauf", side: "überraschend ist, dass es schmeckt. Zumindest fast.", icon: Bomb },
+    { day: "Mittwoch", dish: "Fake-Fleisch-Fantasie in undefinierbarer Soße", side: "serviert mit Kartoffel-ähnlichem Erzeugnis.", icon: Drama },
+    { day: "Donnerstag", subtitle: "Vegetarischer Tag", dish: "Gekochtes Wasser", side: "verfeinert mit einem Hauch von Nichts.", icon: Droplets },
+    { day: "Freitag", dish: "Fischstäbchen-Fragment (Stückzahl: 1)", side: "dazu eine Remoulade aus dem letzten Jahrzehnt.", icon: FishOff },
 ];
 
 export function CanteenMenu() {
@@ -26,13 +26,16 @@ export function CanteenMenu() {
                  <div className="mx-auto max-w-3xl mt-12 space-y-4">
                     {menu.map((item) => (
                         <Card key={item.day} className="bg-background/50">
-                            <CardHeader className="grid grid-cols-[100px_1fr_auto] items-center gap-4 p-4">
-                                <CardTitle className="text-lg font-headline">{item.day}</CardTitle>
+                            <CardHeader className="grid grid-cols-[120px_1fr_auto] items-center gap-4 p-4">
+                                <div className="flex flex-col">
+                                    <CardTitle className="text-lg font-headline">{item.day}</CardTitle>
+                                    {item.subtitle && <CardDescription className="text-xs">{item.subtitle}</CardDescription>}
+                                </div>
                                 <div>
                                     <p className="font-semibold">{item.dish}</p>
                                     <p className="text-sm text-muted-foreground">{item.side}</p>
                                 </div>
-                                <Biohazard className="h-6 w-6 text-destructive/50" />
+                                <item.icon className="h-8 w-8 text-destructive/50" />
                             </CardHeader>
                         </Card>
                     ))}
