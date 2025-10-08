@@ -39,8 +39,13 @@ function BookCarousel({ book }: { book: Product }) {
     });
     
     api.on("pointerDown", () => {
-        plugin.current.reset();
+        plugin.current.stop();
     });
+     
+    api.on("settle", () => {
+        plugin.current.play();
+    })
+
 
     return () => clearTimeout(timeoutId);
   }, [api]);
@@ -48,12 +53,11 @@ function BookCarousel({ book }: { book: Product }) {
   const images = [book.imageSrc, book.imageBackSrc].filter(Boolean) as string[];
 
   return (
-    <div onMouseEnter={plugin.current.stop} onMouseLeave={plugin.current.reset}>
+    <div onMouseEnter={plugin.current.stop} onMouseLeave={plugin.current.play}>
       <Carousel setApi={setApi} plugins={[plugin.current]} className="w-full">
         <CarouselContent>
           {images.map((src, index) => (
             <CarouselItem key={index}>
-              <div className="p-1">
                 <div className="overflow-hidden">
                   <Image
                     alt={`Cover von ${book.title}`}
@@ -64,7 +68,6 @@ function BookCarousel({ book }: { book: Product }) {
                     className="object-contain w-full h-auto"
                   />
                 </div>
-              </div>
             </CarouselItem>
           ))}
         </CarouselContent>
@@ -94,10 +97,10 @@ function HW2BookCard({ book }: { book: Product }) {
             <CardContent className="p-4 md:p-6 flex flex-col h-full">
                 <BookCarousel book={book} />
                 <div className="flex flex-col flex-grow mt-4">
-                    <h3 className="font-headline text-xl font-bold">{book.title}</h3>
+                    <h3 className="font-headline text-xl font-bold min-h-[56px]">{book.title}</h3>
                     <p className="text-xs text-muted-foreground mt-1 min-h-[40px]">{book.subtitle}</p>
-                    <div className="flex-grow"></div>
-                    <div className="my-4">
+                    
+                    <div className="my-4 min-h-[90px]">
                         <div className="flex items-baseline gap-2">
                             <span className="text-2xl font-bold text-muted-foreground line-through">
                                 {book.price.toString().replace('.', ',')} €
@@ -108,12 +111,14 @@ function HW2BookCard({ book }: { book: Product }) {
                                 </span>
                             )}
                         </div>
-                        <Badge variant="destructive" className="mt-2 text-sm animate-pulse">Spare 23% auf die ersten 50 Exemplare!</Badge>
+                        <Badge variant="destructive" className="mt-2 text-xs animate-pulse">Spare 23% auf die ersten 50 Exemplare!</Badge>
                         <p className="text-xs text-muted-foreground mt-1">inkl. MwSt.</p>
                     </div>
-                     <Button size="lg" className="w-full mt-auto" disabled>
-                        Noch nicht verfügbar
-                    </Button>
+                    <div className="mt-auto">
+                        <Button size="lg" className="w-full" disabled>
+                            Noch nicht verfügbar
+                        </Button>
+                    </div>
                 </div>
             </CardContent>
         </Card>
@@ -126,19 +131,21 @@ function BookCard({ book }: { book: Product }) {
             <CardContent className="p-4 md:p-6 flex flex-col h-full">
                 <BookCarousel book={book} />
                 <div className="flex flex-col flex-grow mt-4">
-                    <h3 className="font-headline text-xl font-bold">{book.title}</h3>
+                    <h3 className="font-headline text-xl font-bold min-h-[56px]">{book.title}</h3>
                     <p className="text-xs text-muted-foreground mt-1 min-h-[40px]">{book.subtitle}</p>
-                    <div className="flex-grow"></div>
-                    <div className="my-4">
+                    
+                    <div className="my-4 min-h-[90px]">
                          <span className="text-2xl font-bold">{book.price.toString().replace('.', ',')} €</span>
                         <span className="text-xs text-muted-foreground ml-2">inkl. MwSt.</span>
                     </div>
-                     <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="w-full mt-auto">
-                        <Button size="lg" className="w-full" variant="secondary">
-                            <ShoppingCart className="mr-2 h-4 w-4" />
-                           Bei Amazon kaufen
-                        </Button>
-                    </a>
+                    <div className="mt-auto">
+                         <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="w-full">
+                            <Button size="lg" className="w-full" variant="secondary">
+                                <ShoppingCart className="mr-2 h-4 w-4" />
+                               Bei Amazon kaufen
+                            </Button>
+                        </a>
+                    </div>
                 </div>
             </CardContent>
         </Card>

@@ -3,7 +3,7 @@ import { CheckCircle, PlusCircle, SmilePlus } from "lucide-react";
 
 export function WhyBoth() {
   return (
-    <section id="why-both" className="w-full py-12 md:py-16 bg-blue-100 dark:bg-blue-900/30">
+    <section id="why-both" className="w-full py-8 md:py-8 bg-blue-200 dark:bg-blue-900/50">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
