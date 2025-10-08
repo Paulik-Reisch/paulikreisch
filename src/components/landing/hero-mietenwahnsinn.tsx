@@ -48,7 +48,7 @@ export function HeroMietenwahnsinn() {
             </p>
           </div>
         </div>
-        <Card className="max-w-3xl mx-auto mt-12 shadow-2xl">
+        <Card className="max-w-2xl mx-auto mt-12 shadow-2xl">
           <CardHeader>
             <CardTitle className="font-headline flex items-center gap-2"><Home/> Ihr persönlicher Mietpreis-Rechner</CardTitle>
             <CardDescription>Stellen Sie sich Ihr individuelles Luxuspaket zusammen.</CardDescription>
