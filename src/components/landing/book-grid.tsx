@@ -99,14 +99,14 @@ function BookCard({ book }: { book: Product }) {
                     <BookCarousel book={book} />
                 </div>
                 <div className="flex flex-col flex-grow mt-4">
-                    <h3 className="font-headline text-xl font-bold min-h-[56px]">{book.title}</h3>
-                    <p className="text-xs text-muted-foreground mt-1 min-h-[40px]">{book.subtitle}</p>
+                    <h3 className="font-headline text-xl font-bold">{book.title}</h3>
+                    <p className="text-xs text-muted-foreground">{book.subtitle}</p>
                     
-                    <div className="my-4 min-h-[90px]">
+                    <div className="my-2">
                         {isPreorder ? (
                             <>
-                                <div className="flex items-baseline justify-center gap-2">
-                                    <span className="text-2xl font-bold text-muted-foreground line-through">
+                                <div className="flex items-baseline justify-center gap-2 mt-2">
+                                    <span className="text-xl font-bold text-muted-foreground line-through">
                                         {book.price.toString().replace('.', ',')} €
                                     </span>
                                     {book.preorderPrice && (
@@ -120,19 +120,19 @@ function BookCard({ book }: { book: Product }) {
                             </>
                         ) : (
                             <>
-                                <span className="text-2xl font-bold">{book.price.toString().replace('.', ',')} €</span>
+                                <span className="text-2xl font-bold mt-2 inline-block">{book.price.toString().replace('.', ',')} €</span>
                                 <p className="text-xs text-muted-foreground mt-1">inkl. MwSt.</p>
                             </>
                         )}
                     </div>
-                    <div className="mt-auto">
+                    <div className="mt-auto pt-2">
                         {isPreorder ? (
-                            <Button size="lg" className="w-full" disabled>
+                            <Button size="lg" disabled>
                                 Noch nicht verfügbar
                             </Button>
                         ) : (
-                            <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="w-full">
-                                <Button size="lg" className="w-full" variant="secondary">
+                            <a href={book.amazonLink} target="_blank" rel="noopener noreferrer">
+                                <Button size="lg" variant="secondary">
                                     <ShoppingCart className="mr-2 h-4 w-4" />
                                     Bei Amazon kaufen
                                 </Button>
@@ -187,5 +187,3 @@ export function BookGrid({ initialProducts }: { initialProducts: Product[]}) {
     </section>
   );
 }
-
-    
