@@ -9,10 +9,9 @@ import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function LegalPage({ params }: { params: { slug: string } }) {
+export default function LegalPage({ params: { slug } }: { params: { slug: string } }) {
   const [page, setPage] = useState<LegalPageType | null>(null);
   const [loading, setLoading] = useState(true);
-  const slug = params.slug;
 
   useEffect(() => {
     if (slug) {
