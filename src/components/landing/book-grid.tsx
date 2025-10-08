@@ -36,14 +36,16 @@ function BookCarousel({ book }: { book: Product }) {
         <CarouselContent>
           {images.map((src, index) => (
             <CarouselItem key={index}>
-              <div className="relative w-full mb-4 rounded-md overflow-hidden aspect-[2/3]">
-                <Image
-                  alt={`Cover von ${book.title}`}
-                  src={src}
-                  data-ai-hint={book.aiHint}
-                  fill
-                  className="object-contain transition-transform duration-300 group-hover:scale-105"
-                />
+              <div className="mb-4">
+                <div className="relative w-full aspect-[2/3] rounded-md overflow-hidden">
+                    <Image
+                      alt={`Cover von ${book.title}`}
+                      src={src}
+                      data-ai-hint={book.aiHint}
+                      fill
+                      className="object-contain"
+                    />
+                </div>
               </div>
             </CarouselItem>
           ))}
