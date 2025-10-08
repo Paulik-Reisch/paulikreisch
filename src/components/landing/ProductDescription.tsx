@@ -38,6 +38,9 @@ export function ProductDescription() {
             <h3 className="text-2xl font-bold font-headline tracking-tight mb-4">
               Produktinformationen
             </h3>
+            <p className="text-xs text-muted-foreground -mt-2 mb-4">
+                (Alle Angaben Stand: {currentDate})
+            </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-sm">
                 <div className="space-y-4">
                     <InfoItem label="ASIN" value="B0CVXT9X4J" />
@@ -66,9 +69,6 @@ export function ProductDescription() {
                             </div>
                             <span>5,0 von 5 Sternen</span>
                         </div>
-                         <p className="text-xs text-muted-foreground mt-2">
-                            (Alle Angaben Stand: {currentDate})
-                        </p>
                     </InfoItem>
                 </div>
             </div>
