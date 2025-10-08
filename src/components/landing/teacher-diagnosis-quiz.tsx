@@ -107,13 +107,13 @@ export function TeacherDiagnosisQuiz() {
                         exit={{ opacity: 0, x: -50 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <CardHeader>
+                        <CardHeader className="text-left">
                             <CardTitle className="text-sm">Frage {currentStep + 1} von {questions.length}</CardTitle>
                              <Progress value={progress} className="mt-2" />
                         </CardHeader>
-                        <CardContent className="space-y-4 px-4 pb-4">
+                        <CardContent className="space-y-6 px-6 pb-6 text-left">
                             <p className="font-medium text-sm text-balance min-h-[3rem]">{questions[currentStep].question}</p>
-                            <RadioGroup onValueChange={handleAnswer} value={answers[currentStep]} className="flex justify-center gap-8 py-2">
+                            <RadioGroup onValueChange={handleAnswer} value={answers[currentStep]} className="flex justify-start gap-8 py-2">
                                 <div className="flex items-center space-x-2">
                                     <RadioGroupItem value="yes" id={`q${currentStep}-yes`} />
                                     <Label htmlFor={`q${currentStep}-yes`} className="text-sm">Ja</Label>
@@ -123,7 +123,7 @@ export function TeacherDiagnosisQuiz() {
                                     <Label htmlFor={`q${currentStep}-no`} className="text-sm">Nein</Label>
                                 </div>
                             </RadioGroup>
-                             <div className="text-center mt-4">
+                             <div className="text-left mt-4">
                                 <Button onClick={handleNext} disabled={!answers[currentStep]} size="sm">
                                     {currentStep < questions.length - 1 ? "Nächste Frage" : "Auswerten"}
                                     <ArrowRight className="ml-2 h-4 w-4"/>
