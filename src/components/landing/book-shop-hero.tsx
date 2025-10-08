@@ -55,7 +55,7 @@ export function BookShopHero() {
                 <Card className={`h-64 flex flex-col justify-between p-6 ${item.color} transition-transform duration-300 hover:-translate-y-2`}>
                     {item.type === 'quote' ? (
                          <CardContent className="p-0 flex flex-col justify-center items-center text-center h-full">
-                            <p className="text-xl font-semibold text-balance">"{item.text}"</p>
+                            <p className="text-xl font-semibold text-balance">»{item.text}«</p>
                             <p className="mt-4 text-sm text-muted-foreground">- {item.author}</p>
                         </CardContent>
                     ) : (
