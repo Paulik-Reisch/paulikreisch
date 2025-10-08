@@ -1,4 +1,3 @@
-
 "use client";
 
 import { WifiOff } from 'lucide-react';
@@ -19,7 +18,7 @@ export function HeroInternetDeutschland() {
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center space-y-6 text-center">
             <div className='relative'>
-                <WifiOff className="h-24 w-24 text-destructive" />
+                <WifiOff className="h-24 w-24 text-destructive animate-pulse" />
             </div>
           <div className="space-y-4">
             <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-balance">
@@ -30,7 +29,7 @@ export function HeroInternetDeutschland() {
               </span>
             </h1>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl text-balance">
-              Willkommen im deutschen Internet. Bitte warten Sie einen Moment. Oder zwei. Oder bis zum nächsten Jahrzehnt.
+              Willkommen im deutschen Internet. Bitte warten Sie einen Moment. Oder zwei. Oder auch bis zum nächsten Jahrzehnt.
             </p>
           </div>
         </div>
