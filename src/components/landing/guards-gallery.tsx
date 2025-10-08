@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -8,7 +9,7 @@ import {
 } from "@/components/ui/tooltip"
 
 const guards = [
-    { title: "Oberaufseher K.", specialty: "Spezialgebiet: Spontane Leistungskontrollen und das Zerstören von Träumen.", image: "https://picsum.photos/seed/guard1/200/200", hint: "strict teacher" },
+    { title: "Oberaufseher K.", specialty: "Spezialgebiet: Spontane Leistungskontrollen und das Zerstören von Träumen.", image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/personal1.png?alt=media&token=d32360f0-7952-4027-926b-94d808cc5ab9", hint: "strict teacher" },
     { title: "Wärterin M.", specialty: "Meisterin des unangekündigten Vokabeltests und der passiv-aggressiven Ermahnung.", image: "https://picsum.photos/seed/guard2/200/200", hint: "stern teacher" },
     { title: "Schließer H.", specialty: "Verantwortlich für die pünktliche Verriegelung aller Fluchtwege (auch bekannt als Türen).", image: "https://picsum.photos/seed/guard3/200/200", hint: "old teacher" },
     { title: "Aufseher B.", specialty: "Experte für die pädagogisch wertvolle Maßnahme des 'lauten Anschweigens'.", image: "https://picsum.photos/seed/guard4/200/200", hint: "serious teacher" },
