@@ -24,7 +24,7 @@ export function Testimonials() {
                 <Star className="w-5 h-5 fill-primary text-primary" />
                 <Star className="w-5 h-5 fill-muted stroke-muted-foreground" />
               </div>
-              <p className="text-sm text-left italic">»Ich habe gelacht, ich habe geweint, ich habe meine Lebensentscheidungen in Frage gestellt. Meistens letzteres.«</p>
+              <p className="text-sm text-left italic">»Ich habe gelacht, geweint, und meine Lebensentscheidungen in Frage gestellt. Meistens letzteres.«</p>
               <p className="text-right mt-2 font-semibold">– Ein verwirrter Leser</p>
             </CardContent>
           </Card>

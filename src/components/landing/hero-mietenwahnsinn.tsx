@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Home, BedDouble, Heater, Wind, DoorOpen, KeyRound, Soup, BrickWall, Sparkles } from 'lucide-react';
+import { Home, BedDouble, Heater, Wind, DoorOpen, KeyRound, Soup, BrickWall, Bug } from 'lucide-react';
 
 const extras = [
   { id: 'heizung', label: 'intakte Heizung', price: 250, icon: Heater },
@@ -15,7 +15,7 @@ const extras = [
   { id: 'tuerschloss', label: 'funktionsfähiges Türschloss', price: 75, icon: KeyRound },
   { id: 'kueche', label: 'Küchenmitbenutzung (Mo-Di, 03-04 Uhr)', price: 200, icon: Soup },
   { id: 'waende', label: 'alle vier Wände vorhanden', price: 400, icon: BrickWall },
-  { id: 'sauber', label: 'professionell von Kakerlaken befreit', price: 125, icon: Sparkles },
+  { id: 'sauber', label: 'professionell von Kakerlaken befreit', price: 125, icon: Bug },
 ];
 
 export function HeroMietenwahnsinn() {
