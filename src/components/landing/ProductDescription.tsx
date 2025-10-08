@@ -66,12 +66,12 @@ export function ProductDescription() {
                             </div>
                             <span>5,0 von 5 Sternen</span>
                         </div>
+                         <p className="text-xs text-muted-foreground mt-2">
+                            (Alle Angaben Stand: {currentDate})
+                        </p>
                     </InfoItem>
                 </div>
             </div>
-             <p className="text-xs text-muted-foreground mt-6 text-right">
-                (Alle Angaben Stand: {currentDate})
-            </p>
           </div>
         </div>
       </div>

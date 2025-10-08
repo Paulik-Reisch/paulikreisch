@@ -9,7 +9,7 @@ export function WhyBoth() {
           <div className="space-y-2">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Warum Sie beide Bücher brauchen</h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-              Nur ein Buch zu lesen ist, wie nur einen Schuh anzuziehen. Es funktioniert, aber jeder wird Sie komisch anglotzen.
+              Nur ein Buch zu lesen ist, als würde man nur einen Schuh anziehen. Es funktioniert, aber jeder wird Sie komisch anglotzen.
             </p>
           </div>
         </div>
