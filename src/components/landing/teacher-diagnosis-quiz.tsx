@@ -12,11 +12,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const questions = [
   {
-    question: "Reagiert Ihr Lehrer auf technische Probleme mit einem leeren Blick und dem Satz 'Starten Sie das Gerät neu' (auch wenn es sich um ein Buch handelt)?",
+    question: "Reagiert Ihr Lehrer auf technische Probleme mit einem leeren Blick und dem Satz \"Starten Sie das Gerät neu\" (auch wenn es sich um ein Buch handelt)?",
     points: 20,
   },
   {
-    question: "Besteht der Wortschatz Ihres Lehrers zu mehr als 50 % aus den Worten 'klausurrelevant', 'grundsätzlich' und 'Ruhe'?",
+    question: "Besteht der Wortschatz Ihres Lehrers zu mehr als 50 % aus den Worten \"klausurrelevant\", \"grundsätzlich\" und \"Ruhe\"?",
     points: 20,
   },
   {
@@ -24,7 +24,7 @@ const questions = [
     points: -15, // Negative points for human-like behavior
   },
   {
-    question: "Wird Kaffee als 'Betriebsflüssigkeit' bezeichnet?",
+    question: "Wird Kaffee als \"Betriebsflüssigkeit\" bezeichnet?",
     points: 15,
   },
   {
@@ -113,17 +113,19 @@ export function TeacherDiagnosisQuiz() {
                         </CardHeader>
                         <CardContent className="space-y-6 px-6 pb-6 text-left">
                             <p className="font-medium text-sm text-balance min-h-[3rem]">{questions[currentStep].question}</p>
-                            <RadioGroup onValueChange={handleAnswer} value={answers[currentStep]} className="flex justify-start gap-8 py-2">
-                                <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="yes" id={`q${currentStep}-yes`} />
-                                    <Label htmlFor={`q${currentStep}-yes`} className="text-sm">Ja</Label>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="no" id={`q${currentStep}-no`} />
-                                    <Label htmlFor={`q${currentStep}-no`} className="text-sm">Nein</Label>
-                                </div>
-                            </RadioGroup>
-                             <div className="text-left mt-4">
+                            <div className="flex justify-end">
+                                <RadioGroup onValueChange={handleAnswer} value={answers[currentStep]} className="flex justify-end gap-8 py-2">
+                                    <div className="flex items-center space-x-2">
+                                        <RadioGroupItem value="yes" id={`q${currentStep}-yes`} />
+                                        <Label htmlFor={`q${currentStep}-yes`} className="text-sm">Ja</Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <RadioGroupItem value="no" id={`q${currentStep}-no`} />
+                                        <Label htmlFor={`q${currentStep}-no`} className="text-sm">Nein</Label>
+                                    </div>
+                                </RadioGroup>
+                            </div>
+                             <div className="text-right mt-4">
                                 <Button onClick={handleNext} disabled={!answers[currentStep]} size="sm">
                                     {currentStep < questions.length - 1 ? "Nächste Frage" : "Auswerten"}
                                     <ArrowRight className="ml-2 h-4 w-4"/>
@@ -142,12 +144,14 @@ export function TeacherDiagnosisQuiz() {
                             <CardTitle>Diagnose abgeschlossen</CardTitle>
                             <CardDescription>Basierend auf Ihren Antworten lautet das Ergebnis:</CardDescription>
                         </CardHeader>
-                         <CardContent className="text-center space-y-4">
-                             <div className="flex justify-center items-center">
-                                 {React.createElement(getResult().icon, { className: `w-16 h-16 ${getResult().color}` })}
+                         <CardContent className="text-left space-y-4">
+                             <div className="flex items-center gap-4">
+                                 {React.createElement(getResult().icon, { className: `w-12 h-12 ${getResult().color}` })}
+                                 <div>
+                                    <p className={`text-lg font-bold ${getResult().color}`}>Ihr Lehrer ist zu {Math.max(0, Math.min(100, Math.round((score / 100) * 100)))}% ein Roboter.</p>
+                                    <p className="text-sm text-muted-foreground">{getResult().text}</p>
+                                 </div>
                              </div>
-                             <p className={`text-lg font-bold ${getResult().color}`}>Ihr Lehrer ist zu {Math.max(0, Math.min(100, Math.round((score / 100) * 100)))}% ein Roboter.</p>
-                             <p className="text-sm text-muted-foreground">{getResult().text}</p>
                              <Button onClick={resetQuiz} size="sm">
                                  <RefreshCw className="mr-2 h-4 w-4"/>
                                  Neue Diagnose starten
