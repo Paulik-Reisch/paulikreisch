@@ -24,7 +24,7 @@ export function GuardsGallery() {
                            Galerie der Wärter
                         </h2>
                         <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-                           Lernen Sie das engagierte Personal kennen, das für Ihre 'Bildung' verantwortlich ist.
+                           Lernen Sie das engagierte Personal kennen.
                         </p>
                     </div>
                 </div>

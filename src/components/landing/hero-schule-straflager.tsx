@@ -4,10 +4,10 @@ import { Button } from '@/components/ui/button';
 
 export function HeroSchuleStraflager() {
   return (
-    <section className="w-full py-12 md:py-24 lg:py-32 relative">
+    <section className="w-full py-12 md:py-24 lg:py-32 relative bg-black text-white">
        <Image
           alt="Schulgebäude als Gefängnis"
-          className="absolute inset-0 w-full h-full object-cover opacity-30"
+          className="absolute inset-0 w-full h-full object-cover opacity-15"
           data-ai-hint="school prison"
           layout="fill"
           src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/schule.png?alt=media&token=8d6d2220-8eee-4143-ba1e-8517eec2385f"
@@ -18,7 +18,7 @@ export function HeroSchuleStraflager() {
             <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl xl:text-8xl/none text-balance">
               Die Lernvollzugsanstalt hat wieder geöffnet.
             </h1>
-            <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl py-4">
+            <p className="mx-auto max-w-[700px] text-gray-200 md:text-xl py-4">
               Freistunden sind Fluchtversuche. Lehrer sind Wärter. Der Pausengong ist der Appell. Willkommen zurück im härtesten Straflager von allen: der Schule.
             </p>
           </div>
