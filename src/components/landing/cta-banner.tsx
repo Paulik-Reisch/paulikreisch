@@ -12,7 +12,7 @@ export function CtaBanner() {
           <div className="space-y-2">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Launch-Angebot!</h2>
             <p className="max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Nur für kurze Zeit! Sparen Sie jetzt und sichern Sie sich Ihr Exemplar für nur <span className="line-through">19,99€</span> <span className="font-bold text-2xl animate-pulse">10,99€</span>!
+              Nur für kurze Zeit! Sparen Sie jetzt und sichern Sie sich Ihr Exemplar für nur <span className="line-through">19,99 €</span> <span className="font-bold text-2xl animate-pulse">10,99 €</span>!
               <br/>
             </p>
           </div>

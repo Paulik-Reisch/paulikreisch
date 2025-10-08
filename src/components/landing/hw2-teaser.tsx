@@ -21,7 +21,7 @@ const topics = [
     },
     {
         title: "Der Mietenwahnsinn",
-        description: "10 m² für 1.000 €. Konfigurieren Sie Ihr Luxus-WG-Zimmer mit unserem Preisrechner.",
+        description: "10 m² ab 1.000,- €. Konfigurieren Sie Ihr Luxus-WG-Zimmer mit unserem Preisrechner.",
         link: "/lp-mietenwahnsinn",
         icon: Home,
         cta: "Miete berechnen",
