@@ -54,26 +54,26 @@ export function HeroMietenwahnsinn() {
             <CardDescription>Stellen Sie sich Ihr individuelles Luxuspaket zusammen.</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-x-8 gap-y-8 md:gap-y-4">
-              <div className='space-y-4'>
-                <h3 className="font-semibold flex items-center gap-2"><BedDouble /> Grundmiete</h3>
-                <p className="text-2xl font-bold">1.000,00 €</p>
-              </div>
-              <div className="space-y-4">
-                <h3 className="font-semibold">Wählen Sie Ihre Luxus-Ausstattung:</h3>
-                <div className="space-y-3">
-                  {extras.map(({ id, label, price, icon: Icon }) => (
-                    <div key={id} className="flex items-center space-x-3 p-2 rounded-md hover:bg-muted/50 transition-colors">
-                      <Checkbox id={id} onCheckedChange={() => handleCheckboxChange(id)} />
-                      <Label htmlFor={id} className="flex items-center gap-2 text-sm cursor-pointer w-full">
-                        <Icon className="h-5 w-5 text-primary"/>
-                        <span className="flex-grow whitespace-nowrap">{label}</span>
-                        <span className="font-mono text-xs text-muted-foreground">(+{price} €)</span>
-                      </Label>
-                    </div>
-                  ))}
+            <div className="space-y-8">
+                <div className='space-y-4'>
+                    <h3 className="font-semibold flex items-center gap-2"><BedDouble /> Grundmiete</h3>
+                    <p className="text-2xl font-bold">1.000,00 €</p>
                 </div>
-              </div>
+                <div className="space-y-4">
+                    <h3 className="font-semibold">Wählen Sie Ihre Luxus-Ausstattung:</h3>
+                    <div className="space-y-3">
+                    {extras.map(({ id, label, price, icon: Icon }) => (
+                        <div key={id} className="flex items-center space-x-3 p-2 rounded-md hover:bg-muted/50 transition-colors">
+                        <Checkbox id={id} onCheckedChange={() => handleCheckboxChange(id)} />
+                        <Label htmlFor={id} className="flex items-center gap-2 text-sm cursor-pointer w-full">
+                            <Icon className="h-5 w-5 text-primary"/>
+                            <span className="flex-grow whitespace-nowrap">{label}</span>
+                            <span className="font-mono text-xs text-muted-foreground">(+{price} €)</span>
+                        </Label>
+                        </div>
+                    ))}
+                    </div>
+                </div>
             </div>
             <div className="mt-8 pt-4 border-t-2 border-dashed">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
