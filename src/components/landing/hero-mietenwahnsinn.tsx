@@ -50,14 +50,14 @@ export function HeroMietenwahnsinn() {
         </div>
         <Card className="max-w-md mx-auto mt-12 shadow-2xl">
           <CardHeader>
-            <CardTitle className="font-headline flex items-center gap-2"><Home/> Ihr persönlicher Mietpreis-Rechner</CardTitle>
+            <CardTitle className="font-headline flex items-center gap-2"><Home/> Mietpreis-Rechner</CardTitle>
             <CardDescription>Stellen Sie sich Ihr individuelles Luxuspaket zusammen.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-8">
                 <div className='space-y-4'>
                     <h3 className="font-semibold flex items-center gap-2"><BedDouble /> Grundmiete</h3>
-                    <p className="text-2xl font-bold">1.000,00 €</p>
+                    <p className="text-2xl font-bold">1.000,- €</p>
                 </div>
                 <div className="space-y-4">
                     <h3 className="font-semibold">Wählen Sie Ihre Luxus-Ausstattung:</h3>
@@ -68,7 +68,7 @@ export function HeroMietenwahnsinn() {
                         <Label htmlFor={id} className="flex items-center gap-2 text-sm cursor-pointer w-full">
                             <Icon className="h-5 w-5 text-primary"/>
                             <span className="flex-grow whitespace-nowrap">{label}</span>
-                            <span className="font-mono text-xs text-muted-foreground">+{price} €</span>
+                            <span className="font-mono text-xs text-muted-foreground">+ {price} €</span>
                         </Label>
                         </div>
                     ))}
@@ -78,7 +78,7 @@ export function HeroMietenwahnsinn() {
             <div className="mt-8 pt-4 border-t-2 border-dashed">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
                 <h3 className="text-xl font-bold font-headline mb-2 sm:mb-0">Gesamtmiete pro Monat:</h3>
-                <p className="text-3xl font-bold font-mono text-primary">{totalRent.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</p>
+                <p className="text-3xl font-bold font-mono text-primary">{new Intl.NumberFormat('de-DE').format(totalRent)},- €</p>
               </div>
               <div className="text-center mt-6">
                 <Button size="lg">Mietvertrag jetzt unterschreiben</Button>
