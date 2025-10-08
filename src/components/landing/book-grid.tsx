@@ -58,14 +58,13 @@ function BookCarousel({ book }: { book: Product }) {
         <CarouselContent>
           {images.map((src, index) => (
             <CarouselItem key={index}>
-              <div className="overflow-hidden">
+              <div className="overflow-hidden aspect-[2/3] relative">
                 <Image
                   alt={`Cover von ${book.title}`}
                   src={src}
                   data-ai-hint={book.aiHint}
-                  width={300}
-                  height={450}
-                  className="object-contain w-full h-auto"
+                  fill
+                  className="object-contain"
                 />
               </div>
             </CarouselItem>
@@ -95,8 +94,10 @@ function BookCard({ book }: { book: Product }) {
 
     return (
         <Card className="flex flex-col h-full overflow-hidden transition-transform duration-300 hover:-translate-y-2">
-            <CardContent className="p-4 md:p-6 flex flex-col h-full">
-                <BookCarousel book={book} />
+            <CardContent className="p-4 md:p-6 flex flex-col h-full items-center text-center">
+                <div className="w-full max-w-[300px]">
+                    <BookCarousel book={book} />
+                </div>
                 <div className="flex flex-col flex-grow mt-4">
                     <h3 className="font-headline text-xl font-bold min-h-[56px]">{book.title}</h3>
                     <p className="text-xs text-muted-foreground mt-1 min-h-[40px]">{book.subtitle}</p>
@@ -104,7 +105,7 @@ function BookCard({ book }: { book: Product }) {
                     <div className="my-4 min-h-[90px]">
                         {isPreorder ? (
                             <>
-                                <div className="flex items-baseline gap-2">
+                                <div className="flex items-baseline justify-center gap-2">
                                     <span className="text-2xl font-bold text-muted-foreground line-through">
                                         {book.price.toString().replace('.', ',')} €
                                     </span>
@@ -147,9 +148,9 @@ function BookCard({ book }: { book: Product }) {
 function BookCardSkeleton() {
     return (
         <Card className="flex flex-col h-full overflow-hidden">
-            <CardContent className="p-4 md:p-6 flex flex-col h-full">
-                <Skeleton className="relative aspect-[2/3] w-full mb-4" />
-                <div className="flex flex-col flex-grow">
+            <CardContent className="p-4 md:p-6 flex flex-col h-full items-center text-center">
+                <Skeleton className="relative aspect-[2/3] w-full max-w-[300px] mb-4" />
+                <div className="flex flex-col flex-grow items-center">
                     <Skeleton className="h-6 w-3/4 mb-2" />
                     <Skeleton className="h-4 w-full mb-4" />
                     <Skeleton className="h-10 w-1/2 mb-4" />
@@ -186,3 +187,5 @@ export function BookGrid({ initialProducts }: { initialProducts: Product[]}) {
     </section>
   );
 }
+
+    
