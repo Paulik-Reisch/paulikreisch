@@ -3,7 +3,6 @@ import { Footer } from "@/components/landing/footer";
 import { HeroSeries } from "@/components/landing/hero-series";
 import { BookShowcase } from "@/components/landing/book-showcase";
 import { WhyBoth } from "@/components/landing/why-both";
-import { SeriesCta } from "@/components/landing/series-cta";
 
 export default function SeriesPage() {
   return (
@@ -13,7 +12,6 @@ export default function SeriesPage() {
         <HeroSeries />
         <BookShowcase />
         <WhyBoth />
-        <SeriesCta />
       </main>
       <Footer />
     </div>
