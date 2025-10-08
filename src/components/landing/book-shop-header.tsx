@@ -8,7 +8,7 @@ export function BookShopHeader() {
       <div className="container mx-auto flex items-center justify-between">
         <a className="flex items-center justify-center gap-2" href="/">
           <BookOpen className="h-5 w-5" />
-          <span className="font-headline font-semibold text-lg">Hallo Welt | Buchhandlung Paulik & Reisch</span>
+          <span className="font-headline font-semibold text-lg">Hallo Welt | Buchhandlung</span>
         </a>
       </div>
     </header>

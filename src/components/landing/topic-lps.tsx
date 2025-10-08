@@ -86,7 +86,7 @@ export function TopicLPs() {
                         </AccordionTrigger>
                         <AccordionContent className="pt-0 px-6 pb-4">
                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t pt-4">
-                                <p className="text-base text-muted-foreground flex-grow">{topic.description}</p>
+                                <p className="text-base text-muted-foreground flex-grow text-left">{topic.description}</p>
                                 <Link href={topic.link} className="shrink-0">
                                     <Button variant="outline">
                                         Mehr erfahren <ArrowRight className="ml-2 h-4 w-4" />
