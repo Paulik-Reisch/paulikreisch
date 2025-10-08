@@ -259,9 +259,9 @@ export function SignatureOrderForm({ book }: { book: Product }) {
             {hw2_static && (
             <Alert className={cn("border-2 border-primary text-primary transition-all duration-500", watchFields.acceptComboDeal && "bg-primary/10")}>
                 <Sparkles className="h-4 w-4" />
-                <AlertTitle className="font-headline text-xl">KRISE? Sparen Sie jetzt!</AlertTitle>
+                <AlertTitle className="font-headline text-xl">Sparen Sie jetzt!</AlertTitle>
                 <AlertDescription className="text-primary/90 text-base">
-                    Aktivieren Sie dieses Angebot und sparen Sie <span className="font-bold">80% auf "Hallo Welt"</span>, indem Sie "Hallo Welt 2" (inkl. Signatur) für nur {((bookPrices.hw2_signature_package + (hw2_static.preorderPrice || 0)).toFixed(2).replace('.', ','))} € VORBESTELLEN!
+                    Aktivieren Sie dieses Angebot und sparen Sie <span className="font-bold">80% auf "Hallo Welt"</span>, indem Sie "Hallo Welt 2" (inkl. Signatur) für nur {((bookPrices.hw2_signature_package + (hw2_static.preorderPrice || 0)).toFixed(2).replace('.', ','))} € vorbestellen!
                 </AlertDescription>
                  <div className="flex items-center space-x-3 p-2 rounded-md mt-4">
                     <Controller

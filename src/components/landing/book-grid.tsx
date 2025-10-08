@@ -130,23 +130,6 @@ export function BookGrid({ initialProducts }: { initialProducts: Product[]}) {
                     <>
                         {hw1 && <BookCard book={hw1} />}
                         {hw2 && <HW2BookCard book={hw2} />}
-
-                        {hw1 && (
-                            <Dialog>
-                                <DialogTrigger asChild>
-                                <div className="group relative col-span-1 border-2 border-dashed rounded-xl flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:border-primary hover:bg-muted/50 transition-all duration-300 hover:-translate-y-2">
-                                    <Sparkles className="w-10 h-10 text-primary/50 group-hover:text-primary transition-colors duration-300 transform group-hover:scale-110" />
-                                    <h3 className="font-headline text-xl font-bold mt-4">Signierte Sonderausgabe</h3>
-                                    <p className="text-muted-foreground text-sm mt-2">Sichern Sie sich ein von den Autoren persönlich signiertes Exemplar.</p>
-                                     <Button variant="outline" className="mt-6">
-                                        <PenSquare className="mr-2 h-4 w-4"/>
-                                        Jetzt konfigurieren
-                                    </Button>
-                                </div>
-                                </DialogTrigger>
-                                <SignatureOrderForm book={hw1} />
-                            </Dialog>
-                        )}
                     </>
                 )}
             </div>
