@@ -9,7 +9,7 @@ export function TeacherManualCta() {
       <div className="container px-4 md:px-6">
         <div className="grid md:grid-cols-2 gap-8 items-center">
           <div className="space-y-4 text-center md:text-left">
-            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl leading-tight">
+            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">
               Sie haben die Diagnose – jetzt brauchen Sie die Lösung.
             </h2>
             <p className="text-lg text-primary-foreground/80">
