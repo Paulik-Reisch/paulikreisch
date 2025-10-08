@@ -5,21 +5,21 @@ import { AlertTriangle } from "lucide-react";
 const bugs = [
   {
     code: "Error 404: Motivation Not Found",
-    description: "Symptom: Starrer Blick, wiederholt Phrasen wie \"Das brauchen wir für die Klausur\".",
+    description: "Symptom: Starrer Blick, wiederholt Phrasen wie 'Das brauchen wir für die Klausur'.",
   },
   {
     code: "Error 502: Bad Gateway",
-    description: "Symptom: Antwortet auf komplexe Fragen mit \"Das steht im Buch\". Lösung: auf einen anderen Lehrer hoffen.",
+    description: "Symptom: Antwortet auf komplexe Fragen mit 'Das steht im Buch'. Lösung: auf einen anderen Lehrer hoffen.",
   },
   {
-    code: "Infinite Loop: \"Ruhe jetzt!\"",
+    code: "Infinite Loop: 'Ruhe jetzt!'",
     description: "Symptom: Wiederholt den Befehl in steigender Lautstärke, ohne das eigentliche Problem zu lösen.",
   },
 ];
 
 export function TeacherBugs() {
   return (
-    <section className="w-full py-8 md:py-12" style={{ backgroundColor: 'hsl(45 95% 90%)' }}>
+    <section className="w-full py-8 md:py-12 bg-yellow-200/50 dark:bg-yellow-900/20">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
