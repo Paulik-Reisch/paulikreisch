@@ -112,15 +112,15 @@ export function TeacherDiagnosisQuiz() {
                              <Progress value={progress} className="mt-2" />
                         </CardHeader>
                         <CardContent className="space-y-6">
-                            <p className="text-lg font-medium text-balance min-h-[5rem]">{questions[currentStep].question}</p>
+                            <p className="font-medium text-balance min-h-[5rem]">{questions[currentStep].question}</p>
                             <RadioGroup onValueChange={handleAnswer} value={answers[currentStep]} className="flex justify-center gap-8">
                                 <div className="flex items-center space-x-2">
                                     <RadioGroupItem value="yes" id={`q${currentStep}-yes`} />
-                                    <Label htmlFor={`q${currentStep}-yes`} className="text-lg">Ja</Label>
+                                    <Label htmlFor={`q${currentStep}-yes`} className="text-base">Ja</Label>
                                 </div>
                                 <div className="flex items-center space-x-2">
                                     <RadioGroupItem value="no" id={`q${currentStep}-no`} />
-                                    <Label htmlFor={`q${currentStep}-no`} className="text-lg">Nein</Label>
+                                    <Label htmlFor={`q${currentStep}-no`} className="text-base">Nein</Label>
                                 </div>
                             </RadioGroup>
                              <div className="text-center mt-6">
@@ -144,10 +144,10 @@ export function TeacherDiagnosisQuiz() {
                         </CardHeader>
                          <CardContent className="text-center space-y-6">
                              <div className="flex justify-center items-center">
-                                 {React.createElement(getResult().icon, { className: `w-24 h-24 ${getResult().color}` })}
+                                 {React.createElement(getResult().icon, { className: `w-20 h-20 ${getResult().color}` })}
                              </div>
-                             <p className={`text-2xl font-bold ${getResult().color}`}>Ihr Lehrer ist zu {Math.max(0, Math.min(100, Math.round((score / 100) * 100)))}% ein Roboter.</p>
-                             <p className="text-lg text-muted-foreground">{getResult().text}</p>
+                             <p className={`text-xl font-bold ${getResult().color}`}>Ihr Lehrer ist zu {Math.max(0, Math.min(100, Math.round((score / 100) * 100)))}% ein Roboter.</p>
+                             <p className="text-base text-muted-foreground">{getResult().text}</p>
                              <Button onClick={resetQuiz}>
                                  <RefreshCw className="mr-2 h-4 w-4"/>
                                  Neue Diagnose starten
