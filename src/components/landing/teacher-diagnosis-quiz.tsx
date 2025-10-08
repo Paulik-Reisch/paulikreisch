@@ -12,11 +12,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const questions = [
   {
-    question: "Reagiert Ihr Lehrer auf technische Probleme mit einem leeren Blick und dem Satz 'Starten Sie das Gerät neu' (auch wenn es sich um ein Buch handelt)?",
+    question: "Reagiert Ihr Lehrer auf technische Probleme mit einem leeren Blick und dem Satz \"Starten Sie das Gerät neu\" (auch wenn es sich um ein Buch handelt)?",
     points: 20,
   },
   {
-    question: "Besteht der Wortschatz Ihres Lehrers zu mehr als 50 % aus den Worten 'klausurrelevant', 'grundsätzlich' und 'Ruhe'?",
+    question: "Besteht der Wortschatz Ihres Lehrers zu mehr als 50 % aus den Worten \"klausurrelevant\", \"grundsätzlich\" und \"Ruhe\"?",
     points: 20,
   },
   {
@@ -24,7 +24,7 @@ const questions = [
     points: -15, // Negative points for human-like behavior
   },
   {
-    question: "Wird Kaffee als 'Betriebsflüssigkeit' bezeichnet?",
+    question: "Wird Kaffee als \"Betriebsflüssigkeit\" bezeichnet?",
     points: 15,
   },
   {

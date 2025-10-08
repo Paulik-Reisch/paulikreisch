@@ -85,7 +85,7 @@ export function VisitingHours() {
         <div className="text-center mt-4">
             <Link href="/buchhandlung-paulik-reisch">
                 <Button size="lg" variant="outline">
-                    Vollständiges Regelwerk nachlesen <ArrowRight className="ml-2 h-4 w-4" />
+                   Gesamtes Regelwerk nachlesen <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
             </Link>
         </div>
