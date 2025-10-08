@@ -14,20 +14,14 @@ export function BookMosaic() {
   return (
     <section className="w-full py-12 md:py-16" style={{ backgroundColor: '#e1e1e1' }}>
       <div className="container px-4 md:px-6">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-4">
-            <h2 className="text-3xl font-bold font-headline tracking-tight">
-              Hallo Welt – Ein Mosaik der Jugend
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              „Hallo Welt“ ist kein klassischer Roman – es ist ein Kaleidoskop. Die Seiten setzen sich aus Fragmenten, Episoden und Momentaufnahmen zusammen, die das Lebensgefühl einer ganzen Generation widerspiegeln. Wer sich selbst an überfüllte Busfahrten, genervte Lehrer, absurde Bürokratie oder den ersten Geschmack von Freiheit erinnert, wird sich in diesem Buch wiederfinden.
-            </p>
-             <p className="text-lg text-muted-foreground">
-              „Hallo Welt“ ist kein Buch, das man von vorne nach hinten liest. Es ist wie ein Schulhofgespräch, das immer wieder abschweift – mal laut, mal leise, mal albern, mal bitter ernst.
-            </p>
-          </div>
-          <div className="space-y-4">
-             <h3 className="text-2xl font-bold font-headline tracking-tight">
+        <div className="grid md:grid-cols-1 gap-12 items-center text-center">
+           <div className="max-w-3xl mx-auto">
+                <h2 className="text-3xl font-bold font-headline tracking-tight">
+                    Hallo Welt – Ein Mosaik der Jugend
+                </h2>
+            </div>
+          <div className="space-y-4 max-w-3xl mx-auto text-left">
+             <h3 className="text-2xl font-bold font-headline tracking-tight text-center">
                 Darum solltest du Hallo Welt lesen
             </h3>
             <ul className="space-y-3">

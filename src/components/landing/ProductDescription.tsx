@@ -42,7 +42,7 @@ export function ProductDescription() {
                 <div className="space-y-4">
                     <InfoItem label="ASIN" value="B0CVXT9X4J" />
                     <InfoItem label="Herausgeber" value="Philipp Paulik und Maximilian Reisch" />
-                    <InfoItem label="Erscheinungstermin" value="17. Februar 2024" />
+                    <InfoItem label="Erscheinungsdatum" value="17. Februar 2024" />
                     <InfoItem label="Sprache" value="Deutsch" />
                     <InfoItem label="Seitenzahl der Print-Ausgabe" value="106 Seiten" />
                 </div>
@@ -70,7 +70,7 @@ export function ProductDescription() {
                 </div>
             </div>
              <p className="text-xs text-muted-foreground mt-6 text-right">
-                Alle Angaben Stand: {currentDate}
+                (Alle Angaben Stand: {currentDate})
             </p>
           </div>
         </div>
