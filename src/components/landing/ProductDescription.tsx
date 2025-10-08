@@ -16,7 +16,7 @@ export function ProductDescription() {
               </p>
               <p>Zwischen Euphorie und Überforderung: Fragmente des Schülerdaseins</p>
               <p>
-                "Hallo Welt" ist ein Buch, das die Perspektiven junger Menschen in einer besonderen Übergangsphase einfängt – zwischen Schule und Erwachsenenwelt. Es ist keine lineare Erzählung, kein Roman mit fester Handlung, sondern eine Sammlung von einzelnen Episoden. Dadurch entsteht ein Panorama des jugendlichen Daseins, in dem das Alltägliche und das Außergewöhnliche nebeneinanderstehen.
+                "Hallo Welt" ist ein Buch, das die Perspektiven junger Menschen in einem besonderen Ort einfängt – der Schule Es ist keine lineare Erzählung, kein Roman mit fester Handlung, sondern eine Sammlung von einzelnen Episoden. Dadurch entsteht ein vielseitiges Panorama, in dem das Alltägliche und das Außergewöhnliche nebeneinanderstehen.
               </p>
               <p>
                 Immer wieder schimmert das Spannungsfeld durch: die Euphorie des Aufbruchs auf der einen Seite, die Überforderung durch die Vielschichtigkeit der allseits gehassten Bildungsinstitution auf der anderen.
