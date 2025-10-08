@@ -1,5 +1,5 @@
 
-import { CheckCircle, PlusCircle, SmilePlus } from "lucide-react";
+import { CheckCircle, PlusCircle, SmilePlus, BookCopy } from "lucide-react";
 
 export function WhyBoth() {
   return (
@@ -15,10 +15,10 @@ export function WhyBoth() {
         </div>
         <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-2 md:gap-12 lg:grid-cols-3 mt-12">
           <div className="grid gap-4 text-center p-4">
-            <CheckCircle className="h-12 w-12 mx-auto text-primary" />
-            <h3 className="text-xl font-bold font-headline">Vollständige Verwirrung</h3>
+            <BookCopy className="h-12 w-12 mx-auto text-primary" />
+            <h3 className="text-xl font-bold font-headline">Zwei Bücher, ein Universum</h3>
             <p className="text-sm text-muted-foreground text-balance">
-              Die Handlungsstränge sind derart lose verknüpft, dass Sie sich fragen werden, ob es überhaupt welche gibt.
+              Erleben Sie das ganze Ausmaß des literarischen Unsinns, von der Schule bis zur Bürokratie.
             </p>
           </div>
           <div className="grid gap-4 text-center p-4">
