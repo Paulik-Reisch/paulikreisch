@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { Badge } from "../ui/badge";
+import { motion, AnimatePresence } from "framer-motion";
 
 function BookCarousel({ book }: { book: Product }) {
   const [api, setApi] = useState<CarouselApi>();
@@ -89,6 +90,82 @@ function BookCarousel({ book }: { book: Product }) {
   );
 }
 
+function PriceDisplay({ book }: { book: Product }) {
+  const isPreorder = book.preorderPrice !== undefined;
+  const [showPreorderPrice, setShowPreorderPrice] = useState(false);
+
+  useEffect(() => {
+    if (isPreorder) {
+      const timer = setTimeout(() => {
+        setShowPreorderPrice(true);
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [isPreorder]);
+
+  if (!isPreorder) {
+    return (
+      <div className="min-h-[70px] flex flex-col justify-center items-center">
+        <span className="text-2xl font-bold mt-2 inline-block">{book.price.toString().replace('.', ',')} €</span>
+        <p className="text-xs text-muted-foreground">inkl. MwSt.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-[70px] flex flex-col justify-center items-center">
+      <div className="flex items-baseline justify-center gap-2 mt-2">
+        <AnimatePresence>
+          {!showPreorderPrice ? (
+            <motion.span
+              key="initial"
+              initial={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              className="text-2xl font-bold text-muted-foreground"
+            >
+              {book.price.toString().replace('.', ',')} €
+            </motion.span>
+          ) : (
+            <motion.div
+              key="final"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex items-baseline justify-center gap-2"
+            >
+              <span className="text-xl font-bold text-muted-foreground line-through">
+                {book.price.toString().replace('.', ',')} €
+              </span>
+              {book.preorderPrice && (
+                <motion.span
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ type: "spring", stiffness: 200, damping: 10 }}
+                  className="text-2xl font-bold text-destructive"
+                >
+                  {book.preorderPrice.toString().replace('.', ',')} €
+                </motion.span>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+      <AnimatePresence>
+      {showPreorderPrice && (
+         <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+         >
+            <Badge variant="destructive" className="mt-1 text-xs">Spare 23% auf die ersten 50 Exemplare!</Badge>
+            <p className="text-xs text-muted-foreground">inkl. MwSt.</p>
+        </motion.div>
+      )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+
 function BookCard({ book }: { book: Product }) {
     const isPreorder = book.preorderPrice !== undefined;
 
@@ -98,43 +175,22 @@ function BookCard({ book }: { book: Product }) {
                 <div className="w-full max-w-[300px]">
                     <BookCarousel book={book} />
                 </div>
-                <div className="flex flex-col flex-grow mt-4">
+                <div className="flex flex-col flex-grow mt-2">
                     <h3 className="font-headline text-xl font-bold">{book.title}</h3>
                     <p className="text-xs text-muted-foreground">{book.subtitle}</p>
                     
-                    <div className="my-2">
-                        {isPreorder ? (
-                            <>
-                                <div className="flex items-baseline justify-center gap-2 mt-2">
-                                    <span className="text-xl font-bold text-muted-foreground line-through">
-                                        {book.price.toString().replace('.', ',')} €
-                                    </span>
-                                    {book.preorderPrice && (
-                                        <span className="text-2xl font-bold text-destructive animate-in fade-in zoom-in-50 duration-500">
-                                            {book.preorderPrice.toString().replace('.', ',')} €
-                                        </span>
-                                    )}
-                                </div>
-                                <Badge variant="destructive" className="mt-2 text-xs">Spare 23% auf die ersten 50 Exemplare!</Badge>
-                                <p className="text-xs text-muted-foreground mt-1">inkl. MwSt.</p>
-                            </>
-                        ) : (
-                            <>
-                                <span className="text-2xl font-bold mt-2 inline-block">{book.price.toString().replace('.', ',')} €</span>
-                                <p className="text-xs text-muted-foreground mt-1">inkl. MwSt.</p>
-                            </>
-                        )}
-                    </div>
-                    <div className="mt-auto pt-2">
+                    <PriceDisplay book={book} />
+
+                    <div className="mt-auto pt-1">
                         {isPreorder ? (
                             <Button size="lg" disabled>
                                 Noch nicht verfügbar
                             </Button>
                         ) : (
-                            <a href={book.amazonLink} target="_blank" rel="noopener noreferrer">
-                                <Button size="lg" variant="secondary">
+                            <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="inline-block w-full max-w-[200px]">
+                                <Button size="lg" variant="secondary" className="w-full">
                                     <ShoppingCart className="mr-2 h-4 w-4" />
-                                    Bei Amazon kaufen
+                                    Bei Amazon
                                 </Button>
                             </a>
                         )}
@@ -144,6 +200,7 @@ function BookCard({ book }: { book: Product }) {
         </Card>
     );
 }
+
 
 function BookCardSkeleton() {
     return (
