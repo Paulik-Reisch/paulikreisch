@@ -216,4 +216,41 @@
   .animate-glitch {
     animation: glitch 0.3s infinite alternate;
   }
+
+  /* Styles for FallingText component */
+  .falling-text-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    text-align: center;
+    padding-top: 2em;
+  }
+
+  .falling-text-target {
+    display: inline-block;
+  }
+
+  .word {
+    display: inline-block;
+    margin: 0 2px;
+    user-select: none;
+    position: absolute; /* Added for physics engine */
+    will-change: transform, left, top; /* Performance optimization */
+    color: hsl(var(--foreground));
+  }
+
+  .highlighted {
+    color: hsl(var(--primary));
+    font-weight: bold;
+  }
+
+  .falling-text-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
 }

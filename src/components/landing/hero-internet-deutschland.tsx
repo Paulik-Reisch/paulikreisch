@@ -12,10 +12,10 @@ export function HeroInternetDeutschland() {
         <div className="flex flex-col items-center space-y-6 text-center">
           <div className="space-y-4 animate-in fade-in-0 slide-in-from-bottom-8 duration-1000 delay-500">
             <h2 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl text-balance">
-              Willkommen im deutschen Internet
+              Verbindung wird hergestellt
             </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl text-balance">
-              Entweder existiert diese Seite nicht, oder das Neuland-Netz hat mal wieder Schluckauf. Beides ist gleich wahrscheinlich.
+              Bitte warten Sie einen Moment. Oder zwei. Oder auch bis ins nächste Jahrhundert.
             </p>
           </div>
            <Link href="/" className="animate-in fade-in-0 slide-in-from-bottom-12 duration-1000 delay-500">
