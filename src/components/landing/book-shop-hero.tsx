@@ -41,7 +41,7 @@ export function BookShopHero() {
   )
 
   return (
-    <section className="w-full py-8 md:py-8 bg-muted/40 overflow-hidden">
+    <section className="w-full py-12 md:py-16 bg-muted/40 overflow-hidden">
        <div className="container px-4 md:px-6">
             <Carousel
                 plugins={[plugin.current]}
@@ -53,7 +53,7 @@ export function BookShopHero() {
                     {heroItems.map((item, index) => (
                     <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3 xl:basis-1/3">
                         <div className="p-2 h-full">
-                        <Card className={`h-64 flex flex-col justify-between p-6 ${item.color} transition-transform duration-300 hover:-translate-y-2`}>
+                        <Card className={`h-full flex flex-col justify-between p-6 ${item.color} transition-transform duration-300 hover:-translate-y-2`}>
                             {item.type === 'quote' ? (
                                 <CardContent className="p-0 flex flex-col justify-center items-center text-center h-full">
                                     <p className="text-xl font-semibold text-balance">»{item.text}«</p>

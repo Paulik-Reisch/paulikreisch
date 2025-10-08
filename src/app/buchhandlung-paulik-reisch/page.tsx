@@ -14,7 +14,7 @@ const products: Product[] = [
         subtitle: "Erhebliche Kritik am unerhörten Bildungsgang der Lernvollzugsanstalt SK-S",
         price: 10.99,
         imageSrc: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/cover-hw1.png?alt=media&token=a3c3cb2d-c367-4634-b2b1-944e497f144e",
-        imageBackSrc: "https://placehold.co/300x450/222/fff?text=R%C3%BCckseite+HW1",
+        imageBackSrc: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/back-hw1-temp.png?alt=media&token=a859415e-bf5c-4688-ab60-a4c55dbe6cb1",
         aiHint: "book cover satire",
         amazonLink: "https://amzn.eu/d/0CdFeZ3",
         description: "Die satirische Abrechnung mit dem Schulsystem, Lehrern als Beamtenrobotern und dem täglichen Wahnsinn des Erwachsenwerdens."
