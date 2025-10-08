@@ -16,6 +16,7 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import { Badge } from "../ui/badge";
 
 function BookCarousel({ book }: { book: Product }) {
   const [api, setApi] = useState<CarouselApi>();
@@ -40,15 +41,14 @@ function BookCarousel({ book }: { book: Product }) {
             <CarouselItem key={index}>
               <div className="p-1">
                 <div className="overflow-hidden rounded-md">
-                  <div className="relative w-full aspect-[2/3]">
-                    <Image
-                      alt={`Cover von ${book.title}`}
-                      src={src}
-                      data-ai-hint={book.aiHint}
-                      fill
-                      className="object-contain"
-                    />
-                  </div>
+                  <Image
+                    alt={`Cover von ${book.title}`}
+                    src={src}
+                    data-ai-hint={book.aiHint}
+                    width={300}
+                    height={450}
+                    className="object-contain w-full h-auto"
+                  />
                 </div>
               </div>
             </CarouselItem>
@@ -79,10 +79,10 @@ function HW2BookCard({ book }: { book: Product }) {
         <Card className="flex flex-col h-full overflow-hidden transition-transform duration-300 hover:-translate-y-2">
             <CardContent className="p-4 md:p-6 flex flex-col h-full">
                 <BookCarousel book={book} />
-                <div className="flex flex-col flex-grow">
+                <div className="flex flex-col flex-grow mt-4">
                     <h3 className="font-headline text-xl font-bold">{book.title}</h3>
                     <p className="text-xs text-muted-foreground flex-grow mt-1">{book.subtitle}</p>
-                    <div className="my-2 h-20">
+                    <div className="my-4">
                         <div className="flex items-baseline gap-2">
                             <span className="text-2xl font-bold text-muted-foreground line-through">
                                 {book.price.toString().replace('.', ',')} €
@@ -94,6 +94,7 @@ function HW2BookCard({ book }: { book: Product }) {
                             )}
                         </div>
                         <span className="text-xs text-muted-foreground">inkl. MwSt.</span>
+                         <Badge variant="destructive" className="mt-2 text-sm animate-pulse">Spare 23% auf die ersten 50 Exemplare!</Badge>
                     </div>
                      <Button size="lg" className="w-full mt-auto" disabled>
                         Noch nicht verfügbar
@@ -109,10 +110,10 @@ function BookCard({ book }: { book: Product }) {
         <Card className="flex flex-col h-full overflow-hidden transition-transform duration-300 hover:-translate-y-2">
             <CardContent className="p-4 md:p-6 flex flex-col h-full">
                 <BookCarousel book={book} />
-                <div className="flex flex-col flex-grow">
+                <div className="flex flex-col flex-grow mt-4">
                     <h3 className="font-headline text-xl font-bold">{book.title}</h3>
                     <p className="text-xs text-muted-foreground flex-grow mt-1">{book.subtitle}</p>
-                    <div className="my-2 h-20">
+                    <div className="my-4">
                          <span className="text-2xl font-bold">{book.price.toString().replace('.', ',')} €</span>
                         <span className="text-xs text-muted-foreground ml-2">inkl. MwSt.</span>
                     </div>
@@ -149,7 +150,7 @@ export function BookGrid({ initialProducts }: { initialProducts: Product[]}) {
   const hw2 = initialProducts.find(p => p.id === 'hw2');
 
   return (
-    <section className="w-full py-12 md:py-12">
+    <section className="w-full py-12 md:py-16">
       <div className="container px-4 md:px-6">
         <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <div className="mx-auto grid max-w-4xl grid-cols-1 gap-12 sm:grid-cols-2">
