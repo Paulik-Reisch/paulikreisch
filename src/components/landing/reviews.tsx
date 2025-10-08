@@ -67,7 +67,7 @@ export function Reviews() {
                                             <Star key={i} className={`w-5 h-5 ${i < review.stars ? 'fill-primary text-primary' : 'fill-muted stroke-muted-foreground'}`} />
                                         ))}
                                     </div>
-                                    <p className="text-sm text-left italic">"{review.text}"</p>
+                                    <p className="text-sm text-left italic">»{review.text}«</p>
                                 </div>
                                 <p className="text-right mt-4 font-semibold">- {review.author}</p>
                                 </CardContent>
