@@ -6,18 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Progress } from '@/components/ui/progress';
 import { Battery, BatteryFull, BatteryMedium, BatteryLow, BatteryWarning } from 'lucide-react';
 
-const getEnergyLevel = () => {
-    const now = new Date();
-    const currentHour = now.getHours();
-    
-    if (currentHour < 8) return 95; // Vor der Schule
-    if (currentHour < 10) return 60; // Nach den ersten beiden Stunden
-    if (currentHour < 12) return 25; // Kurz vor der Mittagspause
-    if (currentHour < 14) return 40; // Nach der Pause (kurzer Anstieg)
-    if (currentHour < 16) return 5;  // Ende des Schultags
-    return 75; // Nachmittags-Kaffee oder Erholung
-};
-
 const EnergyIcon = ({ level }: { level: number }) => {
     if (level > 75) return <BatteryFull className="w-6 h-6 text-green-500" />;
     if (level > 50) return <BatteryMedium className="w-6 h-6 text-yellow-500" />;
@@ -26,15 +14,23 @@ const EnergyIcon = ({ level }: { level: number }) => {
 }
 
 export function TeacherEnergyLevel() {
-    const [energy, setEnergy] = useState(0);
+    const [targetEnergy, setTargetEnergy] = useState(0);
+    const [displayEnergy, setDisplayEnergy] = useState(0);
 
     useEffect(() => {
-        // Set initial value on client mount
-        const initialEnergy = getEnergyLevel();
-        setEnergy(initialEnergy);
-
-        // No interval needed as it's just a snapshot of the current time
+        // Run only on client
+        const randomEnergy = Math.floor(Math.random() * 101);
+        setTargetEnergy(randomEnergy);
     }, []);
+
+    useEffect(() => {
+        if (displayEnergy < targetEnergy) {
+            const timer = setTimeout(() => {
+                setDisplayEnergy(prev => Math.min(prev + 1, targetEnergy));
+            }, 20); // Speed of the animation
+            return () => clearTimeout(timer);
+        }
+    }, [displayEnergy, targetEnergy]);
 
     return (
         <section className="w-full py-8 md:py-12 bg-white">
@@ -52,15 +48,14 @@ export function TeacherEnergyLevel() {
                         <CardHeader>
                             <CardTitle className="flex items-center justify-between">
                                 <span>Aktueller Status</span>
-                                <EnergyIcon level={energy} />
+                                <EnergyIcon level={targetEnergy} />
                             </CardTitle>
-                            <CardDescription>Systemleistung in Prozent</CardDescription>
                         </CardHeader>
                         <CardContent>
                              <div className="relative h-8 w-full">
-                                <Progress value={energy} className="h-8" />
+                                <Progress value={displayEnergy} className="h-8 transition-all duration-500 ease-out" />
                                 <div className="absolute inset-0 flex items-center justify-center">
-                                    <span className="font-bold text-lg text-primary-foreground drop-shadow-md">{energy}%</span>
+                                    <span className="font-bold text-lg text-primary-foreground drop-shadow-md">{Math.round(displayEnergy)}%</span>
                                 </div>
                             </div>
                         </CardContent>
