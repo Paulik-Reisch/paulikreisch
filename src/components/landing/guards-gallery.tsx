@@ -11,7 +11,7 @@ import {
 const guards = [
     { title: "Oberaufseher K.", specialty: "Spezialgebiet: Spontane Leistungskontrollen und das Zerstören von Träumen.", image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/personal1.png?alt=media&token=d32360f0-7952-4027-926b-94d808cc5ab9", hint: "strict teacher" },
     { title: "Wärterin M.", specialty: "Meisterin des unangekündigten Vokabeltests und der passiv-aggressiven Ermahnung.", image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/personal2.png?alt=media&token=bba11180-2e70-4b25-a3c4-a138cf4f09f4", hint: "stern teacher" },
-    { title: "Schließer H.", specialty: "Verantwortlich für die pünktliche Verriegelung aller Fluchtwege.", image: "https://picsum.photos/seed/guard3/200/200", hint: "old teacher" },
+    { title: "Schließer H.", specialty: "Verantwortlich für die pünktliche Verriegelung aller Fluchtwege.", image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/personal3.png?alt=media&token=5d032880-5272-49e7-b1ca-673e4927fab2", hint: "old teacher" },
     { title: "Aufseherin B.", specialty: "Expertin für die pädagogisch wertvolle Maßnahme des lauten Schweigens.", image: "https://picsum.photos/seed/guard4/200/200", hint: "serious teacher" },
 ];
 
