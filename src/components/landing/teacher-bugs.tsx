@@ -9,7 +9,7 @@ const bugs = [
   },
   {
     code: "Error 502: Bad Gateway",
-    description: "Symptom: Antwortet auf komplexe Fragen mit \"Das steht im Buch\". Lösung: Externe Wissens-API konsultieren.",
+    description: "Symptom: Antwortet auf komplexe Fragen mit \"Das steht im Buch\". Lösung: hoffen, einen anderen Lehrer zu bekommen.",
   },
   {
     code: "Infinite Loop: \"Ruhe jetzt!\"",
@@ -19,7 +19,7 @@ const bugs = [
 
 export function TeacherBugs() {
   return (
-    <section className="w-full py-8 md:py-12 bg-muted">
+    <section className="w-full py-8 md:py-12 bg-subtle-yellow">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">

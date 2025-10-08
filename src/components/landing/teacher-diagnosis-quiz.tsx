@@ -32,7 +32,7 @@ const questions = [
     points: -20,
   },
   {
-    question: "Scheint die Korrekturgeschwindigkeit von Klausuren unmenschlich schnell zu sein (weniger als 3 Wochen pro Stapel)?",
+    question: "Scheint die Korrekturgeschwindigkeit von Klausuren unmenschlich schnell zu sein (weniger als drei Wochen pro Stapel)?",
     points: 25,
   },
   {
