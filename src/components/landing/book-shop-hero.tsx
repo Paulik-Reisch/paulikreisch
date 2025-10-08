@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -25,14 +26,6 @@ const heroItems = [
         text: 'Dieses Buch ist eine Gefahr. Ich habe meinen Kaffee verschüttet, weil ich zu sehr gelacht habe.',
         author: 'Opfer der Komödie',
         color: 'bg-yellow-100 dark:bg-yellow-900/30'
-    },
-    {
-        type: 'lp_promo',
-        title: 'Der Bürokratie-Generator',
-        description: 'Erhalten Sie auf Knopfdruck ein absurd langes und sinnloses Behörden-Antwortschreiben.',
-        link: '/lp-buerokratie-generator',
-        icon: Book,
-        color: 'bg-green-100 dark:bg-green-900/30'
     },
      {
         type: 'quote',

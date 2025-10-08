@@ -66,7 +66,7 @@ export function ShopNewsletter() {
                             Benachrichtigung erhalten, wenn das Buch online geht.
                         </p>
                          <form ref={formRef} action={formAction} className="w-full max-w-sm flex gap-2">
-                            <Input type="email" name="email" placeholder="deine-email@adresse.de" required className="flex-grow"/>
+                            <Input type="email" name="email" placeholder="meine.email@adresse.de" required className="flex-grow"/>
                             <input type="hidden" name="source" value="book-shop-newsletter" />
                             <NewsletterSubmitButton />
                         </form>
