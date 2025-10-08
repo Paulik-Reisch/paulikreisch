@@ -4,6 +4,8 @@ import { HeroLehrerRoboter } from "@/components/landing/hero-lehrer-roboter";
 import { TeacherBugs } from "@/components/landing/teacher-bugs";
 import { TeacherEnergyLevel } from "@/components/landing/teacher-energy-level";
 import { CoffeeCompatibility } from "@/components/landing/coffee-compatibility";
+import { TeacherDiagnosisQuiz } from "@/components/landing/teacher-diagnosis-quiz";
+import { TeacherManualCta } from "@/components/landing/teacher-manual-cta";
 
 export default function LehrerRoboterPage() {
   return (
@@ -14,6 +16,8 @@ export default function LehrerRoboterPage() {
         <TeacherBugs />
         <TeacherEnergyLevel />
         <CoffeeCompatibility />
+        <TeacherDiagnosisQuiz />
+        <TeacherManualCta />
       </main>
       <Footer />
     </div>

@@ -9,9 +9,9 @@ import {
 } from "@/components/ui/tooltip"
 
 const guards = [
-    { title: "Oberaufseher K.", specialty: "Spezialgebiet: Spontane Leistungskontrollen und das Zerstören von Träumen.", image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/personal1.png?alt=media&token=3e4d20e4-c925-46a6-99de-2d8e5dc4abe4", hint: "strict teacher" },
-    { title: "Wärterin M.", specialty: "Meisterin des unangekündigten Vokabeltests und der passiv-aggressiven Ermahnung.", image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/personal2.png?alt=media&token=6cc733c4-bcdd-4b1d-a18c-837110ed519e", hint: "stern teacher" },
-    { title: "Schließer H.", specialty: "Verantwortlich für die pünktliche Verriegelung aller Fluchtwege.", image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/personal3.png?alt=media&token=f4aac62f-06bf-44cf-a50c-2991e82134f4", hint: "old teacher" },
+    { title: "Oberaufseher K.", specialty: "Spezialgebiet: Spontane Leistungskontrollen und das Zerstören von Träumen.", image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/personal1.png?alt=media&token=044b6a93-3e27-45f9-ba85-aaf3753e3a14", hint: "strict teacher" },
+    { title: "Wärterin M.", specialty: "Meisterin des unangekündigten Vokabeltests und der passiv-aggressiven Ermahnung.", image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/personal2.png?alt=media&token=8bfbfe12-09fd-42ae-bfed-47f34e75fbd4", hint: "stern teacher" },
+    { title: "Schließer H.", specialty: "Verantwortlich für die pünktliche Verriegelung aller Fluchtwege.", image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/personal3.png?alt=media&token=cfd2bda2-16bf-4aef-ab50-12a2531760b4", hint: "old teacher" },
     { title: "Aufseherin B.", specialty: "Expertin für die pädagogisch wertvolle Maßnahme des lauten Schweigens.", image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/personal4.png?alt=media&token=f4570b8e-d7a2-4b21-8fda-04b438e299cf", hint: "serious teacher" },
 ];
 
