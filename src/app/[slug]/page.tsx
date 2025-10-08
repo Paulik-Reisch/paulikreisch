@@ -19,7 +19,8 @@ export default function LegalPage({ params }: { params: { slug: string } }) {
       getLegalPage(slug)
         .then((data) => {
           if (!data) {
-            console.error(`Page not found for slug: ${slug}`);
+            // This console.error was causing noise on 404 pages.
+            // The notFound() call below handles the user-facing logic correctly.
           }
           setPage(data);
         })
