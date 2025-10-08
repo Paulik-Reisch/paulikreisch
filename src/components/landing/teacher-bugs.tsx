@@ -5,14 +5,14 @@ import { AlertTriangle } from "lucide-react";
 const bugs = [
   {
     code: "Error 404: Motivation Not Found",
-    description: "Symptom: Starrer Blick, wiederholt Phrasen wie 'Das brauchen wir für die Klausur'.",
+    description: "Symptom: Starrer Blick, wiederholt Phrasen wie \"Das brauchen wir für die Klausur\".",
   },
   {
     code: "Error 502: Bad Gateway",
-    description: "Symptom: Antwortet auf komplexe Fragen mit 'Das steht im Buch'. Lösung: auf einen anderen Lehrer hoffen.",
+    description: "Symptom: Antwortet auf komplexe Fragen mit \"Das steht im Buch\". Lösung: auf einen anderen Lehrer hoffen.",
   },
   {
-    code: "Infinite Loop: 'Ruhe jetzt!'",
+    code: "Infinite Loop: \"Ruhe jetzt!\"",
     description: "Symptom: Wiederholt den Befehl in steigender Lautstärke, ohne das eigentliche Problem zu lösen.",
   },
 ];
