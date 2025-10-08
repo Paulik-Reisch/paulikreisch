@@ -17,8 +17,8 @@ import Link from "next/link"
 const heroItems = [
     {
         type: 'quote',
-        text: 'Dieses Buch ist eine Gefahr. Ich habe meinen Kaffee verschüttet, weil ich zu sehr gelacht habe.',
-        author: 'Opfer der Komödie',
+        text: 'Ich habe das Buch im Zug gelesen und musste so lachen, dass ich meinen Halt verpasst habe. Musste 30km zurücklaufen. Hat sich gelohnt.',
+        author: 'Ein zufriedener Pendler',
         color: 'bg-yellow-100 dark:bg-yellow-900/30'
     },
      {

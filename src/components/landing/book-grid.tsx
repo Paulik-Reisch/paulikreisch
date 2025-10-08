@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -6,10 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingCart, Sparkles, PenSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-  Dialog,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Product } from "@/lib/firestore";
 import { Skeleton } from "../ui/skeleton";
 
@@ -110,18 +107,16 @@ export function BookGrid({ initialProducts }: { initialProducts: Product[]}) {
     <section className="w-full py-12 md:py-24">
       <div className="container px-4 md:px-6">
         <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 justify-center">
                 {initialProducts.length === 0 ? (
                     <>
-                        <BookCardSkeleton />
-                        <BookCardSkeleton />
                         <BookCardSkeleton />
                         <BookCardSkeleton />
                     </>
                 ) : (
                     <>
-                        {hw1 && <BookCard book={hw1} />}
-                        {hw2 && <HW2BookCard book={hw2} />}
+                        {hw1 && <div className="max-w-xs w-full"><BookCard book={hw1} /></div>}
+                        {hw2 && <div className="max-w-xs w-full"><HW2BookCard book={hw2} /></div>}
                     </>
                 )}
             </div>
