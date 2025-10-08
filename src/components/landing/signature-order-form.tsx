@@ -213,7 +213,7 @@ export function SignatureOrderForm({ book }: { book: Product }) {
                     />
                     <Label htmlFor="hw1_hasSignature" className="font-semibold text-base cursor-pointer flex justify-between w-full">
                         <span>Originalsignatur der Autoren</span>
-                        <span className="text-muted-foreground font-mono">+{bookPrices.hw1_signature.toFixed(2)} €</span>
+                        <span className="text-muted-foreground font-mono">+ {bookPrices.hw1_signature.toFixed(2).replace('.', ',')} €</span>
                     </Label>
                 </div>
                  <div className="flex items-center space-x-3 p-2 rounded-md bg-background/50">
@@ -224,7 +224,7 @@ export function SignatureOrderForm({ book }: { book: Product }) {
                     />
                     <Label htmlFor="hw1_hasDedication" className="font-semibold text-base cursor-pointer flex justify-between w-full">
                        <span>Persönliche Widmung</span>
-                       <span className="text-muted-foreground font-mono">+{bookPrices.hw1_dedication.toFixed(2)} €</span>
+                       <span className="text-muted-foreground font-mono">+ {bookPrices.hw1_dedication.toFixed(2).replace('.', ',')} €</span>
                     </Label>
                 </div>
                  {watchFields.hw1_hasDedication && (
@@ -237,7 +237,7 @@ export function SignatureOrderForm({ book }: { book: Product }) {
                             />
                             <Label htmlFor="hw1_provideDedication" className="cursor-pointer flex justify-between w-full">
                                 <span>Ich möchte meine eigene Widmung vorgeben</span>
-                                <span className="text-muted-foreground font-mono">+{bookPrices.hw1_custom_dedication.toFixed(2)} €</span>
+                                <span className="text-muted-foreground font-mono">+ {bookPrices.hw1_custom_dedication.toFixed(2).replace('.', ',')} €</span>
                             </Label>
                         </div>
                         {watchFields.hw1_provideDedication && (
@@ -261,7 +261,7 @@ export function SignatureOrderForm({ book }: { book: Product }) {
                 <Sparkles className="h-4 w-4" />
                 <AlertTitle className="font-headline text-xl">KRISE? Sparen Sie jetzt!</AlertTitle>
                 <AlertDescription className="text-primary/90 text-base">
-                    Aktivieren Sie dieses Angebot und sparen Sie <span className="font-bold">80% auf "Hallo Welt"</span>, indem Sie "Hallo Welt 2" (inkl. Signatur) für nur {(bookPrices.hw2_signature_package + (hw2_static.preorderPrice || 0)).toFixed(2)} € VORBESTELLEN!
+                    Aktivieren Sie dieses Angebot und sparen Sie <span className="font-bold">80% auf "Hallo Welt"</span>, indem Sie "Hallo Welt 2" (inkl. Signatur) für nur {((bookPrices.hw2_signature_package + (hw2_static.preorderPrice || 0)).toFixed(2).replace('.', ','))} € VORBESTELLEN!
                 </AlertDescription>
                  <div className="flex items-center space-x-3 p-2 rounded-md mt-4">
                     <Controller
@@ -377,39 +377,39 @@ export function SignatureOrderForm({ book }: { book: Product }) {
             <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                     <span>{book.title}</span>
-                    <span>{(book.price || 0).toFixed(2)} €</span>
+                    <span>{(book.price || 0).toFixed(2).replace('.', ',')} €</span>
                 </div>
-                {watchFields.hw1_hasSignature && <div className="flex justify-between"><span>Originalsignatur (HW1)</span><span>{bookPrices.hw1_signature.toFixed(2)} €</span></div>}
-                {watchFields.hw1_hasDedication && <div className="flex justify-between"><span>Persönliche Widmung (HW1)</span><span>{bookPrices.hw1_dedication.toFixed(2)} €</span></div>}
-                {watchFields.hw1_hasDedication && watchFields.hw1_provideDedication && <div className="flex justify-between"><span>Wunsch-Text (HW1)</span><span>{bookPrices.hw1_custom_dedication.toFixed(2)} €</span></div>}
+                {watchFields.hw1_hasSignature && <div className="flex justify-between"><span>Originalsignatur (HW1)</span><span>{bookPrices.hw1_signature.toFixed(2).replace('.', ',')} €</span></div>}
+                {watchFields.hw1_hasDedication && <div className="flex justify-between"><span>Persönliche Widmung (HW1)</span><span>{bookPrices.hw1_dedication.toFixed(2).replace('.', ',')} €</span></div>}
+                {watchFields.hw1_hasDedication && watchFields.hw1_provideDedication && <div className="flex justify-between"><span>Wunsch-Text (HW1)</span><span>{bookPrices.hw1_custom_dedication.toFixed(2).replace('.', ',')} €</span></div>}
                 
                 {watchFields.acceptComboDeal && hw2_static ? (
                     <>
                         <div className="flex justify-between text-destructive">
                             <span>Rabatt (80% auf HW1)</span>
-                            <span>-{( (book.price || 0) * 0.8).toFixed(2)} €</span>
+                            <span>-{( (book.price || 0) * 0.8).toFixed(2).replace('.', ',')} €</span>
                         </div>
                         <Separator className="my-2"/>
                          <div className="flex justify-between font-semibold">
                             <span>"Hallo Welt 2" Vorbesteller-Paket</span>
-                             <span>{((hw2_static.preorderPrice || 0) + bookPrices.hw2_signature_package).toFixed(2)} €</span>
+                             <span>{((hw2_static.preorderPrice || 0) + bookPrices.hw2_signature_package).toFixed(2).replace('.', ',')} €</span>
                         </div>
                          <div className="flex justify-between pl-4 text-xs">
-                            <span>(Buch: {(hw2_static.preorderPrice || 0).toFixed(2)}€, Signatur-Paket: {bookPrices.hw2_signature_package.toFixed(2)}€)</span>
+                            <span>(Buch: {(hw2_static.preorderPrice || 0).toFixed(2).replace('.', ',')} €, Signatur-Paket: {bookPrices.hw2_signature_package.toFixed(2).replace('.', ',')} €)</span>
                         </div>
                          <div className="flex justify-between pl-4 text-xs text-destructive">
-                            <span>(Ersparnis Buch: {((hw2_static.price || 0) - (hw2_static.preorderPrice || 0)).toFixed(2)}€)</span>
+                            <span>(Ersparnis Buch: {((hw2_static.price || 0) - (hw2_static.preorderPrice || 0)).toFixed(2).replace('.', ',')} €)</span>
                         </div>
                         <Separator className="my-2"/>
                         <div className="flex justify-between">
                             <span>Logistik & Bearbeitung (Bundle)</span>
-                            <span>{bookPrices.logistics_bundle.toFixed(2)} €</span>
+                            <span>{bookPrices.logistics_bundle.toFixed(2).replace('.', ',')} €</span>
                         </div>
                     </>
                 ) : (
                      <div className="flex justify-between">
                         <span>Logistik & Bearbeitung</span>
-                        <span>{bookPrices.logistics_single.toFixed(2)} €</span>
+                        <span>{bookPrices.logistics_single.toFixed(2).replace('.', ',')} €</span>
                     </div>
                 )}
             </div>
@@ -419,8 +419,8 @@ export function SignatureOrderForm({ book }: { book: Product }) {
                      <div className="flex justify-between items-baseline">
                         <span className="font-bold text-destructive">Totale Ersparnis:</span>
                         <div className="flex items-baseline gap-2 font-mono">
-                            <span className="text-muted-foreground line-through">{originalPrice.toFixed(2)}€</span>
-                            <span className="font-bold text-destructive">-{totalDiscount.toFixed(2)}€</span>
+                            <span className="text-muted-foreground line-through">{originalPrice.toFixed(2).replace('.', ',')} €</span>
+                            <span className="font-bold text-destructive">-{totalDiscount.toFixed(2).replace('.', ',')} €</span>
                         </div>
                     </div>
                 </div>
@@ -456,3 +456,5 @@ export function SignatureOrderForm({ book }: { book: Product }) {
     </DialogContent>
   );
 }
+
+    

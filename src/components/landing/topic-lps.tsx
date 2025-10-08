@@ -9,7 +9,7 @@ import { Separator } from '../ui/separator';
 
 const topics = [
     {
-        title: "Schule = Straflager",
+        title: "Schule – ein Straflager",
         description: "Die Lernvollzugsanstalt hat wieder geöffnet. Freistunden als Fluchtversuch, Lehrer als Wärter.",
         link: "/lp-schule-straflager",
         icon: School,
@@ -30,7 +30,7 @@ const topics = [
         color: "text-green-500"
     },
     {
-        title: "Busfahren = Mutprobe",
+        title: "Busfahren als Mutprobe",
         description: "Der tägliche Nahverkehr als Gladiatorenkampf. Hol Sie sich den Survival Guide.",
         link: "/lp-busfahren-mutprobe",
         icon: Bus,
@@ -51,8 +51,8 @@ const topics = [
         color: "text-purple-500"
     },
     {
-        title: "Corona für Schüler erklärt",
-        description: "Eine satirische Aufarbeitung von Tests & Quarantäne. Nasenbohrer willkommen!",
+        title: "Corona für Troglodyten erklärt",
+        description: "Eine satirische Aufarbeitung von Tests und Quarantäne. Nasenbohrer willkommen!",
         link: "/lp-corona-satire",
         icon: Biohazard,
         color: "text-pink-500"

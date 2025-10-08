@@ -30,16 +30,16 @@ export function HeroBuerokratieSimulator() {
               Willkommen im Bürokratie-Simulator
             </h1>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl text-balance">
-              Füllen Sie den Antrag auf Beantragung eines Antragsformulars aus. Einfach, digital und effizient.
+              Füllen Sie den Antrag auf Beantragung eines Formulars aus. Einfach und effizient.
             </p>
           </div>
         </div>
         <div className="max-w-2xl mx-auto mt-12 p-8 border-4 border-dashed border-gray-400 bg-gray-50 rounded-lg">
             <form className="space-y-6">
-                <h2 className="text-xl font-semibold font-headline">Antrag A-38 (Passierschein)</h2>
+                <h2 className="text-xl font-semibold font-headline">Passierschein A-38</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className='space-y-2'>
-                        <Label htmlFor='name'>Name, Vorname (in Blockbuchstaben)</Label>
+                        <Label htmlFor='name'>Name, Vorname (in Schreibschrift)</Label>
                         <Input id='name' placeholder='Mustermann, Max' disabled/>
                     </div>
                      <div className='space-y-2'>
@@ -70,7 +70,7 @@ export function HeroBuerokratieSimulator() {
                     <Button onClick={handleDisabledClick}><FilePlus className="mr-2 h-6 w-6"/>Speichern</Button>
                     <Button onClick={handleDisabledClick} variant="destructive"><FileMinus className="mr-2 h-5 w-5"/>Löschen</Button>
                 </div>
-                 <p className="text-xs text-muted-foreground pt-4">Hinweis: Keiner dieser Buttons hat eine Funktion. Dies ist eine Simulation!</p>
+                 <p className="text-xs text-muted-foreground pt-4">(Hinweis: Dies ist eine Simulation – die Buttons haben keine Funktion)</p>
             </form>
         </div>
       </div>

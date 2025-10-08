@@ -82,7 +82,7 @@ export function HW2PreorderPopup({ book, children }: { book: Product, children: 
       if (state.success) {
         toast({
             title: "Herzlichen Glückwunsch!",
-            description: "Ihre unverbindliche Bestellung wurde registriert.",
+            description: "Ihre Bestellung wurde registriert.",
         });
         reset();
         setIsDialogOpen(false);
