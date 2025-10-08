@@ -14,23 +14,37 @@ const EnergyIcon = ({ level }: { level: number }) => {
 }
 
 export function TeacherEnergyLevel() {
-    const [targetEnergy, setTargetEnergy] = useState(0);
+    const [targetEnergy, setTargetEnergy] = useState(50);
     const [displayEnergy, setDisplayEnergy] = useState(0);
 
     useEffect(() => {
-        // Run only on client
-        const randomEnergy = Math.floor(Math.random() * 101);
-        setTargetEnergy(randomEnergy);
+        // Set an initial random target on mount
+        setTargetEnergy(Math.floor(Math.random() * 101));
+
+        // Update the target energy every 3 seconds
+        const interval = setInterval(() => {
+            setTargetEnergy(Math.floor(Math.random() * 101));
+        }, 3000);
+
+        return () => clearInterval(interval);
     }, []);
 
     useEffect(() => {
-        if (displayEnergy < targetEnergy) {
-            const timer = setTimeout(() => {
-                setDisplayEnergy(prev => Math.min(prev + 1, targetEnergy));
-            }, 20); // Speed of the animation
-            return () => clearTimeout(timer);
-        }
-    }, [displayEnergy, targetEnergy]);
+        // Animate the display energy towards the target energy
+        const animationInterval = setInterval(() => {
+            setDisplayEnergy(prev => {
+                if (prev < targetEnergy) {
+                    return Math.min(prev + 1, targetEnergy);
+                }
+                if (prev > targetEnergy) {
+                    return Math.max(prev - 1, targetEnergy);
+                }
+                return prev;
+            });
+        }, 20); // Animation speed
+
+        return () => clearInterval(animationInterval);
+    }, [targetEnergy]);
 
     return (
         <section className="w-full py-8 md:py-12 bg-white">
