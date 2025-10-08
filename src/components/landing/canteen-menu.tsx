@@ -2,11 +2,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Utensils, Biohazard } from "lucide-react";
 
 const menu = [
-    { day: "Montag", dish: "Graue Pampe mit Spurenelementen von Gestern", side: "Dazu ein Glas lauwarmes Leitungswasser." },
-    { day: "Dienstag", dish: "Überraschungs-Auflauf", side: "Die Überraschung ist, dass es schmeckt. Also, fast." },
-    { day: "Mittwoch", dish: "Formfleisch-Fantasie in undefinierbarer Soße", side: "Serviert mit Kartoffel-ähnlichem Erzeugnis." },
-    { day: "Donnerstag", dish: "Vegetarischer Tag: Gekochtes Wasser", side: "Verfeinert mit einem Hauch von Nichts." },
-    { day: "Freitag", dish: "Fischstäbchen-Fragment (Einzahl)", side: "Dazu gibt es Remoulade aus dem letzten Jahrzehnt." },
+    { day: "Montag", dish: "Graue Pampe mit Spurenelementen des gestrigen Tages", side: "dazu ein Glas lauwarmes Leitungswasser." },
+    { day: "Dienstag", dish: "Überraschungs-Auflauf", side: "überraschend ist, dass es schmeckt. Zumindest fast." },
+    { day: "Mittwoch", dish: "Fake-Fleisch-Fantasie in undefinierbarer Soße", side: "serviert mit Kartoffel-ähnlichem Erzeugnis." },
+    { day: "Donnerstag", dish: "Vegetarischer Tag: Gekochtes Wasser", side: "verfeinert mit einem Hauch von Nichts." },
+    { day: "Freitag", dish: "Fischstäbchen-Fragment (Stückzahl: 1)", side: "dazu eine Remoulade aus dem letzten Jahrzehnt." },
 ];
 
 export function CanteenMenu() {

@@ -1,3 +1,4 @@
+
 import {
   Card,
   CardContent,
@@ -36,12 +37,21 @@ export function VisitingHours() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-2 font-mono text-lg text-foreground">
-                <p><strong>Nächster Termin:</strong> 29. Februar 2025</p>
-                <p><strong>Uhrzeit:</strong> 15:00 - 15:07 Uhr (Gruppe A-K)</p>
-                <p><strong>Uhrzeit:</strong> 15:08 - 15:15 Uhr (Gruppe L-Z)</p>
-                <p className="text-sm text-yellow-500 dark:text-yellow-400">
-                  (Pünktlichkeit ist eine Tugend, Verspätung ein Vergehen)
+              <div className="space-y-4 font-mono text-lg text-foreground">
+                 <div>
+                    <p><strong>Nächster Termin:</strong></p>
+                    <p>29. Februar 2025</p>
+                </div>
+                <div>
+                    <p><strong>Uhrzeit (Gruppe A-K):</strong></p>
+                    <p>15:00 - 15:07 Uhr</p>
+                </div>
+                <div>
+                    <p><strong>Uhrzeit (Gruppe L-Z):</strong></p>
+                    <p>15:08 - 15:15 Uhr</p>
+                </div>
+                <p className="text-sm text-yellow-500 dark:text-yellow-400 font-sans">
+                  Pünktlichkeit ist eine Tugend, Verspätung ein Vergehen!
                 </p>
               </div>
             </CardContent>
