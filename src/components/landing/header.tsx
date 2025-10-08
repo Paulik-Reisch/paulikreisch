@@ -2,16 +2,6 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
-
 
 export function Header() {
   return (
@@ -50,34 +40,11 @@ export function Header() {
           </div>
         </a>
         
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button size="sm" variant="secondary">
-                    Bücher
-                    <ChevronDown className="ml-2 h-4 w-4"/>
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Wählen Sie ein Buch</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <Link href="/">
-                    <DropdownMenuItem>
-                        Mehr zu 'Hallo Welt 1' erfahren
-                    </DropdownMenuItem>
-                </Link>
-                <Link href="/lp2">
-                    <DropdownMenuItem>
-                        Mehr zu 'Hallo Welt 2' erfahren
-                    </DropdownMenuItem>
-                </Link>
-                 <DropdownMenuSeparator />
-                 <Link href="/buchhandlung-paulik-reisch">
-                    <DropdownMenuItem>
-                        Zum Shop
-                    </DropdownMenuItem>
-                </Link>
-            </DropdownMenuContent>
-        </DropdownMenu>
+        <Link href="/buchhandlung-paulik-reisch">
+            <Button size="sm" variant="secondary">
+                Buch kaufen
+            </Button>
+        </Link>
 
       </div>
     </header>

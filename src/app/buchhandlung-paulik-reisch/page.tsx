@@ -1,5 +1,5 @@
 
-import { Header } from "@/components/landing/header";
+import { BookShopHeader } from "@/components/landing/book-shop-header";
 import { Footer } from "@/components/landing/footer";
 import { BookGrid } from "@/components/landing/book-grid";
 import { BookShopHero } from "@/components/landing/book-shop-hero";
@@ -39,7 +39,7 @@ const products: Product[] = [
 export default async function BookShopPage() {
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
-      <Header />
+      <BookShopHeader />
       <main className="flex-1 flex flex-col items-center">
         <BookGrid initialProducts={products} />
         <Separator className="my-0 max-w-sm h-[2px] bg-border" />
