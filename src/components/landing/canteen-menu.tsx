@@ -27,16 +27,16 @@ export function CanteenMenu() {
                  <div className="mx-auto max-w-3xl mt-12 space-y-4">
                     {menu.map((item) => (
                         <Card key={item.day} className="bg-background/50">
-                            <CardHeader className="grid grid-cols-[auto_1fr_auto] items-center gap-4 p-4">
+                            <CardHeader className="flex flex-col md:grid md:grid-cols-[auto_1fr_auto] md:items-center gap-4 p-4">
                                 <div className="flex flex-col min-w-[120px]">
                                     <CardTitle className="text-lg font-headline">{item.day}</CardTitle>
                                     {item.subtitle && <CardDescription className="text-xs">{item.subtitle}</CardDescription>}
                                 </div>
-                                <div>
+                                <div className="text-left">
                                     <p className="font-semibold">{item.dish}</p>
                                     <p className="text-sm text-muted-foreground">{item.side}</p>
                                 </div>
-                                <item.icon className="h-8 w-8 text-primary/70" />
+                                <item.icon className="h-8 w-8 text-primary/70 md:justify-self-end" />
                             </CardHeader>
                         </Card>
                     ))}
