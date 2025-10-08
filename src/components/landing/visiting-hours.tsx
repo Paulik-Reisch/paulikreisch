@@ -32,7 +32,7 @@ export function VisitingHours() {
               </CardTitle>
               <CardDescription>
                 Pro Insasse sind 7,5 Minuten Besuchszeit angesetzt. Jede Sekunde
-                darüber hinaus wird dem Notenkonto belastet.
+                darüber hinaus wird dem Notenkonto angelastet.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -55,7 +55,7 @@ export function VisitingHours() {
               <ul className="list-disc list-inside space-y-1 text-muted-foreground">
                 <li>Das Wetter (nur neutrale Bemerkungen)</li>
                 <li>Lobpreisungen für das Bildungssystem</li>
-                <li>Angebote zur Erhöhung des Taschengeldes (des Lehrers)</li>
+                <li>Angebote zur Erhöhung des Kopiergeldes</li>
               </ul>
             </div>
             <div>

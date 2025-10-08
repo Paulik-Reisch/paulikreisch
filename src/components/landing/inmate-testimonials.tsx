@@ -4,17 +4,17 @@ import { MessageSquareQuote } from "lucide-react";
 const testimonials = [
   {
     quote:
-      "Ich war drin wegen eines vergessenen Geodreiecks. Zwei Wochen Einzelhaft im Mathekabinett. Ich ... ich hab Dinge gesehen.",
+      "Ich war drin wegen eines vergessenen Geodreiecks. Zwei Wochen Einzelhaft im Mathekabinett. Ich habe Dinge gesehen ...",
     inmate: "Insasse #734, überlebte 8 Jahre",
   },
   {
     quote:
-      "Sie haben mir mein Pausenbrot weggenommen. Es war mit Salami. MIT SALAMI!",
+      "Sie haben mir mein Pausenbrot weggenommen. Es war mit Salami. Die Monster!",
     inmate: "Insassin #12, suspendiert wegen unerlaubter Wurstwaren",
   },
   {
     quote: "Einmal hab ich im Flur gelacht. Nur einmal.",
-    inmate: "Insasse #99, seitdem auf der Schweigestation",
+    inmate: "Insasse #99, seitdem auf der Intensivschweigestation",
   },
 ];
 
