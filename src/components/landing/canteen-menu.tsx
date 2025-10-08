@@ -12,7 +12,7 @@ const menu = [
 
 export function CanteenMenu() {
     return (
-        <section className="w-full py-8 md:py-12 bg-blue-200 dark:bg-blue-900/50">
+        <section className="w-full py-8 md:py-12 bg-green-100 dark:bg-green-900/30">
             <div className="container px-4 md:px-6">
                 <div className="flex flex-col items-center justify-center space-y-4 text-center">
                     <div className="space-y-2">
