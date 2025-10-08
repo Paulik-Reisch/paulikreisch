@@ -21,14 +21,6 @@ const heroItems = [
         color: 'bg-pink-100 dark:bg-pink-900/30'
     },
     {
-        type: 'lp_promo',
-        title: 'Welche Katastrophenfigur sind Sie?',
-        description: 'Machen Sie den satirischen Persönlichkeitstest, um es herauszufinden.',
-        link: '/lp-satire-typ-test',
-        icon: Sparkles,
-        color: 'bg-blue-100 dark:bg-blue-900/30'
-    },
-    {
         type: 'quote',
         text: 'Dieses Buch ist eine Gefahr. Ich habe meinen Kaffee verschüttet, weil ich zu sehr gelacht habe.',
         author: 'Opfer der Komödie',

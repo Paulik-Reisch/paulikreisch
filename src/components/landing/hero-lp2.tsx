@@ -20,7 +20,7 @@ function SubmitButton() {
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Wird gespeichert ...
                 </>
-            ) : "EXZERPT LESEN"
+            ) : "Exzerpt lesen"
             }
         </Button>
     )
@@ -61,7 +61,7 @@ export function HeroLP2() {
               <Input
                 name="email"
                 className="max-w-lg flex-1"
-                placeholder="Ihre E-Mail-Adresse"
+                placeholder="E-Mail-Adresse eingeben"
                 type="email"
                 required
               />
@@ -69,7 +69,7 @@ export function HeroLP2() {
               <SubmitButton />
             </form>
             <p className="text-xs text-muted-foreground">
-              Wir schicken Ihnen den Auszug. Abmeldung jederzeit möglich.
+              Wir schicken Ihnen einen Auszug. Abmeldung jederzeit möglich.
             </p>
           </div>
         </div>

@@ -31,7 +31,7 @@ export function FeaturesLP2() {
             <BookHeart className="h-10 w-10 mx-auto text-primary" />
             <h3 className="text-xl font-bold font-headline">Mehr Herz</h3>
             <p className="text-sm text-muted-foreground text-balance">
-              Herz im Sinne von Sodbrennen. Die Charaktere durchleben noch absurdere emotionale Achterbahnfahrten.
+              Die Charaktere durchleben noch absurdere emotionale Achterbahnfahrten.
             </p>
           </div>
         </div>

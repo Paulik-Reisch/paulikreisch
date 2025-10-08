@@ -56,7 +56,7 @@ export function Newsletter() {
         </div>
         <div className="mx-auto w-full max-w-sm space-y-2 relative">
           <form ref={formRef} action={formAction} className="flex space-x-2">
-            <Input name="email" className="max-w-lg flex-1" placeholder="Deine E-Mail-Adresse" type="email" required />
+            <Input name="email" className="max-w-lg flex-1" placeholder="E-Mail-Adresse eingeben" type="email" required />
             <input type="hidden" name="source" value="footer-newsletter" />
             <SubmitButton />
           </form>

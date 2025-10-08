@@ -57,7 +57,7 @@ export function CookieBanner() {
             <div className={cn("space-y-4 transition-all duration-300 ease-in-out h-0 opacity-0 overflow-hidden", "md:group-hover:h-auto md:group-hover:opacity-100 md:group-hover:mt-0", isExpanded && "h-auto opacity-100 mt-0")}>
                 <h3 className="font-bold font-headline text-lg">Die Verwendung von Cookies durch Hallo Welt</h3>
                 <p className="text-sm text-muted-foreground">
-                    Wir verwenden Cookies, um Benutzern die bestmögliche Nutzer-Erfahrung zu ermöglichen. Bitten lesen Sie unsere <Link href="/cookie-richtlinie" className="underline hover:text-primary font-semibold">Cookie-Richtlinie</Link>. Indem Du akzeptierst, stimmst Du der Speicherung von absolut nutzlosen, aber technisch notwendigen Cookies auf Deinem Gerät zu.
+                    Wir verwenden Cookies, um Benutzern die bestmögliche Nutzer-Erfahrung zu ermöglichen. Bitten lesen Sie unsere <Link href="/cookie-richtlinie" className="underline hover:text-primary font-semibold">Cookie-Richtlinie</Link>. Indem Sie akzeptieren, stimmen Sie der Speicherung von nutzlosen, aber technisch notwendigen Cookies auf Ihrem Gerät zu.
                 </p>
                 <div className="flex gap-2 justify-end pt-2">
                     <Button onClick={handleDecline} variant="ghost" className="flex-1 sm:flex-none">Ablehnen</Button>
