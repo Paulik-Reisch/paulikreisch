@@ -24,7 +24,7 @@ export function TeacherBugs() {
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">
-              Fehler im System: Häufige Bugs
+              Fehler im System: häufige Bugs
             </h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
               Selbst der beste Code hat seine Schwachstellen. Hier sind die häufigsten Betriebsstörungen des Modells L-3H-R3R.

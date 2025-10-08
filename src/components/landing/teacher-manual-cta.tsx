@@ -27,7 +27,7 @@ export function TeacherManualCta() {
                 src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/cover-mockup-1.png?alt=media&token=c82b73e5-76bd-490d-a65f-008a3bfac00b"
                 width={300}
                 height={450}
-                className="rounded-lg shadow-2xl transform transition-transform duration-500 hover:scale-105 -rotate-3"
+                className="rounded-lg transform transition-transform duration-500 hover:scale-105 -rotate-3"
                 data-ai-hint="book cover"
             />
           </div>
