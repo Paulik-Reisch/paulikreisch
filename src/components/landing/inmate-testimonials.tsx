@@ -1,19 +1,20 @@
+
 import { Card, CardContent } from "@/components/ui/card";
 import { MessageSquareQuote } from "lucide-react";
 
 const testimonials = [
   {
     quote:
-      "Ich war drin wegen eines vergessenen Geodreiecks. Zwei Wochen Einzelhaft im Mathekabinett. Ich habe Dinge gesehen ...",
+      "»Ich war drin wegen eines vergessenen Geodreiecks. Zwei Wochen Einzelhaft im Mathekabinett. Ich habe Dinge gesehen ...«",
     inmate: "Insasse #734, überlebte 8 Jahre",
   },
   {
     quote:
-      "Sie haben mir mein Pausenbrot weggenommen. Es war mit Salami. Die Monster!",
+      "»Sie haben mir mein Pausenbrot weggenommen. Es war mit Salami. Die Monster!«",
     inmate: "Insassin #12, suspendiert wegen unerlaubter Wurstwaren",
   },
   {
-    quote: "Einmal hab ich im Flur gelacht. Nur einmal.",
+    quote: "»Einmal hab ich im Flur gelacht. Nur einmal.«",
     inmate: "Insasse #99, seitdem auf der Intensivschweigestation",
   },
 ];
@@ -42,7 +43,7 @@ export function InmateTestimonials() {
               <CardContent className="p-6 space-y-4">
                 <MessageSquareQuote className="h-8 w-8 text-muted-foreground" />
                 <blockquote className="text-lg font-semibold leading-snug">
-                  "{testimonial.quote}"
+                  {testimonial.quote}
                 </blockquote>
                 <p className="text-sm text-muted-foreground font-medium text-right">
                   – {testimonial.inmate}
