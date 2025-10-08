@@ -42,7 +42,7 @@ export default async function BookShopPage() {
       <BookShopHeader />
       <main className="flex-1 flex flex-col items-center">
         <BookGrid initialProducts={products} />
-        <Separator className="my-8 max-w-sm" />
+        <Separator className="my-6 max-w-sm h-[2px] bg-border" />
         <BookShopHero />
         <WhyBoth />
         <ProductDescription />
