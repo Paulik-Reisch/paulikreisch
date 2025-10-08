@@ -21,14 +21,29 @@ import { Badge } from "../ui/badge";
 function BookCarousel({ book }: { book: Product }) {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
-  const plugin = useRef(Autoplay({ delay: 7000, stopOnInteraction: true }));
+  const plugin = useRef(
+    Autoplay({ delay: 10000, stopOnInteraction: true, playOnInit: false })
+  );
 
   useEffect(() => {
     if (!api) return;
     setCurrent(api.selectedScrollSnap());
+    
+    // Start autoplay with a random delay to ensure asynchronous switching
+    const randomDelay = Math.random() * 1000;
+    const timeoutId = setTimeout(() => {
+        plugin.current.play();
+    }, randomDelay);
+
     api.on("select", () => {
       setCurrent(api.selectedScrollSnap());
     });
+    
+    api.on("pointerDown", () => {
+        plugin.current.reset();
+    });
+
+    return () => clearTimeout(timeoutId);
   }, [api]);
 
   const images = [book.imageSrc, book.imageBackSrc].filter(Boolean) as string[];
@@ -150,7 +165,7 @@ export function BookGrid({ initialProducts }: { initialProducts: Product[]}) {
   const hw2 = initialProducts.find(p => p.id === 'hw2');
 
   return (
-    <section className="w-full py-12 md:py-16">
+    <section className="w-full py-12 md:py-8">
       <div className="container px-4 md:px-6">
         <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <div className="mx-auto grid max-w-4xl grid-cols-1 gap-12 sm:grid-cols-2">
