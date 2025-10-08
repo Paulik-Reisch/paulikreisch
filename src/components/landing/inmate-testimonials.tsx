@@ -6,12 +6,12 @@ const testimonials = [
   {
     quote:
       "»Ich war drin wegen eines vergessenen Geodreiecks. Zwei Wochen Einzelhaft im Mathekabinett. Ich habe Dinge gesehen ...«",
-    inmate: "Insasse #734, überlebte 8 Jahre",
+    inmate: "Insasse #734, überlebte 8 Jahre und 7 Monate",
   },
   {
     quote:
       "»Sie haben mir mein Pausenbrot weggenommen. Es war mit Salami. Die Monster!«",
-    inmate: "Insassin #12, suspendiert wegen unerlaubter Wurstwaren",
+    inmate: "Insassin #12, suspendiert wegen Verzehrs unerlaubter Wurstwaren",
   },
   {
     quote: "»Einmal hab ich im Flur gelacht. Nur einmal.«",
