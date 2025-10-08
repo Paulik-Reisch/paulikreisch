@@ -37,11 +37,11 @@ function HW2BookCard({ book }: { book: Product }) {
                                     showDiscount ? "text-muted-foreground line-through text-lg" : "text-foreground"
                                 )}
                             >
-                                {book.price} €
+                                {book.price.toString().replace('.', ',')} €
                             </span>
                             {showDiscount && book.preorderPrice && (
                                 <span className="text-2xl font-bold text-destructive animate-in fade-in zoom-in-50 duration-500">
-                                    {book.preorderPrice} €
+                                    {book.preorderPrice.toString().replace('.', ',')} €
                                 </span>
                             )}
                         </div>
@@ -68,7 +68,7 @@ function BookCard({ book }: { book: Product }) {
                     <h3 className="font-headline text-xl font-bold">{book.title}</h3>
                     <p className="text-xs text-muted-foreground flex-grow mt-1">{book.subtitle}</p>
                     <div className="my-2 h-20">
-                         <span className="text-2xl font-bold">{book.price} €</span>
+                         <span className="text-2xl font-bold">{book.price.toString().replace('.', ',')} €</span>
                         <span className="text-xs text-muted-foreground ml-2">inkl. MwSt.</span>
                     </div>
                      <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="w-full mt-auto">

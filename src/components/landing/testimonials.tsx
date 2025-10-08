@@ -25,7 +25,7 @@ export function Testimonials() {
                 <Star className="w-5 h-5 fill-muted stroke-muted-foreground" />
               </div>
               <p className="text-sm text-left italic">»Ich habe gelacht, geweint, und meine Lebensentscheidungen in Frage gestellt. Meistens letzteres.«</p>
-              <p className="text-right mt-2 font-semibold">– Ein verwirrter Leser</p>
+              <p className="text-right mt-2 font-semibold">– ein verwirrter Leser</p>
             </CardContent>
           </Card>
           <Card className="transform transition-transform hover:scale-105 -rotate-2">
@@ -51,7 +51,7 @@ export function Testimonials() {
                 <PawPrint className="w-5 h-5 fill-muted stroke-muted-foreground" />
               </div>
               <p className="text-sm text-left italic">»Meine Katze gibt vier Pfoten nach oben! Auch wenn sie es vorzieht, auf dem Buch zu schlafen.«</p>
-              <p className="text-right mt-2 font-semibold">– Ein Haustierbesitzer</p>
+              <p className="text-right mt-2 font-semibold">– ein Haustierbesitzer</p>
             </CardContent>
           </Card>
         </div>
