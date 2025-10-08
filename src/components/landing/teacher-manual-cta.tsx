@@ -1,10 +1,11 @@
+
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 export function TeacherManualCta() {
   return (
-    <section className="w-full py-12 md:py-24 bg-primary text-primary-foreground">
+    <section className="w-full py-8 md:py-12 bg-primary text-primary-foreground">
       <div className="container px-4 md:px-6">
         <div className="grid md:grid-cols-2 gap-8 items-center">
           <div className="space-y-4 text-center md:text-left">
