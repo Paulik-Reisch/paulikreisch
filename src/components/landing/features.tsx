@@ -36,7 +36,7 @@ export function Features() {
               <BrainCircuit className="h-10 w-10 mx-auto" />
               <h3 className="text-xl font-bold font-headline">Taktische Geniestreiche</h3>
               <p className="text-sm text-white/80 text-balance">
-                Lernen Sie, wie man mit absurden Problemen der Schulzeit umgeht – von der Umgehung des Sportunterrichts bis zur Manipulation des Notensystems.
+                Lernen Sie, wie man mit Problemen der Schulzeit umgeht – von der Umgehung des Sportunterrichts bis zur Manipulation der Noten.
               </p>
             </CardContent>
           </Card>
