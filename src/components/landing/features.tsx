@@ -1,5 +1,6 @@
 
-import { BookOpen, Drama, Feather } from "lucide-react";
+
+import { BookOpen, BookCopy, Feather } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 export function Features() {
@@ -14,10 +15,10 @@ export function Features() {
         <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3 lg:gap-12">
           <Card className="bg-white/10 border-0 text-white transform transition-transform hover:scale-105 -rotate-1">
             <CardContent className="p-6 text-center grid gap-1">
-              <Drama className="h-10 w-10 mx-auto" />
-              <h3 className="text-xl font-bold font-headline">Unvergessliche Charaktere</h3>
+              <BookCopy className="h-10 w-10 mx-auto" />
+              <h3 className="text-xl font-bold font-headline">Einzigartige Episoden</h3>
               <p className="text-sm text-white/80 text-balance">
-                Treffen Sie Charaktere, die so bizarr sind, dass sie für immer mietfrei in Ihrem Kopf leben werden.
+                Jedes Kapitel eine neue, absurde Geschichte. Ein Buch, das man immer wieder neu entdecken kann.
               </p>
             </CardContent>
           </Card>
