@@ -12,11 +12,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const questions = [
   {
-    question: "Reagiert Ihr Lehrer auf technische Probleme mit einem leeren Blick und dem Satz \"Starten Sie das Gerät neu\" (auch wenn es sich um ein Buch handelt)?",
+    question: "Reagiert Ihr Lehrer auf technische Probleme mit einem leeren Blick und dem Satz 'Starten Sie das Gerät neu' (auch wenn es sich um ein Buch handelt)?",
     points: 20,
   },
   {
-    question: "Besteht der Wortschatz Ihres Lehrers zu mehr als 50 % aus den Worten \"klausurrelevant\", \"grundsätzlich\" und \"Ruhe\"?",
+    question: "Besteht der Wortschatz Ihres Lehrers zu mehr als 50 % aus den Worten 'klausurrelevant', 'grundsätzlich' und 'Ruhe'?",
     points: 20,
   },
   {
@@ -24,7 +24,7 @@ const questions = [
     points: -15, // Negative points for human-like behavior
   },
   {
-    question: "Wird Kaffee als \"Betriebsflüssigkeit\" bezeichnet?",
+    question: "Wird Kaffee als 'Betriebsflüssigkeit' bezeichnet?",
     points: 15,
   },
   {
@@ -87,7 +87,7 @@ export function TeacherDiagnosisQuiz() {
   }
 
   return (
-    <section className="w-full py-8 md:py-12 bg-muted">
+    <section className="w-full py-8 md:py-12 bg-white">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">
@@ -108,12 +108,12 @@ export function TeacherDiagnosisQuiz() {
                         transition={{ duration: 0.3 }}
                     >
                         <CardHeader>
-                            <CardTitle className="text-base">Frage {currentStep + 1} von {questions.length}</CardTitle>
+                            <CardTitle className="text-sm">Frage {currentStep + 1} von {questions.length}</CardTitle>
                              <Progress value={progress} className="mt-2" />
                         </CardHeader>
-                        <CardContent className="space-y-4">
-                            <p className="font-medium text-sm text-balance min-h-[4rem]">{questions[currentStep].question}</p>
-                            <RadioGroup onValueChange={handleAnswer} value={answers[currentStep]} className="flex justify-center gap-8">
+                        <CardContent className="space-y-4 px-4 pb-4">
+                            <p className="font-medium text-sm text-balance min-h-[3rem]">{questions[currentStep].question}</p>
+                            <RadioGroup onValueChange={handleAnswer} value={answers[currentStep]} className="flex justify-center gap-8 py-2">
                                 <div className="flex items-center space-x-2">
                                     <RadioGroupItem value="yes" id={`q${currentStep}-yes`} />
                                     <Label htmlFor={`q${currentStep}-yes`} className="text-sm">Ja</Label>
