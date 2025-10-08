@@ -6,7 +6,7 @@ export function FeaturesLP2() {
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Was Sie in "Hallo Welt 2" erwartet</h2>
+            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Was Sie in Hallo Welt 2 erwartet</h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
               Noch mehr von dem, was Sie am ersten Buch gehasst oder geliebt haben. Nur intensiver.
             </p>
