@@ -15,12 +15,7 @@ const staticLPs = [
     { href: '/lp-pfeifer', title: 'LP - Pfeifer' },
     { href: '/lp-risitas', title: 'LP - Risitas' },
     { href: '/lp-luin', title: 'LP - Luin' },
-    { href: '/lp-buerokratie-generator', title: 'LP - Bürokratie-Generator' },
-    { href: '/lp-db-ausreden-bot', title: 'LP - DB Ausreden-Bot' },
-    { href: '/lp-fussnoten-generator', title: 'LP - Fußnoten-Generator' },
-    { href: '/lp-lehrer-noten-simulator', title: 'LP - Noten-Simulator' },
     { href: '/lp-mietenwahnsinn', title: 'LP - Mietenwahnsinn' },
-    { href: '/lp-satire-typ-test', title: 'LP - Satire-Typ-Test' },
 ];
 
 export default async function LandingPageManager() {
