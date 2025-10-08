@@ -42,7 +42,7 @@ function BookCarousel({ book }: { book: Product }) {
                   src={src}
                   data-ai-hint={book.aiHint}
                   fill
-                  className="object-contain transition-transform duration-300 group-hover:scale-105 rounded-md"
+                  className="object-contain transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
             </CarouselItem>
