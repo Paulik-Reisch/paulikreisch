@@ -18,7 +18,7 @@ export function EscapeAttempt() {
                         <CardHeader>
                             <Award className="h-12 w-12 mx-auto text-yellow-500" />
                             <CardTitle className="font-headline text-2xl mt-2">Insasse F. und die Zimmerpflanze</CardTitle>
-                             <CardDescription>Ein Akt stillen Protests</CardDescription>
+                             <CardDescription>ein Akt stillen Protests</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <p className="text-lg text-muted-foreground text-balance">
