@@ -54,7 +54,7 @@ export function VisitingHours() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4 text-lg text-foreground">
+              <div className="space-y-4 text-base text-foreground">
                  <div>
                     <p><strong>Nächster Termin:</strong></p>
                     <p>{nextAppointment ? format(nextAppointment, "dd. MMMM yyyy", { locale: de }) : 'wird berechnet...'}</p>
@@ -67,7 +67,7 @@ export function VisitingHours() {
                     <p><strong>Uhrzeit (Gruppe L-Z):</strong></p>
                     <p>15:08 - 15:15 Uhr</p>
                 </div>
-                <p className="text-sm text-yellow-500 dark:text-yellow-400 font-sans">
+                <p className="text-sm text-yellow-500 dark:text-yellow-400">
                   Pünktlichkeit ist eine Tugend, Verspätung ein Vergehen!
                 </p>
               </div>
