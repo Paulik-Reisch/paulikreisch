@@ -25,7 +25,7 @@ const questions = [
     feedbackIncorrect: "Leider falsch. So kreativ ist unsere Küche dann doch nicht."
   },
   {
-    imageSrc: "https://picsum.photos/seed/mensa2/400/300",
+    imageSrc: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/essen2.png?alt=media&token=c8ef4e44-6d31-4e6e-a450-9aa10191ef33",
     imageHint: "mystery food two",
     answers: [
       { text: "Ein mutiertes Brokkoli-Röschen", isCorrect: false },
@@ -142,7 +142,7 @@ export function MensaGuessingGame() {
                       alt="Ein undefinierbares Mensa-Gericht"
                       data-ai-hint={currentQuestion.imageHint}
                       fill
-                      className="object-cover"
+                      className="object-contain"
                     />
                   </div>
 
@@ -169,7 +169,7 @@ export function MensaGuessingGame() {
                       </Alert>
                       {result.isCorrect ? (
                         <Button onClick={handleNext} className="w-full">
-                            Nächste Runde
+                            {currentQuestionIndex < questions.length - 1 ? "Nächste Runde" : "Quiz beenden"}
                             <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
                       ) : (
