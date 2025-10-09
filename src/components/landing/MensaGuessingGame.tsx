@@ -107,12 +107,14 @@ export function MensaGuessingGame() {
             </p>
         </div>
 
-        <Card className="max-w-2xl mx-auto mt-12 shadow-lg">
-          <CardHeader>
-            <CardTitle>Runde {currentQuestionIndex + 1}</CardTitle>
-            <CardDescription>Identifizieren Sie das Gericht.</CardDescription>
-          </CardHeader>
-          <CardContent className="min-h-[450px]">
+        <Card className="max-w-2xl mx-auto mt-12 shadow-lg min-h-[570px] flex flex-col">
+            {!isFinished && (
+                <CardHeader>
+                    <CardTitle>Runde {currentQuestionIndex + 1}</CardTitle>
+                    <CardDescription>Identifizieren Sie das Gericht.</CardDescription>
+                </CardHeader>
+            )}
+            <CardContent className="flex-grow flex flex-col justify-center">
             <AnimatePresence mode="wait">
               <motion.div
                 key={key}
@@ -120,13 +122,14 @@ export function MensaGuessingGame() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -50 }}
                 transition={{ duration: 0.3 }}
+                className="w-full"
               >
                 <div className="flex flex-col items-center gap-6">
                   {isFinished ? (
                      <div className="text-center p-8 space-y-4">
                         <Award className="w-16 h-16 text-yellow-500 mx-auto animate-pulse"/>
                         <h3 className="text-2xl font-bold font-headline">Herzlichen Glückwunsch!</h3>
-                        <p className="text-muted-foreground">Sie haben den kulinarischen Dschungel überlebt und alle Gerichte korrekt identifiziert. Ihr Überlebensinstinkt ist bemerkenswert. Sie sind offiziell Mensa-tauglich!</p>
+                        <p className="text-muted-foreground">Sie haben den kulinarischen Dschungel überlebt. Ihr Überlebensinstinkt ist bemerkenswert. Sie sind offiziell Mensa-tauglich!</p>
                         <Button onClick={handlePlayAgain} className="mt-4">
                             Nochmal spielen? <RefreshCw className="ml-2 h-4 w-4"/>
                         </Button>
