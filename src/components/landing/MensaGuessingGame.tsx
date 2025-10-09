@@ -107,7 +107,7 @@ export function MensaGuessingGame() {
             </p>
         </div>
 
-        <Card className="max-w-xl mx-auto mt-12 shadow-lg flex flex-col min-h-[600px]">
+        <Card className="max-w-xl mx-auto mt-12 shadow-lg flex flex-col min-h-[620px]">
             {!isFinished && (
                 <CardHeader>
                     <CardTitle>Runde {currentQuestionIndex + 1}</CardTitle>
@@ -136,13 +136,13 @@ export function MensaGuessingGame() {
                     </div>
                   ) : (
                   <>
-                  <div className="relative w-full max-w-sm aspect-video rounded-lg overflow-hidden">
+                  <div className="relative w-full max-w-sm aspect-video overflow-hidden">
                     <Image
                       src={currentQuestion.imageSrc}
                       alt="Ein undefinierbares Mensa-Gericht"
                       data-ai-hint={currentQuestion.imageHint}
                       fill
-                      className="object-contain"
+                      className="object-contain rounded-lg"
                     />
                   </div>
 
