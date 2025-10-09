@@ -27,7 +27,7 @@ const products: Product[] = [
         title: "Hallo Welt 2",
         subtitle: "Wie das Leben funktioniert",
         price: 12.99,
-        preorderPrice: 9.99,
+        preorderPrice: 10.99,
         imageSrc: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/cover-hw2-temp.png?alt=media&token=3b0a318c-e8c1-4e66-be02-858a7b365a44",
         imageBackSrc: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/back-hw2-temp.png?alt=media&token=1441421b-bcad-476b-89d0-117a86e5ffd1",
         aiHint: "funny book cover",

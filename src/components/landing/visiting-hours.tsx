@@ -1,4 +1,7 @@
 
+"use client";
+
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -9,8 +12,22 @@ import {
 import { CheckCircle, XCircle, Clock, ArrowRight } from "lucide-react";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { format } from "date-fns";
+import { de } from "date-fns/locale";
 
 export function VisitingHours() {
+  const [nextAppointment, setNextAppointment] = useState<Date | null>(null);
+
+  useEffect(() => {
+    // This runs only on the client
+    const today = new Date();
+    // Add at least 2 months (60 days) and then a random number of additional days (up to 180)
+    const randomDays = 60 + Math.floor(Math.random() * 180);
+    const futureDate = new Date(today.setDate(today.getDate() + randomDays));
+    setNextAppointment(futureDate);
+  }, []);
+
+
   return (
     <section className="w-full py-8 md:py-12 bg-muted">
       <div className="container px-4 md:px-6">
@@ -29,18 +46,18 @@ export function VisitingHours() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Clock className="h-6 w-6 text-primary" />
-                Offizielle Sprechzeiten
+                Sprechzeiten
               </CardTitle>
               <CardDescription>
-                Pro Insasse sind 7,5 Minuten Besuchszeit angesetzt. Jede Sekunde
-                darüber hinaus wird dem Notenkonto angelastet.
+                Pro Elternteil sind 7,5 Minuten Besuchszeit angesetzt. Jede Sekunde
+                darüber hinaus wird dem Notenkonto des entsprechenden Schülers angelastet.
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4 font-mono text-lg text-foreground">
+              <div className="space-y-4 text-lg text-foreground">
                  <div>
                     <p><strong>Nächster Termin:</strong></p>
-                    <p>29. Februar 2025</p>
+                    <p>{nextAppointment ? format(nextAppointment, "dd. MMMM yyyy", { locale: de }) : 'wird berechnet...'}</p>
                 </div>
                 <div>
                     <p><strong>Uhrzeit (Gruppe A-K):</strong></p>
