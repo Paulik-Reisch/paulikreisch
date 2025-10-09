@@ -114,7 +114,7 @@ export function MensaGuessingGame() {
                     <CardDescription>Identifizieren Sie das Gericht.</CardDescription>
                 </CardHeader>
             )}
-            <CardContent className="flex-grow flex flex-col justify-center">
+            <CardContent className="flex-grow flex flex-col justify-center items-center">
             <AnimatePresence mode="wait">
               <motion.div
                 key={key}
@@ -136,7 +136,7 @@ export function MensaGuessingGame() {
                     </div>
                   ) : (
                   <>
-                  <div className="relative w-full max-w-sm aspect-video overflow-hidden rounded-lg">
+                  <div className="relative w-full max-w-sm aspect-video rounded-lg overflow-hidden">
                     <Image
                       src={currentQuestion.imageSrc}
                       alt="Ein undefinierbares Mensa-Gericht"
