@@ -15,6 +15,8 @@ const questions = [
   {
     imageSrc: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/essen1.png?alt=media&token=06ddea5c-075e-4cf8-bdfe-a1576f1e992e",
     imageHint: "mystery food one",
+    width: 400,
+    height: 300,
     answers: [
       { text: "Experimentelle Kunst aus dem Chemielabor", isCorrect: false },
       { text: "Recycelte Reste von letzter Woche", isCorrect: true },
@@ -27,6 +29,8 @@ const questions = [
   {
     imageSrc: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/essen2.png?alt=media&token=c8ef4e44-6d31-4e6e-a450-9aa10191ef33",
     imageHint: "mystery food two",
+    width: 300,
+    height: 225,
     answers: [
       { text: "Ein mutiertes Brokkoli-Röschen", isCorrect: false },
       { text: "Spezial-Salat \"Zukunft\"", isCorrect: false },
@@ -39,6 +43,8 @@ const questions = [
   {
     imageSrc: "https://picsum.photos/seed/mensa3/400/300",
     imageHint: "mystery food three",
+    width: 400,
+    height: 300,
     answers: [
         { text: "Eine Soße, die so lange gekocht wurde, bis sie eine eigene Persönlichkeit entwickelte", isCorrect: true },
         { text: "Ein fehlgeschlagenes Experiment zur Herstellung von Schokolade", isCorrect: false },
@@ -140,8 +146,8 @@ export function MensaGuessingGame() {
                       src={currentQuestion.imageSrc}
                       alt="Ein undefinierbares Mensa-Gericht"
                       data-ai-hint={currentQuestion.imageHint}
-                      width={400}
-                      height={300}
+                      width={currentQuestion.width}
+                      height={currentQuestion.height}
                       className="object-contain rounded-lg max-w-sm w-full"
                     />
 
