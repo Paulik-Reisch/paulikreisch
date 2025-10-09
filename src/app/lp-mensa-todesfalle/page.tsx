@@ -14,8 +14,8 @@ export default function MensaTodesfallePage() {
       <Header />
       <main className="flex-1">
         <HeroMensaTodesfalle />
-        <MensaGuessingGame />
         <MensaHoroscopes />
+        <MensaGuessingGame />
         <MensaRules />
         <MensaFAQ />
         <MensaCTA />
@@ -24,3 +24,4 @@ export default function MensaTodesfallePage() {
     </div>
   );
 }
+

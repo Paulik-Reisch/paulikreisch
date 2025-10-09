@@ -10,22 +10,22 @@ import { HelpCircle, ChevronDown } from "lucide-react";
 const faqs = [
     {
         question: "Ist das Fleisch?",
-        answer: "Das ist eine philosophische Frage, die den Rahmen der Nahrungs-Identifikation sprengt. Wir klassifizieren es als 'proteinbasiertes Produkt'."
+        answer: "Das ist eine philosophische Frage, die den Rahmen der Nahrungs-Identifikation sprengt. Wir klassifizieren es als \"proteinbasiertes Produkt\"."
     },
     {
         question: "Warum bewegt sich mein Essen?",
-        answer: "Das sind 'Frischeindikatoren'. Wenn es aufhört, sich zu bewegen, informieren Sie bitte umgehend das Personal. Oder auch nicht."
+        answer: "Das sind \"Frischeindikatoren\". Wenn es aufhört, sich zu bewegen, informieren Sie bitte umgehend das Personal. Oder auch nicht."
     },
     {
         question: "Ist das ein Haar in meiner Suppe?",
-        answer: "Nein, das ist eine 'Geschmacksfaser', eine Spezialität des Hauses, die für das einzigartige Mundgefühl sorgt."
+        answer: "Nein, das ist eine \"Geschmacksfaser\", eine Spezialität des Hauses, die für das einzigartige Mundgefühl sorgt."
     },
     {
         question: "Kann ich eine vegetarische Option haben?",
-        answer: "Der Gulasch von gestern war zu 98% fleischfrei. Heute ist er zu 100% vegetarisch. Wir nennen es 'Upcycling'."
+        answer: "Der Gulasch von gestern war zu 98% fleischfrei. Heute ist er zu 100% vegetarisch. Wir nennen es \"Upcycling\"."
     },
     {
-        question: "Woraus besteht die 'grüne Soße'?",
+        question: "Woraus besteht die \"grüne Soße\"?",
         answer: "Aus grünen Sachen."
     }
 ]
@@ -65,3 +65,4 @@ export function MensaFAQ() {
     </section>
   );
 }
+
