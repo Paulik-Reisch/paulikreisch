@@ -136,15 +136,14 @@ export function MensaGuessingGame() {
                     </div>
                   ) : (
                   <>
-                  <div className="relative w-full max-w-sm aspect-video overflow-hidden rounded-lg">
                     <Image
                       src={currentQuestion.imageSrc}
                       alt="Ein undefinierbares Mensa-Gericht"
                       data-ai-hint={currentQuestion.imageHint}
-                      fill
-                      className="object-contain"
+                      width={400}
+                      height={300}
+                      className="object-contain rounded-lg max-w-sm w-full"
                     />
-                  </div>
 
                   {!result ? (
                     <>
@@ -190,5 +189,3 @@ export function MensaGuessingGame() {
     </section>
   );
 }
-
-    
