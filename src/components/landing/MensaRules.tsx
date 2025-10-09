@@ -3,12 +3,12 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Gavel, Siren, Scale } from "lucide-react";
 
 const rules = [
-  "Kauen ist nur mit schriftlicher Genehmigung gestattet. Das Formular B-17 ist eine Woche im Voraus einzureichen.",
-  "Jeglicher Augenkontakt mit dem Küchenpersonal ist als Provokation zu werten und wird mit extra Brokkoli bestraft.",
+  "Kauen ist nur mit schriftlicher Genehmigung gestattet. Schmatzen sowieso.",
+  "Jeglicher Augenkontakt mit dem Küchenpersonal ist als Provokation zu werten und wird mit einer Extraportion Spinat bestraft.",
   "Beschwerden über die Nahrungsqualität werden alphabetisch sortiert und anschließend ignoriert.",
   "Das Tauschen von Speisekomponenten ist strengstens untersagt und stellt einen Akt der Rebellion dar.",
   "Positive Äußerungen über das Essen führen zu sofortigem Misstrauen und einer Überprüfung Ihrer geistigen Gesundheit.",
-  "Das Verlassen von Resten auf dem Teller ist erwünscht. Es dient der morgigen Soßengrundlage."
+  "Reste auf dem Teller sind ausdrücklich erwünscht. Sie dienen als morgige Soßengrundlage."
 ];
 
 export function MensaRules() {
@@ -19,8 +19,8 @@ export function MensaRules() {
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">
               Das offizielle Mensa-Regelwerk
             </h2>
-            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-              Anordnung 3A-§42. Unwissenheit schützt vor Strafe nicht.
+            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance italic">
+              Unwissenheit schützt vor Strafe nicht.
             </p>
         </div>
         <div className="max-w-3xl mx-auto mt-12">
@@ -36,9 +36,6 @@ export function MensaRules() {
                         <li key={index} className="text-muted-foreground pl-2">{rule}</li>
                     ))}
                 </ol>
-                <p className="text-xs text-center mt-6 text-muted-foreground font-semibold">
-                    Gezeichnet, die Anstaltsleitung.
-                </p>
             </CardContent>
           </Card>
         </div>

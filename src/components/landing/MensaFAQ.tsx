@@ -14,15 +14,15 @@ const faqs = [
     },
     {
         question: "Warum bewegt sich mein Essen?",
-        answer: "Das sind \"Frischeindikatoren\". Wenn es aufhört, sich zu bewegen, informieren Sie bitte umgehend das Personal. Oder auch nicht."
+        answer: "Das sind \"Frischeindikatoren\". Wenn es aufhört, sich zu bewegen, informieren Sie bitte umgehend das Personal."
     },
     {
         question: "Ist das ein Haar in meiner Suppe?",
-        answer: "Nein, das ist eine \"Geschmacksfaser\", eine Spezialität des Hauses, die für das einzigartige Mundgefühl sorgt."
+        answer: "Nein, das ist eine \"Geschmacksfaser\". Eine Spezialität des Hauses, die für eine einzigartige Textur im Mund sorgt."
     },
     {
         question: "Kann ich eine vegetarische Option haben?",
-        answer: "Der Gulasch von gestern war zu 98% fleischfrei. Heute ist er zu 100% vegetarisch. Wir nennen es \"Upcycling\"."
+        answer: "Das Gulasch von gestern war zu 98 % fleischfrei. Was wollen Sie mehr?"
     },
     {
         question: "Woraus besteht die \"grüne Soße\"?",

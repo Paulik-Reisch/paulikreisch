@@ -5,12 +5,12 @@ import { Sparkles, Soup, Cloudy } from "lucide-react";
 const horoscopes = [
     {
         title: "Wassermann (21.01. - 19.02.)",
-        prediction: "Ihre kreative Ader wird heute auf die Probe gestellt, wenn Sie versuchen herauszufinden, ob das auf Ihrem Teller Fisch oder Hühnchen ist. Tipp: Es ist keins von beiden.",
+        prediction: "Ihre kreative Ader wird heute auf die Probe gestellt, wenn Sie herauszufinden versuchen, ob das auf Ihrem Teller Fisch oder Hühnchen ist. Tipp: Es ist keins von beiden.",
         color: "border-blue-300 bg-blue-50"
     },
     {
         title: "Stier (21.04. - 20.05.)",
-        prediction: "Sie schätzen Beständigkeit. Gut für Sie, denn der Kartoffelbrei hat dieselbe Konsistenz wie letzte Woche. Und die Woche davor.",
+        prediction: "Sie schätzen Beständigkeit. Gut für Sie, denn der Kartoffelbrei hat dieselbe matschige Konsistenz wie letzte Woche. Und die Woche davor.",
         color: "border-green-300 bg-green-50"
     },
     {

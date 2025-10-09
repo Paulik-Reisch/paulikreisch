@@ -72,7 +72,7 @@ export function MensaGuessingGame() {
               Was ist das? Das Mensa-Ratespiel
             </h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-              Testen Sie Ihr Wissen über unsere kulinarischen Kreationen. Nur für Hartgesottene.
+              Testen Sie Ihr Wissen über unsere kulinarischen Kreationen.
             </p>
         </div>
 
