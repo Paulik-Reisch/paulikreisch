@@ -15,8 +15,8 @@ const questions = [
   {
     imageSrc: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/essen1.png?alt=media&token=06ddea5c-075e-4cf8-bdfe-a1576f1e992e",
     imageHint: "mystery food one",
-    width: 400,
-    height: 300,
+    width: 600,
+    height: 450,
     answers: [
       { text: "Experimentelle Kunst aus dem Chemielabor", isCorrect: false },
       { text: "Recycelte Reste von letzter Woche", isCorrect: true },
@@ -29,8 +29,8 @@ const questions = [
   {
     imageSrc: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/essen2.png?alt=media&token=c8ef4e44-6d31-4e6e-a450-9aa10191ef33",
     imageHint: "mystery food two",
-    width: 250,
-    height: 188,
+    width: 350,
+    height: 263,
     answers: [
       { text: "Ein mutiertes Brokkoli-Röschen", isCorrect: false },
       { text: "Spezial-Salat \"Zukunft\"", isCorrect: false },
@@ -113,14 +113,14 @@ export function MensaGuessingGame() {
             </p>
         </div>
 
-        <Card className="max-w-xl mx-auto mt-12 shadow-lg flex flex-col">
+        <Card className="max-w-xl mx-auto mt-12 shadow-lg flex flex-col min-h-[600px]">
             {!isFinished && (
                 <CardHeader>
                     <CardTitle>Runde {currentQuestionIndex + 1}</CardTitle>
                     <CardDescription>Identifizieren Sie das Gericht.</CardDescription>
                 </CardHeader>
             )}
-            <CardContent className="flex-grow flex flex-col items-center min-h-[600px] pt-6">
+            <CardContent className="flex-grow flex flex-col items-center pt-6">
               <AnimatePresence mode="wait">
               <motion.div
                 key={key}
@@ -142,7 +142,7 @@ export function MensaGuessingGame() {
                     </div>
                   ) : (
                   <>
-                    <div className="w-full max-w-[250px] mx-auto">
+                    <div className={`w-full ${currentQuestionIndex === 0 ? 'max-w-[400px]' : 'max-w-[250px]'} mx-auto`}>
                         <Image
                             src={currentQuestion.imageSrc}
                             alt="Ein undefinierbares Mensa-Gericht"
