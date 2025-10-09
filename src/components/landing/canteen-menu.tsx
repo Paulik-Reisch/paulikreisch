@@ -1,10 +1,10 @@
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Utensils, Biohazard, Skull, Bomb, Drama, Droplets, FishOff } from "lucide-react";
+import { Utensils, Biohazard, Skull, Sparkles, Drama, Droplets, FishOff } from "lucide-react";
 
 const menu = [
     { day: "Montag", dish: "Graue Pampe mit Spurenelementen des gestrigen Tages", side: "dazu ein Glas lauwarmes Toilettenwasser.", icon: Skull },
-    { day: "Dienstag", dish: "Überraschungs-Auflauf", side: "überraschend ist, dass es schmeckt. Zumindest fast.", icon: Bomb },
+    { day: "Dienstag", dish: "Überraschungs-Auflauf", side: "überraschend ist, dass es schmeckt. Zumindest fast.", icon: Sparkles },
     { day: "Mittwoch", dish: "Fake-Fleisch-Fantasie in undefinierbarer Soße", side: "serviert mit Kartoffel-ähnlichem Erzeugnis.", icon: Drama },
     { day: "Donnerstag", subtitle: "vegetarischer Tag", dish: "Gekochtes Wasser", side: "verfeinert mit einem Hauch von Nichts.", icon: Droplets },
     { day: "Freitag", dish: "Fischstäbchen-Fragment (Stückzahl: 1)", side: "dazu eine Remoulade aus dem letzten Jahrzehnt.", icon: FishOff },
