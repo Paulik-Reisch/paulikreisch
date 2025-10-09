@@ -16,7 +16,7 @@ export function MensaCTA() {
             Das komplette Kapitel über die Mensa und viele weitere Katastrophen des Schulalltags finden Sie in "Hallo Welt".
           </p>
           <Link href="/buchhandlung-paulik-reisch">
-            <Button size="lg" variant="secondary" className="mt-4 animate-pulse">
+            <Button size="lg" variant="secondary" className="mt-4">
               Zum Buch
             </Button>
           </Link>
