@@ -22,7 +22,7 @@ const horoscopes = [
 
 export function MensaHoroscopes() {
   return (
-    <section className="w-full pb-8 md:pb-12 bg-red-200 dark:bg-red-900/50">
+    <section className="w-full py-8 md:py-12 bg-red-200 dark:bg-red-900/50">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center space-y-4 text-center">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">
