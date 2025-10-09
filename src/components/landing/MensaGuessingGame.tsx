@@ -136,7 +136,7 @@ export function MensaGuessingGame() {
                     </div>
                   ) : (
                   <>
-                  <div className="relative w-full max-w-sm aspect-video rounded-lg overflow-hidden border-4 border-background">
+                  <div className="relative w-full max-w-sm aspect-video rounded-lg overflow-hidden">
                     <Image
                       src={currentQuestion.imageSrc}
                       alt="Ein undefinierbares Mensa-Gericht"
