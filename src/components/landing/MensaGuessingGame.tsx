@@ -13,7 +13,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 const questions = [
   {
-    imageSrc: "https://picsum.photos/seed/mensa1/400/300",
+    imageSrc: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/essen1.png?alt=media&token=06ddea5c-075e-4cf8-bdfe-a1576f1e992e",
     imageHint: "mystery food one",
     answers: [
       { text: "Experimentelle Kunst aus dem Chemielabor", isCorrect: false },
@@ -107,7 +107,7 @@ export function MensaGuessingGame() {
             </p>
         </div>
 
-        <Card className="max-w-2xl mx-auto mt-12 shadow-lg min-h-[570px] flex flex-col">
+        <Card className="max-w-xl mx-auto mt-12 shadow-lg flex flex-col min-h-[600px]">
             {!isFinished && (
                 <CardHeader>
                     <CardTitle>Runde {currentQuestionIndex + 1}</CardTitle>
@@ -136,7 +136,7 @@ export function MensaGuessingGame() {
                     </div>
                   ) : (
                   <>
-                  <div className="relative w-full aspect-video rounded-lg overflow-hidden border-4 border-background">
+                  <div className="relative w-full max-w-sm aspect-video rounded-lg overflow-hidden border-4 border-background">
                     <Image
                       src={currentQuestion.imageSrc}
                       alt="Ein undefinierbares Mensa-Gericht"
