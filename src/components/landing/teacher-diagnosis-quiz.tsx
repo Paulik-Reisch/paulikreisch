@@ -12,7 +12,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const questions = [
   {
-    question: "Reagiert Ihr Lehrer auf technische Probleme mit einem leeren Blick und dem Satz \"Starten Sie das Gerät neu\" (auch wenn es sich um ein Buch handelt)?",
+    question: "Reagiert Ihr Lehrer auf technische Probleme mit einem leeren Blick und dem Satz \"Starten Sie das Gerät neu\", auch wenn es sich um ein Buch handelt?",
     points: 20,
   },
   {
@@ -32,7 +32,7 @@ const questions = [
     points: -20,
   },
   {
-    question: "Scheint die Korrekturgeschwindigkeit von Klausuren unmenschlich schnell zu sein (weniger als drei Wochen pro Stapel)?",
+    question: "Scheint die Korrekturgeschwindigkeit von Klausuren unmenschlich schnell zu sein, d.h. weniger als drei Wochen pro Stapel?",
     points: 25,
   },
   {
