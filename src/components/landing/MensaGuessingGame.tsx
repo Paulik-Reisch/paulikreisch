@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { CheckCircle2, RefreshCw, XCircle } from "lucide-react";
+import { CheckCircle2, RefreshCw, XCircle, ArrowRight } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const questions = [
@@ -35,6 +35,18 @@ const questions = [
     ],
     feedbackCorrect: "Exakt! Die Farbe ist eine vage Erinnerung an bessere, frischere Zeiten.",
     feedbackIncorrect: "Netter Versuch, aber die Realität ist viel trauriger."
+  },
+  {
+    imageSrc: "https://picsum.photos/seed/mensa3/400/300",
+    imageHint: "mystery food three",
+    answers: [
+        { text: "Eine versteinerte Frikadelle aus der Kreidezeit", isCorrect: false },
+        { text: "Ein Stück Kohle zur Energiegewinnung", isCorrect: false },
+        { text: "Das Gewissen des Kochs", isCorrect: false },
+        { text: "Beilage (Definition laut Duden: ungenießbar)", isCorrect: true },
+    ],
+    feedbackCorrect: "Korrekt! Laut unseren Qualitätsstandards muss eine Beilage genau so aussehen.",
+    feedbackIncorrect: "Falsch. Obwohl die anderen Optionen auch plausibel klingen."
   }
 ];
 
@@ -62,6 +74,12 @@ export function MensaGuessingGame() {
     setSelectedAnswer(null);
     setCurrentQuestionIndex((prev) => (prev + 1) % questions.length);
     setKey(prev => prev + 1); // Remount component for animation
+  };
+
+  const handleRetry = () => {
+    setResult(null);
+    setSelectedAnswer(null);
+    setKey(prev => prev + 1); // Remount for re-try
   };
 
   return (
@@ -122,9 +140,16 @@ export function MensaGuessingGame() {
                         <AlertTitle>{result.isCorrect ? "Korrekt!" : "Falsch!"}</AlertTitle>
                         <AlertDescription>{result.feedback}</AlertDescription>
                       </Alert>
-                      <Button onClick={handleNext} className="w-full">
-                        Nächste Runde <RefreshCw className="ml-2 h-4 w-4" />
-                      </Button>
+                      {result.isCorrect ? (
+                        <Button onClick={handleNext} className="w-full">
+                            {currentQuestionIndex === questions.length - 1 ? "Nochmal spielen" : "Nächste Runde"}
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      ) : (
+                         <Button onClick={handleRetry} className="w-full">
+                            Nochmal versuchen <RefreshCw className="ml-2 h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
                   )}
                 </div>
