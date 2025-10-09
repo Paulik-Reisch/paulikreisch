@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -29,8 +29,8 @@ const questions = [
   {
     imageSrc: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/essen2.png?alt=media&token=c8ef4e44-6d31-4e6e-a450-9aa10191ef33",
     imageHint: "mystery food two",
-    width: 300,
-    height: 225,
+    width: 250,
+    height: 188,
     answers: [
       { text: "Ein mutiertes Brokkoli-Röschen", isCorrect: false },
       { text: "Spezial-Salat \"Zukunft\"", isCorrect: false },
@@ -120,7 +120,7 @@ export function MensaGuessingGame() {
                     <CardDescription>Identifizieren Sie das Gericht.</CardDescription>
                 </CardHeader>
             )}
-            <CardContent className="flex-grow flex flex-col items-center min-h-[550px] pt-6">
+            <CardContent className="flex-grow flex flex-col items-center min-h-[600px] pt-6">
               <AnimatePresence mode="wait">
               <motion.div
                 key={key}
@@ -142,14 +142,16 @@ export function MensaGuessingGame() {
                     </div>
                   ) : (
                   <>
-                    <Image
-                      src={currentQuestion.imageSrc}
-                      alt="Ein undefinierbares Mensa-Gericht"
-                      data-ai-hint={currentQuestion.imageHint}
-                      width={currentQuestion.width}
-                      height={currentQuestion.height}
-                      className="object-contain rounded-lg max-w-sm w-full"
-                    />
+                    <div className="w-full max-w-[250px] mx-auto">
+                        <Image
+                            src={currentQuestion.imageSrc}
+                            alt="Ein undefinierbares Mensa-Gericht"
+                            data-ai-hint={currentQuestion.imageHint}
+                            width={currentQuestion.width}
+                            height={currentQuestion.height}
+                            className="rounded-lg object-contain"
+                        />
+                    </div>
 
                   {!result ? (
                     <>
