@@ -25,7 +25,6 @@ export function MensaHoroscopes() {
     <section className="w-full pb-8 md:pb-12 bg-red-200 dark:bg-red-900/50">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center space-y-4 text-center">
-            <Sparkles className="w-12 h-12 text-primary" />
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">
               Ihr kulinarisches Horoskop
             </h2>
