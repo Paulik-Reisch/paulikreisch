@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { CheckCircle2, RefreshCw, XCircle } from "lucide-react";
+import { CheckCircle2, RefreshCw, XCircle, ArrowRight } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const questions = [
@@ -35,6 +35,18 @@ const questions = [
     ],
     feedbackCorrect: "Exakt! Die Farbe ist eine vage Erinnerung an bessere, frischere Zeiten.",
     feedbackIncorrect: "Netter Versuch, aber die Realität ist viel trauriger."
+  },
+  {
+    imageSrc: "https://picsum.photos/seed/mensa3/400/300",
+    imageHint: "mystery food three",
+    answers: [
+        { text: "Eine Soße, die so lange gekocht wurde, bis sie eine eigene Persönlichkeit entwickelt hat.", isCorrect: true },
+        { text: "Ein fehlgeschlagenes Experiment zur Herstellung von Schokolade.", isCorrect: false },
+        { text: "Der Inhalt des Altöl-Fasses aus der Autowerkstatt.", isCorrect: false },
+        { text: "Ein Portal in eine andere, schmackhaftere Dimension (leider defekt).", isCorrect: false },
+    ],
+    feedbackCorrect: "Korrekt! Diese Soße hat mehr Lebenserfahrung als die meisten Studenten.",
+    feedbackIncorrect: "Falsch, aber Ihre Fantasie ehrt unsere Küche."
   }
 ];
 
@@ -64,8 +76,14 @@ export function MensaGuessingGame() {
     setKey(prev => prev + 1); // Remount component for animation
   };
 
+  const handleRetry = () => {
+      setResult(null);
+      setSelectedAnswer(null);
+      setKey(prev => prev + 1); // Remount to reset state of the current question
+  }
+
   return (
-    <section className="w-full py-8 md:py-12 bg-muted">
+    <section className="w-full py-8 md:py-12 bg-subtle-yellow">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center space-y-4 text-center">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">
@@ -122,9 +140,16 @@ export function MensaGuessingGame() {
                         <AlertTitle>{result.isCorrect ? "Korrekt!" : "Falsch!"}</AlertTitle>
                         <AlertDescription>{result.feedback}</AlertDescription>
                       </Alert>
-                      <Button onClick={handleNext} className="w-full">
-                        Nächste Runde <RefreshCw className="ml-2 h-4 w-4" />
-                      </Button>
+                      
+                      {result.isCorrect ? (
+                         <Button onClick={handleNext} className="w-full">
+                            Nächste Runde <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      ) : (
+                         <Button onClick={handleRetry} className="w-full">
+                            Nochmal versuchen <RefreshCw className="ml-2 h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
                   )}
                 </div>
