@@ -142,7 +142,11 @@ export function MensaGuessingGame() {
                     </div>
                   ) : (
                   <>
-                    <div className={`w-full ${currentQuestionIndex === 0 ? 'max-w-[400px]' : 'max-w-[250px]'} mx-auto`}>
+                    <div className={`w-full ${
+                      currentQuestionIndex === 0 ? 'max-w-[400px]' : 
+                      currentQuestionIndex === 1 ? 'max-w-[300px]' : 
+                      'max-w-[250px]'
+                    } mx-auto`}>
                         <Image
                             src={currentQuestion.imageSrc}
                             alt="Ein undefinierbares Mensa-Gericht"
