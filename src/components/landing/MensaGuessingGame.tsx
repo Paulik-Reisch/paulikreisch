@@ -145,7 +145,7 @@ export function MensaGuessingGame() {
                     <div className={`w-full ${
                       currentQuestionIndex === 0 ? 'max-w-[400px]' : 
                       currentQuestionIndex === 1 ? 'max-w-[300px]' : 
-                      'max-w-[250px]'
+                      'max-w-[400px]'
                     } mx-auto`}>
                         <Image
                             src={currentQuestion.imageSrc}
