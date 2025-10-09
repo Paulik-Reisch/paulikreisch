@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle2, RefreshCw, XCircle, ArrowRight, Award } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 const questions = [
   {
@@ -113,14 +114,17 @@ export function MensaGuessingGame() {
             </p>
         </div>
 
-        <Card className="max-w-xl mx-auto mt-12 shadow-lg flex flex-col min-h-[600px]">
+        <Card className={cn(
+          "max-w-xl mx-auto mt-12 shadow-lg flex flex-col",
+          !isFinished && "min-h-[600px]"
+        )}>
             {!isFinished && (
                 <CardHeader>
                     <CardTitle>Runde {currentQuestionIndex + 1}</CardTitle>
                     <CardDescription>Identifizieren Sie das Gericht.</CardDescription>
                 </CardHeader>
             )}
-            <CardContent className="flex-grow flex flex-col items-center pt-6">
+            <CardContent className="flex-grow flex flex-col pt-6">
               <AnimatePresence mode="wait">
               <motion.div
                 key={key}
@@ -142,19 +146,22 @@ export function MensaGuessingGame() {
                     </div>
                   ) : (
                   <>
-                    <div className={`w-full ${
+                    <div className={cn(
+                      "w-full mx-auto",
                       currentQuestionIndex === 0 ? 'max-w-[400px]' : 
                       currentQuestionIndex === 1 ? 'max-w-[300px]' : 
                       'max-w-[400px]'
-                    } mx-auto`}>
-                        <Image
-                            src={currentQuestion.imageSrc}
-                            alt="Ein undefinierbares Mensa-Gericht"
-                            data-ai-hint={currentQuestion.imageHint}
-                            width={currentQuestion.width}
-                            height={currentQuestion.height}
-                            className="rounded-lg object-contain"
-                        />
+                    )}>
+                        <div className="overflow-hidden rounded-lg">
+                            <Image
+                                src={currentQuestion.imageSrc}
+                                alt="Ein undefinierbares Mensa-Gericht"
+                                data-ai-hint={currentQuestion.imageHint}
+                                width={currentQuestion.width}
+                                height={currentQuestion.height}
+                                className="rounded-lg object-contain"
+                            />
+                        </div>
                     </div>
 
                   {!result ? (
