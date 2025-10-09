@@ -136,7 +136,7 @@ export function MensaGuessingGame() {
                     </div>
                   ) : (
                   <>
-                  <div className="relative w-full max-w-sm aspect-video rounded-lg overflow-hidden">
+                  <div className="relative w-full max-w-sm aspect-video overflow-hidden rounded-lg">
                     <Image
                       src={currentQuestion.imageSrc}
                       alt="Ein undefinierbares Mensa-Gericht"
@@ -190,3 +190,5 @@ export function MensaGuessingGame() {
     </section>
   );
 }
+
+    
