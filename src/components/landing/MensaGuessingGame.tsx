@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { CheckCircle2, RefreshCw, XCircle, ArrowRight } from "lucide-react";
+import { CheckCircle2, RefreshCw, XCircle, ArrowRight, Award } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const questions = [
@@ -29,24 +29,24 @@ const questions = [
     imageHint: "mystery food two",
     answers: [
       { text: "Ein mutiertes Brokkoli-Röschen", isCorrect: false },
-      { text: "Dekonstruierter Salat 'Zukunft'", isCorrect: false },
+      { text: "Spezial-Salat \"Zukunft\"", isCorrect: false },
       { text: "Etwas, das mal grün war", isCorrect: true },
-      { text: "Die verlorene Socke vom Hausmeister", isCorrect: false },
+      { text: "Die verlorene Socke des Hausmeisters", isCorrect: false },
     ],
-    feedbackCorrect: "Exakt! Die Farbe ist eine vage Erinnerung an bessere, frischere Zeiten.",
+    feedbackCorrect: "Exakt! Die Farbe ist eine vage Erinnerung an bessere Zeiten.",
     feedbackIncorrect: "Netter Versuch, aber die Realität ist viel trauriger."
   },
   {
     imageSrc: "https://picsum.photos/seed/mensa3/400/300",
     imageHint: "mystery food three",
     answers: [
-        { text: "Eine versteinerte Frikadelle aus der Kreidezeit", isCorrect: false },
-        { text: "Ein Stück Kohle zur Energiegewinnung", isCorrect: false },
-        { text: "Das Gewissen des Kochs", isCorrect: false },
-        { text: "Beilage (Definition laut Duden: ungenießbar)", isCorrect: true },
+        { text: "Eine Soße, die so lange gekocht wurde, bis sie eine eigene Persönlichkeit entwickelt hat", isCorrect: true },
+        { text: "Ein fehlgeschlagenes Experiment zur Herstellung von Schokolade", isCorrect: false },
+        { text: "Der Inhalt des Altöl-Fasses aus der Autowerkstatt", isCorrect: false },
+        { text: "Ein Portal in eine andere, schmackhaftere Dimension", isCorrect: false },
     ],
-    feedbackCorrect: "Korrekt! Laut unseren Qualitätsstandards muss eine Beilage genau so aussehen.",
-    feedbackIncorrect: "Falsch. Obwohl die anderen Optionen auch plausibel klingen."
+    feedbackCorrect: "Korrekt! Diese Soße hat mehr Lebenserfahrung als die meisten Studenten.",
+    feedbackIncorrect: "Falsch, aber Ihre Fantasie ehrt die Küche."
   }
 ];
 
@@ -54,6 +54,7 @@ export function MensaGuessingGame() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [result, setResult] = useState<{ isCorrect: boolean; feedback: string } | null>(null);
+  const [isFinished, setIsFinished] = useState(false);
   const [key, setKey] = useState(0);
 
   const currentQuestion = questions[currentQuestionIndex];
@@ -70,10 +71,14 @@ export function MensaGuessingGame() {
   };
 
   const handleNext = () => {
-    setResult(null);
-    setSelectedAnswer(null);
-    setCurrentQuestionIndex((prev) => (prev + 1) % questions.length);
-    setKey(prev => prev + 1); // Remount component for animation
+    if (currentQuestionIndex === questions.length - 1) {
+      setIsFinished(true);
+    } else {
+      setResult(null);
+      setSelectedAnswer(null);
+      setCurrentQuestionIndex((prev) => (prev + 1));
+      setKey(prev => prev + 1); // Remount component for animation
+    }
   };
 
   const handleRetry = () => {
@@ -81,6 +86,14 @@ export function MensaGuessingGame() {
     setSelectedAnswer(null);
     setKey(prev => prev + 1); // Remount for re-try
   };
+
+  const handlePlayAgain = () => {
+    setIsFinished(false);
+    setResult(null);
+    setSelectedAnswer(null);
+    setCurrentQuestionIndex(0);
+    setKey(prev => prev + 1);
+  }
 
   return (
     <section className="w-full py-8 md:py-12 bg-subtle-yellow">
@@ -109,6 +122,17 @@ export function MensaGuessingGame() {
                 transition={{ duration: 0.3 }}
               >
                 <div className="flex flex-col items-center gap-6">
+                  {isFinished ? (
+                     <div className="text-center p-8 space-y-4">
+                        <Award className="w-16 h-16 text-yellow-500 mx-auto animate-pulse"/>
+                        <h3 className="text-2xl font-bold font-headline">Herzlichen Glückwunsch!</h3>
+                        <p className="text-muted-foreground">Sie haben den kulinarischen Dschungel überlebt und alle Gerichte korrekt identifiziert. Ihr Überlebensinstinkt ist bemerkenswert. Sie sind offiziell Mensa-tauglich!</p>
+                        <Button onClick={handlePlayAgain} className="mt-4">
+                            Nochmal spielen? <RefreshCw className="ml-2 h-4 w-4"/>
+                        </Button>
+                    </div>
+                  ) : (
+                  <>
                   <div className="relative w-full aspect-video rounded-lg overflow-hidden border-4 border-background">
                     <Image
                       src={currentQuestion.imageSrc}
@@ -142,7 +166,7 @@ export function MensaGuessingGame() {
                       </Alert>
                       {result.isCorrect ? (
                         <Button onClick={handleNext} className="w-full">
-                            {currentQuestionIndex === questions.length - 1 ? "Nochmal spielen" : "Nächste Runde"}
+                            Nächste Runde
                             <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
                       ) : (
@@ -151,6 +175,8 @@ export function MensaGuessingGame() {
                         </Button>
                       )}
                     </div>
+                  )}
+                  </>
                   )}
                 </div>
               </motion.div>
