@@ -107,15 +107,15 @@ export function MensaGuessingGame() {
             </p>
         </div>
 
-        <Card className="max-w-xl mx-auto mt-12 shadow-lg flex flex-col min-h-[620px]">
+        <Card className="max-w-xl mx-auto mt-12 shadow-lg flex flex-col">
             {!isFinished && (
                 <CardHeader>
                     <CardTitle>Runde {currentQuestionIndex + 1}</CardTitle>
                     <CardDescription>Identifizieren Sie das Gericht.</CardDescription>
                 </CardHeader>
             )}
-            <CardContent className="flex-grow flex flex-col justify-center items-center">
-            <AnimatePresence mode="wait">
+            <CardContent className="flex-grow flex flex-col items-center min-h-[550px] pt-6">
+              <AnimatePresence mode="wait">
               <motion.div
                 key={key}
                 initial={{ opacity: 0, x: 50 }}
@@ -126,7 +126,7 @@ export function MensaGuessingGame() {
               >
                 <div className="flex flex-col items-center gap-6">
                   {isFinished ? (
-                     <div className="text-center p-8 space-y-4">
+                     <div className="text-center p-8 space-y-4 flex flex-col justify-center items-center h-full">
                         <Award className="w-16 h-16 text-yellow-500 mx-auto animate-pulse"/>
                         <h3 className="text-2xl font-bold font-headline">Herzlichen Glückwunsch!</h3>
                         <p className="text-muted-foreground">Sie haben den kulinarischen Dschungel überlebt. Ihr Überlebensinstinkt ist bemerkenswert. Sie sind offiziell Mensa-tauglich!</p>
