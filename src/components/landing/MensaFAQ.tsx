@@ -5,7 +5,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, ChevronDown } from "lucide-react";
 
 const faqs = [
     {
@@ -32,7 +32,7 @@ const faqs = [
 
 export function MensaFAQ() {
   return (
-    <section className="w-full py-12 md:py-16 bg-background">
+    <section className="w-full py-8 md:py-12 bg-background">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center space-y-4 text-center">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">
@@ -47,11 +47,12 @@ export function MensaFAQ() {
             <Accordion type="single" collapsible className="w-full space-y-4">
                 {faqs.map((faq, index) => (
                     <AccordionItem key={index} value={`item-${index}`} className="bg-muted/50 border rounded-lg">
-                        <AccordionTrigger className="text-left font-semibold px-6 hover:no-underline">
+                        <AccordionTrigger className="text-left font-semibold px-6 hover:no-underline group">
                             <div className="flex items-center gap-3">
                                 <HelpCircle className="h-5 w-5 text-primary shrink-0"/>
                                 <span>{faq.question}</span>
                             </div>
+                             <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180" />
                         </AccordionTrigger>
                         <AccordionContent className="px-6 text-base">
                             <p className="text-muted-foreground">{faq.answer}</p>

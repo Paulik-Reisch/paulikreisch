@@ -5,7 +5,7 @@ import { BookOpen } from "lucide-react";
 
 export function MensaCTA() {
   return (
-    <section className="w-full py-12 md:py-20 bg-primary text-primary-foreground">
+    <section className="w-full py-8 md:py-12 bg-primary text-primary-foreground">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center space-y-6 text-center">
           <BookOpen className="w-16 h-16" />
