@@ -41,7 +41,7 @@ export function CoffeeCompatibility() {
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">
-              Kaffee-Kompatibilitätsmatrix
+              Kaffee-Kompatibilitätskatalog
             </h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
               Die richtige Treibstoffwahl ist entscheidend für einen reibungslosen Betrieb.
@@ -54,7 +54,7 @@ export function CoffeeCompatibility() {
                     <Coffee className="h-5 w-5"/>
                     Leistungssteigerung durch Koffein
                 </CardTitle>
-                <CardDescription>Offizielle Herstellerangaben</CardDescription>
+                <CardDescription>offizielle Herstellerangaben</CardDescription>
             </CardHeader>
             <CardContent>
                 <Table>
@@ -75,7 +75,7 @@ export function CoffeeCompatibility() {
                                         <span>{coffee.effect}</span>
                                     </div>
                                 </TableCell>
-                                <TableCell className="text-sm text-muted-foreground">{coffee.sideEffect}</TableCell>
+                                <TableCell className="text-sm text-foreground">{coffee.sideEffect}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
