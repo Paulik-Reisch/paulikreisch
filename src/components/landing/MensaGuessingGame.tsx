@@ -40,9 +40,9 @@ const questions = [
     imageSrc: "https://picsum.photos/seed/mensa3/400/300",
     imageHint: "mystery food three",
     answers: [
-        { text: "Eine Soße, die so lange gekocht wurde, bis sie eine eigene Persönlichkeit entwickelt hat", isCorrect: true },
+        { text: "Eine Soße, die so lange gekocht wurde, bis sie eine eigene Persönlichkeit entwickelte", isCorrect: true },
         { text: "Ein fehlgeschlagenes Experiment zur Herstellung von Schokolade", isCorrect: false },
-        { text: "Der Inhalt des Altöl-Fasses aus der Autowerkstatt", isCorrect: false },
+        { text: "Der Inhalt des Altöl-Fasses aus der Autowerkstatt um die Ecke", isCorrect: false },
         { text: "Ein Portal in eine andere, schmackhaftere Dimension", isCorrect: false },
     ],
     feedbackCorrect: "Korrekt! Diese Soße hat mehr Lebenserfahrung als die meisten Studenten.",
@@ -112,7 +112,7 @@ export function MensaGuessingGame() {
             <CardTitle>Runde {currentQuestionIndex + 1}</CardTitle>
             <CardDescription>Identifizieren Sie das Gericht.</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="min-h-[450px]">
             <AnimatePresence mode="wait">
               <motion.div
                 key={key}
