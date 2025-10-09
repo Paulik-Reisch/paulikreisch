@@ -13,7 +13,7 @@ const rules = [
 
 export function MensaRules() {
   return (
-    <section className="w-full py-8 md:py-12 bg-muted/40">
+    <section className="w-full py-8 md:py-12 bg-blue-100 dark:bg-blue-900/30">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center space-y-4 text-center">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">

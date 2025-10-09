@@ -12,7 +12,7 @@ export default function MensaTodesfallePage() {
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
       <Header />
-      <main className="flex-1">
+      <main className="flex-1 space-y-0">
         <HeroMensaTodesfalle />
         <MensaHoroscopes />
         <MensaGuessingGame />
@@ -24,4 +24,3 @@ export default function MensaTodesfallePage() {
     </div>
   );
 }
-
