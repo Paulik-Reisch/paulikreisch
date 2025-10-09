@@ -57,14 +57,14 @@ export function VisitingHours() {
               <div className="space-y-4 text-base text-foreground">
                  <div>
                     <p><strong>Nächster Termin:</strong></p>
-                    <p>{nextAppointment ? format(nextAppointment, "dd. MMMM yyyy", { locale: de }) : 'wird berechnet...'}</p>
+                    <p>{nextAppointment ? format(nextAppointment, "dd. MMMM yyyy", { locale: de }) : 'wird berechnet ...'}</p>
                 </div>
                 <div>
-                    <p><strong>Uhrzeit (Gruppe A-K):</strong></p>
+                    <p><strong>Gruppe A-K:</strong></p>
                     <p>15:00 - 15:07 Uhr</p>
                 </div>
                 <div>
-                    <p><strong>Uhrzeit (Gruppe L-Z):</strong></p>
+                    <p><strong>Gruppe L-Z:</strong></p>
                     <p>15:08 - 15:15 Uhr</p>
                 </div>
                 <p className="text-sm text-yellow-500 dark:text-yellow-400">
@@ -79,7 +79,7 @@ export function VisitingHours() {
                 <CheckCircle className="h-5 w-5 text-green-500" /> Erlaubte
                 Gesprächsthemen
               </h3>
-              <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+              <ul className="list-disc list-outside space-y-1 text-muted-foreground pl-5">
                 <li>Das Wetter (nur neutrale Bemerkungen)</li>
                 <li>Lobpreisungen für das Bildungssystem</li>
                 <li>Angebote zur Erhöhung des Kopiergeldes</li>
@@ -90,7 +90,7 @@ export function VisitingHours() {
                 <XCircle className="h-5 w-5 text-red-500" /> Verbotene
                 Gesprächsthemen
               </h3>
-              <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+              <ul className="list-disc list-outside space-y-1 text-muted-foreground pl-5">
                 <li>Fragen nach dem Wohlbefinden des Insassen</li>
                 <li>Diskussionen über "Gefühle" oder "Kreativität"</li>
                 <li>Andeutungen über ein Leben außerhalb der Anstalt</li>
