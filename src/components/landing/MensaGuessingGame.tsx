@@ -30,7 +30,7 @@ const questions = [
     answers: [
       { text: "Ein mutiertes Brokkoli-Röschen", isCorrect: false },
       { text: "Spezial-Salat \"Zukunft\"", isCorrect: false },
-      { text: "Etwas, das mal grün war", isCorrect: true },
+      { text: "Etwas, das mal appetitlich grün war", isCorrect: true },
       { text: "Die verlorene Socke des Hausmeisters", isCorrect: false },
     ],
     feedbackCorrect: "Exakt! Die Farbe ist eine vage Erinnerung an bessere Zeiten.",
@@ -136,13 +136,13 @@ export function MensaGuessingGame() {
                     </div>
                   ) : (
                   <>
-                  <div className="relative w-full max-w-sm aspect-video overflow-hidden">
+                  <div className="relative w-full max-w-sm aspect-video overflow-hidden rounded-lg">
                     <Image
                       src={currentQuestion.imageSrc}
                       alt="Ein undefinierbares Mensa-Gericht"
                       data-ai-hint={currentQuestion.imageHint}
                       fill
-                      className="object-contain rounded-lg"
+                      className="object-contain"
                     />
                   </div>
 
