@@ -41,7 +41,7 @@ const questions = [
     feedbackIncorrect: "Netter Versuch, aber die Realität ist viel trauriger."
   },
   {
-    imageSrc: "https://picsum.photos/seed/mensa3/400/300",
+    imageSrc: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/essen3.png?alt=media&token=9b46de75-7a35-43d2-994a-979d383ed27f",
     imageHint: "mystery food three",
     width: 400,
     height: 300,
@@ -109,7 +109,7 @@ export function MensaGuessingGame() {
               Was ist das? Das Mensa-Ratespiel
             </h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-              Testen Sie Ihr Wissen über unsere kulinarischen Kreationen.
+              Testen Sie Ihr Wissen über die kulinarischen Kreationen unser Grusel-Kantine.
             </p>
         </div>
 
