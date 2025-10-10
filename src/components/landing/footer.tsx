@@ -30,8 +30,8 @@ export function Footer() {
             Veröffentlicht und produziert durch Kindle Direct Publishing (KDP) der Amazon Distribution GmbH, Leipzig sowie ggf. weiteren Verlags- und Produktionspartnern.
             </p>
              <div className="mt-6 text-xs text-muted-foreground max-w-4xl text-balance">
-                <p>Amazon Media EU S.à r.l. (registrierter Verkäufer von digitalen Inhalten, die mit "Verkauf durch Amazon Media EU SARL" gekennzeichnet sind und Betrieb des Amazon Luna Spiele-Streaming-Dienstes):</p>
-                <p>Amazon Media EU S.à r.l. (Société à responsabilité limitée), 38 Avenue John F. Kennedy, L-1855 Luxemburg (Stammkapital: 50.000 EUR; registriert beim RCS Luxemburg; Registernummer: 112767; Gewebescheinnummer: 110001; USt-IdNr.: LU 20944528). Das Unternehmen wird gesetzlich vertreten durch Eric King.</p>
+                <p>Amazon Media EU S.à r.l. (registrierter Verkäufer von digitalen Inhalten, die mit "Verkauf durch Amazon Media EU SARL" gekennzeichnet sind.</p>
+                <p>Amazon Media EU S.à r.l. (Société à responsabilité limitée)</p>
             </div>
             <div className="mt-6 text-xs text-muted-foreground flex flex-wrap gap-x-4 gap-y-2 justify-center items-center border-t pt-4">
             <p>© {new Date().getFullYear()} Paulik & Reisch. Alle Rechte vorbehalten.</p>
@@ -65,8 +65,8 @@ export function Footer() {
           Veröffentlicht und produziert durch Kindle Direct Publishing (KDP) der Amazon Distribution GmbH, Leipzig sowie ggf. weiteren Verlags- und Produktionspartnern.
         </p>
          <div className="mt-6 text-xs text-muted-foreground max-w-4xl text-balance">
-            <p>Amazon Media EU S.à r.l. (registrierter Verkäufer von digitalen Inhalten, die mit "Verkauf durch Amazon Media EU SARL" gekennzeichnet sind und Betrieb des Amazon Luna Spiele-Streaming-Dienstes):</p>
-            <p>Amazon Media EU S.à r.l. (Société à responsabilité limitée), 38 Avenue John F. Kennedy, L-1855 Luxemburg (Stammkapital: 50.000 EUR; registriert beim RCS Luxemburg; Registernummer: 112767; Gewebescheinnummer: 110001; USt-IdNr.: LU 20944528). Das Unternehmen wird gesetzlich vertreten durch Eric King.</p>
+            <p>Amazon Media EU S.à r.l. (registrierter Verkäufer von digitalen Inhalten, die mit "Verkauf durch Amazon Media EU SARL" gekennzeichnet sind.</p>
+            <p>Amazon Media EU S.à r.l. (Société à responsabilité limitée)</p>
         </div>
         <div className="mt-6 text-xs text-muted-foreground flex flex-wrap gap-x-4 gap-y-2 justify-center items-center border-t pt-4">
           <p>© {new Date().getFullYear()} Paulik & Reisch. Alle Rechte vorbehalten.</p>

@@ -15,7 +15,7 @@ const horoscopes = [
     },
     {
         title: "Zwillinge (21.05. - 21.06.)",
-        prediction: "Ihre gespaltene Persönlichkeit ist heute ein Vorteil. Der eine Teil kann das Hauptgericht essen, der andere die Beilage. Zusammen schaffen Sie es vielleicht.",
+        prediction: "Ihre gespaltene Persönlichkeit ist heute ein Vorteil: Der eine Teil kann das Hauptgericht essen, der andere die Beilage. Zusammen schaffen Sie es vielleicht!",
         color: "border-yellow-300 bg-yellow-50"
     }
 ];
