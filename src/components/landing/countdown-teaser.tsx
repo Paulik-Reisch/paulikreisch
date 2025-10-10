@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { useState, useEffect, useTransition } from 'react';
@@ -10,6 +8,8 @@ import { cn } from '@/lib/utils';
 import { getCountdownTarget } from '@/lib/firestore';
 import { reduceCountdownAction } from '@/app/actions';
 import { Skeleton } from '../ui/skeleton';
+
+const COOKIE_NAME = "hw2_countdown_deleted";
 
 const calculateTimeLeft = (targetDate: Date) => {
   const difference = targetDate.getTime() - new Date().getTime();
@@ -29,11 +29,17 @@ const calculateTimeLeft = (targetDate: Date) => {
 export function CountdownTeaser() {
     const [targetDate, setTargetDate] = useState<Date | null>(null);
     const [timeLeft, setTimeLeft] = useState<{ [key: string]: number }>({});
-    const [isShaking, setIsShaking] = useState(false);
+    const [isPulsing, setIsPulsing] = useState(false);
+    const [hasDeletedToday, setHasDeletedToday] = useState(false);
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
 
     useEffect(() => {
+        // Check cookie on mount
+        const cookieValue = document.cookie.split('; ').find(row => row.startsWith(`${COOKIE_NAME}=`));
+        if (cookieValue) {
+            setHasDeletedToday(true);
+        }
         getCountdownTarget().then(setTargetDate);
     }, []);
 
@@ -48,13 +54,32 @@ export function CountdownTeaser() {
     }, [timeLeft, targetDate]);
 
     const reduceTime = () => {
+        if (hasDeletedToday) {
+            toast({
+                title: "Geduld, junger Padawan!",
+                description: "Sie können nur einmal alle 24 Stunden Zeit löschen.",
+                variant: "destructive"
+            });
+            return;
+        }
+
         startTransition(async () => {
-            const previousTime = targetDate ? targetDate.getTime() : 0;
             const result = await reduceCountdownAction();
             
             if ("newTargetDate" in result) {
                 const newDate = new Date(result.newTargetDate);
+                const previousTime = targetDate ? targetDate.getTime() : 0;
                 setTargetDate(newDate);
+
+                // Set cookie to prevent another deletion for 24 hours
+                const expiryDate = new Date();
+                expiryDate.setDate(expiryDate.getDate() + 1);
+                document.cookie = `${COOKIE_NAME}=true; expires=${expiryDate.toUTCString()}; path=/`;
+                setHasDeletedToday(true);
+
+                // Start pulsing effect
+                setIsPulsing(true);
+                setTimeout(() => setIsPulsing(false), 800);
 
                 const timeDiff = previousTime - newDate.getTime();
                 const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
@@ -78,9 +103,6 @@ export function CountdownTeaser() {
                 });
             }
         });
-        
-        setIsShaking(true);
-        setTimeout(() => setIsShaking(false), 500);
     };
 
     const handleShare = () => {
@@ -127,7 +149,7 @@ export function CountdownTeaser() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             {Object.entries(timeLeft).map(([unit, value]) => (
                 <div key={unit} className="p-4 bg-background rounded-lg shadow-md transform hover:scale-110 transition-transform">
-                    <div className={cn("text-4xl sm:text-5xl font-bold font-mono text-primary", { 'animate-shake': isShaking })}>{String(value).padStart(2, '0')}</div>
+                    <div className={cn("text-4xl sm:text-5xl font-bold font-mono text-primary", { 'animate-pulse-fast text-red-500': isPulsing })}>{String(value).padStart(2, '0')}</div>
                     <div className="text-sm font-semibold text-muted-foreground">{unit}</div>
                 </div>
             ))}
@@ -135,9 +157,9 @@ export function CountdownTeaser() {
           <div className='text-center space-y-4 pt-6'>
             <p className='font-semibold'>Machen Sie den Autoren Philipp und Max Dampf unter den Ärschen:</p>
             <div className='flex flex-col sm:flex-row gap-4 justify-center'>
-                 <Button size="lg" onClick={reduceTime} disabled={isPending}>
+                 <Button size="lg" onClick={reduceTime} disabled={isPending || hasDeletedToday}>
                     <Zap className="mr-2" />
-                    Zeit löschen!
+                    {hasDeletedToday ? "Für heute genug gequält" : "Zeit löschen!"}
                 </Button>
                 <Button size="lg" variant="outline" onClick={handleShare}>
                     <Share2 className="mr-2" />

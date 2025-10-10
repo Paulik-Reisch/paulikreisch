@@ -20,7 +20,7 @@ function SubmitButton() {
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Wird gespeichert ...
                 </>
-            ) : "Exzerpt lesen"
+            ) : "Benachrichtigen Sie mich!"
             }
         </Button>
     )
@@ -37,7 +37,6 @@ export function HeroLP2() {
     if (state.success) {
       toast({ title: "Fast geschafft!", description: state.message });
       formRef.current?.reset();
-      router.push('/excerpt-6');
     }
     if (state.error) {
       toast({ variant: "destructive", title: "Fehler", description: state.error });
@@ -53,7 +52,7 @@ export function HeroLP2() {
               Hallo Welt 2 wird noch krasser als Hallo Welt 1!
             </h1>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl animate-in fade-in slide-in-from-top-16 duration-1000">
-              Sie dachten, es ginge nicht schlimmer? Oh, doch. Sicher Sie sich jetzt exklusiven Auszug.
+              Sie wollen als Allererster erfahren, wenn das Buch erscheint? Tragen Sie sich hier ein und wir geben Ihnen Bescheid.
             </p>
           </div>
           <div className="w-full max-w-md space-y-2 animate-in fade-in slide-in-from-top-20 duration-1000">
@@ -65,11 +64,11 @@ export function HeroLP2() {
                 type="email"
                 required
               />
-              <input type="hidden" name="source" value="lp2-hero" />
+              <input type="hidden" name="source" value="lp2-hero-release-notify" />
               <SubmitButton />
             </form>
             <p className="text-xs text-muted-foreground">
-              Wir schicken Ihnen einen Auszug. Abmeldung jederzeit möglich.
+              Wir benachrichtigen Sie zum Launch. Abmeldung jederzeit möglich.
             </p>
           </div>
         </div>
