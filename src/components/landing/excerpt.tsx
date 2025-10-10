@@ -6,7 +6,6 @@ import { ExcerptGate } from "./ExcerptGate";
 import { Button } from "../ui/button";
 import { AlertTriangle, BookWarning, ShoppingCart } from "lucide-react";
 import Link from "next/link";
-import { HW2Teaser } from "./hw2-teaser";
 
 export function Excerpt() {
   const [isGated, setIsGated] = useState(true);
@@ -135,8 +134,6 @@ export function Excerpt() {
             </ol>
           </div>
         </div>
-
-        <HW2Teaser />
       </div>
     </section>
   );
