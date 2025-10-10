@@ -44,20 +44,18 @@ export function Excerpt() {
           </div>
 
           <div className="relative">
-            <div className={isGated ? "max-h-24 overflow-hidden" : ""}>
+            <div className={isGated ? "relative max-h-24 overflow-hidden" : ""}>
                <div className="prose dark:prose-invert max-w-none">
                  <p>
                     Beim Kochen des ersten Kaffees am Morgen stellt sich sogleich die Frage: Ist das wirklich Wasser, welches da aus dem Hahn trieft? Es gleicht beinahe der merkwürdig verfärbten Flüssig- keit, die bei radioaktivem Niederschlag am Ende einer verros- teten und von Schneckenschleim benetzten Regenrinne her- auskommt, in diesem Gebäude aber auch ab und an durch die Decke tröpfelt. Gelegentlich befreit es den faulen Wohnungs- eigentümer zwar vom Putzen des Zimmers, ätzt aber dafür Löcher in die Möbel.
                 </p>
               </div>
+              {isGated && <div className="absolute bottom-0 left-0 w-full h-full bg-gradient-to-t from-background to-transparent pointer-events-none" />}
             </div>
              {isGated && (
-                <>
-                    <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-background to-transparent pointer-events-none z-10" />
-                    <div className="relative z-20">
-                        <ExcerptGate onUnlock={handleUnlock} />
-                    </div>
-                </>
+                <div className="relative z-10 -mt-8">
+                    <ExcerptGate onUnlock={handleUnlock} />
+                </div>
             )}
           </div>
 
