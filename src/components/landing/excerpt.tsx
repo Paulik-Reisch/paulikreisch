@@ -55,6 +55,13 @@ export function Excerpt() {
              {isGated && <ExcerptGate onUnlock={handleUnlock} />}
           </div>
 
+          <div className="prose dark:prose-invert max-w-none">
+            <ol className="text-xs text-muted-foreground space-y-2 pt-8">
+                <li id="fn1">¹ Gärungsbiologie ist ein beschönigender Begriff für die Praktik des Produzierens von hochprozentig gebrannten Spirituosen. Mal dient dies dem Befriedigen der eigenen Sucht, mal als zusätzliche und unversteuerte Einkommensquelle.</li>
+                <li id="fn2">² Der geschulte Leser mag bereits erahnen, was sich hinter diesem Begriff verbirgt. Für die eher schlichten Teilhaber hier eine kurze Schnuppererklärung: Höllenzucker ist ein biologischer Turbo-Kompostierer, welcher den natürlichen Zersetzungsprozess menschlicher DNA radikal beschleunigt. Er kann wahlweise oral oder nasal eingenommen werden.</li>
+                <li id="fn3">³ Hochbegabte Adrenalinjunkies zeichnen sich dadurch aus, dass sie sowohl »hoch« im IQ-Test – meist knapp über Raumtemperatur – als auch »high« im Drogentest sind. Die Forschung ist sich bis heute uneins, ob ihre Begabung im geschickten Slalom durch Bierflaschen oder im simultanen Konsum verschiedenfarbiger Pillen besteht.</li>
+            </ol>
+          </div>
 
          {!isGated && (
             <div className="prose dark:prose-invert max-w-none space-y-6">
@@ -104,11 +111,6 @@ export function Excerpt() {
                 <p>
                     Aber es gibt auch eine gute Seite, welche die Studie offenbart. So deutet sie auf Immobilien hin, die für unter 10 €/m² (ja, die gibt es im Mietspiegel 2025/26) fast immer einen hauseigenen Zoo beinhalten. Darunter zählt das IWMF Kakerlaken, Ratten und gelegentliche Waschbärorgien in der Küche!
                 </p>
-                 <ol className="text-xs text-muted-foreground space-y-2 pt-8">
-                    <li id="fn1">¹ Gärungsbiologie ist ein beschönigender Begriff für die Praktik des Produzierens von hochprozentig gebrannten Spirituosen. Mal dient dies dem Befriedigen der eigenen Sucht, mal als zusätzliche und unversteuerte Einkommensquelle.</li>
-                    <li id="fn2">² Der geschulte Leser mag bereits erahnen, was sich hinter diesem Begriff verbirgt. Für die eher schlichten Teilhaber hier eine kurze Schnuppererklärung: Höllenzucker ist ein biologischer Turbo-Kompostierer, welcher den natürlichen Zersetzungsprozess menschlicher DNA radikal beschleunigt. Er kann wahlweise oral oder nasal eingenommen werden.</li>
-                    <li id="fn3">³ Hochbegabte Adrenalinjunkies zeichnen sich dadurch aus, dass sie sowohl »hoch« im IQ-Test – meist knapp über Raumtemperatur – als auch »high« im Drogentest sind. Die Forschung ist sich bis heute uneins, ob ihre Begabung im geschickten Slalom durch Bierflaschen oder im simultanen Konsum verschiedenfarbiger Pillen besteht.</li>
-                </ol>
             </div>
          )}
         </div>
