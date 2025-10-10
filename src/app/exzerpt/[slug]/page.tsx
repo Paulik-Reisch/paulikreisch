@@ -1,10 +1,61 @@
 
-import { getExcerpt } from "@/lib/firestore";
+import { getExcerpt, getSeoMetadata } from "@/lib/firestore";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
+import type { Metadata, ResolvingMetadata } from 'next'
+ 
+type Props = {
+  params: { slug: string }
+}
+ 
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const slug = params.slug;
+  const seoSlug = `exzerpt-${slug}`;
+  const [excerpt, seoData] = await Promise.all([
+      getExcerpt(slug),
+      getSeoMetadata(seoSlug)
+  ]);
+ 
+  if (!excerpt || !excerpt.isPublished) {
+    return {
+        title: "Seite nicht gefunden",
+    }
+  }
+
+  const previousImages = (await parent).openGraph?.images || []
+
+  const title = seoData?.title || excerpt.title;
+  const description = seoData?.metaDescription || `Leseprobe aus Kapitel ${excerpt.chapterNumber} der 'Hallo Welt' Buchreihe.`;
+ 
+  return {
+    title,
+    description,
+    keywords: seoData?.keywords,
+    openGraph: {
+      title: seoData?.ogTitle || title,
+      description: seoData?.ogDescription || description,
+      images: seoData?.ogImage ? [seoData.ogImage, ...previousImages] : previousImages,
+      type: 'article',
+      publishedTime: new Date(excerpt.lastUpdated).toISOString(),
+      authors: ['Philipp Paulik', 'Maximilian Reisch'],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seoData?.twitterTitle || title,
+      description: seoData?.twitterDescription || description,
+      images: seoData?.twitterImage ? [seoData?.twitterImage] : previousImages,
+    },
+     alternates: {
+        canonical: seoData?.canonicalUrl || `/exzerpt/${slug}`,
+    },
+  }
+}
 
 export default async function ExcerptPage({ params }: { params: { slug: string } }) {
   const page = await getExcerpt(params.slug);

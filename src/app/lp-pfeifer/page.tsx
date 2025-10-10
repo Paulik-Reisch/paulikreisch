@@ -5,13 +5,7 @@ import { HeroPfeifer } from "@/components/landing/hero-pfeifer";
 import { getSeoMetadata } from "@/lib/firestore";
 import type { Metadata } from 'next'
  
-type Props = {
-  params: { slug: string }
-}
- 
-export async function generateMetadata(
-  { params }: Props,
-): Promise<Metadata> {
+export async function generateMetadata(): Promise<Metadata> {
   const seoData = await getSeoMetadata('lp-pfeifer');
  
   if (!seoData) {
@@ -33,11 +27,17 @@ export async function generateMetadata(
       siteName: 'Paulik & Reisch',
     },
     twitter: {
-        card: 'summary_large_image',
+        card: seoData.twitterCard as "summary" | "summary_large_image" | "app" | "player" | undefined,
         title: seoData.twitterTitle,
         description: seoData.twitterDescription,
         images: seoData.twitterImage ? [seoData.twitterImage] : [],
-    }
+        site: seoData.twitterSite,
+        creator: seoData.twitterCreator,
+    },
+    alternates: {
+        canonical: seoData.canonicalUrl,
+    },
+    robots: seoData.robots,
   }
 }
 

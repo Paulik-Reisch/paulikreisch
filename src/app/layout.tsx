@@ -6,12 +6,39 @@ import { CookieBanner } from '@/components/landing/cookie-banner';
 import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
-  title: 'Paulik & Reisch',
-  description: 'Die Autorenwerke von Paulik & Reisch',
+  metadataBase: new URL('https://paulik-reisch.de'),
+  title: {
+    default: 'Paulik & Reisch | Satirische Literatur & humorvolle Bücher',
+    template: '%s | Paulik & Reisch',
+  },
+  description: 'Die offiziellen Autorenwerke von Philipp Paulik & Maximilian Reisch. Satirische Bücher, absurde Kurzgeschichten und tiefgründiger Unsinn über Schule, Bürokratie und den alltäglichen Wahnsinn.',
   applicationName: 'Paulik & Reisch',
+  authors: [{ name: 'Philipp Paulik' }, { name: 'Maximilian Reisch' }],
+  keywords: ['Satire', 'Humor', 'Buch', 'Autoren', 'Paulik', 'Reisch', 'Hallo Welt', 'lustige Bücher', 'deutsche Autoren', 'Schulsatire'],
   openGraph: {
-      title: 'Paulik & Reisch',
-      description: 'Die Autorenwerke von Paulik & Reisch',
+      title: 'Paulik & Reisch | Satirische Literatur',
+      description: 'Die offiziellen Autorenwerke von Philipp Paulik & Maximilian Reisch. Satire über Schule, Bürokratie und den alltäglichen Wahnsinn.',
+      url: 'https://paulik-reisch.de',
+      siteName: 'Paulik & Reisch',
+      locale: 'de_DE',
+      type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Paulik & Reisch | Satire, die sitzt',
+    description: 'Die offiziellen Autorenwerke von Paulik & Reisch. Satire, die den Wahnsinn des Alltags entlarvt.',
+    creator: '@paulikreisch',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 
