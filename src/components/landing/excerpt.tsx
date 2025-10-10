@@ -1,8 +1,11 @@
-
 "use client";
 
 import { useState } from "react";
 import { ExcerptGate } from "./ExcerptGate";
+import { Button } from "../ui/button";
+import { AlertTriangle, BookWarning, ShoppingCart } from "lucide-react";
+import Link from "next/link";
+import { HW2Teaser } from "./hw2-teaser";
 
 export function Excerpt() {
   const [isGated, setIsGated] = useState(true);
@@ -108,6 +111,24 @@ export function Excerpt() {
             </div>
          )}
         </div>
+
+        {!isGated && (
+            <div className="mt-20 max-w-3xl mx-auto text-center p-8 border-2 border-dashed border-destructive rounded-lg bg-yellow-100/50 dark:bg-yellow-900/10">
+                <AlertTriangle className="h-12 w-12 text-destructive mx-auto mb-4" />
+                <h3 className="font-headline text-2xl font-bold text-destructive">Moment mal... Sie kennen "Hallo Welt 1" noch nicht?</h3>
+                <p className="text-muted-foreground mt-2 text-balance">
+                    Ernsthaft? Sie wagen es, sich an Teil 2 zu versuchen, ohne die Grundlagen des Wahnsinns zu kennen? Das ist, als würde man versuchen, einen Marathon zu laufen, ohne vorher das Krabbeln gelernt zu haben. Ein grober, fast unverzeihlicher Fehler.
+                </p>
+                 <Link href="/buchhandlung-paulik-reisch" className="mt-6 inline-block">
+                    <Button size="lg" variant="destructive" className="h-14 text-lg animate-pulse">
+                         <ShoppingCart className="mr-3"/>
+                        SOFORT HIER KAUFEN!
+                    </Button>
+                </Link>
+                <p className="text-xs text-muted-foreground mt-2">Befolgen Sie die Anweisungen, um Ihre Wissenslücke zu schließen.</p>
+            </div>
+        )}
+        <HW2Teaser />
       </div>
     </section>
   );
