@@ -24,7 +24,7 @@ export function VorwortLP2() {
                         </p>
                     </div>
                     <div className="mt-8">
-                        <Link href="/excerpt-6">
+                        <Link href="/excerpt-hw-2-static-c7">
                             <Button>
                                 Einen ersten Blick wagen <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>

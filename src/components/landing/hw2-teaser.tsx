@@ -54,7 +54,7 @@ export function HW2Teaser() {
                 <p className="text-muted-foreground mt-2 mb-6">
                     Lesen Sie den exklusiven Auszug aus Kapitel 6 und überzeugen Sie sich selbst.
                 </p>
-                 <Link href="/excerpt-6">
+                 <Link href="/excerpt-hw-2-static-c7">
                     <Button size="lg" variant="outline">Zur Leseprobe</Button>
                 </Link>
            </div>

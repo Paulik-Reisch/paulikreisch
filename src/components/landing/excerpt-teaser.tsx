@@ -15,8 +15,8 @@ export function ExcerptTeaser() {
               Lesen Sie einen exklusiven Auszug aus Kapitel 6 und finden Sie heraus, warum dieses Buch eine Gefahr für die öffentliche Ordnung ist.
             </p>
           </div>
-          <Link href="/excerpt-6">
-            <Button size="lg">
+          <Link href="/excerpt-hw-2-static-c7">
+            <Button size="lg" className="animate-sway">
               Zum Auszug <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
