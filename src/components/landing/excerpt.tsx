@@ -44,7 +44,7 @@ export function Excerpt() {
           </div>
 
           <div className="relative">
-            {isGated && <div className="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-t from-background to-transparent pointer-events-none" />}
+             {isGated && <div className="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-t from-background to-transparent pointer-events-none z-10" />}
             <div className={isGated ? "max-h-24 overflow-hidden" : ""}>
                <div className="prose dark:prose-invert max-w-none">
                  <p>
@@ -64,6 +64,7 @@ export function Excerpt() {
           </div>
 
          {!isGated && (
+            <>
             <div className="prose dark:prose-invert max-w-none space-y-6">
                  <p>
                     Hat man den Umzug vollends hinter sich gebracht und möchte mit einer Tasse Tee auf dem trostlosen Sofafetzen den Abend vor der flackernden Flimmerkiste genießen, offenbart sich ein ganz anderes tückisches Problem: die Nachbarn.
@@ -112,10 +113,7 @@ export function Excerpt() {
                     Aber es gibt auch eine gute Seite, welche die Studie offenbart. So deutet sie auf Immobilien hin, die für unter 10 €/m² (ja, die gibt es im Mietspiegel 2025/26) fast immer einen hauseigenen Zoo beinhalten. Darunter zählt das IWMF Kakerlaken, Ratten und gelegentliche Waschbärorgien in der Küche!
                 </p>
             </div>
-         )}
-        </div>
 
-        {!isGated && (
             <div className="mt-20 max-w-3xl mx-auto text-center p-8 border-2 border-dashed border-destructive rounded-lg bg-yellow-100/50 dark:bg-yellow-900/10">
                 <AlertTriangle className="h-12 w-12 text-destructive mx-auto mb-4" />
                 <h3 className="font-headline text-2xl font-bold text-destructive">Moment mal... Sie kennen "Hallo Welt 1" noch nicht?</h3>
@@ -130,7 +128,10 @@ export function Excerpt() {
                 </Link>
                 <p className="text-xs text-muted-foreground mt-2">Befolgen Sie die Anweisungen, um Ihre Wissenslücke zu schließen.</p>
             </div>
-        )}
+            </>
+         )}
+        </div>
+
         <HW2Teaser />
       </div>
     </section>
