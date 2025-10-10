@@ -20,6 +20,8 @@ import {
   deletePalabrota,
   updateExcerpt,
   addLog,
+  updateSeoMetadata,
+  SeoMetadata,
 } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
@@ -635,5 +637,50 @@ export async function updateExcerptAction(
   } catch (e) {
     const error = e as Error;
     return { success: false, error: "Fehler beim Aktualisieren: " + error.message };
+  }
+}
+
+// --- SEO Actions ---
+export type SeoState = {
+    success: boolean;
+    error: string | null;
+    message?: string;
+};
+
+export async function updateSeoMetadataAction(
+  prevState: SeoState,
+  formData: FormData
+): Promise<SeoState> {
+  const session = await getSession();
+  if (!session) {
+    return { success: false, error: "Nicht authentifiziert", message: null };
+  }
+
+  const slug = formData.get("slug") as string;
+  if (!slug) {
+    return { success: false, error: "Seiten-Slug fehlt.", message: null };
+  }
+
+  const data: Partial<SeoMetadata> = {};
+  for (const [key, value] of formData.entries()) {
+    if (key !== "slug") {
+        data[key as keyof SeoMetadata] = value as string;
+    }
+  }
+
+  try {
+    await updateSeoMetadata(slug, data, session.user.id);
+    revalidatePath("/admin/seo");
+    revalidatePath(`/admin/seo/editor/${slug}`);
+    // Revalidate the actual page
+    const path = slug === 'home' ? '/' : `/${slug}`;
+    if (!path.startsWith('/exzerpt-')) { // Avoid revalidating dynamic excerpt pages this way
+        revalidatePath(path);
+    }
+    
+    return { success: true, error: null, message: "SEO-Daten erfolgreich aktualisiert." };
+  } catch (e) {
+    const error = e as Error;
+    return { success: false, error: `Fehler beim Aktualisieren: ${error.message}`, message: null };
   }
 }

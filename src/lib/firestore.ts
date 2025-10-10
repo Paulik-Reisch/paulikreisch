@@ -158,9 +158,9 @@ export interface StorageFile {
 }
 
 export interface SeoMetadata {
-  id: string; // URL slug
-  title?: string;
-  metaDescription?: string;
+  id: string; // URL slug, e.g., 'lp-pfeifer' or 'home'
+  title: string;
+  metaDescription: string;
   canonicalUrl?: string;
   keywords?: string;
   ogTitle?: string;
@@ -190,9 +190,9 @@ export interface SeoMetadata {
   robots?: string;
   language?: string;
   geoTargeting?: string;
-  answerSnippets?: string[];
-  contentChunks?: string[];
-  semanticRelations?: string[];
+  answerSnippets?: string;
+  contentChunks?: string;
+  semanticRelations?: string;
   citationData?: string;
 }
 
@@ -745,4 +745,10 @@ export async function getAllSeoMetadata(): Promise<SeoMetadata[]> {
     const collectionRef = collection(db, 'seo_metadata');
     const snapshot = await getDocs(collectionRef);
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as SeoMetadata));
+}
+
+export async function updateSeoMetadata(slug: string, data: Partial<SeoMetadata>, user: string) {
+    const docRef = doc(db, 'seo_metadata', slug);
+    await setDoc(docRef, data, { merge: true });
+    await addLog(user, 'SEO Metadaten aktualisiert', `Seite: ${slug}`);
 }

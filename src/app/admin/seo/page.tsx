@@ -1,9 +1,10 @@
 
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getLegalPages, getPublishedExcerpts, getAllSeoMetadata, SeoMetadata } from "@/lib/firestore";
-import { Edit, PlusCircle, Globe, FileText } from "lucide-react";
+import { Edit, PlusCircle, Globe, FileText, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 
@@ -54,7 +55,7 @@ export default async function SeoDashboardPage() {
                     <p className="text-muted-foreground">Verwalten Sie hier alle Metadaten für Ihre Seiten.</p>
                 </div>
                  <Link href="/admin">
-                     <Button variant="outline">Zurück zum Dashboard</Button>
+                     <Button variant="outline"><ArrowLeft className="mr-2 h-4 w-4"/>Zurück zum Dashboard</Button>
                 </Link>
             </header>
             
@@ -77,7 +78,9 @@ export default async function SeoDashboardPage() {
                         <TableBody>
                             {allPages.map(page => {
                                 const status = getStatus(page.seoData);
-                                const slug = page.path.replace('/', '') || 'home';
+                                const slug = page.path.startsWith('/exzerpt/') 
+                                    ? `exzerpt-${page.path.split('/')[2]}`
+                                    : page.path.replace('/', '') || 'home';
                                 return (
                                     <TableRow key={page.path}>
                                         <TableCell className="font-medium">{page.title}</TableCell>
