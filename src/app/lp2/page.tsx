@@ -6,6 +6,8 @@ import { FeaturesLP2 } from "@/components/landing/features-lp2";
 import { CountdownTeaser } from "@/components/landing/countdown-teaser";
 import { HW2Teaser } from "@/components/landing/hw2-teaser";
 import { AboutAuthorsLP2 } from "@/components/landing/about-authors-lp2";
+import { VorwortLP2 } from "@/components/landing/vorwort-lp2";
+import { ZitierregelnLP2 } from "@/components/landing/zitierregeln-lp2";
 
 export default function LP2() {
   return (
@@ -13,8 +15,10 @@ export default function LP2() {
       <Header />
       <main className="flex-1">
         <HeroLP2 />
+        <VorwortLP2 />
         <FeaturesLP2 />
         <AboutAuthorsLP2 />
+        <ZitierregelnLP2 />
         <CountdownTeaser />
         <HW2Teaser />
       </main>
