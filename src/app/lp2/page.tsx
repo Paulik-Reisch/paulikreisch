@@ -8,6 +8,7 @@ import { HW2Teaser } from "@/components/landing/hw2-teaser";
 import { AboutAuthorsLP2 } from "@/components/landing/about-authors-lp2";
 import { VorwortLP2 } from "@/components/landing/vorwort-lp2";
 import { ZitierregelnLP2 } from "@/components/landing/zitierregeln-lp2";
+import { ExcerptTeaser } from "@/components/landing/excerpt-teaser";
 
 export default function LP2() {
   return (
@@ -18,6 +19,7 @@ export default function LP2() {
         <VorwortLP2 />
         <FeaturesLP2 />
         <AboutAuthorsLP2 />
+        <ExcerptTeaser />
         <ZitierregelnLP2 />
         <CountdownTeaser />
         <HW2Teaser />
