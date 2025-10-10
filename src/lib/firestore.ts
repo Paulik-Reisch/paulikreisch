@@ -1,4 +1,5 @@
 
+
 import { app } from "@/app/firebase";
 import { 
     getFirestore, 
@@ -159,6 +160,27 @@ export interface StorageFile {
 
 const db = getFirestore(app);
 const storage = getStorage(app);
+
+// --- COUNTDOWN ---
+export async function getCountdownTarget(): Promise<Date> {
+    const docRef = doc(db, 'settings', 'countdown');
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+        return (docSnap.data().hw2LaunchDate as Timestamp).toDate();
+    } else {
+        // Initialize if it doesn't exist
+        const initialDate = new Date('2026-08-01T00:00:00');
+        await setDoc(docRef, { hw2LaunchDate: Timestamp.fromDate(initialDate) });
+        return initialDate;
+    }
+}
+
+export async function updateCountdownTarget(newDate: Date): Promise<void> {
+    const docRef = doc(db, 'settings', 'countdown');
+    await setDoc(docRef, { hw2LaunchDate: Timestamp.fromDate(newDate) }, { merge: true });
+}
+
 
 // --- LOGGING ---
 export async function addLog(user: string, action: string, details: string) {

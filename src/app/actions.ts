@@ -3,7 +3,7 @@
 'use server';
 
 import { z } from "zod";
-import { addOrder, addSubscriber, addLog } from "@/lib/firestore";
+import { addOrder, addSubscriber, addLog, getCountdownTarget, updateCountdownTarget } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/session";
 
@@ -78,5 +78,27 @@ export async function subscribeToNewsletterAction(
             return { success: true, message: `Diese E-Mail-Adresse ist bereits registriert.` };
         }
         return { error: "Anmeldung fehlgeschlagen. Das Internet ist wahrscheinlich wieder kaputt." };
+    }
+}
+
+
+export async function reduceCountdownAction(): Promise<{ newTargetDate: string } | { error: string }> {
+    try {
+        const currentTarget = await getCountdownTarget();
+        const timeReductions = [
+            15 * 60 * 1000,
+            60 * 60 * 1000,
+            3 * 60 * 60 * 1000,
+            4 * 24 * 60 * 60 * 1000,
+        ];
+        const randomReduction = timeReductions[Math.floor(Math.random() * timeReductions.length)];
+        const newTargetDate = new Date(currentTarget.getTime() - randomReduction);
+
+        await updateCountdownTarget(newTargetDate);
+
+        return { newTargetDate: newTargetDate.toISOString() };
+    } catch (e) {
+        console.error("Error reducing countdown:", e);
+        return { error: "Zeit konnte nicht reduziert werden." };
     }
 }
