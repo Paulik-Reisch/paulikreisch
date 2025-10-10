@@ -37,7 +37,7 @@ export function ExcerptGate({ onUnlock }: { onUnlock: () => void }) {
   
   return (
     <div className="relative flex justify-center py-12">
-        <div className="relative z-10 w-full max-w-lg p-8 text-center bg-background border-2 border-primary rounded-xl shadow-2xl">
+        <div className="relative z-10 w-full max-w-3xl p-8 text-center bg-background border-2 border-primary rounded-xl shadow-2xl">
             <Lock className="mx-auto h-12 w-12 text-primary mb-4" />
             <h3 className="font-headline text-2xl font-bold">Der Rest ist geheim!</h3>
             <p className="text-muted-foreground mt-2 mb-6">
