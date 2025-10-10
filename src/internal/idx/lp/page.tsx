@@ -15,6 +15,7 @@ const staticLPs = [
     { href: '/lp-pfeifer', title: 'LP - Pfeifer' },
     { href: '/lp-risitas', title: 'LP - Risitas' },
     { href: '/lp-luin', title: 'LP - Luin' },
+    { href: '/los-chipirones', title: 'LP - Los Chipirones' },
 ];
 
 export default async function LandingPageManager() {
