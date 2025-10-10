@@ -46,7 +46,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, RefreshCw, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus, History, Flame, Upload, MessageSquareQuote, ToggleLeft, ToggleRight, BookOpen, ArrowUpRight, DatabaseZap } from "lucide-react";
+import { Loader2, RefreshCw, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus, History, Flame, Upload, MessageSquareQuote, ToggleLeft, ToggleRight, BookOpen, ArrowUpRight, DatabaseZap, Sparkles } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -1133,7 +1133,7 @@ export function AdminDashboard({ defaultTab = "übersicht" }: { defaultTab?: str
 
     return (
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-7 h-auto">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-8 h-auto">
                 <TabsTrigger value="übersicht"><LayoutDashboard className="mr-2 h-4 w-4" />Übersicht</TabsTrigger>
                 <TabsTrigger value="leads"><Users className="mr-2 h-4 w-4" />Leads</TabsTrigger>
                 <TabsTrigger value="dynamic-lps">Dynamische LPs</TabsTrigger>
@@ -1141,6 +1141,7 @@ export function AdminDashboard({ defaultTab = "übersicht" }: { defaultTab?: str
                 <TabsTrigger value="newsletters">Newsletter</TabsTrigger>
                  <TabsTrigger value="palabrotas">Palabrotas</TabsTrigger>
                 <TabsTrigger value="campaigns"><Send className="mr-2 h-4 w-4" />Kampagnen</TabsTrigger>
+                <TabsTrigger value="seo"><Sparkles className="mr-2 h-4 w-4" />SEO</TabsTrigger>
             </TabsList>
             <TabsContent value="übersicht" className="mt-6">
                 <OverviewTab 
@@ -1171,6 +1172,11 @@ export function AdminDashboard({ defaultTab = "übersicht" }: { defaultTab?: str
                     initialSubscribers={initialData.subscribers}
                     initialCampaigns={initialData.campaigns}
                 />
+            </TabsContent>
+            <TabsContent value="seo" className="mt-6">
+                <Link href="/admin/seo">
+                    <Button>Zum SEO-Dashboard</Button>
+                </Link>
             </TabsContent>
         </Tabs>
     )

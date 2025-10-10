@@ -157,6 +157,45 @@ export interface StorageFile {
     updated: string;
 }
 
+export interface SeoMetadata {
+  id: string; // URL slug
+  title?: string;
+  metaDescription?: string;
+  canonicalUrl?: string;
+  keywords?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
+  ogImageAlt?: string;
+  ogType?: string;
+  ogSiteName?: string;
+  twitterCard?: string;
+  twitterSite?: string;
+  twitterCreator?: string;
+  twitterTitle?: string;
+  twitterDescription?: string;
+  twitterImage?: string;
+  aiSummary?: string;
+  aiKeywords?: string;
+  aiEntities?: string;
+  aiContext?: string;
+  aiQuestions?: string;
+  contentStructure?: string;
+  schemaType?: string;
+  articleType?: string;
+  authorName?: string;
+  publisher?: string;
+  datePublished?: string;
+  dateModified?: string;
+  robots?: string;
+  language?: string;
+  geoTargeting?: string;
+  answerSnippets?: string[];
+  contentChunks?: string[];
+  semanticRelations?: string[];
+  citationData?: string;
+}
+
 
 const db = getFirestore(app);
 const storage = getStorage(app);
@@ -690,4 +729,20 @@ export async function listFiles(path: string = '/'): Promise<StorageFile[]> {
     }));
 
     return files.sort((a, b) => new Date(b.updated).getTime() - new Date(a.updated).getTime());
+}
+
+// --- SEO ---
+export async function getSeoMetadata(slug: string): Promise<SeoMetadata | null> {
+    const docRef = doc(db, 'seo_metadata', slug);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        return { id: docSnap.id, ...docSnap.data() } as SeoMetadata;
+    }
+    return null;
+}
+
+export async function getAllSeoMetadata(): Promise<SeoMetadata[]> {
+    const collectionRef = collection(db, 'seo_metadata');
+    const snapshot = await getDocs(collectionRef);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as SeoMetadata));
 }
