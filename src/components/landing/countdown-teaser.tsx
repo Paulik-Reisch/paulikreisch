@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useTransition } from 'react';
@@ -76,11 +77,7 @@ export function CountdownTeaser() {
                 expiryDate.setDate(expiryDate.getDate() + 1);
                 document.cookie = `${COOKIE_NAME}=true; expires=${expiryDate.toUTCString()}; path=/`;
                 setHasDeletedToday(true);
-
-                // Start pulsing effect
-                setIsPulsing(true);
-                setTimeout(() => setIsPulsing(false), 800);
-
+                
                 const timeDiff = previousTime - newDate.getTime();
                 const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((timeDiff / (1000 * 60 * 60)) % 24);
@@ -95,6 +92,14 @@ export function CountdownTeaser() {
                     title: "Zeit gelöscht!",
                     description: `Sie haben den Autoren ${reductionText} Zeit geklaut! Weiter so!`,
                 });
+
+                // Start pulsing effect AFTER state update
+                setTimeout(() => {
+                    setIsPulsing(true);
+                    setTimeout(() => setIsPulsing(false), 800);
+                }, 0);
+
+
             } else {
                 toast({
                     variant: "destructive",
@@ -142,7 +147,7 @@ export function CountdownTeaser() {
             <h2 className="text-4xl font-bold font-headline tracking-tighter sm:text-5xl md:text-6xl text-balance">
               Hallo Welt 2 braucht ... noch etwas.
             </h2>
-            <p className="max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
+            <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
                 Die Autoren sind langsam. Helfen Sie uns, ihnen Dampf zu machen und so die Wartezeit auf das nächste Meisterwerk des literarischen Unsinns zu verkürzen.
             </p>
           </div>
