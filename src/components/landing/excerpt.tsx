@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -32,13 +33,13 @@ export function Excerpt() {
                 Wer zieht es nicht vor, statt unter bröckelnden Brücken zu hausieren und zu vagabundieren, lieber ein vernünftiges Dach über dem Kopf sein Eigen zu nennen?
             </p>
             <p>
-                Doch für viele Menschen wird die Frage des Wohnens schnell zu einer Herausforderung. Anstatt dem Traum vom eigenen Heim nachgehen zu können, bleibt ihnen in Anbetracht ihres mageren Einkommens nichts anderes übrig, als bei zwielich- tigen Vermietern, insbesondere der Sorte Lebenskünstler mit Schwerpunkt Gärungsbiologie¹, einen Wohnplatz anzufragen.
+                Doch für viele Menschen wird die Frage des Wohnens schnell zu einer Herausforderung. Anstatt dem Traum vom eigenen Heim nachgehen zu können, bleibt ihnen in Anbetracht ihres mageren Einkommens nichts anderes übrig, als bei zwielich- tigen Vermietern, insbesondere der Sorte Lebenskünstler mit Schwerpunkt Gärungsbiologie<a href="#fn1" className="text-link no-underline">¹</a>, einen Wohnplatz anzufragen.
             </p>
              <p>
-                Deren Alltagsgeschäft liegt darin, den Drogen- und Alkohol- konsum unserer Gesellschaft in die Höhe zu treiben und zwi- schen Flaschen und neuroeffizienzverstärkenden Substanzen – auch bekannt als Höllenzucker² – zu vegetieren.
+                Deren Alltagsgeschäft liegt darin, den Drogen- und Alkohol- konsum unserer Gesellschaft in die Höhe zu treiben und zwi- schen Flaschen und neuroeffizienzverstärkenden Substanzen – auch bekannt als Höllenzucker<a href="#fn2" className="text-link no-underline">²</a> – zu vegetieren.
             </p>
              <p>
-                Dies wird schnell zum Verhängnis: Für die meisten gescholte- nen Bürger ist es ziemlich unattraktiv, beim Besichtigen einer Wohnung durch ein verrauchtes und stinkendes Treppenhaus zu irren. Erst Slalomlauf zwischen Alkoholflaschen und dann die Treppen wieder runter mit Skiern auf dem hauseigenen Schnee? Das ist schließlich nur etwas für wahre, hochbegabte Adrenalinjunkies³. Doch mangels Alternativen bleibt oft keine andere Wahl, als diese von Kakerlaken und anderem Unge- ziefer behauste Baracke zu beziehen.
+                Dies wird schnell zum Verhängnis: Für die meisten gescholte- nen Bürger ist es ziemlich unattraktiv, beim Besichtigen einer Wohnung durch ein verrauchtes und stinkendes Treppenhaus zu irren. Erst Slalomlauf zwischen Alkoholflaschen und dann die Treppen wieder runter mit Skiern auf dem hauseigenen Schnee? Das ist schließlich nur etwas für wahre, hochbegabte Adrenalinjunkies<a href="#fn3" className="text-link no-underline">³</a>. Doch mangels Alternativen bleibt oft keine andere Wahl, als diese von Kakerlaken und anderem Unge- ziefer behauste Baracke zu beziehen.
             </p>
           </div>
 
@@ -103,11 +104,11 @@ export function Excerpt() {
                 <p>
                     Aber es gibt auch eine gute Seite, welche die Studie offenbart. So deutet sie auf Immobilien hin, die für unter 10 €/m² (ja, die gibt es im Mietspiegel 2025/26) fast immer einen hauseigenen Zoo beinhalten. Darunter zählt das IWMF Kakerlaken, Ratten und gelegentliche Waschbärorgien in der Küche!
                 </p>
-                 <div className="text-xs text-muted-foreground space-y-2 pt-8">
-                    <p>¹ Gärungsbiologie ist ein beschönigender Begriff für die Praktik des Produzierens von hochprozentig gebrannten Spirituosen. Mal dient dies dem Befriedigen der eigenen Sucht, mal als zusätzliche und unversteuerte Einkommensquelle.</p>
-                    <p>² Der geschulte Leser mag bereits erahnen, was sich hinter diesem Begriff verbirgt. Für die eher schlichten Teilhaber hier eine kurze Schnuppererklärung: Höllenzucker ist ein biologischer Turbo-Kompostierer, welcher den natürlichen Zersetzungsprozess menschlicher DNA radikal beschleunigt. Er kann wahlweise oral oder nasal eingenommen werden.</p>
-                    <p>³ Hochbegabte Adrenalinjunkies zeichnen sich dadurch aus, dass sie sowohl »hoch« im IQ-Test – meist knapp über Raumtemperatur – als auch »high« im Drogentest sind. Die Forschung ist sich bis heute uneins, ob ihre Begabung im geschickten Slalom durch Bierflaschen oder im simultanen Konsum verschiedenfarbiger Pillen besteht.</p>
-                </div>
+                 <ol className="text-xs text-muted-foreground space-y-2 pt-8">
+                    <li id="fn1">¹ Gärungsbiologie ist ein beschönigender Begriff für die Praktik des Produzierens von hochprozentig gebrannten Spirituosen. Mal dient dies dem Befriedigen der eigenen Sucht, mal als zusätzliche und unversteuerte Einkommensquelle.</li>
+                    <li id="fn2">² Der geschulte Leser mag bereits erahnen, was sich hinter diesem Begriff verbirgt. Für die eher schlichten Teilhaber hier eine kurze Schnuppererklärung: Höllenzucker ist ein biologischer Turbo-Kompostierer, welcher den natürlichen Zersetzungsprozess menschlicher DNA radikal beschleunigt. Er kann wahlweise oral oder nasal eingenommen werden.</li>
+                    <li id="fn3">³ Hochbegabte Adrenalinjunkies zeichnen sich dadurch aus, dass sie sowohl »hoch« im IQ-Test – meist knapp über Raumtemperatur – als auch »high« im Drogentest sind. Die Forschung ist sich bis heute uneins, ob ihre Begabung im geschickten Slalom durch Bierflaschen oder im simultanen Konsum verschiedenfarbiger Pillen besteht.</li>
+                </ol>
             </div>
          )}
         </div>
