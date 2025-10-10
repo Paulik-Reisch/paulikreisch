@@ -9,8 +9,50 @@ import { Testimonials } from "@/components/landing/testimonials";
 import { Newsletter } from "@/components/landing/newsletter";
 import { CtaBanner } from "@/components/landing/cta-banner";
 import { Footer } from "@/components/landing/footer";
-import { Product } from "@/lib/firestore";
+import { Product, getSeoMetadata } from "@/lib/firestore";
 import { CountdownBanner } from "@/components/landing/countdown-banner";
+import type { Metadata, ResolvingMetadata } from 'next'
+
+export async function generateMetadata(
+  {},
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const seoData = await getSeoMetadata('home');
+ 
+  if (!seoData) {
+    return {
+        title: "Paulik & Reisch | Satirische Literatur & humorvolle Bücher",
+        description: "Die offiziellen Autorenwerke von Philipp Paulik & Maximilian Reisch. Satirische Bücher, absurde Kurzgeschichten und tiefgründiger Unsinn über Schule, Bürokratie und den alltäglichen Wahnsinn."
+    }
+  }
+ 
+  const previousImages = (await parent).openGraph?.images || []
+
+  return {
+    title: seoData.title,
+    description: seoData.metaDescription,
+    keywords: seoData.keywords,
+    openGraph: {
+      title: seoData.ogTitle,
+      description: seoData.ogDescription,
+      images: seoData.ogImage ? [seoData.ogImage, ...previousImages] : previousImages,
+      type: seoData.ogType as 'website' | 'article' | 'book' | 'profile' | undefined,
+    },
+    twitter: {
+      card: seoData.twitterCard as "summary" | "summary_large_image" | "app" | "player" | undefined,
+      title: seoData.twitterTitle,
+      description: seoData.twitterDescription,
+      images: seoData.twitterImage ? [seoData.twitterImage] : previousImages,
+      site: seoData.twitterSite,
+      creator: seoData.twitterCreator,
+    },
+    alternates: {
+        canonical: seoData.canonicalUrl || '/',
+    },
+    robots: seoData.robots,
+  }
+}
+
 
 const hw1: Product = {
     id: "hw1",

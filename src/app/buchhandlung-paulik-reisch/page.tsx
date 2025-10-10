@@ -4,11 +4,52 @@ import { Footer } from "@/components/landing/footer";
 import { BookGrid } from "@/components/landing/book-grid";
 import { BookShopHero } from "@/components/landing/book-shop-hero";
 import { ShopNewsletter } from "@/components/landing/shop-newsletter";
-import { Product } from "@/lib/firestore";
+import { Product, getSeoMetadata } from "@/lib/firestore";
 import { WhyBoth } from "@/components/landing/why-both";
 import { ProductDescription } from "@/components/landing/ProductDescription";
 import { BookMosaic } from "@/components/landing/BookMosaic";
 import { Separator } from "@/components/ui/separator";
+import type { Metadata, ResolvingMetadata } from 'next'
+
+export async function generateMetadata(
+  {},
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const seoData = await getSeoMetadata('buchhandlung-paulik-reisch');
+ 
+  if (!seoData) {
+    return {
+        title: "Buchhandlung | Paulik & Reisch",
+        description: "Kaufen Sie die satirischen Meisterwerke 'Hallo Welt' und 'Hallo Welt 2' von Paulik & Reisch. Offizieller Buch-Shop."
+    }
+  }
+ 
+  const previousImages = (await parent).openGraph?.images || []
+
+  return {
+    title: seoData.title,
+    description: seoData.metaDescription,
+    keywords: seoData.keywords,
+    openGraph: {
+      title: seoData.ogTitle,
+      description: seoData.ogDescription,
+      images: seoData.ogImage ? [seoData.ogImage, ...previousImages] : previousImages,
+      type: seoData.ogType as 'website' | 'article' | 'book' | 'profile' | undefined,
+    },
+    twitter: {
+      card: seoData.twitterCard as "summary" | "summary_large_image" | "app" | "player" | undefined,
+      title: seoData.twitterTitle,
+      description: seoData.twitterDescription,
+      images: seoData.twitterImage ? [seoData.twitterImage] : previousImages,
+      site: seoData.twitterSite,
+      creator: seoData.twitterCreator,
+    },
+    alternates: {
+        canonical: seoData.canonicalUrl || '/buchhandlung-paulik-reisch',
+    },
+    robots: seoData.robots,
+  }
+}
 
 const products: Product[] = [
     {
