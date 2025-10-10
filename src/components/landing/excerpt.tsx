@@ -33,13 +33,13 @@ export function Excerpt() {
                 Wer zieht es nicht vor, statt unter bröckelnden Brücken zu hausieren und zu vagabundieren, lieber ein vernünftiges Dach über dem Kopf sein Eigen zu nennen?
             </p>
             <p>
-                Doch für viele Menschen wird die Frage des Wohnens schnell zu einer Herausforderung. Anstatt dem Traum vom eigenen Heim nachgehen zu können, bleibt ihnen in Anbetracht ihres mageren Einkommens nichts anderes übrig, als bei zwielich- tigen Vermietern, insbesondere der Sorte Lebenskünstler mit Schwerpunkt Gärungsbiologie<a href="#fn1" className="text-link no-underline">¹</a>, einen Wohnplatz anzufragen.
+                Doch für viele Menschen wird die Frage des Wohnens schnell zu einer Herausforderung. Anstatt dem Traum vom eigenen Heim nachgehen zu können, bleibt ihnen in Anbetracht ihres mageren Einkommens nichts anderes übrig, als bei zwielichtigen Vermietern, insbesondere der Sorte Lebenskünstler mit Schwerpunkt Gärungsbiologie<a href="#fn1" className="text-link no-underline">¹</a>, einen Wohnplatz anzufragen.
             </p>
              <p>
-                Deren Alltagsgeschäft liegt darin, den Drogen- und Alkohol- konsum unserer Gesellschaft in die Höhe zu treiben und zwi- schen Flaschen und neuroeffizienzverstärkenden Substanzen – auch bekannt als Höllenzucker<a href="#fn2" className="text-link no-underline">²</a> – zu vegetieren.
+                Deren Alltagsgeschäft liegt darin, den Drogen- und Alkoholkonsum unserer Gesellschaft in die Höhe zu treiben und zwischen Flaschen und neuroeffizienzverstärkenden Substanzen – auch bekannt als Höllenzucker<a href="#fn2" className="text-link no-underline">²</a> – zu vegetieren.
             </p>
              <p>
-                Dies wird schnell zum Verhängnis: Für die meisten gescholte- nen Bürger ist es ziemlich unattraktiv, beim Besichtigen einer Wohnung durch ein verrauchtes und stinkendes Treppenhaus zu irren. Erst Slalomlauf zwischen Alkoholflaschen und dann die Treppen wieder runter mit Skiern auf dem hauseigenen Schnee? Das ist schließlich nur etwas für wahre, hochbegabte Adrenalinjunkies<a href="#fn3" className="text-link no-underline">³</a>. Doch mangels Alternativen bleibt oft keine andere Wahl, als diese von Kakerlaken und anderem Unge- ziefer behauste Baracke zu beziehen.
+                Dies wird schnell zum Verhängnis: Für die meisten gescholtenen Bürger ist es ziemlich unattraktiv, beim Besichtigen einer Wohnung durch ein verrauchtes und stinkendes Treppenhaus zu irren. Erst Slalomlauf zwischen Alkoholflaschen und dann die Treppen wieder runter mit Skiern auf dem hauseigenen Schnee? Das ist schließlich nur etwas für wahre, hochbegabte Adrenalinjunkies<a href="#fn3" className="text-link no-underline">³</a>. Doch mangels Alternativen bleibt oft keine andere Wahl, als diese von Kakerlaken und anderem Unge- ziefer behauste Baracke zu beziehen.
             </p>
           </div>
 
@@ -47,7 +47,7 @@ export function Excerpt() {
             <div className={isGated ? "relative max-h-24 overflow-hidden" : ""}>
                <div className="prose dark:prose-invert max-w-none">
                  <p>
-                    Beim Kochen des ersten Kaffees am Morgen stellt sich sogleich die Frage: Ist das wirklich Wasser, welches da aus dem Hahn trieft? Es gleicht beinahe der merkwürdig verfärbten Flüssig- keit, die bei radioaktivem Niederschlag am Ende einer verros- teten und von Schneckenschleim benetzten Regenrinne her- auskommt, in diesem Gebäude aber auch ab und an durch die Decke tröpfelt. Gelegentlich befreit es den faulen Wohnungs- eigentümer zwar vom Putzen des Zimmers, ätzt aber dafür Löcher in die Möbel.
+                    Beim Kochen des ersten Kaffees am Morgen stellt sich sogleich die Frage: Ist das wirklich Wasser, welches da aus dem Hahn trieft? Es gleicht beinahe der merkwürdig verfärbten Flüssig- keit, die bei radioaktivem Niederschlag am Ende einer verrosteten und von Schneckenschleim benetzten Regenrinne herauskommt, in diesem Gebäude aber auch ab und an durch die Decke tröpfelt. Gelegentlich befreit es den faulen Wohnungs- eigentümer zwar vom Putzen des Zimmers, ätzt aber dafür Löcher in die Möbel.
                 </p>
               </div>
               {isGated && <div className="absolute bottom-0 left-0 w-full h-full bg-gradient-to-t from-background to-transparent pointer-events-none" />}
@@ -66,16 +66,16 @@ export function Excerpt() {
                     Hat man den Umzug vollends hinter sich gebracht und möchte mit einer Tasse Tee auf dem trostlosen Sofafetzen den Abend vor der flackernden Flimmerkiste genießen, offenbart sich ein ganz anderes tückisches Problem: die Nachbarn.
                 </p>
                 <p>
-                    Jene Individuen, welche es darauf abgesehen haben, ihre un- mittelbaren Mitmenschen zu tyrannisieren.
+                    Jene Individuen, welche es darauf abgesehen haben, ihre unmittelbaren Mitmenschen zu tyrannisieren.
                 </p>
                  <p>
-                    Sei es der Lärm, der unverwechselbare Geruch gerauchten Un- krauts oder die rotzfrechen und verwöhnten Pimpfe von ne- benan, die ständig mit Klingelstreichen oder derlei Unfug ihr Unwesen treiben.
+                    Sei es der Lärm, der unverwechselbare Geruch gerauchten Unkrauts oder die rotzfrechen und verwöhnten Pimpfe von nebenan, die ständig mit Klingelstreichen oder derlei Unfug ihr Unwesen treiben.
                 </p>
                 <p>
                     Doch was ist das schlimmste aller Übel?
                 </p>
                 <p>
-                    Die impertinenten Wanddurchdringer schikanieren ihre Mit- bewohner ganz besonders mit der geheimsten aller Waffen: ihrer Daueranwesenheit. Es ist nicht der Bass, der einem die Eingeweide zum Schwingen bringt, und auch nicht der pene- trante Duft nach billigem Kräuterzucker, der neben Verwe- sungsrückständen durch das Lüftungsrohr zieht.
+                    Die impertinenten Wanddurchdringer schikanieren ihre Mitbewohner ganz besonders mit der geheimsten aller Waffen: ihrer Daueranwesenheit. Es ist nicht der Bass, der einem die Eingeweide zum Schwingen bringt, und auch nicht der pene- trante Duft nach billigem Kräuterzucker, der neben Verwe- sungsrückständen durch das Lüftungsrohr zieht.
                 </p>
                 <p>
                     Nein, es ist das pure Bewusstsein, dass sie immer da sind.
@@ -85,7 +85,7 @@ export function Excerpt() {
                     »Nachbarn sind wie Schimmel: Man sieht sie nicht immer, aber man weiß, dass sie hinter der Tapete gedeihen. Sobald man Schimmel sieht, will man ihn loswerden.«
                 </blockquote>
                 <p>
-                    Der eine bohrt in Wänden, in denen es nachweislich nichts mehr zu bohren gibt. Man könnte meinen, er suche den direk- ten Durchgang zu einem fremden Wohnzimmer – in der Hoffnung, es ist weniger heruntergekommen als das eigene.
+                    Der eine bohrt in Wänden, in denen es nachweislich nichts mehr zu bohren gibt. Man könnte meinen, er suche den direkten Durchgang zu einem fremden Wohnzimmer – in der Hoffnung, es ist weniger heruntergekommen als das eigene.
                 </p>
                 <p>
                     Und dann gibt es auch solche, die derart herzzerreißend und ohrenbetäubend nach ihrem heißgeliebten »Kevin« brüllen, dass man schon beinahe überlegen möchte, das Jugendamt zu informieren – oder das Ordnungsamt wegen Ruhestörung nach § 117 des Ordnungswidrigkeitengesetzes.
@@ -97,13 +97,13 @@ export function Excerpt() {
                     Für solche Abenteuer zahlt man mitunter unverschämte elf Euro pro Quadratmeter Miete im Monat. Kalt – eine Heizung gibt es selbstverständlich nicht.
                 </p>
                 <p>
-                    Dass dies keineswegs ein Einzelfall ist, offenbart die jüngst ver- öffentlichte Studie des angesehenen Instituts für Wohnraum- und Mietwucherforschung (IWMF).
+                    Dass dies keineswegs ein Einzelfall ist, offenbart die jüngst veröffentlichte Studie des angesehenen Instituts für Wohnraum- und Mietwucherforschung (IWMF).
                 </p>
                 <p>
                     Wie schon erwähnt, liegt der Mietpreisspiegel 2025/26 bei durchschnittlich 11 €/m² kalt. In Großstädten sogar bei bis zu 23 €/m² – allerdings ohne Heizung, Fenster oder Wände.
                 </p>
                 <p>
-                    Auch konnten die Forschenden einen klaren Zusammenhang zwischen steigenden Mieten und Kriminalitätsraten  nachwei- sen. Je teurer die Wohnung, desto größer ist die Wahrschein- lichkeit, dass der Nachbar beim Pfandflaschensammeln gleich- zeitig eine Fußmatte klaut oder einen Briefkasten entleert.
+                    Auch konnten die Forschenden einen klaren Zusammenhang zwischen steigenden Mieten und Kriminalitätsraten  nachweisen. Je teurer die Wohnung, desto größer ist die Wahrscheinlichkeit, dass der Nachbar beim Pfandflaschensammeln gleichzeitig eine Fußmatte klaut oder einen Briefkasten entleert.
                 </p>
                 <p>
                     Aber es gibt auch eine gute Seite, welche die Studie offenbart. So deutet sie auf Immobilien hin, die für unter 10 €/m² (ja, die gibt es im Mietspiegel 2025/26) fast immer einen hauseigenen Zoo beinhalten. Darunter zählt das IWMF Kakerlaken, Ratten und gelegentliche Waschbärorgien in der Küche!
