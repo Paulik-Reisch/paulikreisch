@@ -32,13 +32,13 @@ export function Excerpt() {
                 Wer zieht es nicht vor, statt unter bröckelnden Brücken zu hausieren und zu vagabundieren, lieber ein vernünftiges Dach über dem Kopf sein Eigen zu nennen?
             </p>
             <p>
-                Doch für viele Menschen wird die Frage des Wohnens schnell zu einer Herausforderung. Anstatt dem Traum vom eigenen Heim nachgehen zu können, bleibt ihnen in Anbetracht ihres mageren Einkommens nichts anderes übrig, als bei zwielich- tigen Vermietern, insbesondere der Sorte Lebenskünstler mit Schwerpunkt Gärungsbiologie, einen Wohnplatz anzufragen.
+                Doch für viele Menschen wird die Frage des Wohnens schnell zu einer Herausforderung. Anstatt dem Traum vom eigenen Heim nachgehen zu können, bleibt ihnen in Anbetracht ihres mageren Einkommens nichts anderes übrig, als bei zwielich- tigen Vermietern, insbesondere der Sorte Lebenskünstler mit Schwerpunkt Gärungsbiologie¹, einen Wohnplatz anzufragen.
             </p>
              <p>
-                Deren Alltagsgeschäft liegt darin, den Drogen- und Alkohol- konsum unserer Gesellschaft in die Höhe zu treiben und zwi- schen Flaschen und neuroeffizienzverstärkenden Substanzen – auch bekannt als Höllenzucker – zu vegetieren.
+                Deren Alltagsgeschäft liegt darin, den Drogen- und Alkohol- konsum unserer Gesellschaft in die Höhe zu treiben und zwi- schen Flaschen und neuroeffizienzverstärkenden Substanzen – auch bekannt als Höllenzucker² – zu vegetieren.
             </p>
              <p>
-                Dies wird schnell zum Verhängnis: Für die meisten gescholte- nen Bürger ist es ziemlich unattraktiv, beim Besichtigen einer Wohnung durch ein verrauchtes und stinkendes Treppenhaus zu irren. Erst Slalomlauf zwischen Alkoholflaschen und dann die Treppen wieder runter mit Skiern auf dem hauseigenen Schnee? Das ist schließlich nur etwas für wahre, hochbegabte Adrenalinjunkies. Doch mangels Alternativen bleibt oft keine andere Wahl, als diese von Kakerlaken und anderem Unge- ziefer behauste Baracke zu beziehen.
+                Dies wird schnell zum Verhängnis: Für die meisten gescholte- nen Bürger ist es ziemlich unattraktiv, beim Besichtigen einer Wohnung durch ein verrauchtes und stinkendes Treppenhaus zu irren. Erst Slalomlauf zwischen Alkoholflaschen und dann die Treppen wieder runter mit Skiern auf dem hauseigenen Schnee? Das ist schließlich nur etwas für wahre, hochbegabte Adrenalinjunkies³. Doch mangels Alternativen bleibt oft keine andere Wahl, als diese von Kakerlaken und anderem Unge- ziefer behauste Baracke zu beziehen.
             </p>
           </div>
 
