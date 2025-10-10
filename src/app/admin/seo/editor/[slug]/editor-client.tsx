@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import Image from "next/image";
 
 const seoConfig = {
     tabs: [
@@ -95,8 +96,93 @@ function SaveButton() {
     )
 }
 
+function GooglePreview({ data, pageTitle, pageSlug }: { data: Partial<SeoMetadata>, pageTitle: string, pageSlug: string }) {
+    return (
+        <Card className="overflow-hidden">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base"><Globe className="h-4 w-4"/> Google-Vorschau</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="space-y-1">
+                    <p className="text-sm text-gray-500 truncate">{`https://paulik-reisch.de/${pageSlug}`}</p>
+                    <h3 className="text-blue-700 text-xl font-medium truncate">{data.title || pageTitle}</h3>
+                    <p className="text-sm text-gray-600 line-clamp-2">{data.metaDescription || "Keine Meta-Beschreibung vorhanden. Dies kann die Klickrate negativ beeinflussen."}</p>
+                </div>
+            </CardContent>
+        </Card>
+    );
+}
+
+function SocialPreview({ data }: { data: Partial<SeoMetadata> }) {
+    return (
+        <Card className="overflow-hidden">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base"><Share2 className="h-4 w-4"/> Social-Media-Vorschau</CardTitle>
+            </CardHeader>
+            <CardContent>
+                {data.ogImage ? (
+                    <div className="aspect-video bg-gray-200 rounded-t-md overflow-hidden relative">
+                         <Image src={data.ogImage} alt={data.ogImageAlt || 'Vorschaubild'} layout="fill" objectFit="cover" />
+                    </div>
+                ) : (
+                    <div className="aspect-video bg-gray-200 rounded-t-md flex items-center justify-center text-gray-500 text-sm">Kein Vorschaubild</div>
+                )}
+                 <div className="p-3 bg-gray-100 rounded-b-md">
+                    <p className="text-xs text-gray-500 uppercase">{data.ogSiteName || 'paulik-reisch.de'}</p>
+                    <h3 className="font-semibold truncate">{data.ogTitle || data.title}</h3>
+                    <p className="text-xs text-gray-600 line-clamp-2">{data.ogDescription || data.metaDescription}</p>
+                </div>
+            </CardContent>
+        </Card>
+    );
+}
+
+function TwitterPreview({ data }: { data: Partial<SeoMetadata> }) {
+    return (
+        <Card className="overflow-hidden">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base"><Twitter className="h-4 w-4 text-blue-500"/> Twitter-Card-Vorschau</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="border rounded-lg overflow-hidden">
+                    {data.twitterImage ? (
+                        <div className="aspect-video bg-gray-200 relative">
+                             <Image src={data.twitterImage} alt={data.twitterTitle || 'Vorschaubild'} layout="fill" objectFit="cover" />
+                        </div>
+                    ) : (
+                         <div className="aspect-video bg-gray-200 flex items-center justify-center text-gray-500 text-sm">Kein Vorschaubild</div>
+                    )}
+                     <div className="p-3">
+                        <h3 className="font-semibold truncate">{data.twitterTitle || data.title}</h3>
+                        <p className="text-xs text-gray-600 line-clamp-2">{data.twitterDescription || data.metaDescription}</p>
+                        <p className="text-xs text-gray-400 mt-1 truncate">paulik-reisch.de</p>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+    );
+}
+
+function AiPreview({ data }: { data: Partial<SeoMetadata> }) {
+     return (
+        <Card className="overflow-hidden">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base"><Bot className="h-4 w-4"/> KI-Antwort-Vorschau</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="p-3 bg-gray-100 rounded-md text-sm space-y-2">
+                   <p>{data.aiSummary || "Die KI konnte keine Zusammenfassung generieren. Bitte füllen Sie das 'aiSummary'-Feld aus."}</p>
+                   {data.aiKeywords && <p className="text-xs text-gray-500"><strong>Relevante Begriffe:</strong> {data.aiKeywords}</p>}
+                </div>
+            </CardContent>
+        </Card>
+    );
+}
+
+
 export function SeoEditorClient({ initialData, pageTitle, pageSlug }: SeoEditorClientProps) {
   const [formData, setFormData] = useState(initialData);
+  const [activeTab, setActiveTab] = useState("Basic SEO");
   const { toast } = useToast();
   const [state, formAction] = useActionState(updateSeoMetadataAction, initialFormState);
 
@@ -107,12 +193,28 @@ export function SeoEditorClient({ initialData, pageTitle, pageSlug }: SeoEditorC
     if (state.error) {
       toast({ variant: "destructive", title: "Fehler", description: state.error });
     }
-  }, [state]);
+  }, [state, toast]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
+  
+  const renderPreview = () => {
+    switch (activeTab) {
+        case "Social Media":
+            return <SocialPreview data={formData} />;
+        case "Twitter/X":
+            return <TwitterPreview data={formData} />;
+        case "KI-Optimierung":
+        case "Erweiterte KI":
+            return <AiPreview data={formData} />;
+        case "Basic SEO":
+        default:
+            return <GooglePreview data={formData} pageTitle={pageTitle} pageSlug={pageSlug} />;
+    }
+  }
+
 
   return (
     <form action={formAction} className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
@@ -130,27 +232,12 @@ export function SeoEditorClient({ initialData, pageTitle, pageSlug }: SeoEditorC
                 <code className="text-xs text-muted-foreground">/{pageSlug}</code>
             </header>
             <div className="p-4 flex-grow overflow-y-auto">
-                <Tabs defaultValue="google" orientation="vertical">
-                    <TabsContent value="google" className="w-full mt-0">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2 text-base"><Globe className="h-4 w-4"/> Google-Vorschau</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="space-y-1">
-                                    <p className="text-sm text-muted-foreground">{`https://paulik-reisch.de/${pageSlug}`}</p>
-                                    <h3 className="text-blue-700 text-xl font-medium group-hover:underline">{formData.title || pageTitle}</h3>
-                                    <p className="text-sm text-gray-600">{formData.metaDescription || "Keine Meta-Beschreibung vorhanden. Dies kann die Klickrate negativ beeinflussen."}</p>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
-                </Tabs>
+                {renderPreview()}
             </div>
             <footer className="p-4 border-t mt-auto">
                  <input type="hidden" name="slug" value={pageSlug} />
                  {Object.entries(formData).map(([key, value]) => {
-                     if (key !== 'id') {
+                     if (key !== 'id' && typeof value === 'string') {
                          return <input key={key} type="hidden" name={key} value={value || ''} />
                      }
                      return null;
@@ -161,7 +248,7 @@ export function SeoEditorClient({ initialData, pageTitle, pageSlug }: SeoEditorC
         
         {/* --- Main Content --- */}
         <main className="lg:col-span-2 border rounded-lg h-full overflow-hidden flex flex-col">
-            <Tabs defaultValue="Basic SEO" className="w-full flex-grow flex flex-col">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full flex-grow flex flex-col">
                 <div className="p-2 border-b">
                     <TabsList className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 h-auto">
                         {seoConfig.tabs.map(tab => (
@@ -177,7 +264,7 @@ export function SeoEditorClient({ initialData, pageTitle, pageSlug }: SeoEditorC
                         <TabsContent key={tab.name} value={tab.name} className="m-0 p-6">
                             <div className="space-y-6">
                                 {tab.fields.map(fieldName => {
-                                    const isTextarea = (fieldDescriptions[fieldName] && fieldDescriptions[fieldName].toLowerCase().includes('json')) || (formData[fieldName as keyof SeoMetadata] as string)?.length > 100;
+                                    const isTextarea = (fieldDescriptions[fieldName] && fieldDescriptions[fieldName].toLowerCase().includes('json')) || String(formData[fieldName as keyof SeoMetadata] || '').length > 100;
                                     return (
                                         <div key={fieldName}>
                                             <Label htmlFor={fieldName} className="text-base font-semibold">{fieldName}</Label>
