@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Percent, Clock, CloudSmoke } from "lucide-react"
+import { Percent, Clock, Cigarette } from "lucide-react"
 
 const stats = [
     {
@@ -11,7 +11,7 @@ const stats = [
     {
         value: "100%",
         label: "Wahrscheinlichkeit, dass der Bus genau dann kommt, wenn Sie sich eine Zigarette anstecken.",
-        icon: CloudSmoke
+        icon: Cigarette
     },
     {
         value: "3 Sek.",
