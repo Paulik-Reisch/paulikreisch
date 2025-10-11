@@ -20,9 +20,6 @@ export function Excerpt() {
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Ein kleiner Vorgeschmack auf Hallo Welt 2</h2>
-            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-              (Weil wir wissen, dass Sie nicht genug bekommen können.)
-            </p>
           </div>
         </div>
         <div className="relative mx-auto max-w-3xl mt-12 text-left space-y-6">

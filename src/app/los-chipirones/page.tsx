@@ -1,6 +1,48 @@
 
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
+import { getSeoMetadata } from "@/lib/firestore";
+import type { Metadata, ResolvingMetadata } from 'next';
+
+export async function generateMetadata(
+  {},
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const seoData = await getSeoMetadata('los-chipirones');
+ 
+  if (!seoData) {
+    return {
+        title: "Die Chronik der Los Chipirónes | Paulik & Reisch",
+        description: "Eine satirische Expedition durch die deutschen Lernvollzugsanstalten. Die Geschichte hinter den Autoren von 'Hallo Welt'."
+    }
+  }
+ 
+  const previousImages = (await parent).openGraph?.images || []
+
+  return {
+    title: seoData.title,
+    description: seoData.metaDescription,
+    keywords: seoData.keywords,
+    openGraph: {
+      title: seoData.ogTitle,
+      description: seoData.ogDescription,
+      images: seoData.ogImage ? [seoData.ogImage, ...previousImages] : previousImages,
+      type: seoData.ogType as 'website' | 'article' | 'book' | 'profile' | undefined,
+    },
+    twitter: {
+      card: seoData.twitterCard as "summary" | "summary_large_image" | "app" | "player" | undefined,
+      title: seoData.twitterTitle,
+      description: seoData.twitterDescription,
+      images: seoData.twitterImage ? [seoData.twitterImage] : previousImages,
+      site: seoData.twitterSite,
+      creator: seoData.twitterCreator,
+    },
+    alternates: {
+        canonical: seoData.canonicalUrl || '/los-chipirones',
+    },
+    robots: seoData.robots,
+  }
+}
 
 export default function LosChipironesPage() {
   const references = [
