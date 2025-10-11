@@ -9,10 +9,10 @@ import {
 } from "@/components/ui/tooltip"
 
 const riders = [
-    { title: "Der Rucksack-Rambo", specialty: "Dreht sich im vollen Bus um 180 Grad und verteilt unabsichtlich Kinnhaken.", image: "https://picsum.photos/seed/bus1/400/400", hint: "person backpack crowded" },
-    { title: "Die Telefon-Terroristin", specialty: "Teilt lauthals Details ihrer Scheidung mit dem gesamten Wagen.", image: "https://picsum.photos/seed/bus2/400/400", hint: "person phone angry" },
-    { title: "Der Döner-Despot", specialty: "Parfümiert den Bus mit einer Melange aus Zwiebel, Knoblauch und scharfer Soße.", image: "https://picsum.photos/seed/bus3/400/400", hint: "person eating smelly" },
-    { title: "Dr. Soundcloud", specialty: "Lässt seine neueste Techno-Mischung über Handy-Lautsprecher laufen. Kopfhörer sind für Anfänger.", image: "https://picsum.photos/seed/bus4/400/400", hint: "teenager music phone" },
+    { title: "Der Rucksack-Rambo", specialty: "Dreht sich im vollen Bus um 180 Grad und verteilt unabsichtlich Kinnhaken.", image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/bus1.png?alt=media&token=faa70e01-6ade-4db5-a912-20b65f1337e5", hint: "person backpack crowded" },
+    { title: "Die Telefon-Terroristin", specialty: "Teilt lauthals Details ihrer Scheidung mit dem gesamten Wagen.", image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/bus2.png?alt=media&token=9cddacd3-df96-459e-a5dc-e3650e61f85a", hint: "person phone angry" },
+    { title: "Der Döner-Despot", specialty: "Parfümiert den Bus mit einer Melange aus Zwiebel, Knoblauch und scharfer Soße.", image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/bus3.png?alt=media&token=ace397a6-8379-46f5-b099-59b19997da0c", hint: "person eating smelly" },
+    { title: "Dr. Soundcloud", specialty: "Lässt seine neueste Techno-Mischung über Handy-Lautsprecher laufen. Kopfhörer sind für Anfänger.", image: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/bus4.png?alt=media&token=443c533e-4def-41b1-9c6c-0fb1ca317f18", hint: "teenager music phone" },
 ];
 
 export function BusRidersGallery() {
