@@ -26,6 +26,19 @@ const staticLPs = [
     { path: '/lp-risitas', title: 'LP - Risitas' },
     { path: '/lp-luin', title: 'LP - Luin' },
     { path: '/los-chipirones', title: 'LP - Los Chipirones' },
+    { path: '/lp-schule-straflager', title: 'LP - Schule als Straflager' },
+    { path: '/lp-lehrer-roboter', title: 'LP - Lehrer als Roboter' },
+    { path: '/lp-mensa-todesfalle', title: 'LP - Mensa als Todesfalle' },
+    { path: '/lp-busfahren-mutprobe', title: 'LP - Busfahren als Mutprobe' },
+    { path: '/lp-sport-ist-mord', title: 'LP - Sport ist Mord' },
+    { path: '/lp-schulzeiten-genickbruch', title: 'LP - Schulzeiten & Genickbruch' },
+    { path: '/lp-corona-satire', title: 'LP - Corona-Satire' },
+    { path: '/lp-buerokratie-simulator', title: 'LP - Bürokratie-Simulator' },
+    { path: '/lp-internet-deutschland', title: 'LP - Internet in Deutschland' },
+    { path: '/lp-mietenwahnsinn', title: 'LP - Mietenwahnsinn' },
+    { path: '/lp-beamten-wartezeiten-simulator', title: 'LP - Beamten-Wartezeiten-Simulator' },
+    { path: '/lp-palabrotas', title: 'LP - Palabrotas' },
+    { path: '/exzerpte', title: 'Exzerpte-Übersicht' },
 ];
 
 export default async function SeoDashboardPage() {
