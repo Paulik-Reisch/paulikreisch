@@ -3,7 +3,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Play, Pause, Music2 } from "lucide-react";
+import { Play, Pause, Music2, Volume2 } from "lucide-react";
 import { Card, CardContent } from "../ui/card";
 
 export function BusMusicPlayer({ src, title }: { src: string; title: string }) {
@@ -50,7 +50,7 @@ export function BusMusicPlayer({ src, title }: { src: string; title: string }) {
                 <p className="text-sm text-muted-foreground">Soundtrack zum Untergang</p>
             </div>
             <Button size="icon" onClick={togglePlayPause}>
-                {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
+                {isPlaying ? <Volume2 className="h-5 w-5 animate-pulse" /> : <Play className="h-5 w-5" />}
             </Button>
         </CardContent>
     </Card>
