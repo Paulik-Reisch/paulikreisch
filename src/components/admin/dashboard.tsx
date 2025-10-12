@@ -42,7 +42,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Loader2, RefreshCw, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus, History, Flame, Upload, MessageSquareQuote, ToggleLeft, ToggleRight, BookOpen, ArrowUpRight, DatabaseZap, Sparkles, CheckCircle, ShieldAlert } from "lucide-react";
+import { Loader2, RefreshCw, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus, History, Flame, Upload, MessageSquareQuote, ToggleLeft, ToggleRight, BookOpen, ArrowUpRight, DatabaseZap, Sparkles, CheckCircle, ShieldAlert, AlertTriangle } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -333,6 +333,117 @@ export function NewsletterManager({ initialNewsletters, onTabChange }: { initial
     )
 }
 
+interface AnalysisResult {
+    level: 'error' | 'warning' | 'info';
+    message: string;
+    details: string;
+}
+
+function EmailChecker({ htmlContent }: { htmlContent: string | undefined }) {
+    const analysis = useMemo((): AnalysisResult[] => {
+        if (!htmlContent) {
+            return [];
+        }
+
+        const results: AnalysisResult[] = [];
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlContent, 'text/html');
+
+        // Check for style blocks in head
+        if (doc.head.querySelectorAll('style').length > 0) {
+            results.push({ level: 'error', message: 'CSS im <head> gefunden', details: 'Outlook (Windows) ignoriert CSS-Blöcke im <head>. Verwenden Sie Inline-Styles.' });
+        }
+        
+        // Check for !important
+        if (htmlContent.includes('!important')) {
+             results.push({ level: 'error', message: '!important-Regeln erkannt', details: 'Outlook ignoriert `!important`. Definieren Sie Styles spezifischer, um sie durchzusetzen.' });
+        }
+
+        // Check for divs as main layout elements
+        const bodyChildren = Array.from(doc.body.children);
+        if (bodyChildren.some(el => el.tagName === 'DIV') && !bodyChildren.some(el => el.tagName === 'TABLE')) {
+            results.push({ level: 'warning', message: 'Div-basiertes Layout', details: 'Layouts, die auf <div> basieren, können in Outlook brechen. Ein tabellenbasiertes Layout ist robuster.' });
+        }
+
+        // Check for missing alt tags on images
+        doc.querySelectorAll('img').forEach(img => {
+            if (!img.alt.trim()) {
+                results.push({ level: 'warning', message: 'Fehlender alt-Text bei Bild', details: 'Bilder sollten immer einen Alternativtext haben, falls sie nicht geladen werden.' });
+            }
+        });
+
+        // Check for cellpadding/cellspacing
+        if (doc.querySelectorAll('table:not([cellpadding="0"])').length > 0 || doc.querySelectorAll('table:not([cellspacing="0"])').length > 0) {
+             results.push({ level: 'info', message: 'cellpadding/cellspacing fehlt', details: 'Setzen Sie `cellpadding="0"`, `cellspacing="0"` und `border="0"` bei Layout-Tabellen, um unerwartete Abstände zu vermeiden.' });
+        }
+        
+         // Check for DOCTYPE
+        if (!htmlContent.toLowerCase().includes('<!doctype')) {
+            results.push({ level: 'info', message: 'Kein DOCTYPE gefunden', details: 'Ein DOCTYPE (z.B. <!DOCTYPE html>) stellt sicher, dass Clients die E-Mail im Standard-Modus rendern.' });
+        }
+
+
+        return results;
+    }, [htmlContent]);
+    
+    const errors = analysis.filter(r => r.level === 'error');
+    const warnings = analysis.filter(r => r.level === 'warning');
+    const infos = analysis.filter(r => r.level === 'info');
+
+    const getSummary = () => {
+        if (!htmlContent) return { title: 'Analyse: Fehler!', description: 'Kein E-Mail-Inhalt zum Analysieren ausgewählt.', variant: 'destructive', icon: ShieldAlert };
+        if (errors.length > 0) return { title: `Analyse: ${errors.length} kritische(r) Fehler`, description: 'Diese Probleme führen wahrscheinlich zu Darstellungsfehlern in Outlook.', variant: 'destructive', icon: ShieldAlert };
+        if (warnings.length > 0) return { title: `Analyse: ${warnings.length} Warnung(en)`, description: 'Es wurden potenzielle Probleme gefunden, die überprüft werden sollten.', variant: 'default', icon: AlertTriangle };
+        return { title: 'Analyse: Alles in Ordnung', description: 'Keine offensichtlichen Kompatibilitätsprobleme gefunden.', variant: 'default', icon: CheckCircle };
+    }
+
+    const summary = getSummary();
+
+    return (
+        <div className="p-2 border-b">
+            <Accordion type="single" collapsible>
+                <AccordionItem value="item-1" className="border-b-0">
+                    <AccordionTrigger className="hover:no-underline p-0">
+                        <Alert variant={summary.variant} className="w-full">
+                            {React.createElement(summary.icon, { className: "h-4 w-4" })}
+                            <AlertTitle>{summary.title}</AlertTitle>
+                            <AlertDescription>{summary.description}</AlertDescription>
+                        </Alert>
+                    </AccordionTrigger>
+                    <AccordionContent className="pt-4 text-xs">
+                        <div className="space-y-3">
+                           {errors.length > 0 && (
+                                <div>
+                                    <h4 className="font-semibold text-red-600">Kritische Fehler:</h4>
+                                    <ul className="list-disc pl-5">
+                                        {errors.map((e, i) => <li key={i}><strong>{e.message}:</strong> {e.details}</li>)}
+                                    </ul>
+                                </div>
+                           )}
+                           {warnings.length > 0 && (
+                                <div>
+                                    <h4 className="font-semibold text-yellow-600">Warnungen:</h4>
+                                     <ul className="list-disc pl-5">
+                                        {warnings.map((w, i) => <li key={i}><strong>{w.message}:</strong> {w.details}</li>)}
+                                    </ul>
+                                </div>
+                           )}
+                           {infos.length > 0 && (
+                               <div>
+                                    <h4 className="font-semibold text-blue-600">Hinweise & Best Practices:</h4>
+                                    <ul className="list-disc pl-5">
+                                        {infos.map((info, i) => <li key={i}><strong>{info.message}:</strong> {info.details}</li>)}
+                                    </ul>
+                               </div>
+                           )}
+                        </div>
+                    </AccordionContent>
+                </AccordionItem>
+            </Accordion>
+        </div>
+    )
+}
+
 function CampaignsManager({ initialNewsletters, initialCampaigns }: { initialNewsletters: Newsletter[], initialCampaigns: Campaign[] }) {
     const { toast } = useToast();
     const [sendState, sendFormAction] = useActionState(sendNewsletterAction, { success: false, message: null });
@@ -433,15 +544,7 @@ function CampaignsManager({ initialNewsletters, initialCampaigns }: { initialNew
                         </CardHeader>
                         <CardContent className="flex-grow flex flex-col p-2 pt-0">
                             <div className="p-4 border rounded-lg bg-background flex-grow flex flex-col">
-                                <div className="p-2 border-b">
-                                     <Alert variant={selectedNewsletter?.content ? "default" : "destructive"}>
-                                        {selectedNewsletter?.content ? <CheckCircle className="h-4 w-4" /> : <ShieldAlert className="h-4 w-4" />}
-                                        <AlertTitle>{selectedNewsletter?.content ? "Analyse: Alles in Ordnung" : "Analyse: Fehler!"}</AlertTitle>
-                                        <AlertDescription>
-                                            {selectedNewsletter?.content ? "Keine offensichtlichen Kompatibilitätsprobleme gefunden." : "Kein E-Mail-Inhalt zum Analysieren ausgewählt."}
-                                        </AlertDescription>
-                                    </Alert>
-                                </div>
+                                <EmailChecker htmlContent={selectedNewsletter?.content} />
                                 <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-b-md flex-grow overflow-auto">
                                     <iframe
                                         srcDoc={selectedNewsletter?.content || ''}
