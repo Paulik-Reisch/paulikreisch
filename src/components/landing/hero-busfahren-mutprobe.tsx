@@ -21,12 +21,14 @@ export function HeroBusfahrenMutprobe() {
         <p className="max-w-[700px] text-lg md:text-xl">
           Der Nahverkehr als moderner Gladiatorenkampf. Nur die Stärksten bekommen einen Sitzplatz – die anderen ein unvergessliches Erlebnis.
         </p>
-        <Link href="/buchhandlung-paulik-reisch">
-            <Button size="lg">
-              <BookOpen className="mr-2" />
-              Im Buch mehrere Survival-Tipps nachlesen
-            </Button>
-        </Link>
+        <div className="pt-3">
+            <Link href="/buchhandlung-paulik-reisch">
+                <Button size="lg">
+                <BookOpen className="mr-2" />
+                Im Buch mehrere Survival-Tipps nachlesen
+                </Button>
+            </Link>
+        </div>
       </div>
     </section>
   );
