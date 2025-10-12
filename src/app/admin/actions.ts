@@ -22,12 +22,12 @@ import {
   addLog,
   updateSeoMetadata,
   SeoMetadata,
-  addMailToSendQueue,
 } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { encrypt, getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
+import { Resend } from 'resend';
 
 
 const LoginSchema = z.object({
@@ -311,6 +311,10 @@ export async function sendNewsletterAction(
     return { success: false, message: "Bitte wählen Sie mindestens einen Tag als Zielgruppe aus." };
   }
   
+  if (!process.env.RESEND_API_KEY) {
+     return { success: false, message: "Resend API-Schlüssel ist nicht konfiguriert. Bitte im Secret Manager hinterlegen." };
+  }
+
   try {
     // 1. Get newsletter and subscribers
     const newsletter = await getNewsletter(newsletterId);
@@ -338,19 +342,25 @@ export async function sendNewsletterAction(
     };
     await addCampaign(campaignData, session.user.id);
 
-    // 3. Create mail documents for the firestore-send-email extension
+    // 3. Send emails via Resend
+    const resend = new Resend(process.env.RESEND_API_KEY);
     const emailsToSend = targetSubscribers.map(subscriber => ({
+        from: 'Hallo Welt <hallo-welt@paulik-reisch.de>',
         to: [subscriber.email],
-        message: {
-            subject: newsletter.subject,
-            html: replacePlaceholders(newsletter.content, subscriber),
-        },
+        subject: newsletter.subject,
+        html: replacePlaceholders(newsletter.content, subscriber),
     }));
 
-    await addMailToSendQueue(emailsToSend);
+    const { data, error } = await resend.batch.send(emailsToSend);
+
+    if (error || !data) {
+      console.error("Resend error:", error);
+      // TODO: Update campaign status to 'failed'
+      return { success: false, message: `Fehler beim E-Mail-Versand: ${error?.message || 'Unbekannter Fehler'}` };
+    }
 
     revalidatePath("/admin");
-    return { success: true, message: `Kampagne erfolgreich erstellt. Versand an ${targetSubscribers.length} Empfänger wird jetzt verarbeitet.` };
+    return { success: true, message: `Kampagne erfolgreich erstellt und Versand an ${targetSubscribers.length} Empfänger gestartet.` };
 
   } catch (e) {
     const error = e as Error;
@@ -674,3 +684,5 @@ export async function updateSeoMetadataAction(
     return { success: false, error: `Fehler beim Aktualisieren: ${error.message}`, message: null };
   }
 }
+
+    
