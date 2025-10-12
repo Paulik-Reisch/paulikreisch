@@ -60,7 +60,7 @@ const results = {
 
 export function SportVerweigererQuiz() {
   const [currentStep, setCurrentStep] = useState(0);
-  const [score, setScore] = useState(0);
+  const [scores, setScores] = useState({ kreativ: 0, krank: 0, taktisch: 0 });
   const [isFinished, setIsFinished] = useState(false);
   const [answers, setAnswers] = useState<{[key: number]: string}>({});
 
