@@ -5,6 +5,7 @@ import { useRef, useEffect } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
 import { MapPin, Hospital, Factory, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 const stops = [
   { name: "Boulevard der gebrochenen Versprechen", icon: AlertCircle, description: "Wo Pünktlichkeit ein Fremdwort ist." },
@@ -80,7 +81,8 @@ export function BusStopNames() {
             </p>
         </div>
         
-        <div ref={ref} className="max-w-2xl mx-auto relative">
+        {/* Desktop View */}
+        <div ref={ref} className="max-w-2xl mx-auto relative hidden md:block">
             <motion.div
                 className="absolute left-1/2 top-0 w-1 bg-primary/20 h-full origin-top"
             />
@@ -93,6 +95,23 @@ export function BusStopNames() {
                     <StopItem key={index} stop={stop} index={index} />
                 ))}
             </div>
+        </div>
+
+        {/* Mobile View */}
+        <div className="max-w-2xl mx-auto space-y-4 md:hidden">
+            {stops.map((stop, index) => (
+                <Card key={index}>
+                    <CardHeader className="flex flex-row items-center gap-4">
+                         <div className="p-3 bg-primary/10 rounded-full">
+                            <stop.icon className="h-6 w-6 text-primary" />
+                        </div>
+                        <div>
+                            <CardTitle className="font-headline text-lg">{stop.name}</CardTitle>
+                            <CardDescription>{stop.description}</CardDescription>
+                        </div>
+                    </CardHeader>
+                </Card>
+            ))}
         </div>
       </div>
     </section>
