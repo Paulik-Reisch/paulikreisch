@@ -26,12 +26,12 @@ export function HeroBusfahrenMutprobe() {
             <div className="flex justify-center">
                 <div className="p-4 rounded-lg">
                      <Image
-                        src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/basura.png?alt=media&token=527ef31c-2d8f-47ee-afb9-9eb2965f220f"
+                        src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/busfelipe.png?alt=media&token=b54b9952-6531-4c8b-9c93-6780eb91318a"
                         alt="Ein Müllhaufen, der einen Bus darstellt"
                         width={400}
                         height={400}
                         className="rounded-lg object-contain"
-                        data-ai-hint="trash garbage"
+                        data-ai-hint="stylized bus"
                     />
                 </div>
             </div>
