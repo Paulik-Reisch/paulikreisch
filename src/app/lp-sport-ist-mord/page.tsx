@@ -2,6 +2,7 @@ import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import { HeroSportIstMord } from "@/components/landing/hero-sport-ist-mord";
 import { DeathDevices } from "@/components/landing/DeathDevices";
+import { DodgeballGuide } from "@/components/landing/DodgeballGuide";
 
 export default function SportIstMordPage() {
   return (
@@ -10,6 +11,7 @@ export default function SportIstMordPage() {
       <main className="flex-1">
         <HeroSportIstMord />
         <DeathDevices />
+        <DodgeballGuide />
       </main>
       <Footer />
     </div>
