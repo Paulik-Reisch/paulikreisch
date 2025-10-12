@@ -4,15 +4,6 @@ import { Resend } from 'resend';
 const resendApiKey = process.env.RESEND_API_KEY;
 const audienceId = process.env.RESEND_AUDIENCE_ID;
 
-if (!resendApiKey) {
-    console.warn("RESEND_API_KEY is not set. Email functionality will be disabled.");
-}
-if (!audienceId) {
-    console.warn("RESEND_AUDIENCE_ID is not set. Audience functionality will be disabled.");
-}
-
-const resend = new Resend(resendApiKey);
-
 /**
  * Adds a contact to the configured Resend audience.
  * @param email The email of the contact to add.
@@ -20,8 +11,11 @@ const resend = new Resend(resendApiKey);
  */
 export async function addContact(email: string) {
     if (!resendApiKey || !audienceId) {
-        throw new Error("Resend is not configured. Missing API key or Audience ID.");
+        console.error("Resend is not configured. Missing RESEND_API_KEY or RESEND_AUDIENCE_ID.");
+        throw new Error("Resend is not configured on the server.");
     }
+    const resend = new Resend(resendApiKey);
+
     try {
         const { data, error } = await resend.contacts.create({
             email,
@@ -54,8 +48,10 @@ export async function addContact(email: string) {
  */
 export async function sendCampaign(subject: string, html: string) {
     if (!resendApiKey || !audienceId) {
-        throw new Error("Resend is not configured. Missing API key or Audience ID.");
+        console.error("Resend is not configured. Missing RESEND_API_KEY or RESEND_AUDIENCE_ID.");
+        throw new Error("Resend is not configured on the server.");
     }
+    const resend = new Resend(resendApiKey);
 
     try {
         const { data, error } = await resend.emails.send({
