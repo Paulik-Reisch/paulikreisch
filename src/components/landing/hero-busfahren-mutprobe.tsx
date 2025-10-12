@@ -8,11 +8,11 @@ export function HeroBusfahrenMutprobe() {
   return (
      <section className="w-full py-12 md:py-24 lg:py-32 relative">
            <Image
-              alt="Schulgebäude als Gefängnis"
+              alt="Ritter Trenk"
               className="absolute inset-0 w-full h-full object-cover opacity-30"
-              data-ai-hint="school prison"
+              data-ai-hint="Ritter Trenk"
               layout="fill"
-              src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/bus.png?alt=media&token=0c046182-305c-44d7-afbf-dae92227e748"
+              src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/ritter-trenk.jpg?alt=media&token=e1a539da-71f0-453c-a99a-f4f5f5904533"
             />
       <div className="container px-4 md:px-6 space-y-6">
         <h1 className="text-4xl font-bold tracking-tighter sm:text-6xl xl:text-8xl/none font-headline text-balance">
