@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Save, ArrowLeft, Eye, Code, PlusCircle, Trash2, ArrowUp, ArrowDown, Type, Image as ImageIcon, Link as LinkIcon, AlignLeft, AlignCenter, AlignRight, Copy, Rows, Columns, Minus, GalleryHorizontal, Settings, Box, Radio, AlertTriangle } from "lucide-react";
+import { Loader2, Save, ArrowLeft, Eye, Code, PlusCircle, Trash2, ArrowUp, ArrowDown, Type, Image as ImageIcon, Link as LinkIcon, AlignLeft, AlignCenter, AlignRight, Copy, Rows, Columns, Minus, GalleryHorizontal, Settings, Box, Radio, AlertTriangle, CheckCircle, ExternalLink } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Accordion,
@@ -43,6 +43,8 @@ import {
 import { CodeEditor } from "@/components/admin/code-editor";
 import { Switch } from "@/components/ui/switch";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Checkbox } from "@/components/ui/checkbox";
+import { cn } from "@/lib/utils";
 
 
 function generateComponentHTML(component: NewsletterComponent): string {
@@ -520,25 +522,37 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove, isLive }: { co
     )
 }
 
-function LiveStatusToggle({ id, isLive, onToggle }: { id: string; isLive: boolean; onToggle: () => void }) {
+function LiveStatusToggle({ id, isLive, onStateChange }: { id: string; isLive: boolean; onStateChange: (state: 'pending' | 'success' | 'idle') => void }) {
     const [state, formAction] = useActionState(toggleNewsletterLiveStatusAction, { success: false, error: null });
-    const [isPending, startTransition] = useTransition();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isConfirmed, setIsConfirmed] = useState(false);
+    const { toast } = useToast();
+
+    useEffect(() => {
+        if(state.success) {
+            onStateChange('success');
+            toast({ title: "Erfolgreich!", description: state.message });
+        }
+        if(state.error) {
+            onStateChange('idle');
+            toast({ variant: "destructive", title: "Fehler", description: state.error });
+        }
+    }, [state, onStateChange, toast]);
 
     const handleSubmit = (formData: FormData) => {
-        startTransition(() => {
-            onToggle();
-            formAction(formData);
-        });
+        onStateChange('pending');
+        formAction(formData);
+        setIsDialogOpen(false);
     }
 
     return (
-        <AlertDialog>
+        <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <AlertDialogTrigger asChild>
-                <Button variant="destructive" disabled={isLive}>
+                <Button variant="default" disabled={isLive}>
                    <Radio className="mr-2 h-4 w-4"/> Live schalten
                 </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent>
+            <AlertDialogContent className="max-w-xl">
                 <form onSubmit={(e) => {
                   e.preventDefault();
                   const formData = new FormData(e.currentTarget);
@@ -547,16 +561,35 @@ function LiveStatusToggle({ id, isLive, onToggle }: { id: string; isLive: boolea
                     <input type="hidden" name="id" value={id} />
                     <input type="hidden" name="isLive" value={String(!isLive)} />
                     <AlertDialogHeader>
-                        <AlertDialogTitle className="flex items-center gap-2"><AlertTriangle/>Sind Sie absolut sicher?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Wenn Sie diesen Newsletter live schalten, wird er für jegliche Bearbeitungen gesperrt. Diese Aktion ist notwendig, um die Integrität der versendeten E-Mail und ihrer öffentlichen Web-Vorschau zu gewährleisten. Sie können den Status später nicht wieder ändern.
+                        <AlertDialogTitle className="flex items-center gap-2 text-xl"><AlertTriangle/>Sind Sie absolut sicher?</AlertDialogTitle>
+                        <AlertDialogDescription asChild>
+                            <div className="text-left space-y-4 mt-4 max-h-[60vh] overflow-y-auto pr-4">
+                                <p className="font-semibold">Das Live-Schalten eines Newsletters ist eine endgültige Aktion mit folgenden Konsequenzen:</p>
+                                <ul className="list-disc pl-5 space-y-2">
+                                    <li><b>Permanente Sperrung:</b> Der Newsletter kann nach diesem Vorgang **nicht mehr bearbeitet** werden. Alle Felder, Komponenten und der HTML-Code werden schreibgeschützt.</li>
+                                    <li><b>Stabile Web-Version:</b> Dies garantiert, dass der öffentliche Vorschau-Link (`/nl/preview/...`) exakt den Inhalt widerspiegelt, der zum Zeitpunkt des Versands aktuell war. Das ist wichtig für die Archivierung und rechtliche Nachvollziehbarkeit.</li>
+                                    <li><b>Integrität der Kampagne:</b> Nachträgliche Änderungen können die Darstellung bei Empfängern, die die E-Mail später öffnen, nicht mehr beeinflussen.</li>
+                                </ul>
+                                <p className="font-bold text-destructive">Empfohlener Workflow:</p>
+                                <ol className="list-decimal pl-5 space-y-2">
+                                    <li>Finalisieren Sie den Newsletter hier im Editor.</li>
+                                    <li>Testen Sie die Vorschau gründlich.</li>
+                                    <li>Kopieren Sie den HTML-Code und erstellen/senden Sie Ihre Kampagne in Resend.</li>
+                                    <li>**Erst danach:** Kehren Sie hierher zurück und schalten Sie den Newsletter "live", um ihn zu archivieren und zu sperren.</li>
+                                </ol>
+                            </div>
                         </AlertDialogDescription>
                     </AlertDialogHeader>
+                     <div className="flex items-center space-x-2 my-6">
+                        <Checkbox id="confirm-live" checked={isConfirmed} onCheckedChange={(checked) => setIsConfirmed(checked as boolean)} />
+                        <Label htmlFor="confirm-live" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                            Ich bin mir der Konsequenzen bewusst und möchte fortfahren.
+                        </Label>
+                    </div>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Abbrechen</AlertDialogCancel>
-                        <AlertDialogAction type="submit" disabled={isPending}>
-                            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Ja, live schalten
+                        <AlertDialogAction type="submit" disabled={!isConfirmed}>
+                            Ja, jetzt live schalten
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </form>
@@ -575,6 +608,7 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
   const [hasManuallyEditedHtml, setHasManuallyEditedHtml] = useState(false);
   const [previewUrl, setPreviewUrl] = useState('');
   const [isLive, setIsLive] = useState(newsletter.isLive || false);
+  const [editorState, setEditorState] = useState<'idle' | 'pending' | 'success'>('idle');
 
   const [updateState, updateFormAction] = useActionState(updateNewsletterAction, initialEditorState);
   
@@ -602,10 +636,12 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
     }
   }, [updateState, toast]);
 
-  const handleGoLive = () => {
-    toast({ title: 'Wird live geschaltet...', description: 'Sie werden zum Dashboard weitergeleitet.' });
-    router.push('/admin');
-  };
+  const handleLiveStateChange = (newState: 'pending' | 'success' | 'idle') => {
+      setEditorState(newState);
+      if (newState === 'success') {
+          setIsLive(true);
+      }
+  }
 
   const handleFormSubmit = (formData: FormData) => {
     if (isLive) return;
@@ -673,6 +709,38 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
         description: "Der Vorschau-Link wurde in die Zwischenablage kopiert.",
     });
   }
+  
+  if(editorState !== 'idle') {
+    return (
+        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center gap-6">
+            {editorState === 'pending' ? (
+                <>
+                    <Loader2 className="h-12 w-12 animate-spin text-primary"/>
+                    <div className="text-center">
+                        <h2 className="text-2xl font-bold font-headline">Newsletter wird publiziert...</h2>
+                        <p className="text-muted-foreground">Live-Daten werden gespeichert und der Editor wird gesperrt.</p>
+                    </div>
+                </>
+            ) : (
+                <>
+                    <CheckCircle className="h-16 w-16 text-green-500"/>
+                     <div className="text-center">
+                        <h2 className="text-2xl font-bold font-headline">Erfolgreich live geschaltet!</h2>
+                        <p className="text-muted-foreground">Der Newsletter ist jetzt permanent gespeichert und nicht mehr editierbar.</p>
+                    </div>
+                    <div className="flex gap-4 mt-4">
+                        <Link href="/admin">
+                            <Button variant="outline">Zurück zum Dashboard</Button>
+                        </Link>
+                         <a href={previewUrl} target="_blank" rel="noopener noreferrer">
+                            <Button>Live-Vorschau öffnen <ExternalLink className="ml-2 h-4 w-4"/></Button>
+                        </a>
+                    </div>
+                </>
+            )}
+        </div>
+    )
+  }
 
   return (
     <div className="grid md:grid-cols-[350px_1fr] h-full">
@@ -725,8 +793,8 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
                                 </div>
                                 <Switch checked={useWrapper} onCheckedChange={setUseWrapper} disabled={isLive}/>
                             </div>
-                           <div className="p-3 border-destructive/50 border rounded-lg bg-destructive/10">
-                                <LiveStatusToggle id={newsletter.id} isLive={isLive} onToggle={handleGoLive} />
+                           <div className="p-3 border-primary/50 border rounded-lg bg-primary/10">
+                                <LiveStatusToggle id={newsletter.id} isLive={isLive} onStateChange={handleLiveStateChange} />
                            </div>
                         </AccordionContent>
                     </AccordionItem>

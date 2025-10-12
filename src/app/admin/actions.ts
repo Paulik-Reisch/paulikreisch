@@ -249,6 +249,8 @@ export async function toggleNewsletterLiveStatusAction(
     const newIsLive = isLive === 'true';
 
     try {
+        // Simulate a delay
+        await new Promise(resolve => setTimeout(resolve, 2000));
         await updateNewsletter(id, { isLive: newIsLive }, session.user.id);
         revalidatePath(`/admin/nle/${id}`);
         revalidatePath('/admin');
