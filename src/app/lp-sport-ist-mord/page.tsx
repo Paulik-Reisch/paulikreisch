@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -7,7 +6,6 @@ import { Footer } from "@/components/landing/footer";
 import { HeroSportIstMord } from "@/components/landing/hero-sport-ist-mord";
 import { DeathDevices } from "@/components/landing/DeathDevices";
 import { DodgeballGuide } from "@/components/landing/DodgeballGuide";
-import { Soundboard } from "@/components/landing/Soundboard";
 import { QuotesGallery } from "@/components/landing/QuotesGallery";
 import { SportVerweigererQuiz } from "@/components/landing/SportVerweigererQuiz";
 
@@ -23,7 +21,6 @@ export default function SportIstMordPage() {
           <>
             <DeathDevices />
             <DodgeballGuide />
-            <Soundboard />
             <QuotesGallery />
             <SportVerweigererQuiz />
           </>
