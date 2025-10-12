@@ -8,11 +8,11 @@ export function HeroBusfahrenMutprobe() {
   return (
      <section className="w-full py-12 md:py-24 lg:py-32 relative">
            <Image
-              alt="Ritter Trenk"
+              alt="Urban Dictionary Mug"
               className="absolute inset-0 w-full h-full object-cover opacity-30"
-              data-ai-hint="Ritter Trenk"
+              data-ai-hint="funny mug"
               layout="fill"
-              src="https://m.media-amazon.com/images/I/817qRWAuYsL._UF894,1000_QL80_.jpg"
+              src="https://urbandictionary.store/image/mug/5044676"
             />
       <div className="container px-4 md:px-6 space-y-6">
         <h1 className="text-4xl font-bold tracking-tighter sm:text-6xl xl:text-8xl/none font-headline text-balance">
@@ -24,7 +24,6 @@ export function HeroBusfahrenMutprobe() {
         <div className="pt-3">
             <Link href="/buchhandlung-paulik-reisch">
                 <Button size="lg">
-                <BookOpen className="mr-2" />
                 Im Buch mehrere Survival-Tipps nachlesen
                 </Button>
             </Link>
