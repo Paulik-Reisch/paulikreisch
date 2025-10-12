@@ -486,19 +486,21 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove, isLive }: { co
 
     return (
         <AccordionItem value={component.id} disabled={isLive}>
-            <AccordionTrigger className="hover:no-underline p-2 bg-muted/50 rounded-t-md border">
-                <div className="flex items-center gap-2 text-sm font-semibold w-full">
-                    {typeIcons[component.type]}
-                    <span className="capitalize flex-grow text-left">{component.type.replace('-', ' ')}</span>
-                    {!isLive && (
-                        <>
-                            <Button type="button" size="icon" variant="ghost" className="h-6 w-6" onClick={(e) => { e.stopPropagation(); onMove(component.id, 'up'); }}><ArrowUp className="h-4 w-4"/></Button>
-                            <Button type="button" size="icon" variant="ghost" className="h-6 w-6" onClick={(e) => { e.stopPropagation(); onMove(component.id, 'down'); }}><ArrowDown className="h-4 w-4"/></Button>
-                            <Button type="button" size="icon" variant="ghost" className="h-6 w-6 text-destructive hover:text-destructive" onClick={(e) => { e.stopPropagation(); onDelete(component.id); }}><Trash2 className="h-4 w-4"/></Button>
-                        </>
-                    )}
-                </div>
-            </AccordionTrigger>
+             <div className="flex items-center gap-2 border bg-muted/50 rounded-t-md">
+                <AccordionTrigger className="hover:no-underline p-2 flex-grow">
+                    <div className="flex items-center gap-2 text-sm font-semibold w-full">
+                        {typeIcons[component.type]}
+                        <span className="capitalize flex-grow text-left">{component.type.replace('-', ' ')}</span>
+                    </div>
+                </AccordionTrigger>
+                 {!isLive && (
+                    <div className="flex items-center pr-2">
+                        <Button type="button" size="icon" variant="ghost" className="h-6 w-6" onClick={() => onMove(component.id, 'up')}><ArrowUp className="h-4 w-4"/></Button>
+                        <Button type="button" size="icon" variant="ghost" className="h-6 w-6" onClick={() => onMove(component.id, 'down')}><ArrowDown className="h-4 w-4"/></Button>
+                        <Button type="button" size="icon" variant="ghost" className="h-6 w-6 text-destructive hover:text-destructive" onClick={() => onDelete(component.id)}><Trash2 className="h-4 w-4"/></Button>
+                    </div>
+                )}
+            </div>
             <AccordionContent className="p-4 border border-t-0 rounded-b-md">
                 {renderContent()}
             </AccordionContent>
@@ -520,19 +522,25 @@ function LiveStatusToggle({ id, isLive }: { id: string; isLive: boolean }) {
     }
 
     return (
-        <div className="flex items-center justify-between rounded-lg border p-3 shadow-sm bg-destructive/10 border-destructive/50">
-            <div className="space-y-0.5">
-                <Label className="font-bold text-destructive">Live schalten</Label>
-                <p className="text-xs text-destructive/80">
-                    Sperrt den Newsletter für Bearbeitungen. Nur aktivieren, wenn die Kampagne versendet wurde.
-                </p>
+        <form action={formAction}>
+            <input type="hidden" name="id" value={id} />
+            <input type="hidden" name="isLive" value={String(!isLive)} />
+            <div className="flex items-center justify-between rounded-lg border p-3 shadow-sm bg-destructive/10 border-destructive/50">
+                <div className="space-y-0.5">
+                    <Label className="font-bold text-destructive">Live schalten</Label>
+                    <p className="text-xs text-destructive/80">
+                        Sperrt den Newsletter für Bearbeitungen. Nur aktivieren, wenn die Kampagne versendet wurde.
+                    </p>
+                </div>
+                <button type="submit" disabled={isPending}>
+                     <Switch 
+                        checked={isLive} 
+                        // The onCheckedChange is now handled by the form submission
+                        disabled={isPending}
+                    />
+                </button>
             </div>
-            <Switch 
-                checked={isLive} 
-                onCheckedChange={handleToggle}
-                disabled={isPending}
-            />
-        </div>
+        </form>
     );
 }
 
@@ -771,5 +779,7 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
     </div>
   );
 }
+
+    
 
     
