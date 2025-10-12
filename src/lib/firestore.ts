@@ -14,7 +14,6 @@ import {
     getDoc,
     setDoc,
     deleteDoc,
-    arrayUnion,
     writeBatch,
     documentId
 } from "firebase/firestore";
@@ -30,15 +29,6 @@ export interface Order {
     [key: string]: any;
     timestamp: string;
 }
-
-export interface Subscriber {
-    id: string; // The email address
-    email: string;
-    source: string[] | string;
-    subscribedAt: string;
-    tags?: string[];
-}
-
 
 export interface PageComponent {
     id: string;
@@ -288,77 +278,6 @@ export async function addOrder(orderData: any, user: string) {
     };
     await addDoc(ordersCol, dataWithTimestamp);
     await addLog(user, 'Bestellung erstellt', `Bestell-Typ: ${orderData.orderType || 'N/A'}`);
-    
-    // Also add to subscribers if not already there
-    if (orderData.email) {
-        await addSubscriber(orderData.email, orderData.orderType || 'Order', user);
-    }
-}
-
-// --- SUBSCRIBERS ---
-export async function addSubscriber(email: string, source: string | undefined, user: string) {
-    const docId = email.toLowerCase();
-    const subscriberRef = doc(db, 'subscribers', docId);
-    const docSnap = await getDoc(subscriberRef);
-
-    if (docSnap.exists()) {
-        // If the subscriber already exists, update the source array
-        const existingData = docSnap.data();
-        const existingSources = existingData.source || [];
-        const newSources = Array.isArray(existingSources) ? existingSources : [existingSources];
-        
-        if (source && !newSources.includes(source)) {
-            await updateDoc(subscriberRef, {
-                source: arrayUnion(source)
-            });
-             await addLog(user, 'Abonnent aktualisiert', `Neue Quelle '${source}' für ${email} hinzugefügt`);
-        }
-    } else {
-        await setDoc(subscriberRef, { 
-            email: email,
-            source: [source || 'unknown'],
-            subscribedAt: Timestamp.now(),
-            tags: [],
-        });
-        await addLog(user, 'Abonnent hinzugefügt', `${email} über Quelle '${source}'`);
-    }
-}
-
-
-export async function getSubscribers(): Promise<Subscriber[]> {
-    const subsCol = collection(db, 'subscribers');
-    const q = query(subsCol, orderBy("subscribedAt", "desc"));
-    const subsSnapshot = await getDocs(q);
-    if (subsSnapshot.empty) {
-        return [];
-    }
-    const subsList = subsSnapshot.docs.map(doc => {
-        const data = doc.data();
-        const subscribedAt = data.subscribedAt;
-        return { 
-            id: doc.id, 
-            email: data.email,
-            source: data.source,
-            tags: data.tags || [],
-            subscribedAt: subscribedAt ? (subscribedAt as Timestamp).toDate().toISOString() : new Date().toISOString(),
-        } as Subscriber;
-    });
-    return subsList;
-}
-
-export async function addTagsToSubscribers(subscriberIds: string[], tags: string[], user: string) {
-    if (!subscriberIds || subscriberIds.length === 0 || !tags || tags.length === 0) {
-        throw new Error("Subscriber IDs and tags are required.");
-    }
-    const batch = [];
-    for (const id of subscriberIds) {
-        const subscriberRef = doc(db, 'subscribers', id);
-        batch.push(updateDoc(subscriberRef, {
-            tags: arrayUnion(...tags)
-        }));
-    }
-    await Promise.all(batch);
-    await addLog(user, 'Tags zugewiesen', `${tags.join(', ')} zu ${subscriberIds.length} Abonnenten`);
 }
 
 
@@ -752,5 +671,3 @@ export async function updateSeoMetadata(slug: string, data: Partial<SeoMetadata>
     await setDoc(docRef, data, { merge: true });
     await addLog(user, 'SEO Metadaten aktualisiert', `Seite: ${slug}`);
 }
-
-    

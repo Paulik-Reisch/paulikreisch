@@ -9,10 +9,7 @@ import {
   addNewsletter,
   duplicateNewsletter,
   getAdminCredentials,
-  addTagsToSubscribers,
-  getSubscribers,
   getNewsletter,
-  Subscriber,
   addCampaign,
   updateLegalPage,
   addPalabrota,
@@ -25,7 +22,7 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { encrypt, getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
-import { Resend } from 'resend';
+import { sendCampaign } from "@/lib/resend";
 
 
 const LoginSchema = z.object({
@@ -228,64 +225,15 @@ export async function duplicateNewsletterAction(
 }
 
 
-const TagSubscribersSchema = z.object({
-    subscriberIds: z.string(),
-    tagName: z.string().min(1, "Tag-Name darf nicht leer sein."),
-});
-
-export type TaggingState = {
-    success: boolean;
-    error: string | null;
-};
-
-export async function tagSubscribersAction(
-    prevState: TaggingState,
-    formData: FormData
-): Promise<TaggingState> {
-    const session = await getSession();
-    if (!session) {
-      return { success: false, error: "Nicht authentifiziert" };
-    }
-
-    const validatedFields = TagSubscribersSchema.safeParse(Object.fromEntries(formData.entries()));
-
-    if (!validatedFields.success) {
-        return { success: false, error: "Ungültige Eingabe." };
-    }
-
-    try {
-        const subscriberIds = JSON.parse(validatedFields.data.subscriberIds);
-        const tags = validatedFields.data.tagName.split(',').map(t => t.trim()).filter(t => t);
-        
-        if (subscriberIds.length === 0) {
-             return { success: false, error: "Keine Abonnenten ausgewählt." };
-        }
-
-        await addTagsToSubscribers(subscriberIds, tags, session.user.id);
-        revalidatePath("/admin");
-        return { success: true, error: null };
-    } catch (e) {
-        const error = e as Error;
-        return { success: false, error: `Fehler beim Taggen: ${error.message}` };
-    }
-}
-
-
 // Campaign Actions
 const SendNewsletterSchema = z.object({
   newsletterId: z.string().min(1, "Bitte wählen Sie einen Newsletter aus."),
-  tags: z.string(),
 });
 
 export type SendNewsletterState = {
   success: boolean;
   message: string | null;
 };
-
-function replacePlaceholders(html: string, subscriber: Subscriber): string {
-    return html.replace(/{EMAIL}/g, subscriber.email);
-    // Add more placeholder replacements here, e.g., {NAME}
-}
 
 export async function sendNewsletterAction(
   prevState: SendNewsletterState,
@@ -303,30 +251,12 @@ export async function sendNewsletterAction(
   }
 
   const { newsletterId } = validatedFields.data;
-  const tags: string[] = JSON.parse(validatedFields.data.tags);
-
-  if (tags.length === 0) {
-    return { success: false, message: "Bitte wählen Sie mindestens einen Tag als Zielgruppe aus." };
-  }
   
-  if (!process.env.RESEND_API_KEY) {
-     return { success: false, message: "Resend API-Schlüssel ist nicht konfiguriert. Bitte im Secret Manager hinterlegen." };
-  }
-
   try {
-    // 1. Get newsletter and subscribers
+    // 1. Get newsletter
     const newsletter = await getNewsletter(newsletterId);
     if (!newsletter || !newsletter.content) {
       return { success: false, message: "Newsletter nicht gefunden oder hat keinen Inhalt." };
-    }
-    
-    const allSubscribers = await getSubscribers();
-    const targetSubscribers = allSubscribers.filter(s => 
-        tags.every(tag => s.tags?.includes(tag))
-    );
-
-    if (targetSubscribers.length === 0) {
-      return { success: false, message: "Es wurden keine Abonnenten für die ausgewählten Tags gefunden." };
     }
     
     // 2. Create campaign record
@@ -334,31 +264,17 @@ export async function sendNewsletterAction(
         newsletterId: newsletter.id,
         newsletterName: newsletter.name,
         newsletterSubject: newsletter.subject,
-        recipientCount: targetSubscribers.length,
-        tags,
+        recipientCount: 0, // We don't know the count beforehand with audiences
+        tags: [], // Tags are now managed in Resend
         status: 'pending' as const,
     };
-    const campaignId = await addCampaign(campaignData, session.user.id);
+    await addCampaign(campaignData, session.user.id);
 
-    // 3. Send emails
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    const emailsToSend = targetSubscribers.map(subscriber => ({
-        from: 'Hallo Welt <hallo-welt@paulik-reisch.de>',
-        to: [subscriber.email],
-        subject: newsletter.subject,
-        html: replacePlaceholders(newsletter.content, subscriber),
-    }));
-
-    const { data, error } = await resend.batch.send(emailsToSend);
-
-    if (error || !data) {
-      console.error("Resend error:", error);
-      // TODO: Update campaign status to 'failed'
-      return { success: false, message: `Fehler beim E-Mail-Versand: ${error?.message || 'Unbekannter Fehler'}` };
-    }
+    // 3. Send email via Resend to the audience
+    await sendCampaign(newsletter.subject, newsletter.content);
 
     revalidatePath("/admin");
-    return { success: true, message: `Kampagne erfolgreich erstellt und Versand an ${targetSubscribers.length} Empfänger gestartet.` };
+    return { success: true, message: `Kampagne erfolgreich an die Audience versendet.` };
 
   } catch (e) {
     const error = e as Error;

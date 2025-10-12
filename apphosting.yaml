@@ -1,4 +1,3 @@
-
 # Settings to manage and configure a Firebase App Hosting backend.
 # https://firebase.google.com/docs/app-hosting/configure
 # Triggering a rebuild to solve a build config issue.
@@ -9,7 +8,6 @@ runConfig:
   maxInstances: 1
   secrets:
     - secret: RESEND_API_KEY
+    - secret: RESEND_AUDIENCE_ID
 buildConfig:
   memoryMiB: 2048
-
-    

@@ -2,19 +2,17 @@
 
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { 
     Newsletter,
-    Subscriber,
     Campaign,
     LegalPage,
     Palabrota,
     Excerpt,
     getNewsletters,
     getLegalPages,
-    getSubscribers,
     getCampaigns,
     getPalabrotas,
     getExcerpts
@@ -23,7 +21,6 @@ import {
     addNewsletterAction,
     deleteNewsletterAction,
     duplicateNewsletterAction,
-    tagSubscribersAction,
     sendNewsletterAction,
     addPalabrotaAction,
     updatePalabrotaAction,
@@ -45,7 +42,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2, RefreshCw, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus, History, Flame, Upload, MessageSquareQuote, ToggleLeft, ToggleRight, BookOpen, ArrowUpRight, DatabaseZap, Sparkles, CheckCircle, ShieldAlert } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
@@ -85,192 +81,25 @@ import { cn } from "@/lib/utils";
 import { Switch } from "../ui/switch";
 
 
-function LeadsTable({ initialSubscribers }: { initialSubscribers: Subscriber[] }) {
-    const [subscribers, setSubscribers] = useState<Subscriber[]>(initialSubscribers);
-    const [loading, setLoading] = useState(false);
-    const [selectedSubscribers, setSelectedSubscribers] = useState<string[]>([]);
-    const [tagName, setTagName] = useState('');
-    const { toast } = useToast();
-    const [searchTerm, setSearchTerm] = useState("");
-    const [selectedTags, setSelectedTags] = useState<string[]>([]);
-
-    const [tagState, tagFormAction] = useActionState(tagSubscribersAction, { success: false, error: null });
-
-    const allTags = useMemo(() => {
-        const tagSet = new Set<string>();
-        subscribers.forEach(s => s.tags?.forEach(t => tagSet.add(t)));
-        return Array.from(tagSet).sort();
-    }, [subscribers]);
-
-    const filteredSubscribers = useMemo(() => {
-        return subscribers.filter(sub => {
-            const matchesSearch = sub.email.toLowerCase().includes(searchTerm.toLowerCase());
-            const matchesTags = selectedTags.length === 0 || selectedTags.every(tag => sub.tags?.includes(tag));
-            return matchesSearch && matchesTags;
-        });
-    }, [subscribers, searchTerm, selectedTags]);
-
-    const fetchLeads = useCallback(async () => {
-        setLoading(true);
-        try {
-            const fetchedSubscribers = await getSubscribers();
-            setSubscribers(fetchedSubscribers);
-        } catch (error) {
-            console.error("Error fetching subscribers:", error);
-            toast({ variant: "destructive", title: "Fehler", description: "Abonnenten konnten nicht geladen werden." });
-        } finally {
-            setLoading(false);
-        }
-    }, [toast]);
-    
-    useEffect(() => {
-        setSubscribers(initialSubscribers);
-    }, [initialSubscribers]);
-
-    useEffect(() => {
-        if(tagState.success) {
-            toast({ title: "Erfolg", description: "Tags wurden erfolgreich zugewiesen."});
-            setSelectedSubscribers([]);
-            setTagName('');
-            fetchLeads(); // Refresh data
-        }
-        if (tagState.error) {
-            toast({ variant: "destructive", title: "Fehler", description: tagState.error });
-        }
-    }, [tagState, toast, fetchLeads]);
-
-    const handleSelectAll = (checked: boolean | 'indeterminate') => {
-        if (checked === true) {
-            setSelectedSubscribers(filteredSubscribers.map(sub => sub.id));
-        } else {
-            setSelectedSubscribers([]);
-        }
-    };
-    
-    const handleTagFormSubmit = (formData: FormData) => {
-        formData.set('subscriberIds', JSON.stringify(selectedSubscribers));
-        tagFormAction(formData);
-    }
-    
-    const handleTagFilterClick = (tag: string) => {
-        setSelectedTags(prev => 
-            prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
-        );
-    }
-
+function LeadsTable() {
     return (
-        <div className="space-y-4">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                 <form action={handleTagFormSubmit} className="flex items-center gap-2">
-                    <Input 
-                        placeholder="Tag-Name (z.B. HW2-Interesse)" 
-                        value={tagName}
-                        onChange={(e) => setTagName(e.target.value)}
-                        name="tagName"
-                        disabled={selectedSubscribers.length === 0}
-                    />
-                    <Button type="submit" disabled={selectedSubscribers.length === 0 || !tagName}>
-                        <Tag className="mr-2 h-4 w-4" />
-                        Zuweisen ({selectedSubscribers.length})
+        <Card>
+            <CardHeader>
+                <CardTitle>Abonnenten-Verwaltung</CardTitle>
+                <CardDescription>Ihre Abonnenten werden jetzt direkt in Ihrem Resend-Konto verwaltet.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <p className="text-sm text-muted-foreground mb-4">
+                    Das Hinzufügen, Entfernen und Taggen von Kontakten findet nun direkt in Resend statt.
+                    Dies stellt sicher, dass Abmeldungen und Bounces korrekt verarbeitet werden.
+                </p>
+                <a href="https://resend.com/audiences" target="_blank" rel="noopener noreferrer">
+                    <Button variant="outline">
+                        Abonnenten in Resend verwalten <ArrowUpRight className="ml-2 h-4 w-4" />
                     </Button>
-                </form>
-                <div className="relative w-full md:w-64">
-                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input
-                        type="search"
-                        placeholder="Nach E-Mail suchen..."
-                        className="pl-8"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </div>
-                <Button onClick={fetchLeads} disabled={loading} variant="outline">
-                    {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
-                    Aktualisieren
-                </Button>
-            </div>
-             <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-sm font-medium">Filter nach Tags:</span>
-                {allTags.map(tag => (
-                     <Button 
-                        key={tag} 
-                        variant={selectedTags.includes(tag) ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => handleTagFilterClick(tag)}
-                        className="h-7"
-                    >
-                        {tag}
-                    </Button>
-                ))}
-                {selectedTags.length > 0 && (
-                    <Button variant="ghost" size="sm" onClick={() => setSelectedTags([])} className="h-7 text-muted-foreground">
-                        <FilterX className="mr-2 h-4 w-4"/>
-                        Filter zurücksetzen
-                    </Button>
-                )}
-            </div>
-            <div className="border rounded-lg overflow-hidden">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead className="w-[50px]">
-                                <Checkbox 
-                                    checked={selectedSubscribers.length === filteredSubscribers.length && filteredSubscribers.length > 0 ? true : (selectedSubscribers.length > 0 ? 'indeterminate' : false)}
-                                    onCheckedChange={handleSelectAll}
-                                />
-                            </TableHead>
-                            <TableHead>E-Mail</TableHead>
-                            <TableHead>Quelle</TableHead>
-                            <TableHead>Tags</TableHead>
-                            <TableHead>Datum</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {loading ? (
-                            <TableRow>
-                                <TableCell colSpan={5} className="text-center py-12">
-                                    <Loader2 className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
-                                </TableCell>
-                            </TableRow>
-                        ) : filteredSubscribers.length === 0 ? (
-                             <TableRow>
-                                <TableCell colSpan={5} className="text-center py-12 text-muted-foreground">
-                                    <VenetianMask className="mx-auto h-8 w-8 mb-2" />
-                                    {subscribers.length === 0 ? "Noch keine Leads." : "Keine Leads entsprechen Ihren Filterkriterien."}
-                                </TableCell>
-                            </TableRow>
-                        ) : (
-                            filteredSubscribers.map((sub) => (
-                                <TableRow key={sub.id} data-state={selectedSubscribers.includes(sub.id) ? 'selected' : ''}>
-                                    <TableCell>
-                                        <Checkbox 
-                                            checked={selectedSubscribers.includes(sub.id)}
-                                            onCheckedChange={(checked) => {
-                                                setSelectedSubscribers(prev => 
-                                                    checked ? [...prev, sub.id] : prev.filter(id => id !== sub.id)
-                                                )
-                                            }}
-                                        />
-                                    </TableCell>
-                                    <TableCell>
-                                        <div className="font-medium">{sub.email}</div>
-                                    </TableCell>
-                                    <TableCell>
-                                        {Array.isArray(sub.source) ? sub.source.map(s => <Badge key={s} variant="secondary" className="mr-1">{s}</Badge>) : <Badge variant="secondary">{sub.source}</Badge>}
-                                    </TableCell>
-                                    <TableCell>
-                                        {sub.tags?.map(tag => <Badge key={tag} variant="outline" className="mr-1">{tag}</Badge>)}
-                                    </TableCell>
-                                     <TableCell>
-                                        {sub.subscribedAt ? format(new Date(sub.subscribedAt), "dd.MM.yyyy HH:mm", { locale: de }) : 'N/A'}
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        )}
-                    </TableBody>
-                </Table>
-            </div>
-        </div>
+                </a>
+            </CardContent>
+        </Card>
     );
 }
 
@@ -504,19 +333,12 @@ export function NewsletterManager({ initialNewsletters, onTabChange }: { initial
     )
 }
 
-function CampaignsManager({ initialNewsletters, initialSubscribers, initialCampaigns }: { initialNewsletters: Newsletter[], initialSubscribers: Subscriber[], initialCampaigns: Campaign[] }) {
+function CampaignsManager({ initialNewsletters, initialCampaigns }: { initialNewsletters: Newsletter[], initialCampaigns: Campaign[] }) {
     const { toast } = useToast();
     const [sendState, sendFormAction] = useActionState(sendNewsletterAction, { success: false, message: null });
 
     const [selectedNewsletterId, setSelectedNewsletterId] = useState<string>('');
-    const [selectedTags, setSelectedTags] = useState<string[]>([]);
     
-    const allTags = useMemo(() => {
-        const tagSet = new Set<string>();
-        initialSubscribers.forEach(s => s.tags?.forEach(t => tagSet.add(t)));
-        return Array.from(tagSet).sort();
-    }, [initialSubscribers]);
-
     const selectedNewsletter = useMemo(() => {
         return initialNewsletters.find(nl => nl.id === selectedNewsletterId);
     }, [selectedNewsletterId, initialNewsletters]);
@@ -530,17 +352,6 @@ function CampaignsManager({ initialNewsletters, initialSubscribers, initialCampa
             });
         }
     }, [sendState, toast]);
-
-    const matchingSubscribers = useMemo(() => {
-        if (selectedTags.length === 0) return 0;
-        return initialSubscribers.filter(s => selectedTags.every(tag => s.tags?.includes(tag))).length;
-    }, [selectedTags, initialSubscribers]);
-
-    const handleTagClick = (tag: string) => {
-        setSelectedTags(prev => 
-            prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
-        );
-    };
 
     return (
         <div className="space-y-12">
@@ -566,24 +377,16 @@ function CampaignsManager({ initialNewsletters, initialSubscribers, initialCampa
                     <Card>
                         <CardHeader>
                             <CardTitle className="font-headline text-2xl font-bold">2. Zielgruppe definieren</CardTitle>
-                            <CardDescription>Wählen Sie Tags aus. Die Kampagne wird an alle Abonnenten gesendet, die **alle** ausgewählten Tags besitzen.</CardDescription>
+                            <CardDescription>Die Kampagne wird an alle Kontakte Ihrer Resend Audience gesendet.</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="flex flex-wrap gap-2">
-                                {allTags.length === 0 ? (
-                                    <p className="text-sm text-muted-foreground">Noch keine Tags vorhanden. Weisen Sie im "Leads"-Tab welche zu.</p>
-                                ) : allTags.map(tag => (
-                                    <Button 
-                                        key={tag} 
-                                        type="button"
-                                        variant={selectedTags.includes(tag) ? "default" : "outline"}
-                                        onClick={() => handleTagClick(tag)}
-                                    >
-                                        {tag}
-                                    </Button>
-                                ))}
-                            </div>
-                            <input type="hidden" name="tags" value={JSON.stringify(selectedTags)} />
+                            <Alert>
+                                <Users className="h-4 w-4" />
+                                <AlertTitle>Information</AlertTitle>
+                                <AlertDescription>
+                                    Die Verwaltung der Empfänger (Audience) findet nun direkt in Ihrem Resend-Konto statt.
+                                </AlertDescription>
+                            </Alert>
                         </CardContent>
                     </Card>
                     <Card className="xl:col-span-2">
@@ -596,13 +399,12 @@ function CampaignsManager({ initialNewsletters, initialSubscribers, initialCampa
                                 <AlertTitle>Zusammenfassung</AlertTitle>
                                 <AlertDescription>
                                     <div>Newsletter: <strong>{selectedNewsletter?.name || 'Keiner ausgewählt'}</strong></div>
-                                    <div>Ziel-Tags: {selectedTags.length > 0 ? selectedTags.map(t => <Badge key={t} className="mr-1">{t}</Badge>) : 'Keine'}</div>
-                                    <div className="mt-2 text-lg">Abonnenten, die erreicht werden: <strong className="text-primary">{matchingSubscribers}</strong></div>
+                                    <div className="mt-2 text-lg">Die Kampagne wird an Ihre konfigurierte Resend Audience versendet.</div>
                                 </AlertDescription>
                             </Alert>
                              <AlertDialog>
                                 <AlertDialogTrigger asChild>
-                                    <Button size="lg" className="w-full mt-6" disabled={!selectedNewsletter || selectedTags.length === 0 || matchingSubscribers === 0}>
+                                    <Button size="lg" className="w-full mt-6" disabled={!selectedNewsletter}>
                                         <Send className="mr-2 h-5 w-5" />
                                         Kampagne starten
                                     </Button>
@@ -611,7 +413,7 @@ function CampaignsManager({ initialNewsletters, initialSubscribers, initialCampa
                                     <AlertDialogHeader>
                                         <AlertDialogTitle>Sind Sie absolut sicher?</AlertDialogTitle>
                                         <AlertDialogDescription>
-                                            Sie sind dabei, den Newsletter "{selectedNewsletter?.name}" an {matchingSubscribers} Empfänger zu senden.
+                                            Sie sind dabei, den Newsletter "{selectedNewsletter?.name}" an Ihre gesamte Audience zu senden.
                                         </AlertDialogDescription>
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
@@ -662,8 +464,6 @@ function CampaignsManager({ initialNewsletters, initialSubscribers, initialCampa
                             <TableRow>
                                 <TableHead>Newsletter</TableHead>
                                 <TableHead>Betreff</TableHead>
-                                <TableHead>Empfänger</TableHead>
-                                <TableHead>Tags</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead>Datum</TableHead>
                             </TableRow>
@@ -671,7 +471,7 @@ function CampaignsManager({ initialNewsletters, initialSubscribers, initialCampa
                         <TableBody>
                             {initialCampaigns.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
+                                    <TableCell colSpan={4} className="text-center py-12 text-muted-foreground">
                                         <History className="mx-auto h-8 w-8 mb-2" />
                                         Bisher keine Kampagnen versendet.
                                     </TableCell>
@@ -681,10 +481,6 @@ function CampaignsManager({ initialNewsletters, initialSubscribers, initialCampa
                                     <TableRow key={campaign.id}>
                                         <TableCell className="font-medium">{campaign.newsletterName}</TableCell>
                                         <TableCell className="text-muted-foreground">{campaign.newsletterSubject}</TableCell>
-                                        <TableCell className="text-muted-foreground">{campaign.recipientCount}</TableCell>
-                                        <TableCell>
-                                            {campaign.tags.map(tag => <Badge key={tag} variant="secondary" className="mr-1">{tag}</Badge>)}
-                                        </TableCell>
                                         <TableCell>
                                             <Badge variant={campaign.status === 'sent' ? 'default' : 'destructive'}>{campaign.status}</Badge>
                                         </TableCell>
@@ -1035,21 +831,20 @@ function ExcerptsManager({ initialExcerpts }: { initialExcerpts: Excerpt[] }) {
 
 function OverviewTab({
     newsletters,
-    subscribers,
     legalPages,
     onTabChange
 } : {
     newsletters: Newsletter[],
-    subscribers: Subscriber[],
     legalPages: LegalPage[],
     onTabChange: (value: string) => void;
 }) {
     const stats = [
         {
             title: "Abonnenten",
-            value: subscribers.length,
+            value: "N/A",
             icon: Users,
-            link: "leads"
+            link: "leads",
+            description: "Verwaltet in Resend"
         },
         {
             title: "Newsletter",
@@ -1078,7 +873,7 @@ function OverviewTab({
                         <CardContent>
                             <div className="text-2xl font-bold">{stat.value}</div>
                              <button onClick={() => onTabChange(stat.link)} className="text-xs text-muted-foreground hover:text-primary flex items-center">
-                                Zum Tab <ArrowRight className="h-3 w-3 ml-1" />
+                                {stat.description || 'Zum Tab'} <ArrowRight className="h-3 w-3 ml-1" />
                             </button>
                         </CardContent>
                     </Card>
@@ -1117,7 +912,6 @@ export function AdminDashboard({ defaultTab = "übersicht" }: { defaultTab?: str
     const [initialData, setInitialData] = useState({
         legalPages: [] as LegalPage[],
         newsletters: [] as Newsletter[],
-        subscribers: [] as Subscriber[],
         campaigns: [] as Campaign[],
         palabrotas: [] as Palabrota[],
         excerpts: [] as Excerpt[],
@@ -1130,14 +924,12 @@ export function AdminDashboard({ defaultTab = "übersicht" }: { defaultTab?: str
                 const [
                     legalPages,
                     newsletters,
-                    subscribers,
                     campaigns,
                     palabrotas,
                     excerpts,
                 ] = await Promise.all([
                     getLegalPages(),
                     getNewsletters(),
-                    getSubscribers(),
                     getCampaigns(),
                     getPalabrotas(),
                     getExcerpts(),
@@ -1145,7 +937,6 @@ export function AdminDashboard({ defaultTab = "übersicht" }: { defaultTab?: str
                 setInitialData({
                     legalPages,
                     newsletters,
-                    subscribers,
                     campaigns,
                     palabrotas,
                     excerpts,
@@ -1182,13 +973,12 @@ export function AdminDashboard({ defaultTab = "übersicht" }: { defaultTab?: str
             <TabsContent value="übersicht" className="mt-6">
                 <OverviewTab 
                     newsletters={initialData.newsletters}
-                    subscribers={initialData.subscribers}
                     legalPages={initialData.legalPages}
                     onTabChange={setActiveTab}
                 />
             </TabsContent>
             <TabsContent value="leads" className="mt-6">
-                <LeadsTable initialSubscribers={initialData.subscribers} />
+                <LeadsTable />
             </TabsContent>
              <TabsContent value="dynamic-lps" className="mt-6">
                 <LegalPagesManager initialLegalPages={initialData.legalPages} />
@@ -1205,7 +995,6 @@ export function AdminDashboard({ defaultTab = "übersicht" }: { defaultTab?: str
              <TabsContent value="campaigns" className="mt-6">
                 <CampaignsManager 
                     initialNewsletters={initialData.newsletters} 
-                    initialSubscribers={initialData.subscribers}
                     initialCampaigns={initialData.campaigns}
                 />
             </TabsContent>

@@ -3,9 +3,10 @@
 'use server';
 
 import { z } from "zod";
-import { addOrder, addSubscriber, addLog, getCountdownTarget, updateCountdownTarget } from "@/lib/firestore";
+import { addOrder, addLog, getCountdownTarget, updateCountdownTarget } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/session";
+import { addContact } from "@/lib/resend";
 
 
 const OrderSchema = z.object({
@@ -53,9 +54,6 @@ export async function subscribeToNewsletterAction(
     },
     formData: FormData
 ) {
-    const session = await getSession();
-    const user = session?.user?.id || 'Gast';
-
     const validatedFields = SubscriberSchema.safeParse({
         email: formData.get("email"),
         source: formData.get("source"),
@@ -69,12 +67,12 @@ export async function subscribeToNewsletterAction(
     }
     
     try {
-        await addSubscriber(validatedFields.data.email, validatedFields.data.source, user);
+        await addContact(validatedFields.data.email);
         return { success: true, message: `Wir haben eine Bestätigungs-E-Mail an ${validatedFields.data.email} gesendet.` };
     } catch (e) {
         console.error(e);
         const error = e as Error;
-        if (error.message.includes("existiert bereits")) {
+        if (error.message.includes("already exists")) {
             return { success: true, message: `Diese E-Mail-Adresse ist bereits registriert.` };
         }
         return { error: "Anmeldung fehlgeschlagen. Das Internet ist wahrscheinlich wieder kaputt." };
