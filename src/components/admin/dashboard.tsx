@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
@@ -7,13 +6,11 @@ import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { 
     Newsletter,
-    Campaign,
     LegalPage,
     Palabrota,
     Excerpt,
     getNewsletters,
     getLegalPages,
-    getCampaigns,
     getPalabrotas,
     getExcerpts
 } from "@/lib/firestore";
@@ -21,7 +18,6 @@ import {
     addNewsletterAction,
     deleteNewsletterAction,
     duplicateNewsletterAction,
-    sendNewsletterAction,
     addPalabrotaAction,
     updatePalabrotaAction,
     deletePalabrotaAction,
@@ -86,26 +82,67 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
+function EmailMarketingManager({ initialNewsletters }: { initialNewsletters: Newsletter[] }) {
+    const [selectedNewsletterId, setSelectedNewsletterId] = useState<string>('');
+    
+    const selectedNewsletter = useMemo(() => {
+        return initialNewsletters.find(nl => nl.id === selectedNewsletterId);
+    }, [selectedNewsletterId, initialNewsletters]);
 
-function LeadsTable() {
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle>Abonnenten-Verwaltung</CardTitle>
-                <CardDescription>Ihre Abonnenten werden jetzt direkt in Ihrem Resend-Konto verwaltet.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                    Das Hinzufügen, Entfernen und Taggen von Kontakten findet nun direkt in Resend statt.
-                    Dies stellt sicher, dass Abmeldungen und Bounces korrekt verarbeitet werden.
-                </p>
-                <a href="https://resend.com/audiences" target="_blank" rel="noopener noreferrer">
-                    <Button variant="outline">
-                        Abonnenten in Resend verwalten <ArrowUpRight className="ml-2 h-4 w-4" />
-                    </Button>
-                </a>
-            </CardContent>
-        </Card>
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+            <div className="space-y-8">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="font-headline text-2xl font-bold">Abonnenten & Versand</CardTitle>
+                        <CardDescription>Die Verwaltung Ihrer Kontakte und der Versand von Kampagnen finden jetzt direkt in Ihrem Resend-Konto statt.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                         <a href="https://resend.com/audiences" target="_blank" rel="noopener noreferrer" className="w-full">
+                            <Button variant="outline" className="w-full">
+                                <Users className="mr-2 h-4 w-4" /> Abonnenten in Resend verwalten <ArrowUpRight className="ml-2 h-4 w-4" />
+                            </Button>
+                        </a>
+                         <a href="https://resend.com/emails" target="_blank" rel="noopener noreferrer" className="w-full">
+                            <Button variant="outline" className="w-full">
+                                <Send className="mr-2 h-4 w-4" /> Neue Kampagne in Resend starten <ArrowUpRight className="ml-2 h-4 w-4" />
+                            </Button>
+                        </a>
+                    </CardContent>
+                </Card>
+            </div>
+            
+            <div className="space-y-4">
+                <Card className="h-full flex flex-col">
+                    <CardHeader>
+                        <CardTitle className="font-headline text-2xl font-bold">E-Mail Vorschau & Kompatibilitäts-Check</CardTitle>
+                         <Select onValueChange={setSelectedNewsletterId} value={selectedNewsletterId}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Wählen Sie einen Newsletter zur Analyse..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {initialNewsletters.map(nl => (
+                                    <SelectItem key={nl.id} value={nl.id}>{nl.name} - ({nl.subject})</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </CardHeader>
+                    <CardContent className="flex-grow flex flex-col p-2 pt-0">
+                        <div className="p-4 border rounded-lg bg-background flex-grow flex flex-col">
+                            <EmailChecker htmlContent={selectedNewsletter?.content} />
+                            <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-b-md flex-grow overflow-auto min-h-[400px]">
+                                <iframe
+                                    srcDoc={selectedNewsletter?.content || ''}
+                                    title="E-Mail Vorschau"
+                                    className="w-full h-full border bg-white"
+                                    sandbox="" // for security
+                                />
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+        </div>
     );
 }
 
@@ -243,9 +280,6 @@ export function NewsletterManager({ initialNewsletters, onTabChange }: { initial
                         </form>
                     </DialogContent>
                 </Dialog>
-                <Button onClick={() => onTabChange('campaigns')}>
-                    Kampagne starten <Send className="ml-2 h-4 w-4" />
-                </Button>
             </div>
              <div className="border rounded-lg overflow-hidden">
                 <Table>
@@ -347,7 +381,7 @@ interface AnalysisResult {
 
 function EmailChecker({ htmlContent }: { htmlContent: string | undefined }) {
     const analysis = useMemo((): AnalysisResult[] => {
-        if (!htmlContent) {
+        if (typeof window === 'undefined' || !htmlContent) {
             return [];
         }
 
@@ -380,8 +414,8 @@ function EmailChecker({ htmlContent }: { htmlContent: string | undefined }) {
         
         // Check for missing width/height on images
         doc.querySelectorAll('img').forEach(img => {
-            if (!img.getAttribute('width') || !img.getAttribute('height')) {
-                results.push({ level: 'warning', message: 'Fehlende width/height-Attribute bei Bild', details: 'Outlook ignoriert oft CSS-Größen. Fügen Sie HTML-Attribute für `width` und `height` hinzu.'});
+            if (!img.getAttribute('width')) {
+                results.push({ level: 'warning', message: 'Fehlendes width-Attribut bei Bild', details: 'Outlook ignoriert oft CSS-Größen. Fügen Sie HTML-Attribute für `width` hinzu.'});
             }
         });
 
@@ -405,7 +439,7 @@ function EmailChecker({ htmlContent }: { htmlContent: string | undefined }) {
     const infos = analysis.filter(r => r.level === 'info');
 
     const getSummary = () => {
-        if (!htmlContent) return { title: 'Analyse: Fehler!', description: 'Kein E-Mail-Inhalt zum Analysieren ausgewählt.', variant: 'destructive', icon: ShieldAlert };
+        if (!htmlContent) return { title: 'Wählen Sie einen Newsletter', description: 'Wählen Sie oben einen Newsletter aus, um ihn zu analysieren.', variant: 'default', icon: CheckCircle };
         if (errors.length > 0) return { title: `Analyse: ${errors.length} kritische(r) Fehler`, description: 'Diese Probleme führen wahrscheinlich zu Darstellungsfehlern in Outlook.', variant: 'destructive', icon: ShieldAlert };
         if (warnings.length > 0) return { title: `Analyse: ${warnings.length} Warnung(en)`, description: 'Es wurden potenzielle Probleme gefunden, die überprüft werden sollten.', variant: 'default', icon: AlertTriangle };
         return { title: 'Analyse: Alles in Ordnung', description: 'Keine offensichtlichen Kompatibilitätsprobleme gefunden.', variant: 'default', icon: CheckCircle };
@@ -415,7 +449,7 @@ function EmailChecker({ htmlContent }: { htmlContent: string | undefined }) {
 
     return (
         <div className="p-2 border-b">
-            <Accordion type="single" collapsible>
+            <Accordion type="single" collapsible disabled={!htmlContent}>
                 <AccordionItem value="item-1" className="border-b-0">
                     <AccordionTrigger className="hover:no-underline p-0">
                         <Alert variant={summary.variant} className="w-full">
@@ -456,163 +490,6 @@ function EmailChecker({ htmlContent }: { htmlContent: string | undefined }) {
             </Accordion>
         </div>
     )
-}
-
-function CampaignsManager({ initialNewsletters, initialCampaigns }: { initialNewsletters: Newsletter[], initialCampaigns: Campaign[] }) {
-    const { toast } = useToast();
-    const [sendState, sendFormAction] = useActionState(sendNewsletterAction, { success: false, message: null });
-
-    const [selectedNewsletterId, setSelectedNewsletterId] = useState<string>('');
-    
-    const selectedNewsletter = useMemo(() => {
-        return initialNewsletters.find(nl => nl.id === selectedNewsletterId);
-    }, [selectedNewsletterId, initialNewsletters]);
-
-    useEffect(() => {
-        if(sendState.message) {
-            toast({
-                title: sendState.success ? "Kampagne gestartet" : "Fehler",
-                description: sendState.message,
-                variant: sendState.success ? "default" : "destructive",
-            });
-        }
-    }, [sendState, toast]);
-
-    return (
-        <div className="space-y-12">
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                <form action={sendFormAction} className="space-y-8">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="font-headline text-2xl font-bold">1. Newsletter auswählen</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                             <Select name="newsletterId" required onValueChange={setSelectedNewsletterId} value={selectedNewsletterId}>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Wählen Sie einen Newsletter..." />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {initialNewsletters.map(nl => (
-                                        <SelectItem key={nl.id} value={nl.id}>{nl.name} - ({nl.subject})</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="font-headline text-2xl font-bold">2. Zielgruppe definieren</CardTitle>
-                            <CardDescription>Die Kampagne wird an alle Kontakte Ihrer Resend Audience gesendet.</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <Alert>
-                                <Users className="h-4 w-4" />
-                                <AlertTitle>Information</AlertTitle>
-                                <AlertDescription>
-                                    Die Verwaltung der Empfänger (Audience) findet nun direkt in Ihrem Resend-Konto statt.
-                                </AlertDescription>
-                            </Alert>
-                        </CardContent>
-                    </Card>
-                    <Card className="xl:col-span-2">
-                        <CardHeader>
-                            <CardTitle className="font-headline text-2xl font-bold">3. Vorschau & Versand</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <Alert>
-                                <Send className="h-4 w-4" />
-                                <AlertTitle>Zusammenfassung</AlertTitle>
-                                <AlertDescription>
-                                    <div>Newsletter: <strong>{selectedNewsletter?.name || 'Keiner ausgewählt'}</strong></div>
-                                    <div className="mt-2 text-lg">Die Kampagne wird an Ihre konfigurierte Resend Audience versendet.</div>
-                                </AlertDescription>
-                            </Alert>
-                             <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                    <Button size="lg" className="w-full mt-6" disabled={!selectedNewsletter}>
-                                        <Send className="mr-2 h-5 w-5" />
-                                        Kampagne starten
-                                    </Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                    <AlertDialogHeader>
-                                        <AlertDialogTitle>Sind Sie absolut sicher?</AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                            Sie sind dabei, den Newsletter "{selectedNewsletter?.name}" an Ihre gesamte Audience zu senden.
-                                        </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                        <AlertDialogCancel>Abbrechen</AlertDialogCancel>
-                                        <AlertDialogAction type="submit">Ja, jetzt versenden</AlertDialogAction>
-                                    </AlertDialogFooter>
-                                </AlertDialogContent>
-                            </AlertDialog>
-                        </CardContent>
-                    </Card>
-                </form>
-                
-                <div className="space-y-4">
-                    <Card className="h-full flex flex-col">
-                        <CardHeader>
-                            <CardTitle className="font-headline text-2xl font-bold">Live-Vorschau (Outlook)</CardTitle>
-                        </CardHeader>
-                        <CardContent className="flex-grow flex flex-col p-2 pt-0">
-                            <div className="p-4 border rounded-lg bg-background flex-grow flex flex-col">
-                                <EmailChecker htmlContent={selectedNewsletter?.content} />
-                                <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-b-md flex-grow overflow-auto">
-                                    <iframe
-                                        srcDoc={selectedNewsletter?.content || ''}
-                                        title="E-Mail Vorschau"
-                                        className="w-full h-full border bg-white"
-                                        sandbox="" // for security
-                                    />
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
-            </div>
-
-            <div>
-                <h3 className="font-headline text-2xl font-bold mb-4 flex items-center gap-2"><History className="h-6 w-6"/>Versand-Verlauf</h3>
-                <div className="border rounded-lg overflow-hidden">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Newsletter</TableHead>
-                                <TableHead>Betreff</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead>Datum</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {initialCampaigns.length === 0 ? (
-                                <TableRow>
-                                    <TableCell colSpan={4} className="text-center py-12 text-muted-foreground">
-                                        <History className="mx-auto h-8 w-8 mb-2" />
-                                        Bisher keine Kampagnen versendet.
-                                    </TableCell>
-                                </TableRow>
-                            ) : (
-                                initialCampaigns.map((campaign) => (
-                                    <TableRow key={campaign.id}>
-                                        <TableCell className="font-medium">{campaign.newsletterName}</TableCell>
-                                        <TableCell className="text-muted-foreground">{campaign.newsletterSubject}</TableCell>
-                                        <TableCell>
-                                            <Badge variant={campaign.status === 'sent' ? 'default' : 'destructive'}>{campaign.status}</Badge>
-                                        </TableCell>
-                                        <TableCell className="text-muted-foreground">
-                                            {format(new Date(campaign.sentAt), "dd.MM.yyyy HH:mm", { locale: de })}
-                                        </TableCell>
-                                    </TableRow>
-                                ))
-                            )}
-                        </TableBody>
-                    </Table>
-                </div>
-            </div>
-        </div>
-    );
 }
 
 function PalabrotasManager({ initialPalabrotas }: { initialPalabrotas: Palabrota[] }) {
@@ -957,17 +834,18 @@ function OverviewTab({
 }) {
     const stats = [
         {
-            title: "Abonnenten",
-            value: "N/A",
+            title: "E-Mail Marketing",
+            value: "Resend",
             icon: Users,
-            link: "leads",
-            description: "Verwaltet in Resend"
+            link: "email",
+            description: "Abonnenten & Versand"
         },
         {
             title: "Newsletter",
             value: newsletters.length,
             icon: Newspaper,
-            link: "newsletters"
+            link: "newsletters",
+            description: "Vorlagen bearbeiten"
         },
         {
             title: "Dynamische LPs",
@@ -1029,43 +907,40 @@ export function AdminDashboard({ defaultTab = "übersicht" }: { defaultTab?: str
     const [initialData, setInitialData] = useState({
         legalPages: [] as LegalPage[],
         newsletters: [] as Newsletter[],
-        campaigns: [] as Campaign[],
         palabrotas: [] as Palabrota[],
         excerpts: [] as Excerpt[],
     });
 
-    useEffect(() => {
-        async function loadData() {
-            setLoading(true);
-            try {
-                const [
-                    legalPages,
-                    newsletters,
-                    campaigns,
-                    palabrotas,
-                    excerpts,
-                ] = await Promise.all([
-                    getLegalPages(),
-                    getNewsletters(),
-                    getCampaigns(),
-                    getPalabrotas(),
-                    getExcerpts(),
-                ]);
-                setInitialData({
-                    legalPages,
-                    newsletters,
-                    campaigns,
-                    palabrotas,
-                    excerpts,
-                });
-            } catch (error) {
-                console.error("Failed to load admin dashboard data:", error);
-            } finally {
-                setLoading(false);
-            }
+    const fetchAllData = useCallback(async () => {
+        setLoading(true);
+        try {
+            const [
+                legalPages,
+                newsletters,
+                palabrotas,
+                excerpts,
+            ] = await Promise.all([
+                getLegalPages(),
+                getNewsletters(),
+                getPalabrotas(),
+                getExcerpts(),
+            ]);
+            setInitialData({
+                legalPages,
+                newsletters,
+                palabrotas,
+                excerpts,
+            });
+        } catch (error) {
+            console.error("Failed to load admin dashboard data:", error);
+        } finally {
+            setLoading(false);
         }
-        loadData();
     }, []);
+
+    useEffect(() => {
+        fetchAllData();
+    }, [fetchAllData]);
 
     if (loading) {
         return (
@@ -1077,14 +952,13 @@ export function AdminDashboard({ defaultTab = "übersicht" }: { defaultTab?: str
 
     return (
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-8 h-auto">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-7 h-auto">
                 <TabsTrigger value="übersicht"><LayoutDashboard className="mr-2 h-4 w-4" />Übersicht</TabsTrigger>
-                <TabsTrigger value="leads"><Users className="mr-2 h-4 w-4" />Leads</TabsTrigger>
-                <TabsTrigger value="dynamic-lps">Dynamische LPs</TabsTrigger>
-                <TabsTrigger value="excerpts"><BookOpen className="mr-2 h-4 w-4" />Exzerpte</TabsTrigger>
+                <TabsTrigger value="email"><Mail className="mr-2 h-4 w-4" />E-Mail</TabsTrigger>
                 <TabsTrigger value="newsletters">Newsletter</TabsTrigger>
-                 <TabsTrigger value="palabrotas">Palabrotas</TabsTrigger>
-                <TabsTrigger value="campaigns"><Send className="mr-2 h-4 w-4" />Kampagnen</TabsTrigger>
+                <TabsTrigger value="dynamic-lps">Dynamische LPs</TabsTrigger>
+                <TabsTrigger value="excerpts"><BookOpen className="mr-2 h-4w-4" />Exzerpte</TabsTrigger>
+                <TabsTrigger value="palabrotas">Palabrotas</TabsTrigger>
                 <TabsTrigger value="seo"><Sparkles className="mr-2 h-4 w-4" />SEO</TabsTrigger>
             </TabsList>
             <TabsContent value="übersicht" className="mt-6">
@@ -1094,8 +968,8 @@ export function AdminDashboard({ defaultTab = "übersicht" }: { defaultTab?: str
                     onTabChange={setActiveTab}
                 />
             </TabsContent>
-            <TabsContent value="leads" className="mt-6">
-                <LeadsTable />
+            <TabsContent value="email" className="mt-6">
+                <EmailMarketingManager initialNewsletters={initialData.newsletters} />
             </TabsContent>
              <TabsContent value="dynamic-lps" className="mt-6">
                 <LegalPagesManager initialLegalPages={initialData.legalPages} />
@@ -1109,16 +983,18 @@ export function AdminDashboard({ defaultTab = "übersicht" }: { defaultTab?: str
             <TabsContent value="palabrotas" className="mt-6">
                 <PalabrotasManager initialPalabrotas={initialData.palabrotas} />
             </TabsContent>
-             <TabsContent value="campaigns" className="mt-6">
-                <CampaignsManager 
-                    initialNewsletters={initialData.newsletters} 
-                    initialCampaigns={initialData.campaigns}
-                />
-            </TabsContent>
-            <TabsContent value="seo" className="mt-6">
-                <Link href="/admin/seo">
-                    <Button>Zum SEO-Dashboard</Button>
-                </Link>
+             <TabsContent value="seo" className="mt-6">
+                 <Card>
+                    <CardHeader>
+                        <CardTitle>SEO-Zentrale</CardTitle>
+                        <CardDescription>Verwalten Sie die Metadaten für alle Seiten.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Link href="/admin/seo">
+                            <Button>Zum SEO-Dashboard <ArrowRight className="ml-2 h-4 w-4"/></Button>
+                        </Link>
+                    </CardContent>
+                </Card>
             </TabsContent>
         </Tabs>
     )

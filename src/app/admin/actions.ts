@@ -1,5 +1,4 @@
 
-
 "use server";
 
 import { z } from "zod";
@@ -9,8 +8,6 @@ import {
   addNewsletter,
   duplicateNewsletter,
   getAdminCredentials,
-  getNewsletter,
-  addCampaign,
   updateLegalPage,
   addPalabrota,
   updatePalabrota,
@@ -24,7 +21,6 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { encrypt, getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
-import { sendCampaign } from "@/lib/resend";
 
 
 const LoginSchema = z.object({
@@ -226,64 +222,6 @@ export async function duplicateNewsletterAction(
     }
 }
 
-
-// Campaign Actions
-const SendNewsletterSchema = z.object({
-  newsletterId: z.string().min(1, "Bitte wählen Sie einen Newsletter aus."),
-});
-
-export type SendNewsletterState = {
-  success: boolean;
-  message: string | null;
-};
-
-export async function sendNewsletterAction(
-  prevState: SendNewsletterState,
-  formData: FormData
-): Promise<SendNewsletterState> {
-   const session = await getSession();
-   if (!session) {
-    return { success: false, message: "Nicht authentifiziert" };
-   }
-
-  const validatedFields = SendNewsletterSchema.safeParse(Object.fromEntries(formData.entries()));
-
-  if (!validatedFields.success) {
-    return { success: false, message: "Ungültige Eingabe." };
-  }
-
-  const { newsletterId } = validatedFields.data;
-  
-  try {
-    // 1. Get newsletter
-    const newsletter = await getNewsletter(newsletterId);
-    if (!newsletter || !newsletter.content) {
-      return { success: false, message: "Newsletter nicht gefunden oder hat keinen Inhalt." };
-    }
-    
-    // 2. Create campaign record
-    const campaignData = {
-        newsletterId: newsletter.id,
-        newsletterName: newsletter.name,
-        newsletterSubject: newsletter.subject,
-        recipientCount: 0, // We don't know the count beforehand with audiences
-        tags: [], // Tags are now managed in Resend
-        status: 'pending' as const,
-    };
-    await addCampaign(campaignData, session.user.id);
-
-    // 3. Send email via Resend to the audience
-    await sendCampaign(newsletter.subject, newsletter.content);
-
-    revalidatePath("/admin");
-    return { success: true, message: `Kampagne erfolgreich an die Audience versendet.` };
-
-  } catch (e) {
-    const error = e as Error;
-    console.error("Newsletter send action error:", error);
-    return { success: false, message: `Fehler bei der Kampagnen-Ausführung: ${error.message}` };
-  }
-}
 
 // Legal Page Actions
 const UpdateLegalPageSchema = z.object({
@@ -600,5 +538,3 @@ export async function updateSeoMetadataAction(
     return { success: false, error: `Fehler beim Aktualisieren: ${error.message}`, message: null };
   }
 }
-
-    

@@ -12,7 +12,7 @@ let resend: Resend | null = null;
 if (resendApiKey) {
     resend = new Resend(resendApiKey);
 } else {
-    console.error("RESEND_API_KEY is not set. Resend functionality will be disabled.");
+    console.warn("RESEND_API_KEY is not set. Resend functionality will be disabled.");
 }
 
 /**
@@ -37,6 +37,7 @@ export async function addContact(email: string) {
             // Handle cases where the contact might already exist gracefully
             if (error.name === 'validation_error' && error.message.includes('`email` must be unique')) {
                  console.log(`Contact ${email} already exists in audience.`);
+                 // Consider this a success from the user's perspective
                  return { success: true, message: 'Contact already exists.' };
             }
             throw error;
@@ -47,37 +48,5 @@ export async function addContact(email: string) {
         console.error(`Failed to add contact ${email} to Resend:`, e);
         // Re-throw to be handled by the action
         throw new Error(e.message || 'Could not add contact to Resend.');
-    }
-}
-
-/**
- * Sends a campaign to the configured Resend audience.
- * @param subject The subject of the email campaign.
- * @param html The HTML content of the email.
- * @returns The result of the send email operation.
- */
-export async function sendCampaign(subject: string, html: string) {
-    if (!resend || !audienceId) {
-        console.error("Resend is not configured. Missing RESEND_API_KEY or RESEND_AUDIENCE_ID.");
-        throw new Error("Resend ist auf dem Server nicht konfiguriert.");
-    }
-
-    try {
-        const { data, error } = await resend.emails.send({
-            from: 'Hallo Welt <hallo-welt@paulik-reisch.de>',
-            to: audienceId,
-            subject: subject,
-            html: html,
-        });
-        
-        if (error) {
-            throw error;
-        }
-
-        return data;
-
-    } catch (e: any) {
-        console.error(`Failed to send campaign:`, e);
-        throw new Error(e.message || 'Could not send campaign via Resend.');
     }
 }

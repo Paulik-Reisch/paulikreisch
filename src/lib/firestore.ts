@@ -1,5 +1,4 @@
 
-
 import { app } from "@/app/firebase";
 import { 
     getFirestore, 
@@ -65,18 +64,6 @@ export interface Newsletter {
     content: string; // Storing the final HTML
     lastUpdated: string;
     useWrapper?: boolean;
-}
-
-export interface Campaign {
-    id: string;
-    newsletterId: string;
-    newsletterName: string;
-    newsletterSubject: string;
-    recipientCount: number;
-    tags: string[];
-    sentAt: string;
-    status: 'sent' | 'pending' | 'failed';
-    resendBatchId?: string;
 }
 
 export interface Product {
@@ -448,33 +435,6 @@ export async function deleteNewsletter(id: string, user: string) {
     const newsletterRef = doc(db, 'newsletters', id);
     await deleteDoc(newsletterRef);
     await addLog(user, 'Newsletter gelöscht', `ID: ${id}`);
-}
-
-
-// --- CAMPAIGNS ---
-export async function addCampaign(data: Omit<Campaign, 'id' | 'sentAt'>, user: string): Promise<string> {
-    const campaignsCol = collection(db, 'campaigns');
-    const docRef = await addDoc(campaignsCol, {
-        ...data,
-        sentAt: Timestamp.now(),
-    });
-    await addLog(user, 'Kampagne gestartet', `Newsletter: ${data.newsletterName}, ${data.recipientCount} Empfänger`);
-    return docRef.id;
-}
-
-
-export async function getCampaigns(): Promise<Campaign[]> {
-    const campaignsCol = collection(db, 'campaigns');
-    const q = query(campaignsCol, orderBy("sentAt", "desc"));
-    const campaignSnapshot = await getDocs(q);
-    return campaignSnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-            id: doc.id,
-            ...data,
-            sentAt: (data.sentAt as Timestamp).toDate().toISOString(),
-        } as Campaign;
-    });
 }
 
 // --- EXCERPTS ---
