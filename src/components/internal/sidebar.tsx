@@ -14,7 +14,7 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
-import { LogOut, LayoutDashboard, Database, HardDrive, Users, Home, BrainCircuit, TestTube2, Palette, Navigation, Cloud, Component, LineChart, History, Newspaper, FileText } from "lucide-react"
+import { LogOut, LayoutDashboard, Database, HardDrive, Users, Home, BrainCircuit, TestTube2, Palette, Navigation, Cloud, Component, LineChart, History, Newspaper, FileText, Music } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { logoutAction } from "@/app/admin/actions"
 import Link from "next/link"
@@ -41,6 +41,10 @@ const idxItems = [
     { href: "/internal/idx/lp", label: "Landing Pages", icon: FileText },
     { href: "/internal/idx/nl", label: "Newsletters", icon: Newspaper },
 ];
+
+const additionalItems = [
+    { href: "/internal/music", label: "Musik", icon: Music },
+]
 
 
 export function InternalSidebar() {
@@ -104,6 +108,20 @@ export function InternalSidebar() {
               </Link>
             </SidebarMenuItem>
           ))}
+        </SidebarGroup>
+         <SidebarSeparator />
+         <SidebarGroup>
+           <SidebarGroupLabel>Zusätzliches</SidebarGroupLabel>
+            {additionalItems.map((item) => (
+                <SidebarMenuItem key={item.href}>
+                <Link href={item.href} className="w-full">
+                    <SidebarMenuButton isActive={pathname === item.href} tooltip={item.label} variant="ghost" className="justify-start data-[active=true]:bg-accent data-[active=true]:text-accent-foreground data-[active=true]:font-semibold hover:bg-gray-100 rounded-sm">
+                    <item.icon />
+                    <span>{item.label}</span>
+                    </SidebarMenuButton>
+                </Link>
+                </SidebarMenuItem>
+            ))}
         </SidebarGroup>
       </SidebarMenu>
       
