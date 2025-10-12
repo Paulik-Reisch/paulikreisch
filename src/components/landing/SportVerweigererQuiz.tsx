@@ -87,7 +87,7 @@ export function SportVerweigererQuiz() {
     setIsFinished(false);
   }
 
-  const progress = (currentStep / questions.length) * 100;
+  const progress = ((currentStep + 1) / questions.length) * 100;
 
   const getResult = () => {
       const finalScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
@@ -118,9 +118,9 @@ export function SportVerweigererQuiz() {
                 {!isFinished ? (
                     <motion.div
                         key={currentStep}
-                        initial={{ opacity: 0, x: 50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -50 }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
                         transition={{ duration: 0.3 }}
                     >
                         <CardHeader>
@@ -152,8 +152,8 @@ export function SportVerweigererQuiz() {
                 ) : (
                      <motion.div
                         key="result"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
                         transition={{ duration: 0.5 }}
                     >
                         <CardHeader className="text-center">
@@ -161,7 +161,7 @@ export function SportVerweigererQuiz() {
                         </CardHeader>
                          <CardContent className="text-center space-y-4 px-6 pb-6">
                              <div className="flex flex-col items-center gap-4">
-                                 {React.createElement(getResult().icon, { className: `w-16 h-16 text-primary` })}
+                                 {React.createElement(getResult().icon, { className: `w-16 h-16 ${getResult().color}` })}
                                  <div className='space-y-1'>
                                     <h3 className="text-2xl font-bold font-headline">{getResult().title}</h3>
                                     <p className="text-muted-foreground text-balance">{getResult().description}</p>
