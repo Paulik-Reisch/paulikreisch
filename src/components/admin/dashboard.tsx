@@ -11,13 +11,11 @@ import {
     LegalPage,
     Palabrota,
     Excerpt,
-    Subscriber,
     getNewsletters,
     getLegalPages,
     getCampaigns,
     getPalabrotas,
-    getExcerpts,
-    getSubscribers
+    getExcerpts
 } from "@/lib/firestore";
 import {
     addNewsletterAction,
@@ -335,24 +333,12 @@ export function NewsletterManager({ initialNewsletters, onTabChange }: { initial
     )
 }
 
-function CampaignsManager({ initialNewsletters, initialCampaigns, initialSubscribers }: { initialNewsletters: Newsletter[], initialCampaigns: Campaign[], initialSubscribers: Subscriber[] }) {
+function CampaignsManager({ initialNewsletters, initialCampaigns }: { initialNewsletters: Newsletter[], initialCampaigns: Campaign[] }) {
     const { toast } = useToast();
     const [sendState, sendFormAction] = useActionState(sendNewsletterAction, { success: false, message: null });
 
     const [selectedNewsletterId, setSelectedNewsletterId] = useState<string>('');
-    const [selectedTags, setSelectedTags] = useState<string[]>([]);
     
-    const allTags = useMemo(() => {
-        const tags = new Set<string>();
-        initialSubscribers.forEach(s => s.tags?.forEach(t => tags.add(t)));
-        return Array.from(tags);
-    }, [initialSubscribers]);
-
-    const filteredSubscribers = useMemo(() => {
-        if (selectedTags.length === 0) return initialSubscribers;
-        return initialSubscribers.filter(s => selectedTags.every(t => s.tags?.includes(t)));
-    }, [initialSubscribers, selectedTags]);
-
     const selectedNewsletter = useMemo(() => {
         return initialNewsletters.find(nl => nl.id === selectedNewsletterId);
     }, [selectedNewsletterId, initialNewsletters]);
@@ -929,7 +915,6 @@ export function AdminDashboard({ defaultTab = "übersicht" }: { defaultTab?: str
         campaigns: [] as Campaign[],
         palabrotas: [] as Palabrota[],
         excerpts: [] as Excerpt[],
-        subscribers: [] as Subscriber[],
     });
 
     useEffect(() => {
@@ -942,14 +927,12 @@ export function AdminDashboard({ defaultTab = "übersicht" }: { defaultTab?: str
                     campaigns,
                     palabrotas,
                     excerpts,
-                    subscribers,
                 ] = await Promise.all([
                     getLegalPages(),
                     getNewsletters(),
                     getCampaigns(),
                     getPalabrotas(),
                     getExcerpts(),
-                    getSubscribers(),
                 ]);
                 setInitialData({
                     legalPages,
@@ -957,7 +940,6 @@ export function AdminDashboard({ defaultTab = "übersicht" }: { defaultTab?: str
                     campaigns,
                     palabrotas,
                     excerpts,
-                    subscribers,
                 });
             } catch (error) {
                 console.error("Failed to load admin dashboard data:", error);
@@ -1014,7 +996,6 @@ export function AdminDashboard({ defaultTab = "übersicht" }: { defaultTab?: str
                 <CampaignsManager 
                     initialNewsletters={initialData.newsletters} 
                     initialCampaigns={initialData.campaigns}
-                    initialSubscribers={initialData.subscribers}
                 />
             </TabsContent>
             <TabsContent value="seo" className="mt-6">
