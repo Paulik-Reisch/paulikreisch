@@ -1,9 +1,8 @@
-
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { MapPin, Hospital, Factory, AlertCircle } from "lucide-react";
 
 const stops = [
-  { name: "Am Rande des Nervenzusammenbruchs", icon: AlertCircle },
+  { name: "Boulevard der gebrochenen Versprechen", icon: AlertCircle },
   { name: "Letzte Hoffnung", description: "(Krankenhaus)", icon: Hospital },
   { name: "Paralleluniversum", description: "(Industriegebiet)", icon: Factory },
 ];
