@@ -34,6 +34,7 @@ export function HeroBusfahrenMutprobe() {
                       width={400}
                       src="https://urbandictionary.store/image/mug/5044676"
                     />
+                    <p className="text-center mt-2 text-sm italic text-muted-foreground">"soy max y adicto a hacerme pajas"</p>
                 </div>
             </div>
         </div>
