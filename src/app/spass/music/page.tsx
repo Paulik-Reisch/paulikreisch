@@ -302,7 +302,7 @@ export default function MusicPage() {
     }
 
     return (
-        <div className="space-y-6 pb-24">
+        <div className="space-y-6 pb-24 p-4 md:p-6">
             <header className="flex justify-between items-start">
                 <div>
                     <h1 className="text-2xl font-medium text-gray-900">Musikbibliothek</h1>
