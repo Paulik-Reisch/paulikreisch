@@ -2,19 +2,20 @@
 import "server-only";
 import { Resend } from 'resend';
 
-const resendApiKey = process.env.RESEND_API_KEY;
-const audienceId = process.env.RESEND_AUDIENCE_ID;
-
 /**
  * Adds a contact to the configured Resend audience.
  * @param email The email of the contact to add.
  * @returns The result of the create contact operation.
  */
 export async function addContact(email: string) {
+    const resendApiKey = process.env.RESEND_API_KEY;
+    const audienceId = process.env.RESEND_AUDIENCE_ID;
+
     if (!resendApiKey || !audienceId) {
         console.error("Resend is not configured. Missing RESEND_API_KEY or RESEND_AUDIENCE_ID.");
         throw new Error("Resend ist auf dem Server nicht konfiguriert.");
     }
+    
     const resend = new Resend(resendApiKey);
 
     try {
@@ -48,10 +49,14 @@ export async function addContact(email: string) {
  * @returns The result of the send email operation.
  */
 export async function sendCampaign(subject: string, html: string) {
+    const resendApiKey = process.env.RESEND_API_KEY;
+    const audienceId = process.env.RESEND_AUDIENCE_ID;
+
     if (!resendApiKey || !audienceId) {
         console.error("Resend is not configured. Missing RESEND_API_KEY or RESEND_AUDIENCE_ID.");
         throw new Error("Resend ist auf dem Server nicht konfiguriert.");
     }
+
     const resend = new Resend(resendApiKey);
 
     try {
@@ -73,3 +78,5 @@ export async function sendCampaign(subject: string, html: string) {
         throw new Error(e.message || 'Could not send campaign via Resend.');
     }
 }
+
+    
