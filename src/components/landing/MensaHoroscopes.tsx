@@ -34,7 +34,7 @@ export function MensaHoroscopes() {
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center space-y-4 text-center">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">
-              ensa-Horoskop
+              Mensa-Horoskop
             </h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
               Finden Sie heraus, was die kulinarischen Sterne heute für Sie bereithalten.

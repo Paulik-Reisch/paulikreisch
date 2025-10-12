@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 export function HeroMensaTodesfalle() {
   return (
-    <section className="w-full py-12 md:py-24 lg:py-32">
+    <section className="w-full pt-12 md:pt-24 lg:pt-32 pb-8 md:pb-12">
       <div className="container grid items-center gap-6 px-4 md:px-6 lg:grid-cols-2 lg:gap-12">
         <div className="space-y-4">
           <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl xl:text-7xl/none text-balance">
