@@ -523,27 +523,24 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove, isLive }: { co
 }
 
 function LiveStatusToggle({ id, isLive, onStateChange }: { id: string; isLive: boolean; onStateChange: (state: 'pending' | 'success' | 'idle') => void }) {
-    const [state, formAction] = useActionState(toggleNewsletterLiveStatusAction, { success: false, error: null });
+    const [state, formAction, isPending] = useActionState(toggleNewsletterLiveStatusAction, initialEditorState);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isConfirmed, setIsConfirmed] = useState(false);
     const { toast } = useToast();
 
     useEffect(() => {
-        if(state.success) {
+        if(isPending) {
+            onStateChange('pending');
+        }
+        if(!isPending && state.success) {
             onStateChange('success');
             toast({ title: "Erfolgreich!", description: state.message });
         }
-        if(state.error) {
+        if(!isPending && state.error) {
             onStateChange('idle');
             toast({ variant: "destructive", title: "Fehler", description: state.error });
         }
-    }, [state, onStateChange, toast]);
-
-    const handleSubmit = (formData: FormData) => {
-        onStateChange('pending');
-        formAction(formData);
-        setIsDialogOpen(false);
-    }
+    }, [isPending, state, onStateChange, toast]);
 
     return (
         <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -553,11 +550,7 @@ function LiveStatusToggle({ id, isLive, onStateChange }: { id: string; isLive: b
                 </Button>
             </AlertDialogTrigger>
             <AlertDialogContent className="max-w-xl">
-                <form onSubmit={(e) => {
-                  e.preventDefault();
-                  const formData = new FormData(e.currentTarget);
-                  handleSubmit(formData);
-                }}>
+                <form action={formAction}>
                     <input type="hidden" name="id" value={id} />
                     <input type="hidden" name="isLive" value={String(!isLive)} />
                     <AlertDialogHeader>
@@ -588,9 +581,9 @@ function LiveStatusToggle({ id, isLive, onStateChange }: { id: string; isLive: b
                     </div>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Abbrechen</AlertDialogCancel>
-                        <AlertDialogAction type="submit" disabled={!isConfirmed}>
+                        <Button type="submit" disabled={!isConfirmed}>
                             Ja, jetzt live schalten
-                        </AlertDialogAction>
+                        </Button>
                     </AlertDialogFooter>
                 </form>
             </AlertDialogContent>
