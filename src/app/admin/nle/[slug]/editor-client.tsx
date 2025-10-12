@@ -507,9 +507,9 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove, isLive }: { co
                 </AccordionTrigger>
                  {!isLive && (
                     <div className="flex items-center pr-2">
-                        <Button type="button" size="icon" variant="ghost" className="h-6 w-6" onClick={() => onMove(component.id, 'up')}><ArrowUp className="h-4 w-4"/></Button>
-                        <Button type="button" size="icon" variant="ghost" className="h-6 w-6" onClick={() => onMove(component.id, 'down')}><ArrowDown className="h-4 w-4"/></Button>
-                        <Button type="button" size="icon" variant="ghost" className="h-6 w-6 text-destructive hover:text-destructive" onClick={() => onDelete(component.id)}><Trash2 className="h-4 w-4"/></Button>
+                        <Button type="button" size="icon" variant="ghost" className="h-6 w-6" onClick={(e) => {e.stopPropagation(); onMove(component.id, 'up');}}><ArrowUp className="h-4 w-4"/></Button>
+                        <Button type="button" size="icon" variant="ghost" className="h-6 w-6" onClick={(e) => {e.stopPropagation(); onMove(component.id, 'down');}}><ArrowDown className="h-4 w-4"/></Button>
+                        <Button type="button" size="icon" variant="ghost" className="h-6 w-6 text-destructive hover:text-destructive" onClick={(e) => {e.stopPropagation(); onDelete(component.id);}}><Trash2 className="h-4 w-4"/></Button>
                     </div>
                 )}
             </div>
@@ -520,13 +520,13 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove, isLive }: { co
     )
 }
 
-function LiveStatusToggle({ id, isLive }: { id: string; isLive: boolean }) {
+function LiveStatusToggle({ id, isLive, onToggle }: { id: string; isLive: boolean; onToggle: () => void }) {
     const [state, formAction] = useActionState(toggleNewsletterLiveStatusAction, { success: false, error: null });
     const [isPending, startTransition] = useTransition();
-    const router = useRouter();
 
     const handleSubmit = (formData: FormData) => {
         startTransition(() => {
+            onToggle();
             formAction(formData);
         });
     }
@@ -534,30 +534,22 @@ function LiveStatusToggle({ id, isLive }: { id: string; isLive: boolean }) {
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                 <div className="flex items-center justify-between rounded-lg border p-3 shadow-sm bg-destructive/10 border-destructive/50">
-                    <div className="space-y-0.5">
-                        <Label className="font-bold text-destructive">Live schalten</Label>
-                        <p className="text-xs text-destructive/80">
-                           Sperrt den Newsletter für Bearbeitungen. Nur aktivieren, wenn die Kampagne versendet wurde.
-                        </p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        {isPending && <Loader2 className="h-4 w-4 animate-spin text-destructive" />}
-                        <Switch 
-                            checked={isLive} 
-                            disabled={isPending || isLive}
-                        />
-                    </div>
-                </div>
+                <Button variant="destructive" disabled={isLive}>
+                   <Radio className="mr-2 h-4 w-4"/> Live schalten
+                </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
-                <form action={handleSubmit}>
+                <form onSubmit={(e) => {
+                  e.preventDefault();
+                  const formData = new FormData(e.currentTarget);
+                  handleSubmit(formData);
+                }}>
                     <input type="hidden" name="id" value={id} />
                     <input type="hidden" name="isLive" value={String(!isLive)} />
                     <AlertDialogHeader>
                         <AlertDialogTitle className="flex items-center gap-2"><AlertTriangle/>Sind Sie absolut sicher?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Wenn Sie diesen Newsletter live schalten, wird er für jegliche Bearbeitungen gesperrt. Diese Aktion ist notwendig, um die Integrität der versendeten E-Mail und ihrer öffentlichen Web-Vorschau zu gewährleisten. Sie können den Status später wieder auf "Entwurf" zurücksetzen.
+                            Wenn Sie diesen Newsletter live schalten, wird er für jegliche Bearbeitungen gesperrt. Diese Aktion ist notwendig, um die Integrität der versendeten E-Mail und ihrer öffentlichen Web-Vorschau zu gewährleisten. Sie können den Status später nicht wieder ändern.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -585,8 +577,7 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
   const [isLive, setIsLive] = useState(newsletter.isLive || false);
 
   const [updateState, updateFormAction] = useActionState(updateNewsletterAction, initialEditorState);
-  const [liveState, liveFormAction] = useActionState(toggleNewsletterLiveStatusAction, initialEditorState);
-
+  
   const { toast } = useToast();
 
   useEffect(() => {
@@ -611,18 +602,10 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
     }
   }, [updateState, toast]);
 
-    useEffect(() => {
-    if (liveState.success) {
-      toast({ title: liveState.message, description: `Newsletter ist jetzt ${liveState.isLive ? 'live und gesperrt' : 'wieder ein Entwurf'}.` });
-      setIsLive(liveState.isLive || false);
-      if (liveState.isLive) {
-          router.push('/admin');
-      }
-    }
-    if (liveState.error) {
-      toast({ variant: "destructive", title: "Fehler", description: liveState.error });
-    }
-  }, [liveState, toast, router]);
+  const handleGoLive = () => {
+    toast({ title: 'Wird live geschaltet...', description: 'Sie werden zum Dashboard weitergeleitet.' });
+    router.push('/admin');
+  };
 
   const handleFormSubmit = (formData: FormData) => {
     if (isLive) return;
@@ -742,7 +725,9 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
                                 </div>
                                 <Switch checked={useWrapper} onCheckedChange={setUseWrapper} disabled={isLive}/>
                             </div>
-                            <LiveStatusToggle id={newsletter.id} isLive={isLive} />
+                           <div className="p-3 border-destructive/50 border rounded-lg bg-destructive/10">
+                                <LiveStatusToggle id={newsletter.id} isLive={isLive} onToggle={handleGoLive} />
+                           </div>
                         </AccordionContent>
                     </AccordionItem>
                 </Accordion>

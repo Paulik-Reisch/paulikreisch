@@ -307,8 +307,11 @@ export function NewsletterManager({ initialNewsletters, onTabChange }: { initial
                                     <TableCell className="font-medium">{newsletter.name}</TableCell>
                                     <TableCell className="text-muted-foreground">{newsletter.subject}</TableCell>
                                     <TableCell>
-                                        <Badge variant={newsletter.isLive ? "destructive" : "secondary"}>
-                                            {newsletter.isLive ? <div className="flex items-center gap-1.5"><Radio className="h-3 w-3" />Live</div> : "Entwurf"}
+                                        <Badge variant={newsletter.isLive ? "default" : "secondary"} className={cn(newsletter.isLive && "bg-green-500 text-white animate-pulse")}>
+                                            <div className="flex items-center gap-1.5">
+                                              {newsletter.isLive && <div className="h-2 w-2 rounded-full bg-white" />}
+                                              {newsletter.isLive ? "Live" : "Entwurf"}
+                                            </div>
                                         </Badge>
                                     </TableCell>
                                     <TableCell className="text-muted-foreground">
@@ -378,12 +381,6 @@ export function NewsletterManager({ initialNewsletters, onTabChange }: { initial
             </div>
         </div>
     )
-}
-
-interface AnalysisResult {
-    level: 'error' | 'warning' | 'info';
-    message: string;
-    details: string;
 }
 
 function EmailChecker({ htmlContent }: { htmlContent: string | undefined }) {
