@@ -3,14 +3,20 @@
 
 import { useRef, useEffect } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
-import { MapPin, Hospital, Factory, AlertCircle } from "lucide-react";
+import { MapPin, Hospital, Factory, AlertCircle, HelpCircle, Briefcase, HeartCrack, ShoppingCart, Drama } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 const stops = [
-  { name: "Boulevard der gebrochenen Versprechen", icon: AlertCircle, description: "Wo Pünktlichkeit ein Fremdwort ist." },
+  { name: "Boulevard der gebrochenen Versprechen", icon: AlertCircle, description: "(Bürgerbüro)" },
   { name: "Letzte Hoffnung", description: "(Krankenhaus)", icon: Hospital },
   { name: "Paralleluniversum", description: "(Industriegebiet)", icon: Factory },
+  { name: "Endstation Sehnsucht", description: "(Hauptbahnhof)", icon: HeartCrack },
+  { name: "Bermudadreieck", description: "(Wo Fahrpläne verschwinden)", icon: HelpCircle },
+  { name: "Kaufrausch-Klippe", description: "(Einkaufszentrum)", icon: ShoppingCart },
+  { name: "Fata Morgana", description: "(Neubaugebiet)", icon: Drama },
+  { name: "Tal der Ahnungslosen", description: "(Universität)", icon: Briefcase },
+  { name: "Fegefeuer", description: "(Finanzamt)", icon: MapPin },
 ];
 
 function StopItem({ stop, index }: { stop: typeof stops[0], index: number }) {
