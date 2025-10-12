@@ -23,12 +23,15 @@ const reasons = [
 
 const importanceLevels = [
     { value: "egal", label: "Völlig egal", description: "(z.B. Treffen mit der Schwiegermutter)" },
+    { value: "unwichtig", label: "Unwichtig", description: "(z.B. Spaziergang im Park)" },
+    { value: "normal", label: "Durchschnittlich wichtig", description: "(z.B. Pünktlich Feierabend machen)" },
     { value: "wichtig", label: "Wichtig", description: "(z.B. Job-Interview, Klausur)" },
-    { value: "lebenswichtig", label: "Lebenswichtig", description: "(z.B. Herz-OP, eigener Hochzeitstermin)" }
+    { value: "sehr_wichtig", label: "Sehr wichtig", description: "(z.B. Flug erwischen)" },
+    { value: "lebenswichtig", label: "Lebenswichtig", description: "(z.B. Lottogewinn abholen, eigene Hochzeit)" },
 ];
 
 export function DelayCalculator() {
-    const [importanceIndex, setImportanceIndex] = useState(1); // Default to "Wichtig"
+    const [importanceIndex, setImportanceIndex] = useState(2); // Default to "Normal"
     const [delay, setDelay] = useState<string | null>(null);
     const [reason, setReason] = useState<string | null>(null);
 
@@ -38,10 +41,20 @@ export function DelayCalculator() {
         let calculatedDelay = 0;
         switch (importance) {
             case "lebenswichtig":
+                setDelay("Der Bus fällt heute leider aus.");
+                setReason("Aufgrund eines unvorhergesehenen Risses im Raum-Zeit-Kontinuum.");
+                return;
+             case "sehr_wichtig":
                 calculatedDelay = Math.floor(Math.random() * 30) + 45; // 45-75 min
                 break;
             case "wichtig":
                 calculatedDelay = Math.floor(Math.random() * 20) + 20; // 20-40 min
+                break;
+             case "normal":
+                calculatedDelay = Math.floor(Math.random() * 10) + 5; // 5-15 min
+                break;
+            case "unwichtig":
+                calculatedDelay = Math.floor(Math.random() * 5); // 0-5 min
                 break;
             case "egal":
                 calculatedDelay = -5; // Der Bus ist 5 Minuten zu früh
@@ -84,8 +97,8 @@ export function DelayCalculator() {
                     <CardContent className="space-y-6">
                          <div className="space-y-4">
                             <Slider
-                                defaultValue={[1]}
-                                max={2}
+                                defaultValue={[2]}
+                                max={importanceLevels.length - 1}
                                 step={1}
                                 onValueChange={handleSliderChange}
                             />
