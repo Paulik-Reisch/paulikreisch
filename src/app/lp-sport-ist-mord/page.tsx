@@ -1,6 +1,7 @@
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import { HeroSportIstMord } from "@/components/landing/hero-sport-ist-mord";
+import { DeathDevices } from "@/components/landing/DeathDevices";
 
 export default function SportIstMordPage() {
   return (
@@ -8,6 +9,7 @@ export default function SportIstMordPage() {
       <Header />
       <main className="flex-1">
         <HeroSportIstMord />
+        <DeathDevices />
       </main>
       <Footer />
     </div>
