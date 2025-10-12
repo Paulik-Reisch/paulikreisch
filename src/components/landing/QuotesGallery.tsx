@@ -49,7 +49,7 @@ export function QuotesGallery() {
               <CardContent className="p-6 h-full flex flex-col justify-between">
                 <blockquote className="text-base italic leading-relaxed text-balance">
                   <MessageSquareQuote className="w-6 h-6 text-primary/70 mb-2" />
-                  "{quote.text}"
+                  »{quote.text}«
                 </blockquote>
                 <p className="text-right text-sm font-semibold text-muted-foreground mt-4">
                   – {quote.author}
