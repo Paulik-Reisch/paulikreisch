@@ -8,59 +8,56 @@ import { cn } from "@/lib/utils";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 const stops = [
-  { name: "Boulevard der gebrochenen Versprechen", icon: AlertCircle, description: "(Bürgerbüro)" },
-  { name: "Letzte Hoffnung", description: "(Krankenhaus)", icon: Hospital },
-  { name: "Paralleluniversum", description: "(Industriegebiet)", icon: Factory },
-  { name: "Endstation Sehnsucht", description: "(Hauptbahnhof)", icon: HeartCrack },
-  { name: "Bermudadreieck", description: "(Wo Fahrpläne verschwinden)", icon: HelpCircle },
-  { name: "Kaufrausch-Klippe", description: "(Einkaufszentrum)", icon: ShoppingCart },
-  { name: "Fata Morgana", description: "(Neubaugebiet)", icon: Drama },
-  { name: "Tal der Ahnungslosen", description: "(Universität)", icon: Briefcase },
-  { name: "Fegefeuer", description: "(Finanzamt)", icon: MapPin },
+  { name: "Boulevard der gebrochenen Versprechen", description: "(Bürgerbüro)", icon: AlertCircle, position: { top: "5%", side: "left" } },
+  { name: "Letzte Hoffnung", description: "(Krankenhaus)", icon: Hospital, position: { top: "15%", side: "right" } },
+  { name: "Paralleluniversum", description: "(Industriegebiet)", icon: Factory, position: { top: "25%", side: "left" } },
+  { name: "Endstation Sehnsucht", description: "(Hauptbahnhof)", icon: HeartCrack, position: { top: "38%", side: "right" } },
+  { name: "Bermudadreieck", description: "(Wo Fahrpläne verschwinden)", icon: HelpCircle, position: { top: "50%", side: "left" } },
+  { name: "Kaufrausch-Klippe", description: "(Einkaufszentrum)", icon: ShoppingCart, position: { top: "62%", side: "right" } },
+  { name: "Fata Morgana", description: "(Neubaugebiet)", icon: Drama, position: { top: "75%", side: "left" } },
+  { name: "Tal der Ahnungslosen", description: "(Universität)", icon: Briefcase, position: { top: "88%", side: "right" } },
+  { name: "Fegefeuer", description: "(Finanzamt)", icon: MapPin, position: { top: "98%", side: "left" } },
 ];
 
-function StopItem({ stop, index }: { stop: typeof stops[0], index: number }) {
-    const isEven = index % 2 === 0;
+function StopItem({ stop }: { stop: typeof stops[0] }) {
+    const isRight = stop.position.side === 'right';
     return (
-        <div className="flex items-center w-full justify-center">
-            {isEven ? (
-                <>
-                    <motion.div 
-                        className="w-1/2 pr-8 text-right"
-                        initial={{ opacity: 0, x: -50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true, amount: 0.8 }}
-                        transition={{ duration: 0.5 }}
-                    >
-                        <h4 className="font-bold text-lg font-headline">{stop.name}</h4>
-                        <p className="text-sm text-muted-foreground">{stop.description}</p>
-                    </motion.div>
-                    <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center z-10 shrink-0 shadow-lg">
-                        <stop.icon className="h-5 w-5"/>
-                    </div>
-                    <div className="w-1/2" />
-                </>
-            ) : (
-                 <>
-                    <div className="w-1/2" />
-                     <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center z-10 shrink-0 shadow-lg">
-                        <stop.icon className="h-5 w-5"/>
-                    </div>
-                    <motion.div 
-                        className="w-1/2 pl-8 text-left"
-                        initial={{ opacity: 0, x: 50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true, amount: 0.8 }}
-                        transition={{ duration: 0.5 }}
-                    >
-                        <h4 className="font-bold text-lg font-headline">{stop.name}</h4>
-                        <p className="text-sm text-muted-foreground">{stop.description}</p>
-                    </motion.div>
-                </>
-            )}
+        <div 
+            className="absolute w-1/2"
+            style={{ 
+                top: stop.position.top, 
+                ...(isRight ? { left: '55%' } : { right: '55%' })
+            }}
+        >
+            <motion.div 
+                className={cn("w-full", isRight ? "text-left" : "text-right")}
+                initial={{ opacity: 0, x: isRight ? 50 : -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.5 }}
+            >
+                <h4 className="font-bold text-lg font-headline">{stop.name}</h4>
+                <p className="text-sm text-muted-foreground">{stop.description}</p>
+            </motion.div>
         </div>
     )
 }
+
+function StopDot({ stop }: { stop: typeof stops[0] }) {
+     return (
+        <motion.div
+            className="absolute left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center z-10 shrink-0 shadow-lg"
+            style={{ top: `calc(${stop.position.top} - 1.25rem)`}}
+            initial={{ scale: 0 }}
+            whileInView={{ scale: 1 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.3, type: 'spring', stiffness: 300, damping: 20 }}
+        >
+            <stop.icon className="h-5 w-5"/>
+        </motion.div>
+    )
+}
+
 
 export function BusStopNames() {
   const ref = useRef(null);
@@ -69,10 +66,9 @@ export function BusStopNames() {
       offset: ["start end", "end start"]
   });
 
-  const scaleY = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
+  const pathLength = useSpring(scrollYProgress, {
+    stiffness: 400,
+    damping: 90,
   });
 
   return (
@@ -88,17 +84,28 @@ export function BusStopNames() {
         </div>
         
         {/* Desktop View */}
-        <div ref={ref} className="max-w-2xl mx-auto relative hidden md:block">
-            <motion.div
-                className="absolute left-1/2 top-0 w-1 bg-primary/20 h-full origin-top"
-            />
-            <motion.div
-                className="absolute left-1/2 top-0 w-1 bg-primary h-full origin-top"
-                style={{ scaleY }}
-            />
-             <div className="relative flex flex-col gap-24">
+        <div ref={ref} className="max-w-2xl mx-auto relative hidden md:block" style={{ height: "1200px" }}>
+            <svg width="100%" height="100%" viewBox="0 0 200 1200" preserveAspectRatio="none" className="absolute top-0 left-0">
+                <motion.path
+                    d="M 100 0 Q 150 150, 100 300 T 100 600 Q 50 750, 100 900 T 100 1200"
+                    fill="none"
+                    stroke="hsl(var(--primary) / 0.2)"
+                    strokeWidth="4"
+                />
+                 <motion.path
+                    d="M 100 0 Q 150 150, 100 300 T 100 600 Q 50 750, 100 900 T 100 1200"
+                    fill="none"
+                    stroke="hsl(var(--primary))"
+                    strokeWidth="4"
+                    style={{ pathLength }}
+                />
+            </svg>
+            <div className="relative h-full">
                 {stops.map((stop, index) => (
-                    <StopItem key={index} stop={stop} index={index} />
+                    <React.Fragment key={index}>
+                        <StopItem stop={stop} />
+                        <StopDot stop={stop} />
+                    </React.Fragment>
                 ))}
             </div>
         </div>
