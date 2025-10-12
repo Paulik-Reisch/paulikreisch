@@ -580,9 +580,9 @@ function CampaignsManager({ initialNewsletters, initialSubscribers, initialCampa
                             <Send className="h-4 w-4" />
                             <AlertTitle>Zusammenfassung</AlertTitle>
                             <AlertDescription>
-                                <p>Newsletter: <strong>{initialNewsletters.find(nl => nl.id === selectedNewsletter)?.name || 'Keiner ausgewählt'}</strong></p>
-                                <p>Ziel-Tags: {selectedTags.length > 0 ? selectedTags.map(t => <Badge key={t} className="mr-1">{t}</Badge>) : 'Keine'}</p>
-                                <p className="mt-2 text-lg">Abonnenten, die erreicht werden: <strong className="text-primary">{matchingSubscribers}</strong></p>
+                                <div>Newsletter: <strong>{initialNewsletters.find(nl => nl.id === selectedNewsletter)?.name || 'Keiner ausgewählt'}</strong></div>
+                                <div>Ziel-Tags: {selectedTags.length > 0 ? selectedTags.map(t => <Badge key={t} className="mr-1">{t}</Badge>) : 'Keine'}</div>
+                                <div className="mt-2 text-lg">Abonnenten, die erreicht werden: <strong className="text-primary">{matchingSubscribers}</strong></div>
                             </AlertDescription>
                         </Alert>
                         
