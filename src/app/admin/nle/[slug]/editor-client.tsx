@@ -523,24 +523,24 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove, isLive }: { co
 }
 
 function LiveStatusToggle({ id, isLive, onStateChange }: { id: string; isLive: boolean; onStateChange: (state: 'pending' | 'success' | 'idle') => void }) {
-    const [state, formAction, isPending] = useActionState(toggleNewsletterLiveStatusAction, initialEditorState);
+    const [state, formAction] = useActionState(toggleNewsletterLiveStatusAction, initialEditorState);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isConfirmed, setIsConfirmed] = useState(false);
     const { toast } = useToast();
 
     useEffect(() => {
-        if(isPending) {
-            onStateChange('pending');
-        }
-        if(!isPending && state.success) {
-            onStateChange('success');
-            toast({ title: "Erfolgreich!", description: state.message });
-        }
-        if(!isPending && state.error) {
+        if (!state.success && state.error) {
             onStateChange('idle');
             toast({ variant: "destructive", title: "Fehler", description: state.error });
+            setIsDialogOpen(false);
         }
-    }, [isPending, state, onStateChange, toast]);
+    }, [state, onStateChange, toast]);
+
+    const handleSubmit = (formData: FormData) => {
+        formAction(formData);
+        onStateChange('success'); // Optimistic update
+        setIsDialogOpen(false);
+    };
 
     return (
         <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -550,7 +550,7 @@ function LiveStatusToggle({ id, isLive, onStateChange }: { id: string; isLive: b
                 </Button>
             </AlertDialogTrigger>
             <AlertDialogContent className="max-w-xl">
-                <form action={formAction}>
+                <form action={handleSubmit}>
                     <input type="hidden" name="id" value={id} />
                     <input type="hidden" name="isLive" value={String(!isLive)} />
                     <AlertDialogHeader>
@@ -706,31 +706,19 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
   if(editorState !== 'idle') {
     return (
         <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center gap-6">
-            {editorState === 'pending' ? (
-                <>
-                    <Loader2 className="h-12 w-12 animate-spin text-primary"/>
-                    <div className="text-center">
-                        <h2 className="text-2xl font-bold font-headline">Newsletter wird publiziert...</h2>
-                        <p className="text-muted-foreground">Live-Daten werden gespeichert und der Editor wird gesperrt.</p>
-                    </div>
-                </>
-            ) : (
-                <>
-                    <CheckCircle className="h-16 w-16 text-green-500"/>
-                     <div className="text-center">
-                        <h2 className="text-2xl font-bold font-headline">Erfolgreich live geschaltet!</h2>
-                        <p className="text-muted-foreground">Der Newsletter ist jetzt permanent gespeichert und nicht mehr editierbar.</p>
-                    </div>
-                    <div className="flex gap-4 mt-4">
-                        <Link href="/admin">
-                            <Button variant="outline">Zurück zum Dashboard</Button>
-                        </Link>
-                         <a href={previewUrl} target="_blank" rel="noopener noreferrer">
-                            <Button>Live-Vorschau öffnen <ExternalLink className="ml-2 h-4 w-4"/></Button>
-                        </a>
-                    </div>
-                </>
-            )}
+            <CheckCircle className="h-16 w-16 text-green-500"/>
+             <div className="text-center">
+                <h2 className="text-2xl font-bold font-headline">Erfolgreich live geschaltet!</h2>
+                <p className="text-muted-foreground">Der Newsletter ist jetzt permanent gespeichert und nicht mehr editierbar.</p>
+            </div>
+            <div className="flex gap-4 mt-4">
+                <Link href="/admin">
+                    <Button variant="outline">Zurück zum Dashboard</Button>
+                </Link>
+                 <a href={previewUrl} target="_blank" rel="noopener noreferrer">
+                    <Button>Live-Vorschau öffnen <ExternalLink className="ml-2 h-4 w-4"/></Button>
+                </a>
+            </div>
         </div>
     )
   }
@@ -858,9 +846,3 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
     </div>
   );
 }
-
-    
-
-    
-
-    
