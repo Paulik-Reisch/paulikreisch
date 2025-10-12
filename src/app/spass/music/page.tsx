@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect, useCallback, useTransition } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL, listAll, getMetadata, deleteObject, type StorageReference } from "firebase/storage";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, listAll, getMetadata, deleteObject } from "firebase/storage";
 import { app } from "@/app/firebase";
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -390,5 +390,3 @@ export default function MusicPage() {
         </div>
     );
 }
-
-    
