@@ -29,10 +29,10 @@ export function HeroBusfahrenMutprobe() {
                      <Image
                       alt="Platzhalterbild für eine Tasse"
                       className="rounded-md"
-                      data-ai-hint="funny mug"
+                      data-ai-hint="funny bus"
                       height={400}
                       width={400}
-                      src="https://picsum.photos/seed/bus-mug/400/400"
+                      src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/bustest.png?alt=media&token=3643e684-5103-4d50-8956-2187e9ec626d"
                     />
                 </div>
             </div>
