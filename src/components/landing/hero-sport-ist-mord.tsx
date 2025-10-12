@@ -57,7 +57,7 @@ export function HeroSportIstMord() {
                   <h1 className={`font-headline text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl ${isGlitching ? 'animate-glitch text-red-500' : ''}`}>
                     Dein Körper kann alles schaffen!
                   </h1>
-                   <p className="max-w-[600px] text-white/80 md:text-xl/relaxed">
+                   <p className="mx-auto max-w-[600px] text-white/80 md:text-xl/relaxed">
                         Entfessle dein wahres Potenzial. Jeder Schweißtropfen bringt dich deinem Ziel näher. Bist du bereit?
                     </p>
                   <Button size="lg" onClick={handleReveal} disabled={isGlitching} variant="secondary">
