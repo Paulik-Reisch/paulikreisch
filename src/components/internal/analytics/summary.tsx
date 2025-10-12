@@ -7,10 +7,10 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 const summaryData = [
-  { title: "Besucher (24h)", value: "2,104", change: "+12.5%" },
-  { title: "Sitzungen", value: "3,456", change: "+8.1%" },
-  { title: "Absprungrate", value: "42.3%", change: "-2.3%" },
-  { title: "Durchschn. Sitzungsdauer", value: "2m 45s", change: "+5.9%" },
+  { title: "Besucher (24h)", value: "2,104", change: "+ 12.5 %" },
+  { title: "Sitzungen", value: "3,456", change: "+ 8.1 %" },
+  { title: "Absprungrate", value: "42.3 %", change: "- 2.3 %" },
+  { title: "Durchschn. Sitzungsdauer", value: "2m 45s", change: "+ 5.9 %" },
 ];
 
 

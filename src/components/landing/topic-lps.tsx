@@ -31,7 +31,7 @@ const topics = [
     },
     {
         title: "Busfahren als Mutprobe",
-        description: "Der tägliche Nahverkehr als Gladiatorenkampf. Hol Sie sich den Survival Guide.",
+        description: "Der tägliche Nahverkehr als Gladiatorenkampf. Holen Sie sich den Survival Guide.",
         link: "/lp-busfahren-mutprobe",
         icon: Bus,
         color: "text-yellow-500"

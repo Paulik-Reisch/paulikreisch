@@ -21,13 +21,12 @@ export function BusAnatomyChart() {
               Anatomie eines überfüllten Busses
             </h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-              Eine wissenschaftliche Einteilung des Mikrokosmos auf Rädern.
+              Eine Einteilung des Mikrokosmos auf Rädern.
             </p>
         </div>
         <Card className="max-w-4xl mx-auto mt-12 bg-muted/30">
             <CardHeader>
                 <CardTitle>Bus-Zonen-Analyse</CardTitle>
-                <CardDescription>Von vorne (gefährlich) nach hinten (mythisch).</CardDescription>
             </CardHeader>
             <CardContent>
                 <div className="h-[300px] w-full">

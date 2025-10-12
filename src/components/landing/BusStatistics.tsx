@@ -4,18 +4,18 @@ import { Percent, Clock, Cigarette } from "lucide-react"
 
 const stats = [
     {
-        value: "98%",
-        label: "aller 'Haltewunsch'-Knöpfe sind Placebos.",
+        value: "98 %",
+        label: "aller Haltewunsch-Knöpfe sind Placebos.",
         icon: Percent
     },
     {
-        value: "100%",
+        value: "100 %",
         label: "Wahrscheinlichkeit, dass der Bus genau dann kommt, wenn Sie sich eine Zigarette anstecken.",
         icon: Cigarette
     },
     {
         value: "3 Sek.",
-        label: "Zeitfenster zwischen 'Tür schließt' und 'Fahrer gibt Vollgas'.",
+        label: "Zeitfenster zwischen \"Tür schließt\" und \"Fahrer gibt Vollgas\".",
         icon: Clock
     }
 ]
@@ -26,7 +26,7 @@ export function BusStatistics() {
             <div className="container px-4 md:px-6">
                 <div className="flex flex-col items-center space-y-4 text-center">
                     <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">
-                        Statistiken, die Sie nicht kannten (aber fühlen)
+                        Statistiken, die Sie nicht kannten
                     </h2>
                     <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
                         Wissenschaftlich bewiesen durch das Institut für gefühlte Wahrheiten.

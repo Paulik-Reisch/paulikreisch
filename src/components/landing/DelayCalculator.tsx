@@ -57,7 +57,7 @@ export function DelayCalculator() {
                         Der offizielle Verspätungs-Kalkulator
                     </h2>
                     <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-                        Berechnen Sie die exakte Ankunftszeit Ihres Busses basierend auf wissenschaftlich erprobten, unergründlichen Faktoren.
+                        Berechnen Sie die exakte Ankunftszeit Ihres Busses basierend auf erprobten Faktoren.
                     </p>
                 </div>
                 <Card className="max-w-xl mx-auto mt-12 shadow-lg">
@@ -69,7 +69,7 @@ export function DelayCalculator() {
                         <div className="flex flex-col sm:flex-row gap-4">
                             <Select onValueChange={setImportance} value={importance}>
                                 <SelectTrigger className="flex-1">
-                                    <SelectValue placeholder="Wichtigkeit auswählen..." />
+                                    <SelectValue placeholder="Wichtigkeit auswählen ..." />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="lebenswichtig">Lebenswichtig (z.B. Herz-OP, eigener Hochzeitstermin)</SelectItem>
