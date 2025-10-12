@@ -1,14 +1,14 @@
 
 "use client";
 
-import { useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
 import { MapPin, Hospital, Factory, AlertCircle, HelpCircle, Briefcase, HeartCrack, ShoppingCart, Drama } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 const stops = [
-  { name: "Boulevard der gebrochenen Versprechen", description: "(Bürgerbüro)", icon: AlertCircle, position: { top: "5%", side: "left" } },
+  { name: "Boulevard der gebrochenen Versprechen", description: "(Wo Pünktlichkeit ein Fremdwort ist)", icon: AlertCircle, position: { top: "5%", side: "left" } },
   { name: "Letzte Hoffnung", description: "(Krankenhaus)", icon: Hospital, position: { top: "15%", side: "right" } },
   { name: "Paralleluniversum", description: "(Industriegebiet)", icon: Factory, position: { top: "25%", side: "left" } },
   { name: "Endstation Sehnsucht", description: "(Hauptbahnhof)", icon: HeartCrack, position: { top: "38%", side: "right" } },
