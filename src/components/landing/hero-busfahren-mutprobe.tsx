@@ -1,6 +1,6 @@
 
 import { Button } from '@/components/ui/button';
-import { BookOpen, Bus } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export function HeroBusfahrenMutprobe() {
@@ -25,7 +25,14 @@ export function HeroBusfahrenMutprobe() {
             </div>
             <div className="flex justify-center">
                 <div className="p-4 rounded-lg">
-                     <Bus className="w-48 h-48 md:w-64 md:h-64 text-muted-foreground/50" />
+                     <Image
+                        src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/basura.png?alt=media&token=527ef31c-2d8f-47ee-afb9-9eb2965f220f"
+                        alt="Ein Müllhaufen, der einen Bus darstellt"
+                        width={400}
+                        height={400}
+                        className="rounded-lg object-contain"
+                        data-ai-hint="trash garbage"
+                    />
                 </div>
             </div>
         </div>
