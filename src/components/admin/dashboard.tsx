@@ -46,7 +46,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, RefreshCw, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus, History, Flame, Upload, MessageSquareQuote, ToggleLeft, ToggleRight, BookOpen, ArrowUpRight, DatabaseZap, Sparkles } from "lucide-react";
+import { Loader2, RefreshCw, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus, History, Flame, Upload, MessageSquareQuote, ToggleLeft, ToggleRight, BookOpen, ArrowUpRight, DatabaseZap, Sparkles, CheckCircle, ShieldAlert } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -508,15 +508,19 @@ function CampaignsManager({ initialNewsletters, initialSubscribers, initialCampa
     const { toast } = useToast();
     const [sendState, sendFormAction] = useActionState(sendNewsletterAction, { success: false, message: null });
 
+    const [selectedNewsletterId, setSelectedNewsletterId] = useState<string>('');
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
+    
     const allTags = useMemo(() => {
         const tagSet = new Set<string>();
         initialSubscribers.forEach(s => s.tags?.forEach(t => tagSet.add(t)));
-        return Array.from(tagSet);
+        return Array.from(tagSet).sort();
     }, [initialSubscribers]);
 
-    const [selectedNewsletter, setSelectedNewsletter] = useState<string>('');
-    const [selectedTags, setSelectedTags] = useState<string[]>([]);
-    
+    const selectedNewsletter = useMemo(() => {
+        return initialNewsletters.find(nl => nl.id === selectedNewsletterId);
+    }, [selectedNewsletterId, initialNewsletters]);
+
     useEffect(() => {
         if(sendState.message) {
             toast({
@@ -540,83 +544,115 @@ function CampaignsManager({ initialNewsletters, initialSubscribers, initialCampa
 
     return (
         <div className="space-y-12">
-            <form action={sendFormAction}>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div className="space-y-6 p-6 border rounded-lg">
-                        <h3 className="font-headline text-2xl font-bold">1. Newsletter auswählen</h3>
-                        <Select name="newsletterId" required onValueChange={setSelectedNewsletter} value={selectedNewsletter}>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Wählen Sie einen Newsletter..." />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {initialNewsletters.map(nl => (
-                                    <SelectItem key={nl.id} value={nl.id}>{nl.name} - ({nl.subject})</SelectItem>
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                <form action={sendFormAction} className="space-y-8">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="font-headline text-2xl font-bold">1. Newsletter auswählen</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                             <Select name="newsletterId" required onValueChange={setSelectedNewsletterId} value={selectedNewsletterId}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Wählen Sie einen Newsletter..." />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {initialNewsletters.map(nl => (
+                                        <SelectItem key={nl.id} value={nl.id}>{nl.name} - ({nl.subject})</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="font-headline text-2xl font-bold">2. Zielgruppe definieren</CardTitle>
+                            <CardDescription>Wählen Sie Tags aus. Die Kampagne wird an alle Abonnenten gesendet, die **alle** ausgewählten Tags besitzen.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="flex flex-wrap gap-2">
+                                {allTags.length === 0 ? (
+                                    <p className="text-sm text-muted-foreground">Noch keine Tags vorhanden. Weisen Sie im "Leads"-Tab welche zu.</p>
+                                ) : allTags.map(tag => (
+                                    <Button 
+                                        key={tag} 
+                                        type="button"
+                                        variant={selectedTags.includes(tag) ? "default" : "outline"}
+                                        onClick={() => handleTagClick(tag)}
+                                    >
+                                        {tag}
+                                    </Button>
                                 ))}
-                            </SelectContent>
-                        </Select>
-
-                        <h3 className="font-headline text-2xl font-bold mt-8">2. Zielgruppe definieren</h3>
-                        <p className="text-sm text-muted-foreground">Wählen Sie einen oder mehrere Tags aus. Die Kampagne wird an alle Abonnenten gesendet, die **alle** ausgewählten Tags besitzen.</p>
-                        <div className="flex flex-wrap gap-2">
-                            {allTags.length === 0 ? (
-                                <p className="text-sm text-muted-foreground">Noch keine Tags vorhanden. Weisen Sie im "Leads"-Tab welche zu.</p>
-                            ) : allTags.map(tag => (
-                                <Button 
-                                    key={tag} 
-                                    type="button"
-                                    variant={selectedTags.includes(tag) ? "default" : "outline"}
-                                    onClick={() => handleTagClick(tag)}
-                                >
-                                    {tag}
-                                </Button>
-                            ))}
-                        </div>
-                        {/* Hidden input to pass tags to server action */}
-                        <input type="hidden" name="tags" value={JSON.stringify(selectedTags)} />
-                    </div>
-                    <div className="space-y-6 p-6 border rounded-lg bg-muted/50">
-                        <h3 className="font-headline text-2xl font-bold">3. Vorschau & Versand</h3>
-                        <Alert>
-                            <Send className="h-4 w-4" />
-                            <AlertTitle>Zusammenfassung</AlertTitle>
-                            <AlertDescription>
-                                <div>Newsletter: <strong>{initialNewsletters.find(nl => nl.id === selectedNewsletter)?.name || 'Keiner ausgewählt'}</strong></div>
-                                <div>Ziel-Tags: {selectedTags.length > 0 ? selectedTags.map(t => <Badge key={t} className="mr-1">{t}</Badge>) : 'Keine'}</div>
-                                <div className="mt-2 text-lg">Abonnenten, die erreicht werden: <strong className="text-primary">{matchingSubscribers}</strong></div>
-                            </AlertDescription>
-                        </Alert>
-                        
-                        <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                                <Button size="lg" className="w-full" disabled={!selectedNewsletter || selectedTags.length === 0 || matchingSubscribers === 0}>
-                                    <Send className="mr-2 h-5 w-5" />
-                                    Kampagne starten
-                                </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>Sind Sie absolut sicher?</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                        Sie sind dabei, den Newsletter "{initialNewsletters.find(nl => nl.id === selectedNewsletter)?.name}" an {matchingSubscribers} Empfänger zu senden.
-                                    </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>Abbrechen</AlertDialogCancel>
-                                    <AlertDialogAction type="submit">Ja, jetzt versenden</AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
-                        {sendState.success === false && sendState.message && (
-                            <Alert variant="destructive">
-                                <AlertTitle>Fehler beim Versand</AlertTitle>
+                            </div>
+                            <input type="hidden" name="tags" value={JSON.stringify(selectedTags)} />
+                        </CardContent>
+                    </Card>
+                    <Card className="xl:col-span-2">
+                        <CardHeader>
+                            <CardTitle className="font-headline text-2xl font-bold">3. Vorschau & Versand</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <Alert>
+                                <Send className="h-4 w-4" />
+                                <AlertTitle>Zusammenfassung</AlertTitle>
                                 <AlertDescription>
-                                    {sendState.message}
+                                    <div>Newsletter: <strong>{selectedNewsletter?.name || 'Keiner ausgewählt'}</strong></div>
+                                    <div>Ziel-Tags: {selectedTags.length > 0 ? selectedTags.map(t => <Badge key={t} className="mr-1">{t}</Badge>) : 'Keine'}</div>
+                                    <div className="mt-2 text-lg">Abonnenten, die erreicht werden: <strong className="text-primary">{matchingSubscribers}</strong></div>
                                 </AlertDescription>
                             </Alert>
-                        )}
-                    </div>
+                             <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button size="lg" className="w-full mt-6" disabled={!selectedNewsletter || selectedTags.length === 0 || matchingSubscribers === 0}>
+                                        <Send className="mr-2 h-5 w-5" />
+                                        Kampagne starten
+                                    </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>Sind Sie absolut sicher?</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            Sie sind dabei, den Newsletter "{selectedNewsletter?.name}" an {matchingSubscribers} Empfänger zu senden.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+                                        <AlertDialogAction type="submit">Ja, jetzt versenden</AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        </CardContent>
+                    </Card>
+                </form>
+                
+                <div className="space-y-4">
+                    <Card className="h-full flex flex-col">
+                        <CardHeader>
+                            <CardTitle className="font-headline text-2xl font-bold">Live-Vorschau (Outlook)</CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex-grow flex flex-col p-2 pt-0">
+                            <div className="p-4 border rounded-lg bg-background flex-grow flex flex-col">
+                                <div className="p-2 border-b">
+                                     <Alert variant={selectedNewsletter?.content ? "default" : "destructive"}>
+                                        {selectedNewsletter?.content ? <CheckCircle className="h-4 w-4" /> : <ShieldAlert className="h-4 w-4" />}
+                                        <AlertTitle>{selectedNewsletter?.content ? "Analyse: Alles in Ordnung" : "Analyse: Fehler!"}</AlertTitle>
+                                        <AlertDescription>
+                                            {selectedNewsletter?.content ? "Keine offensichtlichen Kompatibilitätsprobleme gefunden." : "Kein E-Mail-Inhalt zum Analysieren ausgewählt."}
+                                        </AlertDescription>
+                                    </Alert>
+                                </div>
+                                <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-b-md flex-grow overflow-auto">
+                                    <iframe
+                                        srcDoc={selectedNewsletter?.content || ''}
+                                        title="E-Mail Vorschau"
+                                        className="w-full h-full border bg-white"
+                                        sandbox="" // for security
+                                    />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
-            </form>
+            </div>
 
             <div>
                 <h3 className="font-headline text-2xl font-bold mb-4 flex items-center gap-2"><History className="h-6 w-6"/>Versand-Verlauf</h3>
