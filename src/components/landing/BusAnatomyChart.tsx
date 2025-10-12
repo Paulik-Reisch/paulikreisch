@@ -2,14 +2,14 @@
 "use client"
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList } from "recharts";
 import { Badge } from "../ui/badge";
 
 const data = [
-  { zone: 'Quetsch-Zone', description: "Eingangsbereich. Persönlicher Raum ist ein Fremdwort. Überlebensrate: gering.", value: 100, fill: '#ef4444' },
-  { zone: 'Duft-Oase', description: "Neben der Tür. Eine Mischung aus altem Parfüm, Achselschweiß und dem Döner von gestern.", value: 100, fill: '#f97316' },
-  { zone: 'Bermuda-Dreieck', description: "Der Platz, an dem Schlüssel, Fahrkarten und die Hoffnung auf eine pünktliche Ankunft verschwinden.", value: 100, fill: '#eab308' },
-  { zone: 'VIP-Lounge', description: "Die unerreichbare letzte Reihe. Nur für Legenden, die den Endgegner-Busfahrer besiegt haben.", value: 100, fill: '#22c55e' },
+  { zone: "Quetsch-Zone", description: "Eingangsbereich. Persönlicher Raum ist ein Fremdwort. Überlebensrate: gering.", value: 100, fill: "#ef4444" },
+  { zone: "Duft-Oase", description: "Neben der Tür. Eine Mischung aus altem Parfüm, Achselschweiß und dem Döner von gestern.", value: 100, fill: "#f97316" },
+  { zone: "Bermuda-Dreieck", description: "Der Platz, an dem Schlüssel, Fahrkarten und die Hoffnung auf eine pünktliche Ankunft verschwinden.", value: 100, fill: "#eab308" },
+  { zone: "VIP-Lounge", description: "Die unerreichbare letzte Reihe. Nur für Legenden, die den Endgegner-Busfahrer besiegt haben.", value: 100, fill: "#22c55e" },
 ];
 
 export function BusAnatomyChart() {
@@ -36,11 +36,11 @@ export function BusAnatomyChart() {
                             <YAxis type="category" dataKey="zone" hide />
                              <Tooltip 
                                 contentStyle={{
-                                    backgroundColor: 'hsl(var(--background))',
-                                    borderColor: 'hsl(var(--border))'
+                                    backgroundColor: "hsl(var(--background))",
+                                    borderColor: "hsl(var(--border))"
                                 }}
-                                itemStyle={{ color: 'hsl(var(--foreground))' }}
-                                labelStyle={{ fontWeight: 'bold' }}
+                                itemStyle={{ color: "hsl(var(--foreground))" }}
+                                labelStyle={{ fontWeight: "bold" }}
                                 formatter={(value, name, props) => [props.payload.description, "Beschreibung"]}
                              />
                             <Bar dataKey="value" radius={[4, 4, 4, 4]}>
