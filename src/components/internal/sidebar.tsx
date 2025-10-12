@@ -1,5 +1,3 @@
-
-
 "use client"
 
 import {
@@ -14,7 +12,7 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
-import { LogOut, LayoutDashboard, Database, HardDrive, Users, Home, BrainCircuit, TestTube2, Palette, Navigation, Cloud, Component, LineChart, History, Newspaper, FileText, Music } from "lucide-react"
+import { LogOut, LayoutDashboard, Database, HardDrive, Users, Home, BrainCircuit, TestTube2, Palette, Navigation, Cloud, Component, LineChart, History, Newspaper, FileText, Music, Smile } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { logoutAction } from "@/app/admin/actions"
 import Link from "next/link"
@@ -43,7 +41,7 @@ const idxItems = [
 ];
 
 const additionalItems = [
-    { href: "/internal/music", label: "Musik", icon: Music },
+    { href: "/spass/music", label: "Musik", icon: Music },
 ]
 
 
@@ -111,7 +109,7 @@ export function InternalSidebar() {
         </SidebarGroup>
          <SidebarSeparator />
          <SidebarGroup>
-           <SidebarGroupLabel>Zusätzliches</SidebarGroupLabel>
+           <SidebarGroupLabel>Spaß</SidebarGroupLabel>
             {additionalItems.map((item) => (
                 <SidebarMenuItem key={item.href}>
                 <Link href={item.href} className="w-full">
