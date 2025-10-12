@@ -60,7 +60,7 @@ const results = {
 
 export function SportVerweigererQuiz() {
   const [currentStep, setCurrentStep] = useState(0);
-  const [scores, setScores] = useState({ kreativ: 0, krank: 0, taktisch: 0 });
+  const [score, setScore] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
   const [answers, setAnswers] = useState<{[key: number]: string}>({});
 
@@ -107,13 +107,13 @@ export function SportVerweigererQuiz() {
   }
 
   return (
-    <section className="w-full py-12 md:py-24 bg-cyan-100/60 dark:bg-cyan-900/30">
+    <section className="w-full py-12 md:py-24 bg-cyan-500">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">
+            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl text-background">
               Quiz: Welcher Sportmuffel bist du?
             </h2>
-            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
+            <p className="max-w-[900px] text-background/80 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
               Beantworte ein paar schnelle Fragen und entdecke deine wahre Berufung im Sportunterricht.
             </p>
         </div>
@@ -125,7 +125,7 @@ export function SportVerweigererQuiz() {
                          <Progress value={progress} className="mt-2" />
                     </CardHeader>
                     <CardContent className="space-y-4 px-6 pb-6 text-left">
-                        <div className="min-h-[3rem] flex items-center">
+                         <div className="min-h-[3rem] flex items-center">
                             <AnimatePresence mode="wait">
                                 <motion.p
                                     key={currentStep}
