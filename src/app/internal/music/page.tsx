@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, useCallback, useTransition } from 'react';
@@ -167,31 +166,33 @@ function UploadDialog({ onUploadComplete }: { onUploadComplete: () => void }) {
   );
 }
 
-function MusicPlayer({ file, onEnded }: { file: MusicFile | null; onEnded: () => void }) {
+function MusicPlayer({ file, onEnded, isPlaying, onTogglePlay }: { file: MusicFile | null; onEnded: () => void, isPlaying: boolean, onTogglePlay: () => void }) {
   const audioRef = React.useRef<HTMLAudioElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     if (file && audioRef.current) {
-      audioRef.current.src = file.url;
-      audioRef.current.play();
-      setIsPlaying(true);
+      if (audioRef.current.src !== file.url) {
+        audioRef.current.src = file.url;
+      }
+      if (isPlaying) {
+        audioRef.current.play().catch(e => console.error("Audio play failed", e));
+      } else {
+        audioRef.current.pause();
+      }
     } else {
       audioRef.current?.pause();
-      setIsPlaying(false);
     }
-  }, [file]);
+  }, [file, isPlaying]);
 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
     const timeUpdate = () => {
-      setProgress((audio.currentTime / audio.duration) * 100);
+      setProgress((audio.currentTime / audio.duration) * 100 || 0);
     };
     const ended = () => {
-      setIsPlaying(false);
       onEnded();
     };
 
@@ -204,23 +205,13 @@ function MusicPlayer({ file, onEnded }: { file: MusicFile | null; onEnded: () =>
     };
   }, [onEnded]);
 
-  const togglePlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
 
   if (!file) return null;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-sm border-t animate-in slide-in-from-bottom-5">
       <div className="container mx-auto flex items-center gap-4">
-        <Button size="icon" onClick={togglePlay}>
+        <Button size="icon" onClick={onTogglePlay}>
           {isPlaying ? <PauseCircle /> : <PlayCircle />}
         </Button>
         <div className="flex-grow">
@@ -239,6 +230,7 @@ export default function MusicPage() {
     const [loading, setLoading] = useState(true);
     const [isDeleting, startDeleteTransition] = useTransition();
     const [currentlyPlaying, setCurrentlyPlaying] = useState<MusicFile | null>(null);
+    const [isPlaying, setIsPlaying] = useState(false);
     const { toast } = useToast();
 
     const fetchMusic = useCallback(async () => {
@@ -278,19 +270,34 @@ export default function MusicPage() {
               await deleteObject(fileRef);
               toast({ title: 'Gelöscht', description: `Song "${fileName}" wurde gelöscht.` });
               fetchMusic();
+              if (currentlyPlaying?.path === filePath) {
+                  setCurrentlyPlaying(null);
+                  setIsPlaying(false);
+              }
           } catch(e: any) {
               toast({ variant: 'destructive', title: 'Fehler beim Löschen', description: e.message });
           }
       });
     };
+
+    const togglePlay = (file: MusicFile) => {
+        if (currentlyPlaying?.path === file.path) {
+            setIsPlaying(!isPlaying);
+        } else {
+            setCurrentlyPlaying(file);
+            setIsPlaying(true);
+        }
+    }
     
     const handlePlayNext = () => {
         if (!currentlyPlaying) return;
         const currentIndex = musicFiles.findIndex(f => f.path === currentlyPlaying.path);
         if (currentIndex > -1 && currentIndex < musicFiles.length - 1) {
             setCurrentlyPlaying(musicFiles[currentIndex + 1]);
+            setIsPlaying(true);
         } else {
-            setCurrentlyPlaying(null); // Stop at the end of the list
+            setCurrentlyPlaying(null);
+            setIsPlaying(false);
         }
     }
 
@@ -339,7 +346,7 @@ export default function MusicPage() {
                             musicFiles.map(file => (
                                 <TableRow key={file.path} className={currentlyPlaying?.path === file.path ? 'bg-blue-50' : ''}>
                                     <TableCell>
-                                        <Button size="icon" variant="ghost" className="gcp-icon-button" onClick={() => setCurrentlyPlaying(file)}>
+                                        <Button size="icon" variant="ghost" className="gcp-icon-button" onClick={() => togglePlay(file)}>
                                             {currentlyPlaying?.path === file.path && isPlaying ? <PauseCircle /> : <PlayCircle />}
                                         </Button>
                                     </TableCell>
@@ -378,8 +385,7 @@ export default function MusicPage() {
                     </TableBody>
                 </Table>
             </div>
-            <MusicPlayer file={currentlyPlaying} onEnded={handlePlayNext} />
+            <MusicPlayer file={currentlyPlaying} onEnded={handlePlayNext} isPlaying={isPlaying} onTogglePlay={() => setIsPlaying(!isPlaying)} />
         </div>
     );
 }
-
