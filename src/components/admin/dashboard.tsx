@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { 
@@ -429,7 +429,7 @@ function CampaignsManager({ initialNewsletters, initialCampaigns }: { initialNew
                 <div className="space-y-4">
                     <Card className="h-full flex flex-col">
                         <CardHeader>
-                            <CardTitle className="font-headline text-2xl font-bold">Live-Vorschau (Outlook)</CardTitle>
+                            <CardTitle className="font-headline text-2xl font-bold">Live-Vorschau (Outlook)</CardHeader>
                         </CardHeader>
                         <CardContent className="flex-grow flex flex-col p-2 pt-0">
                             <div className="p-4 border rounded-lg bg-background flex-grow flex flex-col">
