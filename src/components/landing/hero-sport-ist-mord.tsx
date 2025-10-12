@@ -58,12 +58,12 @@ export function HeroSportIstMord({ isRevealed, onReveal }: { isRevealed: boolean
                   <h1 className={`font-headline text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl ${isGlitching ? 'animate-glitch text-red-500' : ''}`}>
                     Dein Körper kann alles schaffen!
                   </h1>
-                   <p className="mx-auto max-w-[600px] text-white/80 md:text-xl/relaxed">
+                   <p className="mx-auto max-w-[600px] text-white/80 md:text-xl/relaxed text-balance">
                         Entfessle dein wahres Potenzial. Jeder Schweißtropfen bringt dich deinem Ziel näher. Bist du bereit?
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                       <Button size="lg" onClick={handleReveal} disabled={isGlitching} variant="secondary">
-                        Starte dein Training
+                        Ja, Training starten!
                       </Button>
                        <Button size="lg" onClick={handleReveal} disabled={isGlitching} variant="default">
                         Nein, Sport ist Mord!
