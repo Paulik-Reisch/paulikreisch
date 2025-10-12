@@ -11,7 +11,7 @@ const stops = [
   { name: "Letzte Hoffnung", description: "(Krankenhaus)", icon: Hospital },
   { name: "Paralleluniversum", description: "(Industriegebiet)", icon: Factory },
   { name: "Endstation Sehnsucht", description: "(Hauptbahnhof)", icon: HeartCrack },
-  { name: "Bermudadreieck", description: "Hier hat Ihr Handy zum letzten Mal Empfang.", icon: HelpCircle },
+  { name: "Bermudadreieck", description: "(Jobcenter)", icon: HelpCircle },
   { name: "Fegefeuer", description: "(Finanzamt)", icon: Drama },
 ];
 
@@ -28,7 +28,7 @@ export function BusStopNames() {
             </p>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {stops.map((stop, index) => (
                 <motion.div
                     key={index}
@@ -51,7 +51,32 @@ export function BusStopNames() {
                 </motion.div>
             ))}
         </div>
+        {/* Mobile View as Cards */}
+        <div className="grid md:hidden grid-cols-1 sm:grid-cols-2 gap-4 max-w-5xl mx-auto">
+            {stops.map((stop, index) => (
+                 <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{ duration: 0.5, delay: index * 0.05 }}
+                >
+                    <Card>
+                        <CardHeader className="flex flex-row items-center gap-4">
+                            <div className="p-3 bg-primary/10 rounded-full">
+                                <stop.icon className="h-6 w-6 text-primary" />
+                            </div>
+                            <div>
+                                <CardTitle className="font-headline text-base">{stop.name}</CardTitle>
+                                <CardDescription>{stop.description}</CardDescription>
+                            </div>
+                        </CardHeader>
+                    </Card>
+                </motion.div>
+            ))}
+        </div>
       </div>
     </section>
   );
 }
+
