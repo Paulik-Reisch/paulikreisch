@@ -3,26 +3,27 @@
 
 import { useState } from "react";
 import { Button } from '@/components/ui/button';
-import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from "@/lib/utils";
 import { Zap } from "lucide-react";
 
-export function HeroSportIstMord() {
-  const [isRevealed, setIsRevealed] = useState(false);
+export function HeroSportIstMord({ isRevealed, onReveal }: { isRevealed: boolean, onReveal: () => void }) {
   const [isGlitching, setIsGlitching] = useState(false);
 
   const handleReveal = () => {
     setIsGlitching(true);
     setTimeout(() => {
       setIsGlitching(false);
-      setIsRevealed(true);
+      onReveal();
     }, 300); // Duration of the glitch animation
   };
 
   return (
-    <section className={cn("w-full py-20 md:py-32 lg:py-40 transition-colors duration-500", isRevealed ? "bg-red-900 text-gray-50" : "bg-green-500 text-white")}>
+    <section className={cn(
+        "w-full transition-colors duration-500 flex items-center", 
+        isRevealed ? "bg-red-900 text-gray-50 py-20 md:py-32 lg:py-40" : "bg-green-500 text-white min-h-[calc(100vh-56px)]"
+    )}>
         <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-6 text-center">
             <AnimatePresence mode="wait">
@@ -41,7 +42,7 @@ export function HeroSportIstMord() {
                     </p>
                     <div className="flex flex-col gap-2 min-[400px]:flex-row pt-3 justify-center">
                        <Link href="/buchhandlung-paulik-reisch">
-                         <Button size="lg" variant="destructive">Berichte aus dem Sportunterricht ansehen</Button>
+                         <Button size="lg" variant="destructive" className="pt-3">Berichte aus dem Sportunterricht ansehen</Button>
                        </Link>
                     </div>
                  </motion.div>
