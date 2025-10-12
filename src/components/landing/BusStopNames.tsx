@@ -12,10 +12,10 @@ const stops = [
   { name: "Paralleluniversum", description: "(Industriegebiet)", icon: Factory },
   { name: "Endstation Sehnsucht", description: "(Hauptbahnhof)", icon: HeartCrack },
   { name: "Bermudadreieck", description: "(Wo Fahrpläne verschwinden)", icon: HelpCircle },
+  { name: "Fegefeuer", description: "(Finanzamt)", icon: MapPin },
   { name: "Kaufrausch-Klippe", description: "(Einkaufszentrum)", icon: ShoppingCart },
   { name: "Fata Morgana", description: "(Neubaugebiet)", icon: Drama },
   { name: "Tal der Ahnungslosen", description: "(Universität)", icon: Briefcase },
-  { name: "Fegefeuer", description: "(Finanzamt)", icon: MapPin },
 ];
 
 export function BusStopNames() {
@@ -38,7 +38,7 @@ export function BusStopNames() {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, amount: 0.3 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    transition={{ duration: 0.5, delay: index * 0.05 }}
                 >
                     <Card className="h-full">
                         <CardHeader className="flex flex-row items-center gap-4">
