@@ -5,6 +5,7 @@ import { DeathDevices } from "@/components/landing/DeathDevices";
 import { DodgeballGuide } from "@/components/landing/DodgeballGuide";
 import { Soundboard } from "@/components/landing/Soundboard";
 import { QuotesGallery } from "@/components/landing/QuotesGallery";
+import { SportVerweigererQuiz } from "@/components/landing/SportVerweigererQuiz";
 
 export default function SportIstMordPage() {
   return (
@@ -16,6 +17,7 @@ export default function SportIstMordPage() {
         <DodgeballGuide />
         <Soundboard />
         <QuotesGallery />
+        <SportVerweigererQuiz />
       </main>
       <Footer />
     </div>
