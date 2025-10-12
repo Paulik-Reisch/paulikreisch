@@ -22,16 +22,19 @@ const stats = [
 
 export function BusStatistics() {
     return (
-        <section className="w-full py-8 md:py-12 bg-background">
+        <section className="w-full py-8 md:py-12 bg-muted/40">
             <div className="container px-4 md:px-6">
                 <div className="flex flex-col items-center space-y-4 text-center">
+                    <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">
+                        Statistiken, die Sie nicht kannten
+                    </h2>
                     <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-                        Wissenschaftlich bewiesen durch das Institut für gefühlte Wahrheiten.
+                        Fakten, die das wahre Ausmaß des täglichen Kampfes belegen.
                     </p>
                 </div>
                  <div className="mx-auto grid max-w-5xl items-stretch gap-6 py-12 lg:grid-cols-3 lg:gap-8">
                     {stats.map((stat, index) => (
-                         <Card key={index} className="flex flex-col text-center items-center justify-center p-6 bg-muted/40">
+                         <Card key={index} className="flex flex-col text-center items-center justify-center p-6 bg-background">
                              <div className="p-3 bg-primary/10 rounded-full mb-4">
                                 <stat.icon className="h-8 w-8 text-primary" />
                             </div>

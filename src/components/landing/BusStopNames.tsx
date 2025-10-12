@@ -10,7 +10,7 @@ const stops = [
 
 export function BusStopNames() {
   return (
-    <section className="w-full py-8 md:py-12 bg-gray-100 dark:bg-gray-800">
+    <section className="w-full py-8 md:py-12 bg-background">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center space-y-4 text-center">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">
@@ -22,7 +22,7 @@ export function BusStopNames() {
         </div>
         <div className="max-w-4xl mx-auto mt-12 grid gap-8 md:grid-cols-3">
             {stops.map((stop, index) => (
-                <Card key={index} className="flex flex-col text-center items-center p-6 bg-background">
+                <Card key={index} className="flex flex-col text-center items-center p-6 bg-muted/20">
                     <div className="p-3 bg-primary/10 rounded-full mb-4">
                         <stop.icon className="h-8 w-8 text-primary" />
                     </div>
