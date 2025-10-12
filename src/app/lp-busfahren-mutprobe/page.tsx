@@ -6,7 +6,6 @@ import { BusRidersGallery } from "@/components/landing/BusRidersGallery";
 import { DelayCalculator } from "@/components/landing/DelayCalculator";
 import { BusStopNames } from "@/components/landing/BusStopNames";
 import { BusCTA } from "@/components/landing/BusCTA";
-import { BusAnatomyChart } from "@/components/landing/BusAnatomyChart";
 import { BusStatistics } from "@/components/landing/BusStatistics";
 
 export default function BusfahrenMutprobePage() {
@@ -16,7 +15,6 @@ export default function BusfahrenMutprobePage() {
       <main className="flex-1">
         <HeroBusfahrenMutprobe />
         <BusRidersGallery />
-        <BusAnatomyChart />
         <DelayCalculator />
         <BusStopNames />
         <BusStatistics />
