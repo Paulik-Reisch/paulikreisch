@@ -62,20 +62,17 @@ export function SportVerweigererQuiz() {
   const [currentStep, setCurrentStep] = useState(0);
   const [scores, setScores] = useState({ kreativ: 0, krank: 0, taktisch: 0 });
   const [isFinished, setIsFinished] = useState(false);
-  const [answers, setAnswers] = useState<{[key: number]: string}>({});
-
-  const handleAnswer = (value: string) => {
-    setAnswers(prev => ({...prev, [currentStep]: value}));
-  };
+  const [selection, setSelection] = useState<string | null>(null);
 
   const handleNext = () => {
-    const answer = answers[currentStep];
     const questionType = questions[currentStep].type;
 
-    if (answer === 'yes') {
+    if (selection === 'yes') {
       setScores(s => ({ ...s, [questionType]: s[questionType as keyof typeof scores] + 1 }));
     }
     
+    setSelection(null); // Reset selection for the next question
+
     if (currentStep < questions.length - 1) {
       setCurrentStep(s => s + 1);
     } else {
@@ -86,7 +83,7 @@ export function SportVerweigererQuiz() {
   const resetQuiz = () => {
     setCurrentStep(0);
     setScores({ kreativ: 0, krank: 0, taktisch: 0 });
-    setAnswers({});
+    setSelection(null);
     setIsFinished(false);
   }
 
@@ -140,7 +137,7 @@ export function SportVerweigererQuiz() {
                             </AnimatePresence>
                         </div>
                         <div className="flex justify-end">
-                            <RadioGroup onValueChange={handleAnswer} value={answers[currentStep]} className="flex justify-end gap-8 py-2">
+                            <RadioGroup onValueChange={setSelection} value={selection || ""} className="flex justify-end gap-8 py-2">
                                 <div className="flex items-center space-x-2">
                                     <RadioGroupItem value="yes" id={`q${currentStep}-yes`} />
                                     <Label htmlFor={`q${currentStep}-yes`} className="text-sm">Ja</Label>
@@ -152,7 +149,7 @@ export function SportVerweigererQuiz() {
                             </RadioGroup>
                         </div>
                          <div className="text-right mt-4">
-                            <Button onClick={handleNext} disabled={!answers[currentStep]} size="sm">
+                            <Button onClick={handleNext} disabled={!selection} size="sm">
                                 {currentStep < questions.length - 1 ? "Nächste Frage" : "Auswerten"}
                                 <ArrowRight className="ml-2 h-4 w-4"/>
                             </Button>
