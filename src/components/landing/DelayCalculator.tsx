@@ -4,9 +4,10 @@
 import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { ArrowRight, Bus, Clock } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const reasons = [
     "Ein Eichhörnchen hat ein Stromkabel durchgenagt.",
@@ -17,13 +18,19 @@ const reasons = [
     "Die Fahrgäste haben eine demokratische Abstimmung über die Route begonnen. Das Ergebnis wird in 3-5 Werktagen erwartet."
 ];
 
+const importanceLevels = [
+    { value: "egal", label: "Völlig egal", description: "(z.B. Treffen mit der Schwiegermutter)" },
+    { value: "wichtig", label: "Wichtig", description: "(z.B. Job-Interview, Klausur)" },
+    { value: "lebenswichtig", label: "Lebenswichtig", description: "(z.B. Herz-OP, eigener Hochzeitstermin)" }
+];
+
 export function DelayCalculator() {
-    const [importance, setImportance] = useState("");
+    const [importanceIndex, setImportanceIndex] = useState(1); // Default to "Wichtig"
     const [delay, setDelay] = useState<string | null>(null);
     const [reason, setReason] = useState<string | null>(null);
 
     const calculateDelay = () => {
-        if (!importance) return;
+        const importance = importanceLevels[importanceIndex].value;
 
         let calculatedDelay = 0;
         switch (importance) {
@@ -49,8 +56,14 @@ export function DelayCalculator() {
         }
     };
 
+    const handleSliderChange = (value: number[]) => {
+        setImportanceIndex(value[0]);
+    }
+
+    const currentImportance = importanceLevels[importanceIndex];
+
     return (
-        <section className="w-full py-8 md:py-12 bg-subtle-blue">
+        <section className="w-full py-8 md:py-12 bg-blue-100 dark:bg-blue-900/40">
             <div className="container px-4 md:px-6">
                 <div className="flex flex-col items-center space-y-4 text-center">
                     <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">
@@ -66,21 +79,25 @@ export function DelayCalculator() {
                         <CardDescription>Wie wichtig ist Ihr nächster Termin?</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
-                        <div className="flex flex-col sm:flex-row gap-4">
-                            <Select onValueChange={setImportance} value={importance}>
-                                <SelectTrigger className="flex-1">
-                                    <SelectValue placeholder="Wichtigkeit auswählen ..." />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="lebenswichtig">Lebenswichtig (z.B. Herz-OP, eigener Hochzeitstermin)</SelectItem>
-                                    <SelectItem value="wichtig">Wichtig (z.B. Job-Interview, Klausur)</SelectItem>
-                                    <SelectItem value="egal">Völlig egal (z.B. Treffen mit der Schwiegermutter)</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            <Button onClick={calculateDelay} disabled={!importance}>
+                         <div className="space-y-4">
+                            <Slider
+                                defaultValue={[1]}
+                                max={2}
+                                step={1}
+                                onValueChange={handleSliderChange}
+                            />
+                            <div className="text-center">
+                                <p className="font-semibold">{currentImportance.label}</p>
+                                <p className="text-xs text-muted-foreground">{currentImportance.description}</p>
+                            </div>
+                        </div>
+
+                        <div className="flex justify-center">
+                             <Button onClick={calculateDelay}>
                                 Verspätung berechnen <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
                         </div>
+                        
                         {delay && reason && (
                              <Alert>
                                 <Bus className="h-4 w-4" />
