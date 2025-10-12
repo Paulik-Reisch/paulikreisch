@@ -3,6 +3,7 @@
 "use client";
 
 import { useState, useEffect, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import Link from "next/link";
@@ -229,7 +230,7 @@ function generateEmailHTML(components: NewsletterComponent[], subject: string, p
                                     <p style="margin:0 0 8px 0;">Die satirische "Hallo Welt"-Bücherserie ist eine Idee und Kreation von Philipp Paulik (Autor), Maximilian Reisch (Autor), Luin Schiffbauer (Illustrator) und weiteren Mitwirkenden. Veröffentlicht und produziert durch Kindle Direct Publishing (KDP) der Amazon Distribution GmbH, Leipzig sowie ggf. weitere Verlags- und Produktionspartner.
                                     </p>
                                     <p style="margin:0 0 8px 0;">Du möchtest keine weiteren E‑Mails erhalten?
-                                    <a href="/nl/unsubscribe" target="_blank" style="color:#0A5EBF; text-decoration:underline;">Hier abmelden</a>.
+                                    <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" target="_blank" style="color:#0A5EBF; text-decoration:underline;">Hier abmelden</a>.
                                     </p>
                                     <p style="margin:0;">&copy; ${new Date().getFullYear()} Hallo Welt – Philipp Paulik & Maximilian Reisch</p>
                                 </td>
@@ -522,6 +523,7 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove, isLive }: { co
 function LiveStatusToggle({ id, isLive }: { id: string; isLive: boolean }) {
     const [state, formAction] = useActionState(toggleNewsletterLiveStatusAction, { success: false, error: null });
     const [isPending, startTransition] = useTransition();
+    const router = useRouter();
 
     const handleSubmit = (formData: FormData) => {
         startTransition(() => {
@@ -572,6 +574,7 @@ function LiveStatusToggle({ id, isLive }: { id: string; isLive: boolean }) {
 }
 
 export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter }) {
+  const router = useRouter();
   const [name, setName] = useState(newsletter.name);
   const [subject, setSubject] = useState(newsletter.subject);
   const [components, setComponents] = useState<NewsletterComponent[]>(newsletter.components);
@@ -612,11 +615,14 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
     if (liveState.success) {
       toast({ title: liveState.message, description: `Newsletter ist jetzt ${liveState.isLive ? 'live und gesperrt' : 'wieder ein Entwurf'}.` });
       setIsLive(liveState.isLive || false);
+      if (liveState.isLive) {
+          router.push('/admin');
+      }
     }
     if (liveState.error) {
       toast({ variant: "destructive", title: "Fehler", description: liveState.error });
     }
-  }, [liveState, toast]);
+  }, [liveState, toast, router]);
 
   const handleFormSubmit = (formData: FormData) => {
     if (isLive) return;
