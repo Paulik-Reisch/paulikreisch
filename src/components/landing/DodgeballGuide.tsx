@@ -30,7 +30,7 @@ const strategies = [
   },
   {
     title: "Der plötzliche Anfall",
-    description: "Simulieren Sie einen akuten Anfall von „Ball-Allergie“ mit dramatischem Niesen und Juckreiz, sobald sich ein Ball nähert. Niemand wirft auf einen Kranken. Meistens.",
+    description: "Simulieren Sie einen akuten Anfall von »Ball-Allergie« mit dramatischem Niesen und Juckreiz, sobald sich ein Ball nähert. Niemand wirft auf einen Kranken. Meistens.",
     icon: Rabbit,
   },
 ];
