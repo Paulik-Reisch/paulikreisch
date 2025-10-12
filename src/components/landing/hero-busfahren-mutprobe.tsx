@@ -25,7 +25,7 @@ export function HeroBusfahrenMutprobe() {
             <div className="flex flex-col items-center justify-center">
                 <div className="p-4 rounded-lg">
                      <Image
-                        src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/busfelipe.png?alt=media&token=b54b9952-6531-4c8b-9c93-6780eb91318a"
+                        src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/bus_header.png?alt=media&token=37a5a737-1cfb-4be8-b6dd-3a11d584abf9"
                         alt="Ein Müllhaufen, der einen Bus darstellt"
                         width={400}
                         height={400}
