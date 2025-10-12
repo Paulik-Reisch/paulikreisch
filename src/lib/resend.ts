@@ -1,6 +1,19 @@
 
+"use server";
+
 import "server-only";
 import { Resend } from 'resend';
+
+// Initialize Resend with the API key from environment variables
+const resendApiKey = process.env.RESEND_API_KEY;
+const audienceId = process.env.RESEND_AUDIENCE_ID;
+
+let resend: Resend | null = null;
+if (resendApiKey) {
+    resend = new Resend(resendApiKey);
+} else {
+    console.error("RESEND_API_KEY is not set. Resend functionality will be disabled.");
+}
 
 /**
  * Adds a contact to the configured Resend audience.
@@ -8,16 +21,11 @@ import { Resend } from 'resend';
  * @returns The result of the create contact operation.
  */
 export async function addContact(email: string) {
-    const resendApiKey = 're_AtS3M62A_Et3QRYdBd4R6v6gP3pd8tYZs';
-    const audienceId = '0489040e-eee0-4eb6-aeb1-6a0172ac3695';
-
-    if (!resendApiKey || !audienceId) {
+    if (!resend || !audienceId) {
         console.error("Resend is not configured. Missing RESEND_API_KEY or RESEND_AUDIENCE_ID.");
         throw new Error("Resend ist auf dem Server nicht konfiguriert.");
     }
     
-    const resend = new Resend(resendApiKey);
-
     try {
         const { data, error } = await resend.contacts.create({
             email,
@@ -49,15 +57,10 @@ export async function addContact(email: string) {
  * @returns The result of the send email operation.
  */
 export async function sendCampaign(subject: string, html: string) {
-    const resendApiKey = 're_AtS3M62A_Et3QRYdBd4R6v6gP3pd8tYZs';
-    const audienceId = '0489040e-eee0-4eb6-aeb1-6a0172ac3695';
-
-    if (!resendApiKey || !audienceId) {
+    if (!resend || !audienceId) {
         console.error("Resend is not configured. Missing RESEND_API_KEY or RESEND_AUDIENCE_ID.");
         throw new Error("Resend ist auf dem Server nicht konfiguriert.");
     }
-
-    const resend = new Resend(resendApiKey);
 
     try {
         const { data, error } = await resend.emails.send({
