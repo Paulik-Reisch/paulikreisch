@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect, useCallback, useTransition } from 'react';
@@ -382,9 +383,3 @@ export default function MusicPage() {
     );
 }
 
-export const metadata = {
-  robots: {
-    index: false,
-    follow: false,
-  },
-}
