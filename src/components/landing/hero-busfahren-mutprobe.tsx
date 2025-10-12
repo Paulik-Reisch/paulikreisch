@@ -2,6 +2,7 @@
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
+import { BusMusicPlayer } from './BusMusicPlayer';
 
 export function HeroBusfahrenMutprobe() {
   return (
@@ -23,7 +24,7 @@ export function HeroBusfahrenMutprobe() {
                     </Link>
                 </div>
             </div>
-            <div className="flex justify-center">
+            <div className="flex flex-col items-center justify-center">
                 <div className="p-4 rounded-lg">
                      <Image
                         src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/busfelipe.png?alt=media&token=b54b9952-6531-4c8b-9c93-6780eb91318a"
@@ -34,6 +35,10 @@ export function HeroBusfahrenMutprobe() {
                         data-ai-hint="stylized bus"
                     />
                 </div>
+                <BusMusicPlayer 
+                    src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/cancion.mp3?alt=media&token=2763b6b9-dda6-4579-aef3-127b94617eb6"
+                    title="El Sonido del Caos"
+                />
             </div>
         </div>
       </div>
