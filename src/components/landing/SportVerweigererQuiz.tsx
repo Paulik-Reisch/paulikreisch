@@ -41,17 +41,20 @@ const results = {
     kreativ: {
         title: "Der kreative Ausredenerfinder",
         description: "Deine Energie fließt nicht in Sprints, sondern in epische Geschichten über entführte Turnschuhe und spontane Familienfeiern. Du bist der Shakespeare des Sport-Schwänzens.",
-        icon: Wand2
+        icon: Wand2,
+        color: "text-purple-500",
     },
     krank: {
         title: "Der chronische Kränkler",
         description: "Dein Körper ist ein medizinisches Wunderwerk, das pünktlich zur Sportstunde seltene und exotische Leiden entwickelt. Deine Paradedisziplin ist das überzeugende Husten.",
-        icon: Stethoscope
+        icon: Stethoscope,
+        color: "text-red-500",
     },
     taktisch: {
         title: "Der taktische Unsichtbare",
         description: "Du bist der Ninja der Turnhalle. Du beherrschst die Kunst, anwesend und doch abwesend zu sein. Dein Motto: Wer sich nicht bewegt, wird nicht getroffen.",
-        icon: EyeOff
+        icon: EyeOff,
+        color: "text-blue-500",
     }
 }
 
@@ -95,7 +98,8 @@ export function SportVerweigererQuiz() {
           return {
             title: "Der sportliche Übermensch",
             description: "Moment mal... du hast alles verneint? Du scheinst Sport tatsächlich zu mögen. Wir sind schockiert, aber auch ein bisschen beeindruckt. Du bist eine Anomalie.",
-            icon: Trophy
+            icon: Trophy,
+            color: "text-green-500"
           }
       }
       const winnerType = finalScores[0][0] as keyof typeof results;
@@ -114,67 +118,72 @@ export function SportVerweigererQuiz() {
             </p>
         </div>
         <Card className="max-w-xl mx-auto mt-12 overflow-hidden shadow-lg">
-            <AnimatePresence mode="wait">
-                {!isFinished ? (
-                    <motion.div
-                        key={currentStep}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                    >
-                        <CardHeader>
-                            <CardTitle className="text-sm">Frage {currentStep + 1} von {questions.length}</CardTitle>
-                             <Progress value={progress} className="mt-2" />
-                        </CardHeader>
-                        <CardContent className="space-y-4 px-6 pb-6 text-left">
-                            <p className="font-medium text-balance min-h-[3rem]">{questions[currentStep].question}</p>
-                            <div className="flex justify-end">
-                                <RadioGroup onValueChange={handleAnswer} value={answers[currentStep]} className="flex justify-end gap-8 py-2">
-                                    <div className="flex items-center space-x-2">
-                                        <RadioGroupItem value="yes" id={`q${currentStep}-yes`} />
-                                        <Label htmlFor={`q${currentStep}-yes`} className="text-sm">Ja</Label>
-                                    </div>
-                                    <div className="flex items-center space-x-2">
-                                        <RadioGroupItem value="no" id={`q${currentStep}-no`} />
-                                        <Label htmlFor={`q${currentStep}-no`} className="text-sm">Nein</Label>
-                                    </div>
-                                </RadioGroup>
-                            </div>
-                             <div className="text-right mt-4">
-                                <Button onClick={handleNext} disabled={!answers[currentStep]} size="sm">
-                                    {currentStep < questions.length - 1 ? "Nächste Frage" : "Auswerten"}
-                                    <ArrowRight className="ml-2 h-4 w-4"/>
-                                </Button>
-                            </div>
-                        </CardContent>
-                    </motion.div>
-                ) : (
-                     <motion.div
-                        key="result"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5 }}
-                    >
-                        <CardHeader className="text-center">
-                            <CardTitle>Dein Ergebnis</CardTitle>
-                        </CardHeader>
-                         <CardContent className="text-center space-y-4 px-6 pb-6">
-                             <div className="flex flex-col items-center gap-4">
-                                 {React.createElement(getResult().icon, { className: `w-16 h-16 ${getResult().color}` })}
-                                 <div className='space-y-1'>
-                                    <h3 className="text-2xl font-bold font-headline">{getResult().title}</h3>
-                                    <p className="text-muted-foreground text-balance">{getResult().description}</p>
-                                 </div>
+            {!isFinished ? (
+                <>
+                    <CardHeader>
+                        <CardTitle className="text-sm">Frage {currentStep + 1} von {questions.length}</CardTitle>
+                         <Progress value={progress} className="mt-2" />
+                    </CardHeader>
+                    <CardContent className="space-y-4 px-6 pb-6 text-left">
+                        <div className="min-h-[3rem] flex items-center">
+                            <AnimatePresence mode="wait">
+                                <motion.p
+                                    key={currentStep}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="font-medium text-balance"
+                                >
+                                    {questions[currentStep].question}
+                                </motion.p>
+                            </AnimatePresence>
+                        </div>
+                        <div className="flex justify-end">
+                            <RadioGroup onValueChange={handleAnswer} value={answers[currentStep]} className="flex justify-end gap-8 py-2">
+                                <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="yes" id={`q${currentStep}-yes`} />
+                                    <Label htmlFor={`q${currentStep}-yes`} className="text-sm">Ja</Label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="no" id={`q${currentStep}-no`} />
+                                    <Label htmlFor={`q${currentStep}-no`} className="text-sm">Nein</Label>
+                                </div>
+                            </RadioGroup>
+                        </div>
+                         <div className="text-right mt-4">
+                            <Button onClick={handleNext} disabled={!answers[currentStep]} size="sm">
+                                {currentStep < questions.length - 1 ? "Nächste Frage" : "Auswerten"}
+                                <ArrowRight className="ml-2 h-4 w-4"/>
+                            </Button>
+                        </div>
+                    </CardContent>
+                </>
+            ) : (
+                <motion.div
+                    key="result"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    <CardHeader className="text-center">
+                        <CardTitle>Dein Ergebnis</CardTitle>
+                    </CardHeader>
+                     <CardContent className="text-center space-y-4 px-6 pb-6">
+                         <div className="flex flex-col items-center gap-4">
+                             {React.createElement(getResult().icon, { className: `w-16 h-16 ${getResult().color}` })}
+                             <div className='space-y-1'>
+                                <h3 className="text-2xl font-bold font-headline">{getResult().title}</h3>
+                                <p className="text-muted-foreground text-balance">{getResult().description}</p>
                              </div>
-                             <Button onClick={resetQuiz} size="sm" variant="outline" className="mt-6">
-                                 <RefreshCw className="mr-2 h-4 w-4"/>
-                                 Quiz neu starten
-                             </Button>
-                        </CardContent>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                         </div>
+                         <Button onClick={resetQuiz} size="sm" variant="outline" className="mt-6">
+                             <RefreshCw className="mr-2 h-4 w-4"/>
+                             Quiz neu starten
+                         </Button>
+                    </CardContent>
+                </motion.div>
+            )}
         </Card>
       </div>
     </section>
