@@ -15,7 +15,7 @@ const stats = [
     },
     {
         value: "3 Sek.",
-        label: "Zeitfenster zwischen 'Tür schließt' und 'Fahrer gibt Vollgas'.",
+        label: "Zeitfenster zwischen \"Tür schließt\" und \"Fahrer gibt Vollgas\".",
         icon: Clock
     }
 ]

@@ -2,7 +2,7 @@
 "use client";
 
 import React from "react";
-import { Hospital, Factory, AlertCircle, HelpCircle, Briefcase, HeartCrack, ShoppingCart, Drama, MapPin } from "lucide-react";
+import { Hospital, Factory, AlertCircle, HelpCircle, HeartCrack, MapPin, Drama, Briefcase, ShoppingCart } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { motion } from "framer-motion";
 
@@ -13,9 +13,6 @@ const stops = [
   { name: "Endstation Sehnsucht", description: "(Hauptbahnhof)", icon: HeartCrack },
   { name: "Bermudadreieck", description: "(Wo Fahrpläne verschwinden)", icon: HelpCircle },
   { name: "Fegefeuer", description: "(Finanzamt)", icon: MapPin },
-  { name: "Kaufrausch-Klippe", description: "(Einkaufszentrum)", icon: ShoppingCart },
-  { name: "Fata Morgana", description: "(Neubaugebiet)", icon: Drama },
-  { name: "Tal der Ahnungslosen", description: "(Universität)", icon: Briefcase },
 ];
 
 export function BusStopNames() {
