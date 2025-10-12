@@ -533,6 +533,18 @@ export async function deleteNewsletter(id: string, user: string) {
 
 
 // --- CAMPAIGNS ---
+export async function addMailToSendQueue(emails: { to: string[], message: { subject: string, html: string } }[]) {
+    const batch = writeBatch(db);
+    const mailCollectionRef = collection(db, "mail");
+
+    emails.forEach(emailData => {
+        const newMailRef = doc(mailCollectionRef);
+        batch.set(newMailRef, emailData);
+    });
+
+    await batch.commit();
+}
+
 export async function addCampaign(data: Omit<Campaign, 'id' | 'sentAt'>, user: string): Promise<string> {
     const campaignsCol = collection(db, 'campaigns');
     const docRef = await addDoc(campaignsCol, {
