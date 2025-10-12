@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { 
@@ -79,6 +79,12 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { cn } from "@/lib/utils";
 import { Switch } from "../ui/switch";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 
 function LeadsTable() {
@@ -371,6 +377,14 @@ function EmailChecker({ htmlContent }: { htmlContent: string | undefined }) {
                 results.push({ level: 'warning', message: 'Fehlender alt-Text bei Bild', details: 'Bilder sollten immer einen Alternativtext haben, falls sie nicht geladen werden.' });
             }
         });
+        
+        // Check for missing width/height on images
+        doc.querySelectorAll('img').forEach(img => {
+            if (!img.getAttribute('width') || !img.getAttribute('height')) {
+                results.push({ level: 'warning', message: 'Fehlende width/height-Attribute bei Bild', details: 'Outlook ignoriert oft CSS-Größen. Fügen Sie HTML-Attribute für `width` und `height` hinzu.'});
+            }
+        });
+
 
         // Check for cellpadding/cellspacing
         if (doc.querySelectorAll('table:not([cellpadding="0"])').length > 0 || doc.querySelectorAll('table:not([cellspacing="0"])').length > 0) {
