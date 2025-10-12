@@ -1,7 +1,8 @@
 
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Download } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
+import Link from 'next/link';
 
 export function HeroBusfahrenMutprobe() {
   return (
@@ -20,10 +21,12 @@ export function HeroBusfahrenMutprobe() {
         <p className="max-w-[700px] text-lg md:text-xl">
           Der Nahverkehr als moderner Gladiatorenkampf. Nur die Stärksten bekommen einen Sitzplatz – die anderen ein unvergessliches Erlebnis.
         </p>
-        <Button size="lg">
-          <Download className="mr-2" />
-          Survival Guide herunterladen
-        </Button>
+        <Link href="/buchhandlung-paulik-reisch">
+            <Button size="lg">
+              <BookOpen className="mr-2" />
+              Im Buch mehrere Survival-Tipps nachlesen
+            </Button>
+        </Link>
       </div>
     </section>
   );

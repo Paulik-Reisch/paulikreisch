@@ -4,7 +4,6 @@ import { Footer } from "@/components/landing/footer";
 import { HeroBusfahrenMutprobe } from "@/components/landing/hero-busfahren-mutprobe";
 import { BusRidersGallery } from "@/components/landing/BusRidersGallery";
 import { DelayCalculator } from "@/components/landing/DelayCalculator";
-import { BusStopNames } from "@/components/landing/BusStopNames";
 import { BusCTA } from "@/components/landing/BusCTA";
 import { BusStatistics } from "@/components/landing/BusStatistics";
 
@@ -16,7 +15,6 @@ export default function BusfahrenMutprobePage() {
         <HeroBusfahrenMutprobe />
         <BusRidersGallery />
         <DelayCalculator />
-        <BusStopNames />
         <BusStatistics />
         <BusCTA />
       </main>
