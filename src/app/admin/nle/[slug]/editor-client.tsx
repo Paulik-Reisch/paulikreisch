@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Save, ArrowLeft, Eye, Code, PlusCircle, Trash2, ArrowUp, ArrowDown, Type, Image as ImageIcon, Link as LinkIcon, AlignLeft, AlignCenter, AlignRight, Copy, Rows, Columns, Minus, GalleryHorizontal, Settings, Box, Radio } from "lucide-react";
+import { Loader2, Save, ArrowLeft, Eye, Code, PlusCircle, Trash2, ArrowUp, ArrowDown, Type, Image as ImageIcon, Link as LinkIcon, AlignLeft, AlignCenter, AlignRight, Copy, Rows, Columns, Minus, GalleryHorizontal, Settings, Box, Radio, AlertTriangle } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Accordion,
@@ -21,6 +21,17 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import {
   Select,
   SelectContent,
@@ -512,35 +523,51 @@ function LiveStatusToggle({ id, isLive }: { id: string; isLive: boolean }) {
     const [state, formAction] = useActionState(toggleNewsletterLiveStatusAction, { success: false, error: null });
     const [isPending, startTransition] = useTransition();
 
-    const handleToggle = (checked: boolean) => {
+    const handleSubmit = (formData: FormData) => {
         startTransition(() => {
-            const formData = new FormData();
-            formData.set('id', id);
-            formData.set('isLive', String(checked));
             formAction(formData);
         });
     }
 
     return (
-        <form action={formAction}>
-            <input type="hidden" name="id" value={id} />
-            <input type="hidden" name="isLive" value={String(!isLive)} />
-            <div className="flex items-center justify-between rounded-lg border p-3 shadow-sm bg-destructive/10 border-destructive/50">
-                <div className="space-y-0.5">
-                    <Label className="font-bold text-destructive">Live schalten</Label>
-                    <p className="text-xs text-destructive/80">
-                        Sperrt den Newsletter für Bearbeitungen. Nur aktivieren, wenn die Kampagne versendet wurde.
-                    </p>
+        <AlertDialog>
+            <AlertDialogTrigger asChild>
+                 <div className="flex items-center justify-between rounded-lg border p-3 shadow-sm bg-destructive/10 border-destructive/50">
+                    <div className="space-y-0.5">
+                        <Label className="font-bold text-destructive">Live schalten</Label>
+                        <p className="text-xs text-destructive/80">
+                           Sperrt den Newsletter für Bearbeitungen. Nur aktivieren, wenn die Kampagne versendet wurde.
+                        </p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        {isPending && <Loader2 className="h-4 w-4 animate-spin text-destructive" />}
+                        <Switch 
+                            checked={isLive} 
+                            disabled={isPending || isLive}
+                        />
+                    </div>
                 </div>
-                <button type="submit" disabled={isPending}>
-                     <Switch 
-                        checked={isLive} 
-                        // The onCheckedChange is now handled by the form submission
-                        disabled={isPending}
-                    />
-                </button>
-            </div>
-        </form>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <form action={handleSubmit}>
+                    <input type="hidden" name="id" value={id} />
+                    <input type="hidden" name="isLive" value={String(!isLive)} />
+                    <AlertDialogHeader>
+                        <AlertDialogTitle className="flex items-center gap-2"><AlertTriangle/>Sind Sie absolut sicher?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Wenn Sie diesen Newsletter live schalten, wird er für jegliche Bearbeitungen gesperrt. Diese Aktion ist notwendig, um die Integrität der versendeten E-Mail und ihrer öffentlichen Web-Vorschau zu gewährleisten. Sie können den Status später wieder auf "Entwurf" zurücksetzen.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+                        <AlertDialogAction type="submit" disabled={isPending}>
+                            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Ja, live schalten
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </form>
+            </AlertDialogContent>
+        </AlertDialog>
     );
 }
 
@@ -779,6 +806,8 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
     </div>
   );
 }
+
+    
 
     
 

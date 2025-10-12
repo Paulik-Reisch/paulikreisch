@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
@@ -38,7 +39,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Loader2, RefreshCw, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus, History, Flame, Upload, MessageSquareQuote, ToggleLeft, ToggleRight, BookOpen, ArrowUpRight, DatabaseZap, Sparkles, CheckCircle, ShieldAlert, AlertTriangle } from "lucide-react";
+import { Loader2, RefreshCw, VenetianMask, FileText, PlusCircle, Trash2, Edit, FilePlus, Mail, Copy, Users, Tag, Send, Book, LayoutDashboard, ArrowRight, Newspaper, Search, FilterX, CopyPlus, History, Flame, Upload, MessageSquareQuote, ToggleLeft, ToggleRight, BookOpen, ArrowUpRight, DatabaseZap, Sparkles, CheckCircle, ShieldAlert, AlertTriangle, Radio } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -287,6 +288,7 @@ export function NewsletterManager({ initialNewsletters, onTabChange }: { initial
                         <TableRow>
                             <TableHead>Name</TableHead>
                             <TableHead>Betreff</TableHead>
+                            <TableHead>Status</TableHead>
                             <TableHead>Zuletzt aktualisiert</TableHead>
                             <TableHead className="text-right">Aktionen</TableHead>
                         </TableRow>
@@ -294,7 +296,7 @@ export function NewsletterManager({ initialNewsletters, onTabChange }: { initial
                     <TableBody>
                         {newsletters.length === 0 ? (
                              <TableRow>
-                                <TableCell colSpan={4} className="text-center py-12 text-muted-foreground">
+                                <TableCell colSpan={5} className="text-center py-12 text-muted-foreground">
                                     <Mail className="mx-auto h-8 w-8 mb-2" />
                                     Keine Newsletter gefunden.
                                 </TableCell>
@@ -304,6 +306,11 @@ export function NewsletterManager({ initialNewsletters, onTabChange }: { initial
                                 <TableRow key={newsletter.id}>
                                     <TableCell className="font-medium">{newsletter.name}</TableCell>
                                     <TableCell className="text-muted-foreground">{newsletter.subject}</TableCell>
+                                    <TableCell>
+                                        <Badge variant={newsletter.isLive ? "destructive" : "secondary"}>
+                                            {newsletter.isLive ? <div className="flex items-center gap-1.5"><Radio className="h-3 w-3" />Live</div> : "Entwurf"}
+                                        </Badge>
+                                    </TableCell>
                                     <TableCell className="text-muted-foreground">
                                         {newsletter.lastUpdated ? format(new Date(newsletter.lastUpdated), "dd.MM.yyyy HH:mm", { locale: de }) : 'N/A'}
                                     </TableCell>
@@ -311,7 +318,7 @@ export function NewsletterManager({ initialNewsletters, onTabChange }: { initial
                                         <div className="flex gap-2 justify-end">
                                              <AlertDialog>
                                                 <AlertDialogTrigger asChild>
-                                                    <Button size="sm" variant="ghost" title="Diesen Newsletter als Vorlage verwenden und duplizieren">
+                                                    <Button size="sm" variant="ghost" title="Diesen Newsletter als Vorlage verwenden und duplizieren" disabled={newsletter.isLive}>
                                                         <CopyPlus className="h-4 w-4" />
                                                     </Button>
                                                 </AlertDialogTrigger>
@@ -335,13 +342,13 @@ export function NewsletterManager({ initialNewsletters, onTabChange }: { initial
                                                 <Copy className="h-4 w-4" />
                                             </Button>
                                             <Link href={`/admin/nle/${newsletter.id}`} title="Newsletter bearbeiten">
-                                                <Button size="sm" variant="outline">
+                                                <Button size="sm" variant="outline" disabled={newsletter.isLive}>
                                                     <Edit className="h-4 w-4" />
                                                 </Button>
                                             </Link>
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild>
-                                                    <Button size="sm" variant="destructive" title="Newsletter löschen">
+                                                    <Button size="sm" variant="destructive" title="Newsletter löschen" disabled={newsletter.isLive}>
                                                         <Trash2 className="h-4 w-4" />
                                                     </Button>
                                                 </AlertDialogTrigger>
@@ -999,3 +1006,5 @@ export function AdminDashboard({ defaultTab = "übersicht" }: { defaultTab?: str
         </Tabs>
     )
 }
+
+    
