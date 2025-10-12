@@ -1,12 +1,12 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Percent, Clock, Cigarette } from "lucide-react"
+import { Percent, Clock, Cigarette, AlertCircle } from "lucide-react"
 
 const stats = [
     {
         value: "98 %",
         label: "aller Haltewunsch-Knöpfe sind Placebos.",
-        icon: Percent
+        icon: AlertCircle
     },
     {
         value: "100 %",
@@ -15,7 +15,7 @@ const stats = [
     },
     {
         value: "3 Sek.",
-        label: "Zeitfenster zwischen \"Tür schließt\" und \"Fahrer gibt Vollgas\".",
+        label: "Zeitfenster zwischen 'Tür schließt' und 'Fahrer gibt Vollgas'.",
         icon: Clock
     }
 ]
