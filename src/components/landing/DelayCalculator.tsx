@@ -15,7 +15,10 @@ const reasons = [
     "Plötzlicher Formel-1-Grand-Prix auf Ihrer Route.",
     "Der Bus hat entschieden, heute als U-Boot zu arbeiten. Die Tauchfahrt dauert an.",
     "Gravitationsanomalie. Der Bus ist derzeit 2 cm über dem Boden und hat keine Traktion.",
-    "Die Fahrgäste haben eine demokratische Abstimmung über die Route begonnen. Das Ergebnis wird in 3-5 Werktagen erwartet."
+    "Die Fahrgäste haben eine demokratische Abstimmung über die Route begonnen. Das Ergebnis wird in 3-5 Werktagen erwartet.",
+    "Der Busfahrer hat eine Wette verloren und muss die gesamte Strecke im Rückwärtsgang fahren.",
+    "Eine Herde philosophierender Kühe blockiert die Straße und diskutiert den Sinn des Lebens.",
+    "Die Haltestellen sind heute schüchtern und haben sich hinter Bäumen versteckt."
 ];
 
 const importanceLevels = [
