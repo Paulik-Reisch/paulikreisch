@@ -1,7 +1,6 @@
 
-import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { BookOpen } from 'lucide-react';
+import { BookOpen, Bus } from 'lucide-react';
 import Link from 'next/link';
 
 export function HeroBusfahrenMutprobe() {
@@ -25,15 +24,8 @@ export function HeroBusfahrenMutprobe() {
                 </div>
             </div>
             <div className="flex justify-center">
-                <div className="bg-white p-4 rounded-lg shadow-2xl border transform-gpu rotate-3 transition-transform duration-300 hover:rotate-0 hover:scale-105">
-                     <Image
-                      alt="Platzhalterbild für eine Tasse"
-                      className="rounded-md"
-                      data-ai-hint="funny bus"
-                      height={400}
-                      width={400}
-                      src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/bustest.png?alt=media&token=3643e684-5103-4d50-8956-2187e9ec626d"
-                    />
+                <div className="p-4 rounded-lg">
+                     <Bus className="w-48 h-48 md:w-64 md:h-64 text-muted-foreground/50" />
                 </div>
             </div>
         </div>
