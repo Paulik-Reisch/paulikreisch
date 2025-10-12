@@ -57,7 +57,7 @@ export async function sendCampaign(subject: string, html: string) {
     try {
         const { data, error } = await resend.emails.send({
             from: 'Hallo Welt <hallo-welt@paulik-reisch.de>',
-            to: [audienceId], // Send to the entire audience
+            to: audienceId, // Send to the entire audience ID directly
             subject: subject,
             html: html,
         });
