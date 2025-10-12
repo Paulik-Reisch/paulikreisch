@@ -65,7 +65,7 @@ export function HeroSportIstMord({ isRevealed, onReveal }: { isRevealed: boolean
                       <Button size="lg" onClick={handleReveal} disabled={isGlitching} variant="secondary">
                         Starte dein Training
                       </Button>
-                       <Button size="lg" onClick={handleReveal} disabled={isGlitching} variant="outline" className="text-white border-white/50 hover:bg-white/10 hover:text-white">
+                       <Button size="lg" onClick={handleReveal} disabled={isGlitching} variant="default">
                         Nein, Sport ist Mord!
                       </Button>
                   </div>
@@ -77,4 +77,3 @@ export function HeroSportIstMord({ isRevealed, onReveal }: { isRevealed: boolean
     </section>
   );
 }
-
