@@ -1,4 +1,5 @@
 
+
 "use server";
 
 import { z } from "zod";
@@ -8,6 +9,7 @@ import {
   addNewsletter,
   duplicateNewsletter,
   getAdminCredentials,
+  getNewsletter,
   updateLegalPage,
   addPalabrota,
   updatePalabrota,
@@ -21,6 +23,7 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { encrypt, getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
+import { sendCampaign } from "@/lib/resend";
 
 
 const LoginSchema = z.object({
@@ -83,6 +86,7 @@ export type AdminNewsletterState = {
   error?: string | null;
   message?: string;
   newNewsletterId?: string;
+  isLive?: boolean;
 };
 
 const initialNewsletterState: AdminNewsletterState = { success: false, error: null };
@@ -222,6 +226,39 @@ export async function duplicateNewsletterAction(
     }
 }
 
+const ToggleLiveStatusSchema = z.object({
+  id: z.string(),
+  isLive: z.string(),
+});
+
+export async function toggleNewsletterLiveStatusAction(
+    prevState: AdminNewsletterState,
+    formData: FormData
+): Promise<AdminNewsletterState> {
+    const session = await getSession();
+    if (!session) {
+      return { success: false, error: "Nicht authentifiziert" };
+    }
+
+    const validatedFields = ToggleLiveStatusSchema.safeParse(Object.fromEntries(formData.entries()));
+    if (!validatedFields.success) {
+        return { success: false, error: "Ungültige Eingabe." };
+    }
+    
+    const { id, isLive } = validatedFields.data;
+    const newIsLive = isLive === 'true';
+
+    try {
+        await updateNewsletter(id, { isLive: newIsLive }, session.user.id);
+        revalidatePath(`/admin/nle/${id}`);
+        revalidatePath('/admin');
+        const message = newIsLive ? "Newsletter ist jetzt LIVE" : "Newsletter ist wieder ein Entwurf";
+        return { success: true, message, isLive: newIsLive };
+    } catch (e) {
+        const error = e as Error;
+        return { success: false, error: "Fehler beim Ändern des Status: " + error.message };
+    }
+}
 
 // Legal Page Actions
 const UpdateLegalPageSchema = z.object({

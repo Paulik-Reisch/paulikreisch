@@ -1,4 +1,5 @@
 
+
 import { app } from "@/app/firebase";
 import { 
     getFirestore, 
@@ -64,6 +65,7 @@ export interface Newsletter {
     content: string; // Storing the final HTML
     lastUpdated: string;
     useWrapper?: boolean;
+    isLive?: boolean;
 }
 
 export interface Product {
@@ -361,6 +363,7 @@ export async function getNewsletters(): Promise<Newsletter[]> {
             content: data.content || '',
             lastUpdated: (data.lastUpdated as Timestamp).toDate().toISOString(),
             useWrapper: data.useWrapper !== false, // default to true
+            isLive: data.isLive === true, // default to false
         } as Newsletter;
     });
 }
@@ -379,6 +382,7 @@ export async function getNewsletter(id: string): Promise<Newsletter | null> {
             content: data.content || '',
             lastUpdated: (data.lastUpdated as Timestamp).toDate().toISOString(),
             useWrapper: data.useWrapper !== false, // default to true
+            isLive: data.isLive === true, // default to false
         } as Newsletter;
     } else {
         return null;
@@ -393,6 +397,7 @@ export async function addNewsletter(data: { name: string; subject: string }, use
         content: ``, // Start with empty content
         lastUpdated: Timestamp.now(),
         useWrapper: true,
+        isLive: false,
     });
     await addLog(user, 'Newsletter erstellt', `Name: ${data.name}`);
     return docRef.id;
@@ -414,6 +419,7 @@ export async function duplicateNewsletter(id: string, user: string): Promise<str
         content: originalNewsletter.content,
         lastUpdated: Timestamp.now(),
         useWrapper: originalNewsletter.useWrapper,
+        isLive: false, // Duplicates are always drafts
     });
     
     await addLog(user, 'Newsletter dupliziert', `Neue Kopie von '${originalNewsletter.name}'`);

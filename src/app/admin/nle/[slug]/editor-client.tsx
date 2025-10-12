@@ -2,18 +2,18 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useTransition } from "react";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import Link from "next/link";
 import { Newsletter, NewsletterComponent } from "@/lib/firestore";
-import { updateNewsletterAction } from "@/app/admin/actions";
+import { updateNewsletterAction, toggleNewsletterLiveStatusAction } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Save, ArrowLeft, Eye, Code, PlusCircle, Trash2, ArrowUp, ArrowDown, Type, Image as ImageIcon, Link as LinkIcon, AlignLeft, AlignCenter, AlignRight, Copy, Rows, Columns, Minus, GalleryHorizontal, Settings, Box } from "lucide-react";
+import { Loader2, Save, ArrowLeft, Eye, Code, PlusCircle, Trash2, ArrowUp, ArrowDown, Type, Image as ImageIcon, Link as LinkIcon, AlignLeft, AlignCenter, AlignRight, Copy, Rows, Columns, Minus, GalleryHorizontal, Settings, Box, Radio } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Accordion,
@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/select";
 import { CodeEditor } from "@/components/admin/code-editor";
 import { Switch } from "@/components/ui/switch";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 
 function generateComponentHTML(component: NewsletterComponent): string {
@@ -240,13 +241,14 @@ type EditorState = {
   success: boolean;
   error: string | null;
   message?: string;
+  isLive?: boolean;
 };
 const initialEditorState: EditorState = { success: false, error: null };
 
-function SubmitButton() {
+function SubmitButton({ isLive }: { isLive: boolean }) {
     const { pending } = useFormStatus();
     return (
-        <Button type="submit" disabled={pending} className="w-full">
+        <Button type="submit" disabled={pending || isLive} className="w-full">
             {pending ? (
                 <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -262,7 +264,7 @@ function SubmitButton() {
     )
 }
 
-function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component: NewsletterComponent, onUpdate: (id: string, props: any) => void, onDelete: (id: string) => void, onMove: (id: string, direction: 'up' | 'down') => void }) {
+function ComponentEditor({ component, onUpdate, onDelete, onMove, isLive }: { component: NewsletterComponent, onUpdate: (id: string, props: any) => void, onDelete: (id: string) => void, onMove: (id: string, direction: 'up' | 'down') => void, isLive: boolean }) {
     
     const updateProp = (propName: string, value: string) => {
         onUpdate(component.id, { ...component.props, [propName]: value });
@@ -278,6 +280,7 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component:
                 onChange={(e) => updateProp(propName, e.target.value)}
                 className="h-8"
                 placeholder={placeholder}
+                disabled={isLive}
             />
         </div>
     );
@@ -291,6 +294,7 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component:
                 onChange={(e) => updateProp(propName, e.target.value)}
                 className="text-xs font-mono"
                 rows={rows}
+                disabled={isLive}
             />
         </div>
     );
@@ -300,7 +304,7 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component:
             <Label className="text-xs">Ausrichtung</Label>
             <div className="flex gap-1 mt-1">
                 {(['left', 'center', 'right'] as const).map(align => (
-                     <Button key={align} size="icon" variant={component.props.alignment === align ? "secondary" : "outline"} className="h-8 w-8" onClick={() => updateProp('alignment', align)}>
+                     <Button key={align} size="icon" variant={component.props.alignment === align ? "secondary" : "outline"} className="h-8 w-8" onClick={() => updateProp('alignment', align)} disabled={isLive}>
                         {align === 'left' && <AlignLeft className="h-4 w-4" />}
                         {align === 'center' && <AlignCenter className="h-4 w-4" />}
                         {align === 'right' && <AlignRight className="h-4 w-4" />}
@@ -319,6 +323,7 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component:
                 placeholder={defaultSize}
                 onChange={(e) => updateProp('fontSize', e.target.value)}
                 className="h-8"
+                disabled={isLive}
             />
         </div>
     );
@@ -333,8 +338,9 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component:
                     placeholder={defaultValue}
                     onChange={(e) => updateProp(propName, e.target.value)}
                     className="h-8"
+                    disabled={isLive}
                 />
-                <Input type="color" value={component.props[propName] || defaultValue} onChange={e => updateProp(propName, e.target.value)} className="w-8 h-8 p-1"/>
+                <Input type="color" value={component.props[propName] || defaultValue} onChange={e => updateProp(propName, e.target.value)} className="w-8 h-8 p-1" disabled={isLive}/>
             </div>
         </div>
     );
@@ -389,12 +395,12 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component:
                         {renderColorInput('color', 'Farbe', '#cccccc')}
                         <div className="flex-1">
                             <Label htmlFor={`${component.id}-thickness`} className="text-xs">Dicke (px)</Label>
-                            <Input id={`${component.id}-thickness`} type="number" value={component.props.thickness || '1'} onChange={(e) => updateProp('thickness', e.target.value)} className="h-8"/>
+                            <Input id={`${component.id}-thickness`} type="number" value={component.props.thickness || '1'} onChange={(e) => updateProp('thickness', e.target.value)} className="h-8" disabled={isLive}/>
                         </div>
                     </div>
                      <div className="flex-1">
                         <Label htmlFor={`${component.id}-style`} className="text-xs">Stil</Label>
-                         <Select onValueChange={(v) => updateProp('style', v)} defaultValue={component.props.style || 'solid'}>
+                         <Select onValueChange={(v) => updateProp('style', v)} defaultValue={component.props.style || 'solid'} disabled={isLive}>
                             <SelectTrigger className="h-8">
                                 <SelectValue />
                             </SelectTrigger>
@@ -407,7 +413,7 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component:
                     </div>
                     <div className="flex-1">
                         <Label htmlFor={`${component.id}-padding`} className="text-xs">Vertikaler Abstand (px)</Label>
-                        <Input id={`${component.id}-padding`} type="number" value={component.props.padding || '10'} onChange={(e) => updateProp('padding', e.target.value)} className="h-8"/>
+                        <Input id={`${component.id}-padding`} type="number" value={component.props.padding || '10'} onChange={(e) => updateProp('padding', e.target.value)} className="h-8" disabled={isLive}/>
                     </div>
                 </div>
             );
@@ -415,7 +421,7 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component:
                 <div className="space-y-4">
                      <div className="flex-1">
                         <Label htmlFor={`${component.id}-height`} className="text-xs">Höhe (px)</Label>
-                        <Input id={`${component.id}-height`} type="number" value={component.props.height || '20'} onChange={(e) => updateProp('height', e.target.value)} className="h-8"/>
+                        <Input id={`${component.id}-height`} type="number" value={component.props.height || '20'} onChange={(e) => updateProp('height', e.target.value)} className="h-8" disabled={isLive}/>
                     </div>
                 </div>
             );
@@ -432,7 +438,7 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component:
                     {renderTextarea('text', 'Text', 6)}
                     <div>
                         <Label className="text-xs">Layout</Label>
-                         <Select onValueChange={(v) => updateProp('layout', v)} defaultValue={component.props.layout || 'image-left'}>
+                         <Select onValueChange={(v) => updateProp('layout', v)} defaultValue={component.props.layout || 'image-left'} disabled={isLive}>
                             <SelectTrigger className="h-8">
                                 <SelectValue />
                             </SelectTrigger>
@@ -444,7 +450,7 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component:
                     </div>
                     <div>
                         <Label className="text-xs">Spaltenbreite (Bild/Text)</Label>
-                         <Select onValueChange={(v) => updateProp('columnWidth', v)} defaultValue={component.props.columnWidth || '50/50'}>
+                         <Select onValueChange={(v) => updateProp('columnWidth', v)} defaultValue={component.props.columnWidth || '50/50'} disabled={isLive}>
                             <SelectTrigger className="h-8">
                                 <SelectValue />
                             </SelectTrigger>
@@ -479,14 +485,18 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component:
     }
 
     return (
-        <AccordionItem value={component.id}>
+        <AccordionItem value={component.id} disabled={isLive}>
             <AccordionTrigger className="hover:no-underline p-2 bg-muted/50 rounded-t-md border">
                 <div className="flex items-center gap-2 text-sm font-semibold w-full">
                     {typeIcons[component.type]}
                     <span className="capitalize flex-grow text-left">{component.type.replace('-', ' ')}</span>
-                     <Button type="button" size="icon" variant="ghost" className="h-6 w-6" onClick={(e) => { e.stopPropagation(); onMove(component.id, 'up'); }}><ArrowUp className="h-4 w-4"/></Button>
-                    <Button type="button" size="icon" variant="ghost" className="h-6 w-6" onClick={(e) => { e.stopPropagation(); onMove(component.id, 'down'); }}><ArrowDown className="h-4 w-4"/></Button>
-                    <Button type="button" size="icon" variant="ghost" className="h-6 w-6 text-destructive hover:text-destructive" onClick={(e) => { e.stopPropagation(); onDelete(component.id); }}><Trash2 className="h-4 w-4"/></Button>
+                    {!isLive && (
+                        <>
+                            <Button type="button" size="icon" variant="ghost" className="h-6 w-6" onClick={(e) => { e.stopPropagation(); onMove(component.id, 'up'); }}><ArrowUp className="h-4 w-4"/></Button>
+                            <Button type="button" size="icon" variant="ghost" className="h-6 w-6" onClick={(e) => { e.stopPropagation(); onMove(component.id, 'down'); }}><ArrowDown className="h-4 w-4"/></Button>
+                            <Button type="button" size="icon" variant="ghost" className="h-6 w-6 text-destructive hover:text-destructive" onClick={(e) => { e.stopPropagation(); onDelete(component.id); }}><Trash2 className="h-4 w-4"/></Button>
+                        </>
+                    )}
                 </div>
             </AccordionTrigger>
             <AccordionContent className="p-4 border border-t-0 rounded-b-md">
@@ -494,6 +504,36 @@ function ComponentEditor({ component, onUpdate, onDelete, onMove }: { component:
             </AccordionContent>
         </AccordionItem>
     )
+}
+
+function LiveStatusToggle({ id, isLive }: { id: string; isLive: boolean }) {
+    const [state, formAction] = useActionState(toggleNewsletterLiveStatusAction, { success: false, error: null });
+    const [isPending, startTransition] = useTransition();
+
+    const handleToggle = (checked: boolean) => {
+        startTransition(() => {
+            const formData = new FormData();
+            formData.set('id', id);
+            formData.set('isLive', String(checked));
+            formAction(formData);
+        });
+    }
+
+    return (
+        <div className="flex items-center justify-between rounded-lg border p-3 shadow-sm bg-destructive/10 border-destructive/50">
+            <div className="space-y-0.5">
+                <Label className="font-bold text-destructive">Live schalten</Label>
+                <p className="text-xs text-destructive/80">
+                    Sperrt den Newsletter für Bearbeitungen. Nur aktivieren, wenn die Kampagne versendet wurde.
+                </p>
+            </div>
+            <Switch 
+                checked={isLive} 
+                onCheckedChange={handleToggle}
+                disabled={isPending}
+            />
+        </div>
+    );
 }
 
 export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter }) {
@@ -504,8 +544,11 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
   const [htmlContent, setHtmlContent] = useState('');
   const [hasManuallyEditedHtml, setHasManuallyEditedHtml] = useState(false);
   const [previewUrl, setPreviewUrl] = useState('');
+  const [isLive, setIsLive] = useState(newsletter.isLive || false);
 
   const [updateState, updateFormAction] = useActionState(updateNewsletterAction, initialEditorState);
+  const [liveState, liveFormAction] = useActionState(toggleNewsletterLiveStatusAction, initialEditorState);
+
   const { toast } = useToast();
 
   useEffect(() => {
@@ -530,30 +573,39 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
     }
   }, [updateState, toast]);
 
+    useEffect(() => {
+    if (liveState.success) {
+      toast({ title: liveState.message, description: `Newsletter ist jetzt ${liveState.isLive ? 'live und gesperrt' : 'wieder ein Entwurf'}.` });
+      setIsLive(liveState.isLive || false);
+    }
+    if (liveState.error) {
+      toast({ variant: "destructive", title: "Fehler", description: liveState.error });
+    }
+  }, [liveState, toast]);
+
   const handleFormSubmit = (formData: FormData) => {
+    if (isLive) return;
     formData.set('id', newsletter.id);
     formData.set('name', name);
     formData.set('subject', subject);
     formData.set('useWrapper', useWrapper.toString());
-    // Always save the latest HTML content from the editor
     formData.set('content', htmlContent);
-    // Save components only if HTML was not manually edited
     if (!hasManuallyEditedHtml) {
       formData.set('components', JSON.stringify(components));
     } else {
-      // Send empty array to indicate manual edit and to clear old components.
-      // The content field is now the source of truth.
       formData.set('components', '[]'); 
     }
     updateFormAction(formData);
   };
   
   const handleHtmlChange = (value: string) => {
+    if (isLive) return;
     setHasManuallyEditedHtml(true);
     setHtmlContent(value);
   }
 
   const addComponent = (type: NewsletterComponent['type']) => {
+      if (isLive) return;
       const newComponent: NewsletterComponent = {
           id: `${type}-${Date.now()}`,
           type: type,
@@ -564,16 +616,19 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
   };
 
   const updateComponent = (id: string, props: any) => {
+      if (isLive) return;
       setComponents(prev => prev.map(c => c.id === id ? { ...c, props } : c));
       setHasManuallyEditedHtml(false);
   };
   
   const deleteComponent = (id: string) => {
+      if (isLive) return;
       setComponents(prev => prev.filter(c => c.id !== id));
       setHasManuallyEditedHtml(false);
   };
 
   const moveComponent = (id: string, direction: 'up' | 'down') => {
+      if (isLive) return;
       setHasManuallyEditedHtml(false);
       const index = components.findIndex(c => c.id === id);
       if (index === -1) return;
@@ -611,13 +666,22 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
                 </Button>
             </div>
             <div className="p-4 space-y-4 flex-grow overflow-y-auto">
+                {isLive && (
+                    <Alert variant="destructive">
+                        <Radio className="h-4 w-4"/>
+                        <AlertTitle className="font-bold">ON AIR - Live-Modus aktiv</AlertTitle>
+                        <AlertDescription>
+                            Dieser Newsletter wurde live geschaltet und ist für Bearbeitungen gesperrt, um die Integrität der versendeten Kampagne zu wahren.
+                        </AlertDescription>
+                    </Alert>
+                )}
                 <div>
                     <Label htmlFor="name">Interner Name</Label>
-                    <Input id="name" value={name} onChange={e => setName(e.target.value)} />
+                    <Input id="name" value={name} onChange={e => setName(e.target.value)} disabled={isLive}/>
                 </div>
                  <div>
                     <Label htmlFor="subject">Betreff</Label>
-                    <Input id="subject" value={subject} onChange={e => setSubject(e.target.value)} />
+                    <Input id="subject" value={subject} onChange={e => setSubject(e.target.value)} disabled={isLive}/>
                 </div>
 
                 <Accordion type="single" collapsible className="w-full" defaultValue="settings">
@@ -635,8 +699,9 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
                                         Aktivieren, um den Inhalt in einen 600px breiten Container mit Header/Footer zu packen.
                                     </p>
                                 </div>
-                                <Switch checked={useWrapper} onCheckedChange={setUseWrapper} />
+                                <Switch checked={useWrapper} onCheckedChange={setUseWrapper} disabled={isLive}/>
                             </div>
+                            <LiveStatusToggle id={newsletter.id} isLive={isLive} />
                         </AccordionContent>
                     </AccordionItem>
                 </Accordion>
@@ -644,12 +709,12 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
 
                  <div>
                     <h3 className="text-sm font-medium mb-2 mt-4 flex items-center gap-2"><Box className="h-4 w-4"/>Komponenten</h3>
-                    {hasManuallyEditedHtml && (
+                    {(hasManuallyEditedHtml && !isLive) && (
                         <div className="p-2 mb-2 text-xs bg-yellow-100 border border-yellow-300 rounded-md text-yellow-800">
                            Sie bearbeiten den HTML-Code manuell. Komponenten-Änderungen werden nicht mehr synchronisiert. Speichern Sie, um die visuellen Komponenten wieder zu aktivieren.
                         </div>
                     )}
-                    <Accordion type="single" collapsible className="w-full space-y-2">
+                    <Accordion type="single" collapsible className="w-full space-y-2" disabled={isLive}>
                         {components.map((comp) => (
                            <ComponentEditor 
                                 key={comp.id} 
@@ -657,6 +722,7 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
                                 onUpdate={updateComponent}
                                 onDelete={deleteComponent}
                                 onMove={moveComponent}
+                                isLive={isLive}
                             />
                         ))}
                     </Accordion>
@@ -664,18 +730,18 @@ export function NewsletterEditorClient({ newsletter }: { newsletter: Newsletter 
             </div>
             <div className="p-4 border-t space-y-2">
                  <div className="grid grid-cols-2 gap-2">
-                    <Button variant="outline" onClick={() => addComponent('heading')}><Type className="mr-2 h-4 w-4"/>Überschrift</Button>
-                    <Button variant="outline" onClick={() => addComponent('text')}><Type className="mr-2 h-4 w-4"/>Text</Button>
-                    <Button variant="outline" onClick={() => addComponent('button')}><LinkIcon className="mr-2 h-4 w-4"/>Button</Button>
-                    <Button variant="outline" onClick={() => addComponent('image')}><ImageIcon className="mr-2 h-4 w-4"/>Bild</Button>
-                    <Button variant="outline" onClick={() => addComponent('spacer')}><Rows className="mr-2 h-4 w-4"/>Abstand</Button>
-                    <Button variant="outline" onClick={() => addComponent('separator')}><Minus className="mr-2 h-4 w-4"/>Trenner</Button>
-                    <Button variant="outline" onClick={() => addComponent('two-columns')}><Columns className="mr-2 h-4 w-4"/>Zwei Spalten</Button>
-                    <Button variant="outline" onClick={() => addComponent('image-text')}><GalleryHorizontal className="mr-2 h-4 w-4"/>Bild & Text</Button>
-                    <Button variant="outline" onClick={() => addComponent('customHtml')} className="col-span-2"><Code className="mr-2 h-4 w-4"/>Custom HTML</Button>
+                    <Button variant="outline" onClick={() => addComponent('heading')} disabled={isLive}><Type className="mr-2 h-4 w-4"/>Überschrift</Button>
+                    <Button variant="outline" onClick={() => addComponent('text')} disabled={isLive}><Type className="mr-2 h-4 w-4"/>Text</Button>
+                    <Button variant="outline" onClick={() => addComponent('button')} disabled={isLive}><LinkIcon className="mr-2 h-4 w-4"/>Button</Button>
+                    <Button variant="outline" onClick={() => addComponent('image')} disabled={isLive}><ImageIcon className="mr-2 h-4 w-4"/>Bild</Button>
+                    <Button variant="outline" onClick={() => addComponent('spacer')} disabled={isLive}><Rows className="mr-2 h-4 w-4"/>Abstand</Button>
+                    <Button variant="outline" onClick={() => addComponent('separator')} disabled={isLive}><Minus className="mr-2 h-4 w-4"/>Trenner</Button>
+                    <Button variant="outline" onClick={() => addComponent('two-columns')} disabled={isLive}><Columns className="mr-2 h-4 w-4"/>Zwei Spalten</Button>
+                    <Button variant="outline" onClick={() => addComponent('image-text')} disabled={isLive}><GalleryHorizontal className="mr-2 h-4 w-4"/>Bild & Text</Button>
+                    <Button variant="outline" onClick={() => addComponent('customHtml')} className="col-span-2" disabled={isLive}><Code className="mr-2 h-4 w-4"/>Custom HTML</Button>
                 </div>
                 <form action={handleFormSubmit}>
-                    <SubmitButton />
+                    <SubmitButton isLive={isLive} />
                 </form>
             </div>
         </div>
