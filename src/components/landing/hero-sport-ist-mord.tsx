@@ -42,7 +42,7 @@ export function HeroSportIstMord({ isRevealed, onReveal }: { isRevealed: boolean
                     </p>
                     <div className="flex flex-col gap-2 min-[400px]:flex-row pt-3 justify-center">
                        <Link href="/buchhandlung-paulik-reisch">
-                         <Button size="lg" variant="destructive" className="pt-3">Berichte aus dem Sportunterricht ansehen</Button>
+                         <Button size="lg" variant="destructive">Berichte aus dem Sportunterricht ansehen</Button>
                        </Link>
                     </div>
                  </motion.div>
@@ -61,9 +61,14 @@ export function HeroSportIstMord({ isRevealed, onReveal }: { isRevealed: boolean
                    <p className="mx-auto max-w-[600px] text-white/80 md:text-xl/relaxed">
                         Entfessle dein wahres Potenzial. Jeder Schweißtropfen bringt dich deinem Ziel näher. Bist du bereit?
                     </p>
-                  <Button size="lg" onClick={handleReveal} disabled={isGlitching} variant="secondary">
-                    Starte dein Training
-                  </Button>
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                      <Button size="lg" onClick={handleReveal} disabled={isGlitching} variant="secondary">
+                        Starte dein Training
+                      </Button>
+                       <Button size="lg" onClick={handleReveal} disabled={isGlitching} variant="outline" className="text-white border-white/50 hover:bg-white/10 hover:text-white">
+                        Nein, Sport ist Mord!
+                      </Button>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -72,3 +77,4 @@ export function HeroSportIstMord({ isRevealed, onReveal }: { isRevealed: boolean
     </section>
   );
 }
+
