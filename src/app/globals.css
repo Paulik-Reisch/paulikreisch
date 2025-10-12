@@ -30,6 +30,7 @@
     --color-bg-light-pink: 340 80% 90%;
     --bg-subtle-yellow: 45 95% 97%;
     --bg-subtle-blue: 220 95% 85%;
+    --color-leche: 0 0% 100%;
   }
 
   .dark {
@@ -57,6 +58,7 @@
     --color-bg-light-pink: 340 80% 20%;
     --bg-subtle-yellow: 45 95% 10%;
     --bg-subtle-blue: 220 95% 25%;
+    --color-leche: 240 3% 15%;
   }
 
   .internal-dashboard {
