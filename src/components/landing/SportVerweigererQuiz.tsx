@@ -73,7 +73,7 @@ export function SportVerweigererQuiz() {
     const questionType = questions[currentStep].type;
 
     if (answer === 'yes') {
-      setScores(s => ({ ...s, [questionType]: s[questionType as keyof typeof s] + 1 }));
+      setScores(s => ({ ...s, [questionType]: s[questionType as keyof typeof scores] + 1 }));
     }
     
     if (currentStep < questions.length - 1) {
