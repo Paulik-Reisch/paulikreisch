@@ -2,17 +2,17 @@
 "use client";
 
 import React from "react";
-import { Hospital, Factory, AlertCircle, HelpCircle, HeartCrack, MapPin, Drama, Briefcase, ShoppingCart } from "lucide-react";
+import { Hospital, Factory, AlertCircle, HelpCircle, HeartCrack, Drama } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { motion } from "framer-motion";
 
 const stops = [
-  { name: "Boulevard der gebrochenen Versprechen", description: "(Wo Pünktlichkeit ein Fremdwort ist)", icon: AlertCircle },
+  { name: "Boulevard der gebrochenen Versprechen", description: "(Bürgerbüro)", icon: AlertCircle },
   { name: "Letzte Hoffnung", description: "(Krankenhaus)", icon: Hospital },
   { name: "Paralleluniversum", description: "(Industriegebiet)", icon: Factory },
   { name: "Endstation Sehnsucht", description: "(Hauptbahnhof)", icon: HeartCrack },
-  { name: "Bermudadreieck", description: "(Wo Fahrpläne verschwinden)", icon: HelpCircle },
-  { name: "Fegefeuer", description: "(Finanzamt)", icon: MapPin },
+  { name: "Bermudadreieck", description: "Hier hat Ihr Handy zum letzten Mal Empfang.", icon: HelpCircle },
+  { name: "Fegefeuer", description: "(Finanzamt)", icon: Drama },
 ];
 
 export function BusStopNames() {
