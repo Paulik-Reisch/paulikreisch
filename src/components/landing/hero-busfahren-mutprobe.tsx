@@ -18,7 +18,7 @@ export function HeroBusfahrenMutprobe() {
                 <div className="flex justify-center md:justify-start pt-3">
                     <Link href="/buchhandlung-paulik-reisch">
                         <Button size="lg">
-                        Zum Survival-Guide im Buch
+                        Mehr Survival-Tipps nachlesen
                         </Button>
                     </Link>
                 </div>
