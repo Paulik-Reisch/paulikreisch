@@ -197,7 +197,7 @@ function BookCard({ book }: { book: Product }) {
                     
                     <PriceDisplay book={book} />
 
-                    <div className="mt-auto pt-1 min-h-[88px] flex flex-col justify-end items-center">
+                    <div className="mt-auto pt-1 flex flex-col justify-end items-center">
                         {isPreorder ? (
                              <div className='flex flex-col items-center gap-2'>
                                 <Button size="lg" disabled className="w-full max-w-[200px]">
@@ -207,12 +207,15 @@ function BookCard({ book }: { book: Product }) {
                                 <p className="text-xs text-muted-foreground px-4">Hinweis: Cover und Rückseite können bei Veröffentlichung anders aussehen.</p>
                             </div>
                         ) : (
-                            <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="inline-block w-full">
-                                <Button size="lg" variant="secondary" className="w-full max-w-[200px]">
-                                    <ShoppingCart className="mr-2 h-4 w-4" />
-                                    Bei Amazon
-                                </Button>
-                            </a>
+                             <div className='flex flex-col items-center gap-2'>
+                                <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="inline-block w-full">
+                                    <Button size="lg" variant="secondary" className="w-full max-w-[200px]">
+                                        <ShoppingCart className="mr-2 h-4 w-4" />
+                                        Bei Amazon
+                                    </Button>
+                                </a>
+                                <p className="text-xs text-muted-foreground px-4 invisible">Hinweis: Cover und Rückseite können bei Veröffentlichung anders aussehen.</p>
+                            </div>
                         )}
                     </div>
                 </div>
