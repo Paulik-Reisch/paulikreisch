@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -17,7 +18,7 @@ export function HeroBusfahrenMutprobe() {
                 <div className="flex justify-center md:justify-start pt-3">
                     <Link href="/buchhandlung-paulik-reisch">
                         <Button size="lg">
-                        Im Buch mehrere Survival-Tipps nachlesen
+                        Zum Survival-Guide im Buch
                         </Button>
                     </Link>
                 </div>
