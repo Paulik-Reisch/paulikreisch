@@ -38,7 +38,7 @@ export function BusStatistics() {
                              <div className="p-3 bg-primary/10 rounded-full mb-4">
                                 <stat.icon className="h-8 w-8 text-primary" />
                             </div>
-                            <p className="text-4xl font-bold font-mono text-primary">{stat.value}</p>
+                            <p className="text-4xl font-bold font-headline text-primary">{stat.value}</p>
                             <p className="text-sm text-muted-foreground mt-2 text-balance">{stat.label}</p>
                         </Card>
                     ))}
