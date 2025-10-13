@@ -199,12 +199,13 @@ function BookCard({ book }: { book: Product }) {
 
                     <div className="mt-auto pt-1">
                         {isPreorder ? (
-                             <a href="#" className="inline-block w-full">
+                             <div className='flex flex-col items-center gap-2'>
                                 <Button size="lg" disabled className="w-full max-w-[200px]">
                                     <ShoppingCart className="mr-2 h-4 w-4" />
                                     Bald verfügbar
                                 </Button>
-                            </a>
+                                <p className="text-xs text-muted-foreground px-4">Hinweis: Cover und Rückseite sind Platzhalter.</p>
+                            </div>
                         ) : (
                             <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="inline-block w-full">
                                 <Button size="lg" variant="secondary" className="w-full max-w-[200px]">
