@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
@@ -7,7 +6,7 @@ import { AnimatePresence, motion, useDragControls } from "framer-motion";
 import { Palabrota } from "@/lib/firestore";
 import { X, ChevronLeft, ChevronRight, Volume2, Pause, Play, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
+import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 import { Badge } from "../ui/badge";
 
 function ProgressBar({ count, current, onSegmentClick, isPaused, onAnimationComplete }: { count: number; current: number; onSegmentClick: (index: number) => void; isPaused: boolean; onAnimationComplete: () => void; }) {

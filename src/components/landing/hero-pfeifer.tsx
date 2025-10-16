@@ -2,7 +2,7 @@
 
 import React, { useActionState, useEffect, useRef } from "react";
 import { useFormStatus } from "react-dom";
-import Image from "next/image";
+import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 import Link from "next/link";
 import { subscribeToNewsletterAction } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
@@ -122,7 +122,7 @@ export function HeroPfeifer() {
               src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/r-pfeifer-con-espania.png?alt=media&token=d858afac-622b-42b9-837e-c2ac5143189a"
               alt="Die legendäre Spanischlehrerin R. Pfeifer mit einer Spanienflagge im Hintergrund"
               data-ai-hint="teacher spain"
-              layout="fill"
+              fill
               objectFit="cover"
             />
           </div>

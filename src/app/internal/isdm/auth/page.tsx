@@ -1,3 +1,5 @@
+import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
+
 export default function AuthPage() {
     return (
         <div>

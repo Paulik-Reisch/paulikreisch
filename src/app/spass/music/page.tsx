@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, useCallback, useTransition } from 'react';
@@ -10,7 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Table, TableBody, TableCell, TableHeader, TableHead, TableRow } from '@/components/ui/table';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
-import { UploadCloud, File, Trash2, Copy, RefreshCw, Music, Loader2, PlayCircle, PauseCircle, Music4 } from 'lucide-react';
+import { UploadCloud, File, Trash2, Copy, RefreshCw, Music, Loader2, PlayCircle, PauseCircle } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import {
   AlertDialog,
@@ -339,7 +338,7 @@ export default function MusicPage() {
                         ) : musicFiles.length === 0 ? (
                             <TableRow>
                                 <TableCell colSpan={5} className="h-32 text-center text-gray-500">
-                                    <Music4 className="mx-auto h-8 w-8 mb-2"/>
+                                    <Music className="mx-auto h-8 w-8 mb-2"/>
                                     Noch keine Songs hochgeladen.
                                 </TableCell>
                             </TableRow>

@@ -1,14 +1,14 @@
 
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import Image from 'next/image';
+import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
 
 export function HeroSchulzeitenGenickbruch() {
   return (
     <section className="w-full py-20 md:py-32 lg:py-48 text-white relative">
       <Image
           src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/schulzeiten.png?alt=media&token=63d97151-7333-4241-85ea-96e6973d71f3"
-          layout="fill"
+          fill
           objectFit="cover"
           alt="Hintergrundbild Schulzeiten"
           className="absolute inset-0 object-cover w-full h-full opacity-30"

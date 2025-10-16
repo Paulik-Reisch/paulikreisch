@@ -1,5 +1,5 @@
 
-import Image from "next/image";
+import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import {
   Tooltip,

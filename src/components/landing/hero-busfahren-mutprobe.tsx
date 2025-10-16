@@ -1,6 +1,6 @@
 
 import { Button } from '@/components/ui/button';
-import Image from 'next/image';
+import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
 import Link from 'next/link';
 
 export function HeroBusfahrenMutprobe() {

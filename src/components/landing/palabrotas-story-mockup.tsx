@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Palabrota } from '@/lib/firestore';
 import { GraduationCap, Volume2 } from 'lucide-react';
-import Image from 'next/image';
+import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
 
 const mockWords: Partial<Palabrota>[] = [
     { de: "Dummkopf", es: "Gilipollas", phonetik: "chili-poy-yas" },

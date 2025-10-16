@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
@@ -31,7 +30,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import Image from 'next/image';
+import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
 
 const storage = getStorage(app);
 const db = getFirestore(app);
@@ -339,5 +338,3 @@ export default function DiscordSoundboardPage() {
     </div>
   );
 }
-
-    

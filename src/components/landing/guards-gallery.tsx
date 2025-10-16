@@ -1,5 +1,5 @@
 
-import Image from "next/image";
+import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import {
   Tooltip,
@@ -35,15 +35,14 @@ export function GuardsGallery() {
                             <Tooltip key={index}>
                                 <TooltipTrigger asChild>
                                     <Card className="flex flex-col text-center bg-background/50 hover:scale-105 transition-transform duration-300 overflow-hidden">
-                                        <div className="aspect-square relative">
-                                            <Image
-                                                src={guard.image}
-                                                alt={`Foto von ${guard.title}`}
-                                                data-ai-hint={guard.hint}
-                                                fill
-                                                className="object-cover"
-                                            />
-                                        </div>
+                                        <Image
+                                            src={guard.image}
+                                            alt={`Foto von ${guard.title}`}
+                                            data-ai-hint={guard.hint}
+                                            width={400}
+                                            height={400}
+                                            className="object-cover aspect-square"
+                                        />
                                         <div className="p-4 flex-grow flex flex-col justify-center">
                                             <CardTitle className="font-headline">{guard.title}</CardTitle>
                                              <p className="text-xs text-muted-foreground mt-2 md:hidden">

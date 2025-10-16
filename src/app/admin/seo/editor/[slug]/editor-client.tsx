@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import Image from "next/image";
+import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 
 const seoConfig = {
     tabs: [
@@ -122,7 +122,7 @@ function SocialPreview({ data }: { data: Partial<SeoMetadata> }) {
             <CardContent>
                 {data.ogImage ? (
                     <div className="aspect-video bg-gray-200 rounded-t-md overflow-hidden relative">
-                         <Image src={data.ogImage} alt={data.ogImageAlt || 'Vorschaubild'} layout="fill" objectFit="cover" />
+                         <Image src={data.ogImage} alt={data.ogImageAlt || 'Vorschaubild'} fill objectFit="cover" />
                     </div>
                 ) : (
                     <div className="aspect-video bg-gray-200 rounded-t-md flex items-center justify-center text-gray-500 text-sm">Kein Vorschaubild</div>
@@ -147,7 +147,7 @@ function TwitterPreview({ data }: { data: Partial<SeoMetadata> }) {
                 <div className="border rounded-lg overflow-hidden">
                     {data.twitterImage ? (
                         <div className="aspect-video bg-gray-200 relative">
-                             <Image src={data.twitterImage} alt={data.twitterTitle || 'Vorschaubild'} layout="fill" objectFit="cover" />
+                             <Image src={data.twitterImage} alt={data.twitterTitle || 'Vorschaubild'} fill objectFit="cover" />
                         </div>
                     ) : (
                          <div className="aspect-video bg-gray-200 flex items-center justify-center text-gray-500 text-sm">Kein Vorschaubild</div>
