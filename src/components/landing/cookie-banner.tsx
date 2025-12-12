@@ -52,7 +52,7 @@ export function CookieBanner() {
                      Mehr erfahren
                    </button>
                 </p>
-                <Button onClick={handleAccept} size="sm" className="shrink-0">Okay</Button>
+                <Button onClick={handleAccept} size="sm" className="shrink-0">Vale!</Button>
             </div>
             <div className={cn("space-y-4 transition-all duration-300 ease-in-out h-0 opacity-0 overflow-hidden", "md:group-hover:h-auto md:group-hover:opacity-100 md:group-hover:mt-0", isExpanded && "h-auto opacity-100 mt-0")}>
                 <h3 className="font-bold font-headline text-lg">Die Verwendung von Cookies durch Hallo Welt</h3>
