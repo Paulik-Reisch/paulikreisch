@@ -6,7 +6,7 @@ import { Header } from '@/components/landing/header';
 import { Footer } from '@/components/landing/footer';
 import { Button } from '@/components/ui/button';
 import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
-import { ArrowRight, BookCheck, ChevronsRight, ShoppingCart } from 'lucide-react';
+import { ArrowRight, BookCheck, ChevronsRight, ShoppingCart, Star, Check, PenSquare, Users } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
@@ -130,6 +130,41 @@ export default function ExperimentalLandingPage2() {
                     </div>
                 </section>
 
+                {/* --- New Section 1: Testimonials --- */}
+                <section className="py-20 md:py-32 bg-blue-100/50 dark:bg-blue-900/10">
+                    <div className="container mx-auto max-w-4xl text-center">
+                         <HandDrawn as="h2" className="text-4xl md:text-5xl font-bold font-headline text-blue-600 transform -rotate-3">Stimmen einer Generation</HandDrawn>
+                         <div className="grid md:grid-cols-3 gap-8 mt-12 text-left">
+                            <motion.div initial={{opacity: 0, y: 20}} whileInView={{opacity: 1, y: 0}} transition={{delay: 0.1}}>
+                                <p className="font-serif italic text-lg">"Ich habe das Buch im Zug gelesen und war so gefesselt, dass ich meinen Halt verpasste. Musste 30 km zurücklaufen. Hat sich gelohnt."</p>
+                                <p className="mt-4 font-bold">- Ein zufriedener Pendler, <span className="text-neutral-500">Note: 1-</span></p>
+                            </motion.div>
+                             <motion.div initial={{opacity: 0, y: 20}} whileInView={{opacity: 1, y: 0}} transition={{delay: 0.2}}>
+                                <p className="font-serif italic text-lg">"Endlich! Ich dachte, ich wäre der Einzige, der den Lehrer für einen schlecht programmierten Roboter hält."</p>
+                                <p className="mt-4 font-bold">- Ein aufmerksamer Schüler, <span className="text-neutral-500">Note: 2+</span></p>
+                            </motion.div>
+                            <motion.div initial={{opacity: 0, y: 20}} whileInView={{opacity: 1, y: 0}} transition={{delay: 0.3}}>
+                                <p className="font-serif italic text-lg">"Dieses Buch sollte verboten werden! Es untergräbt die Autorität des Lehrkörpers."</p>
+                                <p className="mt-4 font-bold">- Ein besorgter Lehrer, <span className="text-neutral-500">Note: 5</span></p>
+                            </motion.div>
+                         </div>
+                    </div>
+                </section>
+
+                 {/* --- New Section 2: What to Expect --- */}
+                <section className="py-20 md:py-32">
+                     <div className="container mx-auto max-w-4xl text-center">
+                        <HandDrawn as="h2" className="text-4xl md:text-5xl font-bold font-headline text-green-600">Was dich erwartet (Spoiler-Alarm)</HandDrawn>
+                        <ul className="mt-12 text-left space-y-4 max-w-lg mx-auto">
+                            <li className="flex items-start text-lg"><Check className="h-6 w-6 mr-3 text-green-600 shrink-0 mt-1"/>Schonungslose Satire über den Schulalltag.</li>
+                            <li className="flex items-start text-lg"><Check className="h-6 w-6 mr-3 text-green-600 shrink-0 mt-1"/>Eine Sammlung von Fragmenten – wie das Leben selbst.</li>
+                            <li className="flex items-start text-lg"><Check className="h-6 w-6 mr-3 text-green-600 shrink-0 mt-1"/>Gesellschaftskritik, die sich als Humor tarnt.</li>
+                            <li className="flex items-start text-lg"><Check className="h-6 w-6 mr-3 text-green-600 shrink-0 mt-1"/>Einblicke in die Psyche von genervten Lehrern und überforderten Schülern.</li>
+                        </ul>
+                    </div>
+                </section>
+
+
                  {/* --- Manifesto Section --- */}
                 <section className="py-20 md:py-32 bg-yellow-100/70 dark:bg-yellow-900/20">
                      <div className="container mx-auto max-w-3xl text-center relative">
@@ -151,6 +186,63 @@ export default function ExperimentalLandingPage2() {
                      </div>
                 </section>
                 
+                 {/* --- New Section 3: Meet the Culprits --- */}
+                <section className="py-20 md:py-32">
+                    <div className="container mx-auto max-w-4xl text-center">
+                        <HandDrawn as="h2" className="text-4xl md:text-5xl font-bold font-headline text-red-500 transform rotate-2">Die Schuldigen</HandDrawn>
+                         <div className="grid md:grid-cols-2 gap-12 mt-12 items-center">
+                            <div className="flex flex-col items-center">
+                                 <Image src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/paulik.png?alt=media&token=7d4dfeb1-5f87-4426-9890-868ed2a089bf" alt="Philipp Paulik" width={150} height={150} className="rounded-full shadow-lg transform -rotate-6"/>
+                                 <h3 className="mt-4 font-bold font-headline text-2xl">Philipp Paulik</h3>
+                                 <p className="text-neutral-600">Der mit dem fragwürdigen Haarschnitt. Sorgt für das Chaos.</p>
+                            </div>
+                             <div className="flex flex-col items-center">
+                                 <Image src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/reisch.png?alt=media&token=5aa20eee-967e-4912-9bfe-3f0b6861a316" alt="Maximilian Reisch" width={150} height={150} className="rounded-full shadow-lg transform rotate-6"/>
+                                 <h3 className="mt-4 font-bold font-headline text-2xl">Maximilian Reisch</h3>
+                                 <p className="text-neutral-600">Der mit der Brille. Versucht, das Chaos in lesbare Sätze zu fassen.</p>
+                            </div>
+                         </div>
+                    </div>
+                </section>
+
+                {/* --- New Section 4: Book Details --- */}
+                <section className="py-20 md:py-32 bg-neutral-100/80 dark:bg-neutral-900/20">
+                     <div className="container mx-auto max-w-2xl">
+                        <div className="border-2 border-dashed border-neutral-400 p-8 relative">
+                             <HandDrawn className="absolute -top-6 -left-6 text-xl bg-yellow-300 p-2 transform -rotate-12">BIBLIOTHEK</HandDrawn>
+                             <HandDrawn className="absolute -bottom-5 -right-5 text-lg text-red-500 transform rotate-6">Nicht zerknittern!</HandDrawn>
+
+                            <h2 className="font-serif text-3xl mb-8">Steckbrief: Hallo Welt 1</h2>
+                            <div className="space-y-3 font-mono text-sm">
+                                <p><span className="text-neutral-500">Titel:</span> Hallo Welt: Erhebliche Kritik...</p>
+                                <p><span className="text-neutral-500">Autoren:</span> Paulik, P. & Reisch, M.</p>
+                                <p><span className="text-neutral-500">ISBN-13:</span> 979-8879791693</p>
+                                <p><span className="text-neutral-500">Seiten:</span> 106 (vollgepackt mit Unsinn)</p>
+                                <p><span className="text-neutral-500">Genre:</span> Satire, Humor, Überlebensratgeber</p>
+                                <p><span className="text-neutral-500">Bewertung:</span> 5/5 Sterne (von denen, die es verstanden haben)</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                 {/* --- New Section 5: Why Both --- */}
+                 <section className="py-20 md:py-32">
+                    <div className="container mx-auto max-w-4xl text-center">
+                         <HandDrawn as="h2" className="text-4xl md:text-5xl font-bold font-headline text-blue-500">Ein Buch ist gut. Zwei sind besser.</HandDrawn>
+                         <p className="mt-4 text-neutral-600 md:text-xl text-balance max-w-2xl mx-auto">Nur ein Buch zu lesen ist, als würde man nur einen Schuh anziehen. Sieht komisch aus und man kommt nicht weit. Holen Sie sich das komplette Set für die volle Dosis Alltags-Wahnsinn.</p>
+                         <div className="mt-8 flex justify-center gap-8">
+                             <div className="flex flex-col items-center">
+                                 <PenSquare className="h-10 w-10 text-blue-500"/>
+                                 <p className="mt-2 font-semibold">Doppelte Satire</p>
+                             </div>
+                             <div className="flex flex-col items-center">
+                                 <Users className="h-10 w-10 text-blue-500"/>
+                                 <p className="mt-2 font-semibold">Doppelter Spaß</p>
+                             </div>
+                         </div>
+                    </div>
+                </section>
+
                  {/* --- CTA Section --- */}
                 <section className="py-20 md:py-32 relative">
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
