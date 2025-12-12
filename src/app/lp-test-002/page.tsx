@@ -10,7 +10,6 @@ import { ArrowRight, BookCheck, ChevronsRight, ShoppingCart, Star, Check, PenSqu
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import { PromptingGuide } from '@/components/landing/prompting-guide';
 import { Card, CardContent } from '@/components/ui/card';
 
 // --- Data extracted from project context ---
@@ -68,9 +67,14 @@ function FinalTest() {
               <Button variant="outline" size="lg" onClick={() => setAnswered(true)} className="flex-1 h-auto py-3">B) Mit dem geheimen Vorrat an Experimental-Alkohol.</Button>
             </div>
           ) : (
-             <motion.div initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} className="text-center p-6 bg-green-100/80 rounded-lg">
+             <motion.div initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} className="text-center p-6 bg-green-100/80 rounded-lg space-y-4">
                 <h3 className="font-bold font-headline text-xl text-green-800">Glückwunsch, richtige Antwort!</h3>
                 <p className="text-green-700 mt-2">Egal was Sie gewählt haben, Ihre Denkweise ist definitiv "Hallo Welt"-kompatibel. Sie haben sich den Zugang zum nächsten Kapitel verdient.</p>
+                 <Link href="/buchhandlung-paulik-reisch" className="inline-block">
+                    <Button variant="secondary" size="lg">
+                        Zum Buch <BookCheck className="ml-2 h-4 w-4"/>
+                    </Button>
+                </Link>
              </motion.div>
           )}
         </Card>
@@ -309,9 +313,6 @@ export default function ExperimentalLandingPage2() {
                 
                 {/* --- New Section 6: Final Test --- */}
                 <FinalTest />
-
-                {/* --- New Section 8: Prompting Guide --- */}
-                <PromptingGuide />
 
             </main>
 
