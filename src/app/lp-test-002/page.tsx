@@ -63,8 +63,8 @@ function FinalTest() {
           <p className="font-serif text-xl text-center">Im Chemieraum bricht ein Feuer aus. Womit löschen Sie?</p>
           {!answered ? (
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button variant="outline" size="lg" onClick={() => setAnswered(true)} className="flex-1 h-auto py-3">A) Mit dem Feuerlöscher.</Button>
-              <Button variant="outline" size="lg" onClick={() => setAnswered(true)} className="flex-1 h-auto py-3">B) Mit dem geheimen Vorrat an Experimental-Alkohol.</Button>
+              <Button variant="outline" size="lg" onClick={() => setAnswered(true)} className="flex-1 h-auto py-3 whitespace-normal">A) Mit dem Feuerlöscher.</Button>
+              <Button variant="outline" size="lg" onClick={() => setAnswered(true)} className="flex-1 h-auto py-3 whitespace-normal">B) Mit dem geheimen Vorrat an Experimental-Alkohol.</Button>
             </div>
           ) : (
              <motion.div initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} className="text-center p-6 bg-green-100/80 dark:bg-green-900/30 rounded-lg space-y-4">
@@ -165,7 +165,7 @@ export default function ExperimentalLandingPage2() {
                 </section>
 
                 {/* --- New Section 1: Testimonials --- */}
-                <section className="py-20 md:py-32 bg-blue-100/50 dark:bg-blue-900/20">
+                <section className="py-20 md:py-32 bg-blue-100/50 dark:bg-blue-900/10">
                     <div className="container mx-auto max-w-4xl text-center">
                          <HandDrawn as="h2" className="text-4xl md:text-5xl font-bold font-headline text-blue-600 transform -rotate-3">Stimmen einer Generation</HandDrawn>
                          <div className="grid md:grid-cols-3 gap-8 mt-12 text-left">
@@ -200,7 +200,7 @@ export default function ExperimentalLandingPage2() {
 
 
                  {/* --- Manifesto Section --- */}
-                <section className="py-20 md:py-32 bg-yellow-100/70 dark:bg-yellow-900/20">
+                <section className="py-20 md:py-32 bg-yellow-100/70 dark:bg-yellow-900/10">
                      <div className="container mx-auto max-w-3xl text-center relative">
                         <HandDrawn as="h2" className="text-3xl md:text-4xl font-bold font-headline text-red-600 absolute -top-12 left-0 -rotate-6">Das steht wirklich drin:</HandDrawn>
                         <motion.div
@@ -240,7 +240,7 @@ export default function ExperimentalLandingPage2() {
                 </section>
 
                 {/* --- New Section 4: Book Details --- */}
-                <section className="py-20 md:py-32 bg-neutral-100/80 dark:bg-neutral-800/20">
+                <section className="py-20 md:py-32 bg-neutral-100/80 dark:bg-neutral-800/10">
                      <div className="container mx-auto max-w-2xl">
                         <div className="border-2 border-dashed border-neutral-400 p-8 relative">
                              <HandDrawn className="absolute -top-6 -left-6 text-xl bg-yellow-300 dark:bg-yellow-600/50 p-2 transform -rotate-12">BIBLIOTHEK</HandDrawn>
@@ -304,7 +304,7 @@ export default function ExperimentalLandingPage2() {
                 </section>
 
                 {/* --- "Not Convinced?" Title Section --- */}
-                <section className="py-10 md:py-16 bg-yellow-100/70 dark:bg-yellow-900/20">
+                <section className="py-10 md:py-16 bg-yellow-100/70 dark:bg-yellow-900/10">
                     <div className="container mx-auto text-center">
                         <h2 className="font-headline text-3xl font-bold text-neutral-800 dark:text-neutral-200">Noch nicht überzeugt?</h2>
                         <p className="text-muted-foreground mt-2">Vielleicht überzeugen Sie diese interaktiven Beweismittel.</p>
@@ -320,5 +320,3 @@ export default function ExperimentalLandingPage2() {
         </div>
     );
 }
-
-    
