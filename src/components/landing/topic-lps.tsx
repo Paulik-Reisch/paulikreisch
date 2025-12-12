@@ -2,7 +2,7 @@
 "use client";
 
 import Link from 'next/link';
-import { ArrowRight, School, Coffee, Utensils, Bus, Dumbbell, AlarmClock, Biohazard, ChevronDown } from 'lucide-react';
+import { ArrowRight, School, Coffee, Utensils, Bus, Dumbbell, AlarmClock, Biohazard, ChevronDown, FileWarning, WifiOff, Home } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Separator } from '../ui/separator';
@@ -56,7 +56,21 @@ const topics = [
         link: "/lp-corona-satire",
         icon: Biohazard,
         color: "text-pink-500"
-    }
+    },
+     {
+        title: "Bürokratie-Simulator",
+        description: "Füllen Sie den Antrag auf Beantragung eines Antragsformulars aus. Digital, effizient – zum Verzweifeln.",
+        link: "/lp-buerokratie-simulator",
+        icon: FileWarning,
+        color: "text-gray-500"
+    },
+    {
+        title: "Beamten-Wartezeiten-Simulator",
+        description: "Erleben Sie die beruhigende Monotonie einer deutschen Behörde. Ziehen Sie jetzt eine Nummer.",
+        link: "/lp-beamten-wartezeiten-simulator",
+        icon: WifiOff,
+        color: "text-orange-500"
+    },
 ];
 
 export function TopicLPs() {

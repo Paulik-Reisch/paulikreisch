@@ -1,3 +1,4 @@
+
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import { HeroLehrerRoboter } from "@/components/landing/hero-lehrer-roboter";
