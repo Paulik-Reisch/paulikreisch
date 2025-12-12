@@ -128,7 +128,7 @@ export default function ExperimentalLandingPage2() {
                             >
                                 <div className="relative transform hover:scale-105 transition-transform duration-300 -rotate-3">
                                     <HandDrawn className="absolute -top-8 -right-4 text-blue-600 -rotate-6">Band 1</HandDrawn>
-                                    {hw1 && <Image src={hw1.imageSrc} alt={`Cover: ${hw1.title}`} width={300} height={450} className="rounded-lg shadow-2xl" />}
+                                    {hw1 && <Image src={hw1.imageSrc} alt={`Cover: ${'\'\''}hw1.title{'\'\''}`} width={300} height={450} className="rounded-lg shadow-2xl" />}
                                 </div>
                                 <h3 className="text-2xl font-bold font-headline mt-6">{hw1?.title}</h3>
                                 <p className="text-neutral-500 text-sm mt-1 mb-4 h-12">{hw1?.subtitle}</p>
@@ -149,7 +149,7 @@ export default function ExperimentalLandingPage2() {
                             >
                                 <div className="relative transform hover:scale-105 transition-transform duration-300 rotate-3">
                                      <HandDrawn className="absolute -top-8 -left-4 text-green-600 rotate-6">Band 2 (bald!)</HandDrawn>
-                                    {hw2 && <Image src={hw2.imageSrc} alt={`Cover: ${hw2.title}`} width={300} height={450} className="rounded-lg shadow-2xl" />}
+                                    {hw2 && <Image src={hw2.imageSrc} alt={`Cover: ${'\'\''}hw2.title{'\'\''}`} width={300} height={450} className="rounded-lg shadow-2xl" />}
                                 </div>
                                 <h3 className="text-2xl font-bold font-headline mt-6">{hw2?.title}</h3>
                                 <p className="text-neutral-500 text-sm mt-1 mb-4 h-12">{hw2?.subtitle}</p>
@@ -310,22 +310,6 @@ export default function ExperimentalLandingPage2() {
                 
                 {/* --- New Section 6: Final Test --- */}
                 <FinalTest />
-
-                {/* --- New Section 7: Interactive Doodle --- */}
-                <section className="bg-neutral-800 text-white py-20 md:py-32 overflow-hidden">
-                    <div className="container mx-auto max-w-3xl text-center">
-                         <HandDrawn as="h2" className="text-4xl md:text-5xl font-bold font-headline text-yellow-300">Der interaktive Spickzettel</HandDrawn>
-                         <p className="mt-4 text-neutral-300 md:text-lg text-balance">Zu faul zum Lesen? Kein Problem. Spielen Sie stattdessen mit den Kernkonzepten des Buches.</p>
-                         <div className="mt-8 h-96 w-full rounded-lg border-2 border-dashed border-neutral-600 bg-neutral-900/50 relative">
-                             <FallingText 
-                                text="Schule Straflager Lehrer Roboter Bürokratie Wahnsinn Satire Kritik Alltag Chaos Freiheit Freundschaft"
-                                highlightWords={["Schule", "Lehrer", "Bürokratie", "Satire"]}
-                                highlightClass="text-yellow-300"
-                                fontSize="1.5rem"
-                             />
-                         </div>
-                    </div>
-                </section>
 
                 {/* --- New Section 8: Prompting Guide --- */}
                 <PromptingGuide />
