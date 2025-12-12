@@ -11,7 +11,6 @@ const COOKIE_NAME = 'hallowelt_cookie_consent';
 
 export function CookieBanner() {
   const [showBanner, setShowBanner] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     // Check localStorage only on the client side
@@ -41,27 +40,17 @@ export function CookieBanner() {
 
   return (
     <div className="fixed bottom-4 inset-x-0 z-50 flex justify-center px-4">
-        <Card className={cn(
-            "group w-full max-w-sm md:max-w-md lg:max-w-xl shadow-2xl transition-all duration-300 ease-in-out md:hover:max-w-2xl animate-in slide-in-from-bottom-5 p-3",
-             isExpanded && "max-w-2xl"
-            )}>
-            <div className={cn("flex items-center transition-opacity duration-300", "md:group-hover:opacity-0 md:group-hover:h-0", isExpanded && "opacity-0 h-0")}>
-                <p className="text-sm text-muted-foreground mr-auto pl-3">
-                   Wir benutzen Cookies.{' '}
-                   <button onClick={() => setIsExpanded(true)} className="underline font-semibold hover:text-primary md:hidden">
-                     Mehr erfahren
-                   </button>
-                </p>
-                <Button onClick={handleAccept} size="sm" className="shrink-0">Vale!</Button>
-            </div>
-            <div className={cn("space-y-4 transition-all duration-300 ease-in-out h-0 opacity-0 overflow-hidden", "md:group-hover:h-auto md:group-hover:opacity-100 md:group-hover:mt-0", isExpanded && "h-auto opacity-100 mt-0")}>
-                <h3 className="font-bold font-headline text-lg">Die Verwendung von Cookies durch Hallo Welt</h3>
-                <p className="text-sm text-muted-foreground">
-                    Wir verwenden Cookies, um Benutzern die bestmögliche Nutzer-Erfahrung zu ermöglichen. Bitten lesen Sie unsere <Link href="/cookie-richtlinie" className="underline hover:text-primary font-semibold">Cookie-Richtlinie</Link>. Indem Sie akzeptieren, stimmen Sie der Speicherung von nutzlosen, aber technisch notwendigen Cookies auf Ihrem Gerät zu.
-                </p>
-                <div className="flex gap-2 justify-end pt-2">
-                    <Button onClick={handleDecline} variant="ghost" className="flex-1 sm:flex-none">Ablehnen</Button>
-                    <Button onClick={handleAccept} className="flex-1 sm:flex-none">Akzeptieren</Button>
+        <Card className="w-full max-w-lg shadow-2xl animate-in slide-in-from-bottom-5 p-4">
+            <div className="md:flex md:items-center md:gap-6">
+                <div className="flex-grow">
+                    <h3 className="font-bold font-headline text-base">Wir benutzen Cookies</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                        Wir verwenden nutzlose, aber technisch notwendige Cookies, um Ihr Erlebnis zu verbessern. Lesen Sie unsere <Link href="/cookie-richtlinie" className="underline hover:text-primary">Cookie-Richtlinie</Link>.
+                    </p>
+                </div>
+                <div className="flex gap-2 mt-4 md:mt-0 shrink-0">
+                    <Button onClick={handleDecline} variant="ghost" className="flex-1 md:flex-none">Nur notwendige</Button>
+                    <Button onClick={handleAccept} className="flex-1 md:flex-none">Akzeptieren</Button>
                 </div>
             </div>
         </Card>
