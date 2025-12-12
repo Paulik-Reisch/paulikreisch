@@ -109,7 +109,7 @@ export default function AnleitungPage() {
                 <p>Für jede spezifische Aufgabe benötigt die KI detaillierte Informationen:</p>
                 <ul>
                     <li><strong>Dateipfade:</strong> Immer den vollständigen Pfad zur relevanten Datei angeben (z.B. `src/components/landing/hero.tsx`).</li>
-                    <li><strong>Komponentennamen:</strong> Nennen Sie die exakten Namen von React-Komponenten, die Sie ändern möchten (`<Hero />`, `<CtaBanner />`).</li>
+                    <li><strong>Komponentennamen:</strong> Nennen Sie die exakten Namen von React-Komponenten, die Sie ändern möchten (`&lt;Hero /&gt;`, `&lt;CtaBanner /&gt;`).</li>
                     <li><strong>Code-Ausschnitte:</strong> Um Missverständnisse auszuschließen, zitieren Sie den exakten Code, den Sie ändern möchten, und stellen Sie den neuen Code bereit.</li>
                 </ul>
 
