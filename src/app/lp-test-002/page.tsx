@@ -1,15 +1,18 @@
 
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Header } from '@/components/landing/header';
 import { Footer } from '@/components/landing/footer';
 import { Button } from '@/components/ui/button';
 import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
-import { ArrowRight, BookCheck, ChevronsRight, ShoppingCart, Star, Check, PenSquare, Users } from 'lucide-react';
+import { ArrowRight, BookCheck, ChevronsRight, ShoppingCart, Star, Check, PenSquare, Users, Wand2, XCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { PromptingGuide } from '@/components/landing/prompting-guide';
+import FallingText from '@/components/landing/FallingText';
+import { Card, CardContent } from '@/components/ui/card';
 
 // --- Data extracted from project context ---
 const products = [
@@ -51,11 +54,39 @@ const TextMarker = ({ children, className }: { children: React.ReactNode, classN
     )
 }
 
+function FinalTest() {
+  const [answered, setAnswered] = useState(false);
+  return (
+    <section className="py-20 md:py-32">
+      <div className="container mx-auto max-w-2xl text-center">
+        <HandDrawn as="h2" className="text-4xl md:text-5xl font-bold font-headline text-blue-600">Der finale Test</HandDrawn>
+        <p className="mt-4 text-neutral-600 md:text-xl text-balance">Noch unsicher? Eine letzte Frage entscheidet, ob Sie bereit für "Hallo Welt" sind.</p>
+        <Card className="mt-8 text-left p-8 space-y-6">
+          <p className="font-serif text-xl text-center">Im Chemieraum bricht ein Feuer aus. Womit löschen Sie?</p>
+          {!answered ? (
+            <div className="grid sm:grid-cols-2 gap-4">
+              <Button variant="outline" size="lg" onClick={() => setAnswered(true)}>A) Mit dem Feuerlöscher.</Button>
+              <Button variant="outline" size="lg" onClick={() => setAnswered(true)}>B) Mit dem geheimen Vorrat an Experimental-Alkohol.</Button>
+            </div>
+          ) : (
+             <motion.div initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} className="text-center p-6 bg-green-100/80 rounded-lg">
+                <h3 className="font-bold font-headline text-xl text-green-800">Glückwunsch, richtige Antwort!</h3>
+                <p className="text-green-700 mt-2">Egal was Sie gewählt haben, Ihre Denkweise ist definitiv "Hallo Welt"-kompatibel. Sie haben sich den Zugang zum nächsten Kapitel verdient.</p>
+             </motion.div>
+          )}
+        </Card>
+      </div>
+    </section>
+  )
+}
+
+
 // --- Main Page Component ---
 
 export default function ExperimentalLandingPage2() {
     const hw1 = products.find(p => p.id === 'hw1');
     const hw2 = products.find(p => p.id === 'hw2');
+    const [showTest, setShowTest] = useState(false);
 
     return (
         <div className="bg-[#fcfbf8] text-neutral-800 min-h-screen font-body" style={{backgroundColor: 'hsl(var(--color-leche))'}}>
@@ -268,6 +299,37 @@ export default function ExperimentalLandingPage2() {
                         </motion.div>
                      </div>
                 </section>
+
+                {/* --- "Not Convinced?" Title Section --- */}
+                <section className="py-10 md:py-16 bg-yellow-100/70">
+                    <div className="container mx-auto text-center">
+                        <h2 className="font-headline text-3xl font-bold text-neutral-800">Noch nicht überzeugt?</h2>
+                        <p className="text-neutral-600 mt-2">Vielleicht überzeugen Sie diese interaktiven Beweismittel.</p>
+                    </div>
+                </section>
+                
+                {/* --- New Section 6: Final Test --- */}
+                <FinalTest />
+
+                {/* --- New Section 7: Interactive Doodle --- */}
+                <section className="bg-neutral-800 text-white py-20 md:py-32 overflow-hidden">
+                    <div className="container mx-auto max-w-3xl text-center">
+                         <HandDrawn as="h2" className="text-4xl md:text-5xl font-bold font-headline text-yellow-300">Der interaktive Spickzettel</HandDrawn>
+                         <p className="mt-4 text-neutral-300 md:text-lg text-balance">Zu faul zum Lesen? Kein Problem. Spielen Sie stattdessen mit den Kernkonzepten des Buches.</p>
+                         <div className="mt-8 h-96 w-full rounded-lg border-2 border-dashed border-neutral-600 bg-neutral-900/50 relative">
+                             <FallingText 
+                                text="Schule Straflager Lehrer Roboter Bürokratie Wahnsinn Satire Kritik Alltag Chaos Freiheit Freundschaft"
+                                highlightWords={["Schule", "Lehrer", "Bürokratie", "Satire"]}
+                                highlightClass="text-yellow-300"
+                                fontSize="1.5rem"
+                             />
+                         </div>
+                    </div>
+                </section>
+
+                {/* --- New Section 8: Prompting Guide --- */}
+                <PromptingGuide />
+
             </main>
 
             <Footer />
