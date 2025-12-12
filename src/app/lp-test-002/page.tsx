@@ -11,7 +11,6 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { PromptingGuide } from '@/components/landing/prompting-guide';
-import FallingText from '@/components/landing/FallingText';
 import { Card, CardContent } from '@/components/ui/card';
 
 // --- Data extracted from project context ---
@@ -64,9 +63,9 @@ function FinalTest() {
         <Card className="mt-8 text-left p-8 space-y-6">
           <p className="font-serif text-xl text-center">Im Chemieraum bricht ein Feuer aus. Womit löschen Sie?</p>
           {!answered ? (
-            <div className="grid sm:grid-cols-2 gap-4">
-              <Button variant="outline" size="lg" onClick={() => setAnswered(true)}>A) Mit dem Feuerlöscher.</Button>
-              <Button variant="outline" size="lg" onClick={() => setAnswered(true)}>B) Mit dem geheimen Vorrat an Experimental-Alkohol.</Button>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button variant="outline" size="lg" onClick={() => setAnswered(true)} className="flex-1 h-auto py-3">A) Mit dem Feuerlöscher.</Button>
+              <Button variant="outline" size="lg" onClick={() => setAnswered(true)} className="flex-1 h-auto py-3">B) Mit dem geheimen Vorrat an Experimental-Alkohol.</Button>
             </div>
           ) : (
              <motion.div initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} className="text-center p-6 bg-green-100/80 rounded-lg">
