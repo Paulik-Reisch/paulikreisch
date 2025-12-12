@@ -20,6 +20,7 @@ export default {
         body: ['Inter', 'sans-serif'],
         headline: ['Poppins', 'sans-serif'],
         code: ['monospace'],
+        handwritten: ['"Patrick Hand"', 'cursive'],
       },
       colors: {
         background: 'hsl(var(--background))',
