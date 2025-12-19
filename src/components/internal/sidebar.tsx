@@ -113,7 +113,7 @@ export function InternalSidebar() {
             {additionalItems.map((item) => (
                 <SidebarMenuItem key={item.href}>
                 <Link href={item.href} className="w-full">
-                    <SidebarMenuButton isActive={pathname === item.href} tooltip={item.label} variant="ghost" className="justify-start data-[active=true]:bg-accent data-[active=true]:text-accent-foreground data-[active=true]:font-semibold hover:bg-gray-100 rounded-sm">
+                    <SidebarMenuButton isActive={pathname.startsWith(item.href)} tooltip={item.label} variant="ghost" className="justify-start data-[active=true]:bg-accent data-[active=true]:text-accent-foreground data-[active=true]:font-semibold hover:bg-gray-100 rounded-sm">
                     <item.icon />
                     <span>{item.label}</span>
                     </SidebarMenuButton>

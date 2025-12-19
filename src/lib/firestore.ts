@@ -443,6 +443,16 @@ export async function deleteNewsletter(id: string, user: string) {
     await addLog(user, 'Newsletter gelöscht', `ID: ${id}`);
 }
 
+// --- CAMPAIGNS ---
+export async function addCampaign(data: any, user: string) {
+    const campaignsCol = collection(db, 'campaigns');
+    await addDoc(campaignsCol, {
+        ...data,
+        sentAt: Timestamp.now()
+    });
+    await addLog(user, 'Kampagne erstellt', `Newsletter: ${data.newsletterName}`);
+}
+
 // --- EXCERPTS ---
 
 async function initializeExcerpts() {
