@@ -3,9 +3,10 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { PlayCircle, PauseCircle, Music, Forward, Rewind } from 'lucide-react';
+import { PlayCircle, PauseCircle, Rewind, Forward, Music } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { Slider } from '@/components/ui/slider';
 
 interface Song {
   title: string;
@@ -22,10 +23,20 @@ const playlist: Song[] = [
   // Weitere Songs können hier hinzugefügt werden
 ];
 
+const formatTime = (time: number) => {
+    if (isNaN(time)) return "00:00";
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+};
+
 export default function MusicPage() {
     const [currentSongIndex, setCurrentSongIndex] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
     const [progress, setProgress] = useState(0);
+    const [currentTime, setCurrentTime] = useState(0);
+    const [duration, setDuration] = useState(0);
+
     const audioRef = useRef<HTMLAudioElement>(null);
     const currentSong = playlist[currentSongIndex];
 
@@ -37,7 +48,7 @@ export default function MusicPage() {
                 audio.play().catch(e => console.error("Audio play failed", e));
             }
         }
-    }, [currentSongIndex, currentSong.url]);
+    }, [currentSongIndex, currentSong.url, isPlaying]);
 
     useEffect(() => {
         const audio = audioRef.current;
@@ -46,9 +57,11 @@ export default function MusicPage() {
         const handlePlay = () => setIsPlaying(true);
         const handlePause = () => setIsPlaying(false);
         const handleTimeUpdate = () => {
-            if (audio.duration) {
-                setProgress((audio.currentTime / audio.duration) * 100);
-            }
+            setCurrentTime(audio.currentTime);
+            setProgress((audio.currentTime / audio.duration) * 100);
+        };
+        const handleLoadedMetadata = () => {
+            setDuration(audio.duration);
         };
         const handleEnded = () => {
             handleNext();
@@ -57,12 +70,14 @@ export default function MusicPage() {
         audio.addEventListener('play', handlePlay);
         audio.addEventListener('pause', handlePause);
         audio.addEventListener('timeupdate', handleTimeUpdate);
+        audio.addEventListener('loadedmetadata', handleLoadedMetadata);
         audio.addEventListener('ended', handleEnded);
 
         return () => {
             audio.removeEventListener('play', handlePlay);
             audio.removeEventListener('pause', handlePause);
             audio.removeEventListener('timeupdate', handleTimeUpdate);
+            audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
             audio.removeEventListener('ended', handleEnded);
         }
     }, []);
@@ -75,7 +90,6 @@ export default function MusicPage() {
             } else {
                 audio.play().catch(e => console.error("Audio play failed", e));
             }
-            setIsPlaying(!isPlaying);
         }
     };
     
@@ -84,41 +98,51 @@ export default function MusicPage() {
     };
 
     const handlePrev = () => {
-        setCurrentSongIndex((prevIndex) => (prevIndex - 1 + playlist.length) % playlist.length);
+        if (audioRef.current && audioRef.current.currentTime > 3) {
+            audioRef.current.currentTime = 0;
+        } else {
+            setCurrentSongIndex((prevIndex) => (prevIndex - 1 + playlist.length) % playlist.length);
+        }
+    };
+    
+    const handleSeek = (value: number[]) => {
+        if (audioRef.current) {
+            audioRef.current.currentTime = (value[0] / 100) * duration;
+        }
     };
 
     return (
-        <div className="space-y-6 p-4 md:p-6">
-            <header>
-                <h1 className="text-2xl font-medium text-gray-900">Musik-Player</h1>
-                <p className="text-sm text-gray-500 mt-1">Hören Sie Ihre ausgewählte Musik.</p>
-            </header>
-            
-            <Card className="max-w-md mx-auto gcp-card">
-                <CardContent className="p-6 flex flex-col items-center text-center">
-                    <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mb-4">
-                        <Music className="w-12 h-12 text-gray-500"/>
+        <div className="space-y-6 p-4 md:p-6 flex flex-col items-center justify-center h-full">
+            <Card className="w-full max-w-sm overflow-hidden gcp-card shadow-2xl">
+                <div className="aspect-square bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                    <Music className="w-24 h-24 text-gray-400 dark:text-gray-500"/>
+                </div>
+                <CardContent className="p-6 text-center space-y-6">
+                    <div className="space-y-1">
+                        <h2 className="text-xl font-bold text-gray-900">{currentSong.title}</h2>
+                        <p className="text-sm text-gray-500">{currentSong.artist}</p>
                     </div>
-                    <h2 className="text-xl font-bold">{currentSong.title}</h2>
-                    <p className="text-sm text-muted-foreground">{currentSong.artist}</p>
 
-                    <div className="w-full mt-6 space-y-2">
-                        <Progress value={progress} className="w-full h-2"/>
-                        <div className="flex justify-between text-xs text-muted-foreground">
-                            <span>{audioRef.current ? new Date(audioRef.current.currentTime * 1000).toISOString().substr(14, 5) : '00:00'}</span>
-                            <span>{audioRef.current && audioRef.current.duration ? new Date(audioRef.current.duration * 1000).toISOString().substr(14, 5) : '00:00'}</span>
+                    <div className="space-y-2">
+                        <Slider
+                            value={[progress]}
+                            onValueChange={handleSeek}
+                        />
+                        <div className="flex justify-between text-xs text-gray-500">
+                            <span>{formatTime(currentTime)}</span>
+                            <span>{formatTime(duration)}</span>
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-center gap-4 mt-6">
-                        <Button onClick={handlePrev} variant="ghost" size="icon" className="gcp-icon-button">
-                            <Rewind className="w-6 h-6"/>
+                    <div className="flex items-center justify-center gap-2">
+                        <Button onClick={handlePrev} variant="ghost" size="icon" className="gcp-icon-button h-12 w-12">
+                            <Rewind className="w-8 h-8"/>
                         </Button>
-                         <Button onClick={togglePlayPause} variant="ghost" size="icon" className="gcp-icon-button h-16 w-16">
-                            {isPlaying ? <PauseCircle className="w-12 h-12" /> : <PlayCircle className="w-12 h-12" />}
+                         <Button onClick={togglePlayPause} variant="ghost" size="icon" className="gcp-icon-button h-20 w-20">
+                            {isPlaying ? <PauseCircle className="w-16 h-16" /> : <PlayCircle className="w-16 h-16" />}
                         </Button>
-                        <Button onClick={handleNext} variant="ghost" size="icon" className="gcp-icon-button">
-                            <Forward className="w-6 h-6"/>
+                        <Button onClick={handleNext} variant="ghost" size="icon" className="gcp-icon-button h-12 w-12">
+                            <Forward className="w-8 h-8"/>
                         </Button>
                     </div>
                 </CardContent>
