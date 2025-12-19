@@ -20,33 +20,64 @@ const songData = {
   title: "Como hace el perro?",
   artist: "LOS_CHIPRIONES",
   duration: 168, // 2:48 in seconds
-  albumArt: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/como-hace-el-perro-cover.png?alt=media&token=c19a89fd-b633-4876-946a-7b3b723a1a6b",
+  albumArt: "https://storage.googleapis.com/corpusant-app-public/riffs/ad9b5cb5-e809-4cd9-afdd-35da65d95afc/image/10c00295-eee6-4268-85f5-3bd7559543da.jpg",
   audioUrl: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/music%2FComo%20hace%20el%20perro_.mp3?alt=media&token=cd0a9f8a-fb76-40e1-9d2b-c9d64213dc6a",
   soundDetails: "Mexican folk music, heavy lots of accordion, tubas, brass section, sleigh bells, organs and piano, upbeat waltz tempo, warm celebratory atmosphere, playful Continental charm, sing-along holiday spirit, 200 BPM, male vocal ensemble, sudden bell tones, melody sometimes underlined with whistling effects, joyful mexican vibes, wild music!! very fast, clear loud vocals!!",
   model: "FUZZ-2.0",
   lyrics: [
-    { time: 0, text: "Intro" },
-    { time: 8.5, text: "solo wisteling at begingi" },
-    { time: 21, text: "¡Guau, guau, guau!" },
-    { time: 24, text: "Así es como lo hace el perro" },
-    { time: 27, text: "¡Guau, guau, guau!" },
-    { time: 29.5, text: "Así es como lo hace el perro" },
-    { time: 32.5, text: "Él dice, ¡guau, guau, guau!" },
-    { time: 35, text: "Porque así es como lo hace el perro" },
-    { time: 38, text: "Miau, así es como lo hace el gato" },
-    { time: 41, text: "Y pío, pío, pío, así es como lo hace el pájaro" },
-    { time: 44, text: "Y muu, así es como lo hace la vaca" },
-    { time: 46.5, text: "Pero el perro dice ¡guau, guau!" },
-    { time: 49.5, text: "(Instrumental)" },
-    { time: 71, text: "¡Guau, guau, guau!" },
-    { time: 73.5, text: "Así es como lo hace el perro" },
-    { time: 76.5, text: "Él dice, ¡guau, guau, guau!" },
-    { time: 79, text: "Porque así es como lo hace el perro" },
-    { time: 82, text: "Miau, así es como lo hace el gato" },
-    { time: 85, text: "Y pío, pío, pío, así es como lo hace el pájaro" },
-    { time: 88, text: "Y muu, así es como lo hace la vaca" },
-    { time: 90.5, text: "Pero el perro dice ¡guau, guau!" },
-    { time: 93, text: "(Outro)" }
+    { time: 0, text: "℗ Max Reisch & Philipp Paulik - All rights reserved" },
+    { time: 1, text: "[Intro]" },
+    { time: 8.5, text: "[solo wisteling at begingi]" },
+    { time: 21, text: "Wuff! Wuff!" },
+    { time: 22.5, text: "Joder, callate perro!!" },
+    { time: 24, text: "[Verse 1]" },
+    { time: 25, text: "Hola hola, oye ladron!" },
+    { time: 27, text: "te voy a contar una historia!" },
+    { time: 29.5, text: "[Verse 2]" },
+    { time: 30.5, text: "Pero primero:" },
+    { time: 32, text: "Chu pa me lo !" },
+    { time: 34, text: "[Bridge]" },
+    { time: 35, text: "Wuff! Wuff!" },
+    { time: 36.5, text: "Jo! jo! jo! jode te!" },
+    { time: 38, text: "[Drop]" },
+    { time: 39, text: "Ay chiquito, como hace el perro??" },
+    { time: 41.5, text: "Siii, hace: Wuff! Wuff!" },
+    { time: 44, text: "*Joder, callate perro!!*" },
+    { time: 46, text: "y.. Chu pa me lo !" },
+    { time: 47.5, text: "carajo!" },
+    { time: 48.5, text: "caya te PEN DEEEJO!" },
+    { time: 51, text: "[Verse 3]" },
+    { time: 52, text: "Wuff! Wuff!" },
+    { time: 53.5, text: "je je je calla-oos!" },
+    { time: 55, text: "Wuff! Wuff!" },
+    { time: 57, text: "[solo wisteling]" },
+    { time: 60, text: "[Bridge]" },
+    { time: 61, text: "HI JO De PUUUU TA LO-CA que to-ca con su boca!!" },
+    { time: 65, text: "HI JO De PUUUU TA De, PUUUU TA LO-CA que to-ca con su boca" },
+    { time: 69, text: "**foca moca doca *LOCA*!!**" },
+    { time: 71, text: "[Drop]" },
+    { time: 72, text: "Ay chiquito, como hace el perro??" },
+    { time: 74.5, text: "Siii! hace: Wuff! Wuff!" },
+    { time: 76.5, text: "*Joder, callate perro!!*" },
+    { time: 78.5, text: "Chu pa me lo !" },
+    { time: 80, text: "y caya te PEN DEJO!!" },
+    { time: 82, text: "[solo wisteling at begingi]" },
+    { time: 85, text: "[Fade out]" },
+    { time: 86, text: "La cancion se termina," },
+    { time: 88, text: "y ahora dame las mamas fritaadas!!!!!!!" },
+    { time: 91, text: "me ca-go en tu cabeza!" },
+    { time: 93, text: "Chu pa me lo!" },
+    { time: 95, text: "[Loud orchera]" },
+    { time: 96, text: "CHUUU PAAA MEEE LO!!" },
+    { time: 98, text: "JO JO JO JO jojo!!" },
+    { time: 100, text: "MEEE das LOCOOO!" },
+    { time: 102, text: "[niños en un choir]" },
+    { time: 103, text: "y ahora salga la lecheee de tu PO JA corta" },
+    { time: 106, text: "mientras ellos bailan con cocaina!" },
+    { time: 109, text: "y nos damos una gran cerveeza!" },
+    { time: 112, text: "jo! jo! jo!." },
+    { time: 114, text: "saludas a mi POLLA duuu-ra!" },
+    { time: 117, text: "[solo wisteling fade out]" }
   ]
 };
 
@@ -145,7 +176,7 @@ export default function MusicUIPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
                 {/* Left Column - Album Art */}
                 <div className="flex justify-center items-start">
-                    <Image src={songData.albumArt} alt="Album Art" width={500} height={500} className="rounded-lg shadow-2xl"/>
+                    <Image src={songData.albumArt} alt="Album Art" width={350} height={350} className="rounded-lg shadow-2xl"/>
                 </div>
 
                 {/* Right Column - Song Info */}
@@ -235,3 +266,4 @@ export default function MusicUIPage() {
     </div>
   );
 }
+
