@@ -3,7 +3,7 @@ import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 import { Badge } from "@/components/ui/badge";
-import { notFound }s from "next/navigation";
+import { notFound } from "next/navigation";
 
 // In a real application, you would fetch this data from an API based on the slug.
 // e.g., from the Wikipedia API
