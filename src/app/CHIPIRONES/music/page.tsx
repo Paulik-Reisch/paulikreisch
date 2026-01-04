@@ -73,22 +73,27 @@ export default function PlayerInterface() {
     }
   }, [isUserLoading, user, auth]);
 
+  // EFFECT 1: Load new track when currentTrack changes
   useEffect(() => {
     if (currentTrack && audioRef.current) {
-        if (audioRef.current.src !== currentTrack.audioUrl) {
-            audioRef.current.src = currentTrack.audioUrl;
-            // The `togglePlay` function will handle playing if `isPlaying` is true.
-            // This prevents race conditions.
-            if (isPlaying) {
-                const playPromise = audioRef.current.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(e => console.error("Error playing audio on track change:", e));
-                }
-            }
-        }
-        initLyrics(currentTrack.lyrics || []);
+      if (audioRef.current.src !== currentTrack.audioUrl) {
+        audioRef.current.src = currentTrack.audioUrl;
+      }
+      initLyrics(currentTrack.lyrics || []);
     }
-  }, [currentTrack]); // IMPORTANT: isPlaying is removed from dependency array
+  }, [currentTrack]);
+  
+  // EFFECT 2: Handle play/pause state changes
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    
+    if (isPlaying) {
+      audio.play().catch(e => console.error("Error playing audio:", e));
+    } else {
+      audio.pause();
+    }
+  }, [isPlaying]);
 
   useEffect(() => {
       if (audioRef.current) {
@@ -113,7 +118,7 @@ export default function PlayerInterface() {
         div.onclick = () => {
             if(audioRef.current) {
                 audioRef.current.currentTime = line.time;
-                togglePlay(true);
+                setIsPlaying(true);
             }
         };
         lyricsContentRef.current?.appendChild(div);
@@ -125,35 +130,25 @@ export default function PlayerInterface() {
     const trackIndex = allTracks.findIndex(t => t.id === trackId);
     if (trackIndex !== -1) {
         setCurrentTrackIndex(trackIndex);
-        togglePlay(true);
+        setIsPlaying(true);
     }
   };
   
-  const togglePlay = useCallback((forcePlay?: boolean) => {
+  const togglePlay = useCallback(() => {
       if (!audioRef.current) return;
-      
-      const shouldPlay = forcePlay === undefined ? audioRef.current.paused : forcePlay;
-
-      if (shouldPlay) {
-          const playPromise = audioRef.current.play();
-          if (playPromise !== undefined) {
-              playPromise.catch(e => console.error("Play error:", e));
-          }
-      } else {
-          audioRef.current.pause();
-      }
+      setIsPlaying(prev => !prev);
   }, []);
 
   const playNextTrack = useCallback(() => {
     if(!allTracks || allTracks.length === 0) return;
     setCurrentTrackIndex(prevIndex => (prevIndex + 1) % allTracks.length);
-    togglePlay(true);
-  }, [allTracks, togglePlay]);
+    setIsPlaying(true);
+  }, [allTracks]);
   
   const playPrevTrack = () => {
     if(!allTracks || allTracks.length === 0) return;
     setCurrentTrackIndex(prevIndex => (prevIndex - 1 + allTracks.length) % allTracks.length);
-    togglePlay(true);
+    setIsPlaying(true);
   }
 
   const expandPlayer = () => playerContainerRef.current?.classList.add('expanded');
@@ -162,6 +157,7 @@ export default function PlayerInterface() {
   useEffect(() => {
     const audio = audioRef.current;
     if(audio) {
+      // These listeners update the UI based on the browser's audio state
       const onPlay = () => setIsPlaying(true);
       const onPause = () => setIsPlaying(false);
       audio.addEventListener('play', onPlay);
@@ -294,7 +290,7 @@ export default function PlayerInterface() {
                         <Repeat />
                     </button>
                     <button className="btn-ctrl" onClick={playPrevTrack}>⏮</button>
-                    <button className="btn-play-lg" id="btn-main-play" ref={btnMainPlayRef} onClick={() => togglePlay()}>▶</button>
+                    <button className="btn-play-lg" id="btn-main-play" ref={btnMainPlayRef} onClick={togglePlay}>▶</button>
                     <button className="btn-ctrl" onClick={playNextTrack}>⏭</button>
                     <button className="btn-ctrl disabled">•••</button>
                 </div>
