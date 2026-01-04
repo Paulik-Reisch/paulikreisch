@@ -1,0 +1,57 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Allow read-only access to most collections by default
+    match /{document=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Allow admins to write to specific collections
+    match /newsletters/{newsletterId} {
+      allow write: if true; // Allow anyone to create/update/delete newsletters
+    }
+
+    match /subscribers/{subscriberId} {
+        allow write: if true;
+    }
+
+    match /orders/{orderId} {
+        allow write: if true;
+    }
+    
+    match /logs/{logId} {
+        allow write: if true;
+    }
+
+    match /settings/{settingId} {
+        allow write: if request.auth != null;
+    }
+
+    match /legal/{pageId} {
+        allow write: if request.auth != null;
+    }
+
+    match /palabrotas/{palabrotaId} {
+        allow write: if request.auth != null;
+    }
+
+    match /chistes/{chisteId} {
+        allow write: if request.auth != null;
+    }
+
+    match /excerpts/{excerptId} {
+        allow write: if request.auth != null;
+    }
+
+     match /campaigns/{campaignId} {
+        allow write: if request.auth != null;
+    }
+
+    match /seo_metadata/{metadataId} {
+      allow write: if request.auth != null;
+    }
+  }
+}
