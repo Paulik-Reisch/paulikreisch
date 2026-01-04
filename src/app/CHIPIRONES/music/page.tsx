@@ -75,15 +75,20 @@ export default function PlayerInterface() {
 
   useEffect(() => {
     if (currentTrack && audioRef.current) {
-      if (audioRef.current.src !== currentTrack.audioUrl) {
-         audioRef.current.src = currentTrack.audioUrl;
-         if(isPlaying) {
-           audioRef.current.play().catch(e => console.error("Error playing audio:", e));
-         }
-      }
-      initLyrics(currentTrack.lyrics || []);
+        if (audioRef.current.src !== currentTrack.audioUrl) {
+            audioRef.current.src = currentTrack.audioUrl;
+            // The `togglePlay` function will handle playing if `isPlaying` is true.
+            // This prevents race conditions.
+            if (isPlaying) {
+                const playPromise = audioRef.current.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(e => console.error("Error playing audio on track change:", e));
+                }
+            }
+        }
+        initLyrics(currentTrack.lyrics || []);
     }
-  }, [currentTrack, isPlaying]);
+  }, [currentTrack]); // IMPORTANT: isPlaying is removed from dependency array
 
   useEffect(() => {
       if (audioRef.current) {
@@ -130,20 +135,23 @@ export default function PlayerInterface() {
       const shouldPlay = forcePlay === undefined ? audioRef.current.paused : forcePlay;
 
       if (shouldPlay) {
-          audioRef.current.play().catch(e => console.error("Play error:", e));
+          const playPromise = audioRef.current.play();
+          if (playPromise !== undefined) {
+              playPromise.catch(e => console.error("Play error:", e));
+          }
       } else {
           audioRef.current.pause();
       }
   }, []);
 
   const playNextTrack = useCallback(() => {
-    if(!allTracks) return;
+    if(!allTracks || allTracks.length === 0) return;
     setCurrentTrackIndex(prevIndex => (prevIndex + 1) % allTracks.length);
     togglePlay(true);
   }, [allTracks, togglePlay]);
   
   const playPrevTrack = () => {
-    if(!allTracks) return;
+    if(!allTracks || allTracks.length === 0) return;
     setCurrentTrackIndex(prevIndex => (prevIndex - 1 + allTracks.length) % allTracks.length);
     togglePlay(true);
   }
@@ -168,7 +176,7 @@ export default function PlayerInterface() {
 
 
   const seek = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!audioRef.current) return;
+    if (!audioRef.current || !audioRef.current.duration) return;
     const target = e.currentTarget as HTMLElement;
     const width = target.clientWidth;
     const clickX = e.nativeEvent.offsetX;
@@ -183,7 +191,7 @@ export default function PlayerInterface() {
   };
 
   const timeUpdateHandler = () => {
-    if (!audioRef.current || !progressFillRef.current || !currentTimeRef.current) return;
+    if (!audioRef.current || !progressFillRef.current || !currentTimeRef.current || !audioRef.current.duration) return;
     const percent = (audioRef.current.currentTime / audioRef.current.duration) * 100;
     progressFillRef.current.style.width = `${percent}%`;
     currentTimeRef.current.innerText = formatTime(audioRef.current.currentTime);
