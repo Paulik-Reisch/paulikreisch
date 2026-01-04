@@ -146,7 +146,6 @@ const pageHTML = `
         .input-group { flex-direction: column; }
     }
 </style>
-<div dangerouslySetInnerHTML={{ __html: \`
     <!-- SECTION 1: HERO - The first impression -->
     <section id="sec-hero">
         <div class="container fade-in">
@@ -425,7 +424,6 @@ const pageHTML = `
             </div>
         </div>
     </footer>
-\` }} />
 `;
 
 export default function ChipironesPage() {
