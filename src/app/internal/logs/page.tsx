@@ -66,5 +66,4 @@ export default async function LogsPage() {
         </div>
     );
 }
-
     
