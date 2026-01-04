@@ -10,7 +10,7 @@ service cloud.firestore {
     // Allow public read access to the tracks collection for the music player,
     // but restrict write access. In a real app, write would be limited to admins.
     match /CHIPIRONES/music/tracks/{trackId} {
-      allow read: if isSignedIn();
+      allow get, list, read: if isSignedIn();
       allow write: if isSignedIn(); // In a real app, you'd check for an admin claim here.
     }
     
