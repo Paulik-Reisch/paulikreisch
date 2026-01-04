@@ -3,10 +3,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
-import { getFirestore, collection, addDoc, serverTimestamp, getDocs, query, orderBy, deleteDoc, doc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, serverTimestamp, getDocs, query, orderBy, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useFirestore } from '@/firebase/provider';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Trash2, Edit } from 'lucide-react';
+import { Loader2, Trash2, Edit, XCircle } from 'lucide-react';
 import { useCollection, useMemoFirebase } from '@/firebase';
 
 // TYPES
@@ -19,10 +19,13 @@ interface Track {
     id: string;
     title: string;
     artist: string;
+    album: string;
+    duration: string;
     imageUrl: string;
     vibe: string;
     createdAt: any;
     audioUrl: string;
+    lyrics?: LyricLine[];
 }
 
 const VIBES = [
@@ -66,6 +69,7 @@ const AdminDashboard: React.FC = () => {
   // STATE: UI
   const [isUploading, setIsUploading] = useState(false);
   const [statusMsg, setStatusMsg] = useState('Ready for new masterpiece.');
+  const [editingTrackId, setEditingTrackId] = useState<string | null>(null);
   
   const fallbackCoverUrl = "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/los_chipirones%2Fdefault_1-1_cover_art.png?alt=media&token=ba0b2ed2-974c-4a1f-a0fc-9dab5fbfab1f";
 
@@ -102,9 +106,11 @@ const AdminDashboard: React.FC = () => {
       setCoverFile(null);
       setCoverUrl('');
       setLyrics([{ time: 0, text: "" }]);
+      setEditingTrackId(null);
   }
 
   const handleUpload = async () => {
+    if (!firestore) return;
     if (!title) {
         toast({ variant: 'destructive', title: 'Fehler', description: 'Ein Track-Titel ist erforderlich.' });
         return;
@@ -145,14 +151,24 @@ const AdminDashboard: React.FC = () => {
             audioUrl: finalAudioUrl,
             imageUrl: finalCoverUrl,
             lyrics: lyrics.filter(l => l.text.trim() !== ''),
-            createdAt: serverTimestamp()
         };
 
-        setStatusMsg('Writing to Firestore...');
-        await addDoc(collection(firestore, "CHIPIRONES/music/tracks"), trackData);
-
-        toast({ title: 'Erfolg!', description: `Track "${title}" wurde erfolgreich veröffentlicht.` });
-        setStatusMsg('Success! Track is live. 🐙');
+        if (editingTrackId) {
+            setStatusMsg('Updating document in Firestore...');
+            const trackRef = doc(firestore, "CHIPIRONES/music/tracks", editingTrackId);
+            await updateDoc(trackRef, trackData);
+            toast({ title: 'Erfolg!', description: `Track "${title}" wurde erfolgreich aktualisiert.` });
+            setStatusMsg('Success! Track updated. 🐙');
+        } else {
+            setStatusMsg('Writing to Firestore...');
+            await addDoc(collection(firestore, "CHIPIRONES/music/tracks"), {
+                ...trackData,
+                createdAt: serverTimestamp()
+            });
+            toast({ title: 'Erfolg!', description: `Track "${title}" wurde erfolgreich veröffentlicht.` });
+            setStatusMsg('Success! Track is live. 🐙');
+        }
+        
         resetForm();
         setTimeout(() => setStatusMsg('Ready for new masterpiece.'), 3000);
       
@@ -176,8 +192,15 @@ const AdminDashboard: React.FC = () => {
         // Delete audio and image from Storage if they are from storage
         const deleteStorageFile = async (url: string) => {
             if (url && url.includes('firebasestorage.googleapis.com')) {
-                const fileRef = ref(storage, url);
-                await deleteObject(fileRef);
+                try {
+                  const fileRef = ref(storage, url);
+                  await deleteObject(fileRef);
+                } catch(e: any) {
+                  // It's okay if the file doesn't exist (e.g. it was already deleted or never existed)
+                  if (e.code !== 'storage/object-not-found') {
+                    throw e;
+                  }
+                }
             }
         };
 
@@ -193,10 +216,25 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
-  const handleEdit = (trackId: string) => {
-      // Implement edit logic, e.g., navigate to an edit page or open a modal
-      toast({ title: "TODO", description: `Edit-Funktion für Track ${trackId} implementieren.` });
+  const handleEdit = (track: Track) => {
+      setEditingTrackId(track.id);
+      setTitle(track.title);
+      setArtist(track.artist);
+      setAlbum(track.album);
+      setDuration(track.duration);
+      setVibe(track.vibe);
+      setAudioUrl(track.audioUrl);
+      setCoverUrl(track.imageUrl);
+      setLyrics(track.lyrics || [{ time: 0, text: "" }]);
+      setAudioFile(null);
+      setCoverFile(null);
+      setStatusMsg(`Editing "${track.title}"...`);
   };
+
+  const handleCancelEdit = () => {
+    resetForm();
+    setStatusMsg('Ready for new masterpiece.');
+  }
 
 
   return (
@@ -331,7 +369,7 @@ const AdminDashboard: React.FC = () => {
             <span className="logo-icon">🐙</span>
             <div>
                 <h1>Mission Control</h1>
-                <p>Upload New Masterpiece</p>
+                <p>{editingTrackId ? `Editing Track` : 'Upload New Masterpiece'}</p>
             </div>
         </header>
 
@@ -452,14 +490,22 @@ const AdminDashboard: React.FC = () => {
         {/* 4. ACTIONS */}
         <div className="actions">
             <div className="status">{statusMsg}</div>
-            <button 
-                className={`cta-btn ${isUploading ? 'loading' : ''}`} 
-                onClick={handleUpload} 
-                disabled={isUploading}
-            >
-                {isUploading && <Loader2 className="animate-spin" />}
-                {isUploading ? 'UPLOADING...' : 'PUBLISH TRACK'}
-            </button>
+             <div className="flex items-center gap-4">
+                {editingTrackId && (
+                     <button className="text-btn" onClick={handleCancelEdit} disabled={isUploading}>
+                        <XCircle size={16} className="inline-block mr-1" />
+                        Cancel Edit
+                    </button>
+                )}
+                <button 
+                    className={`cta-btn ${isUploading ? 'loading' : ''}`} 
+                    onClick={handleUpload} 
+                    disabled={isUploading}
+                >
+                    {isUploading && <Loader2 className="animate-spin" />}
+                    {isUploading ? 'SAVING...' : (editingTrackId ? 'UPDATE TRACK' : 'PUBLISH TRACK')}
+                </button>
+            </div>
         </div>
 
       </div>
@@ -478,7 +524,7 @@ const AdminDashboard: React.FC = () => {
                         <p>{track.artist} - {track.vibe}</p>
                     </div>
                     <div className="track-list-actions">
-                        <button onClick={() => handleEdit(track.id)} title="Bearbeiten"><Edit size={16}/></button>
+                        <button onClick={() => handleEdit(track)} title="Bearbeiten"><Edit size={16}/></button>
                         <button onClick={() => handleDelete(track)} title="Löschen"><Trash2 size={16}/></button>
                     </div>
                 </div>
@@ -492,3 +538,4 @@ const AdminDashboard: React.FC = () => {
 
 export default AdminDashboard;
     
+
