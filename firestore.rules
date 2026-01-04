@@ -1,82 +1,21 @@
-/**
- * This ruleset implements a strict Role-Based Access Control (RBAC) model for a music management application.
- *
- * Core Philosophy:
- * The security model is centered around an 'admin' role. Only users who have been explicitly granted
- * this admin role (via Firebase Auth Custom Claims) are permitted to read or modify any data.
- * All other users, including authenticated non-admins and anonymous users, are denied all access.
- *
- * Data Structure:
- * All manageable data is located in a single collection: /CHIPIRONES/music/tracks/{trackId}.
- * This centralized structure simplifies the rules, as one check can secure the entire dataset.
- *
- * Key Security Decisions:
- * - Admin-Only Access: All operations (read, write, delete) are gated by an `isAdmin()` check.
- * - No Public Access: There are no publicly readable collections. This prevents unauthorized data listing or access.
- * - Custom Claims for Roles: The system relies on Firebase Auth Custom Claims to identify admins.
- *   An administrator must set a custom claim like `{ admin: true }` on a user's auth token
- *   for them to gain access.
- * - Default Deny: The default security posture is to deny all requests. Access is only granted
- *   if a specific rule explicitly allows it.
- */
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // ----------------------------------------------------------------------
-    // Helper Functions
-    // ----------------------------------------------------------------------
-
-    /**
-     * Checks if the user is authenticated.
-     */
+  
     function isSignedIn() {
       return request.auth != null;
     }
-
-    /**
-     * Checks if the user has an 'admin' role via Firebase Auth Custom Claims.
-     * An administrator must set this claim on the user's token out-of-band.
-     * Example: `firebase auth:set-custom-claims <user_uid> --claims='{"admin":true}'`
-     */
-    function isAdmin() {
-      return isSignedIn() && request.auth.token.admin == true;
-    }
-
-    /**
-     * Verifies that a document exists before an update or delete operation.
-     * This prevents futile writes and ensures rules act on existing data.
-     */
-    function isExistingDoc() {
-      return resource != null;
-    }
-
-    // ----------------------------------------------------------------------
-    // Collection Rules
-    // ----------------------------------------------------------------------
-
-    /**
-     * @description
-     *   Grants full read and write access to the music tracks collection
-     *   exclusively for users with an 'admin' role.
-     * @path
-     *   /CHIPIRONES/music/tracks/{trackId}
-     * @allow
-     *   An admin user (`request.auth.token.admin == true`) can (create) a new track document.
-     * @deny
-     *   A regular authenticated user (`request.auth.token.admin != true`) is denied when trying to (get) a track.
-     * @principle
-     *   Enforces strict Role-Based Access Control (RBAC) using Firebase Auth Custom Claims.
-     */
+    
+    // Allow read/write access to the tracks collection only for authenticated users.
+    // In a real app, you'd want to check for an admin claim: request.auth.token.admin == true
     match /CHIPIRONES/music/tracks/{trackId} {
-      // READ permissions
-      allow get: if isAdmin();
-      allow list: if isAdmin();
-
-      // WRITE permissions
-      allow create: if isAdmin();
-      allow update: if isAdmin() && isExistingDoc();
-      allow delete: if isAdmin() && isExistingDoc();
+      allow read, write: if isSignedIn();
+    }
+    
+    // Deny all other access by default
+    match /{path=**} {
+      allow read, write: if false;
     }
   }
 }

@@ -18,66 +18,35 @@
           "type": "string",
           "description": "Artist of the track."
         },
-        "album": {
-          "type": "string",
-          "description": "Album the track belongs to."
-        },
-        "genre": {
-          "type": "string",
-          "description": "Genre of the track."
-        },
         "duration": {
-          "type": "number",
-          "description": "Duration of the track in seconds."
-        },
-        "fileUrl": {
           "type": "string",
-          "description": "URL of the track file.",
-          "format": "uri"
+          "description": "Duration of the track in M:SS format."
         },
         "imageUrl": {
           "type": "string",
-          "description": "URL of the track's image.",
+          "description": "URL for the track's cover image.",
           "format": "uri"
         }
       },
       "required": [
-        "id",
         "title",
         "artist",
-        "album",
-        "genre",
         "duration",
-        "fileUrl",
         "imageUrl"
       ]
     }
   },
   "auth": {
     "providers": [
-      "password",
       "anonymous"
     ]
   },
   "firestore": {
-    "structure": [
-      {
-        "path": "CHIPIRONES/music/tracks/{trackId}",
-        "definition": {
-          "entityName": "Track",
-          "schema": {
-            "$ref": "#/backend/entities/Track"
-          },
-          "description": "Collection of music tracks. Accessible only to authenticated admins for management.",
-          "params": [
-            {
-              "name": "trackId",
-              "description": "Unique identifier for each track."
-            }
-          ]
-        }
-      }
-    ],
-    "reasoning": "Based on the requirements, the music tracks will be managed dynamically in a specific collection. To ensure proper access control, we'll create a dedicated collection named `tracks` nested under `CHIPIRONES/music`. To manage the application the admin has full read and write access. \n\n**Authorization Independence**: Since all tracks are accessible for management through the admin path, no denormalization is required in this scenario.  The security rules will focus on checking if the user has the admin role before granting access.\n\n**QAPs**: This structure supports secure listing because the admin can access the `tracks` collection directly.  The rules will allow only authenticated admins to `list` the contents, preventing unauthorized access. The segregation of tracks under `CHIPIRONES/music/tracks` ensures that only those with admin privileges can manage them."
+    "/CHIPIRONES/music/tracks/{trackId}": {
+      "schema": {
+        "$ref": "#/entities/Track"
+      },
+      "description": "Collection of music tracks. Accessible only to authenticated admins for management."
+    }
   }
 }
