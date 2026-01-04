@@ -222,7 +222,7 @@ const pageHTML = `
         <h2 class="red-text">WORAUF WARTEN SIE NOCH?</h2>
         <p>Die Uhr tickt. Die Exemplare schwinden. Das Schicksal ruft.</p>
         <a href="#order-form" class="cta-button">JA! ICH WILL ALLES ZUM SCHLEUDERPREIS!</a>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Credit_card_logos.svg/800px-Credit_card_logos.svg.png" style="width: 200px; margin-top: 10px; opacity: 0.7;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Cib-cc-visa_%28CoreUI_Icons_v1.0.0%29.svg/1280px-Cib-cc-visa_%28CoreUI_Icons_v1.0.0%29.svg.png" style="width: 200px; margin-top: 10px; opacity: 0.7;">
     </div>
     
     <!-- ORDER SECTION -->
@@ -295,11 +295,13 @@ const pageHTML = `
         <p>
             Der Countdown-Timer dient ausschließlich der dramaturgischen Untermalung und wird bei jedem Neuladen der Seite zurückgesetzt (wir nennen das "Zeitschleifen-Marketing"). "Solange der Vorrat reicht" bezieht sich auf den Vorrat an unserer Geduld oder den digitalen Speicherplatz. Ergebnisse können variieren. Wenn Sie nach dem Lesen von Buch 1 nicht wissen, wie die Lernvollzugsanstalt S-KS funktioniert, liegt das nicht an uns. Wenn Sie nach der Vorschau von Buch 2 immer noch nicht wissen, wie das Leben funktioniert, willkommen im Club. Keine Rückerstattung bei Nichtgefallen, geistiger Verwirrung oder plötzlicher Erleuchtung. Rechtsweg ist ausgeschlossen, wir sind ja hier nicht vor Gericht. Kaufen Sie jetzt. Bitte. Wir brauchen das Geld für Buch 3 ("Hallo Welt 3: Es reicht jetzt langsam").
         </p>
-        <p>&copy; 2024-2027 Super-Cheap-Selling-Strategies GmbH & Co. KG. Alle Rechte (und Linken) vorbehalten.</p>
+        <p>© 2024-2027 Smart-Selling-Campaigns Group / BY THE PAULIK_REISCH MEDIA. Alle Rechte (und Linken) vorbehalten.</p>
     </div>
 </div>
-`;
-
+`
+,
+  }
+];
 
 export default function SmsLp01Page() {
     useEffect(() => {
