@@ -1,15 +1,10 @@
 "use client";
 
 import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
-import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { SchnickSchnackSchnuck } from "./SchnickSchnackSchnuck";
 import { cn } from "@/lib/utils";
 
-type GameState = "idle" | "playing" | "result" | "bomb";
-
 export function Authors() {
-  const [gameState, setGameState] = useState<GameState>("idle");
 
   return (
     <section id="authors" className="w-full py-12 md:py-16 bg-subtle-yellow">
@@ -19,8 +14,8 @@ export function Authors() {
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Treffen Sie die verdrehten Köpfe</h2>
           </div>
         </div>
-        <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-1 md:gap-12 lg:max-w-none lg:grid-cols-3 mt-12">
-          <Card className={cn("transform transition-transform duration-500 hover:scale-105 hover:-rotate-1 -rotate-2", gameState === 'playing' && "animate-sway")}>
+        <div className="mx-auto grid max-w-4xl items-start gap-8 sm:grid-cols-1 md:grid-cols-2 md:gap-12 mt-12">
+          <Card className="transform transition-transform duration-500 hover:scale-105 hover:-rotate-1 -rotate-2">
             <CardHeader className="text-center">
               <Image
                 alt="Autor Paulik"
@@ -44,9 +39,7 @@ export function Authors() {
             </CardContent>
           </Card>
 
-          <SchnickSchnackSchnuck onGameStateChange={setGameState} />
-
-          <Card className={cn("transform transition-transform duration-500 hover:scale-105 hover:rotate-1 rotate-2", gameState === 'playing' && "animate-sway")} style={{ animationDelay: '0.1s' }}>
+          <Card className="transform transition-transform duration-500 hover:scale-105 hover:rotate-1 rotate-2">
             <CardHeader className="text-center">
               <Image
                 alt="Autor Reisch"
