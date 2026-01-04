@@ -5,8 +5,9 @@ import Link from 'next/link';
 
 const pageHTML = `
 <style>
-    /* --- CORE SETTINGS & RESET --- */
+    /* --- HEADER CONFIG --- */
     :root {
+        --header-h: 850px; /* Höhe des Headers */
         --bg-dark: #050505;
         --bg-card: #141414;
         --accent: #F46E7E; /* Dein Newsletter-Pink */
@@ -30,6 +31,182 @@ const pageHTML = `
 
     a { text-decoration: none; color: inherit; transition: 0.3s; }
     ul { list-style: none; }
+
+    /* HEADER CONTAINER */
+    #lp-header {
+        position: relative;
+        width: 100%;
+        height: var(--header-h);
+        background: #000;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    /* --- "SHADER" BACKGROUND EFFECT (CSS TRICK) --- */
+    .shader-bg {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: 0;
+        overflow: hidden;
+        opacity: 0.8;
+    }
+
+    /* Die tanzenden Blobs */
+    .blob {
+        position: absolute;
+        filter: blur(90px);
+        opacity: 0.8;
+        border-radius: 50%;
+        animation: floatShader 10s infinite alternate cubic-bezier(0.4, 0.0, 0.2, 1);
+    }
+
+    .blob-1 {
+        top: -10%; left: -10%;
+        width: 50vw; height: 50vw;
+        background: #4a0d16; /* Deep Red */
+        animation-duration: 12s;
+    }
+    
+    .blob-2 {
+        bottom: 0%; right: -10%;
+        width: 40vw; height: 40vw;
+        background: #F46E7E; /* Dein Pink */
+        animation-duration: 8s;
+        animation-direction: alternate-reverse;
+    }
+
+    .blob-3 {
+        top: 30%; left: 30%;
+        width: 30vw; height: 30vw;
+        background: #731e2c; /* Mid Tone */
+        animation-delay: -2s;
+        animation-duration: 15s;
+    }
+
+    /* Grid Overlay für den "Tech-Look" */
+    .grid-overlay {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+        z-index: 1;
+        mask-image: radial-gradient(circle, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%);
+    }
+
+    @keyframes floatShader {
+        0% { transform: translate(0, 0) scale(1); }
+        50% { transform: translate(30px, -50px) scale(1.1); }
+        100% { transform: translate(-20px, 40px) scale(0.9); }
+    }
+
+    /* --- NAVIGATION BAR (Glassmorphism) --- */
+    .nav-bar {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 30px 50px;
+        background: rgba(0,0,0,0.2); /* Ganz leicht */
+        backdrop-filter: blur(5px);
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .logo-text {
+        font-weight: 900;
+        font-size: 24px;
+        letter-spacing: -1px;
+        color: #fff;
+        text-transform: uppercase;
+        display: flex; align-items: center; gap: 10px;
+    }
+
+    /* --- HERO CONTENT --- */
+    .header-content {
+        position: relative;
+        z-index: 5;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 0 20px;
+        margin-top: -60px; /* Offset für visuelle Balance */
+    }
+
+    /* Riesiger Titel mit Glow */
+    .hero-h1 {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        font-weight: 800;
+        font-size: clamp(3rem, 10vw, 7rem); /* Responsive Giant Type */
+        line-height: 0.95;
+        letter-spacing: -2px;
+        color: transparent;
+        -webkit-text-stroke: 1px rgba(255,255,255,0.6);
+        margin-bottom: 30px;
+        position: relative;
+    }
+    
+    .hero-h1 span {
+        display: block;
+        color: #fff;
+        text-shadow: 0 0 50px rgba(244,110,126, 0.4); /* Pink Shadow */
+        -webkit-text-stroke: 0;
+    }
+
+    .hero-subtitle {
+        font-size: clamp(1rem, 2vw, 1.25rem);
+        max-width: 600px;
+        color: #ccc;
+        margin-bottom: 40px;
+        line-height: 1.6;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    /* DER BUTTON */
+    .cta-header-btn {
+        background: #F46E7E; /* Chipirones Pink */
+        color: #fff;
+        font-size: 18px;
+        font-weight: bold;
+        text-decoration: none;
+        padding: 18px 45px;
+        border-radius: 50px;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+        border: 2px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cta-header-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 40px rgba(244, 110, 126, 0.6);
+        background: #ff7d8d;
+    }
+    
+    .cta-header-btn:active {
+        transform: scale(0.95);
+    }
+
+    /* Floating Arrow Anim */
+    .btn-arrow { transition: 0.3s; font-size: 20px;}
+    .cta-header-btn:hover .btn-arrow { transform: translateX(5px); }
+
+    /* Responsiveness */
+    @media (max-width: 768px) {
+        .nav-bar { padding: 20px; }
+        .hero-h1 { font-size: 4rem; }
+    }
+
 
     /* --- UTILITY & ANIMATION --- */
     .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
@@ -67,11 +244,6 @@ const pageHTML = `
 
     /* --- SECTIONS (20 STYLES) --- */
     section { padding: 80px 0; border-bottom: 1px solid #1a1a1a; position: relative; overflow: hidden; }
-    
-    /* 1. HERO */
-    #sec-hero { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; background: radial-gradient(circle at center, #1a1012 0%, #000 70%); }
-    #sec-hero h1 { font-size: clamp(3rem, 8vw, 6rem); line-height: 1; margin-bottom: 20px; font-weight: 800; }
-    #sec-hero span { color: var(--accent); }
     
     /* 2. THE CLAIM */
     #sec-claim { text-align: center; font-size: 1.5rem; }
@@ -140,20 +312,54 @@ const pageHTML = `
     
     /* Responsive */
     @media(max-width: 768px) {
-        #sec-hero h1 { font-size: 3rem; }
         #sec-tech { grid-template-columns: 1fr; }
         .input-group { flex-direction: column; }
     }
 </style>
-    <!-- SECTION 1: HERO - The first impression -->
-    <section id="sec-hero">
-        <div class="container fade-in">
-            <h4>WELCOME TO</h4>
-            <h1>LOS <span class="glow-text">CHIPIRONES</span></h1>
-            <p style="margin-bottom: 40px; font-size: 1.2rem; color: #aaa;">AI Generated. Human Curated. Future Vibes.</p>
-            <a href="/CHIPIRONES/music" class="btn-main">Jetzt reinhören</a>
+    <!-- HEADER HTML STRUCTURE -->
+    <header id="lp-header">
+        
+        <!-- BACKGROUND ANIMATION LAYERS -->
+        <div class="shader-bg">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+            <div class="blob blob-3"></div>
+            <div class="grid-overlay"></div>
         </div>
-    </section>
+
+        <!-- TOP NAVIGATION -->
+        <nav class="nav-bar">
+            <div class="logo-text">
+                <span style="font-size:30px;">🐙</span> LOS CHIPIRONES
+            </div>
+            <!-- Kleines Menu für Desktop (optional) -->
+            <div style="display:flex; gap:30px; font-size:14px; font-weight:600; display:none; @media(min-width:700px){display:flex;}">
+                <a href="#" style="color:#fff; opacity:0.7;">About</a>
+                <a href="#" style="color:#fff; opacity:0.7;">Estilos</a>
+                <a href="#" style="color:#F46E7E;">Join Newsletter</a>
+            </div>
+        </nav>
+
+        <!-- MAIN CONTENT CENTER -->
+        <div class="header-content fade-in">
+            <div class="hero-h1">
+                FUTURE OF
+                <span>MUSIC IS AI</span>
+            </div>
+            
+            <p class="hero-subtitle">
+                Generiert vom Algorithmus. Kuratiert von Paulik-Reisch. <br>
+                Das neue Zuhause für Beats ohne Kompromisse.
+            </p>
+
+            <!-- CTA BUTTON -->
+            <a href="/CHIPIRONES/music" class="cta-header-btn">
+                <span>Musik hören</span>
+                <span class="btn-arrow">►</span>
+            </a>
+        </div>
+
+    </header>
 
     <!-- SECTION 2: THE HOOK -->
     <section id="sec-claim">
