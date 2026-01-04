@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from 'react';
@@ -49,6 +50,7 @@ const PlayerInterface = () => {
   const btnMainPlayRef = useRef<HTMLButtonElement>(null);
 
   const currentTrack = tracks ? tracks[currentTrackIndex] : null;
+  const fallbackCover = "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/los_chipirones%2Fdefault_1-1_cover_art.png?alt=media&token=ba0b2ed2-974c-4a1f-a0fc-9dab5fbfab1f";
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -97,10 +99,10 @@ const PlayerInterface = () => {
     togglePlay(true);
   };
 
-  const playNextTrack = () => {
-    const nextIndex = (currentTrackIndex + 1) % (tracks?.length || 1);
-    playTrack(nextIndex);
-  };
+  const playNextTrack = useCallback(() => {
+    setCurrentTrackIndex(prevIndex => (prevIndex + 1) % (tracks?.length || 1));
+    togglePlay(true);
+  }, [tracks?.length, togglePlay]);
   
   const playPrevTrack = () => {
     let prevIndex = currentTrackIndex - 1;
@@ -116,15 +118,30 @@ const PlayerInterface = () => {
   const togglePlay = useCallback((forcePlay?: boolean) => {
       if (!audioRef.current) return;
       
-      const shouldPlay = forcePlay || audioRef.current.paused;
+      const shouldPlay = forcePlay === undefined ? audioRef.current.paused : forcePlay;
 
       if (shouldPlay) {
           audioRef.current.play().catch(e => console.error("Play error:", e));
       } else {
           audioRef.current.pause();
       }
-      setIsPlaying(shouldPlay);
   }, []);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if(audio) {
+      const onPlay = () => setIsPlaying(true);
+      const onPause = () => setIsPlaying(false);
+      audio.addEventListener('play', onPlay);
+      audio.addEventListener('pause', onPause);
+      
+      return () => {
+        audio.removeEventListener('play', onPlay);
+        audio.removeEventListener('pause', onPause);
+      }
+    }
+  }, [audioRef]);
+
 
   const seek = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!audioRef.current) return;
@@ -187,7 +204,6 @@ const PlayerInterface = () => {
       audio.removeEventListener('loadedmetadata', loadedMetadataHandler);
       audio.removeEventListener('ended', playNextTrack);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTrack, playNextTrack]);
   
    useEffect(() => {
@@ -201,7 +217,7 @@ const PlayerInterface = () => {
      <div id="music-player" ref={playerContainerRef}>
         <audio id="audio-source" ref={audioRef} preload="metadata" />
         <div className="mini-player-row" onClick={expandPlayer}>
-            <div className="mini-cover"><img src={currentTrack?.imageUrl || 'https://via.placeholder.com/100x100/333/F46E7E?text=LP'} alt="cover" /></div>
+            <div className="mini-cover"><img src={currentTrack?.imageUrl || fallbackCover} alt="cover" /></div>
             <div className="mini-info">
                 <div className="mini-title">{currentTrack?.title || 'Wähle einen Track'}</div>
                 <div className="mini-artist">{currentTrack?.artist || 'Los Chipirones'}</div>
@@ -223,7 +239,7 @@ const PlayerInterface = () => {
             <div className="vinyl-wrapper" id="vinyl" ref={vinylElementRef}>
                 <div className="tonearm"></div>
                 <div className="vinyl-disc">
-                    <div className="vinyl-cover"><img src={currentTrack?.imageUrl || "https://via.placeholder.com/200/F46E7E/ffffff?text=🐙"} alt="Label" /></div>
+                    <div className="vinyl-cover"><img src={currentTrack?.imageUrl || fallbackCover} alt="Label" /></div>
                 </div>
             </div>
             <div className="track-info">
@@ -615,7 +631,7 @@ const PlayerInterface = () => {
             </div>
              {['Chipirón Selects', 'Bavarian Beats', 'Fiesta Latino', 'Russian Lo-Fi'].map(vibe => (
                 <div className="playlist-item active" key={vibe}>
-                    <img src={`https://via.placeholder.com/80/000000/F46E7E?text=${vibe.charAt(0)}`} className="pl-img" alt="Mix" />
+                    <img src={fallbackCover} className="pl-img" alt="Mix" />
                     <div>
                         <strong>{vibe}</strong>
                         <div style={{fontSize:'11px', color:'#666'}}>{tracks?.filter(t => t.vibe === vibe).length || 0} Tracks</div>
@@ -632,7 +648,7 @@ const PlayerInterface = () => {
             </div>
             <div className="now-playing-section">
                 <div className="np-info">
-                    <img src={currentTrack?.imageUrl || "https://via.placeholder.com/150/000/F46E7E?text=NOW"} className="np-cover" id="np-img" />
+                    <img src={currentTrack?.imageUrl || fallbackCover} className="np-cover" id="np-img" />
                     <div className="np-text">
                         <h4>PLAYING NOW</h4>
                         <h2 id="np-title">{currentTrack?.title || 'Wähle einen Track'}</h2>
@@ -659,7 +675,7 @@ const PlayerInterface = () => {
                     <div className="track-row" key={track.id} onClick={() => playTrack(index)}>
                         <div className="col-drag">::</div>
                         <div className="col-img">
-                            <img src={track.imageUrl} alt="Art" />
+                            <img src={track.imageUrl || fallbackCover} alt="Art" />
                             <div className="play-icon-overlay">▶</div>
                         </div>
                         <div style={{paddingLeft:'15px'}}>
@@ -679,5 +695,3 @@ const PlayerInterface = () => {
     </>
   );
 };
-
-export default PlayerInterface;
