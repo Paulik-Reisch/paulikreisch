@@ -176,7 +176,6 @@ export interface SeoMetadata {
 
 
 const db = getFirestore(app);
-const storage = getStorage(app);
 
 // --- COUNTDOWN ---
 export async function getCountdownTarget(): Promise<Date> {
@@ -388,7 +387,7 @@ export async function getNewsletter(id: string): Promise<Newsletter | null> {
     }
 }
 
-export async function addNewsletter(data: { name: string; subject: string }): Promise<string> {
+export async function addNewsletter(data: { name: string; subject: string }) {
     const newslettersCol = collection(db, 'newsletters');
     const docRef = await addDoc(newslettersCol, {
         ...data,
@@ -607,6 +606,7 @@ export async function deleteDocument(collectionId: string, documentId: string, u
 
 // --- STORAGE ---
 export async function listFiles(path: string = '/'): Promise<StorageFile[]> {
+    const storage = getStorage(app);
     const listRef = ref(storage, path);
     const res = await listAll(listRef);
     

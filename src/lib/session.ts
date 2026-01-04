@@ -1,3 +1,4 @@
+
 import "server-only";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
@@ -30,10 +31,12 @@ export async function decrypt(input: string): Promise<any> {
 }
 
 export async function getSession() {
-  const sessionCookieValue = cookies().get("session")?.value;
-  if (!sessionCookieValue) return null;
+  const cookieStore = cookies();
+  const sessionCookie = cookieStore.get("session");
   
-  const decrypted = await decrypt(sessionCookieValue);
+  if (!sessionCookie?.value) return null;
+  
+  const decrypted = await decrypt(sessionCookie.value);
   if (!decrypted) return null;
 
   // Validate expires
