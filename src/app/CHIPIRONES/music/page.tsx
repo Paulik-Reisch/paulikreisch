@@ -609,23 +609,34 @@ const PlayerInterface = () => {
 
     const trackContainer = document.getElementById('track-container');
 
-    function playTrack(trackId) {
+    function playTrack(trackId: number) {
         const track = tracks.find(t => t.id == trackId);
-        
+        if (!track) return;
+
         const titleEl = document.getElementById('np-title');
-        titleEl.style.opacity = 0;
+        if (!titleEl) return;
+
+        titleEl.style.opacity = '0';
         
         setTimeout(() => {
-            document.getElementById('np-title').innerText = track.title;
-            document.getElementById('np-artist').innerText = track.artist;
-            document.getElementById('np-time').innerText = "-" + track.duration;
-            document.getElementById('np-img').src = `https://via.placeholder.com/150/000/F46E7E?text=${track.img}`;
+            const npTitle = document.getElementById('np-title');
+            if (npTitle) npTitle.innerText = track.title;
             
-            titleEl.style.opacity = 1;
+            const npArtist = document.getElementById('np-artist');
+            if (npArtist) npArtist.innerText = track.artist;
+            
+            const npTime = document.getElementById('np-time');
+            if (npTime) npTime.innerText = "-" + track.duration;
+
+            const npImg = document.getElementById('np-img') as HTMLImageElement;
+            if (npImg) npImg.src = `https://via.placeholder.com/150/000/F46E7E?text=${track.img}`;
+            
+            titleEl.style.opacity = '1';
         }, 200);
     }
 
-    function renderTracks(data) {
+    function renderTracks(data: typeof tracks) {
+        if (!trackContainer) return;
         trackContainer.innerHTML = '';
         
         data.forEach(track => {
@@ -652,7 +663,7 @@ const PlayerInterface = () => {
     }
     renderTracks(tracks);
 
-    (window as any).sortTracks = (type, btn) => {
+    (window as any).sortTracks = (type: string, btn: HTMLElement) => {
         document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
@@ -666,7 +677,7 @@ const PlayerInterface = () => {
         }
 
         renderTracks(sorted);
-    }
+    };
     
     // DATA: Sample Lyrics synced to time (Seconds: Text)
     const lyricsData = [
@@ -799,3 +810,6 @@ const PlayerInterface = () => {
 
   return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
 };
+export default PlayerInterface;
+
+    
