@@ -801,5 +801,4 @@ const PlayerInterface = () => {
 };
 
 export default PlayerInterface;
-
-    
+}
