@@ -3,17 +3,22 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
   
+    // Hilfsfunktion, um zu prüfen, ob ein Benutzer angemeldet ist.
     function isSignedIn() {
       return request.auth != null;
     }
     
-    // Allow public read access to individual tracks
+    // Regel für die Musik-Tracks
     match /CHIPIRONES/music/tracks/{trackId} {
-      allow read: if true;
+      // JEDER darf einzelne Tracks lesen (get).
+      allow get: if true;
+      
+      // NUR angemeldete Benutzer dürfen Tracks erstellen, bearbeiten oder löschen.
+      // In einer echten App würde man hier eine Admin-Rolle prüfen.
       allow write: if isSignedIn();
     }
     
-    // Allow public list access to the entire collection
+    // Diese Regel ist entscheidend: JEDER darf die gesamte Liste der Tracks abfragen.
     match /CHIPIRONES/music/tracks {
       allow list: if true;
     }
