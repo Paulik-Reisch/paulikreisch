@@ -1,5 +1,4 @@
 
-
 import { app } from "@/app/firebase";
 import { 
     getFirestore, 
@@ -389,7 +388,7 @@ export async function getNewsletter(id: string): Promise<Newsletter | null> {
     }
 }
 
-export async function addNewsletter(data: { name: string; subject: string }, user: string): Promise<string> {
+export async function addNewsletter(data: { name: string; subject: string }): Promise<string> {
     const newslettersCol = collection(db, 'newsletters');
     const docRef = await addDoc(newslettersCol, {
         ...data,
@@ -399,7 +398,6 @@ export async function addNewsletter(data: { name: string; subject: string }, use
         useWrapper: true,
         isLive: false,
     });
-    await addLog(user, 'Newsletter erstellt', `Name: ${data.name}`);
     return docRef.id;
 }
 
@@ -647,3 +645,5 @@ export async function updateSeoMetadata(slug: string, data: Partial<SeoMetadata>
     await setDoc(docRef, data, { merge: true });
     await addLog(user, 'SEO Metadaten aktualisiert', `Seite: ${slug}`);
 }
+
+    

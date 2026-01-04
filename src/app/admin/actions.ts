@@ -99,9 +99,6 @@ export async function addNewsletterAction(
   prevState: AdminNewsletterState,
   formData: FormData
 ): Promise<AdminNewsletterState> {
-  const session = await getSession();
-  const user = session?.user.id || "system"; // Fallback user
-
   const validatedFields = AddNewsletterSchema.safeParse(Object.fromEntries(formData.entries()));
 
   if (!validatedFields.success) {
@@ -110,7 +107,8 @@ export async function addNewsletterAction(
   }
 
   try {
-    const newId = await addNewsletter(validatedFields.data, user);
+    const newId = await addNewsletter(validatedFields.data);
+    await addLog("system", "Newsletter erstellt", `Name: ${validatedFields.data.name}`);
     revalidatePath("/admin");
     return { success: true, message: "Newsletter erfolgreich erstellt.", newNewsletterId: newId };
   } catch (e) {
@@ -572,3 +570,5 @@ export async function updateSeoMetadataAction(
     return { success: false, error: `Fehler beim Aktualisieren: ${error.message}`, message: null };
   }
 }
+
+    
