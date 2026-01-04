@@ -1,4 +1,3 @@
-import { GenkitExplorer } from '@/components/internal/genkit/explorer';
 
 export default function GenkitPage() {
     return (
@@ -9,7 +8,10 @@ export default function GenkitPage() {
             </header>
             <main className="flex-grow min-h-0 relative">
                 <div className="absolute inset-0">
-                    <GenkitExplorer />
+                    {/* <GenkitExplorer /> */}
+                     <div className="flex items-center justify-center h-full bg-gray-100 rounded-lg">
+                        <p className="text-gray-500">Genkit Explorer Komponente wird hier geladen.</p>
+                    </div>
                 </div>
             </main>
         </div>
