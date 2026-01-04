@@ -29,21 +29,15 @@ const PlayerInterface = () => {
             overflow: hidden; /* Prevent body scroll when player is open */
             height: 100vh;
             width: 100vw;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        /* --- 2. DEMO BACKGROUND (Now the main interface) --- */
+        /* --- 2. MAIN INTERFACE --- */
         .interface-wrapper {
             display: flex;
-            width: 1100px;
-            height: 700px;
+            width: 100%;
+            height: 100%;
             background: var(--bg-panel);
-            border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
-            border: 1px solid #222;
         }
 
         /* --- LEFT SIDEBAR: PLAYLISTS --- */
@@ -56,7 +50,7 @@ const PlayerInterface = () => {
         }
         
         .sidebar-header { margin-bottom: 30px; }
-        .sidebar-header h3 { font-size: 12px; color: var(--text-mute); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px;}
+        .sidebar-header h3 { font-size: 12px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px;}
         
         .playlist-item {
             display: flex; align-items: center;
@@ -126,7 +120,8 @@ const PlayerInterface = () => {
 
         /* VISUALIZER ICON */
         .mini-vis { display: flex; gap: 4px; align-items: flex-end; height: 20px; margin-right: 20px;}
-        .vis-bar { width: 3px; background: var(--primary); animation: bump 1s infinite ease-in-out; border-radius: 2px;}
+        .vis-bar { width: 3px; background: var(--primary); animation: bump 1s infinite ease-in-out; border-radius: 2px; animation-play-state: paused; }
+        .playing .vis-bar { animation-play-state: running; }
         .vis-bar:nth-child(1) { height: 60%; animation-delay: 0.1s; }
         .vis-bar:nth-child(2) { height: 100%; animation-delay: 0.3s; }
         .vis-bar:nth-child(3) { height: 40%; animation-delay: 0.5s; }
@@ -236,6 +231,9 @@ const PlayerInterface = () => {
         .mini-artist { font-size: 12px; color: var(--text-muted); }
         
         .mini-controls { font-size: 20px; padding: 0 10px; display: flex; gap: 15px;}
+        .mini-controls .mini-vis-small { animation-play-state: paused; }
+        .playing .mini-controls .mini-vis-small { animation-play-state: running; }
+
 
         /* --- 5. FULL PLAYER LAYOUT --- */
         .full-player-view {
@@ -433,7 +431,7 @@ const PlayerInterface = () => {
             <div class="playlist-item active">
                 <img src="https://via.placeholder.com/80/000000/F46E7E?text=🐙" class="pl-img" alt="Mix">
                 <div>
-                    <strong>Octopus Selects</strong>
+                    <strong>Chipirón Selects</strong>
                     <div style="font-size:11px; color:#666;">Playing • 42 Tracks</div>
                 </div>
             </div>
@@ -461,10 +459,6 @@ const PlayerInterface = () => {
                     <div style="font-size:11px; color:#666;">12 Tracks</div>
                 </div>
             </div>
-            
-            <div style="margin-top:auto; background:#111; padding:15px; border-radius:12px; border:1px dashed #333;">
-                <span style="font-size:20px;">+</span> New Vibe
-            </div>
         </aside>
 
         <!-- MAIN CONTENT -->
@@ -474,7 +468,7 @@ const PlayerInterface = () => {
             <div class="queue-header">
                 <div class="queue-title">
                     <span>QUEUE</span>
-                    <h1>Octopus Selects</h1>
+                    <h1>Chipirón Selects</h1>
                 </div>
                 <div class="sort-controls">
                     <button class="sort-btn active" onclick="sortTracks('date', this)">Recents</button>
@@ -484,7 +478,7 @@ const PlayerInterface = () => {
             </div>
 
             <!-- Now Playing Area -->
-            <div class="now-playing-section">
+            <div id="now-playing-container" class="now-playing-section">
                 <div class="np-info">
                     <img src="https://via.placeholder.com/150/000/F46E7E?text=NOW" class="np-cover" id="np-img">
                     <div class="np-text">
@@ -533,9 +527,9 @@ const PlayerInterface = () => {
             <div class="mini-controls">
                 <!-- Visualizer Icons Small -->
                 <div style="font-size:12px; display:flex; gap:2px; align-items:flex-end; height:15px;">
-                    <div style="width:2px; background:#F46E7E; height:80%; animation: soundBar 0.5s infinite"></div>
-                    <div style="width:2px; background:#F46E7E; height:40%; animation: soundBar 0.7s infinite"></div>
-                    <div style="width:2px; background:#F46E7E; height:90%; animation: soundBar 0.4s infinite"></div>
+                    <div class="mini-vis-small" style="width:2px; background:#F46E7E; height:80%; animation: soundBar 0.5s infinite"></div>
+                    <div class="mini-vis-small" style="width:2px; background:#F46E7E; height:40%; animation: soundBar 0.7s infinite"></div>
+                    <div class="mini-vis-small" style="width:2px; background:#F46E7E; height:90%; animation: soundBar 0.4s infinite"></div>
                 </div>
                 <span id="btn-mini-play" onclick="event.stopPropagation(); togglePlay();">▶</span>
             </div>
@@ -699,6 +693,7 @@ const PlayerInterface = () => {
 
     // ELEMENTS
     const playerContainer = document.getElementById('music-player');
+    const nowPlayingContainer = document.getElementById('now-playing-container');
     const vinylElement = document.getElementById('vinyl');
     const audio = document.getElementById('audio-source') as HTMLAudioElement;
     const btnMiniPlay = document.getElementById('btn-mini-play');
@@ -708,7 +703,7 @@ const PlayerInterface = () => {
     const durationTimeEl = document.getElementById('duration-time');
     const lyricsContent = document.getElementById('lyrics-content');
     
-    if(!playerContainer || !vinylElement || !audio || !btnMiniPlay || !btnMainPlay || !progressFill || !currentTimeEl || !durationTimeEl || !lyricsContent) return;
+    if(!playerContainer || !vinylElement || !audio || !btnMiniPlay || !btnMainPlay || !progressFill || !currentTimeEl || !durationTimeEl || !lyricsContent || !nowPlayingContainer) return;
     
     (window as any).expandPlayer = () => {
         playerContainer.classList.add('expanded');
@@ -722,11 +717,15 @@ const PlayerInterface = () => {
         if (audio.paused || forcePlay) {
             audio.play();
             vinylElement.classList.add('playing');
+            nowPlayingContainer.classList.add('playing');
+            playerContainer.classList.add('playing');
             btnMiniPlay.innerText = "⏸";
             btnMainPlay.innerText = "⏸";
         } else {
             audio.pause();
             vinylElement.classList.remove('playing');
+            nowPlayingContainer.classList.remove('playing');
+            playerContainer.classList.remove('playing');
             btnMiniPlay.innerText = "▶";
             btnMainPlay.innerText = "▶";
         }
