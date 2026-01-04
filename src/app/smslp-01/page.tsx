@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect } from 'react';
@@ -179,7 +180,7 @@ const pageHTML = `
         <p><i>(Aber nur solange der Vorrat reicht - wir haben nur noch 14 Exemplare im Lager!)</i></p>
         
         <div class="arrow">⬇⬇⬇</div>
-        <a href="#" class="cta-button">JETZT EXEMPLAR SICHERN >></a>
+        <a href="#order-form" class="cta-button">JETZT EXEMPLAR SICHERN >></a>
         <small>Klicken Sie jetzt, bevor Ihr Nachbar es tut!</small>
     </div>
 
@@ -220,8 +221,66 @@ const pageHTML = `
     <div style="text-align: center; margin-top: 40px;">
         <h2 class="red-text">WORAUF WARTEN SIE NOCH?</h2>
         <p>Die Uhr tickt. Die Exemplare schwinden. Das Schicksal ruft.</p>
-        <a href="#" class="cta-button">JA! ICH WILL ALLES ZUM SCHLEUDERPREIS!</a>
+        <a href="#order-form" class="cta-button">JA! ICH WILL ALLES ZUM SCHLEUDERPREIS!</a>
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Credit_card_logos.svg/800px-Credit_card_logos.svg.png" style="width: 200px; margin-top: 10px; opacity: 0.7;">
+    </div>
+    
+    <!-- ORDER SECTION -->
+    <div id="order-form" style="background-color: #fff; border: 5px dashed #cc0000; padding: 20px; margin-top: 50px;">
+        <h2 style="background-color: #cc0000; color: white; padding: 10px;">SCHRITT 1: Sichern Sie sich Ihren Zugang!</h2>
+        
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+            <!-- Product Summary -->
+            <div style="flex: 1; min-width: 300px; padding: 10px; text-align: left;">
+                <h3 style="margin-top: 0;">Ihre Bestellung:</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="border-bottom: 1px solid #ddd; padding: 10px 0;">
+                        ✅ <strong>Buch 1: "Hallo Welt - Die Kritik"</strong> <br>
+                        <span style="color: green;">(Digitaler Sofort-Download)</span>
+                        <span style="float: right; text-decoration: line-through;">43,99€</span>
+                    </li>
+                    <li style="border-bottom: 1px solid #ddd; padding: 10px 0;">
+                        ✅ <strong>BONUS: Buch 2 Vorschau (Exklusiv)</strong><br>
+                        <span style="color: green;">(Streng geheim!)</span>
+                        <span style="float: right; text-decoration: line-through;">99,00€</span>
+                    </li>
+                    <li style="border-bottom: 1px solid #ddd; padding: 10px 0;">
+                        ✅ <strong>Wartelisten-Platz 2027</strong><br>
+                        <span style="color: green;">(VIP Status)</span>
+                        <span style="float: right; text-decoration: line-through;">Unbezahlbar</span>
+                    </li>
+                    <li style="padding: 20px 0; font-size: 1.5em; font-weight: bold; color: #cc0000;">
+                        GESAMTSUMME HEUTE: <span style="float: right;">9,99€</span>
+                    </li>
+                </ul>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Verisign_logo.svg/330px-Verisign_logo.svg.png" style="width: 100px; opacity: 0.8;">
+                <small>SSL-Verschlüsselt</small>
+            </div>
+
+            <!-- Input Form (Visual Only - No Real Function) -->
+            <div style="flex: 1; min-width: 300px; padding: 10px; background: #f9f9f9;">
+                <form action="#" method="get" onsubmit="alert('Dies ist eine Parodie-Seite. Keine echte Zahlung möglich!'); return false;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 5px;">Ihre E-Mail Adresse (für die Auslieferung):</label>
+                    <input type="email" placeholder="ihre@email.de" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; box-sizing: border-box;" required>
+                    
+                    <label style="font-weight: bold; display: block; margin-bottom: 5px;">Vor- und Nachname:</label>
+                    <input type="text" placeholder="Max Mustermann" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; box-sizing: border-box;">
+
+                    <div style="background: #ffeebb; padding: 10px; border: 1px solid #e6dbb9; margin-bottom: 15px; font-size: 0.9em;">
+                        🔒 <strong>Sichere Bezahlung:</strong><br>
+                        Wählen Sie auf der nächsten Seite Ihre bevorzugte Zahlungsart (Kreditkarte, PayPal, Lastschrift).
+                    </div>
+
+                    <button type="submit" class="cta-button" style="width: 100%; font-size: 1.5em; margin: 0;">
+                        JETZT KAUFEN FÜR 9,99€
+                    </button>
+                    <p style="font-size: 0.8em; text-align: center; margin-top: 10px;">
+                        Durch Klicken akzeptieren Sie, dass Sie eventuell 2027 noch auf dieses Buch warten. <br>
+                        <span style="color: #888;">100% Geld-Zurück-Garantie</span>
+                    </p>
+                </form>
+            </div>
+        </div>
     </div>
 
     <!-- FOOTER / KLEINGEDRUCKTES -->
