@@ -122,7 +122,7 @@ const AdminDashboard: React.FC = () => {
         let finalAudioUrl = audioUrl;
         if (audioFile) {
             setStatusMsg('Uploading audio file...');
-            const audioRef = ref(storage, `tracks/${Date.now()}_${audioFile.name}`);
+            const audioRef = ref(storage, `music/${Date.now()}_${audioFile.name}`);
             await uploadBytes(audioRef, audioFile);
             finalAudioUrl = await getDownloadURL(audioRef);
         }
@@ -134,10 +134,10 @@ const AdminDashboard: React.FC = () => {
         let finalCoverUrl = coverUrl;
         if (coverFile) {
             setStatusMsg('Uploading cover art...');
-            const coverRef = ref(storage, `covers/${Date.now()}_${coverFile.name}`);
+            const coverRef = ref(storage, `music/covers/${Date.now()}_${coverFile.name}`);
             await uploadBytes(coverRef, coverFile);
             finalCoverUrl = await getDownloadURL(coverRef);
-        } else if (!finalCoverUrl) {
+        } else if (!finalCoverUrl && !editingTrackId) {
             finalCoverUrl = fallbackCoverUrl;
         }
       
@@ -538,4 +538,3 @@ const AdminDashboard: React.FC = () => {
 
 export default AdminDashboard;
     
-
