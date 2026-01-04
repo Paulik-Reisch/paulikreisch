@@ -222,7 +222,6 @@ const pageHTML = `
         <h2 class="red-text">WORAUF WARTEN SIE NOCH?</h2>
         <p>Die Uhr tickt. Die Exemplare schwinden. Das Schicksal ruft.</p>
         <a href="#order-form" class="cta-button">JA! ICH WILL ALLES ZUM SCHLEUDERPREIS!</a>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Cib-cc-visa_%28CoreUI_Icons_v1.0.0%29.svg/1280px-Cib-cc-visa_%28CoreUI_Icons_v1.0.0%29.svg.png" style="width: 200px; margin-top: 10px; opacity: 0.7;">
     </div>
     
     <!-- ORDER SECTION -->
