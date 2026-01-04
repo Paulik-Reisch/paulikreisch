@@ -48,6 +48,9 @@ const AdminDashboard: React.FC = () => {
   // STATE: UI
   const [isUploading, setIsUploading] = useState(false);
   const [statusMsg, setStatusMsg] = useState('Ready for new masterpiece.');
+  
+  const fallbackCoverUrl = "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/los_chipirones%2Fdefault_1-1_cover_art.png?alt=media&token=ba0b2ed2-974c-4a1f-a0fc-9dab5fbfab1f";
+
 
   // HELPERS
   const handleLyricChange = (index: number, field: keyof LyricLine, value: string | number) => {
@@ -100,16 +103,18 @@ const AdminDashboard: React.FC = () => {
             finalAudioUrl = await getDownloadURL(audioRef);
         }
 
+        if (!finalAudioUrl) {
+            throw new Error("Audioquelle fehlt. Bitte stellen Sie eine Datei oder eine URL bereit.");
+        }
+
         let finalCoverUrl = coverUrl;
         if (coverFile) {
             setStatusMsg('Uploading cover art...');
             const coverRef = ref(storage, `covers/${Date.now()}_${coverFile.name}`);
             await uploadBytes(coverRef, coverFile);
             finalCoverUrl = await getDownloadURL(coverRef);
-        }
-
-        if (!finalAudioUrl || !finalCoverUrl) {
-            throw new Error("Audio- oder Cover-URL fehlt. Bitte stellen Sie eine Datei oder eine URL bereit.");
+        } else if (!finalCoverUrl) {
+            finalCoverUrl = fallbackCoverUrl;
         }
       
         setStatusMsg('Preparing database entry...');
@@ -393,3 +398,5 @@ const AdminDashboard: React.FC = () => {
 };
 
 export default AdminDashboard;
+
+    
