@@ -1,17 +1,28 @@
 
 "use client";
 
-import React, { useState } from 'react';
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
+import React, { useState, useEffect } from 'react';
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+import { getFirestore, collection, addDoc, serverTimestamp, getDocs, query, orderBy, deleteDoc, doc } from "firebase/firestore";
 import { useFirestore } from '@/firebase/provider';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Trash2, Edit } from 'lucide-react';
+import { useCollection, useMemoFirebase } from '@/firebase';
 
 // TYPES
 interface LyricLine {
   time: number;
   text: string;
+}
+
+interface Track {
+    id: string;
+    title: string;
+    artist: string;
+    imageUrl: string;
+    vibe: string;
+    createdAt: any;
+    audioUrl: string;
 }
 
 const VIBES = [
@@ -27,6 +38,13 @@ const AdminDashboard: React.FC = () => {
   const firestore = useFirestore();
   const storage = getStorage();
   const { toast } = useToast();
+
+  const tracksCollection = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return query(collection(firestore, '/CHIPIRONES/music/tracks'), orderBy("createdAt", "desc"));
+  }, [firestore]);
+  
+  const { data: tracks, isLoading, error } = useCollection<Track>(tracksCollection);
 
   // STATE: META DATA
   const [title, setTitle] = useState('');
@@ -147,6 +165,40 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
+  const handleDelete = async (track: Track) => {
+    if (!firestore) return;
+    if (!confirm(`Sind Sie sicher, dass Sie "${track.title}" löschen möchten?`)) return;
+
+    try {
+        // Delete from Firestore
+        await deleteDoc(doc(firestore, "CHIPIRONES/music/tracks", track.id));
+
+        // Delete audio and image from Storage if they are from storage
+        const deleteStorageFile = async (url: string) => {
+            if (url && url.includes('firebasestorage.googleapis.com')) {
+                const fileRef = ref(storage, url);
+                await deleteObject(fileRef);
+            }
+        };
+
+        await deleteStorageFile(track.audioUrl);
+        if (track.imageUrl !== fallbackCoverUrl) {
+            await deleteStorageFile(track.imageUrl);
+        }
+
+        toast({ title: "Gelöscht", description: `"${track.title}" wurde entfernt.` });
+    } catch (error: any) {
+        console.error("Fehler beim Löschen:", error);
+        toast({ variant: "destructive", title: "Löschen fehlgeschlagen", description: error.message });
+    }
+  };
+
+  const handleEdit = (trackId: string) => {
+      // Implement edit logic, e.g., navigate to an edit page or open a modal
+      toast({ title: "TODO", description: `Edit-Funktion für Track ${trackId} implementieren.` });
+  };
+
+
   return (
     <>
     <style>{`
@@ -160,22 +212,31 @@ const AdminDashboard: React.FC = () => {
           --text-muted: #888;
         }
 
-        .admin-wrapper {
-          background: var(--admin-bg);
-          min-height: 100vh;
-          display: flex; justify-content: center; align-items: center;
-          font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-          padding: 40px;
+        .admin-container {
+            display: flex;
+            gap: 40px;
+            padding: 40px;
+            min-height: 100vh;
+            background: var(--admin-bg);
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            align-items: flex-start;
         }
 
-        .admin-card {
-          width: 100%; max-width: 800px;
+        .admin-card, .track-list-card {
           background: var(--panel-bg);
           border: 1px solid var(--border);
           border-radius: 24px;
           padding: 40px;
           box-shadow: 0 40px 100px rgba(0,0,0,0.8);
-          position: relative; overflow: hidden;
+        }
+        
+        .admin-card {
+            flex: 1;
+            max-width: 800px;
+        }
+
+        .track-list-card {
+            flex: 0 0 400px; /* Do not grow, do not shrink, base width 400px */
         }
 
         .admin-header {
@@ -246,15 +307,25 @@ const AdminDashboard: React.FC = () => {
         .cta-btn:hover { transform: scale(1.05); box-shadow: 0 0 30px var(--pink); }
         .cta-btn:disabled { background: #444; cursor: not-allowed; opacity: 0.5; box-shadow: none; }
         .cta-btn.loading .loader { display: block; }
+        
+        /* Track List Styles */
+        .track-list-item { display: flex; align-items: center; gap: 15px; padding: 10px; border-bottom: 1px solid var(--border); }
+        .track-list-item:last-child { border-bottom: none; }
+        .track-list-cover { width: 40px; height: 40px; border-radius: 4px; object-fit: cover; }
+        .track-list-info { flex-grow: 1; }
+        .track-list-info h4 { margin: 0; color: var(--text); font-size: 14px;}
+        .track-list-info p { margin: 0; color: var(--text-muted); font-size: 12px;}
+        .track-list-actions button { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 5px; }
+        .track-list-actions button:hover { color: var(--pink); }
+
 
         /* Responsive */
-        @media (max-width: 600px) { .split-grid { grid-template-columns: 1fr; } .admin-card { padding: 20px; } }
+        @media (max-width: 1200px) { .admin-container { flex-direction: column; align-items: center;} .track-list-card { flex: 1; width: 100%; max-width: 800px; } }
+        @media (max-width: 600px) { .split-grid { grid-template-columns: 1fr; } .admin-card, .track-list-card { padding: 20px; } }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        .fade-in { opacity: 0; transform: translateY(30px); animation: fadeInAnimation 0.8s ease-out forwards; }
-        @keyframes fadeInAnimation { to { opacity: 1; transform: translateY(0); } }
     `}</style>
-    <div className="admin-wrapper">
-      <div className="admin-card fade-in">
+    <div className="admin-container">
+      <div className="admin-card">
         
         <header className="admin-header">
             <span className="logo-icon">🐙</span>
@@ -325,7 +396,7 @@ const AdminDashboard: React.FC = () => {
                 </div>
             </div>
             <div className="media-box">
-                <label>COVER ART</label>
+                <label>COVER ART (OPTIONAL)</label>
                 <div className="upload-toggle">
                    {coverFile ? 
                      <div className="file-badge">🖼 {coverFile.name} <span onClick={() => setCoverFile(null)}>×</span></div> 
@@ -392,11 +463,32 @@ const AdminDashboard: React.FC = () => {
         </div>
 
       </div>
+      <div className="track-list-card">
+        <header className="admin-header">
+            <h2>Live Tracks</h2>
+        </header>
+        <div className="max-h-[80vh] overflow-y-auto">
+            {isLoading && <div className="flex justify-center p-8"><Loader2 className="animate-spin text-pink"/></div>}
+            {error && <div className="text-red-500">Error loading tracks: {error.message}</div>}
+            {tracks && tracks.map(track => (
+                <div key={track.id} className="track-list-item">
+                    <img src={track.imageUrl} alt={track.title} className="track-list-cover"/>
+                    <div className="track-list-info">
+                        <h4>{track.title}</h4>
+                        <p>{track.artist} - {track.vibe}</p>
+                    </div>
+                    <div className="track-list-actions">
+                        <button onClick={() => handleEdit(track.id)} title="Bearbeiten"><Edit size={16}/></button>
+                        <button onClick={() => handleDelete(track)} title="Löschen"><Trash2 size={16}/></button>
+                    </div>
+                </div>
+            ))}
+        </div>
+      </div>
     </div>
     </>
   );
 };
 
 export default AdminDashboard;
-
     
