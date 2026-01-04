@@ -58,11 +58,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui
 import { cn } from "@/lib/utils";
 
 type AdminDashboardProps = {
-    initialNewsletters: Newsletter[];
-    initialLegalPages: LegalPage[];
-    initialPalabrotas: Palabrota[];
-    initialChistes: Chiste[];
-    initialExcerpts: Excerpt[];
+    initialNewsletters?: Newsletter[];
+    initialLegalPages?: LegalPage[];
+    initialPalabrotas?: Palabrota[];
+    initialChistes?: Chiste[];
+    initialExcerpts?: Excerpt[];
 };
 
 export function AdminDashboard({ 
@@ -74,6 +74,11 @@ export function AdminDashboard({
 }: AdminDashboardProps) {
     const [activeTab, setActiveTab] = useState("übersicht");
     
+    const newsletters = initialNewsletters || [];
+    const legalPages = initialLegalPages || [];
+    const palabrotas = initialPalabrotas || [];
+    const excerpts = initialExcerpts || [];
+
     return (
         <div className="space-y-6">
             <header>
@@ -87,7 +92,7 @@ export function AdminDashboard({
                         <CardTitle className="text-sm font-medium">Newsletter</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">{initialNewsletters.length}</div>
+                        <div className="text-2xl font-bold">{newsletters.length}</div>
                         <p className="text-xs text-muted-foreground">Erstellte Vorlagen</p>
                     </CardContent>
                 </Card>
@@ -96,7 +101,7 @@ export function AdminDashboard({
                         <CardTitle className="text-sm font-medium">Dynamische Seiten</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">{initialLegalPages.length}</div>
+                        <div className="text-2xl font-bold">{legalPages.length}</div>
                         <p className="text-xs text-muted-foreground">Verwaltete LPs & Seiten</p>
                     </CardContent>
                 </Card>
@@ -105,7 +110,7 @@ export function AdminDashboard({
                         <CardTitle className="text-sm font-medium">Palabrotas</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">{initialPalabrotas.length}</div>
+                        <div className="text-2xl font-bold">{palabrotas.length}</div>
                         <p className="text-xs text-muted-foreground">Einträge im Wörterbuch</p>
                     </CardContent>
                 </Card>
@@ -114,7 +119,7 @@ export function AdminDashboard({
                         <CardTitle className="text-sm font-medium">Exzerpte</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">{initialExcerpts.length}</div>
+                        <div className="text-2xl font-bold">{excerpts.length}</div>
                         <p className="text-xs text-muted-foreground">Verwaltete Buchauszüge</p>
                     </CardContent>
                 </Card>
