@@ -28,7 +28,7 @@ interface Track {
 }
 
 
-const PlayerInterface = () => {
+export default function PlayerInterface() {
   const firestore = useFirestore();
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
@@ -98,22 +98,6 @@ const PlayerInterface = () => {
     setCurrentTrackIndex(index);
     togglePlay(true);
   };
-
-  const playNextTrack = useCallback(() => {
-    setCurrentTrackIndex(prevIndex => (prevIndex + 1) % (tracks?.length || 1));
-    togglePlay(true);
-  }, [tracks?.length, togglePlay]);
-  
-  const playPrevTrack = () => {
-    let prevIndex = currentTrackIndex - 1;
-    if (prevIndex < 0) {
-        prevIndex = (tracks?.length || 1) -1;
-    }
-    playTrack(prevIndex);
-  }
-
-  const expandPlayer = () => playerContainerRef.current?.classList.add('expanded');
-  const collapsePlayer = () => playerContainerRef.current?.classList.remove('expanded');
   
   const togglePlay = useCallback((forcePlay?: boolean) => {
       if (!audioRef.current) return;
@@ -127,6 +111,24 @@ const PlayerInterface = () => {
       }
   }, []);
 
+  const playNextTrack = useCallback(() => {
+    if(!tracks) return;
+    setCurrentTrackIndex(prevIndex => (prevIndex + 1) % tracks.length);
+    togglePlay(true);
+  }, [tracks, togglePlay]);
+  
+  const playPrevTrack = () => {
+    if(!tracks) return;
+    let prevIndex = currentTrackIndex - 1;
+    if (prevIndex < 0) {
+        prevIndex = tracks.length - 1;
+    }
+    playTrack(prevIndex);
+  }
+
+  const expandPlayer = () => playerContainerRef.current?.classList.add('expanded');
+  const collapsePlayer = () => playerContainerRef.current?.classList.remove('expanded');
+  
   useEffect(() => {
     const audio = audioRef.current;
     if(audio) {
