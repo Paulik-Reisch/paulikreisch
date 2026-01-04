@@ -1,6 +1,7 @@
 
 "use client";
 import { useEffect } from 'react';
+import Link from 'next/link';
 
 const pageHTML = `
 <style>
@@ -90,6 +91,10 @@ const pageHTML = `
         position: relative;
         box-shadow: 0 20px 50px rgba(0,0,0,0.8);
         border: 1px solid #333;
+        transition: transform 0.3s;
+    }
+    .player-wrapper:hover {
+        transform: scale(1.02);
     }
     .progress-bar { height: 6px; background: #333; border-radius: 3px; margin: 30px 0; position: relative; }
     .progress-fill { width: 45%; height: 100%; background: var(--accent); border-radius: 3px; box-shadow: 0 0 15px var(--accent); }
@@ -108,16 +113,10 @@ const pageHTML = `
     .style-icon { font-size: 4rem; margin-bottom: 20px; display: block; }
     
     /* 7. PLAYLIST GRID */
-    .playlist-row { display: flex; align-items: center; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #222; }
+    .playlist-row { display: flex; align-items: center; justify-content: space-between; padding: 15px; border-bottom: 1px solid #222; }
     .playlist-row:hover { background: #111; }
     .play-btn-mini { width: 40px; height: 40px; border-radius: 50%; background: var(--text-mute); color: #000; display: flex; align-items: center; justify-content: center; }
     .playlist-row:hover .play-btn-mini { background: var(--accent); color: #fff; }
-
-    /* 8-11: MOODS (Full width visuals) */
-    .mood-section { height: 60vh; display: flex; align-items: center; justify-content: center; position: relative; }
-    .mood-content { z-index: 2; text-align: center; background: rgba(0,0,0,0.7); padding: 40px; backdrop-filter: blur(10px); border-radius: var(--radius); }
-    .mood-bg { position: absolute; top:0; left:0; width:100%; height:100%; object-fit: cover; opacity: 0.3; filter: grayscale(100%); z-index: 1; transition: 0.5s; }
-    .mood-section:hover .mood-bg { filter: grayscale(0%); opacity: 0.6; }
 
     /* 12. TECH SPECS */
     #sec-tech { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
@@ -152,7 +151,7 @@ const pageHTML = `
             <h4>WELCOME TO</h4>
             <h1>LOS <span class="glow-text">CHIPIRONES</span></h1>
             <p style="margin-bottom: 40px; font-size: 1.2rem; color: #aaa;">AI Generated. Human Curated. Future Vibes.</p>
-            <a href="#sec-player" class="btn-main">Jetzt reinhören</a>
+            <a href="/CHIPIRONES/music" class="btn-main">Jetzt reinhören</a>
         </div>
     </section>
 
@@ -175,25 +174,27 @@ const pageHTML = `
     <!-- SECTION 4: MUSIC PLAYER INTERFACE -->
     <section id="sec-player">
         <div class="container fade-in">
-            <div class="player-wrapper">
-                <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-                    <div>
-                        <h3 style="color: #888; font-size: 14px; text-transform: uppercase;">Playing Now</h3>
-                        <h2 style="font-size: 2rem;">Hit des Monats</h2>
-                        <p style="color: var(--accent);">Estilo Latino AI-Mix</p>
+             <a href="/CHIPIRONES/music">
+                <div class="player-wrapper">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                        <div>
+                            <h3 style="color: #888; font-size: 14px; text-transform: uppercase;">Playing Now</h3>
+                            <h2 style="font-size: 2rem;">Hit des Monats</h2>
+                            <p style="color: var(--accent);">Estilo Latino AI-Mix</p>
+                        </div>
+                        <div style="font-size: 3rem; color: var(--accent);">▶</div>
                     </div>
-                    <div style="font-size: 3rem; color: var(--accent); cursor: pointer;">▶</div>
-                </div>
-                
-                <div class="progress-bar">
-                    <div class="progress-fill"></div>
-                </div>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
 
-                <div style="display: flex; justify-content: space-between; color: #666; font-size: 12px;">
-                    <span>01:45</span>
-                    <span>-02:15</span>
+                    <div style="display: flex; justify-content: space-between; color: #666; font-size: 12px;">
+                        <span>01:45</span>
+                        <span>-02:15</span>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
     </section>
 
@@ -239,38 +240,29 @@ const pageHTML = `
         <div class="container fade-in">
             <h2 style="margin-bottom: 30px;">Neueste Releases</h2>
             <!-- Track 1 -->
-            <div class="playlist-row">
+            <a href="/CHIPIRONES/music" class="playlist-row">
                 <div>
                     <strong style="display:block;">El Chipirón Bailando</strong>
                     <span style="font-size: 12px; color:#666;">Pop / Synthwave</span>
                 </div>
                 <div class="play-btn-mini">▶</div>
-            </div>
+            </a>
             <!-- Track 2 -->
-            <div class="playlist-row">
+            <a href="/CHIPIRONES/music" class="playlist-row">
                 <div>
                     <strong style="display:block;">Techno Tintenfisch</strong>
                     <span style="font-size: 12px; color:#666;">Deep House</span>
                 </div>
                 <div class="play-btn-mini">▶</div>
-            </div>
+            </a>
             <!-- Track 3 -->
-            <div class="playlist-row">
+            <a href="/CHIPIRONES/music" class="playlist-row">
                 <div>
                     <strong style="display:block;">Melancholia Deep</strong>
                     <span style="font-size: 12px; color:#666;">Lo-Fi</span>
                 </div>
                 <div class="play-btn-mini">▶</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SECTION 8: MOOD - PARTY -->
-    <section class="mood-section">
-        <div style="background-color: #4a192c;" class="mood-bg"></div> <!-- Hier später Party Bild -->
-        <div class="mood-content fade-in">
-            <h2>MOOD: FIESTA</h2>
-            <p>Für die Nächte, die nie enden.</p>
+            </a>
         </div>
     </section>
 
@@ -279,14 +271,6 @@ const pageHTML = `
         <h2 style="margin: 0; font-size: 4rem; line-height: 1;">MÚSICA /// MUSIK</h2>
     </section>
 
-    <!-- SECTION 10: MOOD - FOCUS -->
-    <section class="mood-section">
-        <div style="background-color: #192c4a;" class="mood-bg"></div> <!-- Hier später Focus Bild -->
-        <div class="mood-content fade-in">
-            <h2>MOOD: FOCUS</h2>
-            <p>Coding, Design, Deep Work.</p>
-        </div>
-    </section>
 
     <!-- SECTION 11: NUMBERS (Stats) -->
     <section style="background: #0f0f0f; text-align: center;">
@@ -447,19 +431,7 @@ export default function ChipironesPage() {
             observer.observe(section);
         });
 
-        // Basic Player Toggle (Visual only for LP)
-        const playBtn = document.querySelector('.player-wrapper div[style*="font-size: 3rem"]');
-        if (playBtn) {
-            let isPlaying = false;
-            const clickHandler = () => {
-                isPlaying = !isPlaying;
-                playBtn.textContent = isPlaying ? '⏸' : '▶';
-                // Here you would hook up the real Audio()
-                if(isPlaying) alert('Visual Demo: Music would start now!');
-            };
-            playBtn.addEventListener('click', clickHandler);
-            return () => playBtn.removeEventListener('click', clickHandler);
-        }
+        // The click handler is removed as per the new linking requirement.
   }, []);
 
   return <div dangerouslySetInnerHTML={{ __html: pageHTML }} />;
