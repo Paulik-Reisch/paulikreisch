@@ -619,7 +619,7 @@ const PlayerInterface = () => {
             document.getElementById('np-title').innerText = track.title;
             document.getElementById('np-artist').innerText = track.artist;
             document.getElementById('np-time').innerText = "-" + track.duration;
-            document.getElementById('np-img').src = \`https://via.placeholder.com/150/000/F46E7E?text=\${track.img}\`;
+            document.getElementById('np-img').src = `https://via.placeholder.com/150/000/F46E7E?text=${track.img}`;
             
             titleEl.style.opacity = 1;
         }, 200);
@@ -633,20 +633,20 @@ const PlayerInterface = () => {
             row.className = 'track-row';
             row.onclick = () => playTrack(track.id);
             
-            row.innerHTML = \`
+            row.innerHTML = `
                 <div class="col-drag">::</div>
                 <div class="col-img">
-                    <img src="https://via.placeholder.com/60/222/888?text=\${track.img}" alt="Art">
+                    <img src="https://via.placeholder.com/60/222/888?text=${track.img}" alt="Art">
                     <div class="play-icon-overlay">▶</div>
                 </div>
                 <div style="padding-left:15px;">
-                    <div class="col-title">\${track.title}</div>
-                    <div class="col-meta col-artist" style="display:block;">\${track.artist}</div>
+                    <div class="col-title">${track.title}</div>
+                    <div class="col-meta col-artist" style="display:block;">${track.artist}</div>
                 </div>
                 <div class="col-meta date">Added recently</div>
-                <div class="col-meta" style="text-align:right;">\${track.duration}</div>
+                <div class="col-meta" style="text-align:right;">${track.duration}</div>
                 <div class="col-options" style="text-align:center;">•••</div>
-            \`;
+            `;
             trackContainer.appendChild(row);
         });
     }
@@ -735,7 +735,7 @@ const PlayerInterface = () => {
         div.classList.add('lyric-line');
         div.innerText = line.text;
         div.dataset.time = String(line.time);
-        div.id = \`line-\${index}\`;
+        div.id = `line-${index}`;
         div.onclick = () => {
             audio.currentTime = line.time;
             (window as any).togglePlay(true);
@@ -747,12 +747,12 @@ const PlayerInterface = () => {
         if(isNaN(seconds)) return "0:00";
         const min = Math.floor(seconds / 60);
         const sec = Math.floor(seconds % 60);
-        return \`\${min}:\${sec < 10 ? '0' : ''}\${sec}\`;
+        return `${min}:${sec < 10 ? '0' : ''}${sec}`;
     }
 
     const timeUpdateHandler = () => {
         const percent = (audio.currentTime / audio.duration) * 100;
-        progressFill.style.width = \`\${percent}%\`;
+        progressFill.style.width = `${percent}%`;
         currentTimeEl.innerText = formatTime(audio.currentTime);
         
         let activeIndex = -1;
@@ -766,12 +766,12 @@ const PlayerInterface = () => {
 
         if(activeIndex !== -1) {
             document.querySelectorAll('.lyric-line').forEach(el => el.classList.remove('active'));
-            const activeEl = document.getElementById(\`line-\${activeIndex}\`);
+            const activeEl = document.getElementById(`line-${activeIndex}`);
             if(activeEl) {
                 activeEl.classList.add('active');
                 const lineHeight = 40; 
                 const offset = activeIndex * lineHeight; 
-                (lyricsContent as HTMLElement).style.transform = \`translateY(-\${offset}px)\`;
+                (lyricsContent as HTMLElement).style.transform = `translateY(-${offset}px)`;
             }
         }
     };
@@ -783,7 +783,7 @@ const PlayerInterface = () => {
     const endedHandler = () => {
         (window as any).togglePlay();
         audio.currentTime = 0;
-        (lyricsContent as HTMLElement).style.transform = \`translateY(0)\`;
+        (lyricsContent as HTMLElement).style.transform = `translateY(0)`;
     };
 
     audio.addEventListener('timeupdate', timeUpdateHandler);
@@ -799,6 +799,3 @@ const PlayerInterface = () => {
 
   return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
 };
-
-export default PlayerInterface;
-}
