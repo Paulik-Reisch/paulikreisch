@@ -572,5 +572,3 @@ export async function updateSeoMetadataAction(
     return { success: false, error: `Fehler beim Aktualisieren: ${error.message}`, message: null };
   }
 }
-
-    
