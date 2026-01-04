@@ -1,60 +1,17 @@
 
-"use client";
-
-import { useState, useEffect } from "react";
-import { Header } from "@/components/landing/header";
-import { Footer } from "@/components/landing/footer";
 import { getLegalPage, type LegalPage as LegalPageType } from "@/lib/firestore";
 import { notFound } from "next/navigation";
+import { Header } from "@/components/landing/header";
+import { Footer } from "@/components/landing/footer";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
-import { Skeleton } from "@/components/ui/skeleton";
 
-export default function LegalPage({ params }: { params: { slug: string } }) {
-  const [page, setPage] = useState<LegalPageType | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (params.slug) {
-      getLegalPage(params.slug)
-        .then((data) => {
-          if (!data) {
-            // This console.error was causing noise on 404 pages.
-            // The notFound() call below handles the user-facing logic correctly.
-          }
-          setPage(data);
-        })
-        .catch((error) => {
-          console.error("Error fetching legal page:", error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
-  }, [params.slug]);
-  
-  if (loading) {
-    return (
-      <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
-        <Header />
-        <main className="flex-1 py-12 md:py-24">
-          <div className="container px-4 md:px-6">
-            <article className="prose prose-lg dark:prose-invert mx-auto">
-              <Skeleton className="h-12 w-3/4 mb-4" />
-              <Skeleton className="h-4 w-1/2 mb-8" />
-              <Skeleton className="h-6 w-full mb-4" />
-              <Skeleton className="h-6 w-full mb-4" />
-              <Skeleton className="h-6 w-5/6 mb-4" />
-            </article>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
+// This is now a Server Component
+export default async function LegalPage({ params }: { params: { slug: string } }) {
+  const page = await getLegalPage(params.slug);
 
   if (!page) {
-    return notFound();
+    notFound();
   }
 
   const lastUpdatedDate = format(new Date(page.lastUpdated), "dd. MMMM yyyy", { locale: de });
