@@ -63,7 +63,6 @@ export default async function AdminDashboardPage() {
             <Suspense fallback={<StatCardSkeleton />}><StatCard title="Dynamische LPs" icon={FileText} valuePromise={getLegalPages().then(d => d.length)} link="/admin/lp" linkText="Manage Pages" /></Suspense>
             <Suspense fallback={<StatCardSkeleton />}><StatCard title="Exzerpte" icon={Sparkles} valuePromise={getExcerpts().then(d => d.length)} link="/admin/excerpts" linkText="Manage Excerpts" /></Suspense>
             <Suspense fallback={<StatCardSkeleton />}><StatCard title="Palabrotas" icon={VenetianMask} valuePromise={getPalabrotas().then(d => d.length)} link="/admin/palabrotas" linkText="Manage Words" /></Suspense>
-            <Suspense fallback={<StatCardSkeleton />}><StatCard title="Storage Files" icon={HardDrive} valuePromise={listFiles('/').then(d => d.length)} link="/admin/storage" linkText="Manage Storage" /></Suspense>
              <Suspense fallback={<StatCardSkeleton />}><StatCard title="Logs" icon={Activity} valuePromise={getCollectionData('logs').then(d => d.length)} link="/admin/logs" linkText="View Logs" /></Suspense>
         </div>
     </div>
