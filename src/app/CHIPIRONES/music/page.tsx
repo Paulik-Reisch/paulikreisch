@@ -16,6 +16,8 @@ const PlayerInterface = () => {
             --text-muted: #888;
             --radius: 24px;
             --anim-speed: 0.5s;
+            --bg-panel: #111111;
+            --border: rgba(255, 255, 255, 0.1);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
@@ -32,21 +34,145 @@ const PlayerInterface = () => {
             justify-content: center;
         }
 
-        /* --- 2. DEMO BACKGROUND (Placeholder Web Content) --- */
-        .demo-bg {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at top right, #2a0a10, #000);
-            z-index: 0;
+        /* --- 2. DEMO BACKGROUND (Now the main interface) --- */
+        .interface-wrapper {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            text-align: center;
+            width: 1100px;
+            height: 700px;
+            background: var(--bg-panel);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+            border: 1px solid #222;
         }
-        .demo-bg h1 { opacity: 0.2; font-size: 5vw; max-width: 600px; text-transform: uppercase; }
-        .demo-hint { margin-top: 20px; color: var(--primary); animation: pulse 2s infinite; cursor: pointer; border: 1px solid var(--primary); padding: 10px 20px; border-radius: 50px; z-index: 10;}
 
+        /* --- LEFT SIDEBAR: PLAYLISTS --- */
+        .sidebar {
+            width: 300px;
+            background: #0a0a0a;
+            padding: 30px 20px;
+            border-right: 1px solid var(--border);
+            display: flex; flex-direction: column;
+        }
+        
+        .sidebar-header { margin-bottom: 30px; }
+        .sidebar-header h3 { font-size: 12px; color: var(--text-mute); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px;}
+        
+        .playlist-item {
+            display: flex; align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #ccc;
+        }
+        .playlist-item:hover { background: #1a1a1a; color: #fff; transform: translateX(5px); }
+        .playlist-item.active { background: #222; color: #fff; border-left: 3px solid var(--primary); }
+        
+        .pl-img { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; margin-right: 15px; filter: grayscale(50%); }
+        .active .pl-img { filter: grayscale(0%); box-shadow: 0 0 10px rgba(244,110,126,0.3); }
+
+        /* --- RIGHT MAIN: QUEUE --- */
+        .main-queue {
+            flex: 1;
+            padding: 40px;
+            display: flex; flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* TOP BAR WITH SORT */
+        .queue-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 30px;
+        }
+        .queue-title h1 { font-size: 28px; font-weight: 700; margin-bottom: 5px; }
+        .queue-title span { font-size: 14px; color: var(--primary); font-weight: bold; }
+
+        .sort-controls {
+            display: flex; gap: 10px; background: #000; padding: 5px; border-radius: 30px;
+        }
+        .sort-btn {
+            background: transparent; border: none; color: #666; padding: 8px 16px; 
+            font-size: 12px; cursor: pointer; border-radius: 20px; transition: 0.3s;
+            font-weight: 600;
+        }
+        .sort-btn:hover { color: #fff; }
+        .sort-btn.active { background: #222; color: #fff; }
+
+        /* PLAYING NOW CARD */
+        .now-playing-section {
+            background: linear-gradient(90deg, #1c090c 0%, #111 100%);
+            border: 1px solid rgba(244,110,126, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        .now-playing-section::after { /* Scanline effect overlay */
+            content:''; position: absolute; top:0; left:0; width:100%; height:100%;
+            background: repeating-linear-gradient(rgba(0,0,0,0) 0, rgba(0,0,0,0) 2px, rgba(0,0,0,0.3) 3px);
+            pointer-events: none;
+        }
+
+        .np-info { display: flex; align-items: center; gap: 20px; z-index: 1;}
+        .np-cover { width: 70px; height: 70px; border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); object-fit: cover;}
+        
+        .np-text h4 { font-size: 10px; color: var(--primary); text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px;}
+        .np-text h2 { margin: 0; font-size: 20px; text-shadow: 0 0 15px rgba(255,255,255,0.3); }
+        .np-text p { margin: 0; font-size: 14px; color: #aaa; }
+
+        /* VISUALIZER ICON */
+        .mini-vis { display: flex; gap: 4px; align-items: flex-end; height: 20px; margin-right: 20px;}
+        .vis-bar { width: 3px; background: var(--primary); animation: bump 1s infinite ease-in-out; border-radius: 2px;}
+        .vis-bar:nth-child(1) { height: 60%; animation-delay: 0.1s; }
+        .vis-bar:nth-child(2) { height: 100%; animation-delay: 0.3s; }
+        .vis-bar:nth-child(3) { height: 40%; animation-delay: 0.5s; }
+        .vis-bar:nth-child(4) { height: 80%; animation-delay: 0.0s; }
+        @keyframes bump { 0%, 100% { transform: scaleY(0.5); opacity:0.6; } 50% { transform: scaleY(1); opacity:1;} }
+
+        /* UP NEXT LIST */
+        .queue-label { font-size: 12px; color: #555; margin-bottom: 15px; font-weight: bold; padding-left: 10px; display: flex; justify-content: space-between;}
+        
+        .queue-list { 
+            overflow-y: auto; 
+            padding-right: 5px;
+            flex: 1; /* Fills remaining height */
+        }
+
+        .track-row {
+            display: grid;
+            grid-template-columns: 30px 50px 3fr 2fr 80px 40px;
+            align-items: center;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border-bottom: 1px solid #1a1a1a;
+            font-size: 14px;
+            color: #ccc;
+            transition: 0.2s;
+            cursor: pointer;
+            margin-bottom: 2px;
+        }
+        
+        .track-row:hover { background: #161616; }
+        .track-row:hover .play-icon-overlay { opacity: 1; }
+
+        /* Track Columns */
+        .col-drag { color: #333; cursor: grab; }
+        .col-img { position: relative; width: 35px; height: 35px; }
+        .col-img img { width: 100%; height: 100%; border-radius: 4px; object-fit: cover; }
+        
+        .play-icon-overlay {
+            position: absolute; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center;
+            border-radius: 4px; opacity: 0; transition: 0.2s; color: #fff;
+        }
+
+        .col-title { font-weight: 500; color: #fff; }
+        .col-meta { color: #666; font-size: 13px; }
+        
         /* --- 3. THE PLAYER CONTAINER --- */
         #music-player {
             position: fixed;
@@ -276,23 +402,119 @@ const PlayerInterface = () => {
             top: 20px; right: 20px;
             display: flex; gap: 4px;
         }
-        .bar { width: 4px; height: 10px; background: var(--primary); border-radius: 2px; }
-        .playing .bar { animation: soundBar 1s infinite alternate; }
-        .bar:nth-child(1) { animation-delay: 0.1s; }
-        .bar:nth-child(2) { animation-delay: 0.3s; }
-        .bar:nth-child(3) { animation-delay: 0.0s; }
-        .bar:nth-child(4) { animation-delay: 0.4s; }
+        .player-bar { width: 4px; height: 10px; background: var(--primary); border-radius: 2px; }
+        .playing .player-bar { animation: soundBar 1s infinite alternate; }
+        .player-bar:nth-child(1) { animation-delay: 0.1s; }
+        .player-bar:nth-child(2) { animation-delay: 0.3s; }
+        .player-bar:nth-child(3) { animation-delay: 0.0s; }
+        .player-bar:nth-child(4) { animation-delay: 0.4s; }
 
         @keyframes soundBar { 0% { height: 5px; opacity:0.5;} 100% { height: 25px; opacity:1;} }
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes pulse { 0% { opacity:0.8; } 50% { opacity: 1; transform: scale(1.05); } 100% { opacity:0.8; } }
+        
+        @media(max-width: 800px) {
+            .interface-wrapper { flex-direction: column; height: 100vh; width: 100%; border-radius: 0; border: none;}
+            .sidebar { width: 100%; height: 100px; overflow-x: auto; flex-direction: row; border-right: none; border-bottom: 1px solid #222; align-items: center;}
+            .sidebar-header { display: none; }
+            .track-row { grid-template-columns: 40px 1fr 60px; }
+            .col-drag, .col-artist, .col-options { display: none; }
+            .col-meta.date { display: none; }
+        }
     </style>
-    <!-- Demo UI Background -->
-    <div class="demo-bg">
-        <h1 class="glow-text">Los Chipirones</h1>
-        <p style="color: #666; margin-top: 10px;">WEBSITE CONTENT...</p>
-        <br>
-        <div class="demo-hint" onclick="expandPlayer()">Player öffnen (oder klicke unten)</div>
+     <div class="interface-wrapper">
+        
+        <!-- SIDEBAR (Vibes/Playlists) -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Vibes</h3>
+            </div>
+
+            <div class="playlist-item active">
+                <img src="https://via.placeholder.com/80/000000/F46E7E?text=🐙" class="pl-img" alt="Mix">
+                <div>
+                    <strong>Octopus Selects</strong>
+                    <div style="font-size:11px; color:#666;">Playing • 42 Tracks</div>
+                </div>
+            </div>
+
+            <div class="playlist-item">
+                <img src="https://via.placeholder.com/80/1a1a1a/dddddd?text=🦁" class="pl-img" alt="Bavarian">
+                <div>
+                    <strong>Bavarian Beats</strong>
+                    <div style="font-size:11px; color:#666;">23 Tracks</div>
+                </div>
+            </div>
+
+            <div class="playlist-item">
+                <img src="https://via.placeholder.com/80/1a1a1a/dddddd?text=🐕" class="pl-img" alt="Latino">
+                <div>
+                    <strong>Fiesta Latino</strong>
+                    <div style="font-size:11px; color:#666;">55 Tracks</div>
+                </div>
+            </div>
+
+            <div class="playlist-item">
+                <img src="https://via.placeholder.com/80/1a1a1a/dddddd?text=🐻" class="pl-img" alt="Russian">
+                <div>
+                    <strong>Russian Lo-Fi</strong>
+                    <div style="font-size:11px; color:#666;">12 Tracks</div>
+                </div>
+            </div>
+            
+            <div style="margin-top:auto; background:#111; padding:15px; border-radius:12px; border:1px dashed #333;">
+                <span style="font-size:20px;">+</span> New Vibe
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-queue">
+            
+            <!-- Header -->
+            <div class="queue-header">
+                <div class="queue-title">
+                    <span>QUEUE</span>
+                    <h1>Octopus Selects</h1>
+                </div>
+                <div class="sort-controls">
+                    <button class="sort-btn active" onclick="sortTracks('date', this)">Recents</button>
+                    <button class="sort-btn" onclick="sortTracks('alpha', this)">A-Z</button>
+                    <button class="sort-btn" onclick="sortTracks('len', this)">Shortest</button>
+                </div>
+            </div>
+
+            <!-- Now Playing Area -->
+            <div class="now-playing-section">
+                <div class="np-info">
+                    <img src="https://via.placeholder.com/150/000/F46E7E?text=NOW" class="np-cover" id="np-img">
+                    <div class="np-text">
+                        <h4>PLAYING NOW</h4>
+                        <h2 id="np-title">Digital Tinterl</h2>
+                        <p id="np-artist">Los Chipirones feat. AI</p>
+                    </div>
+                </div>
+                
+                <div style="display:flex; align-items:center;">
+                    <div class="mini-vis">
+                        <div class="vis-bar"></div><div class="vis-bar"></div><div class="vis-bar"></div><div class="vis-bar"></div>
+                    </div>
+                    <span style="font-family:monospace; color:#F46E7E;" id="np-time">-2:14</span>
+                </div>
+            </div>
+
+            <!-- Up Next Labels -->
+            <div class="queue-label">
+                <span>UP NEXT</span>
+                <span>DURATION</span>
+            </div>
+
+            <!-- Queue Container -->
+            <div class="queue-list" id="track-container">
+                <!-- Tracks will be rendered here by JS -->
+            </div>
+
+        </main>
+
     </div>
 
     <!-- MAIN PLAYER COMPONENT -->
@@ -325,7 +547,7 @@ const PlayerInterface = () => {
             <div class="close-btn" onclick="collapsePlayer()"></div>
             
             <div class="visualizer">
-                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                <div class="player-bar"></div><div class="player-bar"></div><div class="player-bar"></div><div class="player-bar"></div>
             </div>
 
             <!-- Vinyl Animation Section -->
@@ -373,6 +595,79 @@ const PlayerInterface = () => {
   `;
 
   useEffect(() => {
+    // MOCK DATA (Songs)
+    const tracks = [
+        { id: 1, title: "Tequila Byte", artist: "Chipirón Latino", duration: "3:45", added: 1, img: "🐕" },
+        { id: 2, title: "Lederhosen Loop", artist: "MC Bavarian", duration: "2:10", added: 2, img: "🦁" },
+        { id: 3, title: "Vodka Vapor", artist: "The Bear", duration: "4:20", added: 3, img: "🐻" },
+        { id: 4, title: "Deep Sea Coding", artist: "Los Chipirones", duration: "5:00", added: 4, img: "🐙" },
+        { id: 5, title: "Neural Network Noise", artist: "AI Core", duration: "3:15", added: 5, img: "💻" },
+        { id: 6, title: "Munich Underground", artist: "Paulik-Reisch", duration: "4:01", added: 6, img: "🚇" },
+        { id: 7, title: "Fiesta de Algoritmo", artist: "Chipirón Latino", duration: "3:10", added: 7, img: "🌮" },
+        { id: 8, title: "Pretzel Bass", artist: "MC Bavarian", duration: "2:45", added: 8, img: "🥨" },
+    ];
+
+    const trackContainer = document.getElementById('track-container');
+
+    function playTrack(trackId) {
+        const track = tracks.find(t => t.id == trackId);
+        
+        const titleEl = document.getElementById('np-title');
+        titleEl.style.opacity = 0;
+        
+        setTimeout(() => {
+            document.getElementById('np-title').innerText = track.title;
+            document.getElementById('np-artist').innerText = track.artist;
+            document.getElementById('np-time').innerText = "-" + track.duration;
+            document.getElementById('np-img').src = \`https://via.placeholder.com/150/000/F46E7E?text=\${track.img}\`;
+            
+            titleEl.style.opacity = 1;
+        }, 200);
+    }
+
+    function renderTracks(data) {
+        trackContainer.innerHTML = '';
+        
+        data.forEach(track => {
+            const row = document.createElement('div');
+            row.className = 'track-row';
+            row.onclick = () => playTrack(track.id);
+            
+            row.innerHTML = \`
+                <div class="col-drag">::</div>
+                <div class="col-img">
+                    <img src="https://via.placeholder.com/60/222/888?text=\${track.img}" alt="Art">
+                    <div class="play-icon-overlay">▶</div>
+                </div>
+                <div style="padding-left:15px;">
+                    <div class="col-title">\${track.title}</div>
+                    <div class="col-meta col-artist" style="display:block;">\${track.artist}</div>
+                </div>
+                <div class="col-meta date">Added recently</div>
+                <div class="col-meta" style="text-align:right;">\${track.duration}</div>
+                <div class="col-options" style="text-align:center;">•••</div>
+            \`;
+            trackContainer.appendChild(row);
+        });
+    }
+    renderTracks(tracks);
+
+    (window as any).sortTracks = (type, btn) => {
+        document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        let sorted = [...tracks]; 
+        if(type === 'alpha') {
+            sorted.sort((a, b) => a.title.localeCompare(b.title));
+        } else if(type === 'date') {
+            sorted.sort((a, b) => a.added - b.added);
+        } else if(type === 'len') {
+            sorted.sort((a, b) => parseInt(a.duration) - parseInt(b.duration));
+        }
+
+        renderTracks(sorted);
+    }
+    
     // DATA: Sample Lyrics synced to time (Seconds: Text)
     const lyricsData = [
         { time: 0, text: "--- INSTRUMENTAL INTRO ---" },
@@ -404,7 +699,6 @@ const PlayerInterface = () => {
     
     if(!playerContainer || !vinylElement || !audio || !btnMiniPlay || !btnMainPlay || !progressFill || !currentTimeEl || !durationTimeEl || !lyricsContent) return;
     
-    // Global functions for inline event handlers
     (window as any).expandPlayer = () => {
         playerContainer.classList.add('expanded');
     };
@@ -435,14 +729,13 @@ const PlayerInterface = () => {
         audio.currentTime = (clickX / width) * duration;
     };
     
-    // INIT LYRICS
     lyricsContent.innerHTML = '';
     lyricsData.forEach((line, index) => {
         const div = document.createElement('div');
         div.classList.add('lyric-line');
         div.innerText = line.text;
         div.dataset.time = String(line.time);
-        div.id = `line-${index}`;
+        div.id = \`line-\${index}\`;
         div.onclick = () => {
             audio.currentTime = line.time;
             (window as any).togglePlay(true);
@@ -454,12 +747,12 @@ const PlayerInterface = () => {
         if(isNaN(seconds)) return "0:00";
         const min = Math.floor(seconds / 60);
         const sec = Math.floor(seconds % 60);
-        return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+        return \`\${min}:\${sec < 10 ? '0' : ''}\${sec}\`;
     }
 
     const timeUpdateHandler = () => {
         const percent = (audio.currentTime / audio.duration) * 100;
-        progressFill.style.width = `${percent}%`;
+        progressFill.style.width = \`\${percent}%\`;
         currentTimeEl.innerText = formatTime(audio.currentTime);
         
         let activeIndex = -1;
@@ -473,12 +766,12 @@ const PlayerInterface = () => {
 
         if(activeIndex !== -1) {
             document.querySelectorAll('.lyric-line').forEach(el => el.classList.remove('active'));
-            const activeEl = document.getElementById(`line-${activeIndex}`);
+            const activeEl = document.getElementById(\`line-\${activeIndex}\`);
             if(activeEl) {
                 activeEl.classList.add('active');
                 const lineHeight = 40; 
                 const offset = activeIndex * lineHeight; 
-                (lyricsContent as HTMLElement).style.transform = `translateY(-${offset}px)`;
+                (lyricsContent as HTMLElement).style.transform = \`translateY(-\${offset}px)\`;
             }
         }
     };
@@ -490,7 +783,7 @@ const PlayerInterface = () => {
     const endedHandler = () => {
         (window as any).togglePlay();
         audio.currentTime = 0;
-        (lyricsContent as HTMLElement).style.transform = `translateY(0)`;
+        (lyricsContent as HTMLElement).style.transform = \`translateY(0)\`;
     };
 
     audio.addEventListener('timeupdate', timeUpdateHandler);
@@ -508,3 +801,5 @@ const PlayerInterface = () => {
 };
 
 export default PlayerInterface;
+
+    
