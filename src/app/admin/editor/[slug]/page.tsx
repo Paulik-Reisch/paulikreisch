@@ -19,7 +19,7 @@ export default async function EditorPage({ params }: { params: { slug: string } 
   }
 
   return (
-    <div className="flex flex-col h-screen bg-muted/40 w-full fixed inset-0 p-4 md:p-6">
+    <div className="flex flex-col h-[calc(100vh-100px)] bg-muted/40 w-full p-0">
       <EditorClient page={page} />
     </div>
   );

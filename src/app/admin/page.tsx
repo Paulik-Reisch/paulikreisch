@@ -1,41 +1,71 @@
 
-
-import { Header } from "@/components/landing/header";
-import { Footer } from "@/components/landing/footer";
-import { AdminDashboard } from "@/components/admin/dashboard";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { logoutAction } from "./actions";
-import { LogOut } from "lucide-react";
-import { getSession } from "@/lib/session";
-import { redirect } from "next/navigation";
+import Link from "next/link";
+import { Activity, Database, FileText, HardDrive, LineChart, Newspaper, Sparkles, VenetianMask } from "lucide-react";
+import { getNewsletters, getLegalPages, getPalabrotas, getChistes, getExcerpts, getCollectionData, listFiles } from "@/lib/firestore";
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
+async function StatCard({ title, icon: Icon, valuePromise, link, linkText }: { title: string, icon: React.ElementType, valuePromise: Promise<number>, link: string, linkText: string }) {
+    const value = await valuePromise;
+    return (
+        <Card className="gcp-card">
+            <CardHeader>
+                <div className="flex items-center justify-between">
+                    <CardTitle className="text-sm font-medium">{title}</CardTitle>
+                    <Icon className="h-4 w-4 text-muted-foreground" />
+                </div>
+            </CardHeader>
+            <CardContent>
+                <div className="text-2xl font-bold">{value}</div>
+                <div className="action-bar !mt-2 !pt-2">
+                    <Link href={link}>
+                        <span className="gcp-link text-sm">{linkText}</span>
+                    </Link>
+                </div>
+            </CardContent>
+        </Card>
+    );
+}
 
-export default async function AdminPage() {
-  const session = await getSession();
-  if (!session) {
-    redirect("/login");
-  }
+function StatCardSkeleton() {
+    return (
+        <Card className="gcp-card">
+            <CardHeader>
+                <Skeleton className="h-5 w-24" />
+            </CardHeader>
+            <CardContent>
+                <Skeleton className="h-8 w-12 mb-2" />
+                <div className="action-bar !mt-2 !pt-2">
+                    <Skeleton className="h-5 w-20" />
+                </div>
+            </CardContent>
+        </Card>
+    );
+}
 
+export default async function AdminDashboardPage() {
   return (
-    <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
-      <Header />
-      <main className="flex-1 py-12">
-        <div className="container px-4 md:px-6">
-            <div className="flex justify-between items-center mb-8">
-              <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl">
-                Admin-Dashboard
-              </h1>
-              <form action={logoutAction}>
-                <Button variant="outline" type="submit">
-                  <LogOut className="mr-2 h-4 w-4"/>
-                  Abmelden
-                </Button>
-              </form>
-            </div>
-            <AdminDashboard />
+    <div className="space-y-6">
+        <div className="page-tabs">
+            <div className="tab active">Dashboard</div>
+            <div className="tab">Activity</div>
+            <div className="tab">Recommendations</div>
         </div>
-      </main>
-      <Footer />
+        
+        <div className="alert-banner">
+            <span><b>Maintenance Scheduled:</b> IMCORE DB-Node-04 will undergo maintenance on Sunday at 03:00 UTC.</span>
+        </div>
+
+        <div className="dashboard-grid">
+            <Suspense fallback={<StatCardSkeleton />}><StatCard title="Newsletter" icon={Newspaper} valuePromise={getNewsletters().then(d => d.length)} link="/admin/marketing" linkText="Manage Newsletters" /></Suspense>
+            <Suspense fallback={<StatCardSkeleton />}><StatCard title="Dynamische LPs" icon={FileText} valuePromise={getLegalPages().then(d => d.length)} link="/admin/lp" linkText="Manage Pages" /></Suspense>
+            <Suspense fallback={<StatCardSkeleton />}><StatCard title="Exzerpte" icon={Sparkles} valuePromise={getExcerpts().then(d => d.length)} link="/admin/excerpts" linkText="Manage Excerpts" /></Suspense>
+            <Suspense fallback={<StatCardSkeleton />}><StatCard title="Palabrotas" icon={VenetianMask} valuePromise={getPalabrotas().then(d => d.length)} link="/admin/palabrotas" linkText="Manage Words" /></Suspense>
+            <Suspense fallback={<StatCardSkeleton />}><StatCard title="Storage Files" icon={HardDrive} valuePromise={listFiles('/').then(d => d.length)} link="/admin/storage" linkText="Manage Storage" /></Suspense>
+             <Suspense fallback={<StatCardSkeleton />}><StatCard title="Logs" icon={Activity} valuePromise={getCollectionData('logs').then(d => d.length)} link="/admin/logs" linkText="View Logs" /></Suspense>
+        </div>
     </div>
   );
 }

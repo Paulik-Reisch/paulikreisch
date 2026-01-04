@@ -52,7 +52,7 @@ export default async function SeoEditorPage({ params }: { params: { slug: string
   };
 
   return (
-    <div className="flex flex-col h-screen bg-background text-foreground p-4 md:p-6">
+    <div className="flex flex-col h-[calc(100vh-8rem)] bg-background text-foreground">
       <SeoEditorClient initialData={initialData} pageTitle={pageTitle} pageSlug={slug} />
     </div>
   );
