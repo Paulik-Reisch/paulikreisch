@@ -32,182 +32,6 @@ const pageHTML = `
     a { text-decoration: none; color: inherit; transition: 0.3s; }
     ul { list-style: none; }
 
-    /* HEADER CONTAINER */
-    #lp-header {
-        position: relative;
-        width: 100%;
-        height: var(--header-h);
-        background: #000;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-    }
-
-    /* --- "SHADER" BACKGROUND EFFECT (CSS TRICK) --- */
-    .shader-bg {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        z-index: 0;
-        overflow: hidden;
-        opacity: 0.8;
-    }
-
-    /* Die tanzenden Blobs */
-    .blob {
-        position: absolute;
-        filter: blur(90px);
-        opacity: 0.8;
-        border-radius: 50%;
-        animation: floatShader 10s infinite alternate cubic-bezier(0.4, 0.0, 0.2, 1);
-    }
-
-    .blob-1 {
-        top: -10%; left: -10%;
-        width: 50vw; height: 50vw;
-        background: #4a0d16; /* Deep Red */
-        animation-duration: 12s;
-    }
-    
-    .blob-2 {
-        bottom: 0%; right: -10%;
-        width: 40vw; height: 40vw;
-        background: #F46E7E; /* Dein Pink */
-        animation-duration: 8s;
-        animation-direction: alternate-reverse;
-    }
-
-    .blob-3 {
-        top: 30%; left: 30%;
-        width: 30vw; height: 30vw;
-        background: #731e2c; /* Mid Tone */
-        animation-delay: -2s;
-        animation-duration: 15s;
-    }
-
-    /* Grid Overlay für den "Tech-Look" */
-    .grid-overlay {
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-        background-size: 50px 50px;
-        z-index: 1;
-        mask-image: radial-gradient(circle, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%);
-    }
-
-    @keyframes floatShader {
-        0% { transform: translate(0, 0) scale(1); }
-        50% { transform: translate(30px, -50px) scale(1.1); }
-        100% { transform: translate(-20px, 40px) scale(0.9); }
-    }
-
-    /* --- NAVIGATION BAR (Glassmorphism) --- */
-    .nav-bar {
-        position: relative;
-        z-index: 10;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 30px 50px;
-        background: rgba(0,0,0,0.2); /* Ganz leicht */
-        backdrop-filter: blur(5px);
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .logo-text {
-        font-weight: 900;
-        font-size: 24px;
-        letter-spacing: -1px;
-        color: #fff;
-        text-transform: uppercase;
-        display: flex; align-items: center; gap: 10px;
-    }
-
-    /* --- HERO CONTENT --- */
-    .header-content {
-        position: relative;
-        z-index: 5;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        padding: 0 20px;
-        margin-top: -60px; /* Offset für visuelle Balance */
-    }
-
-    /* Riesiger Titel mit Glow */
-    .hero-h1 {
-        font-family: 'Helvetica Neue', Arial, sans-serif;
-        font-weight: 800;
-        font-size: clamp(3rem, 10vw, 7rem); /* Responsive Giant Type */
-        line-height: 0.95;
-        letter-spacing: -2px;
-        color: transparent;
-        -webkit-text-stroke: 1px rgba(255,255,255,0.6);
-        margin-bottom: 30px;
-        position: relative;
-    }
-    
-    .hero-h1 span {
-        display: block;
-        color: #fff;
-        text-shadow: 0 0 50px rgba(244,110,126, 0.4); /* Pink Shadow */
-        -webkit-text-stroke: 0;
-    }
-
-    .hero-subtitle {
-        font-size: clamp(1rem, 2vw, 1.25rem);
-        max-width: 600px;
-        color: #ccc;
-        margin-bottom: 40px;
-        line-height: 1.6;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-    }
-
-    /* DER BUTTON */
-    .cta-header-btn {
-        background: #F46E7E; /* Chipirones Pink */
-        color: #fff;
-        font-size: 18px;
-        font-weight: bold;
-        text-decoration: none;
-        padding: 18px 45px;
-        border-radius: 50px;
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
-        border: 2px solid transparent;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .cta-header-btn:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 40px rgba(244, 110, 126, 0.6);
-        background: #ff7d8d;
-    }
-    
-    .cta-header-btn:active {
-        transform: scale(0.95);
-    }
-
-    /* Floating Arrow Anim */
-    .btn-arrow { transition: 0.3s; font-size: 20px;}
-    .cta-header-btn:hover .btn-arrow { transform: translateX(5px); }
-
-    /* Responsiveness */
-    @media (max-width: 768px) {
-        .nav-bar { padding: 20px; }
-        .hero-h1 { font-size: 4rem; }
-    }
-
-
     /* --- UTILITY & ANIMATION --- */
     .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
     .glow-text { text-shadow: 0 0 20px var(--accent-glow); }
@@ -290,9 +114,6 @@ const pageHTML = `
     .play-btn-mini { width: 40px; height: 40px; border-radius: 50%; background: var(--text-mute); color: #000; display: flex; align-items: center; justify-content: center; }
     .playlist-row:hover .play-btn-mini { background: var(--accent); color: #fff; }
 
-    /* 12. TECH SPECS */
-    #sec-tech { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
-    
     /* 15. SOCIAL PROOF */
     #sec-proof .testimonial { font-size: 2rem; font-style: italic; color: #fff; line-height: 1.4; text-align: center; }
 
@@ -309,11 +130,311 @@ const pageHTML = `
 
     /* ANIMATIONS */
     @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-20px); } 100% { transform: translateY(0px); } }
+
+    /* New Tech Section Styles */
+    #sec-tech-advanced {
+        background-color: #080808;
+        padding: 100px 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .tech-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 60px;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        position: relative; z-index: 2;
+    }
+
+    .tech-content h2 {
+        font-size: 3.5rem;
+        line-height: 1;
+        margin-bottom: 30px;
+        background: -webkit-linear-gradient(0deg, #fff, #888);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 800;
+        letter-spacing: -2px;
+    }
+
+    .tech-content p {
+        font-size: 1.1rem;
+        color: #999;
+        line-height: 1.8;
+        margin-bottom: 20px;
+        border-left: 2px solid var(--accent); /* #F46E7E */
+        padding-left: 20px;
+    }
+
+    .tech-interface-card {
+        background: rgba(20, 20, 20, 0.6);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 24px;
+        backdrop-filter: blur(20px);
+        overflow: hidden;
+        position: relative;
+        height: 400px;
+        box-shadow: 0 20px 80px rgba(0,0,0,0.6);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .shader-layer {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        opacity: 0.5;
+        z-index: 0;
+        background: 
+            radial-gradient(circle at 50% 50%, rgba(244,110,126,0.2) 0%, transparent 60%),
+            conic-gradient(from 180deg at 50% 50%, #000 0%, #1a0505 50%, #2a0808 100%);
+        background-size: 200% 200%;
+        animation: gradientShift 10s ease infinite;
+    }
+
+    .holo-noise {
+        position: absolute; top:0; left:0; width:100%; height:100%;
+        background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.08"/%3E%3C/svg%3E');
+        z-index: 1;
+        mix-blend-mode: overlay;
+    }
+
+    @keyframes gradientShift { 
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; } 
+        100% { background-position: 0% 50%; }
+    }
+
+    .viz-container {
+        flex: 1;
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+    
+    .v-bar {
+        width: 8px;
+        background: #F46E7E;
+        border-radius: 4px;
+        height: 10px;
+        box-shadow: 0 0 15px rgba(244,110,126,0.6);
+        animation: visualize 1s ease-in-out infinite alternate;
+    }
+
+    .v-bar:nth-child(odd) { animation-duration: 0.8s; background: #fff; }
+    .v-bar:nth-child(2) { height: 40px; animation-delay: 0.1s; }
+    .v-bar:nth-child(3) { height: 60px; animation-delay: 0.3s; }
+    .v-bar:nth-child(4) { height: 90px; animation-delay: 0.0s; }
+    .v-bar:nth-child(5) { height: 50px; animation-delay: 0.2s; }
+    .v-bar:nth-child(6) { height: 30px; animation-delay: 0.4s; }
+
+    @keyframes visualize {
+        0% { height: 10px; opacity: 0.5; transform: scaleY(0.8); }
+        100% { height: 80px; opacity: 1; transform: scaleY(1.2); }
+    }
+
+    .tech-controls {
+        z-index: 5;
+        padding: 30px;
+        background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+    }
+
+    .play-circle {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: 70px; height: 70px;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        color: #fff;
+        font-size: 24px;
+        backdrop-filter: blur(5px);
+        cursor: pointer;
+        z-index: 10;
+        transition: 0.3s;
+        box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    }
+    .play-circle:hover { border-color: #F46E7E; color: #F46E7E; transform: translate(-50%, -50%) scale(1.1); }
+
+    .tech-meta {
+        display: flex; justify-content: space-between; font-family: monospace; font-size: 10px; color: #666; letter-spacing: 2px;
+        margin-bottom: 10px;
+    }
+
+    .process-line {
+        height: 2px; width: 100%; background: #333; position: relative;
+        overflow: hidden;
+    }
+    .process-active {
+        position: absolute; top:0; left:0; height:100%; width: 40%; background: #F46E7E;
+        box-shadow: 0 0 10px #F46E7E;
+        animation: processing 3s cubic-bezier(0.4, 0.0, 0.2, 1) infinite;
+    }
+
+    @keyframes processing { 0% { left: -50%; } 100% { left: 100%; } }
+
+    .floating-data {
+        position: absolute; font-family: monospace; color: rgba(244,110,126,0.5); font-size: 10px; pointer-events: none;
+    }
     
     /* Responsive */
-    @media(max-width: 768px) {
-        #sec-tech { grid-template-columns: 1fr; }
+    @media(max-width: 800px) {
+        .tech-grid { grid-template-columns: 1fr; gap: 30px; }
         .input-group { flex-direction: column; }
+        .tech-interface-card { height: 300px; }
+    }
+    
+    /* HEADER STYLES (from previous request) */
+     #lp-header {
+        position: relative;
+        width: 100%;
+        height: var(--header-h);
+        background: #000;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+    .shader-bg {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: 0;
+        overflow: hidden;
+        opacity: 0.8;
+    }
+    .blob {
+        position: absolute;
+        filter: blur(90px);
+        opacity: 0.8;
+        border-radius: 50%;
+        animation: floatShader 10s infinite alternate cubic-bezier(0.4, 0.0, 0.2, 1);
+    }
+    .blob-1 {
+        top: -10%; left: -10%;
+        width: 50vw; height: 50vw;
+        background: #4a0d16;
+        animation-duration: 12s;
+    }
+    .blob-2 {
+        bottom: 0%; right: -10%;
+        width: 40vw; height: 40vw;
+        background: #F46E7E;
+        animation-duration: 8s;
+        animation-direction: alternate-reverse;
+    }
+    .blob-3 {
+        top: 30%; left: 30%;
+        width: 30vw; height: 30vw;
+        background: #731e2c;
+        animation-delay: -2s;
+        animation-duration: 15s;
+    }
+    .grid-overlay {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+        z-index: 1;
+        mask-image: radial-gradient(circle, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%);
+    }
+    @keyframes floatShader {
+        0% { transform: translate(0, 0) scale(1); }
+        50% { transform: translate(30px, -50px) scale(1.1); }
+        100% { transform: translate(-20px, 40px) scale(0.9); }
+    }
+    .nav-bar {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 30px 50px;
+        background: rgba(0,0,0,0.2);
+        backdrop-filter: blur(5px);
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .logo-text {
+        font-weight: 900;
+        font-size: 24px;
+        letter-spacing: -1px;
+        color: #fff;
+        text-transform: uppercase;
+        display: flex; align-items: center; gap: 10px;
+    }
+    .header-content {
+        position: relative;
+        z-index: 5;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 0 20px;
+        margin-top: -60px;
+    }
+    .hero-h1 {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        font-weight: 800;
+        font-size: clamp(3rem, 10vw, 7rem);
+        line-height: 0.95;
+        letter-spacing: -2px;
+        color: transparent;
+        -webkit-text-stroke: 1px rgba(255,255,255,0.6);
+        margin-bottom: 30px;
+        position: relative;
+    }
+    .hero-h1 span {
+        display: block;
+        color: #fff;
+        text-shadow: 0 0 50px rgba(244,110,126, 0.4);
+        -webkit-text-stroke: 0;
+    }
+    .hero-subtitle {
+        font-size: clamp(1rem, 2vw, 1.25rem);
+        max-width: 600px;
+        color: #ccc;
+        margin-bottom: 40px;
+        line-height: 1.6;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+    .cta-header-btn {
+        background: #F46E7E;
+        color: #fff;
+        font-size: 18px;
+        font-weight: bold;
+        text-decoration: none;
+        padding: 18px 45px;
+        border-radius: 50px;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+        border: 2px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
+    .cta-header-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 40px rgba(244, 110, 126, 0.6);
+        background: #ff7d8d;
+    }
+    .cta-header-btn:active { transform: scale(0.95); }
+    .btn-arrow { transition: 0.3s; font-size: 20px;}
+    .cta-header-btn:hover .btn-arrow { transform: translateX(5px); }
+    @media (max-width: 768px) {
+        .nav-bar { padding: 20px; }
+        .hero-h1 { font-size: 4rem; }
     }
 </style>
     <!-- HEADER HTML STRUCTURE -->
@@ -496,17 +617,50 @@ const pageHTML = `
         </div>
     </section>
 
-    <!-- SECTION 12: THE TECH BEHIND -->
-    <section id="sec-tech">
-        <div class="container" style="max-width: 1000px; margin: 0 auto; display: grid; gap:40px;">
-            <div class="fade-in">
-                <h2 style="color: var(--accent);">Technology.</h2>
-                <p>Wir nutzen fortschrittliche neuronale Netze für die Komposition. Aber die Selektion ("Curation") erfolgt durch Menschen. Das Ergebnis ist perfektionierter Sound ohne emotionale Glitches.</p>
+    <!-- SECTION 12: THE TECH BEHIND (NEW) -->
+    <section id="sec-tech-advanced">
+        <div class="tech-grid">
+            <div class="tech-content fade-in">
+                <h2>Neural<br>Curation.</h2>
+                <p>
+                    Technologie darf niemals kalt klingen. Wir nutzen fortschrittliche neuronale Netze (Transformer-based Audio Models) für die Grundstruktur der Komposition. 
+                </p>
+                <p>
+                    Doch das Herz ist menschlich. Jede Spur durchläuft unser "Curated Listening Protocol". Menschen entscheiden über Groove, Seele und Flow. Das Ergebnis ist perfektionierter Sound ohne emotionale Glitches.
+                </p>
             </div>
-            <div style="background: #222; padding: 30px; border-radius: 20px;" class="fade-in">
-                <code style="color: #0f0; display: block; margin-bottom: 10px;">> init sequence...</code>
-                <code style="color: #ccc; display: block; margin-bottom: 10px;">> generating beat pattern...</code>
-                <code style="color: var(--accent); display: block;">> success. output: hit.mp3</code>
+            <div class="tech-interface-card fade-in" onclick="toggleTechDemo(this)">
+                <div class="shader-layer"></div>
+                <div class="holo-noise"></div>
+                <div class="floating-data" style="top: 20px; right: 20px; text-align: right;">
+                    AI_MODEL_V4.2<br>
+                    STATUS: GENERATING<br>
+                    BPM: 124.0
+                </div>
+                <div class="play-circle">
+                    ▶
+                </div>
+                <div class="viz-container">
+                    <div class="v-bar"></div>
+                    <div class="v-bar"></div>
+                    <div class="v-bar"></div>
+                    <div class="v-bar"></div>
+                    <div class="v-bar"></div>
+                    <div class="v-bar"></div>
+                    <div class="v-bar"></div>
+                </div>
+                <div class="tech-controls">
+                    <div class="tech-meta">
+                        <span>> RENDERING_CHIPIRON_STYLE.WAV</span>
+                        <span>100% LOSSLESS</span>
+                    </div>
+                    <div class="process-line">
+                        <div class="process-active"></div>
+                    </div>
+                    <div style="font-family: monospace; font-size: 10px; color: #555; margin-top: 5px;">
+                        QUEUE POSITION: 1 • EST TIME: 0.04s
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -637,8 +791,20 @@ export default function ChipironesPage() {
             observer.observe(section);
         });
 
-        // The click handler is removed as per the new linking requirement.
-  }, []);
+        (window as any).toggleTechDemo = function(card: HTMLElement) {
+            const icon = card.querySelector('.play-circle');
+            const bars = card.querySelectorAll('.v-bar');
+            
+            if (icon && icon.innerHTML.includes('▶')) {
+                icon.innerHTML = 'II';
+                bars.forEach((b: any) => b.style.animationDuration = (Math.random() * 0.5 + 0.2) + 's');
+            } else if (icon) {
+                icon.innerHTML = '▶';
+                bars.forEach((b: any) => b.style.animationDuration = '3s');
+            }
+        };
+
+    }, []);
 
   return <div dangerouslySetInnerHTML={{ __html: pageHTML }} />;
 }
