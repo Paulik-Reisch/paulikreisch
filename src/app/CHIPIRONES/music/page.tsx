@@ -4,8 +4,8 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useCollection, useMemoFirebase } from '@/firebase';
 import { useFirestore } from '@/firebase/provider';
-import { collection, query, orderBy } from 'firebase/firestore';
-import { Loader2 } from 'lucide-react';
+import { collection, query, orderBy, where } from 'firebase/firestore';
+import { Loader2, Repeat } from 'lucide-react';
 import { initiateAnonymousSignIn } from '@/firebase/non-blocking-login';
 import { useAuth, useUser } from '@/firebase';
 
@@ -27,17 +27,25 @@ interface Track {
     lyrics?: LyricLine[];
 }
 
+const VIBES = ['Chipirón Selects', 'Bavarian Beats', 'Fiesta Latino', 'Russian Lo-Fi'];
 
 export default function PlayerInterface() {
   const firestore = useFirestore();
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
   
-  const tracksCollection = useMemoFirebase(() => query(collection(firestore, '/CHIPIRONES/music/tracks'), orderBy("title", "asc")), [firestore]);
+  const [selectedVibe, setSelectedVibe] = useState(VIBES[0]);
+
+  const tracksCollection = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return query(collection(firestore, '/CHIPIRONES/music/tracks'), where("vibe", "==", selectedVibe), orderBy("title", "asc"));
+  }, [firestore, selectedVibe]);
+  
   const { data: tracks, isLoading } = useCollection<Track>(tracksCollection);
 
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLooping, setIsLooping] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const playerContainerRef = useRef<HTMLDivElement>(null);
@@ -57,6 +65,12 @@ export default function PlayerInterface() {
         initiateAnonymousSignIn(auth);
     }
   }, [isUserLoading, user, auth]);
+  
+  useEffect(() => {
+    // Reset track index when vibe changes
+    setCurrentTrackIndex(0);
+  }, [selectedVibe]);
+
 
   useEffect(() => {
     if (currentTrack && audioRef.current) {
@@ -69,6 +83,12 @@ export default function PlayerInterface() {
       initLyrics(currentTrack.lyrics || []);
     }
   }, [currentTrack, isPlaying]);
+
+  useEffect(() => {
+      if (audioRef.current) {
+        audioRef.current.loop = isLooping;
+      }
+  }, [isLooping]);
 
 
   const initLyrics = (lyricsData: LyricLine[]) => {
@@ -260,11 +280,13 @@ export default function PlayerInterface() {
                     <span id="duration-time" ref={durationTimeRef}>--:--</span>
                 </div>
                 <div className="control-buttons">
-                    <button className="btn-ctrl">⚡</button>
+                    <button className={`btn-ctrl ${isLooping ? 'active' : ''}`} onClick={() => setIsLooping(!isLooping)}>
+                        <Repeat />
+                    </button>
                     <button className="btn-ctrl" onClick={playPrevTrack}>⏮</button>
                     <button className="btn-play-lg" id="btn-main-play" ref={btnMainPlayRef} onClick={() => togglePlay()}>▶</button>
                     <button className="btn-ctrl" onClick={playNextTrack}>⏭</button>
-                    <button className="btn-ctrl">❤</button>
+                    <button className="btn-ctrl disabled">•••</button>
                 </div>
             </div>
         </div>
@@ -320,8 +342,7 @@ export default function PlayerInterface() {
             color: #ccc;
         }
         .playlist-item:hover { background: #1a1a1a; color: #fff; transform: translateX(5px); }
-        .playlist-item.active { background: #222; color: #fff; border-left: 3px solid var(--primary); }
-        .pl-img { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; margin-right: 15px; filter: grayscale(50%); }
+        .playlist-item.active { background: var(--primary-dim); border: 1px solid var(--primary); color: #fff; }
         .active .pl-img { filter: grayscale(0%); box-shadow: 0 0 10px rgba(244,110,126,0.3); }
         .main-queue {
             flex: 1;
@@ -596,7 +617,9 @@ export default function PlayerInterface() {
             display: flex; justify-content: space-between; align-items: center; padding: 0 20px;
         }
         .btn-ctrl { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; transition: 0.2s; opacity: 0.7; }
-        .btn-ctrl:hover { opacity: 1; transform: scale(1.1); }
+        .btn-ctrl.disabled { opacity: 0.2; pointer-events: none; }
+        .btn-ctrl.active { color: var(--primary); opacity: 1;}
+        .btn-ctrl:hover:not(.disabled) { opacity: 1; transform: scale(1.1); }
         .btn-play-lg { 
             width: 70px; height: 70px; 
             border-radius: 50%; background: var(--primary); color: #fff; 
@@ -619,8 +642,7 @@ export default function PlayerInterface() {
         @keyframes pulse { 0% { opacity:0.8; } 50% { opacity: 1; transform: scale(1.05); } 100% { opacity:0.8; } }
         @media(max-width: 800px) {
             .interface-wrapper { flex-direction: column; height: 100vh; width: 100%; border-radius: 0; border: none;}
-            .sidebar { width: 100%; height: 100px; overflow-x: auto; flex-direction: row; border-right: none; border-bottom: 1px solid #222; align-items: center;}
-            .sidebar-header { display: none; }
+            .sidebar { width: 100%; height: auto; overflow-x: auto; flex-direction: column; border-right: none; border-bottom: 1px solid #222; }
             .track-row { grid-template-columns: 40px 1fr 60px; }
             .col-drag, .col-artist, .col-options { display: none; }
             .col-meta.date { display: none; }
@@ -631,12 +653,10 @@ export default function PlayerInterface() {
             <div className="sidebar-header">
                 <h3>Vibes</h3>
             </div>
-             {['Chipirón Selects', 'Bavarian Beats', 'Fiesta Latino', 'Russian Lo-Fi'].map(vibe => (
-                <div className="playlist-item active" key={vibe}>
-                    <img src={fallbackCover} className="pl-img" alt="Mix" />
+             {VIBES.map(vibe => (
+                <div className={`playlist-item ${selectedVibe === vibe ? 'active' : ''}`} key={vibe} onClick={() => setSelectedVibe(vibe)}>
                     <div>
                         <strong>{vibe}</strong>
-                        <div style={{fontSize:'11px', color:'#666'}}>{tracks?.filter(t => t.vibe === vibe).length || 0} Tracks</div>
                     </div>
                 </div>
             ))}
@@ -645,7 +665,7 @@ export default function PlayerInterface() {
             <div className="queue-header">
                 <div className="queue-title">
                     <span>QUEUE</span>
-                    <h1>Chipirón Selects</h1>
+                    <h1>{selectedVibe}</h1>
                 </div>
             </div>
             <div className="now-playing-section">
@@ -696,4 +716,5 @@ export default function PlayerInterface() {
       </div>
     </>
   );
-};
+}
+    
