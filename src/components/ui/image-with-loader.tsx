@@ -23,7 +23,7 @@ export function ImageWithLoader(props: ImageProps) {
           isLoading ? "opacity-0" : "opacity-100",
           props.className
         )}
-        onLoadingComplete={() => setIsLoading(false)}
+        onLoad={() => setIsLoading(false)}
       />
       {isLoading && (
         <Skeleton className="absolute inset-0" />

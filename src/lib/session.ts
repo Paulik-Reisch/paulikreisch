@@ -30,9 +30,16 @@ export async function decrypt(input: string): Promise<any> {
 }
 
 export async function getSession() {
-  const sessionCookie = cookies().get("session")?.value;
-  if (!sessionCookie) return null;
-  const decrypted = await decrypt(sessionCookie);
+  const sessionCookieValue = cookies().get("session")?.value;
+  if (!sessionCookieValue) return null;
+  
+  const decrypted = await decrypt(sessionCookieValue);
   if (!decrypted) return null;
+
+  // Validate expires
+  if (new Date(decrypted.expires) < new Date()) {
+      return null;
+  }
+
   return { user: { id: decrypted.user.id }, expires: decrypted.expires };
 }
