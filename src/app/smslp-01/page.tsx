@@ -298,10 +298,7 @@ const pageHTML = `
         <p>© 2024-2027 Smart-Selling-Campaigns Group / BY THE PAULIK_REISCH MEDIA. Alle Rechte (und Linken) vorbehalten.</p>
     </div>
 </div>
-`
-,
-  }
-];
+`;
 
 export default function SmsLp01Page() {
     useEffect(() => {
