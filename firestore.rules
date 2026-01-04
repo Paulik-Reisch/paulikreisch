@@ -7,21 +7,15 @@ service cloud.firestore {
       return request.auth != null;
     }
     
-    // Allow public read access to the tracks collection for the music player,
-    // but restrict write access to signed-in users (admins).
+    // Allow public read access to individual tracks
     match /CHIPIRONES/music/tracks/{trackId} {
       allow read: if true;
       allow write: if isSignedIn();
     }
     
-    // Explicitly allow LIST operation on the collection for public access
+    // Allow public list access to the entire collection
     match /CHIPIRONES/music/tracks {
       allow list: if true;
-    }
-    
-    // Deny all other access by default
-    match /{path=**} {
-      allow read, write: if false;
     }
   }
 }
