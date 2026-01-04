@@ -1,12 +1,261 @@
-
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
+import { useCollection, useMemoFirebase } from '@/firebase';
+import { useFirestore } from '@/firebase/provider';
+import { collection, query, orderBy } from 'firebase/firestore';
+import { Loader2 } from 'lucide-react';
+import { initiateAnonymousSignIn } from '@/firebase/non-blocking-login';
+import { useAuth, useUser } from '@/firebase';
+
+
+interface LyricLine {
+    time: number;
+    text: string;
+}
+
+interface Track {
+    id: string;
+    title: string;
+    artist: string;
+    duration: string; // M:SS
+    imageUrl: string;
+    audioUrl: string;
+    album: string;
+    vibe: string;
+    lyrics?: LyricLine[];
+}
+
 
 const PlayerInterface = () => {
-  const htmlContent = `
-    <style>
-        /* --- 1. CONFIG & RESET --- */
+  const firestore = useFirestore();
+  const auth = useAuth();
+  const { user, isUserLoading } = useUser();
+  
+  const tracksCollection = useMemoFirebase(() => query(collection(firestore, '/CHIPIRONES/music/tracks'), orderBy("title", "asc")), [firestore]);
+  const { data: tracks, isLoading } = useCollection<Track>(tracksCollection);
+
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const playerContainerRef = useRef<HTMLDivElement>(null);
+  const vinylElementRef = useRef<HTMLDivElement>(null);
+  const progressFillRef = useRef<HTMLDivElement>(null);
+  const lyricsContentRef = useRef<HTMLDivElement>(null);
+  const currentTimeRef = useRef<HTMLSpanElement>(null);
+  const durationTimeRef = useRef<HTMLSpanElement>(null);
+  const btnMiniPlayRef = useRef<HTMLSpanElement>(null);
+  const btnMainPlayRef = useRef<HTMLButtonElement>(null);
+
+  const currentTrack = tracks ? tracks[currentTrackIndex] : null;
+
+  useEffect(() => {
+    if (!isUserLoading && !user) {
+        initiateAnonymousSignIn(auth);
+    }
+  }, [isUserLoading, user, auth]);
+
+  useEffect(() => {
+    if (currentTrack && audioRef.current) {
+      if (audioRef.current.src !== currentTrack.audioUrl) {
+         audioRef.current.src = currentTrack.audioUrl;
+         if(isPlaying) {
+           audioRef.current.play().catch(e => console.error("Error playing audio:", e));
+         }
+      }
+      initLyrics(currentTrack.lyrics || []);
+    }
+  }, [currentTrack, isPlaying]);
+
+
+  const initLyrics = (lyricsData: LyricLine[]) => {
+    if (!lyricsContentRef.current) return;
+    lyricsContentRef.current.innerHTML = '';
+    if (!lyricsData || lyricsData.length === 0) {
+        lyricsContentRef.current.innerHTML = '<div class="lyric-line active">Keine Songtexte für diesen Track verfügbar.</div>';
+        return;
+    }
+    lyricsData.forEach((line, index) => {
+        const div = document.createElement('div');
+        div.classList.add('lyric-line');
+        div.innerText = line.text;
+        div.dataset.time = String(line.time);
+        div.id = `line-${index}`;
+        div.onclick = () => {
+            if(audioRef.current) {
+                audioRef.current.currentTime = line.time;
+                togglePlay(true);
+            }
+        };
+        lyricsContentRef.current?.appendChild(div);
+    });
+  };
+
+  const playTrack = (index: number) => {
+    setCurrentTrackIndex(index);
+    togglePlay(true);
+  };
+
+  const playNextTrack = () => {
+    const nextIndex = (currentTrackIndex + 1) % (tracks?.length || 1);
+    playTrack(nextIndex);
+  };
+  
+  const playPrevTrack = () => {
+    let prevIndex = currentTrackIndex - 1;
+    if (prevIndex < 0) {
+        prevIndex = (tracks?.length || 1) -1;
+    }
+    playTrack(prevIndex);
+  }
+
+  const expandPlayer = () => playerContainerRef.current?.classList.add('expanded');
+  const collapsePlayer = () => playerContainerRef.current?.classList.remove('expanded');
+  
+  const togglePlay = useCallback((forcePlay?: boolean) => {
+      if (!audioRef.current) return;
+      
+      const shouldPlay = forcePlay || audioRef.current.paused;
+
+      if (shouldPlay) {
+          audioRef.current.play().catch(e => console.error("Play error:", e));
+      } else {
+          audioRef.current.pause();
+      }
+      setIsPlaying(shouldPlay);
+  }, []);
+
+  const seek = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!audioRef.current) return;
+    const target = e.currentTarget as HTMLElement;
+    const width = target.clientWidth;
+    const clickX = e.nativeEvent.offsetX;
+    audioRef.current.currentTime = (clickX / width) * audioRef.current.duration;
+  };
+
+  const formatTime = (seconds: number) => {
+    if (isNaN(seconds)) return "0:00";
+    const min = Math.floor(seconds / 60);
+    const sec = Math.floor(seconds % 60);
+    return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+  };
+
+  const timeUpdateHandler = () => {
+    if (!audioRef.current || !progressFillRef.current || !currentTimeRef.current) return;
+    const percent = (audioRef.current.currentTime / audioRef.current.duration) * 100;
+    progressFillRef.current.style.width = `${percent}%`;
+    currentTimeRef.current.innerText = formatTime(audioRef.current.currentTime);
+    
+    // Lyrics Sync
+    if (!currentTrack?.lyrics) return;
+    const currTime = audioRef.current.currentTime;
+    let activeIndex = -1;
+    for (let i = 0; i < currentTrack.lyrics.length; i++) {
+        if (currTime >= currentTrack.lyrics[i].time) {
+            activeIndex = i;
+        } else {
+            break;
+        }
+    }
+    if (activeIndex !== -1) {
+        lyricsContentRef.current?.querySelectorAll('.lyric-line').forEach(el => el.classList.remove('active'));
+        const activeEl = lyricsContentRef.current?.querySelector(`#line-${activeIndex}`);
+        if (activeEl) {
+            activeEl.classList.add('active');
+            const lineHeight = 40;
+            const offset = activeIndex * lineHeight;
+            if(lyricsContentRef.current) lyricsContentRef.current.style.transform = `translateY(-${offset}px)`;
+        }
+    }
+  };
+
+  const loadedMetadataHandler = () => {
+    if (!audioRef.current || !durationTimeRef.current) return;
+    durationTimeRef.current.innerText = formatTime(audioRef.current.duration);
+  };
+  
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.addEventListener('timeupdate', timeUpdateHandler);
+    audio.addEventListener('loadedmetadata', loadedMetadataHandler);
+    audio.addEventListener('ended', playNextTrack);
+    
+    return () => {
+      audio.removeEventListener('timeupdate', timeUpdateHandler);
+      audio.removeEventListener('loadedmetadata', loadedMetadataHandler);
+      audio.removeEventListener('ended', playNextTrack);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTrack, playNextTrack]);
+  
+   useEffect(() => {
+        if (vinylElementRef.current) vinylElementRef.current.classList.toggle('playing', isPlaying);
+        if (playerContainerRef.current) playerContainerRef.current.classList.toggle('playing', isPlaying);
+        if (btnMiniPlayRef.current) btnMiniPlayRef.current.innerText = isPlaying ? "⏸" : "▶";
+        if (btnMainPlayRef.current) btnMainPlayRef.current.innerText = isPlaying ? "⏸" : "▶";
+  }, [isPlaying]);
+
+  const renderPlayer = () => (
+     <div id="music-player" ref={playerContainerRef}>
+        <audio id="audio-source" ref={audioRef} preload="metadata" />
+        <div className="mini-player-row" onClick={expandPlayer}>
+            <div className="mini-cover"><img src={currentTrack?.imageUrl || 'https://via.placeholder.com/100x100/333/F46E7E?text=LP'} alt="cover" /></div>
+            <div className="mini-info">
+                <div className="mini-title">{currentTrack?.title || 'Wähle einen Track'}</div>
+                <div className="mini-artist">{currentTrack?.artist || 'Los Chipirones'}</div>
+            </div>
+            <div className="mini-controls">
+                <div className="mini-vis-small-wrapper">
+                    <div className="mini-vis-small"></div>
+                    <div className="mini-vis-small"></div>
+                    <div className="mini-vis-small"></div>
+                </div>
+                <span id="btn-mini-play" ref={btnMiniPlayRef} onClick={(e) => { e.stopPropagation(); togglePlay(); }}>▶</span>
+            </div>
+        </div>
+        <div className="full-player-view">
+            <div className="close-btn" onClick={collapsePlayer}></div>
+            <div className="visualizer">
+                <div className="player-bar"></div><div className="player-bar"></div><div className="player-bar"></div><div className="player-bar"></div>
+            </div>
+            <div className="vinyl-wrapper" id="vinyl" ref={vinylElementRef}>
+                <div className="tonearm"></div>
+                <div className="vinyl-disc">
+                    <div className="vinyl-cover"><img src={currentTrack?.imageUrl || "https://via.placeholder.com/200/F46E7E/ffffff?text=🐙"} alt="Label" /></div>
+                </div>
+            </div>
+            <div className="track-info">
+                <h2>{currentTrack?.title || "Kein Track ausgewählt"}</h2>
+                <p>{currentTrack?.album || "Unknown Album"}</p>
+            </div>
+            <div className="lyrics-container">
+                <div className="lyrics-scroll" id="lyrics-content" ref={lyricsContentRef}></div>
+            </div>
+            <div className="full-controls">
+                <div className="progress-area">
+                    <span id="current-time" ref={currentTimeRef}>0:00</span>
+                    <div className="progress-bar-bg" onClick={seek}>
+                        <div className="progress-fill" id="progress-fill" ref={progressFillRef}></div>
+                    </div>
+                    <span id="duration-time" ref={durationTimeRef}>--:--</span>
+                </div>
+                <div className="control-buttons">
+                    <button className="btn-ctrl">⚡</button>
+                    <button className="btn-ctrl" onClick={playPrevTrack}>⏮</button>
+                    <button className="btn-play-lg" id="btn-main-play" ref={btnMainPlayRef} onClick={() => togglePlay()}>▶</button>
+                    <button className="btn-ctrl" onClick={playNextTrack}>⏭</button>
+                    <button className="btn-ctrl">❤</button>
+                </div>
+            </div>
+        </div>
+    </div>
+  );
+
+  return (
+    <>
+     <style>{`
         :root {
             --primary: #F46E7E;
             --primary-dim: rgba(244, 110, 126, 0.3);
@@ -19,19 +268,14 @@ const PlayerInterface = () => {
             --bg-panel: #111111;
             --border: rgba(255, 255, 255, 0.1);
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
-        
         body {
             background-color: var(--bg-deep);
             color: var(--text-main);
             font-family: 'Helvetica Neue', Arial, sans-serif;
-            overflow: hidden; /* Prevent body scroll when player is open */
+            overflow: hidden;
             height: 100vh;
             width: 100vw;
         }
-
-        /* --- 2. MAIN INTERFACE --- */
         .interface-wrapper {
             display: flex;
             width: 100%;
@@ -39,8 +283,6 @@ const PlayerInterface = () => {
             background: var(--bg-panel);
             overflow: hidden;
         }
-
-        /* --- LEFT SIDEBAR: PLAYLISTS --- */
         .sidebar {
             width: 300px;
             background: #0a0a0a;
@@ -48,10 +290,8 @@ const PlayerInterface = () => {
             border-right: 1px solid var(--border);
             display: flex; flex-direction: column;
         }
-        
         .sidebar-header { margin-bottom: 30px; }
         .sidebar-header h3 { font-size: 12px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px;}
-        
         .playlist-item {
             display: flex; align-items: center;
             padding: 12px 15px;
@@ -63,26 +303,20 @@ const PlayerInterface = () => {
         }
         .playlist-item:hover { background: #1a1a1a; color: #fff; transform: translateX(5px); }
         .playlist-item.active { background: #222; color: #fff; border-left: 3px solid var(--primary); }
-        
         .pl-img { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; margin-right: 15px; filter: grayscale(50%); }
         .active .pl-img { filter: grayscale(0%); box-shadow: 0 0 10px rgba(244,110,126,0.3); }
-
-        /* --- RIGHT MAIN: QUEUE --- */
         .main-queue {
             flex: 1;
             padding: 40px;
             display: flex; flex-direction: column;
             overflow: hidden;
         }
-
-        /* TOP BAR WITH SORT */
         .queue-header {
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 30px;
         }
         .queue-title h1 { font-size: 28px; font-weight: 700; margin-bottom: 5px; }
         .queue-title span { font-size: 14px; color: var(--primary); font-weight: bold; }
-
         .sort-controls {
             display: flex; gap: 10px; background: #000; padding: 5px; border-radius: 30px;
         }
@@ -93,8 +327,6 @@ const PlayerInterface = () => {
         }
         .sort-btn:hover { color: #fff; }
         .sort-btn.active { background: #222; color: #fff; }
-
-        /* PLAYING NOW CARD */
         .now-playing-section {
             background: linear-gradient(90deg, #1c090c 0%, #111 100%);
             border: 1px solid rgba(244,110,126, 0.2);
@@ -105,20 +337,16 @@ const PlayerInterface = () => {
             position: relative;
             overflow: hidden;
         }
-        .now-playing-section::after { /* Scanline effect overlay */
+        .now-playing-section::after {
             content:''; position: absolute; top:0; left:0; width:100%; height:100%;
             background: repeating-linear-gradient(rgba(0,0,0,0) 0, rgba(0,0,0,0) 2px, rgba(0,0,0,0.3) 3px);
             pointer-events: none;
         }
-
         .np-info { display: flex; align-items: center; gap: 20px; z-index: 1;}
         .np-cover { width: 70px; height: 70px; border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); object-fit: cover;}
-        
         .np-text h4 { font-size: 10px; color: var(--primary); text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px;}
         .np-text h2 { margin: 0; font-size: 20px; text-shadow: 0 0 15px rgba(255,255,255,0.3); }
         .np-text p { margin: 0; font-size: 14px; color: #aaa; }
-
-        /* VISUALIZER ICON */
         .mini-vis { display: flex; gap: 4px; align-items: flex-end; height: 20px; margin-right: 20px;}
         .vis-bar { width: 3px; background: var(--primary); animation: bump 1s infinite ease-in-out; border-radius: 2px; animation-play-state: paused; }
         .playing .vis-bar { animation-play-state: running; }
@@ -127,16 +355,12 @@ const PlayerInterface = () => {
         .vis-bar:nth-child(3) { height: 40%; animation-delay: 0.5s; }
         .vis-bar:nth-child(4) { height: 80%; animation-delay: 0.0s; }
         @keyframes bump { 0%, 100% { transform: scaleY(0.5); opacity:0.6; } 50% { transform: scaleY(1); opacity:1;} }
-
-        /* UP NEXT LIST */
         .queue-label { font-size: 12px; color: #555; margin-bottom: 15px; font-weight: bold; padding-left: 10px; display: flex; justify-content: space-between;}
-        
         .queue-list { 
             overflow-y: auto; 
             padding-right: 5px;
-            flex: 1; /* Fills remaining height */
+            flex: 1;
         }
-
         .track-row {
             display: grid;
             grid-template-columns: 30px 50px 3fr 2fr 80px 40px;
@@ -150,25 +374,18 @@ const PlayerInterface = () => {
             cursor: pointer;
             margin-bottom: 2px;
         }
-        
         .track-row:hover { background: #161616; }
         .track-row:hover .play-icon-overlay { opacity: 1; }
-
-        /* Track Columns */
         .col-drag { color: #333; cursor: grab; }
         .col-img { position: relative; width: 35px; height: 35px; }
         .col-img img { width: 100%; height: 100%; border-radius: 4px; object-fit: cover; }
-        
         .play-icon-overlay {
             position: absolute; top:0; left:0; width:100%; height:100%;
             background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center;
             border-radius: 4px; opacity: 0; transition: 0.2s; color: #fff;
         }
-
         .col-title { font-weight: 500; color: #fff; }
         .col-meta { color: #666; font-size: 13px; }
-        
-        /* --- 3. THE PLAYER CONTAINER --- */
         #music-player {
             position: fixed;
             bottom: 20px;
@@ -189,8 +406,6 @@ const PlayerInterface = () => {
             display: flex;
             flex-direction: column;
         }
-
-        /* EXPANDED STATE (FULLSCREEN) */
         #music-player.expanded {
             bottom: 0;
             left: 0;
@@ -202,8 +417,6 @@ const PlayerInterface = () => {
             padding: 0;
             background: linear-gradient(180deg, #1a080a 0%, #000 100%);
         }
-
-        /* --- 4. MINI PLAYER LAYOUT --- */
         .mini-player-row {
             display: flex;
             align-items: center;
@@ -214,9 +427,8 @@ const PlayerInterface = () => {
             z-index: 5;
         }
         .expanded .mini-player-row {
-            display: none; /* Hide mini bar when full */
+            display: none;
         }
-
         .mini-cover {
             width: 40px; height: 40px;
             background: var(--primary);
@@ -225,22 +437,22 @@ const PlayerInterface = () => {
             margin-right: 15px;
         }
         .mini-cover img { width: 100%; height: 100%; object-fit: cover; }
-        
         .mini-info { flex: 1; }
         .mini-title { font-size: 14px; font-weight: bold; }
         .mini-artist { font-size: 12px; color: var(--text-muted); }
-        
         .mini-controls { font-size: 20px; padding: 0 10px; display: flex; gap: 15px;}
-        .mini-controls .mini-vis-small { animation-play-state: paused; }
-        .playing .mini-controls .mini-vis-small { animation-play-state: running; }
+        .mini-vis-small-wrapper { font-size:12px; display:flex; gap:2px; align-items:flex-end; height:15px; }
+        .mini-vis-small { width:2px; background:var(--primary); height:80%; animation: soundBar 0.5s infinite; animation-play-state: paused; }
+        .mini-vis-small:nth-child(1) { height: 80%; animation-duration: 0.5s; }
+        .mini-vis-small:nth-child(2) { height: 40%; animation-duration: 0.7s; }
+        .mini-vis-small:nth-child(3) { height: 90%; animation-duration: 0.4s; }
+        .playing .mini-vis-small { animation-play-state: running; }
 
-
-        /* --- 5. FULL PLAYER LAYOUT --- */
         .full-player-view {
             opacity: 0;
             pointer-events: none;
             transform: translateY(50px);
-            transition: 0.5s ease 0.2s; /* Delay until expand finishes */
+            transition: 0.5s ease 0.2s;
             display: flex;
             flex-direction: column;
             height: 100%;
@@ -248,14 +460,11 @@ const PlayerInterface = () => {
             position: absolute;
             top: 0; left: 0; width: 100%;
         }
-
         .expanded .full-player-view {
             opacity: 1;
             pointer-events: all;
             transform: translateY(0);
         }
-
-        /* CLOSE BUTTON */
         .close-btn {
             position: absolute;
             top: 20px; left: 50%;
@@ -265,8 +474,6 @@ const PlayerInterface = () => {
             border-radius: 10px;
             cursor: pointer;
         }
-
-        /* VINYL RECORD */
         .vinyl-wrapper {
             width: 300px; height: 300px;
             margin: 40px auto 20px auto;
@@ -274,7 +481,6 @@ const PlayerInterface = () => {
             transition: 0.5s;
         }
         @media(max-height: 700px) { .vinyl-wrapper { width: 220px; height: 220px; margin: 20px auto; } }
-
         .vinyl-disc {
             width: 100%; height: 100%;
             background: 
@@ -291,7 +497,6 @@ const PlayerInterface = () => {
             animation-play-state: paused;
             display: flex; align-items: center; justify-content: center;
         }
-
         .vinyl-cover {
             width: 40%; height: 40%;
             border-radius: 50%;
@@ -300,8 +505,6 @@ const PlayerInterface = () => {
             border: 5px solid #000;
         }
         .vinyl-cover img { width: 100%; height: 100%; object-fit: cover; }
-
-        /* ARM MECH */
         .tonearm {
             position: absolute;
             top: 0; right: -10px;
@@ -314,17 +517,13 @@ const PlayerInterface = () => {
             border-radius: 5px;
             box-shadow: 2px 2px 10px rgba(0,0,0,0.5);
         }
-        .tonearm::after { /* The Needle Head */
+        .tonearm::after {
             content:''; position: absolute; bottom: 0; left: -10px;
             width: 30px; height: 50px; background: #666;
             transform: rotate(30deg);
         }
-
-        /* Playing State for Vinyl */
         .playing .vinyl-disc { animation-play-state: running; }
         .playing .tonearm { transform: rotate(20deg); }
-
-        /* LYRICS BOX */
         .lyrics-container {
             flex: 1;
             margin-top: 20px;
@@ -334,12 +533,10 @@ const PlayerInterface = () => {
             -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
             position: relative;
         }
-        
         .lyrics-scroll {
             transition: transform 0.5s ease-out;
-            padding: 100px 0; /* Padding so text can be centered */
+            padding: 100px 0;
         }
-
         .lyric-line {
             font-size: 18px;
             padding: 8px 0;
@@ -354,17 +551,13 @@ const PlayerInterface = () => {
             text-shadow: 0 0 10px var(--primary-dim);
             font-weight: 700;
         }
-
-        /* FULL CONTROLS */
         .full-controls {
             margin-top: auto;
             width: 100%;
         }
-
         .track-info { text-align: center; margin-bottom: 20px; }
         .track-info h2 { font-size: 24px; margin-bottom: 5px; }
         .track-info p { color: var(--primary); }
-
         .progress-area {
             width: 100%; display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
             font-size: 12px; color: #888;
@@ -381,7 +574,6 @@ const PlayerInterface = () => {
             content:''; position: absolute; right: 0; top: 0; height: 100%; width: 5px; 
             background: #fff; box-shadow: 0 0 10px #fff;
         }
-
         .control-buttons {
             display: flex; justify-content: space-between; align-items: center; padding: 0 20px;
         }
@@ -393,8 +585,6 @@ const PlayerInterface = () => {
             display: flex; align-items: center; justify-content: center;
             font-size: 30px; box-shadow: 0 10px 20px rgba(244,110,126, 0.4);
         }
-        
-        /* VISUALIZER */
         .visualizer {
             position: absolute;
             top: 20px; right: 20px;
@@ -406,11 +596,9 @@ const PlayerInterface = () => {
         .player-bar:nth-child(2) { animation-delay: 0.3s; }
         .player-bar:nth-child(3) { animation-delay: 0.0s; }
         .player-bar:nth-child(4) { animation-delay: 0.4s; }
-
         @keyframes soundBar { 0% { height: 5px; opacity:0.5;} 100% { height: 25px; opacity:1;} }
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes pulse { 0% { opacity:0.8; } 50% { opacity: 1; transform: scale(1.05); } 100% { opacity:0.8; } }
-        
         @media(max-width: 800px) {
             .interface-wrapper { flex-direction: column; height: 100vh; width: 100%; border-radius: 0; border: none;}
             .sidebar { width: 100%; height: 100px; overflow-x: auto; flex-direction: row; border-right: none; border-bottom: 1px solid #222; align-items: center;}
@@ -419,396 +607,77 @@ const PlayerInterface = () => {
             .col-drag, .col-artist, .col-options { display: none; }
             .col-meta.date { display: none; }
         }
-    </style>
-     <div class="interface-wrapper">
-        
-        <!-- SIDEBAR (Vibes/Playlists) -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
+     `}</style>
+      <div className="interface-wrapper">
+        <aside className="sidebar">
+            <div className="sidebar-header">
                 <h3>Vibes</h3>
             </div>
-
-            <div class="playlist-item active">
-                <img src="https://via.placeholder.com/80/000000/F46E7E?text=🐙" class="pl-img" alt="Mix">
-                <div>
-                    <strong>Chipirón Selects</strong>
-                    <div style="font-size:11px; color:#666;">Playing • 42 Tracks</div>
+             {['Chipirón Selects', 'Bavarian Beats', 'Fiesta Latino', 'Russian Lo-Fi'].map(vibe => (
+                <div className="playlist-item active" key={vibe}>
+                    <img src={`https://via.placeholder.com/80/000000/F46E7E?text=${vibe.charAt(0)}`} className="pl-img" alt="Mix" />
+                    <div>
+                        <strong>{vibe}</strong>
+                        <div style={{fontSize:'11px', color:'#666'}}>{tracks?.filter(t => t.vibe === vibe).length || 0} Tracks</div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="playlist-item">
-                <img src="https://via.placeholder.com/80/1a1a1a/dddddd?text=🦁" class="pl-img" alt="Bavarian">
-                <div>
-                    <strong>Bavarian Beats</strong>
-                    <div style="font-size:11px; color:#666;">23 Tracks</div>
-                </div>
-            </div>
-
-            <div class="playlist-item">
-                <img src="https://via.placeholder.com/80/1a1a1a/dddddd?text=🐕" class="pl-img" alt="Latino">
-                <div>
-                    <strong>Fiesta Latino</strong>
-                    <div style="font-size:11px; color:#666;">55 Tracks</div>
-                </div>
-            </div>
-
-            <div class="playlist-item">
-                <img src="https://via.placeholder.com/80/1a1a1a/dddddd?text=🐻" class="pl-img" alt="Russian">
-                <div>
-                    <strong>Russian Lo-Fi</strong>
-                    <div style="font-size:11px; color:#666;">12 Tracks</div>
-                </div>
-            </div>
+            ))}
         </aside>
-
-        <!-- MAIN CONTENT -->
-        <main class="main-queue">
-            
-            <!-- Header -->
-            <div class="queue-header">
-                <div class="queue-title">
+        <main className="main-queue">
+            <div className="queue-header">
+                <div className="queue-title">
                     <span>QUEUE</span>
                     <h1>Chipirón Selects</h1>
                 </div>
-                <div class="sort-controls">
-                    <button class="sort-btn active" onclick="sortTracks('date', this)">Recents</button>
-                    <button class="sort-btn" onclick="sortTracks('alpha', this)">A-Z</button>
-                    <button class="sort-btn" onclick="sortTracks('len', this)">Shortest</button>
-                </div>
             </div>
-
-            <!-- Now Playing Area -->
-            <div id="now-playing-container" class="now-playing-section">
-                <div class="np-info">
-                    <img src="https://via.placeholder.com/150/000/F46E7E?text=NOW" class="np-cover" id="np-img">
-                    <div class="np-text">
+            <div className="now-playing-section">
+                <div className="np-info">
+                    <img src={currentTrack?.imageUrl || "https://via.placeholder.com/150/000/F46E7E?text=NOW"} className="np-cover" id="np-img" />
+                    <div className="np-text">
                         <h4>PLAYING NOW</h4>
-                        <h2 id="np-title">Digital Tinterl</h2>
-                        <p id="np-artist">Los Chipirones feat. AI</p>
+                        <h2 id="np-title">{currentTrack?.title || 'Wähle einen Track'}</h2>
+                        <p id="np-artist">{currentTrack?.artist || 'Los Chipirones'}</p>
                     </div>
                 </div>
-                
-                <div style="display:flex; align-items:center;">
-                    <div class="mini-vis">
-                        <div class="vis-bar"></div><div class="vis-bar"></div><div class="vis-bar"></div><div class="vis-bar"></div>
+                <div style={{display:'flex', alignItems:'center'}}>
+                    <div className={`mini-vis ${isPlaying ? 'playing' : ''}`}>
+                        <div className="vis-bar"></div><div className="vis-bar"></div><div className="vis-bar"></div><div className="vis-bar"></div>
                     </div>
-                    <span style="font-family:monospace; color:#F46E7E;" id="np-time">-2:14</span>
                 </div>
             </div>
-
-            <!-- Up Next Labels -->
-            <div class="queue-label">
+            <div className="queue-label">
                 <span>UP NEXT</span>
                 <span>DURATION</span>
             </div>
-
-            <!-- Queue Container -->
-            <div class="queue-list" id="track-container">
-                <!-- Tracks will be rendered here by JS -->
-            </div>
-
-        </main>
-
-    </div>
-
-    <!-- MAIN PLAYER COMPONENT -->
-    <div id="music-player">
-        
-        <!-- AUDIO ELEMENT (Simuliert - Ersetze src durch echten Song) -->
-        <audio id="audio-source" preload="metadata" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
-
-        <!-- MINI BAR -->
-        <div class="mini-player-row" onclick="expandPlayer()">
-            <div class="mini-cover"><img src="https://via.placeholder.com/100x100/333/F46E7E?text=LP" alt="cover"></div>
-            <div class="mini-info">
-                <div class="mini-title">Bavarian Beast</div>
-                <div class="mini-artist">Los Chipirones</div>
-            </div>
-            <div class="mini-controls">
-                <!-- Visualizer Icons Small -->
-                <div style="font-size:12px; display:flex; gap:2px; align-items:flex-end; height:15px;">
-                    <div class="mini-vis-small" style="width:2px; background:#F46E7E; height:80%; animation: soundBar 0.5s infinite"></div>
-                    <div class="mini-vis-small" style="width:2px; background:#F46E7E; height:40%; animation: soundBar 0.7s infinite"></div>
-                    <div class="mini-vis-small" style="width:2px; background:#F46E7E; height:90%; animation: soundBar 0.4s infinite"></div>
-                </div>
-                <span id="btn-mini-play" onclick="event.stopPropagation(); togglePlay();">▶</span>
-            </div>
-        </div>
-
-        <!-- FULL VIEW OVERLAY -->
-        <div class="full-player-view">
-            <!-- Header Controls -->
-            <div class="close-btn" onclick="collapsePlayer()"></div>
-            
-            <div class="visualizer">
-                <div class="player-bar"></div><div class="player-bar"></div><div class="player-bar"></div><div class="player-bar"></div>
-            </div>
-
-            <!-- Vinyl Animation Section -->
-            <div class="vinyl-wrapper" id="vinyl">
-                <div class="tonearm"></div>
-                <div class="vinyl-disc">
-                    <div class="vinyl-cover"><img src="https://via.placeholder.com/200/F46E7E/ffffff?text=🐙" alt="Label"></div>
-                </div>
-            </div>
-
-            <!-- Meta Data -->
-            <div class="track-info">
-                <h2>Bavarian Beast (AI-Mix)</h2>
-                <p>Album: Future Octoberfest</p>
-            </div>
-
-            <!-- Synced Lyrics Section -->
-            <div class="lyrics-container">
-                <div class="lyrics-scroll" id="lyrics-content">
-                    <!-- Lyrics will be injected by JS -->
-                </div>
-            </div>
-
-            <!-- Bottom Controls -->
-            <div class="full-controls">
-                <div class="progress-area">
-                    <span id="current-time">0:00</span>
-                    <div class="progress-bar-bg" onclick="seek(event)">
-                        <div class="progress-fill" id="progress-fill"></div>
+            <div className="queue-list" id="track-container">
+               {isLoading ? (
+                 <div className="flex items-center justify-center h-full">
+                    <Loader2 className="h-12 w-12 animate-spin text-primary" />
+                 </div>
+               ) : (
+                tracks?.map((track, index) => (
+                    <div className="track-row" key={track.id} onClick={() => playTrack(index)}>
+                        <div className="col-drag">::</div>
+                        <div className="col-img">
+                            <img src={track.imageUrl} alt="Art" />
+                            <div className="play-icon-overlay">▶</div>
+                        </div>
+                        <div style={{paddingLeft:'15px'}}>
+                            <div className="col-title">{track.title}</div>
+                            <div className="col-meta col-artist" style={{display:'block'}}>{track.artist}</div>
+                        </div>
+                        <div className="col-meta date"></div>
+                        <div className="col-meta" style={{textAlign:'right'}}>{track.duration}</div>
+                        <div className="col-options" style={{textAlign:'center'}}>•••</div>
                     </div>
-                    <span id="duration-time">--:--</span>
-                </div>
-
-                <div class="control-buttons">
-                    <button class="btn-ctrl">⚡</button> <!-- Shuffle -->
-                    <button class="btn-ctrl">⏮</button>
-                    <button class="btn-play-lg" id="btn-main-play" onclick="togglePlay()">▶</button>
-                    <button class="btn-ctrl">⏭</button>
-                    <button class="btn-ctrl">❤</button>
-                </div>
+                ))
+               )}
             </div>
-        </div>
-
-    </div>
-  `;
-
-  useEffect(() => {
-    // MOCK DATA (Songs)
-    const tracks = [
-        { id: 1, title: "Tequila Byte", artist: "Chipirón Latino", duration: "3:45", added: 1, img: "🐕" },
-        { id: 2, title: "Lederhosen Loop", artist: "MC Bavarian", duration: "2:10", added: 2, img: "🦁" },
-        { id: 3, title: "Vodka Vapor", artist: "The Bear", duration: "4:20", added: 3, img: "🐻" },
-        { id: 4, title: "Deep Sea Coding", artist: "Los Chipirones", duration: "5:00", added: 4, img: "🐙" },
-        { id: 5, title: "Neural Network Noise", artist: "AI Core", duration: "3:15", added: 5, img: "💻" },
-        { id: 6, title: "Munich Underground", artist: "Paulik-Reisch", duration: "4:01", added: 6, img: "🚇" },
-        { id: 7, title: "Fiesta de Algoritmo", artist: "Chipirón Latino", duration: "3:10", added: 7, img: "🌮" },
-        { id: 8, title: "Pretzel Bass", artist: "MC Bavarian", duration: "2:45", added: 8, img: "🥨" },
-    ];
-
-    const trackContainer = document.getElementById('track-container');
-
-    function playTrack(trackId: number) {
-        const track = tracks.find(t => t.id == trackId);
-        if (!track) return;
-
-        const titleEl = document.getElementById('np-title');
-        if (!titleEl) return;
-
-        titleEl.style.opacity = '0';
-        
-        setTimeout(() => {
-            const npTitle = document.getElementById('np-title');
-            if (npTitle) npTitle.innerText = track.title;
-            
-            const npArtist = document.getElementById('np-artist');
-            if (npArtist) npArtist.innerText = track.artist;
-            
-            const npTime = document.getElementById('np-time');
-            if (npTime) npTime.innerText = "-" + track.duration;
-
-            const npImg = document.getElementById('np-img') as HTMLImageElement;
-            if (npImg) npImg.src = `https://via.placeholder.com/150/000/F46E7E?text=${track.img}`;
-            
-            titleEl.style.opacity = '1';
-        }, 200);
-    }
-
-    function renderTracks(data: typeof tracks) {
-        if (!trackContainer) return;
-        trackContainer.innerHTML = '';
-        
-        data.forEach(track => {
-            const row = document.createElement('div');
-            row.className = 'track-row';
-            row.onclick = () => playTrack(track.id);
-            
-            row.innerHTML = `
-                <div class="col-drag">::</div>
-                <div class="col-img">
-                    <img src="https://via.placeholder.com/60/222/888?text=${track.img}" alt="Art">
-                    <div class="play-icon-overlay">▶</div>
-                </div>
-                <div style="padding-left:15px;">
-                    <div class="col-title">${track.title}</div>
-                    <div class="col-meta col-artist" style="display:block;">${track.artist}</div>
-                </div>
-                <div class="col-meta date">Added recently</div>
-                <div class="col-meta" style="text-align:right;">${track.duration}</div>
-                <div class="col-options" style="text-align:center;">•••</div>
-            `;
-            trackContainer.appendChild(row);
-        });
-    }
-    renderTracks(tracks);
-
-    (window as any).sortTracks = (type: string, btn: HTMLElement) => {
-        document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        let sorted = [...tracks]; 
-        if(type === 'alpha') {
-            sorted.sort((a, b) => a.title.localeCompare(b.title));
-        } else if(type === 'date') {
-            sorted.sort((a, b) => a.added - b.added);
-        } else if(type === 'len') {
-            sorted.sort((a, b) => parseInt(a.duration) - parseInt(b.duration));
-        }
-
-        renderTracks(sorted);
-    };
-    
-    // DATA: Sample Lyrics synced to time (Seconds: Text)
-    const lyricsData = [
-        { time: 0, text: "--- INSTRUMENTAL INTRO ---" },
-        { time: 10, text: "Yeah..." },
-        { time: 13, text: "Los Chipirones in the house" },
-        { time: 18, text: "Tenemos estilos diferentes" },
-        { time: 24, text: "It's the future sound..." },
-        { time: 30, text: "Música que se oye bien" },
-        { time: 35, text: "Coding all night long" },
-        { time: 42, text: "Never gonna stop the beat" },
-        { time: 50, text: "Dark mode aktiviert" },
-        { time: 58, text: "Der Oktopus tanzt..." },
-        { time: 65, text: "Ein Song für die Ewigkeit." },
-        { time: 70, text: "(Bass Drop)" },
-        { time: 85, text: "Oye como va..." },
-        { time: 100, text: "Unsubscribe is not an option" },
-    ];
-
-    // ELEMENTS
-    const playerContainer = document.getElementById('music-player');
-    const nowPlayingContainer = document.getElementById('now-playing-container');
-    const vinylElement = document.getElementById('vinyl');
-    const audio = document.getElementById('audio-source') as HTMLAudioElement;
-    const btnMiniPlay = document.getElementById('btn-mini-play');
-    const btnMainPlay = document.getElementById('btn-main-play');
-    const progressFill = document.getElementById('progress-fill') as HTMLDivElement;
-    const currentTimeEl = document.getElementById('current-time');
-    const durationTimeEl = document.getElementById('duration-time');
-    const lyricsContent = document.getElementById('lyrics-content');
-    
-    if(!playerContainer || !vinylElement || !audio || !btnMiniPlay || !btnMainPlay || !progressFill || !currentTimeEl || !durationTimeEl || !lyricsContent || !nowPlayingContainer) return;
-    
-    (window as any).expandPlayer = () => {
-        playerContainer.classList.add('expanded');
-    };
-
-    (window as any).collapsePlayer = () => {
-        playerContainer.classList.remove('expanded');
-    };
-
-    (window as any).togglePlay = (forcePlay = false) => {
-        if (audio.paused || forcePlay) {
-            audio.play();
-            vinylElement.classList.add('playing');
-            nowPlayingContainer.classList.add('playing');
-            playerContainer.classList.add('playing');
-            btnMiniPlay.innerText = "⏸";
-            btnMainPlay.innerText = "⏸";
-        } else {
-            audio.pause();
-            vinylElement.classList.remove('playing');
-            nowPlayingContainer.classList.remove('playing');
-            playerContainer.classList.remove('playing');
-            btnMiniPlay.innerText = "▶";
-            btnMainPlay.innerText = "▶";
-        }
-    };
-
-    (window as any).seek = (e: MouseEvent) => {
-        const target = e.currentTarget as HTMLElement;
-        const width = target.clientWidth;
-        const clickX = e.offsetX;
-        const duration = audio.duration;
-        audio.currentTime = (clickX / width) * duration;
-    };
-    
-    lyricsContent.innerHTML = '';
-    lyricsData.forEach((line, index) => {
-        const div = document.createElement('div');
-        div.classList.add('lyric-line');
-        div.innerText = line.text;
-        div.dataset.time = String(line.time);
-        div.id = `line-${index}`;
-        div.onclick = () => {
-            audio.currentTime = line.time;
-            (window as any).togglePlay(true);
-        };
-        lyricsContent.appendChild(div);
-    });
-
-    const formatTime = (seconds: number) => {
-        if(isNaN(seconds)) return "0:00";
-        const min = Math.floor(seconds / 60);
-        const sec = Math.floor(seconds % 60);
-        return `${min}:${sec < 10 ? '0' : ''}${sec}`;
-    }
-
-    const timeUpdateHandler = () => {
-        const percent = (audio.currentTime / audio.duration) * 100;
-        progressFill.style.width = `${percent}%`;
-        currentTimeEl.innerText = formatTime(audio.currentTime);
-        
-        let activeIndex = -1;
-        for(let i = 0; i < lyricsData.length; i++) {
-            if(audio.currentTime >= lyricsData[i].time) {
-                activeIndex = i;
-            } else {
-                break; 
-            }
-        }
-
-        if(activeIndex !== -1) {
-            document.querySelectorAll('.lyric-line').forEach(el => el.classList.remove('active'));
-            const activeEl = document.getElementById(`line-${activeIndex}`);
-            if(activeEl) {
-                activeEl.classList.add('active');
-                const lineHeight = 40; 
-                const offset = activeIndex * lineHeight; 
-                (lyricsContent as HTMLElement).style.transform = `translateY(-${offset}px)`;
-            }
-        }
-    };
-    
-    const loadedMetadataHandler = () => {
-        durationTimeEl.innerText = formatTime(audio.duration);
-    };
-    
-    const endedHandler = () => {
-        (window as any).togglePlay();
-        audio.currentTime = 0;
-        (lyricsContent as HTMLElement).style.transform = `translateY(0)`;
-    };
-
-    audio.addEventListener('timeupdate', timeUpdateHandler);
-    audio.addEventListener('loadedmetadata', loadedMetadataHandler);
-    audio.addEventListener('ended', endedHandler);
-    
-    return () => {
-      audio.removeEventListener('timeupdate', timeUpdateHandler);
-      audio.removeEventListener('loadedmetadata', loadedMetadataHandler);
-      audio.removeEventListener('ended', endedHandler);
-    }
-  }, []);
-
-  return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
+        </main>
+        {renderPlayer()}
+      </div>
+    </>
+  );
 };
-export default PlayerInterface;
 
-    
+export default PlayerInterface;

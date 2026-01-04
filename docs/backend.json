@@ -26,13 +26,42 @@
           "type": "string",
           "description": "URL for the track's cover image.",
           "format": "uri"
+        },
+        "audioUrl": {
+          "type": "string",
+          "description": "URL for the track's audio file.",
+          "format": "uri"
+        },
+        "album": {
+          "type": "string",
+          "description": "Album the track belongs to."
+        },
+        "vibe": {
+          "type": "string",
+          "description": "The vibe or playlist category for the track.",
+          "enum": ["Chipirón Selects", "Bavarian Beats", "Fiesta Latino", "Russian Lo-Fi"]
+        },
+        "lyrics": {
+            "type": "array",
+            "description": "Array of lyric objects with time and text.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "time": { "type": "number", "description": "Time in seconds" },
+                    "text": { "type": "string", "description": "Lyric line" }
+                },
+                "required": ["time", "text"]
+            }
         }
       },
       "required": [
         "title",
         "artist",
         "duration",
-        "imageUrl"
+        "imageUrl",
+        "audioUrl",
+        "album",
+        "vibe"
       ]
     }
   },
