@@ -1,10 +1,10 @@
 
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { useCollection, useMemoFirebase } from '@/firebase';
 import { useFirestore } from '@/firebase/provider';
-import { collection, query, orderBy, where } from 'firebase/firestore';
+import { collection, query, orderBy } from 'firebase/firestore';
 import { Loader2, Repeat } from 'lucide-react';
 import { initiateAnonymousSignIn } from '@/firebase/non-blocking-login';
 import { useAuth, useUser } from '@/firebase';
@@ -36,14 +36,21 @@ export default function PlayerInterface() {
   
   const [selectedVibe, setSelectedVibe] = useState(VIBES[0]);
 
-  const tracksCollection = useMemoFirebase(() => {
+  // 1. Fetch ALL tracks for the global queue
+  const allTracksCollection = useMemoFirebase(() => {
     if (!firestore) return null;
-    return query(collection(firestore, '/CHIPIRONES/music/tracks'), where("vibe", "==", selectedVibe), orderBy("title", "asc"));
-  }, [firestore, selectedVibe]);
+    return query(collection(firestore, '/CHIPIRONES/music/tracks'), orderBy("title", "asc"));
+  }, [firestore]);
   
-  const { data: tracks, isLoading } = useCollection<Track>(tracksCollection);
+  const { data: allTracks, isLoading } = useCollection<Track>(allTracksCollection);
 
-  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  // 2. Filtered list for display based on selectedVibe
+  const displayedTracks = useMemo(() => {
+      if (!allTracks) return [];
+      return allTracks.filter(track => track.vibe === selectedVibe);
+  }, [allTracks, selectedVibe]);
+
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0); // Index refers to allTracks
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLooping, setIsLooping] = useState(false);
 
@@ -57,7 +64,7 @@ export default function PlayerInterface() {
   const btnMiniPlayRef = useRef<HTMLSpanElement>(null);
   const btnMainPlayRef = useRef<HTMLButtonElement>(null);
 
-  const currentTrack = tracks ? tracks[currentTrackIndex] : null;
+  const currentTrack = allTracks ? allTracks[currentTrackIndex] : null;
   const fallbackCover = "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/los_chipirones%2Fdefault_1-1_cover_art.png?alt=media&token=ba0b2ed2-974c-4a1f-a0fc-9dab5fbfab1f";
 
   useEffect(() => {
@@ -65,12 +72,6 @@ export default function PlayerInterface() {
         initiateAnonymousSignIn(auth);
     }
   }, [isUserLoading, user, auth]);
-  
-  useEffect(() => {
-    // Reset track index when vibe changes
-    setCurrentTrackIndex(0);
-  }, [selectedVibe]);
-
 
   useEffect(() => {
     if (currentTrack && audioRef.current) {
@@ -114,9 +115,13 @@ export default function PlayerInterface() {
     });
   };
 
-  const playTrack = (index: number) => {
-    setCurrentTrackIndex(index);
-    togglePlay(true);
+  const playTrack = (trackId: string) => {
+    if (!allTracks) return;
+    const trackIndex = allTracks.findIndex(t => t.id === trackId);
+    if (trackIndex !== -1) {
+        setCurrentTrackIndex(trackIndex);
+        togglePlay(true);
+    }
   };
   
   const togglePlay = useCallback((forcePlay?: boolean) => {
@@ -132,18 +137,15 @@ export default function PlayerInterface() {
   }, []);
 
   const playNextTrack = useCallback(() => {
-    if(!tracks) return;
-    setCurrentTrackIndex(prevIndex => (prevIndex + 1) % tracks.length);
+    if(!allTracks) return;
+    setCurrentTrackIndex(prevIndex => (prevIndex + 1) % allTracks.length);
     togglePlay(true);
-  }, [tracks, togglePlay]);
+  }, [allTracks, togglePlay]);
   
   const playPrevTrack = () => {
-    if(!tracks) return;
-    let prevIndex = currentTrackIndex - 1;
-    if (prevIndex < 0) {
-        prevIndex = tracks.length - 1;
-    }
-    playTrack(prevIndex);
+    if(!allTracks) return;
+    setCurrentTrackIndex(prevIndex => (prevIndex - 1 + allTracks.length) % allTracks.length);
+    togglePlay(true);
   }
 
   const expandPlayer = () => playerContainerRef.current?.classList.add('expanded');
@@ -693,8 +695,8 @@ export default function PlayerInterface() {
                     <Loader2 className="h-12 w-12 animate-spin text-primary" />
                  </div>
                ) : (
-                tracks?.map((track, index) => (
-                    <div className="track-row" key={track.id} onClick={() => playTrack(index)}>
+                displayedTracks.map((track) => (
+                    <div className="track-row" key={track.id} onClick={() => playTrack(track.id)}>
                         <div className="col-drag">::</div>
                         <div className="col-img">
                             <img src={track.imageUrl || fallbackCover} alt="Art" />
@@ -717,4 +719,6 @@ export default function PlayerInterface() {
     </>
   );
 }
+    
+
     
