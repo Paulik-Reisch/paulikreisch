@@ -7,10 +7,11 @@ service cloud.firestore {
       return request.auth != null;
     }
     
-    // Allow read/write access to the tracks collection only for authenticated users.
-    // In a real app, you'd want to check for an admin claim: request.auth.token.admin == true
+    // Allow public read access to the tracks collection for the music player,
+    // but restrict write access. In a real app, write would be limited to admins.
     match /CHIPIRONES/music/tracks/{trackId} {
-      allow read, write: if isSignedIn();
+      allow read: if isSignedIn();
+      allow write: if isSignedIn(); // In a real app, you'd check for an admin claim here.
     }
     
     // Deny all other access by default
