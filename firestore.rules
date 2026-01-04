@@ -14,6 +14,11 @@ service cloud.firestore {
       allow write: if isSignedIn();
     }
     
+    // Explicitly allow LIST operation on the collection for public access
+    match /CHIPIRONES/music/tracks {
+      allow list: if true;
+    }
+    
     // Deny all other access by default
     match /{path=**} {
       allow read, write: if false;
