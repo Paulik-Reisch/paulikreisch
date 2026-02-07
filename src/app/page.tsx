@@ -1,5 +1,6 @@
 
 import { Header } from "@/components/landing/header";
+import { PremiumBanner } from "@/components/landing/premium-banner";
 import { Hero } from "@/components/landing/hero";
 import { TopicLPs } from "@/components/landing/topic-lps";
 import { Authors } from "@/components/landing/authors";
@@ -69,6 +70,7 @@ export default async function Home() {
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background text-foreground overflow-x-hidden">
       <Header />
+      <PremiumBanner />
       <main className="flex-1">
         <Hero product={hw1} />
         <TopicLPs />
