@@ -1,8 +1,15 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { createTrackedUrl } from '@/lib/utils';
 
 export function PremiumBanner() {
+  const premiumUrl = createTrackedUrl(
+    'https://premium.paulik-reisch.de/',
+    'premium-launch',
+    'banner',
+    'top-banner'
+  );
+
   return (
     <aside
       aria-label="Premium-Ankündigung"
@@ -12,9 +19,9 @@ export function PremiumBanner() {
         <div className="flex items-center justify-center p-3 text-center">
           <p className="text-sm font-medium">
             <span className="md:hidden">Die neue Premium-Erfahrung!</span>
-            <span className="hidden md:inline">Paulik &amp; Reisch launchen die ultimative Premium-Erfahrung für Sie.</span>
+            <span className="hidden md:inline">Paulik & Reisch launchen die ultimative Premium-Erfahrung für Sie.</span>
             <Link
-              href="https://premium.paulik-reisch.de/?utm-source=paulik-reisch.de&utm-medium=banner&utm-campaign=premium-launch"
+              href={premiumUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="ml-3 inline-block whitespace-nowrap font-bold underline transition-transform hover:scale-105"
