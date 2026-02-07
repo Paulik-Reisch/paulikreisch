@@ -1,4 +1,3 @@
-
 "use client"
 
 import * as React from "react"
@@ -41,7 +40,7 @@ export function BookShopHero() {
   )
 
   return (
-    <section className="w-full py-12 md:py-16 bg-muted/40 overflow-hidden">
+    <section className="w-full py-12 md:py-16 bg-muted/40 overflow-hidden" aria-label="Kundenstimmen">
        <div className="container px-4 md:px-6">
             <Carousel
                 plugins={[plugin.current]}
@@ -53,12 +52,14 @@ export function BookShopHero() {
                     {heroItems.map((item, index) => (
                     <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3 xl:basis-1/3">
                         <div className="p-2 h-full">
-                        <Card className={`h-full flex flex-col justify-between p-6 ${item.color} transition-transform duration-300 hover:-translate-y-2`}>
+                        <Card className={`h-full flex flex-col justify-center items-center text-center p-6 ${item.color} transition-transform duration-300 hover:-translate-y-2`}>
                             {item.type === 'quote' ? (
-                                <CardContent className="p-0 flex flex-col justify-center items-center text-center h-full">
-                                    <p className="text-base font-semibold text-balance">»{item.text}«</p>
-                                    <p className="mt-4 text-sm text-muted-foreground">- {item.author}</p>
-                                </CardContent>
+                               <figure>
+                                    <blockquote className="text-base font-semibold text-balance">
+                                        <p>»{item.text}«</p>
+                                    </blockquote>
+                                    <figcaption className="mt-4 text-sm text-muted-foreground"><cite>- {item.author}</cite></figcaption>
+                                </figure>
                             ) : (
                                 <CardContent className="p-0 flex flex-col justify-center items-center text-center h-full">
                                     {item.icon && <item.icon className="w-10 h-10 mb-4 text-primary"/>}

@@ -1,13 +1,12 @@
-
 import { CheckCircle, PlusCircle, SmilePlus, BookCopy } from "lucide-react";
 
 export function WhyBoth() {
   return (
-    <section id="why-both" className="w-full py-8 md:py-8 bg-blue-200 dark:bg-blue-900/50">
+    <section aria-labelledby="why-both-heading" className="w-full py-8 md:py-8 bg-blue-200 dark:bg-blue-900/50">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Warum Sie beide Bücher brauchen</h2>
+            <h2 id="why-both-heading" className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Warum Sie beide Bücher brauchen</h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
               Nur ein Buch zu lesen ist, als würde man nur einen Schuh anziehen. Es funktioniert, aber jeder wird Sie komisch anglotzen.
             </p>

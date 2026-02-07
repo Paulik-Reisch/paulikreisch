@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useEffect, useActionState, useRef } from "react";
@@ -39,7 +38,10 @@ export function ShopNewsletter() {
   }, [state, toast]);
 
   return (
-    <section className="w-full pt-8 md:pt-8 pb-8 md:pb-12">
+    <section aria-labelledby="shop-newsletter-heading" className="w-full pt-8 md:pt-8 pb-8 md:pb-12">
+        <h2 id="shop-newsletter-heading" className="absolute w-px h-px p-0 -m-px overflow-hidden [clip:rect(0,0,0,0)] whitespace-nowrap border-0">
+            Neuigkeiten und Benachrichtigungen
+        </h2>
         <div className="container px-4 md:px-6">
             <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000">
                 <div className="mx-auto grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-2">

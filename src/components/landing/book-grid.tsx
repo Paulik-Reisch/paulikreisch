@@ -81,6 +81,7 @@ function BookCarousel({ book }: { book: Product }) {
                 "h-2 w-2 rounded-full transition-colors",
                 current === index ? "bg-primary" : "bg-muted-foreground/50"
               )}
+              aria-label={`Gehe zu Bild ${index + 1}`}
             />
           ))}
         </div>
@@ -185,41 +186,43 @@ function BookCard({ book }: { book: Product }) {
     const isPreorder = book.preorderPrice !== undefined;
 
     return (
-        <Card className="flex flex-col h-full overflow-hidden transition-transform duration-300 hover:-translate-y-2">
-            <CardContent className="p-4 md:p-6 flex flex-col h-full items-center text-center">
-                <div className="w-full max-w-[250px]">
-                    <BookCarousel book={book} />
-                </div>
-                <div className="flex flex-col flex-grow mt-1">
-                    <h3 className="font-headline text-xl font-bold">{book.title}</h3>
-                    <p className="text-xs text-muted-foreground min-h-[30px]">{book.subtitle}</p>
-                    
-                    <PriceDisplay book={book} />
-
-                    <div className="mt-auto pt-1 flex flex-col justify-end items-center">
-                        {isPreorder ? (
-                             <div className='flex flex-col items-center gap-2'>
-                                <Button size="lg" disabled className="w-full max-w-[200px]">
-                                    <ShoppingCart className="mr-2 h-4 w-4" />
-                                    Bald verfügbar
-                                </Button>
-                                <p className="text-xs text-muted-foreground px-4">Hinweis: Cover und Rückseite können bei Veröffentlichung anders aussehen.</p>
-                            </div>
-                        ) : (
-                             <div className='flex flex-col items-center gap-2'>
-                                <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="inline-block w-full">
-                                    <Button size="lg" variant="secondary" className="w-full max-w-[200px]">
-                                        <ShoppingCart className="mr-2 h-4 w-4" />
-                                        Bei Amazon
-                                    </Button>
-                                </a>
-                                <p className="text-xs text-muted-foreground px-4 invisible">Hinweis: Cover und Rückseite können bei Veröffentlichung anders aussehen.</p>
-                            </div>
-                        )}
+        <article>
+            <Card className="flex flex-col h-full overflow-hidden transition-transform duration-300 hover:-translate-y-2">
+                <CardContent className="p-4 md:p-6 flex flex-col h-full items-center text-center">
+                    <div className="w-full max-w-[250px]">
+                        <BookCarousel book={book} />
                     </div>
-                </div>
-            </CardContent>
-        </Card>
+                    <div className="flex flex-col flex-grow mt-1">
+                        <h3 className="font-headline text-xl font-bold">{book.title}</h3>
+                        <p className="text-xs text-muted-foreground min-h-[30px]">{book.subtitle}</p>
+                        
+                        <PriceDisplay book={book} />
+
+                        <div className="mt-auto pt-1 flex flex-col justify-end items-center">
+                            {isPreorder ? (
+                                <div className='flex flex-col items-center gap-2'>
+                                    <Button size="lg" disabled className="w-full max-w-[200px]">
+                                        <ShoppingCart className="mr-2 h-4 w-4" />
+                                        Bald verfügbar
+                                    </Button>
+                                    <p className="text-xs text-muted-foreground px-4">Hinweis: Cover und Rückseite können bei Veröffentlichung anders aussehen.</p>
+                                </div>
+                            ) : (
+                                <div className='flex flex-col items-center gap-2'>
+                                    <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="inline-block w-full">
+                                        <Button size="lg" variant="secondary" className="w-full max-w-[200px]">
+                                            <ShoppingCart className="mr-2 h-4 w-4" />
+                                            Bei Amazon
+                                        </Button>
+                                    </a>
+                                    <p className="text-xs text-muted-foreground px-4 invisible">Hinweis: Cover und Rückseite können bei Veröffentlichung anders aussehen.</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+        </article>
     );
 }
 

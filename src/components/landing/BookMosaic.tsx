@@ -1,4 +1,3 @@
-
 import { Check } from "lucide-react";
 
 export function BookMosaic() {
@@ -12,11 +11,11 @@ export function BookMosaic() {
   ];
 
   return (
-    <section className="w-full py-12 md:py-16 bg-muted text-foreground">
+    <section aria-labelledby="book-mosaic-heading" className="w-full py-12 md:py-16 bg-muted text-foreground">
       <div className="container px-4 md:px-6">
         <div className="grid md:grid-cols-1 gap-12 items-center text-center">
            <div className="max-w-3xl mx-auto">
-                <h2 className="text-3xl font-bold font-headline tracking-tight">
+                <h2 id="book-mosaic-heading" className="text-3xl font-bold font-headline tracking-tight">
                     Darum solltest du Hallo Welt lesen
                 </h2>
             </div>
