@@ -40,7 +40,7 @@ export default function PhilippPaulikPage() {
           <div className="grid md:grid-cols-3 gap-8 md:gap-12 items-start">
             <div className="md:col-span-1 flex justify-center">
               <Image 
-                src="https://firebasestorage.googleapis.com/v0/b/studio-3771483374-9cb61.firebasestorage.app/o/autoren-profilbilder%2FFrame%2015.png?alt=media&token=6329a227-a4e4-439d-aa97-85dff9bb6320"
+                src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/ersteller%2Fphilipp-paulik.png?alt=media&token=7e48b706-80fa-45cc-ae51-b6444bd7ccb3"
                 alt="Porträt von Philipp Paulik" 
                 width={250} 
                 height={250} 

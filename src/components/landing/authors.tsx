@@ -1,10 +1,18 @@
+
 "use client";
 
 import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import Link from "next/link";
+import { createTrackedUrl } from "@/lib/utils";
 
 export function Authors() {
+    const philippsPortfolioUrl = createTrackedUrl(
+        'https://philipp-paulik.de/',
+        'author_profile_link',
+        'organic_crosslink',
+        'homepage_authors_section'
+    );
   return (
     <section id="authors" aria-labelledby="authors-heading" className="w-full py-12 md:py-16 bg-subtle-yellow">
       <div className="container px-4 md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
@@ -27,7 +35,7 @@ export function Authors() {
                       className="mx-auto mb-4 rounded-full"
                       data-ai-hint="funny portrait"
                       height="120"
-                      src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/paulik.png?alt=media&token=7d4dfeb1-5f87-4426-9890-868ed2a089bf"
+                      src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/ersteller%2Fphilipp-paulik.png?alt=media&token=7e48b706-80fa-45cc-ae51-b6444bd7ccb3"
                       style={{
                       aspectRatio: "120/120",
                       objectFit: "cover",
