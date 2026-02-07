@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import type { Metadata } from 'next';
+import { createTrackedUrl } from "@/lib/utils";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -18,6 +19,12 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function LuinSchiffbauerPage() {
   const amazonUrl = "https://www.amazon.de/s?i=stripbooks&rh=p_27%3ALuin%2BSchiffbauer&s=relevancerank&text=Luin+Schiffbauer&ref=dp_byline_sr_book_3";
+  const instagramUrl = createTrackedUrl(
+    'https://www.instagram.com/luinthemushroom/',
+    'author_profile_link_luin',
+    'organic_crosslink',
+    'profile_page_hw_website'
+  );
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -46,9 +53,12 @@ export default function LuinSchiffbauerPage() {
                 <p>Luin Schiffbauer ist der visionäre Künstler, der den Worten von Paulik & Reisch ein unvergessliches Gesicht gibt. Als Illustrator der 'Hallo Welt'-Reihe ist er dafür verantwortlich, den satirischen Wahnsinn in Bilder zu übersetzen, die oft mehr sagen als tausend Worte. Sein einzigartiger Stil, eine Mischung aus minimalistischer Klarheit und maximalem Ausdruck, ist ein wesentlicher Bestandteil des Erfolgs.</p>
                 <p>Mit jedem Strich fängt Luin die Essenz der Charaktere und Situationen ein und schafft visuelle Gags, die perfekt mit dem Text harmonieren. Seine Illustrationen sind nicht nur Beiwerk, sondern ein integraler Bestandteil des Leseerlebnisses. Entdecken Sie mehr von seiner Arbeit und den Büchern, die er mitgestaltet hat, auf Amazon.</p>
               </article>
-              <div className="pt-4">
+              <div className="pt-4 flex items-center gap-4">
                 <a href={amazonUrl} target="_blank" rel="noopener noreferrer">
                     <Button>Bücher auf Amazon</Button>
+                </a>
+                <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
+                    <Button variant="outline">Instagram</Button>
                 </a>
               </div>
             </div>
