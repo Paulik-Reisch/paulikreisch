@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { subscribeToNewsletterAction } from "@/app/actions";
 import { Loader2 } from "lucide-react";
+import { Logo } from "../ui/logo";
 
 const initialNewsletterState = { success: undefined, error: undefined, message: undefined };
 
@@ -50,13 +51,7 @@ export function Footer() {
           
           {/* Brand Column */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
-            <Image
-              src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522"
-              alt="Paulik & Reisch Logo"
-              width={140}
-              height={140}
-              className="mb-5"
-            />
+            <Logo className="w-36 h-auto mb-5 text-black" />
             <p className="font-bold">Paulik und Reisch</p>
           </div>
 
