@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState } from 'react';
@@ -231,7 +230,7 @@ export default function ExperimentalLandingPage2() {
                                  <p className="text-muted-foreground">Der mit dem fragwürdigen Haarschnitt. Sorgt für das Chaos.</p>
                             </div>
                              <div className="flex flex-col items-center">
-                                 <Image src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/reisch.png?alt=media&token=5aa20eee-967e-4912-9bfe-3f0b6861a316" alt="Maximilian Reisch" width={150} height={150} className="rounded-full shadow-lg transform rotate-6"/>
+                                 <Image src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/ersteller%2Fmax-reisch.png?alt=media&token=b8ded8f8-a5da-412f-aa2f-eb5ebebbc61a" alt="Maximilian Reisch" width={150} height={150} className="rounded-full shadow-lg transform rotate-6"/>
                                  <h3 className="mt-4 font-bold font-headline text-2xl">Maximilian Reisch</h3>
                                  <p className="text-muted-foreground">Der mit der Brille. Versucht, das Chaos in lesbare Sätze zu fassen.</p>
                             </div>
