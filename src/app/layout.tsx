@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 import { CookieBanner } from '@/components/landing/cookie-banner';
 import { ThemeProvider } from '@/components/theme-provider';
+import { PremiumBanner } from '@/components/landing/premium-banner';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://paulik-reisch.de'),
@@ -65,6 +66,7 @@ export default function RootLayout({
       <body className="font-body antialiased">
         <ThemeProvider attribute="class" defaultTheme="light">
           {children}
+          <PremiumBanner />
           <Toaster />
           <CookieBanner />
         </ThemeProvider>

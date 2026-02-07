@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { createTrackedUrl } from '@/lib/utils';
@@ -7,7 +8,7 @@ export function PremiumBanner() {
     'https://premium.paulik-reisch.de/',
     'premium-launch',
     'banner',
-    'top-banner'
+    'bottom-banner'
   );
 
   return (
