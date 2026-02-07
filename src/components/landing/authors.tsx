@@ -1,10 +1,20 @@
+
 "use client";
 
 import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { createTrackedUrl } from "@/lib/utils";
+import Link from "next/link";
 
 export function Authors() {
+
+  const portfolioUrl = createTrackedUrl(
+    'https://philipp-paulik.de/',
+    'author_portfolio_link',
+    'organic_crosslink',
+    'authors_section_hw_website'
+  );
 
   return (
     <section id="authors" aria-labelledby="authors-heading" className="w-full py-12 md:py-16 bg-subtle-yellow">
@@ -30,7 +40,11 @@ export function Authors() {
                     }}
                     width="120"
                 />
-                <CardTitle className="font-headline">Paulik</CardTitle>
+                <CardTitle className="font-headline">
+                   <Link href={portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                    Paulik
+                  </Link>
+                </CardTitle>
                 <CardDescription>Der mit dem fragwürdigen Haarschnitt.</CardDescription>
                 </CardHeader>
                 <CardContent>
