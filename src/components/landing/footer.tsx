@@ -101,7 +101,7 @@ export function Footer() {
       </footer>
 
       {/* Bottom Section */}
-      <div className="bg-[#a3a3a3] text-white py-10 px-5 text-xs">
+      <div className="bg-muted text-muted-foreground py-10 px-5 text-xs">
         <div className="container mx-auto max-w-7xl flex flex-col md:flex-row justify-between items-center md:items-start gap-10 text-center md:text-left">
           
           <div className="md:flex-2 max-w-3xl opacity-90 leading-relaxed">
