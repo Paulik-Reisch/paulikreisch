@@ -6,14 +6,16 @@ import { Product } from "@/lib/firestore";
 export function Hero({ product }: { product?: Product }) {
   const imageSrc = product?.imageSrc || "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/cover-mockup-1.png?alt=media&token=2c8772ba-04f9-479f-9855-027099fcbc13";
   const imageHint = product?.aiHint || "book cover";
+  const bookTitle = product?.title || 'Hallo Welt';
+  const fullBookTitle = product?.subtitle ? `${bookTitle}: ${product.subtitle}` : bookTitle;
 
   return (
-    <section className="w-full pt-12 md:pt-16 lg:pt-20 pb-2 md:pb-4 lg:pb-6">
+    <section aria-labelledby="main-hero-heading" className="w-full pt-12 md:pt-16 lg:pt-20 pb-2 md:pb-4 lg:pb-6">
       <div className="container px-4 md:px-6">
         <div className="grid items-center gap-6 md:grid-cols-2 lg:gap-12">
           <div className="flex flex-col justify-center space-y-4 text-center md:text-left">
             <div className="space-y-4">
-              <h1 className="font-headline text-3xl sm:text-4xl font-bold tracking-tighter md:text-5xl xl:text-7xl/none text-balance animate-in fade-in slide-in-from-top-12 duration-1000">
+              <h1 id="main-hero-heading" className="font-headline text-3xl sm:text-4xl font-bold tracking-tighter md:text-5xl xl:text-7xl/none text-balance animate-in fade-in slide-in-from-top-12 duration-1000">
                 Ein Buch, das allen Konventionen trotzt.
               </h1>
               <p className="max-w-[600px] text-muted-foreground md:text-xl mx-auto md:mx-0 animate-in fade-in slide-in-from-top-16 duration-1000">
@@ -28,12 +30,13 @@ export function Hero({ product }: { product?: Product }) {
           </div>
           <div className="relative w-full max-w-sm mx-auto md:max-w-none animate-in fade-in zoom-in-50 duration-1000">
              <Image
-                alt="Buchcover"
+                alt={`Buchcover von '${fullBookTitle}'`}
                 className="mx-auto overflow-hidden rounded-xl object-contain transform transition-transform duration-500 hover:rotate-0 hover:scale-105"
                 data-ai-hint={imageHint}
                 height="974"
                 src={imageSrc}
                 width="640"
+                priority
               />
           </div>
         </div>
