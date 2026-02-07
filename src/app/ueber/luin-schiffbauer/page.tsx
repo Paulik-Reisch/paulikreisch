@@ -33,9 +33,8 @@ export default function LuinSchiffbauerPage() {
           <div className="grid md:grid-cols-3 gap-8 md:gap-12 items-start">
             <div className="md:col-span-1 flex justify-center">
               <Image 
-                src="https://picsum.photos/seed/luin-profile/500/500"
-                alt="Porträt von Luin Schiffbauer" 
-                data-ai-hint="artist portrait illustrator"
+                src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/luin-schiffbauer.png?alt=media&token=61abe644-7d94-4bfc-8164-37447ac9279b"
+                alt="Porträt von Luin Schiffbauer, dem Illustrator der Hallo Welt Bücher" 
                 width={250} 
                 height={250} 
                 className="rounded-full aspect-square object-cover shadow-lg"
