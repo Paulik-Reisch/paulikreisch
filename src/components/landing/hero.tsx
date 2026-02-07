@@ -2,15 +2,19 @@ import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Product } from "@/lib/firestore";
+import { ChevronDown } from "lucide-react";
 
 export function Hero({ product }: { product?: Product }) {
-  const imageSrc = product?.imageSrc || "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/cover-mockup-1.png?alt=media&token=2c8772ba-04f9-479f-9855-027099fcbc13";
+  const imageSrc = product?.imageSrc || "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/cover-mockup-1.png?alt=media&token=c82b73e5-76bd-490d-a65f-008a3bfac00b";
   const imageHint = product?.aiHint || "book cover";
   const bookTitle = product?.title || 'Hallo Welt';
   const fullBookTitle = product?.subtitle ? `${bookTitle}: ${product.subtitle}` : bookTitle;
 
   return (
-    <section aria-labelledby="main-hero-heading" className="w-full pt-12 md:pt-16 lg:pt-20 pb-2 md:pb-4 lg:pb-6">
+    <section 
+      aria-labelledby="main-hero-heading" 
+      className="relative w-full flex items-center justify-center min-h-[calc(100vh-100px)] py-12"
+    >
       <div className="container px-4 md:px-6">
         <div className="grid items-center gap-6 md:grid-cols-2 lg:gap-12">
           <div className="flex flex-col justify-center space-y-4 text-center md:text-left">
@@ -40,6 +44,11 @@ export function Hero({ product }: { product?: Product }) {
               />
           </div>
         </div>
+      </div>
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:block">
+        <a href="#topic-lps" aria-label="Nach unten scrollen">
+          <ChevronDown className="h-8 w-8 text-muted-foreground animate-bounce" />
+        </a>
       </div>
     </section>
   );
