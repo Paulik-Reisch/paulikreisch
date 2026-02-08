@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Product } from "@/lib/firestore";
 import { ChevronDown } from "lucide-react";
-import { MorphingText } from "../ui/morphing-text";
+import { Typewriter } from "../ui/typewriter";
 
 const heroTexts = [
     "Eine Abrechnung mit der Schule.",
@@ -44,10 +44,11 @@ export function Hero({ product }: { product?: Product }) {
         <div className="grid items-center gap-6 md:grid-cols-2 lg:gap-12">
           <div className="flex flex-col justify-center space-y-8 text-center md:text-left">
             <div className="space-y-4 min-h-[12rem] flex flex-col justify-center animate-in fade-in slide-in-from-top-12 duration-1000">
-                <h1 id="main-hero-heading" className="sr-only">Hallo Welt: Eine Abrechnung mit der Schule.</h1>
-                <MorphingText texts={heroTexts} className="font-headline text-3xl sm:text-4xl md:text-5xl xl:text-7xl/none text-balance" />
+                <h1 id="main-hero-heading" className="font-headline text-3xl sm:text-4xl md:text-5xl xl:text-7xl/none text-balance">
+                    <Typewriter texts={heroTexts} />
+                </h1>
             </div>
-            <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center md:justify-start animate-in fade-in slide-in-from-top-20 duration-1000">
+            <div className="flex justify-center md:justify-start animate-in fade-in slide-in-from-top-20 duration-1000">
               <Link href="/buchhandlung-paulik-reisch">
                 <Button size="lg" variant="secondary">Jetzt kaufen</Button>
               </Link>
