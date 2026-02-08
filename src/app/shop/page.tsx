@@ -1,4 +1,4 @@
-
+'use client';
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
@@ -7,10 +7,17 @@ import { GooglePlayIcon } from "@/components/ui/icons/google-play-icon";
 import { ElevenReaderIcon } from "@/components/ui/icons/eleven-reader-icon";
 import { ShopNewsletterForm } from "./ShopNewsletterForm";
 import './shop.css';
+import { useEffect } from "react";
 
 export default function ShopPage() {
+    useEffect(() => {
+        document.body.classList.add('shop-page');
+        return () => {
+            document.body.classList.remove('shop-page');
+        }
+    }, []);
     return (
-        <div className="shop-page">
+        <>
             <Header />
             <main>
                 {/* === SEKTION 1: SHOP (HERO) === */}
@@ -25,7 +32,7 @@ export default function ShopPage() {
                             {/* BAND 1 */}
                             <article className="book-card">
                                 <div className="book-cover-wrapper">
-                                    <Image src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-hw1_900px.png?alt=media&token=42ce90a3-ed34-49d2-8e09-5258d0dfc484" alt="Hallo Welt Cover" className="book-cover" fill />
+                                    <Image src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-hw1_900px.png?alt=media&token=42ce90a3-ed34-49d2-8e09-5258d0dfc484" alt="Hallo Welt Cover" fill />
                                 </div>
                                 
                                 <span className="series-tag">Band 1</span>
@@ -51,7 +58,7 @@ export default function ShopPage() {
                             {/* BAND 2 */}
                             <article className="book-card">
                                 <div className="book-cover-wrapper">
-                                    <Image src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw2%2Fcover-hw2-900px.png?alt=media&token=9479f94f-e21d-4fe8-82d5-b668781bd724" alt="Band 2 Cover" className="book-cover" fill />
+                                    <Image src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw2%2Fcover-hw2-900px.png?alt=media&token=9479f94f-e21d-4fe8-82d5-b668781bd724" alt="Band 2 Cover" fill />
                                 </div>
                                 
                                 <span className="series-tag">Band 2</span>
@@ -200,6 +207,6 @@ export default function ShopPage() {
                 </section>
             </main>
             <Footer />
-        </div>
+        </>
     );
 }
