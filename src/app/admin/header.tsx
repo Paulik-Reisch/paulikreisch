@@ -1,9 +1,8 @@
-
 import { Button } from "@/components/ui/button";
 import { logoutAction } from "./actions";
 import Link from "next/link";
 import { Logo } from "@/components/ui/logo";
-import { LogOut, Home, Newspaper, BarChart3, Presentation } from "lucide-react";
+import { LogOut, Home, Newspaper, BarChart3, Presentation, Sparkles } from "lucide-react";
 
 export function AdminHeader() {
   return (
@@ -34,6 +33,12 @@ export function AdminHeader() {
                     <Button variant="ghost">
                         <BarChart3 className="mr-2 h-4 w-4" />
                         Analytics
+                    </Button>
+                </Link>
+                 <Link href="/admin/seo">
+                    <Button variant="ghost">
+                        <Sparkles className="mr-2 h-4 w-4" />
+                        SEO
                     </Button>
                 </Link>
             </nav>
