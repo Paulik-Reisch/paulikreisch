@@ -39,6 +39,36 @@ const reviews = [
         stars: 4,
         text: "»Besser als jede Tasse Kaffee, um morgens wach zu werden. Ein Adrenalinschub in Prosaform.«",
         author: "Koffein-Junkie",
+    },
+    {
+        stars: 5,
+        text: "»Pflichtlektüre für jeden, der jemals eine Schule von innen gesehen hat. Es ist, als hätten die Autoren meine Gedanken gestohlen.«",
+        author: "Ehemaliger Insasse",
+    },
+    {
+        stars: 5,
+        text: "»Ich habe es meinem Lehrer geschenkt. Er hat nicht mehr mit mir gesprochen. Beste Investition meines Lebens.«",
+        author: "Ein Rebell",
+    },
+    {
+        stars: 4,
+        text: "»Einige Passagen sind so absurd, dass sie wahr sein müssen. Ein schmerzhaftes Vergnügen.«",
+        author: "Realistischer Zyniker",
+    },
+    {
+        stars: 5,
+        text: "»Dieses Buch ist der Grund, warum ich jetzt Therapeut bin. Und auch der Grund, warum ich einen brauche.«",
+        author: "Ein Betroffener",
+    },
+    {
+        stars: 2,
+        text: "»Ich verstehe den Hype nicht. Das ist doch alles völlig normaler Schulalltag.«",
+        author: "Ein Lehrer (vermutlich)",
+    },
+    {
+        stars: 5,
+        text: "»Ich habe versucht, das Buch als Entschuldigung für meinen Sohn zu verwenden. Hat nicht geklappt, aber der Richter hat gelacht.«",
+        author: "Engagierter Vater",
     }
 ]
 
