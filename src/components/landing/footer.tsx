@@ -7,10 +7,12 @@ import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { subscribeToNewsletterAction } from "@/app/actions";
+import { subscribeToNewsletterAction, logEventAction } from "@/app/actions";
 import { Loader2 } from "lucide-react";
 import { Logo } from "../ui/logo";
 import { createTrackedUrl } from "@/lib/utils";
+import { useUser } from "@/firebase/provider";
+import { usePathname } from "next/navigation";
 
 const initialNewsletterState = { success: undefined, error: undefined, message: undefined };
 
@@ -33,16 +35,25 @@ export function Footer() {
   const formRef = useRef<HTMLFormElement>(null);
   const [state, formAction] = useActionState(subscribeToNewsletterAction, initialNewsletterState);
   const { toast } = useToast();
+  const { user } = useUser();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (state.success) {
       toast({ title: "Fast geschafft!", description: state.message });
+      
+      // Log analytics event
+      if (user && formRef.current) {
+        const formData = new FormData(formRef.current);
+        const source = formData.get('source') as string;
+        logEventAction('newsletter_subscription', user.uid, pathname, { source });
+      }
       formRef.current?.reset();
     }
     if (state.error) {
       toast({ variant: "destructive", title: "Fehler", description: state.error });
     }
-  }, [state, toast]);
+  }, [state, toast, user, pathname]);
   
   return (
     <div className="text-[#555] leading-relaxed">

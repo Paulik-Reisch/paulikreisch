@@ -14,7 +14,8 @@ import {
     setDoc,
     deleteDoc,
     writeBatch,
-    documentId
+    documentId,
+    where
 } from "firebase/firestore";
 import { 
     getStorage,
@@ -22,6 +23,8 @@ import {
     listAll,
     getMetadata,
 } from "firebase/storage";
+import { startOfMonth, subMonths, endOfMonth, format } from "date-fns";
+import { de } from "date-fns/locale";
 
 export interface Order {
     id: string;
@@ -196,6 +199,17 @@ export interface LandingPage {
     htmlContent?: string;
     cssContent?: string;
     jsContent?: string;
+}
+
+export interface AnalyticsEvent {
+    id: string;
+    type: 'page_view' | 'newsletter_subscription' | string;
+    timestamp: Timestamp;
+    path: string;
+    userId: string;
+    params?: {
+        [key: string]: any;
+    };
 }
 
 
@@ -488,8 +502,6 @@ export async function updateLegalPage(pageId: string, data: Partial<Omit<LegalPa
 }
 
 // --- LANDING PAGES ---
-const defaultLandingPages: Omit<LandingPage, 'id' | 'lastUpdated'>[] = [];
-
 
 async function initializeLandingPages() {
     const lpCol = collection(db, 'landing_pages');
@@ -497,10 +509,7 @@ async function initializeLandingPages() {
     if (snapshot.empty) {
         const batch = writeBatch(db);
         console.log("Initializing default landing pages...");
-        defaultLandingPages.forEach(lpData => {
-            const docRef = doc(lpCol, lpData.slug);
-            batch.set(docRef, { ...lpData, lastUpdated: Timestamp.now() });
-        });
+        
         await batch.commit();
         console.log("Default landing pages initialized.");
     }
@@ -892,6 +901,101 @@ export async function updateSeoMetadata(slug: string, data: Partial<SeoMetadata>
     await addLog(user, 'SEO Metadaten aktualisiert', `Seite: ${slug}`);
 }
 
+// --- ANALYTICS ---
+export async function logAnalyticsEvent(type: string, path: string, userId: string, params: object = {}) {
+    try {
+        const eventsCol = collection(db, 'analytics_events');
+        await addDoc(eventsCol, {
+            type,
+            path,
+            userId,
+            params,
+            timestamp: Timestamp.now(),
+        });
+    } catch (e) {
+        console.error("Error logging analytics event:", e);
+    }
+}
+
+type AnalyticsSummary = {
+    visitors: number;
+    pageViews: number;
+    newsletterSubscriptions: number;
+};
+
+async function getSummaryForPeriod(startDate: Date, endDate: Date): Promise<AnalyticsSummary> {
+    const eventsCol = collection(db, 'analytics_events');
+    const q = query(eventsCol, where('timestamp', '>=', startDate), where('timestamp', '<=', endDate));
+    const snapshot = await getDocs(q);
+
+    const events = snapshot.docs.map(doc => doc.data());
+
+    const pageViews = events.filter(e => e.type === 'page_view').length;
+    const visitors = new Set(events.filter(e => e.type === 'page_view').map(e => e.userId)).size;
+    const newsletterSubscriptions = events.filter(e => e.type === 'newsletter_subscription').length;
+
+    return { visitors, pageViews, newsletterSubscriptions };
+}
+
+export async function getAnalyticsSummary() {
+    const now = new Date();
+    const startOfCurrentMonth = startOfMonth(now);
+    const startOfPreviousMonth = startOfMonth(subMonths(now, 1));
+    const endOfPreviousMonth = endOfMonth(subMonths(now, 1));
+    
+    const currentPeriod = await getSummaryForPeriod(startOfCurrentMonth, now);
+    const previousPeriod = await getSummaryForPeriod(startOfPreviousMonth, endOfPreviousMonth);
+
+    const calculateChange = (current: number, previous: number) => {
+        if (previous === 0) return current > 0 ? 100 : 0;
+        return ((current - previous) / previous) * 100;
+    };
+
+    return {
+        visitors: {
+            value: currentPeriod.visitors,
+            change: calculateChange(currentPeriod.visitors, previousPeriod.visitors)
+        },
+        pageViews: {
+            value: currentPeriod.pageViews,
+            change: calculateChange(currentPeriod.pageViews, previousPeriod.pageViews)
+        },
+        newsletterSubscriptions: {
+            value: currentPeriod.newsletterSubscriptions,
+            change: calculateChange(currentPeriod.newsletterSubscriptions, previousPeriod.newsletterSubscriptions)
+        },
+        // Conversion rate is still a placeholder
+        conversionRate: {
+            value: 5.4, // dummy
+            change: 0 // dummy
+        }
+    };
+}
+
+export async function getMonthlyPageViewsChartData(): Promise<{ month: string; pageViews: number }[]> {
+    const now = new Date();
+    const chartData = [];
+    const eventsCol = collection(db, 'analytics_events');
+
+    for (let i = 5; i >= 0; i--) {
+        const date = subMonths(now, i);
+        const monthName = format(date, "MMMM", { locale: de });
+        
+        const startDate = startOfMonth(date);
+        const endDate = endOfMonth(date);
+
+        const q = query(eventsCol, 
+            where('type', '==', 'page_view'),
+            where('timestamp', '>=', startDate),
+            where('timestamp', '<=', endDate)
+        );
+        const snapshot = await getDocs(q);
+        
+        chartData.push({ month: monthName, pageViews: snapshot.size });
+    }
+
+    return chartData;
+}
     
 
     

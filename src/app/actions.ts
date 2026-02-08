@@ -3,7 +3,7 @@
 'use server';
 
 import { z } from "zod";
-import { addOrder, addLog, getCountdownTarget, updateCountdownTarget } from "@/lib/firestore";
+import { addOrder, addLog, getCountdownTarget, updateCountdownTarget, logAnalyticsEvent } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/session";
 import { addContact } from "@/lib/resend";
@@ -99,4 +99,8 @@ export async function reduceCountdownAction(): Promise<{ newTargetDate: string }
         console.error("Error reducing countdown:", e);
         return { error: "Zeit konnte nicht reduziert werden." };
     }
+}
+
+export async function logEventAction(type: 'page_view' | 'newsletter_subscription' | string, userId: string, path: string, params: object = {}) {
+    await logAnalyticsEvent(type, path, userId, params);
 }

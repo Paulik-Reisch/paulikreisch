@@ -1,4 +1,4 @@
-import { FirebaseClientProvider } from "@/firebase/client-provider";
+
 
 export default function MusicLayout({
   children,
@@ -6,8 +6,8 @@ export default function MusicLayout({
   children: React.ReactNode;
 }) {
   return (
-    <FirebaseClientProvider>
+    <>
         {children}
-    </FirebaseClientProvider>
+    </>
   );
 }

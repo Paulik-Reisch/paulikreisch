@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "Track": {
@@ -94,6 +95,32 @@
         "jsContent": { "type": "string" }
       },
       "required": ["slug", "title"]
+    },
+    "AnalyticsEvent": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Analytics Event",
+      "type": "object",
+      "description": "Represents a single tracked event in the application.",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "description": "Type of the event, e.g., 'page_view', 'newsletter_subscription'." },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "path": { "type": "string", "description": "The URL path where the event occurred." },
+        "userId": { "type": "string", "description": "The authenticated or anonymous user ID." },
+        "params": {
+          "type": "object",
+          "description": "Additional parameters for the event, like UTM tags.",
+          "properties": {
+            "utm_source": { "type": "string" },
+            "utm_medium": { "type": "string" },
+            "utm_campaign": { "type": "string" },
+            "utm_content": { "type": "string" },
+            "utm_term": { "type": "string" },
+            "source": { "type": "string" }
+          }
+        }
+      },
+      "required": ["type", "timestamp", "path", "userId"]
     }
   },
   "auth": {
@@ -119,6 +146,12 @@
         "$ref": "#/entities/LandingPage"
       },
       "description": "Collection of standalone landing pages."
+    },
+    "/analytics_events/{eventId}": {
+        "schema": {
+            "$ref": "#/entities/AnalyticsEvent"
+        },
+        "description": "Collection of analytics events for internal tracking."
     }
   }
 }

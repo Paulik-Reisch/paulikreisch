@@ -26,14 +26,6 @@ import {
 } from "@/components/ui/chart";
 import { Bar, BarChart, XAxis, YAxis, CartesianGrid } from "recharts";
 
-const chartData = [
-  { month: "Januar", pageViews: 186 },
-  { month: "Februar", pageViews: 305 },
-  { month: "März", pageViews: 237 },
-  { month: "April", pageViews: 273 },
-  { month: "Mai", pageViews: 209 },
-  { month: "Juni", pageViews: 214 },
-];
 
 const chartConfig = {
   pageViews: {
@@ -50,7 +42,17 @@ type TrackingData = {
     term: string | null;
 }
 
-export function AnalyticsClient() {
+type AnalyticsData = {
+    summary: {
+        visitors: { value: number; change: number };
+        pageViews: { value: number; change: number };
+        newsletterSubscriptions: { value: number; change: number };
+        conversionRate: { value: number; change: number };
+    };
+    chartData: { month: string; pageViews: number }[];
+}
+
+export function AnalyticsClient({ summary, chartData }: AnalyticsData) {
   const { toast } = useToast();
   const searchParams = useSearchParams();
 
@@ -108,8 +110,8 @@ export function AnalyticsClient() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">+2.350</div>
-            <p className="text-xs text-muted-foreground">+180.1% zum Vormonat</p>
+            <div className="text-2xl font-bold">{summary.visitors.value.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">{summary.visitors.change >= 0 ? '+' : ''}{summary.visitors.change.toFixed(1)}% zum Vormonat</p>
           </CardContent>
         </Card>
         <Card>
@@ -118,8 +120,8 @@ export function AnalyticsClient() {
             <BarChartIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">+12.234</div>
-            <p className="text-xs text-muted-foreground">+19% zum Vormonat</p>
+            <div className="text-2xl font-bold">{summary.pageViews.value.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">{summary.pageViews.change >= 0 ? '+' : ''}{summary.pageViews.change.toFixed(1)}% zum Vormonat</p>
           </CardContent>
         </Card>
         <Card>
@@ -128,8 +130,8 @@ export function AnalyticsClient() {
             <MousePointerClick className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">+573</div>
-            <p className="text-xs text-muted-foreground">+201 seit letzter Woche</p>
+            <div className="text-2xl font-bold">{summary.newsletterSubscriptions.value.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">{summary.newsletterSubscriptions.change >= 0 ? '+' : ''}{summary.newsletterSubscriptions.change.toFixed(1)}% zum Vormonat</p>
           </CardContent>
         </Card>
         <Card>
@@ -138,7 +140,7 @@ export function AnalyticsClient() {
             <Percent className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">5.4%</div>
+            <div className="text-2xl font-bold">{summary.conversionRate.value.toFixed(1)}%</div>
             <p className="text-xs text-muted-foreground">Buchkäufe / Besucher</p>
           </CardContent>
         </Card>

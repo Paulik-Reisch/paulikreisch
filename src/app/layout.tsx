@@ -4,6 +4,8 @@ import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 import { CookieBanner } from '@/components/landing/cookie-banner';
 import { ThemeProvider } from '@/components/theme-provider';
+import { FirebaseClientProvider } from '@/firebase/client-provider';
+import { GlobalTracker } from '@/components/analytics/global-tracker';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://paulik-reisch.de'),
@@ -74,9 +76,12 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         <ThemeProvider attribute="class" defaultTheme="light">
-          {children}
-          <Toaster />
-          <CookieBanner />
+          <FirebaseClientProvider>
+            {children}
+            <Toaster />
+            <CookieBanner />
+            <GlobalTracker />
+          </FirebaseClientProvider>
         </ThemeProvider>
       </body>
     </html>
