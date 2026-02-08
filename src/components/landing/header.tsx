@@ -31,7 +31,7 @@ export function Header() {
   return (
     <header className={cn(
       "px-4 lg:px-6 h-14 flex items-center sticky top-0 z-40 w-full bg-background/95 backdrop-blur-sm transition-all duration-300",
-      scrolled ? "border-b shadow-sm" : "border-b border-transparent"
+      scrolled ? "border-b shadow-sm" : ""
     )}>
       <div className="container mx-auto flex items-center justify-between">
         <a className="flex items-center justify-center" href="/">
@@ -42,36 +42,34 @@ export function Header() {
         </a>
         
         <div className="flex items-center gap-2">
-          <Link href={amazonLink} target="_blank" rel="noopener noreferrer">
+          {/* We use a wrapper Link with `group` to control the hover state on child elements */}
+          <Link href={amazonLink} target="_blank" rel="noopener noreferrer" className="group" aria-label="Bei Amazon kaufen">
             <Button
               variant="secondary"
-              className="flex items-center justify-center sm:justify-start gap-2 w-10 h-10 overflow-hidden transition-all duration-300 ease-in-out p-0 sm:px-2 sm:hover:w-40"
-              aria-label="Bei Amazon kaufen"
+              className="justify-start gap-2 w-10 md:group-hover:w-44 p-0 px-2.5 h-10 overflow-hidden transition-all duration-300 ease-in-out"
             >
               <AmazonIcon className="h-5 w-5 shrink-0" />
-              <span className="whitespace-nowrap hidden sm:inline">Bei Amazon kaufen</span>
+              <span className="whitespace-nowrap opacity-0 md:group-hover:opacity-100 transition-opacity duration-200 delay-150">Bei Amazon kaufen</span>
             </Button>
           </Link>
 
-          <Link href={googlePlayLink} target="_blank" rel="noopener noreferrer">
+          <Link href={googlePlayLink} target="_blank" rel="noopener noreferrer" className="group" aria-label="Bei Google Play kaufen">
             <Button
               variant="outline"
-              className="flex items-center justify-center sm:justify-start gap-2 w-10 h-10 overflow-hidden transition-all duration-300 ease-in-out p-0 sm:px-2 sm:hover:w-40"
-              aria-label="Bei Google Play kaufen"
+              className="justify-start gap-2 w-10 md:group-hover:w-40 p-0 px-2.5 h-10 overflow-hidden transition-all duration-300 ease-in-out"
             >
               <GooglePlayIcon className="h-5 w-5 shrink-0" />
-              <span className="whitespace-nowrap hidden sm:inline">Bei Google Play</span>
+              <span className="whitespace-nowrap opacity-0 md:group-hover:opacity-100 transition-opacity duration-200 delay-150">Bei Google Play</span>
             </Button>
           </Link>
 
-          <Link href={elevenReaderLink} target="_blank" rel="noopener noreferrer">
-            <Button
+          <Link href={elevenReaderLink} target="_blank" rel="noopener noreferrer" className="group" aria-label="Auf 11Reader hören">
+             <Button
               variant="outline"
-              className="flex items-center justify-center sm:justify-start gap-2 w-10 h-10 overflow-hidden transition-all duration-300 ease-in-out p-0 sm:px-2 sm:hover:w-56"
-              aria-label="Auf 11Reader hören"
+              className="justify-start gap-2 w-10 md:group-hover:w-[220px] p-0 px-2.5 h-10 overflow-hidden transition-all duration-300 ease-in-out"
             >
               <ElevenReaderIcon className="h-4 w-4 shrink-0" />
-              <span className="whitespace-nowrap text-xs sm:text-sm hidden sm:inline">
+              <span className="whitespace-nowrap opacity-0 md:group-hover:opacity-100 transition-opacity duration-200 delay-150 text-xs sm:text-sm">
                 <span className="font-bold text-destructive">GRATIS</span> hören auf 11Reader
               </span>
             </Button>
