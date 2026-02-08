@@ -50,7 +50,7 @@ export async function generateMetadata(
 
 export default function LP3() {
   return (
-    <div className="flex flex-col min-h-[100dvh] bg-background text-foreground overflow-x-hidden">
+    <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
       <Header />
       <main className="flex-1">
         <HeroLP3 />
