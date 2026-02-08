@@ -48,9 +48,12 @@ export function Hero({ product }: { product?: Product }) {
                     <Typewriter texts={heroTexts} />
                 </h1>
             </div>
-            <div className="flex justify-center md:justify-start animate-in fade-in slide-in-from-top-20 duration-1000">
+            <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 animate-in fade-in slide-in-from-top-20 duration-1000">
               <Link href="/buchhandlung-paulik-reisch">
                 <Button size="lg" variant="secondary">Jetzt kaufen</Button>
+              </Link>
+              <Link href="/lp-series">
+                <Button size="lg" variant="outline">Mehr Satirewerke</Button>
               </Link>
             </div>
           </div>
