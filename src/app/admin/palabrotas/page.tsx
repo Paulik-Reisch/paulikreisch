@@ -1,4 +1,6 @@
 
+import { notFound } from "next/navigation";
+
 export default function PalabrotasAdminPage() {
-  return <div>Palabrotas Admin Content</div>;
+  notFound();
 }

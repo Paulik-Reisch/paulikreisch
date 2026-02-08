@@ -1,4 +1,6 @@
 
+import { notFound } from "next/navigation";
+
 export default function LogsPage() {
-  return <div>Logs Page Content</div>;
+  notFound();
 }

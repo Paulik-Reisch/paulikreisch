@@ -1,4 +1,6 @@
 
+import { notFound } from "next/navigation";
+
 export default function NewsletterManagementPage() {
-  return <div>Newsletter Management Content</div>;
+  notFound();
 }

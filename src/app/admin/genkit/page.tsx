@@ -1,4 +1,6 @@
 
+import { notFound } from "next/navigation";
+
 export default function GenkitPage() {
-  return <div>Genkit Page Content</div>;
+  notFound();
 }

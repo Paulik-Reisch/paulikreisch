@@ -1,4 +1,6 @@
 
+import { notFound } from "next/navigation";
+
 export default function ChistesPage() {
-  return <div>Chistes Page Content</div>;
+  notFound();
 }

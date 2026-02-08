@@ -1,4 +1,6 @@
 
+import { notFound } from "next/navigation";
+
 export default function AnalyticsPage() {
-  return <div>Analytics Page Content</div>;
+  notFound();
 }

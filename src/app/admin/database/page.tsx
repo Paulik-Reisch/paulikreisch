@@ -1,4 +1,6 @@
 
+import { notFound } from "next/navigation";
+
 export default function DatabasePage() {
-  return <div>Database Page Content</div>;
+  notFound();
 }

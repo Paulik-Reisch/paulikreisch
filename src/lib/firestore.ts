@@ -254,6 +254,7 @@ export async function getArticles(): Promise<Article[]> {
         return {
             id: doc.id,
             ...data,
+            slug: doc.id,
             publishedDate: (data.publishedDate as Timestamp).toDate().toISOString(),
         } as Article;
     });
@@ -267,10 +268,45 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
         return {
             id: docSnap.id,
             ...data,
+            slug: docSnap.id,
             publishedDate: (data.publishedDate as Timestamp).toDate().toISOString(),
         } as Article;
     }
     return null;
+}
+
+
+export async function addArticle(articleData: Omit<Article, 'id' | 'publishedDate'>, user: string): Promise<string> {
+    const slug = articleData.slug || articleData.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    const docRef = doc(db, 'articles', slug);
+    
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        throw new Error(`Artikel-Slug "${slug}" existiert bereits.`);
+    }
+
+    const dataWithTimestamp = {
+        ...articleData,
+        slug,
+        publishedDate: Timestamp.now(),
+    };
+    await setDoc(docRef, dataWithTimestamp);
+    await addLog(user, 'Artikel erstellt', `Slug: ${slug}`);
+    return slug;
+}
+
+export async function updateArticle(slug: string, dataToUpdate: Partial<Omit<Article, 'id'>>, user: string) {
+    const docRef = doc(db, 'articles', slug);
+    await updateDoc(docRef, {
+        ...dataToUpdate,
+    });
+    await addLog(user, 'Artikel aktualisiert', `Slug: ${slug}`);
+}
+
+export async function deleteArticle(slug: string, user: string) {
+    const docRef = doc(db, 'articles', slug);
+    await deleteDoc(docRef);
+    await addLog(user, 'Artikel gelöscht', `Slug: ${slug}`);
 }
 
 

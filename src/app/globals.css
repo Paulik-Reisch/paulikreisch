@@ -60,36 +60,6 @@
     --bg-subtle-blue: 220 95% 25%;
     --color-leche: 240 3% 15%;
   }
-
-  /* New GCP Style for Admin Dashboard */
-  .internal-dashboard {
-      --background: #f8f9fa;
-      --foreground: #202124;
-      --card: #ffffff;
-      --card-foreground: #202124;
-      --popover: #ffffff;
-      --popover-foreground: #202124;
-      --primary: #3367d6;
-      --primary-foreground: #ffffff;
-      --secondary: #e8f0fe;
-      --secondary-foreground: #3367d6;
-      --muted: #f1f3f4;
-      --muted-foreground: #5f6368;
-      --accent: #e8f0fe;
-      --accent-foreground: #3367d6;
-      --destructive: #d93025;
-      --destructive-foreground: #ffffff;
-      --border: #dadce0;
-      --input: #dadce0;
-      --ring: #3367d6;
-      --radius: 0.25rem;
-
-      --sidebar-background: #ffffff;
-      --sidebar-foreground: #202124;
-      --sidebar-accent: #e8f0fe;
-      --sidebar-accent-foreground: #3367d6;
-      --sidebar-border: #dadce0;
-  }
 }
 
 @layer base {
@@ -101,51 +71,6 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-
-  .internal-dashboard .header { @apply bg-primary text-primary-foreground; }
-  .internal-dashboard .project-picker { @apply border-white/30 bg-white/5; }
-  .internal-dashboard .project-picker:hover { @apply bg-white/10; }
-  .internal-dashboard .search-input { @apply bg-white/15 text-white placeholder:text-white/70; }
-  .internal-dashboard .sidebar { @apply bg-sidebar text-sidebar-foreground border-sidebar-border; }
-  .internal-dashboard .nav-item { @apply text-foreground; }
-  .internal-dashboard .nav-item:hover { @apply bg-accent; }
-  .internal-dashboard .nav-item.active { @apply bg-secondary text-secondary-foreground font-medium; }
-  .internal-dashboard .nav-icon { @apply fill-muted-foreground; }
-  .internal-dashboard .nav-item.active .nav-icon { @apply fill-secondary-foreground; }
-  .internal-dashboard .nav-header { @apply text-muted-foreground; }
-  .internal-dashboard .main { @apply bg-background; }
-  .internal-dashboard .page-tabs { @apply border-border; }
-  .internal-dashboard .tab { @apply text-muted-foreground; }
-  .internal-dashboard .tab.active { @apply text-primary border-primary; }
-  .internal-dashboard .alert-banner { @apply bg-secondary border-blue-200 text-primary; }
-  .internal-dashboard .card { @apply bg-card text-card-foreground border-border shadow-none; }
-  .internal-dashboard .card-header { @apply border-border; }
-  .internal-dashboard .card-title { @apply text-card-foreground; }
-  .internal-dashboard .info-label { @apply text-muted-foreground; }
-  .internal-dashboard .info-val { @apply text-foreground; }
-  .internal-dashboard .code-val { @apply bg-muted text-foreground; }
-  .internal-dashboard .gcp-link { @apply text-primary; }
-  .internal-dashboard .ugly-table th { @apply border-black/10 text-muted-foreground; }
-  .internal-dashboard .ugly-table td { @apply border-black/10; }
-
-}
-
-@layer components {
-    .gcp-input {
-      @apply h-9 rounded-sm border-gray-300 focus-visible:ring-offset-0 focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary;
-    }
-    .gcp-button {
-        @apply bg-gray-100 text-gray-800 border-gray-300 rounded-sm shadow-none h-8 px-3 text-xs font-normal hover:bg-gray-200 active:scale-100;
-    }
-    .gcp-button-primary {
-         @apply bg-primary text-primary-foreground border-transparent rounded-sm shadow-none h-8 px-3 text-xs font-medium hover:bg-primary/90 active:scale-100;
-    }
-    .gcp-icon-button {
-        @apply text-gray-500 hover:text-gray-800 hover:bg-gray-100 rounded-sm h-8 w-8 shadow-none border-transparent;
-    }
-    .gcp-card {
-        @apply rounded-sm shadow-none border-border;
-    }
 }
 
 @layer utilities {

@@ -1,9 +1,8 @@
 
-import { SidebarProvider } from "@/components/ui/sidebar";
 import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
-import { AdminSidebar } from "./sidebar";
 import { AdminHeader } from "./header";
+import { Footer } from "@/components/landing/footer";
 
 export default async function AdminLayout({
   children,
@@ -16,16 +15,10 @@ export default async function AdminLayout({
   }
 
   return (
-    <SidebarProvider>
-      <div className="internal-dashboard flex flex-col h-screen overflow-hidden">
-        <AdminHeader />
-        <div className="wrapper flex flex-1 overflow-hidden">
-          <AdminSidebar />
-          <main className="main flex-1 overflow-y-auto p-6">
-              {children}
-          </main>
-        </div>
-      </div>
-    </SidebarProvider>
+    <div className="flex flex-col min-h-screen">
+      <AdminHeader />
+      <main className="flex-1 container py-8 md:py-12">{children}</main>
+      <Footer />
+    </div>
   );
 }

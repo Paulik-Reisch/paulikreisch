@@ -1,4 +1,6 @@
 
+import { notFound } from "next/navigation";
+
 export default function StoragePage() {
-  return <div>Storage Page Content</div>;
+  notFound();
 }

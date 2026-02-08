@@ -1,4 +1,6 @@
 
+import { notFound } from "next/navigation";
+
 export default function SeoAdminPage() {
-  return <div>SEO Admin Content</div>;
+  notFound();
 }
