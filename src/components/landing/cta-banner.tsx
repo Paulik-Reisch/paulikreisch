@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { CountdownBanner } from "./countdown-banner";
@@ -10,10 +9,9 @@ export function CtaBanner() {
         <div className="flex flex-col items-center justify-center space-y-8 text-center">
           <CountdownBanner />
           <div className="space-y-2">
-            <h2 id="cta-heading" className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Launch-Angebot</h2>
+            <h2 id="cta-heading" className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Kurzzeit-Angebot</h2>
             <p className="max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Nur für kurze Zeit! Sparen Sie jetzt und sichern Sie sich Ihr Exemplar für nur <span className="inline-block whitespace-nowrap line-through">12,99 €</span> <span className="inline-block whitespace-nowrap font-bold text-2xl animate-pulse">10,99 €</span>
-              <br/>
+              <span className="inline-block whitespace-nowrap line-through">20,99 €</span> <span className="inline-block whitespace-nowrap font-bold text-2xl animate-pulse">10,99 €</span>
             </p>
           </div>
           <Link href="/buchhandlung-paulik-reisch">

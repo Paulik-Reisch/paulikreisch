@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -90,7 +89,7 @@ export function CountdownBanner() {
             </h3>
             <div 
                 className={cn(
-                    "font-mono text-5xl md:text-6xl font-bold tracking-tighter transition-colors duration-500 text-yellow-300",
+                    "font-mono text-6xl md:text-8xl font-bold tracking-tighter transition-colors duration-500 text-yellow-300",
                     isBlinking && "text-red-400 animate-flash",
                     isPulsing && "animate-pulse-fast",
                 )}
