@@ -60,7 +60,7 @@ export function CookieBanner() {
         {view === 'main' ? (
           <div className="p-8">
             <Logo className="h-10 w-auto mb-6 mx-auto text-foreground"/>
-            <h3 className="font-bold font-headline text-2xl text-center">Bevor Sie fortfahren...</h3>
+            <h3 className="font-bold font-headline text-2xl text-center">{'Bevor Sie fortfahren\u00A0…'}</h3>
             <p className="text-sm text-muted-foreground mt-4">
               Wir und unsere Partner verwenden Cookies und andere Technologien, um Informationen auf Ihrem Gerät zu speichern und abzurufen. Dies hilft uns, die Nutzung der Website zu analysieren, die Leistung zu verbessern und Ihnen relevante Inhalte anzuzeigen. Indem Sie auf „Zustimmen“ klicken, willigen Sie in die Verwendung dieser Technologien für alle genannten Zwecke ein.
             </p>
