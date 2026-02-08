@@ -33,7 +33,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/lp-risitas/biografie',
     '/lp-risitas/legales',
     '/lp-luin',
-    '/los-chipirones',
     '/exzerpte',
     '/lp-schule-straflager',
     '/lp-lehrer-roboter',
