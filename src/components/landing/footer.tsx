@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { subscribeToNewsletterAction } from "@/app/actions";
 import { Loader2 } from "lucide-react";
 import { Logo } from "../ui/logo";
+import { createTrackedUrl } from "@/lib/utils";
 
 const initialNewsletterState = { success: undefined, error: undefined, message: undefined };
 
@@ -32,6 +33,13 @@ export function Footer() {
   const formRef = useRef<HTMLFormElement>(null);
   const [state, formAction] = useActionState(subscribeToNewsletterAction, initialNewsletterState);
   const { toast } = useToast();
+
+  const premiumUrl = createTrackedUrl(
+    'https://premium.paulik-reisch.de/',
+    'premium-footer-link',
+    'organic_footer',
+    'footer_main_website'
+  );
 
   useEffect(() => {
     if (state.success) {
@@ -59,10 +67,8 @@ export function Footer() {
           <div className="text-center md:text-left">
             <h3 className="text-sm font-bold uppercase text-gray-500 mb-5 tracking-wider">Entdecken</h3>
             <ul className="space-y-3">
-              <li><Link href="/exzerpte" className="text-gray-600 hover:text-[#f08e6c] text-[15px]">Bücher & Exzerpte</Link></li>
-              <li><Link href="/lp-series" className="text-gray-600 hover:text-[#f08e6c] text-[15px]">Hallo Welt Serie</Link></li>
+              <li><a href={premiumUrl} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-[#f08e6c] text-[15px]">Premium Satire</a></li>
               <li><Link href="/ueber/autoren" className="text-gray-600 hover:text-[#f08e6c] text-[15px]">Über die Autoren</Link></li>
-              <li><Link href="/admin" className="text-gray-600 hover:text-[#f08e6c] text-[15px]">Newsletter Archiv</Link></li>
             </ul>
           </div>
 
@@ -100,7 +106,7 @@ export function Footer() {
         <div className="container mx-auto max-w-7xl flex flex-col md:flex-row justify-between items-center md:items-start gap-10 text-center md:text-left">
           
           <div className="md:flex-2 max-w-3xl opacity-90 leading-relaxed">
-            <p>Die satirische "Hallo Welt"-Bücherserie ist eine Idee und Kreation von Philipp Paulik (Autor), Maximilian Reisch (Autor), Luin Schiffbauer (Illustrator) und weiteren Mitwirkenden. Veröffentlicht und produziert durch Kindle Direct Publishing (KDP) der Amazon Distribution GmbH, Leipzig sowie ggf. weiteren Verlags- und Produktionspartnern.</p>
+            <p>Die satirische "Hallo Welt"-Bücherserie ist eine Idee und Kreation von Philipp Paulik (Autor), Maximilian Reisch (Autor), Luin Schiffbauer (Illustrator) und weiteren Mitwirkenden. Veröffentlicht und produziert durch Kindle Direct Publishing (KDP) der Amazon Distribution GmbH, Leipzig sowie ggf. weitere Verlags- und Produktionspartnern.</p>
             <br/>
             <p>Amazon Media EU S.à r.l. (registrierter Verkäufer von digitalen Inhalten, die mit "Verkauf durch Amazon Media EU SARL" gekennzeichnet sind.<br/>
             Amazon Media EU S.à r.l. (Société à responsabilité limitée)</p>
