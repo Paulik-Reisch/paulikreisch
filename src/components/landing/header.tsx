@@ -8,7 +8,6 @@ import { cn } from '@/lib/utils';
 import { AmazonIcon } from '@/components/ui/icons/amazon-icon';
 import { GooglePlayIcon } from '@/components/ui/icons/google-play-icon';
 import { ElevenReaderIcon } from '@/components/ui/icons/eleven-reader-icon';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const amazonLink = "https://amzn.eu/d/0CdFeZ3";
 const googlePlayLink = "https://play.google.com/store/books/details?id=HZb3EAAAQBAJ&rdid=book-HZb3EAAAQBAJ&rdot=1&source=gbs_atb&pcampaignid=books_booksearch_atb";
@@ -43,46 +42,40 @@ export function Header() {
         </a>
         
         <div className="flex items-center gap-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link href={amazonLink} target="_blank" rel="noopener noreferrer" aria-label="Bei Amazon kaufen">
-                    <Button size="icon" variant="secondary">
-                        <AmazonIcon className="h-5 w-5" />
-                    </Button>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Bei Amazon kaufen</p>
-              </TooltipContent>
-            </Tooltip>
+          <Link href={amazonLink} target="_blank" rel="noopener noreferrer">
+            <Button
+              variant="secondary"
+              className="flex items-center justify-center sm:justify-start gap-2 w-10 h-10 overflow-hidden transition-all duration-300 ease-in-out p-0 sm:px-2 sm:hover:w-40"
+              aria-label="Bei Amazon kaufen"
+            >
+              <AmazonIcon className="h-5 w-5 shrink-0" />
+              <span className="whitespace-nowrap hidden sm:inline">Bei Amazon kaufen</span>
+            </Button>
+          </Link>
 
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link href={googlePlayLink} target="_blank" rel="noopener noreferrer" aria-label="Bei Google Play kaufen">
-                    <Button size="icon" variant="outline">
-                        <GooglePlayIcon className="h-5 w-5" />
-                    </Button>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Bei Google Play kaufen</p>
-              </TooltipContent>
-            </Tooltip>
+          <Link href={googlePlayLink} target="_blank" rel="noopener noreferrer">
+            <Button
+              variant="outline"
+              className="flex items-center justify-center sm:justify-start gap-2 w-10 h-10 overflow-hidden transition-all duration-300 ease-in-out p-0 sm:px-2 sm:hover:w-40"
+              aria-label="Bei Google Play kaufen"
+            >
+              <GooglePlayIcon className="h-5 w-5 shrink-0" />
+              <span className="whitespace-nowrap hidden sm:inline">Bei Google Play</span>
+            </Button>
+          </Link>
 
-             <Tooltip>
-              <TooltipTrigger asChild>
-                <Link href={elevenReaderLink} target="_blank" rel="noopener noreferrer" aria-label="Auf 11Reader hören">
-                     <Button size="icon" variant="outline">
-                        <ElevenReaderIcon className="h-4 w-4" />
-                    </Button>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Auf 11Reader hören</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <Link href={elevenReaderLink} target="_blank" rel="noopener noreferrer">
+            <Button
+              variant="outline"
+              className="flex items-center justify-center sm:justify-start gap-2 w-10 h-10 overflow-hidden transition-all duration-300 ease-in-out p-0 sm:px-2 sm:hover:w-56"
+              aria-label="Auf 11Reader hören"
+            >
+              <ElevenReaderIcon className="h-4 w-4 shrink-0" />
+              <span className="whitespace-nowrap text-xs sm:text-sm hidden sm:inline">
+                <span className="font-bold text-destructive">GRATIS</span> hören auf 11Reader
+              </span>
+            </Button>
+          </Link>
         </div>
 
       </div>
