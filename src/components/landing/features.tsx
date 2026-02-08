@@ -1,5 +1,4 @@
 
-
 import { BookOpen, BrainCircuit, Feather } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -9,7 +8,7 @@ export function Features() {
       <div className="container px-4 md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
-            <h2 id="features-heading" className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Warum dieses Buch Ihr Leben verändern wird</h2>
+            <h2 id="features-heading" className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Warum Sie unsere Satire lieben werden</h2>
           </div>
         </div>
         <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3 lg:gap-12">
@@ -45,4 +44,3 @@ export function Features() {
     </section>
   );
 }
-
