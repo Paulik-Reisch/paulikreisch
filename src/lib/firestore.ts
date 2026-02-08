@@ -525,6 +525,73 @@ export async function getLandingPages(): Promise<LandingPage[]> {
     });
 }
 
+export async function getLandingPageBySlug(slug: string): Promise<LandingPage | null> {
+    const docRef = doc(db, 'landing_pages', slug);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        const data = docSnap.data();
+        return {
+            id: docSnap.id,
+            slug: docSnap.id,
+            ...data,
+            lastUpdated: (data.lastUpdated as Timestamp).toDate().toISOString(),
+        } as LandingPage;
+    }
+    return null;
+}
+
+export async function addLandingPage(pageData: Omit<LandingPage, 'id' | 'lastUpdated'>, user: string): Promise<string> {
+    const slug = pageData.slug || pageData.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    const docRef = doc(db, 'landing_pages', slug);
+    
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        throw new Error(`Landing Page mit Slug "${slug}" existiert bereits.`);
+    }
+
+    const dataWithTimestamp = {
+        ...pageData,
+        slug,
+        lastUpdated: Timestamp.now(),
+    };
+    await setDoc(docRef, dataWithTimestamp);
+    await addLog(user, 'Landing Page erstellt', `Slug: ${slug}`);
+    return slug;
+}
+
+export async function updateLandingPage(slug: string, dataToUpdate: Partial<Omit<LandingPage, 'id' | 'lastUpdated'>>, user: string) {
+    const docRef = doc(db, 'landing_pages', slug);
+    
+    // If slug is being changed, we need to move the document
+    if (dataToUpdate.slug && dataToUpdate.slug !== slug) {
+        const newDocRef = doc(db, 'landing_pages', dataToUpdate.slug);
+        const oldDocSnap = await getDoc(docRef);
+        if (oldDocSnap.exists()) {
+            const batch = writeBatch(db);
+            const newData = {
+                ...oldDocSnap.data(),
+                ...dataToUpdate,
+                lastUpdated: Timestamp.now()
+            };
+            batch.set(newDocRef, newData);
+            batch.delete(docRef);
+            await batch.commit();
+            await addLog(user, 'Landing Page Slug geändert', `Von ${slug} zu ${dataToUpdate.slug}`);
+        }
+    } else {
+         await updateDoc(docRef, {
+            ...dataToUpdate,
+            lastUpdated: Timestamp.now(),
+        });
+        await addLog(user, 'Landing Page aktualisiert', `Slug: ${slug}`);
+    }
+}
+
+export async function deleteLandingPage(slug: string, user: string) {
+    const docRef = doc(db, 'landing_pages', slug);
+    await deleteDoc(docRef);
+    await addLog(user, 'Landing Page gelöscht', `Slug: ${slug}`);
+}
 
 // --- Newsletter Functions ---
 

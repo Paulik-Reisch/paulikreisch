@@ -17,8 +17,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
+import { deleteLandingPageAction } from "./actions";
 
 export default async function LandingPagesAdminPage() {
     const landingPages = await getLandingPages();
@@ -68,11 +80,29 @@ export default async function LandingPagesAdminPage() {
                                                     Bearbeiten
                                                 </DropdownMenuItem>
                                             </Link>
-                                            {/* Delete action will be added later */}
-                                            <DropdownMenuItem disabled className="text-destructive focus:text-destructive focus:bg-destructive/10">
-                                                <Trash2 className="mr-2 h-4 w-4" />
-                                                Löschen (demnächst)
-                                            </DropdownMenuItem>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-destructive focus:text-destructive focus:bg-destructive/10">
+                                                        <Trash2 className="mr-2 h-4 w-4" />
+                                                        Löschen
+                                                    </DropdownMenuItem>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <form action={deleteLandingPageAction}>
+                                                        <input type="hidden" name="slug" value={page.slug} />
+                                                        <AlertDialogHeader>
+                                                        <AlertDialogTitle>Sind Sie sicher?</AlertDialogTitle>
+                                                        <AlertDialogDescription>
+                                                            Möchten Sie die Landing Page "{page.title}" wirklich endgültig löschen? Diese Aktion kann nicht rückgängig gemacht werden.
+                                                        </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                        <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+                                                        <Button type="submit" variant="destructive">Löschen</Button>
+                                                        </AlertDialogFooter>
+                                                    </form>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </TableCell>
