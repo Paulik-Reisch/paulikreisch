@@ -61,7 +61,7 @@ export function Footer() {
             <ul className="space-y-3">
               <li><Link href="/exzerpte" className="text-gray-600 hover:text-[#f08e6c] text-[15px]">Bücher & Exzerpte</Link></li>
               <li><Link href="/lp-series" className="text-gray-600 hover:text-[#f08e6c] text-[15px]">Hallo Welt Serie</Link></li>
-              <li><Link href="/los-chipirones" className="text-gray-600 hover:text-[#f08e6c] text-[15px]">Über die Autoren</Link></li>
+              <li><Link href="/ueber/autoren" className="text-gray-600 hover:text-[#f08e6c] text-[15px]">Über die Autoren</Link></li>
               <li><Link href="/admin" className="text-gray-600 hover:text-[#f08e6c] text-[15px]">Newsletter Archiv</Link></li>
             </ul>
           </div>
