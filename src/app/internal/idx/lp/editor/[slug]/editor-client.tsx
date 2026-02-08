@@ -1,11 +1,10 @@
 
-
 "use client";
 
 import React, { useState, useEffect, useActionState, useTransition } from "react";
 import Link from "next/link";
 import { LegalPage, PageComponent } from "@/lib/firestore";
-import { updateLegalPageAction } from "@/app/admin/actions";
+import { updateLegalPageAction } from "@/components/admin/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

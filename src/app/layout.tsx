@@ -1,5 +1,6 @@
 
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 import { CookieBanner } from '@/components/landing/cookie-banner';
@@ -80,7 +81,9 @@ export default function RootLayout({
             {children}
             <Toaster />
             <CookieBanner />
-            <GlobalTracker />
+            <Suspense>
+              <GlobalTracker />
+            </Suspense>
           </FirebaseClientProvider>
         </ThemeProvider>
       </body>
