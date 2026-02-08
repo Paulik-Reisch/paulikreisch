@@ -1,6 +1,16 @@
+import { getPalabrotas } from "@/lib/firestore";
+import { PalabrotasClient } from "./palabrotas-client";
 
-import { notFound } from "next/navigation";
+export default async function PalabrotasAdminPage() {
+    const palabrotas = await getPalabrotas();
 
-export default function PalabrotasAdminPage() {
-  notFound();
+    return (
+        <div className="space-y-6">
+            <header>
+                <h1 className="text-3xl font-bold font-headline">Palabrotas-Duden</h1>
+                <p className="text-muted-foreground">Verwalten Sie hier den essenziellen Wortschatz für den Weltbürger.</p>
+            </header>
+            <PalabrotasClient initialData={palabrotas} />
+        </div>
+    );
 }
