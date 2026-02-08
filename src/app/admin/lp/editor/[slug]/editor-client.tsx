@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Save, ArrowLeft, Code, Eye } from "lucide-react";
+import { Loader2, Save, Code, Eye } from "lucide-react";
 import { CodeEditor } from "@/components/admin/code-editor";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -35,7 +35,6 @@ function generateHtml(page: Partial<LandingPage>) {
 }
 
 export function LpEditorClient({ page }: { page?: LandingPage }) {
-    const router = useRouter();
     const { toast } = useToast();
     const isNew = !page;
 
@@ -56,17 +55,21 @@ export function LpEditorClient({ page }: { page?: LandingPage }) {
     useEffect(() => {
         if (state.success) {
             toast({ title: "Erfolg!", description: state.message });
-            if (isNew && state.newSlug) {
-                router.push(`/admin/lp/editor/${state.newSlug}`);
-            } else {
-                router.push(`/admin/lp`);
-            }
-            router.refresh();
+            
+            const timer = setTimeout(() => {
+                if (isNew && state.newSlug) {
+                    window.location.href = `/admin/lp/editor/${state.newSlug}`;
+                } else {
+                    window.location.href = '/admin/lp';
+                }
+            }, 500);
+            
+            return () => clearTimeout(timer);
         }
         if (state.error) {
             toast({ variant: "destructive", title: "Fehler", description: state.error });
         }
-    }, [state, toast, router, isNew]);
+    }, [state, isNew]);
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newTitle = e.target.value;
@@ -87,7 +90,7 @@ export function LpEditorClient({ page }: { page?: LandingPage }) {
                 </div>
                 <div className="space-y-2">
                     <Label htmlFor="slug">Slug (URL-Pfad unter /lp/)</Label>
-                    <Input id="slug" name="slug" value={slug} onChange={(e) => setSlug(e.target.value)} required />
+                    <Input id="slug" name="slug" value={slug} onChange={(e) => setSlug(e.target.value)} required readOnly={!isNew}/>
                 </div>
             </div>
 

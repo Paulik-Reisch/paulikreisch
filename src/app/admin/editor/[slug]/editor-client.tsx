@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect, useActionState, useTransition } from "react";
+import { useState, useEffect, useActionState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { type Article } from "@/lib/firestore";
@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Save, ArrowLeft } from "lucide-react";
+import { Loader2, Save } from "lucide-react";
 import { CodeEditor } from "@/components/admin/code-editor";
 
 const initialState: ArticleActionState = { success: false, error: null };
@@ -30,19 +30,23 @@ export function ArticleEditorClient({ article }: { article?: Article }) {
   useEffect(() => {
     if (state.success) {
       toast({ title: "Erfolg!", description: state.message });
-      if (isNew && state.newSlug) {
-        router.push(`/admin/articles/edit/${state.newSlug}`);
-      } else if (!isNew) {
-        router.push(`/admin/articles/edit/${slug}`);
-        router.refresh();
-      } else {
-        router.push('/admin');
-      }
+      
+      const timer = setTimeout(() => {
+        if (isNew && state.newSlug) {
+          // Full page navigation to ensure session is correctly handled on the server.
+          window.location.href = `/admin/editor/${state.newSlug}`;
+        } else if (!isNew) {
+          // A full reload ensures data is fresh, especially if slug was editable.
+          window.location.reload();
+        }
+      }, 500); // Delay to allow toast to be visible.
+      
+      return () => clearTimeout(timer);
     }
     if (state.error) {
       toast({ variant: "destructive", title: "Fehler", description: state.error });
     }
-  }, [state, toast, router, isNew, slug]);
+  }, [state, isNew]);
   
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (isNew) {
@@ -54,7 +58,7 @@ export function ArticleEditorClient({ article }: { article?: Article }) {
 
   return (
     <form action={formAction} className="space-y-6">
-      {!isNew && <input type="hidden" name="originalSlug" value={article.id} />}
+      {!isNew && <input type="hidden" name="originalSlug" value={article.slug} />}
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
@@ -63,7 +67,7 @@ export function ArticleEditorClient({ article }: { article?: Article }) {
         </div>
         <div className="space-y-2">
           <Label htmlFor="slug">Slug (URL-Pfad)</Label>
-          <Input id="slug" name="slug" value={slug} onChange={(e) => setSlug(e.target.value)} required />
+          <Input id="slug" name="slug" value={slug} onChange={(e) => setSlug(e.target.value)} required readOnly={!isNew} />
         </div>
       </div>
       
