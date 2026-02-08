@@ -11,8 +11,8 @@ export function Typewriter({ texts }: TypewriterProps) {
   const [subIndex, setSubIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const typeSpeed = 100;
-  const deleteSpeed = 50;
+  const typeSpeed = 80;
+  const deleteSpeed = 40;
   const delay = 2000;
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export function Typewriter({ texts }: TypewriterProps) {
     }, delay);
     return () => clearTimeout(timeoutId);
     
-  }, [subIndex, isDeleting, textIndex, texts]);
+  }, [subIndex, isDeleting, textIndex, texts, deleteSpeed, typeSpeed]);
 
   return (
     <>
