@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Logo } from "../ui/logo";
-import { PremiumBanner } from "./premium-banner";
 
 export function Header() {
   return (

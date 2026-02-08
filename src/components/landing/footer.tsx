@@ -34,13 +34,6 @@ export function Footer() {
   const [state, formAction] = useActionState(subscribeToNewsletterAction, initialNewsletterState);
   const { toast } = useToast();
 
-  const premiumUrl = createTrackedUrl(
-    'https://premium.paulik-reisch.de/',
-    'premium-footer-link',
-    'organic_footer',
-    'footer_main_website'
-  );
-
   useEffect(() => {
     if (state.success) {
       toast({ title: "Fast geschafft!", description: state.message });
@@ -67,7 +60,6 @@ export function Footer() {
           <div className="text-center md:text-left">
             <h3 className="text-sm font-bold uppercase text-gray-500 mb-5 tracking-wider">Entdecken</h3>
             <ul className="space-y-3">
-              <li><a href={premiumUrl} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-[#f08e6c] text-[15px]">Premium Satire</a></li>
               <li><Link href="/ueber/autoren" className="text-gray-600 hover:text-[#f08e6c] text-[15px]">Über die Autoren</Link></li>
             </ul>
           </div>

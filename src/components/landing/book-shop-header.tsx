@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
 import { Logo } from "../ui/logo";
-import { PremiumBanner } from "./premium-banner";
 
 
 export function BookShopHeader() {
