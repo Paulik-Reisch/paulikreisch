@@ -48,6 +48,14 @@ function NewsletterSection() {
 }
 
 export default function ShopPage() {
+    useEffect(() => {
+        document.body.classList.add('shop-page');
+        // Cleanup function to remove the class when the component unmounts
+        return () => {
+          document.body.classList.remove('shop-page');
+        };
+    }, []);
+
     return (
         <>
             <header>
