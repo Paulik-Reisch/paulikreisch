@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from 'next/navigation';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +16,7 @@ import {
   Percent,
   Link as LinkIcon,
   Copy,
+  TrendingUp,
 } from "lucide-react";
 import {
   ChartContainer,
@@ -40,15 +42,29 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+type TrackingData = {
+    source: string | null;
+    medium: string | null;
+    campaign: string | null;
+    content: string | null;
+    term: string | null;
+}
 
 export function AnalyticsClient() {
   const { toast } = useToast();
+  const searchParams = useSearchParams();
+
+  // State for UTM Link Generator
   const [baseUrl, setBaseUrl] = useState("https://paulik-reisch.de");
   const [campaign, setCampaign] = useState("");
   const [medium, setMedium] = useState("");
   const [content, setContent] = useState("");
   const [generatedUrl, setGeneratedUrl] = useState("");
+  
+  // State for session tracking
+  const [trackingData, setTrackingData] = useState<TrackingData | null>(null);
 
+  // Effect for UTM Generator
   useEffect(() => {
     if (baseUrl && campaign && medium) {
         const url = createTrackedUrl(baseUrl, campaign, medium, content);
@@ -57,6 +73,20 @@ export function AnalyticsClient() {
         setGeneratedUrl("");
     }
   }, [baseUrl, campaign, medium, content]);
+  
+  // Effect for Session Tracking
+  useEffect(() => {
+    const data: TrackingData = {
+        source: searchParams.get('utm_source'),
+        medium: searchParams.get('utm_medium'),
+        campaign: searchParams.get('utm_campaign'),
+        content: searchParams.get('utm_content'),
+        term: searchParams.get('utm_term'),
+    };
+    if (data.source || data.medium || data.campaign) {
+        setTrackingData(data);
+    }
+  }, [searchParams]);
 
   const copyToClipboard = () => {
     if (generatedUrl) {
@@ -114,9 +144,9 @@ export function AnalyticsClient() {
         </Card>
       </div>
 
-      {/* Chart and Link Generator */}
-      <div className="grid gap-8 md:grid-cols-2">
-        <Card>
+      {/* Main Grid */}
+      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>Seitenaufrufe</CardTitle>
             <CardDescription>Letzte 6 Monate</CardDescription>
@@ -146,28 +176,69 @@ export function AnalyticsClient() {
           </CardContent>
         </Card>
 
+        {trackingData ? (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2"><TrendingUp className="h-5 w-5 text-primary" /> Kampagnen-Tracking</CardTitle>
+              <CardDescription>Daten der aktuellen Sitzung.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm">
+                <div>
+                    <p className="font-semibold text-primary">{trackingData.campaign || '(nicht gesetzt)'}</p>
+                    <p className="text-xs text-muted-foreground">Kampagne</p>
+                </div>
+                 <div>
+                    <p className="font-medium">{trackingData.medium || '(nicht gesetzt)'}</p>
+                    <p className="text-xs text-muted-foreground">Medium</p>
+                </div>
+                <div>
+                    <p className="font-medium">{trackingData.source || '(nicht gesetzt)'}</p>
+                    <p className="text-xs text-muted-foreground">Quelle</p>
+                </div>
+                 <div>
+                    <p className="font-medium">{trackingData.content || '(nicht gesetzt)'}</p>
+                    <p className="text-xs text-muted-foreground">Inhalt</p>
+                </div>
+            </CardContent>
+          </Card>
+        ) : (
+             <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2"><TrendingUp className="h-5 w-5 text-muted-foreground" /> Kampagnen-Tracking</CardTitle>
+                    <CardDescription>Daten der aktuellen Sitzung.</CardDescription>
+                </CardHeader>
+                <CardContent className="flex items-center justify-center h-48">
+                    <p className="text-sm text-muted-foreground text-center">Keine aktiven Kampagnenparameter in dieser Sitzung.</p>
+                </CardContent>
+             </Card>
+        )}
+      </div>
+      
+      <div>
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2"><LinkIcon className="h-5 w-5" /> UTM-Link-Generator</CardTitle>
             <CardDescription>Erstellen Sie nachverfolgbare Links für Ihre Kampagnen.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="space-y-2">
-                <Label htmlFor="base-url">Basis-URL</Label>
-                <Input id="base-url" value={baseUrl} onChange={(e) => setBaseUrl(e.target.value)} placeholder="https://paulik-reisch.de/..." />
-            </div>
-             <div className="space-y-2">
-                <Label htmlFor="campaign">Kampagne (utm_campaign)</Label>
-                <Input id="campaign" value={campaign} onChange={(e) => setCampaign(e.target.value)} placeholder="z.B. sommer-aktion" required />
-            </div>
-             <div className="space-y-2">
-                <Label htmlFor="medium">Medium (utm_medium)</Label>
-                <Input id="medium" value={medium} onChange={(e) => setMedium(e.target.value)} placeholder="z.B. social, email" required />
-            </div>
-             <div className="space-y-2">
-                <Label htmlFor="content">Inhalt (utm_content, optional)</Label>
-                <Input id="content" value={content} onChange={(e) => setContent(e.target.value)} placeholder="z.B. post-1, header-link" />
-            </div>
+             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="space-y-2 lg:col-span-2">
+                    <Label htmlFor="base-url">Basis-URL</Label>
+                    <Input id="base-url" value={baseUrl} onChange={(e) => setBaseUrl(e.target.value)} placeholder="https://paulik-reisch.de/..." />
+                </div>
+                 <div className="space-y-2">
+                    <Label htmlFor="campaign">Kampagne (utm_campaign)</Label>
+                    <Input id="campaign" value={campaign} onChange={(e) => setCampaign(e.target.value)} placeholder="z.B. sommer-aktion" required />
+                </div>
+                 <div className="space-y-2">
+                    <Label htmlFor="medium">Medium (utm_medium)</Label>
+                    <Input id="medium" value={medium} onChange={(e) => setMedium(e.target.value)} placeholder="z.B. social, email" required />
+                </div>
+                 <div className="space-y-2 lg:col-span-2">
+                    <Label htmlFor="content">Inhalt (utm_content, optional)</Label>
+                    <Input id="content" value={content} onChange={(e) => setContent(e.target.value)} placeholder="z.B. post-1, header-link" />
+                </div>
+             </div>
             {generatedUrl && (
                 <div className="space-y-2 pt-2">
                     <Label>Generierter Link</Label>
@@ -180,6 +251,7 @@ export function AnalyticsClient() {
           </CardContent>
         </Card>
       </div>
+
     </div>
   );
 }
