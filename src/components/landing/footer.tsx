@@ -13,8 +13,15 @@ import { Logo } from "../ui/logo";
 import { createTrackedUrl } from "@/lib/utils";
 import { useUser } from "@/firebase/provider";
 import { usePathname } from "next/navigation";
+import { AmazonIcon } from '@/components/ui/icons/amazon-icon';
+import { GooglePlayIcon } from '@/components/ui/icons/google-play-icon';
+import { ElevenReaderIcon } from '@/components/ui/icons/eleven-reader-icon';
 
 const initialNewsletterState = { success: undefined, error: undefined, message: undefined };
+
+const amazonLink = "https://amzn.eu/d/0CdFeZ3";
+const googlePlayLink = "https://play.google.com/store/books/details?id=HZb3EAAAQBAJ&rdid=book-HZb3EAAAQBAJ&rdot=1&source=gbs_atb&pcampaignid=books_booksearch_atb";
+const elevenReaderLink = "https://elevenreader.io/audiobooks/hallo-welt/PNgTk712as4goF7HwxJJ";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -73,6 +80,27 @@ export function Footer() {
             <ul className="space-y-3">
               <li><Link href="/ueber/autoren" className="text-gray-600 hover:text-[#f08e6c] text-[15px]">Über die Autoren</Link></li>
             </ul>
+             <h3 className="text-sm font-bold uppercase text-gray-500 mb-4 mt-8 tracking-wider">Buch kaufen</h3>
+              <div className="space-y-2 flex flex-col items-center md:items-start">
+                  <a href={amazonLink} target="_blank" rel="noopener noreferrer" className="w-full max-w-[200px]">
+                      <Button variant="secondary" className="w-full justify-start gap-2">
+                          <AmazonIcon className="h-4 w-4"/>
+                          <span>Amazon</span>
+                      </Button>
+                  </a>
+                  <a href={googlePlayLink} target="_blank" rel="noopener noreferrer" className="w-full max-w-[200px]">
+                      <Button variant="outline" className="w-full justify-start gap-2">
+                          <GooglePlayIcon className="h-4 w-4"/>
+                          <span>Google Play</span>
+                      </Button>
+                  </a>
+                  <a href={elevenReaderLink} target="_blank" rel="noopener noreferrer" className="w-full max-w-[200px]">
+                      <Button variant="outline" className="w-full justify-start gap-2">
+                          <ElevenReaderIcon className="h-4 w-4"/>
+                          <span>11Reader</span>
+                      </Button>
+                  </a>
+              </div>
           </div>
 
           {/* Contact Column */}

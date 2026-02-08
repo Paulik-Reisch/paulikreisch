@@ -5,6 +5,15 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Logo } from "../ui/logo";
 import { cn } from '@/lib/utils';
+import { AmazonIcon } from '@/components/ui/icons/amazon-icon';
+import { GooglePlayIcon } from '@/components/ui/icons/google-play-icon';
+import { ElevenReaderIcon } from '@/components/ui/icons/eleven-reader-icon';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+
+const amazonLink = "https://amzn.eu/d/0CdFeZ3";
+const googlePlayLink = "https://play.google.com/store/books/details?id=HZb3EAAAQBAJ&rdid=book-HZb3EAAAQBAJ&rdot=1&source=gbs_atb&pcampaignid=books_booksearch_atb";
+const elevenReaderLink = "https://elevenreader.io/audiobooks/hallo-welt/PNgTk712as4goF7HwxJJ";
+
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -33,11 +42,48 @@ export function Header() {
           </div>
         </a>
         
-        <Link href="/buchhandlung-paulik-reisch">
-            <Button size="sm" variant="secondary">
-                Buch kaufen
-            </Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link href={amazonLink} target="_blank" rel="noopener noreferrer" aria-label="Bei Amazon kaufen">
+                    <Button size="icon" variant="secondary">
+                        <AmazonIcon className="h-5 w-5" />
+                    </Button>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Bei Amazon kaufen</p>
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link href={googlePlayLink} target="_blank" rel="noopener noreferrer" aria-label="Bei Google Play kaufen">
+                    <Button size="icon" variant="outline">
+                        <GooglePlayIcon className="h-5 w-5" />
+                    </Button>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Bei Google Play kaufen</p>
+              </TooltipContent>
+            </Tooltip>
+
+             <Tooltip>
+              <TooltipTrigger asChild>
+                <Link href={elevenReaderLink} target="_blank" rel="noopener noreferrer" aria-label="Auf 11Reader hören">
+                     <Button size="icon" variant="outline">
+                        <ElevenReaderIcon className="h-4 w-4" />
+                    </Button>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Auf 11Reader hören</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
 
       </div>
     </header>
