@@ -488,10 +488,7 @@ export async function updateLegalPage(pageId: string, data: Partial<Omit<LegalPa
 }
 
 // --- LANDING PAGES ---
-const defaultLandingPages: Omit<LandingPage, 'id' | 'lastUpdated'>[] = [
-    { slug: 'welcome-offer', title: 'Willkommensangebot Frühling 2024', htmlContent: '<h1>Willkommen!</h1>', cssContent: 'h1 { color: blue; }', jsContent: 'console.log("Welcome!");' },
-    { slug: 'product-launch-x', title: 'Produktlaunch X', htmlContent: '<h1>Produkt X ist da!</h1>', cssContent: 'h1 { font-family: sans-serif; }', jsContent: 'alert("Produkt X");' },
-];
+const defaultLandingPages: Omit<LandingPage, 'id' | 'lastUpdated'>[] = [];
 
 
 async function initializeLandingPages() {
@@ -894,5 +891,7 @@ export async function updateSeoMetadata(slug: string, data: Partial<SeoMetadata>
     await setDoc(docRef, data, { merge: true });
     await addLog(user, 'SEO Metadaten aktualisiert', `Seite: ${slug}`);
 }
+
+    
 
     
