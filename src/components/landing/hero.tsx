@@ -41,7 +41,7 @@ export function Hero({ product }: { product?: Product }) {
       className="relative w-full flex items-center justify-center min-h-[calc(100vh-100px)] py-12"
     >
       <div className="container px-4 md:px-6">
-        <div className="grid items-center gap-6 md:grid-cols-2 lg:gap-12">
+        <div className="flex flex-col-reverse md:grid items-center gap-6 md:grid-cols-2 lg:gap-12">
           <div className="flex flex-col justify-center space-y-8 text-center md:text-left">
             <div className="space-y-4 min-h-[12rem] flex flex-col justify-center animate-in fade-in slide-in-from-top-12 duration-1000">
                 <h1 id="main-hero-heading" className="font-headline text-3xl sm:text-4xl md:text-5xl xl:text-7xl/none text-balance">
@@ -71,7 +71,7 @@ export function Hero({ product }: { product?: Product }) {
         </div>
       </div>
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:block">
-        <a href="#topic-lps" aria-label="Nach unten scrollen">
+        <a href="#articles" aria-label="Nach unten scrollen">
           <ChevronDown className="h-8 w-8 text-muted-foreground animate-bounce" />
         </a>
       </div>
