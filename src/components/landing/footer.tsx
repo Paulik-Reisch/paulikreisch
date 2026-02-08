@@ -69,19 +69,19 @@ export function Footer() {
         <div className="container mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1fr_1fr_1.5fr_1.5fr] gap-10">
           
           {/* Brand Column */}
-          <div className="flex flex-col items-center md:items-start text-center md:text-left">
+          <div className="flex flex-col items-start text-left">
             <Logo className="w-36 h-auto mb-5 text-black" />
             <p className="font-bold">Paulik und Reisch</p>
           </div>
 
           {/* Navigation Column */}
-          <div className="text-center md:text-left">
+          <div className="text-left">
             <h3 className="text-sm font-bold uppercase text-gray-500 mb-5 tracking-wider">Entdecken</h3>
             <ul className="space-y-3">
               <li><Link href="/ueber/autoren" className="text-gray-600 hover:text-[#f08e6c] text-[15px]">Über die Autoren</Link></li>
             </ul>
              <h3 className="text-sm font-bold uppercase text-gray-500 mb-4 mt-8 tracking-wider">Buch kaufen</h3>
-              <div className="space-y-2 flex flex-col items-center md:items-start">
+              <div className="space-y-2 flex flex-col items-start">
                   <a href={amazonLink} target="_blank" rel="noopener noreferrer" className="w-full max-w-[200px]">
                       <Button variant="secondary" className="w-full justify-start gap-2">
                           <AmazonIcon className="h-4 w-4"/>
@@ -104,7 +104,7 @@ export function Footer() {
           </div>
 
           {/* Contact Column */}
-          <div className="text-center md:text-left">
+          <div className="text-left">
             <h3 className="text-sm font-bold uppercase text-gray-500 mb-5 tracking-wider">Kontakt</h3>
             <div className="text-[15px] text-gray-600 space-y-3">
               <p>
@@ -117,12 +117,12 @@ export function Footer() {
           </div>
 
           {/* Newsletter Column */}
-          <div className="text-center md:text-left">
+          <div className="text-left">
             <h3 className="text-sm font-bold uppercase text-gray-500 mb-5 tracking-wider">Stay Connected</h3>
             <p className="text-[15px] text-gray-600 mb-5">
               Werde Teil der Paulik & Reisch Familie und erhalte Updates zu neuen Büchern und Events.
             </p>
-            <form ref={formRef} action={formAction} className="flex flex-col gap-2.5 items-center md:items-start">
+            <form ref={formRef} action={formAction} className="flex flex-col gap-2.5 items-start">
               <Input type="email" name="email" placeholder="E-Mail eingeben" className="bg-white border-gray-300 rounded-sm" required />
               <input type="hidden" name="source" value="main-footer" />
               <SubmitButton />
@@ -136,7 +136,7 @@ export function Footer() {
       <div className="bg-muted text-muted-foreground py-10 px-5 text-xs">
         <div className="container mx-auto max-w-7xl flex flex-col md:flex-row justify-between items-center md:items-start gap-10 text-left">
           
-          <div className="md:flex-2 max-w-3xl opacity-90 leading-relaxed">
+          <div className="md:flex-2 max-w-3xl opacity-90 leading-relaxed text-left">
             <p>Die satirische "Hallo Welt"-Bücherserie ist eine Idee und Kreation von Philipp Paulik (Autor), Maximilian Reisch (Autor), Luin Schiffbauer (Illustrator) und weiteren Mitwirkenden. Veröffentlicht und produziert durch Kindle Direct Publishing (KDP) der Amazon Distribution GmbH, Leipzig sowie ggf. weitere Verlags- und Produktionspartnern.</p>
             <br/>
             <p>Amazon Media EU S.à r.l. (registrierter Verkäufer von digitalen Inhalten, die mit "Verkauf durch Amazon Media EU SARL" gekennzeichnet sind.<br/>
