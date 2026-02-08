@@ -81,6 +81,19 @@
         "isFree": { "type": "boolean" }
       },
       "required": ["title", "slug", "category", "imageUrl", "teaser", "content", "readTime", "publishedDate", "isFree"]
+    },
+    "LandingPage": {
+      "title": "Landing Page",
+      "type": "object",
+      "description": "A standalone landing page with custom HTML, CSS, and JS.",
+      "properties": {
+        "slug": { "type": "string" },
+        "title": { "type": "string" },
+        "htmlContent": { "type": "string" },
+        "cssContent": { "type": "string" },
+        "jsContent": { "type": "string" }
+      },
+      "required": ["slug", "title"]
     }
   },
   "auth": {
@@ -100,6 +113,12 @@
         "$ref": "#/entities/Article"
       },
       "description": "Collection of premium satire articles."
+    },
+    "/landing_pages/{lpId}": {
+      "schema": {
+        "$ref": "#/entities/LandingPage"
+      },
+      "description": "Collection of standalone landing pages."
     }
   }
 }

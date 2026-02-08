@@ -188,6 +188,16 @@ export interface Article {
     isFree: boolean;
 }
 
+export interface LandingPage {
+    id: string;
+    slug: string;
+    title: string;
+    lastUpdated: string;
+    htmlContent?: string;
+    cssContent?: string;
+    jsContent?: string;
+}
+
 
 
 const db = getFirestore(app);
@@ -475,6 +485,44 @@ export async function updateLegalPage(pageId: string, data: Partial<Omit<LegalPa
         lastUpdated: Timestamp.now(),
     });
     await addLog(user, 'LP aktualisiert', `Seite: /${pageId}`);
+}
+
+// --- LANDING PAGES ---
+const defaultLandingPages: Omit<LandingPage, 'id' | 'lastUpdated'>[] = [
+    { slug: 'welcome-offer', title: 'Willkommensangebot Frühling 2024', htmlContent: '<h1>Willkommen!</h1>', cssContent: 'h1 { color: blue; }', jsContent: 'console.log("Welcome!");' },
+    { slug: 'product-launch-x', title: 'Produktlaunch X', htmlContent: '<h1>Produkt X ist da!</h1>', cssContent: 'h1 { font-family: sans-serif; }', jsContent: 'alert("Produkt X");' },
+];
+
+
+async function initializeLandingPages() {
+    const lpCol = collection(db, 'landing_pages');
+    const snapshot = await getDocs(query(lpCol));
+    if (snapshot.empty) {
+        const batch = writeBatch(db);
+        console.log("Initializing default landing pages...");
+        defaultLandingPages.forEach(lpData => {
+            const docRef = doc(lpCol, lpData.slug);
+            batch.set(docRef, { ...lpData, lastUpdated: Timestamp.now() });
+        });
+        await batch.commit();
+        console.log("Default landing pages initialized.");
+    }
+}
+
+export async function getLandingPages(): Promise<LandingPage[]> {
+    await initializeLandingPages();
+    const lpCol = collection(db, 'landing_pages');
+    const q = query(lpCol, orderBy("title", "asc"));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+            id: doc.id,
+            slug: doc.id,
+            ...data,
+            lastUpdated: (data.lastUpdated as Timestamp).toDate().toISOString(),
+        } as LandingPage;
+    });
 }
 
 
