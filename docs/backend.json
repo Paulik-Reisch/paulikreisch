@@ -63,6 +63,24 @@
         "album",
         "vibe"
       ]
+    },
+    "Article": {
+      "title": "Article",
+      "type": "object",
+      "description": "A satirical article for the premium section.",
+      "properties": {
+        "title": { "type": "string" },
+        "slug": { "type": "string" },
+        "category": { "type": "string" },
+        "imageUrl": { "type": "string", "format": "uri" },
+        "imageAlt": { "type": "string" },
+        "teaser": { "type": "string" },
+        "content": { "type": "string" },
+        "readTime": { "type": "number", "description": "Reading time in minutes" },
+        "publishedDate": { "type": "string", "format": "date-time" },
+        "isFree": { "type": "boolean" }
+      },
+      "required": ["title", "slug", "category", "imageUrl", "teaser", "content", "readTime", "publishedDate", "isFree"]
     }
   },
   "auth": {
@@ -76,6 +94,12 @@
         "$ref": "#/entities/Track"
       },
       "description": "Collection of music tracks. Accessible only to authenticated admins for management."
+    },
+    "/articles/{articleId}": {
+      "schema": {
+        "$ref": "#/entities/Article"
+      },
+      "description": "Collection of premium satire articles."
     }
   }
 }

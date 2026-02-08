@@ -1,24 +1,6 @@
 
-import { Header } from "@/components/landing/header";
-import { Footer } from "@/components/landing/footer";
-import { HeroBusfahrenMutprobe } from "@/components/landing/hero-busfahren-mutprobe";
-import { BusRidersGallery } from "@/components/landing/BusRidersGallery";
-import { DelayCalculator } from "@/components/landing/DelayCalculator";
-import { BusCTA } from "@/components/landing/BusCTA";
-import { BusStatistics } from "@/components/landing/BusStatistics";
+import { notFound } from "next/navigation";
 
 export default function BusfahrenMutprobePage() {
-  return (
-    <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
-      <Header />
-      <main className="flex-1">
-        <HeroBusfahrenMutprobe />
-        <BusRidersGallery />
-        <DelayCalculator />
-        <BusStatistics />
-        <BusCTA />
-      </main>
-      <Footer />
-    </div>
-  );
+  notFound();
 }

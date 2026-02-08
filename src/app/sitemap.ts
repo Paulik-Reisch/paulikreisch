@@ -1,11 +1,20 @@
 import { MetadataRoute } from 'next';
-import { getLegalPages, getPublishedExcerpts } from '@/lib/firestore';
+import { getLegalPages, getPublishedExcerpts, getArticles } from '@/lib/firestore';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://paulik-reisch.de';
 
   // 1. Get dynamic pages from Firestore
-  const legalPages = await getLegalPages();
+  const legalPagesPromise = getLegalPages();
+  const excerptsPromise = getPublishedExcerpts();
+  const articlesPromise = getArticles();
+
+  const [legalPages, excerpts, articles] = await Promise.all([
+    legalPagesPromise,
+    excerptsPromise,
+    articlesPromise,
+  ]);
+  
   const legalPageUrls = legalPages.map(page => ({
     url: `${baseUrl}/${page.id}`,
     lastModified: new Date(page.lastUpdated),
@@ -13,12 +22,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
-  const excerpts = await getPublishedExcerpts();
   const excerptUrls = excerpts.map(excerpt => ({
     url: `${baseUrl}/exzerpt/${excerpt.slug}`,
     lastModified: new Date(excerpt.lastUpdated),
     changeFrequency: 'weekly' as const,
     priority: 0.7,
+  }));
+
+  const articleUrls = articles.map(article => ({
+    url: `${baseUrl}/a/${article.slug}`,
+    lastModified: new Date(article.publishedDate),
+    changeFrequency: 'weekly' as const,
+    priority: 0.8,
   }));
   
   // 2. Define static pages
@@ -34,16 +49,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/lp-risitas/legales',
     '/lp-luin',
     '/exzerpte',
-    '/lp-schule-straflager',
-    '/lp-lehrer-roboter',
-    '/lp-mensa-todesfalle',
-    '/lp-busfahren-mutprobe',
-    '/lp-sport-ist-mord',
-    '/lp-schulzeiten-genickbruch',
-    '/lp-corona-satire',
-    '/lp-buerokratie-simulator',
-    '/lp-beamten-wartezeiten-simulator',
-    '/lp-mietenwahnsinn',
     '/lp-palabrotas',
     '/lp-palabrotas/mehr-erfahren',
     '/vibecoding/anleitung',
@@ -65,5 +70,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
 
   // 3. Combine all URLs
-  return [...staticPageUrls, ...legalPageUrls, ...excerptUrls];
+  return [...staticPageUrls, ...legalPageUrls, ...excerptUrls, ...articleUrls];
 }

@@ -174,8 +174,105 @@ export interface SeoMetadata {
   citationData?: string;
 }
 
+export interface Article {
+    id: string;
+    title: string;
+    slug: string;
+    category: string;
+    imageUrl: string;
+    imageAlt: string;
+    teaser: string;
+    content: string;
+    readTime: number; // in minutes
+    publishedDate: string;
+    isFree: boolean;
+}
+
+
 
 const db = getFirestore(app);
+
+// --- ARTICLES ---
+const defaultArticles: Omit<Article, 'id' | 'publishedDate'>[] = [
+    {
+        slug: 'der-unertraegliche-charme-der-buerokratie',
+        title: 'Der unerträgliche Charme der Bürokratie',
+        category: 'Gesellschaft',
+        imageUrl: 'https://picsum.photos/seed/buro/800/600',
+        imageAlt: 'Ein riesiger Stapel Papierkram',
+        teaser: 'Warum das Ausfüllen von Formularen in dreifacher Ausfertigung die wahre deutsche Nationalsportart ist und wie Sie darin zur Meisterschaft gelangen.',
+        content: '<p>Der vollständige Artikel über den Charme der Bürokratie...</p>',
+        readTime: 5,
+        isFree: true,
+    },
+    {
+        slug: 'warum-ihr-drucker-sie-hasst',
+        title: 'Warum Ihr Drucker Sie hasst: Eine psychologische Analyse',
+        category: 'Technik',
+        imageUrl: 'https://picsum.photos/seed/drucker/800/600',
+        imageAlt: 'Ein Drucker, der in Flammen steht',
+        teaser: 'Tinte leer? Papierstau? Wir decken die geheime Verschwörung der Druckerindustrie auf. Es ist schlimmer, als Sie denken.',
+        content: '<p>Der vollständige Artikel über hasserfüllte Drucker...</p>',
+        readTime: 4,
+        isFree: true,
+    },
+    {
+        slug: 'die-kunst-des-prokrastinierens',
+        title: 'Die Kunst des Prokrastinierens: Ein Leitfaden für Fortgeschrittene',
+        category: 'Lebenshilfe',
+        imageUrl: 'https://picsum.photos/seed/prokrastination/800/600',
+        imageAlt: 'Eine Person, die entspannt auf einem Sofa liegt, während Arbeit wartet',
+        teaser: 'Verschieben Sie nicht auf morgen, was Sie auch nächste Woche noch ignorieren können. Tipps und Tricks vom Meister des Aufschubs.',
+        content: '<p>Der vollständige Artikel über das Prokrastinieren...</p>',
+        readTime: 6,
+        isFree: true,
+    },
+];
+
+async function initializeArticles() {
+    const articlesCol = collection(db, 'articles');
+    const snapshot = await getDocs(query(articlesCol));
+    if (snapshot.empty) {
+        const batch = writeBatch(db);
+        console.log("Initializing default articles...");
+        defaultArticles.forEach(articleData => {
+            const docRef = doc(articlesCol, articleData.slug);
+            batch.set(docRef, { ...articleData, publishedDate: Timestamp.now() });
+        });
+        await batch.commit();
+        console.log("Default articles initialized.");
+    }
+}
+
+export async function getArticles(): Promise<Article[]> {
+    await initializeArticles();
+    const articlesCol = collection(db, 'articles');
+    const q = query(articlesCol, orderBy("publishedDate", "desc"));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+            id: doc.id,
+            ...data,
+            publishedDate: (data.publishedDate as Timestamp).toDate().toISOString(),
+        } as Article;
+    });
+}
+
+export async function getArticleBySlug(slug: string): Promise<Article | null> {
+    const docRef = doc(db, 'articles', slug);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        const data = docSnap.data();
+        return {
+            id: docSnap.id,
+            ...data,
+            publishedDate: (data.publishedDate as Timestamp).toDate().toISOString(),
+        } as Article;
+    }
+    return null;
+}
+
 
 // --- COUNTDOWN ---
 export async function getCountdownTarget(): Promise<Date> {
@@ -387,7 +484,7 @@ export async function getNewsletter(id: string): Promise<Newsletter | null> {
     }
 }
 
-export async function addNewsletter(data: { name: string; subject: string }) {
+export async function addNewsletter(data: { name: string; subject: string }, user: string) {
     const newslettersCol = collection(db, 'newsletters');
     const docRef = await addDoc(newslettersCol, {
         ...data,
@@ -397,6 +494,7 @@ export async function addNewsletter(data: { name: string; subject: string }) {
         useWrapper: true,
         isLive: false,
     });
+    await addLog(user, 'Newsletter erstellt', `Name: ${data.name}`);
     return docRef.id;
 }
 
