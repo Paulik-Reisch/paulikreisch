@@ -2,11 +2,33 @@ import { ArrowRight, Calendar, Clock } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
-import { getArticles, type Article } from "@/lib/firestore";
+import { type Article } from "@/lib/firestore";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
+
+const mockArticles: Article[] = Array.from({ length: 20 }).map((_, i) => ({
+    id: `mock-${i}`,
+    slug: `mock-article-${i + 1}`,
+    title: `Der ${i + 1}. Kreis der Büro-Hölle`,
+    category: i % 3 === 0 ? 'Gesellschaft' : i % 3 === 1 ? 'Technik' : 'Lebenshilfe',
+    imageUrl: `https://picsum.photos/seed/article-carousel-${i}/800/450`,
+    imageAlt: `Ein satirisches Bild zum ${i + 1}. Artikel`,
+    teaser: 'Ein weiterer Tag, ein weiterer absurder Kampf gegen die Tücken des Alltags, von rebellischen Druckern bis zu philosophierenden Toastern.',
+    content: '<p>Voller Inhalt...</p>',
+    readTime: Math.floor(Math.random() * (7 - 3 + 1)) + 3,
+    publishedDate: new Date().toISOString(),
+    isFree: true,
+}));
+
 
 function ArticleCard({ article }: { article: Article }) {
   return (
@@ -60,8 +82,6 @@ function ArticleCard({ article }: { article: Article }) {
 
 
 export async function ArticleSection() {
-  const articles = await getArticles();
-
   return (
     <section id="articles" aria-labelledby="articles-heading" className="w-full py-20 md:py-24 lg:py-32 bg-background text-foreground">
       <div className="container px-4 md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
@@ -74,11 +94,26 @@ export async function ArticleSection() {
           </div>
         </div>
         
-        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-3">
-            {articles.map((article) => (
-                <ArticleCard key={article.id} article={article} />
+        <Carousel 
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+          className="w-full max-w-7xl mx-auto"
+        >
+          <CarouselContent>
+            {mockArticles.map((article) => (
+              <CarouselItem key={article.id} className="md:basis-1/2 lg:basis-1/3">
+                <div className="p-1 h-full">
+                  <ArticleCard article={article} />
+                </div>
+              </CarouselItem>
             ))}
-        </div>
+          </CarouselContent>
+          <CarouselPrevious className="hidden sm:flex -left-4 md:-left-12" />
+          <CarouselNext className="hidden sm:flex -right-4 md:-right-12" />
+        </Carousel>
+
       </div>
     </section>
   );

@@ -1,17 +1,65 @@
 import Link from 'next/link';
 import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Clock } from 'lucide-react';
+import { ArrowRight, Clock, Calendar } from 'lucide-react';
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { format } from 'date-fns';
+import { de } from 'date-fns/locale';
 
+// Keep the same mock data structure
 const mockArticles = Array.from({ length: 30 }).map((_, i) => ({
   id: `mock-article-${i + 1}`,
   title: `Die ${i + 1}. Stufe des Wahnsinns`,
-  slug: `/a`,
+  slug: `/a/mock-article-${i + 1}`, // Assuming a slug structure
+  category: i % 3 === 0 ? 'Gesellschaft' : i % 3 === 1 ? 'Technik' : 'Lebenshilfe',
   imageUrl: `https://picsum.photos/seed/article${i+1}/500/${Math.floor(Math.random() * (600 - 400 + 1)) + 400}`,
   aiHint: 'satire humor article',
   teaser: 'Ein kurzer, bissiger Teaser-Text, der neugierig auf den absurden Inhalt des Artikels macht.',
   readTime: Math.floor(Math.random() * (8 - 3 + 1)) + 3,
+  publishedDate: new Date().toISOString(),
 }));
+
+function PinterestArticleCard({ article }: { article: typeof mockArticles[0] }) {
+  return (
+    <Card className="flex flex-col h-full overflow-hidden group break-inside-avoid">
+      <Link href={article.slug} className="block overflow-hidden">
+        <Image
+          src={article.imageUrl}
+          alt={article.title}
+          width={500}
+          height={500}
+          className="w-full h-auto transition-transform duration-500 group-hover:scale-105"
+          data-ai-hint={article.aiHint}
+        />
+      </Link>
+      <CardContent className="p-4 flex flex-col flex-grow">
+        <div className="flex-grow">
+          <Badge variant="secondary" className="mb-2">{article.category}</Badge>
+          <Link href={article.slug}>
+            <h3 className="text-lg font-bold font-headline leading-snug group-hover:text-primary transition-colors">
+              {article.title}
+            </h3>
+          </Link>
+          <p className="mt-2 text-sm text-muted-foreground line-clamp-2 text-balance">
+            {article.teaser}
+          </p>
+        </div>
+        <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
+           <Link href={article.slug}>
+            <Button variant="link" className="p-0 h-auto text-xs">
+              Weiterlesen <ArrowRight className="ml-1 h-3 w-3" />
+            </Button>
+          </Link>
+          <div className="flex items-center gap-1.5">
+            <Clock className="w-3 h-3" />
+            <span>{article.readTime} min</span>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 
 export function LP2Teaser() {
   return (
@@ -33,33 +81,7 @@ export function LP2Teaser() {
 
           <div className="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-4 space-y-4">
             {mockArticles.map((article) => (
-              <div key={article.id} className="break-inside-avoid">
-                <Link href={article.slug}>
-                  <div className="group relative block w-full overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
-                    <Image
-                      src={article.imageUrl}
-                      alt={article.title}
-                      width={500}
-                      height={500}
-                      className="w-full h-auto"
-                      data-ai-hint={article.aiHint}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent group-hover:from-black/90 group-hover:via-black/50 transition-all" />
-                    <div className="absolute inset-0 p-4 text-white flex flex-col justify-end">
-                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 mb-2">
-                        <p className="text-xs text-white/90 line-clamp-3 leading-snug">{article.teaser}</p>
-                        <div className="flex items-center gap-1.5 text-xs font-bold mt-2 text-white/90">
-                            <Clock className="w-3 h-3"/>
-                            <span>{article.readTime} min Lesezeit</span>
-                        </div>
-                      </div>
-                      <h3 className="font-bold font-headline text-base drop-shadow-md">
-                        {article.title}
-                      </h3>
-                    </div>
-                  </div>
-                </Link>
-              </div>
+              <PinterestArticleCard key={article.id} article={article} />
             ))}
           </div>
           
