@@ -8,6 +8,8 @@ import { type Metadata, type ResolvingMetadata } from 'next'
 import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock } from "lucide-react";
+import { ReadingProgressBar } from "@/components/ui/reading-progress-bar";
+import { SocialShare } from "@/components/ui/social-share";
 
 type Props = {
   params: { slug: string }
@@ -119,6 +121,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
 
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
+       <ReadingProgressBar />
        <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -157,6 +160,8 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                 </figure>
                 
                 <div dangerouslySetInnerHTML={{ __html: article.content }} />
+
+                <SocialShare article={article} />
             </article>
         </div>
       </main>
