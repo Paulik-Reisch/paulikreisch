@@ -38,7 +38,7 @@ export function Hero({ product }: { product?: Product }) {
   return (
     <section 
       aria-labelledby="main-hero-heading" 
-      className="relative w-full flex items-center justify-center min-h-[calc(100vh-100px)] py-12"
+      className="relative w-full flex items-center justify-center min-h-[calc(100vh-100px)] py-20 md:py-24 lg:py-32"
     >
       <div className="container px-4 md:px-6">
         <div className="flex flex-col-reverse md:grid items-center gap-6 md:grid-cols-2 lg:gap-12">

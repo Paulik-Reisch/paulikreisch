@@ -45,7 +45,7 @@ export function Newsletter() {
   }, [state, toast]);
 
   return (
-    <section id="newsletter" aria-labelledby="newsletter-heading" className="w-full py-12 md:py-16 lg:py-20 bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500">
+    <section id="newsletter" aria-labelledby="newsletter-heading" className="w-full py-20 md:py-24 lg:py-32 bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500">
       <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="space-y-3">
           <h2 id="newsletter-heading" className="text-3xl font-bold font-headline tracking-tighter md:text-4xl text-white">Immer mehr zu Lachen!</h2>

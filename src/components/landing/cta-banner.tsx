@@ -4,7 +4,7 @@ import { CountdownBanner } from "./countdown-banner";
 
 export function CtaBanner() {
   return (
-    <section id="cta-banner" aria-labelledby="cta-heading" className="w-full py-12 md:py-16 bg-primary text-primary-foreground">
+    <section id="cta-banner" aria-labelledby="cta-heading" className="w-full py-20 md:py-24 lg:py-32 bg-primary text-primary-foreground">
       <div className="container px-4 md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="flex flex-col items-center justify-center space-y-8 text-center">
           <CountdownBanner />

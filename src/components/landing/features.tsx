@@ -1,10 +1,9 @@
-
 import { BookOpen, BrainCircuit, Feather } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 export function Features() {
   return (
-    <section id="features" aria-labelledby="features-heading" className="w-full py-12 md:py-16 lg:py-20 bg-primary text-primary-foreground">
+    <section id="features" aria-labelledby="features-heading" className="w-full py-20 md:py-24 lg:py-32 bg-primary text-primary-foreground">
       <div className="container px-4 md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">

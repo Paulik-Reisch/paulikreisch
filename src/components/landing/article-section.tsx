@@ -1,4 +1,3 @@
-
 import { ArrowRight, Calendar, Clock } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
@@ -64,7 +63,7 @@ export async function ArticleSection() {
   const articles = await getArticles();
 
   return (
-    <section id="articles" aria-labelledby="articles-heading" className="w-full py-12 md:py-16 lg:py-20 bg-background text-foreground">
+    <section id="articles" aria-labelledby="articles-heading" className="w-full py-20 md:py-24 lg:py-32 bg-background text-foreground">
       <div className="container px-4 md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
           <div className="space-y-4">
