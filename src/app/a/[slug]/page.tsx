@@ -142,9 +142,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                             <span>{article.readTime} Minuten Lesezeit</span>
                         </div>
                     </div>
-                    <p className="mt-8 text-lg text-muted-foreground text-balance">
-                        {article.teaser}
-                    </p>
+                    <div className="mt-8 text-lg text-muted-foreground text-balance" dangerouslySetInnerHTML={{ __html: article.teaser }} />
                 </header>
                 
                 <figure className="not-prose my-12 -mx-4 md:mx-0">

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useActionState } from "react";
@@ -99,7 +98,7 @@ export function ArticleEditorClient({ article }: { article?: Article }) {
        </div>
 
       <div className="space-y-2">
-        <Label htmlFor="teaser">Teaser</Label>
+        <Label htmlFor="teaser">Teaser (HTML)</Label>
         <Textarea id="teaser" name="teaser" defaultValue={article?.teaser} required rows={3} />
       </div>
 
