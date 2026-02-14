@@ -2,27 +2,60 @@
 
 import { useActionState, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { subscribeToNewsletterAction } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import { Confetti } from "./confetti";
+import { Checkbox } from "../ui/checkbox";
+import { Label } from "../ui/label";
 
 const initialNewsletterState = { success: undefined, error: undefined, message: undefined };
 
-function SubmitButton() {
+// This new component encapsulates the form's interactive elements and state.
+function NewsletterFormContent() {
   const { pending } = useFormStatus();
+  const [isConsentGiven, setIsConsentGiven] = useState(false);
+
   return (
-    <Button type="submit" disabled={pending} variant="secondary">
-      {pending ? (
-        <>
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-        </>
-      ) : (
-        "Abonnieren"
-      )}
-    </Button>
+    <div className="space-y-4">
+      <div className="flex space-x-2">
+        <Input 
+          name="email" 
+          aria-label="E-Mail-Adresse" 
+          className="max-w-lg flex-1 bg-white/20 text-white placeholder:text-white/80 border-white/50 focus:ring-white" 
+          placeholder="E-Mail-Adresse eingeben" 
+          type="email" 
+          required 
+        />
+        <input type="hidden" name="source" value="footer-newsletter" />
+        <Button type="submit" disabled={pending || !isConsentGiven} variant="secondary">
+          {pending ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            </>
+          ) : (
+            "Abonnieren"
+          )}
+        </Button>
+      </div>
+      <div className="flex items-start space-x-3 px-1">
+        <Checkbox 
+          id="terms" 
+          checked={isConsentGiven} 
+          onCheckedChange={(checked) => setIsConsentGiven(checked as boolean)} 
+          className="border-white/80 data-[state=checked]:bg-white data-[state=checked]:text-black mt-1" 
+        />
+        <Label htmlFor="terms" className="text-xs text-white/90 text-left leading-snug">
+          Ich stimme zu, den Newsletter zu erhalten und habe die{' '}
+          <Link href="/datenschutz" className="underline hover:text-white font-bold" target="_blank" rel="noopener noreferrer">
+            Datenschutzerklärung
+          </Link> gelesen.
+        </Label>
+      </div>
+    </div>
   );
 }
 
@@ -54,15 +87,10 @@ export function Newsletter() {
           </p>
         </div>
         <div className="mx-auto w-full max-w-sm space-y-2 relative">
-          <form ref={formRef} action={formAction} className="flex space-x-2">
-            <Input name="email" aria-label="E-Mail-Adresse" className="max-w-lg flex-1 bg-white/20 text-white placeholder:text-white/80 border-white/50 focus:ring-white" placeholder="E-Mail-Adresse eingeben" type="email" required />
-            <input type="hidden" name="source" value="footer-newsletter" />
-            <SubmitButton />
+          <form ref={formRef} action={formAction}>
+            <NewsletterFormContent />
           </form>
            {showConfetti && <Confetti onComplete={() => setShowConfetti(false)} />}
-          <p className="text-xs text-white/90">
-            Melden Sie sich jetzt zu unserem Newsletter an, um benachrichtigt zu werden, wenn wir etwas Neues veröffentlichen.
-          </p>
         </div>
       </div>
     </section>
