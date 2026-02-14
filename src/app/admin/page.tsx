@@ -2,7 +2,7 @@
 import { getArticles } from "@/lib/firestore";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, ArrowUpRight } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -47,7 +47,12 @@ export default async function AdminArticlesDashboard() {
                     <TableBody>
                         {articles.map((article) => (
                             <TableRow key={article.id}>
-                                <TableCell className="font-medium">{article.title}</TableCell>
+                                <TableCell className="font-medium">
+                                    <Link href={`/artikel/${article.slug}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:underline">
+                                        {article.title}
+                                        <ArrowUpRight className="h-3 w-3 text-muted-foreground" />
+                                    </Link>
+                                </TableCell>
                                 <TableCell><Badge variant="secondary">{article.category}</Badge></TableCell>
                                 <TableCell>{format(new Date(article.publishedDate), "dd. MMM yyyy", { locale: de })}</TableCell>
                                 <TableCell className="text-right">

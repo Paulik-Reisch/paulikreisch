@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useActionState, useEffect } from "react";
@@ -16,9 +17,10 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Edit, MoreHorizontal, Trash2, Loader2 } from "lucide-react";
+import { Edit, MoreHorizontal, Trash2, Loader2, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { deleteArticleAction } from "./actions";
 import type { Article } from "@/lib/firestore";
@@ -52,6 +54,13 @@ export function ArticleActions({ article }: { article: Article }) {
                     Bearbeiten
                 </DropdownMenuItem>
             </Link>
+            <Link href={`/admin/seo/editor/a-${article.slug}`}>
+                <DropdownMenuItem>
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    SEO bearbeiten
+                </DropdownMenuItem>
+            </Link>
+            <DropdownMenuSeparator />
             <AlertDialog>
                 <AlertDialogTrigger asChild>
                     <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-destructive focus:text-destructive focus:bg-destructive/10">
