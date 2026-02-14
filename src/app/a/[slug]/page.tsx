@@ -126,7 +126,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
       <Header />
       <main className="flex-1 py-12 md:py-20">
         <div className="container px-4 md:px-6">
-            <article className="prose prose-serif dark:prose-invert mx-auto max-w-4xl">
+            <article className="prose prose-lg prose-serif dark:prose-invert mx-auto max-w-4xl">
                 <header className="mb-12">
                     <Badge variant="secondary" className="mb-4">{article.category}</Badge>
                     <h1 className="text-4xl sm:text-5xl font-extrabold font-serifHeadline tracking-tight text-balance">{article.title}</h1>
@@ -142,6 +142,9 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                             <span>{article.readTime} Minuten Lesezeit</span>
                         </div>
                     </div>
+                    <p className="mt-8 text-lg text-muted-foreground text-balance">
+                        {article.teaser}
+                    </p>
                 </header>
                 
                 <figure className="not-prose my-12 -mx-4 md:mx-0">
