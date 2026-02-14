@@ -1,36 +1,21 @@
 import Link from 'next/link';
 import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Clock, Calendar } from 'lucide-react';
+import { ArrowRight, Clock } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { format } from 'date-fns';
-import { de } from 'date-fns/locale';
+import { getArticles, type Article } from '@/lib/firestore';
 
-// Keep the same mock data structure
-const mockArticles = Array.from({ length: 30 }).map((_, i) => ({
-  id: `mock-article-${i + 1}`,
-  title: `Die ${i + 1}. Stufe des Wahnsinns`,
-  slug: `mock-article-${i + 1}`,
-  category: i % 3 === 0 ? 'Gesellschaft' : i % 3 === 1 ? 'Technik' : 'Lebenshilfe',
-  imageUrl: `https://picsum.photos/seed/article${i+1}/500/${Math.floor(Math.random() * (600 - 400 + 1)) + 400}`,
-  aiHint: 'satire humor article',
-  teaser: 'Ein kurzer, bissiger Teaser-Text, der neugierig auf den absurden Inhalt des Artikels macht.',
-  readTime: Math.floor(Math.random() * (8 - 3 + 1)) + 3,
-  publishedDate: new Date().toISOString(),
-}));
-
-function PinterestArticleCard({ article }: { article: typeof mockArticles[0] }) {
+function PinterestArticleCard({ article }: { article: Article }) {
   return (
     <Card className="flex flex-col h-full overflow-hidden group break-inside-avoid">
       <Link href={`/a/${article.slug}`} className="block overflow-hidden">
         <Image
           src={article.imageUrl}
-          alt={article.title}
+          alt={article.imageAlt}
           width={500}
           height={500}
           className="w-full h-auto transition-transform duration-500 group-hover:scale-105"
-          data-ai-hint={article.aiHint}
         />
       </Link>
       <CardContent className="p-4 flex flex-col flex-grow">
@@ -61,7 +46,9 @@ function PinterestArticleCard({ article }: { article: typeof mockArticles[0] }) 
   );
 }
 
-export function LP2Teaser() {
+export async function LP2Teaser() {
+  const articles = await getArticles();
+
   return (
     <section id="premium-teaser" aria-labelledby="premium-teaser-heading" className="w-full py-20 md:py-24 lg:py-32 bg-background text-foreground">
       <div className="container px-4 md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
@@ -80,7 +67,7 @@ export function LP2Teaser() {
           <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-background to-transparent z-10 pointer-events-none" />
 
           <div className="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-4 space-y-4">
-            {mockArticles.map((article) => (
+            {articles.map((article) => (
               <PinterestArticleCard key={article.id} article={article} />
             ))}
           </div>
