@@ -85,7 +85,7 @@ export default async function SeoAdminPage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {articles.map(article => renderTableRow({slug: `a-${article.slug}`, title: article.title, pathPrefix: '/a/'}))}
+                                {articles.map(article => renderTableRow({slug: `a-${article.slug}`, title: article.title, pathPrefix: '/artikel/'}))}
                             </TableBody>
                         </Table>
                     </CardContent>

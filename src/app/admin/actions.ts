@@ -106,7 +106,7 @@ export async function createArticleAction(prevState: ArticleActionState, formDat
     try {
         const newSlug = await addArticle(validatedFields.data, session.user.id);
         revalidatePath("/admin");
-        revalidatePath("/a", "layout");
+        revalidatePath("/artikel", "layout");
         return { success: true, message: "Artikel erfolgreich erstellt.", newSlug };
     } catch(e: any) {
         return { success: false, error: e.message };
@@ -132,9 +132,9 @@ export async function updateArticleAction(prevState: ArticleActionState, formDat
     try {
         await updateArticle(originalSlug, validatedFields.data, session.user.id);
         revalidatePath("/admin");
-        revalidatePath(`/a/${originalSlug}`);
+        revalidatePath(`/artikel/${originalSlug}`);
         if(originalSlug !== validatedFields.data.slug) {
-            revalidatePath(`/a/${validatedFields.data.slug}`);
+            revalidatePath(`/artikel/${validatedFields.data.slug}`);
         }
         return { success: true, message: "Artikel erfolgreich aktualisiert." };
     } catch(e: any) {
@@ -152,7 +152,7 @@ export async function deleteArticleAction(prevState: any, formData: FormData): P
     try {
         await deleteArticle(slug, session.user.id);
         revalidatePath("/admin");
-        revalidatePath("/a", "layout");
+        revalidatePath("/artikel", "layout");
         return { success: true, error: null };
     } catch (e: any) {
         return { success: false, error: e.message };

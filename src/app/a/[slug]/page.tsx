@@ -1,4 +1,3 @@
-
 import { getArticleBySlug, getSeoMetadata } from "@/lib/firestore";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/landing/header";
@@ -52,13 +51,13 @@ export async function generateMetadata(
     keywords: seoData?.keywords?.split(',').map(k => k.trim()),
     authors: authors.map(author => ({ name: author })),
     alternates: {
-        canonical: seoData?.canonicalUrl || `/a/${slug}`,
+        canonical: seoData?.canonicalUrl || `/artikel/${slug}`,
     },
     robots: seoData?.robots || 'index, follow',
     openGraph: {
       title: seoData?.ogTitle || title,
       description: seoData?.ogDescription || description,
-      url: seoData?.canonicalUrl || `/a/${slug}`,
+      url: seoData?.canonicalUrl || `/artikel/${slug}`,
       siteName: seoData?.ogSiteName || 'Paulik & Reisch',
       images: [...openGraphImages, ...previousImages],
       locale: seoData?.language ? seoData.language.replace('-', '_') : 'de_DE',
@@ -97,7 +96,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     '@type': seoData?.articleType || 'SatiricalArticle',
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://paulik-reisch.de/a/${slug}`,
+      '@id': `https://paulik-reisch.de/artikel/${slug}`,
     },
     headline: seoData?.title || article.title,
     description: seoData?.metaDescription || article.teaser,
