@@ -1,9 +1,12 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Product } from "@/lib/firestore";
 import { ChevronDown } from "lucide-react";
-import { Typewriter } from "../ui/typewriter";
+import SplitText from "../ui/SplitText";
 
 const heroTexts = [
     "Eine Abrechnung mit der Schule.",
@@ -30,6 +33,18 @@ const heroTexts = [
 
 
 export function Hero({ product }: { product?: Product }) {
+  const [textIndex, setTextIndex] = useState(0);
+  const [key, setKey] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+        setKey(prev => prev + 1); // This will re-mount the SplitText component
+        setTextIndex(prevIndex => (prevIndex + 1) % heroTexts.length);
+    }, 4000); // Change text every 4 seconds
+
+    return () => clearInterval(interval);
+  }, [heroTexts.length]);
+
   const imageSrc = product?.imageSrc || "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/cover-mockup-1.png?alt=media&token=c82b73e5-76bd-490d-a65f-008a3bfac00b";
   const imageHint = product?.aiHint || "book cover";
   const bookTitle = product?.title || 'Hallo Welt';
@@ -45,7 +60,18 @@ export function Hero({ product }: { product?: Product }) {
           <div className="flex flex-col justify-center space-y-8 text-center md:text-left">
             <div className="space-y-4 min-h-[12rem] flex flex-col justify-center animate-in fade-in slide-in-from-top-12 duration-1000">
                 <h1 id="main-hero-heading" className="font-headline text-3xl sm:text-4xl md:text-5xl xl:text-7xl/none text-balance">
-                    <Typewriter texts={heroTexts} />
+                    <SplitText
+                        key={key} // Use key to force re-render and re-animate
+                        text={heroTexts[textIndex]}
+                        splitType="words"
+                        duration={0.8}
+                        ease="power3.out"
+                        from={{ opacity: 0, y: 30 }}
+                        to={{ opacity: 1, y: 0 }}
+                        delay={60}
+                        tag="span" 
+                        textAlign="inherit"
+                    />
                 </h1>
             </div>
             <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 animate-in fade-in slide-in-from-top-20 duration-1000">
