@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -17,6 +16,9 @@ import {
   Link as LinkIcon,
   Copy,
   TrendingUp,
+  Globe,
+  Smartphone,
+  Monitor
 } from "lucide-react";
 import {
   ChartContainer,
@@ -24,13 +26,27 @@ import {
   ChartTooltipContent,
   ChartConfig,
 } from "@/components/ui/chart";
-import { Bar, BarChart, XAxis, YAxis, CartesianGrid } from "recharts";
+import { Bar, BarChart, XAxis, YAxis, CartesianGrid, Pie, PieChart, Cell, Legend } from "recharts";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { formatDistanceToNow } from 'date-fns';
+import { de } from 'date-fns/locale';
+import type { AnalyticsEvent } from "@/lib/firestore";
 
-
-const chartConfig = {
+const pageViewChartConfig = {
   pageViews: {
     label: "Seitenaufrufe",
     color: "hsl(var(--primary))",
+  },
+} satisfies ChartConfig;
+
+const deviceChartConfig = {
+  desktop: {
+    label: "Desktop",
+    color: "hsl(var(--primary))",
+  },
+  mobile: {
+    label: "Mobile",
+    color: "hsl(var(--secondary))",
   },
 } satisfies ChartConfig;
 
@@ -42,7 +58,7 @@ type TrackingData = {
     term: string | null;
 }
 
-type AnalyticsData = {
+type AnalyticsClientProps = {
     summary: {
         visitors: { value: number; change: number };
         pageViews: { value: number; change: number };
@@ -50,12 +66,16 @@ type AnalyticsData = {
         conversionRate: { value: number; change: number };
     };
     chartData: { month: string; pageViews: number }[];
+    topPages: { path: string; views: number }[];
+    topSources: { source: string; visitors: number }[];
+    deviceBreakdown: { type: string; count: number }[];
+    recentEvents: AnalyticsEvent[];
 }
 
-export function AnalyticsClient({ summary, chartData }: AnalyticsData) {
-  const { toast } = useToast();
-  const searchParams = useSearchParams();
 
+export function AnalyticsClient({ summary, chartData, topPages, topSources, deviceBreakdown, recentEvents }: AnalyticsClientProps) {
+  const { toast } = useToast();
+  
   // State for UTM Link Generator
   const [baseUrl, setBaseUrl] = useState("https://paulik-reisch.de");
   const [campaign, setCampaign] = useState("");
@@ -63,9 +83,6 @@ export function AnalyticsClient({ summary, chartData }: AnalyticsData) {
   const [content, setContent] = useState("");
   const [generatedUrl, setGeneratedUrl] = useState("");
   
-  // State for session tracking
-  const [trackingData, setTrackingData] = useState<TrackingData | null>(null);
-
   // Effect for UTM Generator
   useEffect(() => {
     if (baseUrl && campaign && medium) {
@@ -75,20 +92,6 @@ export function AnalyticsClient({ summary, chartData }: AnalyticsData) {
         setGeneratedUrl("");
     }
   }, [baseUrl, campaign, medium, content]);
-  
-  // Effect for Session Tracking
-  useEffect(() => {
-    const data: TrackingData = {
-        source: searchParams.get('utm_source'),
-        medium: searchParams.get('utm_medium'),
-        campaign: searchParams.get('utm_campaign'),
-        content: searchParams.get('utm_content'),
-        term: searchParams.get('utm_term'),
-    };
-    if (data.source || data.medium || data.campaign) {
-        setTrackingData(data);
-    }
-  }, [searchParams]);
 
   const copyToClipboard = () => {
     if (generatedUrl) {
@@ -99,6 +102,8 @@ export function AnalyticsClient({ summary, chartData }: AnalyticsData) {
       });
     }
   };
+
+  const pieChartColors = [deviceChartConfig.desktop.color, deviceChartConfig.mobile.color];
 
   return (
     <div className="space-y-8">
@@ -154,68 +159,124 @@ export function AnalyticsClient({ summary, chartData }: AnalyticsData) {
             <CardDescription>Letzte 6 Monate</CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={chartConfig} className="h-[250px] w-full">
+            <ChartContainer config={pageViewChartConfig} className="h-[250px] w-full">
               <BarChart accessibilityLayer data={chartData}>
                 <CartesianGrid vertical={false} />
-                <XAxis
-                  dataKey="month"
-                  tickLine={false}
-                  tickMargin={10}
-                  axisLine={false}
-                />
+                <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} />
                 <YAxis hide />
-                <ChartTooltip
-                  cursor={false}
-                  content={<ChartTooltipContent hideIndicator />}
-                />
-                <Bar
-                  dataKey="pageViews"
-                  fill="var(--color-pageViews)"
-                  radius={8}
-                />
+                <ChartTooltip cursor={false} content={<ChartTooltipContent hideIndicator />} />
+                <Bar dataKey="pageViews" fill="var(--color-pageViews)" radius={8} />
               </BarChart>
             </ChartContainer>
           </CardContent>
         </Card>
 
-        {trackingData ? (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2"><TrendingUp className="h-5 w-5 text-primary" /> Kampagnen-Tracking</CardTitle>
-              <CardDescription>Daten der aktuellen Sitzung.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm">
-                <div>
-                    <p className="font-semibold text-primary">{trackingData.campaign || '(nicht gesetzt)'}</p>
-                    <p className="text-xs text-muted-foreground">Kampagne</p>
-                </div>
-                 <div>
-                    <p className="font-medium">{trackingData.medium || '(nicht gesetzt)'}</p>
-                    <p className="text-xs text-muted-foreground">Medium</p>
-                </div>
-                <div>
-                    <p className="font-medium">{trackingData.source || '(nicht gesetzt)'}</p>
-                    <p className="text-xs text-muted-foreground">Quelle</p>
-                </div>
-                 <div>
-                    <p className="font-medium">{trackingData.content || '(nicht gesetzt)'}</p>
-                    <p className="text-xs text-muted-foreground">Inhalt</p>
-                </div>
-            </CardContent>
-          </Card>
-        ) : (
-             <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><TrendingUp className="h-5 w-5 text-muted-foreground" /> Kampagnen-Tracking</CardTitle>
-                    <CardDescription>Daten der aktuellen Sitzung.</CardDescription>
-                </CardHeader>
-                <CardContent className="flex items-center justify-center h-48">
-                    <p className="text-sm text-muted-foreground text-center">Keine aktiven Kampagnenparameter in dieser Sitzung.</p>
-                </CardContent>
-             </Card>
-        )}
+        <Card>
+          <CardHeader>
+            <CardTitle>Geräte</CardTitle>
+            <CardDescription>Besucher nach Gerätetyp</CardDescription>
+          </CardHeader>
+          <CardContent className="flex justify-center">
+            <ChartContainer config={deviceChartConfig} className="h-[250px] w-[250px]">
+                <PieChart>
+                    <Pie data={deviceBreakdown} dataKey="count" nameKey="type" cx="50%" cy="50%" outerRadius={80} label>
+                        {deviceBreakdown.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={pieChartColors[index % pieChartColors.length]} />
+                        ))}
+                    </Pie>
+                    <Legend content={({ payload }) => (
+                      <ul className="flex gap-4 justify-center mt-4 text-sm">
+                        {payload?.map((entry, index) => (
+                          <li key={`item-${index}`} className="flex items-center gap-2">
+                            <span className="h-3 w-3 rounded-full" style={{ backgroundColor: entry.color }} />
+                            <span>{entry.value}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )} />
+                </PieChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
       </div>
       
+      <div className="grid gap-8 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Top-Seiten</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Pfad</TableHead>
+                        <TableHead className="text-right">Aufrufe</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {topPages.map((page) => (
+                        <TableRow key={page.path}>
+                            <TableCell className="font-medium truncate max-w-xs">{page.path}</TableCell>
+                            <TableCell className="text-right">{page.views.toLocaleString()}</TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Top-Quellen</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Quelle</TableHead>
+                        <TableHead className="text-right">Besucher</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {topSources.map((source) => (
+                        <TableRow key={source.source}>
+                            <TableCell className="font-medium">{source.source}</TableCell>
+                            <TableCell className="text-right">{source.visitors.toLocaleString()}</TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
+
+       <div>
+         <Card>
+           <CardHeader>
+             <CardTitle>Letzte Aktivitäten</CardTitle>
+           </CardHeader>
+           <CardContent>
+             <div className="space-y-4">
+               {recentEvents.map(event => (
+                 <div key={event.id} className="flex items-center gap-4">
+                   <div className="p-2 bg-muted rounded-full">
+                     { (event.params?.userAgent || '').toLowerCase().includes('mobi') ? <Smartphone className="h-5 w-5 text-muted-foreground"/> : <Monitor className="h-5 w-5 text-muted-foreground"/> }
+                   </div>
+                   <div className="flex-grow">
+                     <p className="font-medium truncate">{event.path}</p>
+                     <p className="text-xs text-muted-foreground">
+                        {event.params?.utm_source ? `via ${event.params.utm_source}` : 'Direkter Zugriff'}
+                     </p>
+                   </div>
+                   <div className="text-xs text-muted-foreground text-right shrink-0">
+                     {formatDistanceToNow(new Date(event.timestamp), { addSuffix: true, locale: de })}
+                   </div>
+                 </div>
+               ))}
+             </div>
+           </CardContent>
+         </Card>
+       </div>
+
       <div>
         <Card>
           <CardHeader>

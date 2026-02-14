@@ -1028,3 +1028,87 @@ export async function getMonthlyPageViewsChartData(): Promise<{ month: string; p
     return chartData;
 }
     
+export async function getTopPages(limit = 10): Promise<{ path: string; views: number }[]> {
+    const eventsCol = collection(db, 'analytics_events');
+    const q = query(eventsCol, where('type', '==', 'page_view'));
+    const snapshot = await getDocs(q);
+
+    const pageCounts: { [path: string]: number } = {};
+    snapshot.docs.forEach(doc => {
+        const event = doc.data();
+        const basePath = event.path.split('?')[0];
+        pageCounts[basePath] = (pageCounts[basePath] || 0) + 1;
+    });
+
+    return Object.entries(pageCounts)
+        .sort(([, a], [, b]) => b - a)
+        .slice(0, limit)
+        .map(([path, views]) => ({ path, views }));
+}
+
+export async function getTopSources(limit = 10): Promise<{ source: string; visitors: number }[]> {
+    const eventsCol = collection(db, 'analytics_events');
+    const q = query(eventsCol, where('type', '==', 'page_view'));
+    const snapshot = await getDocs(q);
+
+    const sourceCounts: { [source: string]: Set<string> } = {};
+    snapshot.docs.forEach(doc => {
+        const event = doc.data() as AnalyticsEvent;
+        const source = event.params?.utm_source || event.params?.source || '(direct)';
+        if (!sourceCounts[source]) {
+            sourceCounts[source] = new Set();
+        }
+        sourceCounts[source].add(event.userId);
+    });
+
+    return Object.entries(sourceCounts)
+        .sort(([, a], [, b]) => b.size - a.size)
+        .slice(0, limit)
+        .map(([source, userIds]) => ({ source, visitors: userIds.size }));
+}
+
+export async function getDeviceBreakdown(): Promise<{ type: string; count: number }[]> {
+    const eventsCol = collection(db, 'analytics_events');
+    const q = query(eventsCol, where('type', '==', 'page_view'));
+    const snapshot = await getDocs(q);
+
+    const breakdown = { Desktop: 0, Mobile: 0, Unknown: 0 };
+    const seenUsers = new Set<string>();
+
+    snapshot.docs.forEach(doc => {
+        const event = doc.data() as AnalyticsEvent;
+        // Simple daily unique visitor count
+        const dailyUserIdentifier = `${event.userId}-${(event.timestamp.toDate() as Date).toDateString()}`;
+        if (seenUsers.has(dailyUserIdentifier)) return;
+        seenUsers.add(dailyUserIdentifier);
+
+        const userAgent = event.params?.userAgent || '';
+        if (userAgent.toLowerCase().includes('mobi')) {
+            breakdown.Mobile++;
+        } else if (userAgent) {
+            breakdown.Desktop++;
+        } else {
+            breakdown.Unknown++;
+        }
+    });
+
+    return [
+        { type: 'Desktop', count: breakdown.Desktop },
+        { type: 'Mobile', count: breakdown.Mobile },
+    ];
+}
+
+export async function getRecentEvents(limit = 20): Promise<AnalyticsEvent[]> {
+    const eventsCol = collection(db, 'analytics_events');
+    const q = query(eventsCol, orderBy('timestamp', 'desc'), where('type', '==', 'page_view'));
+    const snapshot = await getDocs(q);
+
+    return snapshot.docs.slice(0, limit).map(doc => {
+        const data = doc.data();
+        return {
+            id: doc.id,
+            ...data,
+            timestamp: (data.timestamp as Timestamp).toDate().toISOString(),
+        } as AnalyticsEvent;
+    });
+}

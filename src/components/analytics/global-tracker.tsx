@@ -15,17 +15,20 @@ export function GlobalTracker() {
       return;
     }
 
-    // Combine pathname and searchParams to get the full path
     const url = `${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
     
-    const utmParams: {[key: string]: string} = {};
+    const params: {[key: string]: any} = {};
     for (const [key, value] of searchParams.entries()) {
-        if (key.startsWith('utm_')) {
-            utmParams[key] = value;
-        }
+        params[key] = value;
     }
 
-    logEventAction('page_view', user.uid, url, utmParams);
+    // Add client-side info
+    params.userAgent = navigator.userAgent;
+    params.language = navigator.language;
+    params.screen_width = window.screen.width;
+    params.screen_height = window.screen.height;
+
+    logEventAction('page_view', user.uid, url, params);
 
   }, [pathname, searchParams, user, isUserLoading]);
 
