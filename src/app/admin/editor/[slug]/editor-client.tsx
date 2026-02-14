@@ -8,7 +8,6 @@ import { createArticleAction, updateArticleAction, type ArticleActionState } fro
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Save } from "lucide-react";
@@ -99,7 +98,16 @@ export function ArticleEditorClient({ article }: { article?: Article }) {
 
       <div className="space-y-2">
         <Label htmlFor="teaser">Teaser (HTML)</Label>
-        <Textarea id="teaser" name="teaser" defaultValue={article?.teaser} required rows={3} />
+        <div className="min-h-[150px]">
+            <CodeEditor
+                value={article?.teaser || ''}
+                onChange={(value) => {
+                    const teaserInput = document.getElementById('teaser-input') as HTMLInputElement;
+                    if(teaserInput) teaserInput.value = value;
+                }}
+            />
+            <input type="hidden" id="teaser-input" name="teaser" defaultValue={article?.teaser || ''} />
+        </div>
       </div>
 
       <div className="space-y-2">
