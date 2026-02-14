@@ -112,7 +112,7 @@ export function Excerpt() {
                 <p className="text-muted-foreground mt-2 text-balance">
                     Ernsthaft? Sie wagen es, sich an Teil 2 zu versuchen, ohne die Grundlagen des Wahnsinns zu kennen? Das ist, als würde man versuchen, einen Marathon zu laufen, ohne vorher das Krabbeln gelernt zu haben. Ein grober, fast unverzeihlicher Fehler.
                 </p>
-                 <Link href="/buchhandlung-paulik-reisch" className="mt-6 inline-block">
+                 <Link href="/shop" className="mt-6 inline-block">
                     <Button size="lg" variant="destructive" className="h-14 text-lg animate-pulse">
                          <ShoppingCart className="mr-3"/>
                         SOFORT HIER KAUFEN!

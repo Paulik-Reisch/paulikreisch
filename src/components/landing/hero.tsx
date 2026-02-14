@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -75,7 +76,7 @@ export function Hero({ product }: { product?: Product }) {
                 </h1>
             </div>
             <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 animate-in fade-in slide-in-from-top-20 duration-1000">
-              <Link href="/buchhandlung-paulik-reisch">
+              <Link href="/shop">
                 <Button size="lg" variant="secondary">Jetzt kaufen</Button>
               </Link>
               <Link href="/lp-series">

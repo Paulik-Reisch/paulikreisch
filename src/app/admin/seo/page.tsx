@@ -25,7 +25,7 @@ export default async function SeoAdminPage() {
     const staticPages = [
         { href: '/', title: 'Homepage', slug: 'home' },
         { href: '/artikel', title: 'Artikel Übersicht', slug: 'artikel' },
-        { href: '/buchhandlung-paulik-reisch', title: 'Buchhandlung', slug: 'buchhandlung-paulik-reisch' },
+        { href: '/shop', title: 'Shop', slug: 'shop' },
         { href: '/lp2', title: 'LP2 - Countdown', slug: 'lp2' },
         { href: '/lp3', title: 'LP3 - Buch Live', slug: 'lp3' },
         { href: '/lp-series', title: 'LP - Buchserie', slug: 'lp-series' },

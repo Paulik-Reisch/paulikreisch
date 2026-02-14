@@ -15,7 +15,7 @@ export function TeacherManualCta() {
             <p className="text-lg text-primary-foreground/80">
               "Hallo Welt" ist das unverzichtbare Handbuch für den Umgang mit dem modernen Lehrkörper.
             </p>
-            <Link href="/buchhandlung-paulik-reisch">
+            <Link href="/shop">
                 <Button size="lg" variant="secondary" className="mt-4">
                     Zum Handbuch
                 </Button>

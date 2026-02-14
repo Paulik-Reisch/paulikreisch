@@ -190,7 +190,7 @@ export default function ExperimentalLandingPage() {
                             <p className="text-neutral-400">
                                 Die "Hallo Welt"-Saga ist mehr als nur ein Buch. Es ist ein notwendiges Update für Ihr Betriebssystem. Installieren Sie es jetzt. Auf eigene Gefahr.
                             </p>
-                            <Link href="/buchhandlung-paulik-reisch">
+                            <Link href="/shop">
                                 <Button size="lg" className="bg-green-400 text-black hover:bg-white font-bold h-12 text-base px-8">
                                     Update installieren (Kaufen)
                                 </Button>

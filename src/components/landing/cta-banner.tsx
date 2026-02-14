@@ -14,7 +14,7 @@ export function CtaBanner() {
               <span className="inline-block whitespace-nowrap line-through">20,99 €</span> <span className="inline-block whitespace-nowrap font-bold text-2xl animate-pulse">10,99 €</span>
             </p>
           </div>
-          <Link href="/buchhandlung-paulik-reisch">
+          <Link href="/shop">
             <Button size="lg" variant="secondary">Ja, ich will den Rabatt!</Button>
           </Link>
         </div>

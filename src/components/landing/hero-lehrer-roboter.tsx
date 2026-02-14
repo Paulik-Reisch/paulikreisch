@@ -17,7 +17,7 @@ export function HeroLehrerRoboter() {
                 Ein tiefgründiger Einblick in die Welt der inkompetenten Pädagogen, unmotivierten Beamtenroboter und ihrer unendlichen Liebe zu Kaffeetassen.
               </p>
             </div>
-             <Link href="/buchhandlung-paulik-reisch">
+             <Link href="/shop">
                 <Button size="lg">Buch jetzt kaufen</Button>
             </Link>
           </div>

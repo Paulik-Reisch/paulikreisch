@@ -40,7 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages = [
     '/',
     '/artikel',
-    '/buchhandlung-paulik-reisch',
+    '/shop',
     '/lp2',
     '/lp3',
     '/lp-series',
@@ -59,7 +59,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPageUrls = staticPages.map(path => {
     let priority = 0.8;
     if (path === '/') priority = 1.0;
-    if (path === '/buchhandlung-paulik-reisch' || path === '/lp2' || path === '/artikel') priority = 0.9;
+    if (path === '/shop' || path === '/lp2' || path === '/artikel') priority = 0.9;
     
     return {
       url: `${baseUrl}${path.startsWith('/') ? '' : '/'}${path.replace(/^\//, '')}`,

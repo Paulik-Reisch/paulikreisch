@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState } from 'react';
@@ -69,7 +70,7 @@ function FinalTest() {
              <motion.div initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} className="text-center p-6 bg-green-100/80 dark:bg-green-900/30 rounded-lg space-y-4">
                 <h3 className="font-bold font-headline text-xl text-green-800 dark:text-green-200">Glückwunsch, richtige Antwort!</h3>
                 <p className="text-green-700 dark:text-green-300 mt-2">Egal was Sie gewählt haben, Ihre Denkweise ist definitiv "Hallo Welt"-kompatibel. Sie haben sich den Zugang zum nächsten Kapitel verdient.</p>
-                 <Link href="/buchhandlung-paulik-reisch" className="inline-block">
+                 <Link href="/shop" className="inline-block">
                     <Button variant="secondary" size="lg">
                         Zum Buch <BookCheck className="ml-2 h-4 w-4"/>
                     </Button>
@@ -293,7 +294,7 @@ export default function ExperimentalLandingPage2() {
                             <p className="text-muted-foreground max-w-md mx-auto">
                                 Ein Buch, das man nicht von vorne nach hinten liest. Es ist wie ein Schulhofgespräch, das immer wieder abschweift – mal laut, mal leise, mal albern, mal bitter ernst.
                             </p>
-                             <Link href="/buchhandlung-paulik-reisch">
+                             <Link href="/shop">
                                 <Button size="lg" className="bg-red-500 hover:bg-red-600 text-white font-bold h-14 text-lg px-10 shadow-lg transform hover:scale-105 transition-transform">
                                     Exemplar sichern <ChevronsRight className="ml-2 h-6 w-6"/>
                                 </Button>
