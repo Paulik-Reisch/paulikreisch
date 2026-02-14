@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock } from "lucide-react";
 import { ReadingProgressBar } from "@/components/ui/reading-progress-bar";
 import { SocialShare } from "@/components/ui/social-share";
+import { ArticleRenderer } from "@/components/article/article-renderer";
 
 type Props = {
   params: { slug: string }
@@ -145,7 +146,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                             <span>{article.readTime} Minuten Lesezeit</span>
                         </div>
                     </div>
-                    <div className="mt-8 text-lg text-muted-foreground text-balance" dangerouslySetInnerHTML={{ __html: article.teaser }} />
+                    <div className="mt-8 text-lg text-muted-foreground text-balance prose" dangerouslySetInnerHTML={{ __html: article.teaser }} />
                 </header>
                 
                 <figure className="not-prose my-12 -mx-4 md:mx-0">
@@ -159,7 +160,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                     />
                 </figure>
                 
-                <div dangerouslySetInnerHTML={{ __html: article.content }} />
+                <ArticleRenderer article={article} />
 
                 <SocialShare article={article} />
             </article>

@@ -8,10 +8,10 @@ import { createArticleAction, updateArticleAction, type ArticleActionState } fro
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Save } from "lucide-react";
 import { CodeEditor } from "@/components/admin/code-editor";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const initialState: ArticleActionState = { success: false, error: null };
 
@@ -97,7 +97,7 @@ export function ArticleEditorClient({ article }: { article?: Article }) {
        </div>
 
       <div className="space-y-2">
-        <Label htmlFor="teaser">Teaser (HTML)</Label>
+        <Label htmlFor="teaser-input">Teaser (HTML)</Label>
         <div className="min-h-[150px]">
             <CodeEditor
                 value={article?.teaser || ''}
@@ -111,7 +111,7 @@ export function ArticleEditorClient({ article }: { article?: Article }) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="content">Inhalt (HTML)</Label>
+        <Label htmlFor="content-input">Inhalt (HTML)</Label>
         <div className="min-h-[400px]">
             <CodeEditor
                 value={article?.content || ''}
@@ -125,9 +125,19 @@ export function ArticleEditorClient({ article }: { article?: Article }) {
         </div>
       </div>
 
-       <div className="flex items-center space-x-2">
-        <Checkbox id="isFree" name="isFree" defaultChecked={article?.isFree ?? true} />
-        <Label htmlFor="isFree">Dieser Artikel ist für alle frei zugänglich.</Label>
+       <div className="space-y-2">
+        <Label htmlFor="accessLevel">Zugriffslevel</Label>
+        <Select name="accessLevel" defaultValue={article?.accessLevel || 'free'}>
+          <SelectTrigger id="accessLevel">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="free">Frei zugänglich</SelectItem>
+            <SelectItem value="leadwall">Lead-Wall (E-Mail)</SelectItem>
+            <SelectItem value="sharewall">Share-Wall (Teilen)</SelectItem>
+          </SelectContent>
+        </Select>
+        <p className="text-xs text-muted-foreground">Steuert, ob der Artikel eine Paywall, Leadwall oder Sharewall hat.</p>
       </div>
 
       <div className="flex justify-end gap-4">

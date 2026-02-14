@@ -87,7 +87,7 @@ const ArticleSchema = z.object({
   teaser: z.string().min(1, "Teaser-Text ist erforderlich."),
   content: z.string().min(1, "Inhalt ist erforderlich."),
   readTime: z.coerce.number().min(1, "Lesezeit muss mindestens 1 sein."),
-  isFree: z.boolean(),
+  accessLevel: z.enum(['free', 'leadwall', 'sharewall']),
 });
 
 export async function createArticleAction(prevState: ArticleActionState, formData: FormData): Promise<ArticleActionState> {
@@ -96,7 +96,6 @@ export async function createArticleAction(prevState: ArticleActionState, formDat
 
     const validatedFields = ArticleSchema.safeParse({
         ...Object.fromEntries(formData.entries()),
-        isFree: formData.get('isFree') === 'on',
     });
 
     if (!validatedFields.success) {
@@ -122,7 +121,6 @@ export async function updateArticleAction(prevState: ArticleActionState, formDat
 
     const validatedFields = ArticleSchema.safeParse({
         ...Object.fromEntries(formData.entries()),
-        isFree: formData.get('isFree') === 'on',
     });
 
     if (!validatedFields.success) {

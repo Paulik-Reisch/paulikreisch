@@ -79,9 +79,13 @@
         "content": { "type": "string" },
         "readTime": { "type": "number", "description": "Reading time in minutes" },
         "publishedDate": { "type": "string", "format": "date-time" },
-        "isFree": { "type": "boolean" }
+        "accessLevel": {
+          "type": "string",
+          "description": "Controls the access level for the article.",
+          "enum": ["free", "leadwall", "sharewall"]
+        }
       },
-      "required": ["title", "slug", "category", "imageUrl", "teaser", "content", "readTime", "publishedDate", "isFree"]
+      "required": ["title", "slug", "category", "imageUrl", "teaser", "content", "readTime", "publishedDate", "accessLevel"]
     },
     "LandingPage": {
       "title": "Landing Page",

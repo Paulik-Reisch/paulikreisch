@@ -188,7 +188,7 @@ export interface Article {
     content: string;
     readTime: number; // in minutes
     publishedDate: string;
-    isFree: boolean;
+    accessLevel: 'free' | 'leadwall' | 'sharewall';
 }
 
 export interface LandingPage {
@@ -227,7 +227,7 @@ const defaultArticles: Omit<Article, 'id' | 'publishedDate'>[] = [
         teaser: 'Warum das Ausfüllen von Formularen in dreifacher Ausfertigung die wahre deutsche Nationalsportart ist und wie Sie darin zur Meisterschaft gelangen.',
         content: '<p>Der vollständige Artikel über den Charme der Bürokratie...</p>',
         readTime: 5,
-        isFree: true,
+        accessLevel: 'free',
     },
     {
         slug: 'warum-ihr-drucker-sie-hasst',
@@ -238,7 +238,7 @@ const defaultArticles: Omit<Article, 'id' | 'publishedDate'>[] = [
         teaser: 'Tinte leer? Papierstau? Wir decken die geheime Verschwörung der Druckerindustrie auf. Es ist schlimmer, als Sie denken.',
         content: '<p>Der vollständige Artikel über hasserfüllte Drucker...</p>',
         readTime: 4,
-        isFree: true,
+        accessLevel: 'free',
     },
     {
         slug: 'die-kunst-des-prokrastinierens',
@@ -249,7 +249,7 @@ const defaultArticles: Omit<Article, 'id' | 'publishedDate'>[] = [
         teaser: 'Verschieben Sie nicht auf morgen, was Sie auch nächste Woche noch ignorieren können. Tipps und Tricks vom Meister des Aufschubs.',
         content: '<p>Der vollständige Artikel über das Prokrastinieren...</p>',
         readTime: 6,
-        isFree: true,
+        accessLevel: 'free',
     },
 ];
 
@@ -294,6 +294,7 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
             ...data,
             slug: docSnap.id,
             publishedDate: (data.publishedDate as Timestamp).toDate().toISOString(),
+            accessLevel: data.accessLevel || 'free',
         } as Article;
     }
     return null;
@@ -313,6 +314,7 @@ export async function addArticle(articleData: Omit<Article, 'id' | 'publishedDat
         ...articleData,
         slug,
         publishedDate: Timestamp.now(),
+        accessLevel: articleData.accessLevel || 'free',
     };
     await setDoc(docRef, dataWithTimestamp);
     await addLog(user, 'Artikel erstellt', `Slug: ${slug}`);
