@@ -30,7 +30,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const articleUrls = articles.map(article => ({
-    url: `${baseUrl}/artikel/${article.slug}`,
+    url: `${baseUrl}/a/${article.slug}`,
     lastModified: new Date(article.publishedDate),
     changeFrequency: 'weekly' as const,
     priority: 0.8,
@@ -39,7 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 2. Define static pages
   const staticPages = [
     '/',
-    '/artikel',
+    '/a',
     '/shop',
     '/lp2',
     '/lp3',
@@ -59,7 +59,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPageUrls = staticPages.map(path => {
     let priority = 0.8;
     if (path === '/') priority = 1.0;
-    if (path === '/shop' || path === '/lp2' || path === '/artikel') priority = 0.9;
+    if (path === '/shop' || path === '/lp2' || path === '/a') priority = 0.9;
     
     return {
       url: `${baseUrl}${path.startsWith('/') ? '' : '/'}${path.replace(/^\//, '')}`,

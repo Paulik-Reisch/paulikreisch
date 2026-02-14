@@ -15,9 +15,10 @@ export default async function SeoEditorPage({ params }: { params: { slug: string
   const metadata = await getSeoMetadata(slug);
 
   const getPagePath = () => {
-    if (slug.startsWith('a-')) return `/artikel/${slug.replace('a-', '')}`;
+    if (slug.startsWith('a-')) return `/a/${slug.replace('a-', '')}`;
     if (slug.startsWith('lp-')) return `/lp/${slug.replace('lp-', '')}`;
     if (slug === 'home') return '/';
+    if (slug === 'artikel') return '/a';
     return `/${slug}`;
   }
 

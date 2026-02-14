@@ -24,7 +24,7 @@ export default async function SeoAdminPage() {
 
     const staticPages = [
         { href: '/', title: 'Homepage', slug: 'home' },
-        { href: '/artikel', title: 'Artikel Übersicht', slug: 'artikel' },
+        { href: '/a', title: 'Artikel Übersicht', slug: 'artikel' },
         { href: '/shop', title: 'Shop', slug: 'shop' },
         { href: '/lp2', title: 'LP2 - Countdown', slug: 'lp2' },
         { href: '/lp3', title: 'LP3 - Buch Live', slug: 'lp3' },
@@ -41,6 +41,7 @@ export default async function SeoAdminPage() {
         const hasDesc = !!meta?.metaDescription;
         const getPath = () => {
             if (item.pathPrefix) return `${item.pathPrefix}${item.slug.replace(/^a-|^lp-/, '')}`;
+            if (item.slug === 'artikel') return '/a';
             if (item.slug === 'home') return '/';
             return `/${item.slug}`;
         }
@@ -86,7 +87,7 @@ export default async function SeoAdminPage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {articles.map(article => renderTableRow({slug: `a-${article.slug}`, title: article.title, pathPrefix: '/artikel/'}))}
+                                {articles.map(article => renderTableRow({slug: `a-${article.slug}`, title: article.title, pathPrefix: '/a/'}))}
                             </TableBody>
                         </Table>
                     </CardContent>

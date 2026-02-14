@@ -33,7 +33,7 @@ const mockArticles: Article[] = Array.from({ length: 20 }).map((_, i) => ({
 function ArticleCard({ article }: { article: Article }) {
   return (
     <Card className="flex flex-col h-full overflow-hidden group">
-      <Link href={`/artikel/${article.slug}`} className="block overflow-hidden">
+      <Link href={`/a/${article.slug}`} className="block overflow-hidden">
         <Image
           src={article.imageUrl}
           alt={article.imageAlt}
@@ -59,7 +59,7 @@ function ArticleCard({ article }: { article: Article }) {
               </div>
             </div>
           </div>
-          <Link href={`/artikel/${article.slug}`}>
+          <Link href={`/a/${article.slug}`}>
             <h3 className="text-2xl font-bold font-headline tracking-tight leading-snug group-hover:text-primary transition-colors">
               {article.title}
             </h3>
@@ -69,7 +69,7 @@ function ArticleCard({ article }: { article: Article }) {
           </p>
         </div>
         <div className="mt-6">
-          <Link href={`/artikel/${article.slug}`}>
+          <Link href={`/a/${article.slug}`}>
             <Button variant="link" className="p-0 h-auto">
               Weiterlesen <ArrowRight className="ml-2 h-4 w-4" />
             </Button>

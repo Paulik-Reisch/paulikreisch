@@ -23,7 +23,7 @@ const mockArticles = Array.from({ length: 30 }).map((_, i) => ({
 function PinterestArticleCard({ article }: { article: typeof mockArticles[0] }) {
   return (
     <Card className="flex flex-col h-full overflow-hidden group break-inside-avoid">
-      <Link href={`/artikel/${article.slug}`} className="block overflow-hidden">
+      <Link href={`/a/${article.slug}`} className="block overflow-hidden">
         <Image
           src={article.imageUrl}
           alt={article.title}
@@ -36,7 +36,7 @@ function PinterestArticleCard({ article }: { article: typeof mockArticles[0] }) 
       <CardContent className="p-4 flex flex-col flex-grow">
         <div className="flex-grow">
           <Badge variant="secondary" className="mb-2">{article.category}</Badge>
-          <Link href={`/artikel/${article.slug}`}>
+          <Link href={`/a/${article.slug}`}>
             <h3 className="text-lg font-bold font-headline leading-snug group-hover:text-primary transition-colors">
               {article.title}
             </h3>
@@ -46,7 +46,7 @@ function PinterestArticleCard({ article }: { article: typeof mockArticles[0] }) 
           </p>
         </div>
         <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
-           <Link href={`/artikel/${article.slug}`}>
+           <Link href={`/a/${article.slug}`}>
             <Button variant="link" className="p-0 h-auto text-xs">
               Weiterlesen <ArrowRight className="ml-1 h-3 w-3" />
             </Button>
@@ -89,7 +89,7 @@ export function LP2Teaser() {
         </div>
 
         <div className="mt-12 text-center">
-            <Link href="/artikel">
+            <Link href="/a">
                 <Button size="lg">
                     Mehr Artikel
                     <ArrowRight className="ml-2 h-4 w-4" />

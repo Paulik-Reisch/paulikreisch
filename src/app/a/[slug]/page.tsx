@@ -51,13 +51,13 @@ export async function generateMetadata(
     keywords: seoData?.keywords?.split(',').map(k => k.trim()),
     authors: authors.map(author => ({ name: author })),
     alternates: {
-        canonical: seoData?.canonicalUrl || `/artikel/${slug}`,
+        canonical: seoData?.canonicalUrl || `/a/${slug}`,
     },
     robots: seoData?.robots || 'index, follow',
     openGraph: {
       title: seoData?.ogTitle || title,
       description: seoData?.ogDescription || description,
-      url: seoData?.canonicalUrl || `/artikel/${slug}`,
+      url: seoData?.canonicalUrl || `/a/${slug}`,
       siteName: seoData?.ogSiteName || 'Paulik & Reisch',
       images: [...openGraphImages, ...previousImages],
       locale: seoData?.language ? seoData.language.replace('-', '_') : 'de_DE',
@@ -96,7 +96,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     '@type': seoData?.articleType || 'SatiricalArticle',
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://paulik-reisch.de/artikel/${slug}`,
+      '@id': `https://paulik-reisch.de/a/${slug}`,
     },
     headline: seoData?.title || article.title,
     description: seoData?.metaDescription || article.teaser,
@@ -126,10 +126,10 @@ export default async function ArticlePage({ params }: { params: { slug: string }
       <Header />
       <main className="flex-1 py-12 md:py-20">
         <div className="container px-4 md:px-6">
-            <article className="prose dark:prose-invert mx-auto max-w-4xl">
+            <article className="prose prose-serif dark:prose-invert mx-auto max-w-4xl">
                 <header className="mb-12">
                     <Badge variant="secondary" className="mb-4">{article.category}</Badge>
-                    <h1 className="text-4xl sm:text-5xl font-extrabold font-headline tracking-tight text-balance">{article.title}</h1>
+                    <h1 className="text-4xl sm:text-5xl font-extrabold font-serifHeadline tracking-tight text-balance">{article.title}</h1>
                     <div className="mt-6 flex items-center gap-6 text-sm text-muted-foreground">
                         <div className="flex items-center gap-2">
                             <Calendar className="w-4 h-4" />

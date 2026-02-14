@@ -48,7 +48,7 @@ export default async function AdminArticlesDashboard() {
                         {articles.map((article) => (
                             <TableRow key={article.id}>
                                 <TableCell className="font-medium">
-                                    <Link href={`/artikel/${article.slug}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:underline">
+                                    <Link href={`/a/${article.slug}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:underline">
                                         {article.title}
                                         <ArrowUpRight className="h-3 w-3 text-muted-foreground" />
                                     </Link>

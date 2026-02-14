@@ -21,6 +21,8 @@ export default {
         headline: ['Poppins', 'sans-serif'],
         code: ['monospace'],
         handwritten: ['"Patrick Hand"', 'cursive'],
+        serif: ['"Source Serif Pro"', 'serif'],
+        serifHeadline: ['Lora', 'serif'],
       },
       colors: {
         background: 'hsl(var(--background))',
