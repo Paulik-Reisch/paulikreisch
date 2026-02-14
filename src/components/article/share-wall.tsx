@@ -2,7 +2,6 @@
 
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Twitter, Facebook, Linkedin, Link as LinkIcon, Share2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { type Article } from '@/lib/firestore';
@@ -34,26 +33,26 @@ export function ShareWall({ article, onUnlock }: { article: Article; onUnlock: (
   };
 
   return (
-    <Card className="max-w-xl mx-auto bg-background/80 backdrop-blur-sm border-primary shadow-lg">
-      <CardHeader className="text-center">
+    <div className="bg-background/80 backdrop-blur-sm py-12 px-6 shadow-[0_-8px_20px_rgba(0,0,0,0.05)] border-b">
+      <div className="max-w-xl mx-auto text-center">
         <Share2 className="mx-auto h-12 w-12 text-primary" />
-        <CardTitle className="font-headline text-2xl">Teilen und weiterlesen</CardTitle>
-        <CardDescription>Teilen Sie diesen Artikel, um den Rest des Inhalts sofort freizuschalten.</CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-wrap items-center justify-center gap-4">
-        <Button variant="outline" size="icon" onClick={() => handleShare(shareLinks.twitter)} aria-label="Auf Twitter teilen">
-          <Twitter className="h-5 w-5" />
-        </Button>
-        <Button variant="outline" size="icon" onClick={() => handleShare(shareLinks.facebook)} aria-label="Auf Facebook teilen">
-          <Facebook className="h-5 w-5" />
-        </Button>
-        <Button variant="outline" size="icon" onClick={() => handleShare(shareLinks.linkedin)} aria-label="Auf LinkedIn teilen">
-          <Linkedin className="h-5 w-5" />
-        </Button>
-        <Button variant="outline" size="icon" onClick={copyLink} aria-label="Link kopieren">
-          <LinkIcon className="h-5 w-5" />
-        </Button>
-      </CardContent>
-    </Card>
+        <h2 className="font-headline text-2xl font-bold mt-4">Teilen und weiterlesen</h2>
+        <p className="text-muted-foreground mt-2 mb-6">Teilen Sie diesen Artikel, um den Rest des Inhalts sofort freizuschalten.</p>
+        <div className="flex flex-wrap items-center justify-center gap-4">
+          <Button variant="outline" size="icon" onClick={() => handleShare(shareLinks.twitter)} aria-label="Auf Twitter teilen">
+            <Twitter className="h-5 w-5" />
+          </Button>
+          <Button variant="outline" size="icon" onClick={() => handleShare(shareLinks.facebook)} aria-label="Auf Facebook teilen">
+            <Facebook className="h-5 w-5" />
+          </Button>
+          <Button variant="outline" size="icon" onClick={() => handleShare(shareLinks.linkedin)} aria-label="Auf LinkedIn teilen">
+            <Linkedin className="h-5 w-5" />
+          </Button>
+          <Button variant="outline" size="icon" onClick={copyLink} aria-label="Link kopieren">
+            <LinkIcon className="h-5 w-5" />
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 }
