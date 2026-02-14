@@ -1,12 +1,16 @@
 import Link from 'next/link';
 import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
+import { Button } from '@/components/ui/button';
+import { ArrowRight, Clock } from 'lucide-react';
 
 const mockArticles = Array.from({ length: 30 }).map((_, i) => ({
   id: `mock-article-${i + 1}`,
   title: `Die ${i + 1}. Stufe des Wahnsinns`,
-  slug: `/a/artikel-${i + 1}`,
+  slug: `/a`,
   imageUrl: `https://picsum.photos/seed/article${i+1}/500/${Math.floor(Math.random() * (600 - 400 + 1)) + 400}`,
-  aiHint: 'satire humor article'
+  aiHint: 'satire humor article',
+  teaser: 'Ein kurzer, bissiger Teaser-Text, der neugierig auf den absurden Inhalt des Artikels macht.',
+  readTime: Math.floor(Math.random() * (8 - 3 + 1)) + 3,
 }));
 
 export function LP2Teaser() {
@@ -24,30 +28,53 @@ export function LP2Teaser() {
           </div>
         </div>
         
-        <div className="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-4 space-y-4">
-          {mockArticles.map((article) => (
-            <div key={article.id} className="break-inside-avoid">
-              <Link href={article.slug}>
-                <div className="group relative block w-full overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
-                  <Image
-                    src={article.imageUrl}
-                    alt={article.title}
-                    width={500}
-                    height={500} // Base height, will be overridden by actual image ratio
-                    className="w-full h-auto"
-                    data-ai-hint={article.aiHint}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-                  <div className="absolute bottom-0 left-0 p-4">
-                    <h3 className="text-white font-bold font-headline text-base drop-shadow-md">
-                      {article.title}
-                    </h3>
+        <div className="relative">
+          <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-background to-transparent z-10 pointer-events-none" />
+
+          <div className="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-4 space-y-4">
+            {mockArticles.map((article) => (
+              <div key={article.id} className="break-inside-avoid">
+                <Link href={article.slug}>
+                  <div className="group relative block w-full overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
+                    <Image
+                      src={article.imageUrl}
+                      alt={article.title}
+                      width={500}
+                      height={500}
+                      className="w-full h-auto"
+                      data-ai-hint={article.aiHint}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent group-hover:from-black/90 group-hover:via-black/50 transition-all" />
+                    <div className="absolute inset-0 p-4 text-white flex flex-col justify-end">
+                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 mb-2">
+                        <p className="text-xs text-white/90 line-clamp-3 leading-snug">{article.teaser}</p>
+                        <div className="flex items-center gap-1.5 text-xs font-bold mt-2 text-white/90">
+                            <Clock className="w-3 h-3"/>
+                            <span>{article.readTime} min Lesezeit</span>
+                        </div>
+                      </div>
+                      <h3 className="font-bold font-headline text-base drop-shadow-md">
+                        {article.title}
+                      </h3>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            </div>
-          ))}
+                </Link>
+              </div>
+            ))}
+          </div>
+          
+          <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-background to-transparent z-10 pointer-events-none" />
         </div>
+
+        <div className="mt-12 text-center">
+            <Link href="/a">
+                <Button size="lg">
+                    Mehr Artikel
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+            </Link>
+        </div>
+
       </div>
     </section>
   );
