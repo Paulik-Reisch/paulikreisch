@@ -319,12 +319,41 @@ export async function addArticle(articleData: Omit<Article, 'id' | 'publishedDat
     return slug;
 }
 
-export async function updateArticle(slug: string, dataToUpdate: Partial<Omit<Article, 'id'>>, user: string) {
-    const docRef = doc(db, 'articles', slug);
-    await updateDoc(docRef, {
-        ...dataToUpdate,
-    });
-    await addLog(user, 'Artikel aktualisiert', `Slug: ${slug}`);
+export async function updateArticle(originalSlug: string, dataToUpdate: Omit<Article, 'id' | 'publishedDate'>, user: string) {
+    const { slug: newSlug, ...restData } = dataToUpdate;
+
+    if (!newSlug || originalSlug === newSlug) {
+        const docRef = doc(db, 'articles', originalSlug);
+        await updateDoc(docRef, { ...restData });
+        await addLog(user, 'Artikel aktualisiert', `Slug: ${originalSlug}`);
+    } else {
+        const oldDocRef = doc(db, 'articles', originalSlug);
+        const newDocRef = doc(db, 'articles', newSlug);
+
+        const newDocSnap = await getDoc(newDocRef);
+        if (newDocSnap.exists()) {
+            throw new Error(`Artikel-Slug "${newSlug}" existiert bereits.`);
+        }
+
+        const oldDocSnap = await getDoc(oldDocRef);
+        if (!oldDocSnap.exists()) {
+             throw new Error(`Originalartikel mit Slug "${originalSlug}" nicht gefunden.`);
+        }
+        
+        const oldData = oldDocSnap.data();
+        const batch = writeBatch(db);
+        
+        const newData = {
+            ...oldData,
+            ...dataToUpdate,
+        };
+
+        batch.set(newDocRef, newData);
+        batch.delete(oldDocRef);
+        
+        await batch.commit();
+        await addLog(user, 'Artikel verschoben/aktualisiert', `Von ${originalSlug} zu ${newSlug}`);
+    }
 }
 
 export async function deleteArticle(slug: string, user: string) {

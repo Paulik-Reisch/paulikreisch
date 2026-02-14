@@ -136,7 +136,8 @@ export async function updateArticleAction(prevState: ArticleActionState, formDat
         if(originalSlug !== validatedFields.data.slug) {
             revalidatePath(`/artikel/${validatedFields.data.slug}`);
         }
-        return { success: true, message: "Artikel erfolgreich aktualisiert." };
+        revalidatePath('/artikel'); // Revalidate the overview page
+        return { success: true, message: "Artikel erfolgreich aktualisiert.", newSlug: validatedFields.data.slug };
     } catch(e: any) {
         return { success: false, error: e.message };
     }

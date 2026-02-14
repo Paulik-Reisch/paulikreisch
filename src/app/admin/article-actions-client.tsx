@@ -1,5 +1,6 @@
 'use client';
 
+import { useActionState, useEffect } from "react";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -17,12 +18,26 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Edit, MoreHorizontal, Trash2 } from "lucide-react";
+import { Edit, MoreHorizontal, Trash2, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { deleteArticleAction } from "./actions";
 import type { Article } from "@/lib/firestore";
+import { useToast } from "@/hooks/use-toast";
+
 
 export function ArticleActions({ article }: { article: Article }) {
+  const { toast } = useToast();
+  const [state, formAction, isPending] = useActionState(deleteArticleAction, { success: false, error: null });
+
+  useEffect(() => {
+    if (state.success) {
+      toast({ title: "Erfolg!", description: "Artikel wurde gelöscht." });
+    }
+    if (state.error) {
+      toast({ variant: "destructive", title: "Fehler", description: state.error });
+    }
+  }, [state, toast]);
+
   return (
     <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -45,7 +60,7 @@ export function ArticleActions({ article }: { article: Article }) {
                     </DropdownMenuItem>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
-                    <form action={deleteArticleAction}>
+                    <form action={formAction}>
                         <input type="hidden" name="slug" value={article.slug} />
                         <AlertDialogHeader>
                         <AlertDialogTitle>Sind Sie sicher?</AlertDialogTitle>
@@ -55,7 +70,10 @@ export function ArticleActions({ article }: { article: Article }) {
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                         <AlertDialogCancel>Abbrechen</AlertDialogCancel>
-                        <Button type="submit" variant="destructive">Löschen</Button>
+                        <Button type="submit" variant="destructive" disabled={isPending}>
+                            {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : null}
+                            Löschen
+                        </Button>
                         </AlertDialogFooter>
                     </form>
                 </AlertDialogContent>

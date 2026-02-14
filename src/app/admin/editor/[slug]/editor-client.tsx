@@ -33,20 +33,25 @@ export function ArticleEditorClient({ article }: { article?: Article }) {
       
       const timer = setTimeout(() => {
         if (isNew && state.newSlug) {
-          // Full page navigation to ensure session is correctly handled on the server.
-          window.location.href = `/admin/editor/${state.newSlug}`;
+            router.push(`/admin/editor/${state.newSlug}`);
+        } else if (!isNew && state.newSlug) {
+            if (article?.slug !== state.newSlug) {
+                router.push(`/admin/editor/${state.newSlug}`);
+            } else {
+                router.refresh();
+            }
         } else if (!isNew) {
-          // A full reload ensures data is fresh, especially if slug was editable.
-          window.location.reload();
+            router.push('/admin');
+            router.refresh();
         }
-      }, 500); // Delay to allow toast to be visible.
+      }, 500);
       
       return () => clearTimeout(timer);
     }
     if (state.error) {
       toast({ variant: "destructive", title: "Fehler", description: state.error });
     }
-  }, [state, isNew]);
+  }, [state, isNew, article?.slug, router, toast]);
   
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (isNew) {
@@ -67,7 +72,7 @@ export function ArticleEditorClient({ article }: { article?: Article }) {
         </div>
         <div className="space-y-2">
           <Label htmlFor="slug">Slug (URL-Pfad)</Label>
-          <Input id="slug" name="slug" value={slug} onChange={(e) => setSlug(e.target.value)} required readOnly={!isNew} />
+          <Input id="slug" name="slug" value={slug} onChange={(e) => setSlug(e.target.value)} required />
         </div>
       </div>
       
