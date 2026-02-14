@@ -1028,5 +1028,3 @@ export async function getMonthlyPageViewsChartData(): Promise<{ month: string; p
     return chartData;
 }
     
-
-    

@@ -1,3 +1,4 @@
+
 import { MetadataRoute } from 'next';
 import { getLegalPages, getPublishedExcerpts, getArticles } from '@/lib/firestore';
 
