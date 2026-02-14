@@ -6,7 +6,7 @@ import { subscribeToNewsletterAction } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Loader2, MailLock } from 'lucide-react';
+import { Loader2, Lock } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 const initialNewsletterState = { success: undefined, error: undefined, message: undefined };
@@ -38,7 +38,7 @@ export function LeadWall({ onUnlock }: { onUnlock: () => void }) {
   return (
     <Card className="max-w-xl mx-auto bg-background/80 backdrop-blur-sm border-primary shadow-lg">
       <CardHeader className="text-center">
-        <MailLock className="mx-auto h-12 w-12 text-primary" />
+        <Lock className="mx-auto h-12 w-12 text-primary" />
         <CardTitle className="font-headline text-2xl">Lesen Sie den ganzen Artikel</CardTitle>
         <CardDescription>Geben Sie Ihre E-Mail-Adresse ein, um sofort weiterzulesen und exklusive Inhalte zu erhalten.</CardDescription>
       </CardHeader>
