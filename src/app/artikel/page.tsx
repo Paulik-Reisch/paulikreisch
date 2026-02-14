@@ -68,18 +68,19 @@ export async function generateMetadata(
   const seoSlug = 'artikel'; // A unique slug for the articles overview page
   const seoData = await getSeoMetadata(seoSlug);
  
-  const title = seoData?.title || "Satirische Artikel | Paulik & Reisch";
-  const description = seoData?.metaDescription || "Eine Sammlung der neuesten und besten satirischen Artikel von Paulik & Reisch über Gesellschaft, Technik und den alltäglichen Wahnsinn.";
+  const title = seoData?.title || "Satirische Artikel | Paulik & Reisch Magazin";
+  const description = seoData?.metaDescription || "Eine kuratierte Sammlung satirischer Meisterwerke, die den alltäglichen Wahnsinn auf die Schippe nehmen. Von Gesellschaftskritik bis Technik-Alpträume.";
   const previousImages = (await parent).openGraph?.images || []
 
   return {
     title,
     description,
-    keywords: seoData?.keywords?.split(',').map(k => k.trim()) || ['Satire', 'Artikel', 'Humor', 'Gesellschaftskritik'],
+    keywords: seoData?.keywords?.split(',').map(k => k.trim()) || ['Satire', 'Artikel', 'Humor', 'Gesellschaftskritik', 'Magazin', 'Kolumne'],
     openGraph: {
       title: seoData?.ogTitle || title,
       description: seoData?.ogDescription || description,
       url: seoData?.canonicalUrl || '/artikel',
+      siteName: seoData?.ogSiteName || 'Paulik & Reisch',
       images: seoData?.ogImage ? [seoData.ogImage, ...previousImages] : previousImages,
       type: 'website',
     },
@@ -102,15 +103,37 @@ export default async function ArticlesPage() {
   
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    'name': 'Satirische Artikel von Paulik & Reisch',
-    'description': 'Eine kuratierte Sammlung von satirischen Artikeln, die den alltäglichen Wahnsinn auf die Schippe nehmen.',
-    'itemListElement': articles.map((article, index) => ({
-      '@type': 'ListItem',
-      'position': index + 1,
-      'url': `https://paulik-reisch.de/artikel/${article.slug}`,
-      'name': article.title,
-    })),
+    '@type': 'CollectionPage',
+    "name": "Satirische Artikel | Das Paulik & Reisch Magazin",
+    "description": "Eine kuratierte Sammlung satirischer Meisterwerke, die den alltäglichen Wahnsinn auf die Schippe nehmen. Von Gesellschaftskritik bis Technik-Alpträume.",
+    "url": "https://paulik-reisch.de/artikel",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Paulik & Reisch",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522"
+      }
+    },
+    'mainEntity': {
+      '@type': 'ItemList',
+      'itemListElement': articles.map((article, index) => ({
+        '@type': 'ListItem',
+        'position': index + 1,
+        'item': {
+          '@type': 'Article',
+          'headline': article.title,
+          'url': `https://paulik-reisch.de/artikel/${article.slug}`,
+          'image': article.imageUrl,
+          'datePublished': article.publishedDate,
+          'author': [
+            { "@type": "Person", "name": "Philipp Paulik" },
+            { "@type": "Person", "name": "Maximilian Reisch" }
+          ],
+          'description': article.teaser
+        }
+      })),
+    }
   };
 
   return (
