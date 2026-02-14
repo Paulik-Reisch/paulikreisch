@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { type Article } from '@/lib/firestore';
 import { LeadWall } from './lead-wall';
 import { ShareWall } from './share-wall';
+import { SocialShare } from '@/components/ui/social-share';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -52,6 +53,8 @@ export function ArticleRenderer({ article }: { article: Article }) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {isUnlocked && <SocialShare article={article} />}
     </div>
   );
 }

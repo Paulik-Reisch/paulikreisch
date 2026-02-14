@@ -9,7 +9,6 @@ import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock } from "lucide-react";
 import { ReadingProgressBar } from "@/components/ui/reading-progress-bar";
-import { SocialShare } from "@/components/ui/social-share";
 import { ArticleRenderer } from "@/components/article/article-renderer";
 
 type Props = {
@@ -162,7 +161,6 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                 
                 <ArticleRenderer article={article} />
 
-                <SocialShare article={article} />
             </article>
         </div>
       </main>
