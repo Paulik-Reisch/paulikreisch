@@ -1,4 +1,4 @@
-import { getArticleBySlug, getSeoMetadata } from "@/lib/firestore";
+import { getArticleBySlug, getArticles, getSeoMetadata, type Article } from "@/lib/firestore";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
@@ -7,12 +7,65 @@ import { de } from "date-fns/locale";
 import { type Metadata, type ResolvingMetadata } from 'next'
 import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock } from "lucide-react";
+import { Calendar, Clock, ArrowRight } from "lucide-react";
 import { ReadingProgressBar } from "@/components/ui/reading-progress-bar";
 import { ArticleRenderer } from "@/components/article/article-renderer";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 type Props = {
   params: { slug: string }
+}
+
+function ArticleCard({ article }: { article: Article }) {
+  return (
+    <Card className="flex flex-col h-full overflow-hidden group">
+      <Link href={`/a/${article.slug}`} className="block overflow-hidden">
+        <Image
+          src={article.imageUrl}
+          alt={article.imageAlt}
+          width={800}
+          height={450}
+          className="aspect-video object-cover w-full transition-transform duration-500 group-hover:scale-105"
+        />
+      </Link>
+      <CardContent className="p-6 flex flex-col flex-grow">
+        <div className="flex-grow">
+          <div className="flex justify-between items-center mb-2">
+            <Badge variant="secondary">{article.category}</Badge>
+            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1.5">
+                <Calendar className="w-4 h-4" />
+                <time dateTime={article.publishedDate}>
+                  {format(new Date(article.publishedDate), "dd. MMM yyyy", { locale: de })}
+                </time>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Clock className="w-4 h-4" />
+                <span>{article.readTime} min</span>
+              </div>
+            </div>
+          </div>
+          <Link href={`/a/${article.slug}`}>
+            <h3 className="text-2xl font-bold font-headline tracking-tight leading-snug group-hover:text-primary transition-colors">
+              {article.title}
+            </h3>
+          </Link>
+          <p className="mt-3 text-muted-foreground line-clamp-3 text-balance">
+            {article.teaser}
+          </p>
+        </div>
+        <div className="mt-6">
+          <Link href={`/a/${article.slug}`}>
+            <Button variant="link" className="p-0 h-auto">
+              Weiterlesen <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+      </CardContent>
+    </Card>
+  );
 }
  
 export async function generateMetadata(
@@ -84,14 +137,19 @@ export async function generateMetadata(
 
 export default async function ArticlePage({ params }: { params: { slug: string } }) {
   const slug = params.slug;
-  const [article, seoData] = await Promise.all([
+  const [article, seoData, allArticles] = await Promise.all([
     getArticleBySlug(slug),
     getSeoMetadata(`a-${slug}`),
+    getArticles(),
   ]);
 
   if (!article) {
     notFound();
   }
+
+  const relatedArticles = allArticles
+    .filter(a => a.slug !== slug)
+    .slice(0, 3);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -162,6 +220,19 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                 <ArticleRenderer article={article} />
 
             </article>
+
+            {relatedArticles.length > 0 && (
+              <section className="mt-24 border-t pt-16">
+                  <h2 className="text-3xl font-bold font-headline text-center mb-12">
+                      Das könnte Sie auch interessieren
+                  </h2>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+                      {relatedArticles.map((relatedArticle) => (
+                          <ArticleCard key={relatedArticle.id} article={relatedArticle} />
+                      ))}
+                  </div>
+              </section>
+            )}
         </div>
       </main>
       <Footer />
