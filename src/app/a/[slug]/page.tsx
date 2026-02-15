@@ -1,3 +1,4 @@
+
 import { getArticleBySlug, getArticles, getSeoMetadata, type Article } from "@/lib/firestore";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/landing/header";
@@ -13,6 +14,7 @@ import { ArticleRenderer } from "@/components/article/article-renderer";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type Props = {
   params: { slug: string }
@@ -177,6 +179,15 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     dateModified: seoData?.dateModified || new Date(article.publishedDate).toISOString(),
   };
 
+  const author = {
+    name: article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Unsere Redaktion',
+    subtitle: article.author === 'gastbeitrag' ? 'Von einem externen Autor' : 'Paulik & Reisch',
+    avatarUrl: article.author === 'gastbeitrag' 
+      ? 'https://picsum.photos/seed/guest-author/100/100' 
+      : 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522',
+    avatarFallback: article.author === 'gastbeitrag' ? 'G' : 'PR',
+  }
+
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
        <ReadingProgressBar />
@@ -191,7 +202,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                 <header className="mb-12">
                     <Badge variant="secondary" className="mb-4">{article.category}</Badge>
                     <h1 className="text-4xl sm:text-5xl font-extrabold font-serifHeadline tracking-tight text-balance">{article.title}</h1>
-                    <div className="mt-6 flex items-center gap-6 text-sm text-muted-foreground">
+                    <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4 text-sm text-muted-foreground">
                         <div className="flex items-center gap-2">
                             <Calendar className="w-4 h-4" />
                             <time dateTime={article.publishedDate}>
@@ -203,6 +214,18 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                             <span>{article.readTime} Minuten Lesezeit</span>
                         </div>
                     </div>
+
+                    <div className="mt-8 flex items-center gap-4 not-prose">
+                        <Avatar className="h-12 w-12">
+                            <AvatarImage src={author.avatarUrl} alt={`Avatar für ${author.name}`} />
+                            <AvatarFallback>{author.avatarFallback}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                            <p className="font-semibold text-foreground">{author.name}</p>
+                            <p className="text-sm text-muted-foreground">{author.subtitle}</p>
+                        </div>
+                    </div>
+
                     <div className="mt-8 text-lg text-muted-foreground text-balance prose" dangerouslySetInnerHTML={{ __html: article.teaser }} />
                 </header>
                 

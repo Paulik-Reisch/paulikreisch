@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useActionState } from "react";
@@ -85,6 +86,37 @@ export function ArticleEditorClient({ article }: { article?: Article }) {
         </div>
       </div>
 
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+            <Label htmlFor="accessLevel">Zugriffslevel</Label>
+            <Select name="accessLevel" defaultValue={article?.accessLevel || 'free'}>
+              <SelectTrigger id="accessLevel">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="free">Frei zugänglich</SelectItem>
+                <SelectItem value="leadwall">Lead-Wall (E-Mail)</SelectItem>
+                <SelectItem value="sharewall">Share-Wall (Teilen)</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-muted-foreground">Steuert, ob der Artikel eine Paywall, Leadwall oder Sharewall hat.</p>
+        </div>
+        <div className="space-y-2">
+            <Label htmlFor="author">Autor</Label>
+            <Select name="author" defaultValue={article?.author || 'redaktion'}>
+              <SelectTrigger id="author">
+                <SelectValue placeholder="Autor auswählen" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="redaktion">Unsere Redaktion</SelectItem>
+                <SelectItem value="gastbeitrag">Gastbeitrag</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-muted-foreground">Bestimmt, wer als Autor des Artikels angezeigt wird.</p>
+        </div>
+      </div>
+
+
        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
                 <Label htmlFor="imageUrl">Bild-URL</Label>
@@ -123,21 +155,6 @@ export function ArticleEditorClient({ article }: { article?: Article }) {
             />
              <input type="hidden" id="content-input" name="content" defaultValue={article?.content || ''} />
         </div>
-      </div>
-
-       <div className="space-y-2">
-        <Label htmlFor="accessLevel">Zugriffslevel</Label>
-        <Select name="accessLevel" defaultValue={article?.accessLevel || 'free'}>
-          <SelectTrigger id="accessLevel">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="free">Frei zugänglich</SelectItem>
-            <SelectItem value="leadwall">Lead-Wall (E-Mail)</SelectItem>
-            <SelectItem value="sharewall">Share-Wall (Teilen)</SelectItem>
-          </SelectContent>
-        </Select>
-        <p className="text-xs text-muted-foreground">Steuert, ob der Artikel eine Paywall, Leadwall oder Sharewall hat.</p>
       </div>
 
       <div className="flex justify-end gap-4">

@@ -88,6 +88,7 @@ const ArticleSchema = z.object({
   content: z.string().min(1, "Inhalt ist erforderlich."),
   readTime: z.coerce.number().min(1, "Lesezeit muss mindestens 1 sein."),
   accessLevel: z.enum(['free', 'leadwall', 'sharewall']),
+  author: z.enum(['redaktion', 'gastbeitrag']).optional(),
 });
 
 export async function createArticleAction(prevState: ArticleActionState, formData: FormData): Promise<ArticleActionState> {

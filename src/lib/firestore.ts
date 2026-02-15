@@ -189,6 +189,7 @@ export interface Article {
     readTime: number; // in minutes
     publishedDate: string;
     accessLevel: 'free' | 'leadwall' | 'sharewall';
+    author?: 'redaktion' | 'gastbeitrag';
 }
 
 export interface LandingPage {
@@ -228,6 +229,7 @@ const defaultArticles: Omit<Article, 'id' | 'publishedDate'>[] = [
         content: '<p>Der vollständige Artikel über den Charme der Bürokratie...</p>',
         readTime: 5,
         accessLevel: 'free',
+        author: 'redaktion'
     },
     {
         slug: 'warum-ihr-drucker-sie-hasst',
@@ -239,6 +241,7 @@ const defaultArticles: Omit<Article, 'id' | 'publishedDate'>[] = [
         content: '<p>Der vollständige Artikel über hasserfüllte Drucker...</p>',
         readTime: 4,
         accessLevel: 'free',
+        author: 'redaktion'
     },
     {
         slug: 'die-kunst-des-prokrastinierens',
@@ -250,6 +253,7 @@ const defaultArticles: Omit<Article, 'id' | 'publishedDate'>[] = [
         content: '<p>Der vollständige Artikel über das Prokrastinieren...</p>',
         readTime: 6,
         accessLevel: 'free',
+        author: 'redaktion'
     },
 ];
 
@@ -280,6 +284,7 @@ export async function getArticles(): Promise<Article[]> {
             ...data,
             slug: doc.id,
             publishedDate: (data.publishedDate as Timestamp).toDate().toISOString(),
+            author: data.author || 'redaktion',
         } as Article;
     });
 }
@@ -295,6 +300,7 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
             slug: docSnap.id,
             publishedDate: (data.publishedDate as Timestamp).toDate().toISOString(),
             accessLevel: data.accessLevel || 'free',
+            author: data.author || 'redaktion',
         } as Article;
     }
     return null;
@@ -315,6 +321,7 @@ export async function addArticle(articleData: Omit<Article, 'id' | 'publishedDat
         slug,
         publishedDate: Timestamp.now(),
         accessLevel: articleData.accessLevel || 'free',
+        author: articleData.author || 'redaktion',
     };
     await setDoc(docRef, dataWithTimestamp);
     await addLog(user, 'Artikel erstellt', `Slug: ${slug}`);
