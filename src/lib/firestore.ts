@@ -1146,5 +1146,4 @@ export async function getRecentEvents(limit = 20): Promise<AnalyticsEvent[]> {
             timestamp: (data.timestamp as Timestamp).toDate().toISOString(),
         } as AnalyticsEvent;
     });
-
-    
+}
