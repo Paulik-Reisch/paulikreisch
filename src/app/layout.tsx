@@ -11,25 +11,25 @@ import { GlobalTracker } from '@/components/analytics/global-tracker';
 export const metadata: Metadata = {
   metadataBase: new URL('https://paulik-reisch.de'),
   title: {
-    default: 'Paiúlik & Reisch | Premium Humor und Satire',
-    template: '%s | Paiúlik & Reisch',
+    default: 'Paulik & Reisch | Premium Humor und Satire',
+    template: '%s | Paulik & Reisch',
   },
   description: 'Premium Humor und Satire',
-  applicationName: 'Paiúlik & Reisch',
+  applicationName: 'Paulik & Reisch',
   authors: [{ name: 'Philipp Paulik' }, { name: 'Maximilian Reisch' }],
   keywords: ['Satire', 'Humor', 'Buch', 'Autoren', 'Paulik', 'Reisch', 'Hallo Welt', 'lustige Bücher', 'deutsche Autoren', 'Schulsatire', 'Premium Satire'],
   openGraph: {
-      title: 'Paiúlik & Reisch',
+      title: 'Paulik & Reisch',
       description: 'Premium Humor und Satire',
       url: 'https://paulik-reisch.de',
-      siteName: 'Paiúlik & Reisch',
+      siteName: 'Paulik & Reisch',
       locale: 'de_DE',
       type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Paiúlik & Reisch | Premium Humor und Satire',
-    description: 'Entdecken Sie Premium Humor und Satire von Paiúlik & Reisch.',
+    title: 'Paulik & Reisch | Premium Humor und Satire',
+    description: 'Entdecken Sie Premium Humor und Satire von Paulik & Reisch.',
     creator: '@paulikreisch',
   },
   robots: {
