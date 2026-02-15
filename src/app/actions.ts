@@ -71,8 +71,8 @@ export async function subscribeToNewsletterAction(
         return { success: true, message: `Wir haben eine Bestätigungs-E-Mail an ${validatedFields.data.email} gesendet.` };
     } catch (e) {
         console.error(e);
-        const error = e as Error;
-        if (error.message.includes("already exists")) {
+        const error = e as any;
+        if (error.name === 'validation_error' && error.message.includes('`email` must be unique')) {
             return { success: true, message: `Diese E-Mail-Adresse ist bereits registriert.` };
         }
         return { error: "Anmeldung fehlgeschlagen. Das Internet ist wahrscheinlich wieder kaputt." };
