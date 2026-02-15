@@ -90,7 +90,7 @@ export function Newsletter() {
           <form ref={formRef} action={formAction}>
             <NewsletterFormContent />
           </form>
-           {showConfetti && <Confetti onComplete={() => setShowConfetti(false)} />}
+           {showConfetti && <Confetti onComplete={() => setTimeout(() => setShowConfetti(false), 0)} />}
         </div>
       </div>
     </section>
