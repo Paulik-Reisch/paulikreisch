@@ -1,3 +1,4 @@
+
 import { getArticles, getSeoMetadata, type Article } from "@/lib/firestore";
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
@@ -41,7 +42,7 @@ function ArticleCard({ article }: { article: Article }) {
             </div>
           </div>
           <Link href={`/a/${article.slug}`}>
-            <h3 className="text-2xl font-bold font-headline tracking-tight leading-snug group-hover:text-primary transition-colors">
+            <h3 className="text-2xl font-bold font-headline tracking-tight leading-snug group-hover:text-primary transition-colors line-clamp-2">
               {article.title}
             </h3>
           </Link>
@@ -167,3 +168,5 @@ export default async function ArticlesPage() {
     </div>
   );
 }
+
+    
