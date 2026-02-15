@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -79,8 +78,8 @@ export function Hero({ product }: { product?: Product }) {
               <Link href="/shop">
                 <Button size="lg" variant="secondary">Jetzt kaufen</Button>
               </Link>
-              <Link href="/lp-series">
-                <Button size="lg" variant="outline">Mehr Satirewerke</Button>
+              <Link href="/a">
+                <Button size="lg" variant="default">Lustige Artikel</Button>
               </Link>
             </div>
           </div>

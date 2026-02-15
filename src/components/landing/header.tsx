@@ -34,12 +34,19 @@ export function Header() {
       scrolled ? "border-b shadow-sm" : ""
     )}>
       <div className="container mx-auto flex items-center justify-between">
-        <a className="flex items-center justify-center" href="/">
-          <div className="flex items-center gap-2">
-            <Logo className="h-8 w-auto" />
-            <span className="font-headline font-semibold text-lg ml-2 hidden sm:inline">Paulik & Reisch</span>
-          </div>
-        </a>
+        <div className="flex items-center gap-6">
+            <a className="flex items-center justify-center" href="/">
+            <div className="flex items-center gap-2">
+                <Logo className="h-8 w-auto" />
+                <span className="font-headline font-semibold text-lg ml-2 hidden sm:inline">Paulik & Reisch</span>
+            </div>
+            </a>
+            <nav className="hidden md:flex">
+                <Link href="/a">
+                    <Button variant="default">Lustige Artikel</Button>
+                </Link>
+            </nav>
+        </div>
         
         <div className="flex items-center gap-2">
           {/* We use a wrapper Link with `group` to control the hover state on child elements */}
