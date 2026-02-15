@@ -88,9 +88,14 @@
           "type": "string",
           "description": "Art des Autors, z.B. Redaktion oder Gastbeitrag.",
           "enum": ["redaktion", "gastbeitrag"]
+        },
+        "status": {
+          "type": "string",
+          "description": "The publication status of the article.",
+          "enum": ["draft", "published"]
         }
       },
-      "required": ["title", "slug", "category", "imageUrl", "teaser", "content", "readTime", "publishedDate", "accessLevel"]
+      "required": ["title", "slug", "category", "imageUrl", "teaser", "content", "readTime", "publishedDate", "accessLevel", "status"]
     },
     "LandingPage": {
       "title": "Landing Page",

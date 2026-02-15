@@ -1,5 +1,5 @@
 
-import { getArticles } from "@/lib/firestore";
+import { getAdminArticles } from "@/lib/firestore";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { PlusCircle, ArrowUpRight } from "lucide-react";
@@ -17,7 +17,7 @@ import { de } from "date-fns/locale";
 import { ArticleActions } from "./article-actions-client";
 
 export default async function AdminArticlesDashboard() {
-    const articles = await getArticles();
+    const articles = await getAdminArticles();
 
     return (
         <div className="space-y-6">
@@ -39,6 +39,7 @@ export default async function AdminArticlesDashboard() {
                     <TableHeader>
                         <TableRow>
                             <TableHead>Titel</TableHead>
+                            <TableHead>Status</TableHead>
                             <TableHead>Kategorie</TableHead>
                             <TableHead>Veröffentlicht</TableHead>
                             <TableHead className="text-right">Aktionen</TableHead>
@@ -52,6 +53,11 @@ export default async function AdminArticlesDashboard() {
                                         {article.title}
                                         <ArrowUpRight className="h-3 w-3 text-muted-foreground" />
                                     </Link>
+                                </TableCell>
+                                 <TableCell>
+                                    <Badge variant={article.status === 'published' ? 'default' : 'secondary'}>
+                                        {article.status === 'published' ? 'Publiziert' : 'Entwurf'}
+                                    </Badge>
                                 </TableCell>
                                 <TableCell><Badge variant="secondary">{article.category}</Badge></TableCell>
                                 <TableCell>{format(new Date(article.publishedDate), "dd. MMM yyyy", { locale: de })}</TableCell>

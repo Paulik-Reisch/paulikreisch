@@ -75,7 +75,7 @@ export function ArticleEditorClient({ article }: { article?: Article }) {
         </div>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="space-y-2">
             <Label htmlFor="category">Kategorie</Label>
             <Input id="category" name="category" defaultValue={article?.category} required />
@@ -83,6 +83,18 @@ export function ArticleEditorClient({ article }: { article?: Article }) {
         <div className="space-y-2">
             <Label htmlFor="readTime">Lesezeit (in Minuten)</Label>
             <Input id="readTime" name="readTime" type="number" defaultValue={article?.readTime} required />
+        </div>
+        <div className="space-y-2">
+            <Label htmlFor="status">Status</Label>
+            <Select name="status" defaultValue={article?.status || 'draft'}>
+              <SelectTrigger id="status">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="draft">Entwurf</SelectItem>
+                <SelectItem value="published">Publiziert</SelectItem>
+              </SelectContent>
+            </Select>
         </div>
       </div>
 
@@ -108,7 +120,7 @@ export function ArticleEditorClient({ article }: { article?: Article }) {
                 <SelectValue placeholder="Autor auswählen" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="redaktion">Unsere Redaktion</SelectItem>
+                <SelectItem value="redaktion">Unsere Autoren</SelectItem>
                 <SelectItem value="gastbeitrag">Gastbeitrag</SelectItem>
               </SelectContent>
             </Select>

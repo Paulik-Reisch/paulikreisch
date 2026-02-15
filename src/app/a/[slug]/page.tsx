@@ -15,6 +15,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getSession } from "@/lib/session";
 
 type Props = {
   params: { slug: string }
@@ -139,13 +140,15 @@ export async function generateMetadata(
 
 export default async function ArticlePage({ params }: { params: { slug: string } }) {
   const slug = params.slug;
+  const session = await getSession();
+
   const [article, seoData, allArticles] = await Promise.all([
     getArticleBySlug(slug),
     getSeoMetadata(`a-${slug}`),
-    getArticles(),
+    getArticles(), // This now only gets published articles
   ]);
 
-  if (!article) {
+  if (!article || (article.status !== 'published' && !session)) {
     notFound();
   }
 
@@ -180,7 +183,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
   };
 
   const author = {
-    name: article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Unsere Redaktion',
+    name: article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Unsere Autoren',
     subtitle: article.author === 'gastbeitrag' ? 'Von einem externen Autor' : 'Paulik & Reisch',
     avatarUrl: article.author === 'gastbeitrag' 
       ? 'https://picsum.photos/seed/guest-author/100/100' 

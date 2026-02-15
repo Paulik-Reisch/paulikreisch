@@ -190,6 +190,7 @@ export interface Article {
     publishedDate: string;
     accessLevel: 'free' | 'leadwall' | 'sharewall';
     author?: 'redaktion' | 'gastbeitrag';
+    status: 'draft' | 'published';
 }
 
 export interface LandingPage {
@@ -229,7 +230,8 @@ const defaultArticles: Omit<Article, 'id' | 'publishedDate'>[] = [
         content: '<p>Der vollständige Artikel über den Charme der Bürokratie...</p>',
         readTime: 5,
         accessLevel: 'free',
-        author: 'redaktion'
+        author: 'redaktion',
+        status: 'published'
     },
     {
         slug: 'warum-ihr-drucker-sie-hasst',
@@ -241,7 +243,8 @@ const defaultArticles: Omit<Article, 'id' | 'publishedDate'>[] = [
         content: '<p>Der vollständige Artikel über hasserfüllte Drucker...</p>',
         readTime: 4,
         accessLevel: 'free',
-        author: 'redaktion'
+        author: 'redaktion',
+        status: 'published'
     },
     {
         slug: 'die-kunst-des-prokrastinierens',
@@ -253,7 +256,8 @@ const defaultArticles: Omit<Article, 'id' | 'publishedDate'>[] = [
         content: '<p>Der vollständige Artikel über das Prokrastinieren...</p>',
         readTime: 6,
         accessLevel: 'free',
-        author: 'redaktion'
+        author: 'redaktion',
+        status: 'published'
     },
 ];
 
@@ -265,14 +269,14 @@ async function initializeArticles() {
         console.log("Initializing default articles...");
         defaultArticles.forEach(articleData => {
             const docRef = doc(articlesCol, articleData.slug);
-            batch.set(docRef, { ...articleData, publishedDate: Timestamp.now() });
+            batch.set(docRef, { ...articleData, publishedDate: Timestamp.now(), status: 'published' });
         });
         await batch.commit();
         console.log("Default articles initialized.");
     }
 }
 
-export async function getArticles(): Promise<Article[]> {
+export async function getAdminArticles(): Promise<Article[]> {
     await initializeArticles();
     const articlesCol = collection(db, 'articles');
     const q = query(articlesCol, orderBy("publishedDate", "desc"));
@@ -285,8 +289,30 @@ export async function getArticles(): Promise<Article[]> {
             slug: doc.id,
             publishedDate: (data.publishedDate as Timestamp).toDate().toISOString(),
             author: data.author || 'redaktion',
+            status: data.status || 'published',
         } as Article;
     });
+}
+
+export async function getArticles(): Promise<Article[]> {
+    await initializeArticles();
+    const articlesCol = collection(db, 'articles');
+    // Query all articles and sort by date, then filter in code.
+    // This avoids the need for a composite index on 'status' and 'publishedDate'.
+    const q = query(articlesCol, orderBy("publishedDate", "desc"));
+    const snapshot = await getDocs(q);
+    const allArticles = snapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+            id: doc.id,
+            ...data,
+            slug: doc.id,
+            publishedDate: (data.publishedDate as Timestamp).toDate().toISOString(),
+            author: data.author || 'redaktion',
+            status: data.status || 'published',
+        } as Article;
+    });
+    return allArticles.filter(article => article.status === 'published');
 }
 
 export async function getArticleBySlug(slug: string): Promise<Article | null> {
@@ -301,13 +327,14 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
             publishedDate: (data.publishedDate as Timestamp).toDate().toISOString(),
             accessLevel: data.accessLevel || 'free',
             author: data.author || 'redaktion',
+            status: data.status || 'published',
         } as Article;
     }
     return null;
 }
 
 
-export async function addArticle(articleData: Omit<Article, 'id' | 'publishedDate'>, user: string): Promise<string> {
+export async function addArticle(articleData: Omit<Article, 'id' | 'publishedDate' | 'status'>, user: string): Promise<string> {
     const slug = articleData.slug || articleData.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     const docRef = doc(db, 'articles', slug);
     
@@ -322,13 +349,14 @@ export async function addArticle(articleData: Omit<Article, 'id' | 'publishedDat
         publishedDate: Timestamp.now(),
         accessLevel: articleData.accessLevel || 'free',
         author: articleData.author || 'redaktion',
+        status: 'draft',
     };
     await setDoc(docRef, dataWithTimestamp);
     await addLog(user, 'Artikel erstellt', `Slug: ${slug}`);
     return slug;
 }
 
-export async function updateArticle(originalSlug: string, dataToUpdate: Omit<Article, 'id' | 'publishedDate'>, user: string) {
+export async function updateArticle(originalSlug: string, dataToUpdate: Partial<Omit<Article, 'id' | 'publishedDate'>>, user: string) {
     const { slug: newSlug, ...restData } = dataToUpdate;
 
     if (!newSlug || originalSlug === newSlug) {
@@ -1118,4 +1146,5 @@ export async function getRecentEvents(limit = 20): Promise<AnalyticsEvent[]> {
             timestamp: (data.timestamp as Timestamp).toDate().toISOString(),
         } as AnalyticsEvent;
     });
-}
+
+    

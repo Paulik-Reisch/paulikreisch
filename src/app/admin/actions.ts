@@ -89,6 +89,7 @@ const ArticleSchema = z.object({
   readTime: z.coerce.number().min(1, "Lesezeit muss mindestens 1 sein."),
   accessLevel: z.enum(['free', 'leadwall', 'sharewall']),
   author: z.enum(['redaktion', 'gastbeitrag']).optional(),
+  status: z.enum(['draft', 'published']).optional(),
 });
 
 export async function createArticleAction(prevState: ArticleActionState, formData: FormData): Promise<ArticleActionState> {
@@ -129,7 +130,12 @@ export async function updateArticleAction(prevState: ArticleActionState, formDat
     }
     
     try {
-        await updateArticle(originalSlug, validatedFields.data, session.user.id);
+        const dataToUpdate = { ...validatedFields.data };
+        if (!dataToUpdate.status) {
+            dataToUpdate.status = 'draft';
+        }
+
+        await updateArticle(originalSlug, dataToUpdate, session.user.id);
         revalidatePath("/admin");
         revalidatePath(`/a/${originalSlug}`);
         if(originalSlug !== validatedFields.data.slug) {
