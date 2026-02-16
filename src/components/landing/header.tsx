@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { AmazonIcon } from '@/components/ui/icons/amazon-icon';
 import { GooglePlayIcon } from '@/components/ui/icons/google-play-icon';
 import { ElevenReaderIcon } from '@/components/ui/icons/eleven-reader-icon';
+import { WorthaftIcon } from '../ui/icons/worthaft-icon';
 
 const amazonLink = "https://amzn.eu/d/0CdFeZ3";
 const googlePlayLink = "https://play.google.com/store/books/details?id=HZb3EAAAQBAJ&rdid=book-HZb3EAAAQBAJ&rdot=1&source=gbs_atb&pcampaignid=books_booksearch_atb";
@@ -44,9 +45,15 @@ export function Header() {
         </div>
         
         <div className="flex items-center gap-4">
-            <nav className="hidden md:flex">
+            <nav className="hidden md:flex items-center gap-4">
                 <Link href="/a">
                     <Button variant="default">Lustige Artikel</Button>
+                </Link>
+                <Link href="/worthaft">
+                    <Button variant="outline">
+                        <WorthaftIcon className="mr-2 h-4 w-4" />
+                        Worthaft Spiel
+                    </Button>
                 </Link>
             </nav>
           {/* We use a wrapper Link with `group` to control the hover state on child elements */}
