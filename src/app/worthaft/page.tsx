@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -59,7 +58,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
   };
 
   return (
-    <div className="space-y-2 mt-8">
+    <div className="space-y-1.5 mt-8">
       {rows.map((row, i) => (
         <div key={i} className="flex justify-center gap-1.5">
           {row.map((key) => (
@@ -72,8 +71,8 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
                 else onChar(key);
               }}
               className={cn(
-                'h-12 font-bold text-sm sm:text-base transition-colors duration-300 flex-1',
-                key.length > 1 ? 'px-2' : 'sm:flex-none sm:w-10 px-0',
+                'h-12 font-bold text-sm sm:text-base transition-colors duration-300 flex-1 p-0',
+                key.length > 1 ? 'px-2' : 'sm:flex-none sm:w-10',
                 getStatusClass(key)
               )}
             >
@@ -86,7 +85,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
   );
 };
 
-const Grid = ({ guesses, currentGuess }: { guesses: { guess: string; statuses: LetterStatus[] }[]; currentGuess: string }) => {
+const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex }: { guesses: { guess: string; statuses: LetterStatus[] }[]; currentGuess: string; isShaking: boolean; currentRowIndex: number; }) => {
   const rows = Array.from({ length: MAX_GUESSES });
   const getStatusClass = (status: LetterStatus) => {
     switch (status) {
@@ -98,9 +97,12 @@ const Grid = ({ guesses, currentGuess }: { guesses: { guess: string; statuses: L
   };
 
   return (
-    <div className="grid grid-rows-6 gap-2">
+    <div className="grid grid-rows-6 gap-1.5">
       {rows.map((_, rowIndex) => (
-        <div key={rowIndex} className="grid grid-cols-5 gap-2">
+        <div key={rowIndex} className={cn(
+          "grid grid-cols-5 gap-1.5",
+          isShaking && rowIndex === currentRowIndex && "animate-shake"
+        )}>
           {Array.from({ length: WORD_LENGTH }).map((_, colIndex) => {
             const guessInfo = guesses[rowIndex];
             const isCurrentRow = rowIndex === guesses.length;
@@ -112,12 +114,12 @@ const Grid = ({ guesses, currentGuess }: { guesses: { guess: string; statuses: L
                 <div
                     key={colIndex}
                     className={cn(
-                        'w-14 h-14 sm:w-16 sm:h-16 border-2 flex items-center justify-center text-3xl font-bold rounded-md transition-all duration-500',
+                        'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-md transition-all duration-500',
                         getStatusClass(status),
                         isCurrentRow && hasLetter && 'border-muted-foreground',
                         status !== 'empty' && 'animate-in fade-in zoom-in-50'
                     )}
-                    style={{ animationDelay: `${'\'\'\''}${colIndex * 100}ms'\'\'\''` }}
+                    style={{ animationDelay: `'''${colIndex * 100}ms'''` }}
                 >
                     {letter}
                 </div>
@@ -140,6 +142,7 @@ export default function WorthaftPage() {
     const [stats, setStats] = useState({ games: 0, wins: 0, streak: 0 });
     const [isCompletedToday, setIsCompletedToday] = useState(false);
     const [timeToNextGame, setTimeToNextGame] = useState('');
+    const [isShaking, setIsShaking] = useState(false);
 
     const getTodayString = () => new Date().toISOString().split('T')[0];
 
@@ -214,6 +217,8 @@ export default function WorthaftPage() {
 
         if (!WORDS.includes(currentGuess.toLowerCase())) {
             toast({ variant: 'destructive', title: 'Ungültiges Wort', description: 'Dieses Wort steht nicht in unserem Duden.' });
+            setIsShaking(true);
+            setTimeout(() => setIsShaking(false), 600);
             return;
         }
 
@@ -309,7 +314,7 @@ export default function WorthaftPage() {
             }).join('')
         ).join('\n');
         
-        const text = `${'\'\'\''}${title}\n${gameState === 'won' ? guesses.length : 'X'}/${MAX_GUESSES}\n\n${resultGrid}\n\nhttps://paulik-reisch.de/worthaft'\'\'\''}`;
+        const text = `'''${title}\n${gameState === 'won' ? guesses.length : 'X'}/${MAX_GUESSES}\n\n${resultGrid}\n\nhttps://paulik-reisch.de/worthaft'''`;
         
         navigator.clipboard.writeText(text).then(() => {
             toast({ title: 'Kopiert!', description: 'Ergebnis in die Zwischenablage kopiert. Teile es mit der Welt!' });
@@ -349,8 +354,10 @@ export default function WorthaftPage() {
                         <h1 className="text-4xl font-bold font-headline">Worthaft</h1>
                         <p className="text-muted-foreground">Eine Hommage von <Link href="/ueber/autoren" className="underline">Paulik & Reisch</Link>. <Link href="/worthaft/ueber" className="underline">Wie funktioniert's?</Link></p>
                     </div>
-                    <Grid guesses={guesses} currentGuess={currentGuess} />
-                    <Keyboard onChar={handleChar} onEnter={handleEnter} onDelete={handleDelete} letterStatuses={letterStatuses} />
+                    <div className="w-full max-w-xs sm:max-w-sm">
+                        <Grid guesses={guesses} currentGuess={currentGuess} isShaking={isShaking && guesses.length < MAX_GUESSES} currentRowIndex={guesses.length} />
+                        <Keyboard onChar={handleChar} onEnter={handleEnter} onDelete={handleDelete} letterStatuses={letterStatuses} />
+                    </div>
                 </div>
             </main>
             <Footer />
