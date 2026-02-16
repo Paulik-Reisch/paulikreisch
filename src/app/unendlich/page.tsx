@@ -153,9 +153,9 @@ export default function UnendlichPage() {
 
         let currentBoard = board;
         let rotations = 0;
-        if (direction === 'up') { rotations = 1; }
+        if (direction === 'down') { rotations = 1; }
         if (direction === 'right') { rotations = 2; }
-        if (direction === 'down') { rotations = 3; }
+        if (direction === 'up') { rotations = 3; }
 
         for (let i = 0; i < rotations; i++) {
             currentBoard = rotateBoard(currentBoard);
@@ -366,3 +366,5 @@ export default function UnendlichPage() {
         </div>
     );
 }
+
+    
