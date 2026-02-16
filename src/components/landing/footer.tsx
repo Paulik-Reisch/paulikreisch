@@ -16,6 +16,7 @@ import { usePathname } from "next/navigation";
 import { AmazonIcon } from '@/components/ui/icons/amazon-icon';
 import { GooglePlayIcon } from '@/components/ui/icons/google-play-icon';
 import { ElevenReaderIcon } from '@/components/ui/icons/eleven-reader-icon';
+import { WorthaftIcon } from "../ui/icons/worthaft-icon";
 
 const initialNewsletterState = { success: undefined, error: undefined, message: undefined };
 
@@ -79,6 +80,12 @@ export function Footer() {
             <h3 className="text-sm font-bold uppercase text-gray-500 mb-5 tracking-wider">Entdecken</h3>
             <ul className="space-y-3">
               <li><Link href="/ueber/autoren" className="text-gray-600 hover:text-[#f08e6c] text-[15px]">Über die Autoren</Link></li>
+              <li>
+                <Link href="/worthaft" className="text-gray-600 hover:text-[#f08e6c] text-[15px] inline-flex items-center gap-2">
+                    <WorthaftIcon className="h-4 w-4" />
+                    <span>Worthaft Spiel</span>
+                </Link>
+              </li>
             </ul>
              <h3 className="text-sm font-bold uppercase text-gray-500 mb-4 mt-8 tracking-wider">Buch kaufen</h3>
               <div className="space-y-2 flex flex-col items-start">
