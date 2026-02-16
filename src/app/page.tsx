@@ -12,6 +12,7 @@ import { Footer } from "@/components/landing/footer";
 import { Product, getSeoMetadata } from "@/lib/firestore";
 import { CountdownBanner } from "@/components/landing/countdown-banner";
 import type { Metadata, ResolvingMetadata } from 'next'
+import { WorthaftTeaser } from '@/components/landing/worthaft-teaser';
 
 export async function generateMetadata(
   {},
@@ -72,6 +73,7 @@ export default async function Home() {
       <main className="flex-1">
         <Hero product={hw1} />
         <ArticleSection />
+        <WorthaftTeaser />
         <Features />
         <Authors />
         <Testimonials />
