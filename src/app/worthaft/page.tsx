@@ -304,6 +304,63 @@ export default function WorthaftPage() {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [handleKeyDown]);
 
+    useEffect(() => {
+        // We only want to run this on the client
+        if (typeof window === 'undefined' || typeof document === 'undefined') return;
+
+        let link = document.querySelector<HTMLLinkElement>("link[rel*='icon']");
+        
+        // If no link is found, create one. This is a fallback.
+        if (!link) {
+            link = document.createElement('link');
+            link.rel = 'icon';
+            document.head.appendChild(link);
+        }
+        
+        const originalFavicon = link.href;
+
+        const canvas = document.createElement('canvas');
+        canvas.width = 32;
+        canvas.height = 32;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        // Draw a base (using a neutral color from the brand palette)
+        ctx.fillStyle = 'hsl(240 5% 96%)'; // --muted color
+        ctx.fillRect(0, 0, 32, 32);
+
+        let text = '';
+        let textColor = 'hsl(240 10% 3.9%)'; // --foreground
+
+        if (gameState === 'won') {
+            text = '✅';
+        } else if (gameState === 'lost') {
+            text = '❌';
+        } else if (guesses.length > 0) {
+            text = `${guesses.length}`;
+            textColor = 'hsl(220 85% 55%)'; // --primary
+        }
+
+        if (text) {
+            ctx.font = 'bold 24px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = textColor;
+            ctx.fillText(text, 16, 18);
+            link.href = canvas.toDataURL('image/png');
+        } else {
+            // If game hasn't started, ensure original is set
+            link.href = originalFavicon;
+        }
+        
+        // Cleanup function to restore original favicon when the user navigates away
+        return () => {
+            if (link) {
+                link.href = originalFavicon;
+            }
+        };
+    }, [guesses, gameState]);
+
     const shareResults = () => {
         const title = 'Worthaft - Das Paulik & Reisch Wortspiel';
         const resultGrid = guesses.map(g => 
