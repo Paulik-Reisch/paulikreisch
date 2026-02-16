@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Header } from '@/components/landing/header';
 import { Footer } from '@/components/landing/footer';
 import { cn } from '@/lib/utils';
@@ -143,6 +143,11 @@ export default function WorthaftPage() {
     const [isCompletedToday, setIsCompletedToday] = useState(false);
     const [timeToNextGame, setTimeToNextGame] = useState('');
     const [isShaking, setIsShaking] = useState(false);
+
+    const prevGameStateRef = useRef(gameState);
+    const prevGuessesLengthRef = useRef(guesses.length);
+    const originalFaviconRef = useRef<string | null>(null);
+    const blinkTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const getTodayString = () => new Date().toISOString().split('T')[0];
 
@@ -304,62 +309,78 @@ export default function WorthaftPage() {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [handleKeyDown]);
 
+    // Effect for dynamic favicon
     useEffect(() => {
-        // We only want to run this on the client
         if (typeof window === 'undefined' || typeof document === 'undefined') return;
 
-        let link = document.querySelector<HTMLLinkElement>("link[rel*='icon']");
-        
-        // If no link is found, create one. This is a fallback.
-        if (!link) {
-            link = document.createElement('link');
-            link.rel = 'icon';
-            document.head.appendChild(link);
+        const link = document.querySelector<HTMLLinkElement>("link[rel*='icon']");
+        if (!link) return;
+
+        // Store original favicon on first mount if not already set
+        if (originalFaviconRef.current === null) {
+            originalFaviconRef.current = link.href;
         }
-        
-        const originalFavicon = link.href;
+        const originalFavicon = originalFaviconRef.current;
 
-        const canvas = document.createElement('canvas');
-        canvas.width = 32;
-        canvas.height = 32;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
+        const drawFavicon = (text: string, textColor: string, bgColor: string): string => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 32;
+            canvas.height = 32;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return originalFavicon;
 
-        // Draw a base (using a neutral color from the brand palette)
-        ctx.fillStyle = 'hsl(240 5% 96%)'; // --muted color
-        ctx.fillRect(0, 0, 32, 32);
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, 32, 32);
 
-        let text = '';
-        let textColor = 'hsl(240 10% 3.9%)'; // --foreground
-
-        if (gameState === 'won') {
-            text = '✅';
-        } else if (gameState === 'lost') {
-            text = '❌';
-        } else if (guesses.length > 0) {
-            text = `${guesses.length}`;
-            textColor = 'hsl(220 85% 55%)'; // --primary
-        }
-
-        if (text) {
             ctx.font = 'bold 24px sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillStyle = textColor;
             ctx.fillText(text, 16, 18);
-            link.href = canvas.toDataURL('image/png');
-        } else {
-            // If game hasn't started, ensure original is set
-            link.href = originalFavicon;
-        }
+
+            return canvas.toDataURL('image/png');
+        };
         
-        // Cleanup function to restore original favicon when the user navigates away
+        const blinkFavicon = (text: string, textColor: string, bgColor: string) => {
+            if (blinkTimeoutRef.current) {
+                clearTimeout(blinkTimeoutRef.current);
+            }
+
+            const newFavicon = drawFavicon(text, textColor, bgColor);
+            link.href = newFavicon;
+
+            blinkTimeoutRef.current = setTimeout(() => {
+                if (link.href === newFavicon) {
+                    link.href = originalFavicon;
+                }
+            }, 2000);
+        };
+        
+        const justGuessed = guesses.length > prevGuessesLengthRef.current;
+        const justFinished = gameState !== 'playing' && prevGameStateRef.current === 'playing';
+
+        if (justFinished) {
+            if (gameState === 'won') {
+                blinkFavicon('✅', '#FFFFFF', '#22c55e'); // green
+            } else { // lost
+                blinkFavicon('❌', '#FFFFFF', '#ef4444'); // red
+            }
+        } else if (justGuessed) {
+            blinkFavicon(`${guesses.length}`, 'hsl(220 85% 55%)', 'hsl(240 5% 96%)');
+        }
+
+        prevGameStateRef.current = gameState;
+        prevGuessesLengthRef.current = guesses.length;
+
         return () => {
-            if (link) {
+            if (link && originalFavicon) {
                 link.href = originalFavicon;
             }
+            if (blinkTimeoutRef.current) {
+                clearTimeout(blinkTimeoutRef.current);
+            }
         };
-    }, [guesses, gameState]);
+    }, [guesses.length, gameState]);
 
     const shareResults = () => {
         const title = 'Worthaft - Das Paulik & Reisch Wortspiel';

@@ -30,6 +30,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/worthaft',
   },
+  icons: {
+    icon: 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Fworthaft.svg?alt=media&token=c63037f9-af2e-4fac-94b5-0679e776a14f',
+  },
 };
 
 export default function WorthaftLayout({
