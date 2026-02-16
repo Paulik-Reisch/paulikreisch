@@ -109,7 +109,7 @@ const Grid = ({ guesses, currentGuess }: { guesses: { guess: string; statuses: L
                         isCurrentRow && hasLetter && 'border-muted-foreground',
                         status !== 'empty' && 'animate-in fade-in zoom-in-50'
                     )}
-                    style={{ animationDelay: `${colIndex * 100}ms` }}
+                    style={{ animationDelay: `${'\'\'\''}${colIndex * 100}ms'\'\'\''` }}
                 >
                     {letter}
                 </div>
@@ -237,21 +237,45 @@ export default function WorthaftPage() {
             }).join('')
         ).join('\n');
         
-        const text = `${title}\n${gameState === 'won' ? guesses.length : 'X'}/${MAX_GUESSES}\n\n${resultGrid}\n\nhttps://paulik-reisch.de/worthaft`;
+        const text = `${'\'\'\''}${title}\n${gameState === 'won' ? guesses.length : 'X'}/${MAX_GUESSES}\n\n${resultGrid}\n\nhttps://paulik-reisch.de/worthaft'\'\'\''}`;
         
         navigator.clipboard.writeText(text).then(() => {
             toast({ title: 'Kopiert!', description: 'Ergebnis in die Zwischenablage kopiert. Teile es mit der Welt!' });
         });
     }
 
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'WebApplication',
+        name: 'Worthaft',
+        description: 'Ein tägliches Worträtselspiel im Stil von Wordle, präsentiert von den Satire-Autoren Paulik & Reisch.',
+        url: 'https://paulik-reisch.de/worthaft',
+        applicationCategory: 'GameApplication',
+        operatingSystem: 'Any',
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+        },
+        publisher: {
+          '@type': 'Organization',
+          name: 'Paulik & Reisch',
+          url: 'https://paulik-reisch.de'
+        },
+        keywords: 'Wordle, Wortspiel, Rätsel, Deutsch, Worthaft'
+    };
+
     return (
         <div className="flex flex-col min-h-screen bg-background text-foreground">
+             <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             <Header />
             <main className="flex-1 py-8 md:py-12">
                 <div className="container max-w-md mx-auto flex flex-col items-center justify-center">
                     <div className="text-center mb-8">
                         <h1 className="text-4xl font-bold font-headline">Worthaft</h1>
-                        <p className="text-muted-foreground">Eine Hommage von <Link href="/ueber/autoren" className="underline">Paulik & Reisch</Link></p>
+                        <p className="text-muted-foreground">Eine Hommage von <Link href="/ueber/autoren" className="underline">Paulik & Reisch</Link>. <Link href="/worthaft/ueber" className="underline">Wie funktioniert's?</Link></p>
                     </div>
                     <Grid guesses={guesses} currentGuess={currentGuess} />
                     <Keyboard onChar={handleChar} onEnter={handleEnter} onDelete={handleDelete} letterStatuses={letterStatuses} />
