@@ -6,6 +6,13 @@ import Link from "next/link";
 import { Logo } from "../ui/logo";
 import { cn } from '@/lib/utils';
 import { WorthaftIcon } from '../ui/icons/worthaft-icon';
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import { Menu } from 'lucide-react';
+
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -51,6 +58,38 @@ export function Header() {
                     <Button variant="secondary">Buch Kaufen</Button>
                 </Link>
             </nav>
+            <div className="md:hidden">
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="icon">
+                    <Menu className="h-6 w-6" />
+                    <span className="sr-only">Menü öffnen</span>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right">
+                  <div className="flex flex-col gap-4 py-6">
+                    <a className="flex items-center justify-center mb-4" href="/">
+                      <div className="flex items-center gap-2">
+                          <Logo className="h-8 w-auto" />
+                          <span className="font-headline font-semibold text-lg ml-2">Paulik & Reisch</span>
+                      </div>
+                    </a>
+                    <Link href="/a">
+                        <Button variant="default" className="w-full">Lustige Artikel</Button>
+                    </Link>
+                    <Link href="/worthaft">
+                        <Button variant="outline" className="w-full">
+                            <WorthaftIcon className="mr-2 h-4 w-4" />
+                            Worthaft Spiel
+                        </Button>
+                    </Link>
+                    <Link href="/shop">
+                        <Button variant="secondary" className="w-full">Buch Kaufen</Button>
+                    </Link>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
         </div>
 
       </div>
