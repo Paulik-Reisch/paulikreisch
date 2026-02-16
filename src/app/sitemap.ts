@@ -55,6 +55,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/lp-palabrotas/mehr-erfahren',
     '/vibecoding/anleitung',
     '/wiki/satire',
+    '/worthaft',
+    '/worthaft/ueber',
   ];
 
   const staticPageUrls = staticPages.map(path => {
