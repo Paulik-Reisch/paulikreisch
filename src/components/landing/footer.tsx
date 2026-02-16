@@ -27,7 +27,7 @@ const elevenReaderLink = "https://elevenreader.io/audiobooks/hallo-welt/PNgTk712
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending} className="bg-[#0070c0] hover:bg-[#0070d9] text-white rounded-sm px-6 py-3 self-start">
+    <Button variant="secondary" type="submit" disabled={pending} className="rounded-sm px-6 py-3 self-start">
       {pending ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
