@@ -148,6 +148,8 @@ export function Footer() {
             <br/>
             <p>Amazon Media EU S.à r.l. (registrierter Verkäufer von digitalen Inhalten, die mit "Verkauf durch Amazon Media EU SARL" gekennzeichnet sind.<br/>
             Amazon Media EU S.à r.l. (Société à responsabilité limitée)</p>
+            <br/>
+            <p>Das Spiel "Worthaft" ist eine unabhängige Hommage und steht in keiner Verbindung zum Original "Wordle" der New York Times. Spieldaten wie Statistiken und Fortschritt werden ausschließlich lokal im Browser des Nutzers gespeichert. Es findet keine serverseitige Erfassung oder Auswertung der Spieldaten statt.</p>
           </div>
 
           <div className="flex-1 flex flex-col items-center md:items-end gap-2 min-w-[200px]">
