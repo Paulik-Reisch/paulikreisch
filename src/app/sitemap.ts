@@ -57,6 +57,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/wiki/satire',
     '/worthaft',
     '/worthaft/ueber',
+    '/unendlich',
+    '/unendlich/ueber',
   ];
 
   const staticPageUrls = staticPages.map(path => {

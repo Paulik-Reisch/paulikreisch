@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -11,7 +12,7 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { Menu } from 'lucide-react';
+import { Menu, Infinity } from 'lucide-react';
 
 
 export function Header() {
@@ -46,12 +47,18 @@ export function Header() {
         <div className="flex items-center gap-4">
             <nav className="hidden md:flex items-center gap-4">
                 <Link href="/a">
-                    <Button variant="default">Lustige Artikel</Button>
+                    <Button variant="ghost">Lustige Artikel</Button>
                 </Link>
                 <Link href="/worthaft">
-                    <Button variant="outline">
+                    <Button variant="ghost">
                         <WorthaftIcon className="mr-2 h-4 w-4" />
-                        Worthaft Spiel
+                        Worthaft
+                    </Button>
+                </Link>
+                <Link href="/unendlich">
+                    <Button variant="ghost">
+                        <Infinity className="mr-2 h-4 w-4" />
+                        Unendlich
                     </Button>
                 </Link>
                 <Link href="/shop">
@@ -81,6 +88,12 @@ export function Header() {
                         <Button variant="outline" className="w-full">
                             <WorthaftIcon className="mr-2 h-4 w-4" />
                             Worthaft Spiel
+                        </Button>
+                    </Link>
+                    <Link href="/unendlich">
+                        <Button variant="outline" className="w-full">
+                            <Infinity className="mr-2 h-4 w-4" />
+                            Unendlich Spiel
                         </Button>
                     </Link>
                     <Link href="/shop">
