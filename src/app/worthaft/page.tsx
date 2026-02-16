@@ -85,7 +85,14 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
   );
 };
 
-const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex }: { guesses: { guess: string; statuses: LetterStatus[] }[]; currentGuess: string; isShaking: boolean; currentRowIndex: number; }) => {
+const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, onCellClick }: { 
+    guesses: { guess: string; statuses: LetterStatus[] }[]; 
+    currentGuess: string[]; 
+    isShaking: boolean; 
+    currentRowIndex: number;
+    activeIndex: number;
+    onCellClick: (index: number) => void;
+}) => {
   const rows = Array.from({ length: MAX_GUESSES });
   const getStatusClass = (status: LetterStatus) => {
     switch (status) {
@@ -113,10 +120,13 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex }: { guesses: 
             return (
                 <div
                     key={colIndex}
+                    onClick={() => isCurrentRow && onCellClick(colIndex)}
                     className={cn(
-                        'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-md transition-all duration-500',
+                        'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-md transition-all duration-300',
                         getStatusClass(status),
+                        isCurrentRow && 'cursor-pointer',
                         isCurrentRow && hasLetter && 'border-muted-foreground',
+                        isCurrentRow && activeIndex === colIndex && 'border-primary ring-2 ring-primary scale-105',
                         status !== 'empty' && 'animate-in fade-in zoom-in-50'
                     )}
                     style={{ animationDelay: `'''${colIndex * 100}ms'''` }}
@@ -136,7 +146,8 @@ export default function WorthaftPage() {
     const { toast } = useToast();
     const [solution, setSolution] = useState('');
     const [guesses, setGuesses] = useState<{ guess: string; statuses: LetterStatus[] }[]>([]);
-    const [currentGuess, setCurrentGuess] = useState('');
+    const [currentGuess, setCurrentGuess] = useState<string[]>(Array(WORD_LENGTH).fill(''));
+    const [activeIndex, setActiveIndex] = useState(0);
     const [gameState, setGameState] = useState<'playing' | 'won' | 'lost'>('playing');
     const [letterStatuses, setLetterStatuses] = useState<{ [key: string]: LetterStatus }>({});
     const [stats, setStats] = useState({ games: 0, wins: 0, streak: 0 });
@@ -213,14 +224,26 @@ export default function WorthaftPage() {
 
 
     const handleChar = (char: string) => {
-        if (gameState !== 'playing' || currentGuess.length >= WORD_LENGTH) return;
-        setCurrentGuess(currentGuess + char);
+        if (gameState !== 'playing') return;
+        const newGuess = [...currentGuess];
+        newGuess[activeIndex] = char;
+        setCurrentGuess(newGuess);
+        setActiveIndex((prev) => (prev + 1) % WORD_LENGTH);
     };
 
     const handleEnter = useCallback(() => {
-        if (gameState !== 'playing' || currentGuess.length !== WORD_LENGTH) return;
+        if (gameState !== 'playing') return;
 
-        if (!WORDS.includes(currentGuess.toLowerCase())) {
+        if (currentGuess.includes('')) {
+            toast({ variant: 'destructive', title: 'Unvollständiges Wort', description: 'Bitte füllen Sie alle Felder aus.' });
+            setIsShaking(true);
+            setTimeout(() => setIsShaking(false), 600);
+            return;
+        }
+
+        const guessWord = currentGuess.join('');
+
+        if (!WORDS.includes(guessWord.toLowerCase())) {
             toast({ variant: 'destructive', title: 'Ungültiges Wort', description: 'Dieses Wort steht nicht in unserem Duden.' });
             setIsShaking(true);
             setTimeout(() => setIsShaking(false), 600);
@@ -232,7 +255,7 @@ export default function WorthaftPage() {
 
         // First pass for correct letters
         for (let i = 0; i < WORD_LENGTH; i++) {
-            if (currentGuess[i] === solution[i]) {
+            if (guessWord[i] === solution[i]) {
                 newStatuses[i] = 'correct';
                 solutionLetters[i] = '_';
             }
@@ -240,20 +263,20 @@ export default function WorthaftPage() {
 
         // Second pass for present letters
         for (let i = 0; i < WORD_LENGTH; i++) {
-            if (newStatuses[i] !== 'correct' && solutionLetters.includes(currentGuess[i])) {
+            if (newStatuses[i] !== 'correct' && solutionLetters.includes(guessWord[i])) {
                 newStatuses[i] = 'present';
-                solutionLetters[solutionLetters.indexOf(currentGuess[i])] = '_';
+                solutionLetters[solutionLetters.indexOf(guessWord[i])] = '_';
             }
         }
         
-        const newGuess = { guess: currentGuess, statuses: newStatuses };
+        const newGuess = { guess: guessWord, statuses: newStatuses };
         const newGuesses = [...guesses, newGuess];
         setGuesses(newGuesses);
 
         // Update keyboard statuses
         const newLetterStatuses = { ...letterStatuses };
         for (let i = 0; i < WORD_LENGTH; i++) {
-            const letter = currentGuess[i];
+            const letter = guessWord[i];
             const currentStatus = newLetterStatuses[letter];
             const newStatus = newStatuses[i];
             if (currentStatus !== 'correct') {
@@ -262,11 +285,12 @@ export default function WorthaftPage() {
         }
         setLetterStatuses(newLetterStatuses);
         
-        setCurrentGuess('');
+        setCurrentGuess(Array(WORD_LENGTH).fill(''));
+        setActiveIndex(0);
 
         const todayStr = getTodayString();
         // Check game state
-        if (currentGuess === solution) {
+        if (guessWord === solution) {
             setGameState('won');
             const newStats = { games: stats.games + 1, wins: stats.wins + 1, streak: stats.streak + 1 };
             setStats(newStats);
@@ -287,7 +311,18 @@ export default function WorthaftPage() {
 
     const handleDelete = () => {
         if (gameState !== 'playing') return;
-        setCurrentGuess(currentGuess.slice(0, -1));
+        const newGuess = [...currentGuess];
+        // If current cell has a letter, delete it and stay.
+        if (newGuess[activeIndex]) {
+            newGuess[activeIndex] = '';
+            setCurrentGuess(newGuess);
+        } else if (activeIndex > 0) {
+            // If current cell is empty, move to previous and delete that one.
+            const prevIndex = activeIndex - 1;
+            newGuess[prevIndex] = '';
+            setCurrentGuess(newGuess);
+            setActiveIndex(prevIndex);
+        }
     };
     
     const isDialogOpen = gameState === 'won' || gameState === 'lost';
@@ -299,6 +334,10 @@ export default function WorthaftPage() {
             handleEnter();
         } else if (event.key === 'Backspace') {
             handleDelete();
+        } else if (event.key === 'ArrowLeft') {
+            setActiveIndex(prev => (prev - 1 + WORD_LENGTH) % WORD_LENGTH);
+        } else if (event.key === 'ArrowRight') {
+            setActiveIndex(prev => (prev + 1) % WORD_LENGTH);
         } else if (/^[a-zA-ZäöüÄÖÜ]$/.test(event.key)) {
             handleChar(event.key.toUpperCase());
         }
@@ -433,7 +472,14 @@ export default function WorthaftPage() {
                         <p className="text-muted-foreground">Eine Hommage von <Link href="/ueber/autoren" className="underline">Paulik & Reisch</Link>. <Link href="/worthaft/ueber" className="underline">Wie funktioniert's?</Link></p>
                     </div>
                     <div className="w-full max-w-xs sm:max-w-sm">
-                        <Grid guesses={guesses} currentGuess={currentGuess} isShaking={isShaking && guesses.length < MAX_GUESSES} currentRowIndex={guesses.length} />
+                        <Grid 
+                            guesses={guesses} 
+                            currentGuess={currentGuess} 
+                            isShaking={isShaking} 
+                            currentRowIndex={guesses.length}
+                            activeIndex={activeIndex}
+                            onCellClick={setActiveIndex}
+                        />
                         <Keyboard onChar={handleChar} onEnter={handleEnter} onDelete={handleDelete} letterStatuses={letterStatuses} />
                     </div>
                 </div>
