@@ -16,7 +16,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { WORDS } from '@/lib/worthaft-words';
-import { Share2 } from 'lucide-react';
+import { Share2, Book, Newspaper } from 'lucide-react';
 import Link from 'next/link';
 
 const WORD_LENGTH = 5;
@@ -24,10 +24,18 @@ const MAX_GUESSES = 6;
 
 type LetterStatus = 'correct' | 'present' | 'absent' | 'empty' | 'tbd';
 
+type DailyGameState = {
+  date: string;
+  guesses: { guess: string; statuses: LetterStatus[] }[];
+  status: 'won' | 'lost';
+};
+
+
 // Select a word for the day
 const getWordOfTheDay = () => {
   const startDate = new Date('2024-01-01');
   const today = new Date();
+  today.setHours(0,0,0,0); // Normalize to start of day
   const diffTime = Math.abs(today.getTime() - startDate.getTime());
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
   return WORDS[diffDays % WORDS.length].toUpperCase();
@@ -130,14 +138,71 @@ export default function WorthaftPage() {
     const [gameState, setGameState] = useState<'playing' | 'won' | 'lost'>('playing');
     const [letterStatuses, setLetterStatuses] = useState<{ [key: string]: LetterStatus }>({});
     const [stats, setStats] = useState({ games: 0, wins: 0, streak: 0 });
-    
+    const [isCompletedToday, setIsCompletedToday] = useState(false);
+    const [timeToNextGame, setTimeToNextGame] = useState('');
+
+    const getTodayString = () => new Date().toISOString().split('T')[0];
+
     useEffect(() => {
+        const todayStr = getTodayString();
         setSolution(getWordOfTheDay());
+
         const savedStats = localStorage.getItem('worthaft-stats');
         if (savedStats) {
             setStats(JSON.parse(savedStats));
         }
+
+        const savedGame = localStorage.getItem('worthaft-daily-game');
+        if (savedGame) {
+            const dailyState: DailyGameState = JSON.parse(savedGame);
+            if (dailyState.date === todayStr && (dailyState.status === 'won' || dailyState.status === 'lost')) {
+                setGuesses(dailyState.guesses);
+                setGameState(dailyState.status);
+                setIsCompletedToday(true);
+
+                const newLetterStatuses: { [key: string]: LetterStatus } = {};
+                dailyState.guesses.forEach(({ guess, statuses }) => {
+                    for (let i = 0; i < WORD_LENGTH; i++) {
+                        const letter = guess[i];
+                        const currentStatus = newLetterStatuses[letter];
+                        const newStatus = statuses[i];
+                        if (currentStatus !== 'correct') {
+                            newLetterStatuses[letter] = newStatus;
+                        }
+                    }
+                });
+                setLetterStatuses(newLetterStatuses);
+            }
+        }
     }, []);
+
+    useEffect(() => {
+        if (gameState !== 'won' && gameState !== 'lost' && !isCompletedToday) return;
+
+        const timer = setInterval(() => {
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(now.getDate() + 1);
+            tomorrow.setHours(0, 0, 0, 0);
+
+            const diff = tomorrow.getTime() - now.getTime();
+            if (diff <= 0) {
+                setTimeToNextGame('00:00:00');
+                return;
+            }
+
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            setTimeToNextGame(
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+            );
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [gameState, isCompletedToday]);
+
 
     const handleChar = (char: string) => {
         if (gameState !== 'playing' || currentGuess.length >= WORD_LENGTH) return;
@@ -189,19 +254,26 @@ export default function WorthaftPage() {
         
         setCurrentGuess('');
 
+        const todayStr = getTodayString();
         // Check game state
         if (currentGuess === solution) {
             setGameState('won');
             const newStats = { games: stats.games + 1, wins: stats.wins + 1, streak: stats.streak + 1 };
             setStats(newStats);
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
+            const dailyState: DailyGameState = { date: todayStr, guesses: newGuesses, status: 'won' };
+            localStorage.setItem('worthaft-daily-game', JSON.stringify(dailyState));
+            setIsCompletedToday(true);
         } else if (newGuesses.length === MAX_GUESSES) {
             setGameState('lost');
             const newStats = { games: stats.games + 1, wins: stats.wins, streak: 0 };
             setStats(newStats);
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
+            const dailyState: DailyGameState = { date: todayStr, guesses: newGuesses, status: 'lost' };
+            localStorage.setItem('worthaft-daily-game', JSON.stringify(dailyState));
+            setIsCompletedToday(true);
         }
-    }, [currentGuess, gameState, guesses, letterStatuses, solution, stats.games, stats.streak, stats.wins, toast]);
+    }, [currentGuess, gameState, guesses, letterStatuses, solution, stats, toast]);
 
     const handleDelete = () => {
         if (gameState !== 'playing') return;
@@ -211,7 +283,7 @@ export default function WorthaftPage() {
     const isDialogOpen = gameState === 'won' || gameState === 'lost';
 
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
-        if (gameState !== 'playing' || isDialogOpen) return;
+        if (isDialogOpen || isCompletedToday) return;
 
         if (event.key === 'Enter') {
             handleEnter();
@@ -220,7 +292,7 @@ export default function WorthaftPage() {
         } else if (/^[a-zA-ZäöüÄÖÜ]$/.test(event.key)) {
             handleChar(event.key.toUpperCase());
         }
-    }, [gameState, isDialogOpen, handleEnter, handleDelete, handleChar]);
+    }, [isDialogOpen, isCompletedToday, handleEnter, handleDelete, handleChar]);
     
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
@@ -282,11 +354,11 @@ export default function WorthaftPage() {
                 </div>
             </main>
             <Footer />
-            <AlertDialog open={isDialogOpen}>
+            <AlertDialog open={isDialogOpen || isCompletedToday}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
                     <AlertDialogTitle className="text-center text-2xl font-headline">
-                        {gameState === 'won' ? 'Gratulation!' : 'Schade!'}
+                        {isCompletedToday ? 'Sie haben bereits gespielt' : (gameState === 'won' ? 'Gratulation!' : 'Schade!')}
                     </AlertDialogTitle>
                     <AlertDialogDescription className="text-center">
                         {gameState === 'won' 
@@ -296,14 +368,14 @@ export default function WorthaftPage() {
                     </AlertDialogDescription>
                     </AlertDialogHeader>
                     <div className="text-center space-y-4">
-                        <h4 className="font-bold">Statistik</h4>
+                        <h4 className="font-bold">Ihre Statistik</h4>
                         <div className="flex justify-around">
                             <div className="text-center">
                                 <div className="text-3xl font-bold">{stats.games}</div>
                                 <div className="text-xs">Spiele</div>
                             </div>
                              <div className="text-center">
-                                <div className="text-3xl font-bold">{stats.wins > 0 ? Math.round((stats.wins / stats.games) * 100) : 0}%</div>
+                                <div className="text-3xl font-bold">{stats.games > 0 ? Math.round((stats.wins / stats.games) * 100) : 0}%</div>
                                 <div className="text-xs">Gewonnen</div>
                             </div>
                              <div className="text-center">
@@ -312,10 +384,29 @@ export default function WorthaftPage() {
                             </div>
                         </div>
                     </div>
-                    <AlertDialogFooter className="mt-4">
-                        <Button variant="outline" onClick={shareResults}>
-                            <Share2 className="mr-2 h-4 w-4" /> Teilen
-                        </Button>
+                    <AlertDialogFooter className="mt-4 sm:justify-center flex-col sm:flex-col sm:space-x-0 gap-2">
+                        <div className="flex w-full justify-center items-center gap-2">
+                             <div className="text-center flex-grow">
+                                <p className="text-sm font-semibold">Nächstes Spiel in:</p>
+                                <p className="font-mono text-lg font-bold text-primary">{timeToNextGame}</p>
+                            </div>
+                            <Button variant="outline" size="icon" onClick={shareResults}>
+                                <Share2 className="h-4 w-4" />
+                                <span className="sr-only">Ergebnis teilen</span>
+                            </Button>
+                        </div>
+                        <Link href="/a" className="w-full">
+                            <Button className="w-full" variant="outline">
+                                <Newspaper className="mr-2 h-4 w-4"/>
+                                Derweil einen lustigen Artikel lesen
+                            </Button>
+                        </Link>
+                        <Link href="/shop" className="w-full">
+                            <Button className="w-full">
+                                <Book className="mr-2 h-4 w-4"/>
+                                Derweil das Buch Hallo Welt bestellen
+                            </Button>
+                        </Link>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
