@@ -55,12 +55,6 @@ export function Header() {
                         Worthaft
                     </Button>
                 </Link>
-                <Link href="/unendlich">
-                    <Button variant="ghost">
-                        <Infinity className="mr-2 h-4 w-4" />
-                        Unendlich
-                    </Button>
-                </Link>
                 <Link href="/shop">
                     <Button variant="secondary">Buch Kaufen</Button>
                 </Link>

@@ -7,24 +7,25 @@ import { Footer } from '@/components/landing/footer';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ArrowLeft, ArrowRight, ArrowUp, ArrowDown, RotateCw, Book, Newspaper } from 'lucide-react';
+import { RotateCw, Book, Newspaper } from 'lucide-react';
 import Link from 'next/link';
 
 const GRID_SIZE = 4;
 
-const TILE_MAP: { [key: number]: { text: string; className: string } } = {
-  2: { text: 'Idee', className: 'bg-gray-200 text-gray-800' },
-  4: { text: 'Satz', className: 'bg-yellow-200 text-yellow-900' },
-  8: { text: 'Witz', className: 'bg-orange-300 text-orange-900' },
-  16: { text: 'Kapitel', className: 'bg-red-300 text-red-900' },
-  32: { text: 'Satire', className: 'bg-pink-400 text-white' },
-  64: { text: 'Kritik', className: 'bg-purple-500 text-white' },
-  128: { text: 'Chaos', className: 'bg-indigo-500 text-white' },
-  256: { text: 'Buch', className: 'bg-blue-600 text-white' },
-  512: { text: 'Bestseller', className: 'bg-cyan-500 text-white' },
-  1024: { text: 'Saga', className: 'bg-teal-500 text-white' },
-  2048: { text: 'Hallo Welt', className: 'bg-yellow-500 text-black font-bold text-lg' }
+const TILE_COLORS: { [key: number]: string } = {
+  2: 'bg-gray-200 text-gray-800',
+  4: 'bg-yellow-200 text-yellow-900',
+  8: 'bg-orange-300 text-orange-900',
+  16: 'bg-red-400 text-white',
+  32: 'bg-red-500 text-white',
+  64: 'bg-red-600 text-white',
+  128: 'bg-yellow-400 text-black',
+  256: 'bg-yellow-500 text-black',
+  512: 'bg-yellow-600 text-black',
+  1024: 'bg-yellow-700 text-white',
+  2048: 'bg-black text-yellow-400 font-black text-lg',
 };
+
 
 type Board = number[][];
 type GameStatus = 'playing' | 'won' | 'lost';
@@ -98,10 +99,11 @@ export default function UnendlichPage() {
     const [status, setStatus] = useState<GameStatus>('playing');
     const [isCompletedToday, setIsCompletedToday] = useState(false);
     const [timeToNextGame, setTimeToNextGame] = useState('');
+    const [touchStart, setTouchStart] = useState<{ x: number, y: number } | null>(null);
 
     const getTodayString = () => new Date().toISOString().split('T')[0];
 
-    const initGame = (savedState?: DailyState) => {
+    const initGame = useCallback((savedState?: DailyState) => {
         if (savedState) {
             setBoard(savedState.board);
             setScore(savedState.score);
@@ -118,33 +120,9 @@ export default function UnendlichPage() {
             setIsCompletedToday(false);
             saveState(newBoard, 0, 'playing');
         }
-    };
-    
-    useEffect(() => {
-        const todayStr = getTodayString();
-        const savedGame = localStorage.getItem('unendlich-daily');
-        if (savedGame) {
-            const dailyState: DailyState = JSON.parse(savedGame);
-            if (dailyState.date === todayStr) {
-                initGame(dailyState);
-            } else {
-                initGame();
-            }
-        } else {
-            initGame();
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     
-     useEffect(() => {
-        if (!isCompletedToday) return;
-        const timer = setInterval(() => {
-            // ... (countdown logic from Worthaft)
-        }, 1000);
-        return () => clearInterval(timer);
-    }, [isCompletedToday]);
-
-    const saveState = (board: Board, score: number, status: GameStatus) => {
+    const saveState = useCallback((board: Board, score: number, status: GameStatus) => {
         const dailyState: DailyState = {
             date: getTodayString(),
             board,
@@ -152,9 +130,25 @@ export default function UnendlichPage() {
             status,
         };
         localStorage.setItem('unendlich-daily', JSON.stringify(dailyState));
+    }, []);
+
+    const checkGameOver = (board: Board): GameStatus => {
+        let has2048 = false;
+        let canMove = false;
+        for (let i = 0; i < GRID_SIZE; i++) {
+            for (let j = 0; j < GRID_SIZE; j++) {
+                if (board[i][j] === 2048) has2048 = true;
+                if (board[i][j] === 0) canMove = true;
+                if (i > 0 && board[i][j] === board[i-1][j]) canMove = true;
+                if (j > 0 && board[i][j] === board[i][j-1]) canMove = true;
+            }
+        }
+        if (has2048) return 'won';
+        if (!canMove) return 'lost';
+        return 'playing';
     };
 
-    const handleMove = (direction: 'up' | 'down' | 'left' | 'right') => {
+    const handleMove = useCallback((direction: 'up' | 'down' | 'left' | 'right') => {
         if (status !== 'playing') return;
 
         let currentBoard = board;
@@ -199,24 +193,47 @@ export default function UnendlichPage() {
                 setIsCompletedToday(true);
             }
         }
-    };
+    }, [board, status, score, saveState]);
     
-    const checkGameOver = (board: Board): GameStatus => {
-        let has2048 = false;
-        let canMove = false;
-        for (let i = 0; i < GRID_SIZE; i++) {
-            for (let j = 0; j < GRID_SIZE; j++) {
-                if (board[i][j] === 2048) has2048 = true;
-                if (board[i][j] === 0) canMove = true;
-                if (i > 0 && board[i][j] === board[i-1][j]) canMove = true;
-                if (j > 0 && board[i][j] === board[i][j-1]) canMove = true;
+    useEffect(() => {
+        const todayStr = getTodayString();
+        const savedGame = localStorage.getItem('unendlich-daily');
+        if (savedGame) {
+            const dailyState: DailyState = JSON.parse(savedGame);
+            if (dailyState.date === todayStr) {
+                initGame(dailyState);
+            } else {
+                initGame();
             }
+        } else {
+            initGame();
         }
-        if (has2048) return 'won';
-        if (!canMove) return 'lost';
-        return 'playing';
-    };
+    }, [initGame]);
+    
+     useEffect(() => {
+        if (!isCompletedToday) return;
+        const timer = setInterval(() => {
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(now.getDate() + 1);
+            tomorrow.setHours(0, 0, 0, 0);
 
+            const diff = tomorrow.getTime() - now.getTime();
+            if (diff <= 0) {
+                setTimeToNextGame('00:00:00');
+                return;
+            }
+
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            setTimeToNextGame(
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+            );
+        }, 1000);
+        return () => clearInterval(timer);
+    }, [isCompletedToday]);
 
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
         if (isCompletedToday) return;
@@ -226,14 +243,38 @@ export default function UnendlichPage() {
             case 'ArrowLeft': handleMove('left'); break;
             case 'ArrowRight': handleMove('right'); break;
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [board, status, isCompletedToday]);
+    }, [isCompletedToday, handleMove]);
 
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [handleKeyDown]);
-    
+
+    const handleTouchStart = (e: React.TouchEvent) => {
+        if (isCompletedToday) return;
+        setTouchStart({ x: e.touches[0].clientX, y: e.touches[0].clientY });
+    };
+
+    const handleTouchEnd = (e: React.TouchEvent) => {
+        if (!touchStart || isCompletedToday) return;
+        
+        const touchEnd = { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY };
+        const dx = touchEnd.x - touchStart.x;
+        const dy = touchEnd.y - touchStart.y;
+        const minSwipeDistance = 50;
+
+        if (Math.abs(dx) > Math.abs(dy)) {
+            if (Math.abs(dx) > minSwipeDistance) {
+                handleMove(dx > 0 ? 'right' : 'left');
+            }
+        } else {
+            if (Math.abs(dy) > minSwipeDistance) {
+                handleMove(dy > 0 ? 'down' : 'up');
+            }
+        }
+        setTouchStart(null);
+    };
+
     const restartGame = () => {
         localStorage.removeItem('unendlich-daily');
         initGame();
@@ -247,13 +288,13 @@ export default function UnendlichPage() {
                 <div className="container max-w-xl mx-auto flex flex-col items-center justify-center">
                     <div className="text-center mb-8">
                         <h1 className="text-4xl font-bold font-headline">Unendlich</h1>
-                        <p className="text-muted-foreground">Kombiniere die Kacheln bis zur "Hallo Welt"-Stufe. <Link href="/unendlich/ueber" className="underline">Spielregeln</Link></p>
+                        <p className="text-muted-foreground">Kombiniere die Kacheln bis zur 2048-Stufe. <Link href="/unendlich/ueber" className="underline">Spielregeln</Link></p>
                     </div>
 
                     {isCompletedToday ? (
                         <div className="text-center p-8 border rounded-lg">
                            <h2 className="text-2xl font-bold font-headline mb-4">{status === 'won' ? "Sensationell!" : "Schade!"}</h2>
-                            <p className="mb-2">{status === 'won' ? "Sie haben die 'Hallo Welt'-Kachel erreicht!" : "Keine Züge mehr möglich."}</p>
+                            <p className="mb-2">{status === 'won' ? "Sie haben die 2048-Kachel erreicht!" : "Keine Züge mehr möglich."}</p>
                             <p className="mb-4 font-bold text-xl">Endstand: {score}</p>
                             <p className="text-sm">Nächstes Spiel in: <span className="font-mono">{timeToNextGame}</span></p>
                              <div className="flex flex-col sm:flex-row gap-2 mt-6">
@@ -271,7 +312,11 @@ export default function UnendlichPage() {
                                 <Button onClick={restartGame} variant="outline" size="icon"><RotateCw className="h-4 w-4" /></Button>
                             </div>
 
-                            <div className="relative bg-muted p-2 rounded-md aspect-square w-full max-w-md">
+                            <div 
+                              className="relative bg-muted p-2 rounded-md aspect-square w-full max-w-md"
+                              onTouchStart={handleTouchStart}
+                              onTouchEnd={handleTouchEnd}
+                            >
                                  <AnimatePresence>
                                     {(status === 'won' || status === 'lost') && (
                                         <motion.div
@@ -297,7 +342,7 @@ export default function UnendlichPage() {
                                                         exit={{ scale: 0.5, opacity: 0 }}
                                                         className={cn(
                                                             "absolute rounded text-xs font-bold w-[calc(25%-0.5rem)] h-[calc(25%-0.5rem)] flex items-center justify-center text-center p-1",
-                                                            TILE_MAP[value]?.className
+                                                            TILE_COLORS[value]
                                                         )}
                                                         style={{
                                                             top: `calc(${i * 25}% + 0.5rem)`,
@@ -305,7 +350,7 @@ export default function UnendlichPage() {
                                                         }}
                                                         transition={{ duration: 0.2 }}
                                                     >
-                                                        <span className="text-balance leading-tight">{TILE_MAP[value]?.text}</span>
+                                                        <span className="text-xl sm:text-2xl">{value}</span>
                                                     </motion.div>
                                                 )}
                                             </AnimatePresence>

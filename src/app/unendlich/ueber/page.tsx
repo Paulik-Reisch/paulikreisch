@@ -16,26 +16,26 @@ export default function AboutUnendlichPage() {
             <Badge>Spielanleitung</Badge>
             <h1 className="font-headline mt-4">Über Unendlich</h1>
             <p className="lead">
-              Eine satirische Simulation des kreativen Prozesses, getarnt als süchtig machendes Kachelspiel.
+              Eine Adaption des süchtig machenden Kachelspiels "2048", neu interpretiert von Paulik & Reisch.
             </p>
-            <h2>Die Regeln des Wahnsinns</h2>
+            <h2>Die Regeln des Spiels</h2>
             <p>
-              Willkommen bei "Unendlich", dem einzigen Spiel, das den Weg von einer flüchtigen Idee zu einem literarischen Meisterwerk (oder zumindest zu einem Buch) simuliert. Die Regeln sind einfach, der Weg ist steinig:
+              Willkommen bei "Unendlich". Die Regeln sind einfach, der Weg ist eine Herausforderung:
             </p>
             <ul>
               <li>
-                <span className="flex items-center gap-2"><Box className="h-5 w-5 text-primary"/><strong>Verschieben:</strong> Benutzen Sie die Pfeiltasten, um die Kacheln zu bewegen. Alle Kacheln rutschen so weit wie möglich in die gewählte Richtung.</span>
+                <span className="flex items-center gap-2"><Box className="h-5 w-5 text-primary"/><strong>Verschieben:</strong> Benutzen Sie die Pfeiltasten auf Ihrer Tastatur oder wischen Sie auf Ihrem Touch-Gerät, um die Kacheln zu bewegen. Alle Kacheln rutschen so weit wie möglich in die gewählte Richtung.</span>
               </li>
               <li>
-                <span className="flex items-center gap-2"><Boxes className="h-5 w-5 text-secondary"/><strong>Kombinieren:</strong> Wenn zwei Kacheln mit demselben Inhalt aufeinandertreffen, verschmelzen sie zu einer neuen, glorreicheren Kachel. (z.B. zwei "Ideen" werden zu einem "Satz").</span>
+                <span className="flex items-center gap-2"><Boxes className="h-5 w-5 text-secondary"/><strong>Kombinieren:</strong> Wenn zwei Kacheln mit derselben Zahl aufeinandertreffen, verschmelzen sie zu einer neuen Kachel mit dem doppelten Wert.</span>
               </li>
                <li>
-                <span className="flex items-center gap-2"><Bot className="h-5 w-5 text-destructive"/><strong>Überleben:</strong> Nach jedem Zug erscheint eine neue Kachel. Ihr Ziel ist es, Platz zu schaffen und weiter zu kombinieren, bis das Spielfeld voll ist oder Sie die legendäre "Hallo Welt"-Kachel erschaffen haben.</span>
+                <span className="flex items-center gap-2"><Bot className="h-5 w-5 text-destructive"/><strong>Überleben:</strong> Nach jedem Zug erscheint eine neue Kachel (eine 2 oder eine 4). Ihr Ziel ist es, Platz zu schaffen und weiter zu kombinieren, bis das Spielfeld voll ist oder Sie die legendäre 2048-Kachel erschaffen haben.</span>
               </li>
             </ul>
              <h2>Täglicher Versuch</h2>
             <p>
-                Wie im echten Leben haben Sie nur einen Versuch pro Tag, den Gipfel des literarischen Schaffens zu erklimmen. Scheitern Sie, müssen Sie bis morgen warten, um Ihre Genialität erneut unter Beweis zu stellen. Kein Druck.
+                Wie im echten Leben haben Sie nur einen Versuch pro Tag. Scheitern Sie, müssen Sie bis morgen warten, um Ihre Genialität erneut unter Beweis zu stellen. Kein Druck.
             </p>
             <div className="not-prose text-center mt-12">
                 <Link href="/unendlich">
