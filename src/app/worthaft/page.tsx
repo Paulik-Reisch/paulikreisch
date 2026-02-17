@@ -17,6 +17,7 @@ import {
 import { WORDS } from '@/lib/worthaft-words';
 import { Share2, Book, Newspaper } from 'lucide-react';
 import Link from 'next/link';
+import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
 
 const WORD_LENGTH = 5;
 const MAX_GUESSES = 6;
@@ -468,6 +469,7 @@ export default function WorthaftPage() {
             <main className="flex-1 py-8 md:py-12">
                 <div className="container max-w-md mx-auto flex flex-col items-center justify-center">
                     <div className="text-center mb-8">
+                        <WorthaftIcon className="mx-auto h-12 w-12 mb-4 text-primary" />
                         <h1 className="text-4xl font-bold font-headline">Worthaft</h1>
                         <p className="text-muted-foreground">Eine Hommage von <Link href="/ueber/autoren" className="underline">Paulik & Reisch</Link>. <Link href="/worthaft/ueber" className="underline">Wie funktioniert's?</Link></p>
                     </div>
