@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getSession } from "@/lib/session";
+import { WorthaftIcon } from "@/components/ui/icons/worthaft-icon";
 
 type Props = {
   params: { slug: string }
@@ -250,6 +251,26 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                 <ArticleRenderer article={article} />
 
             </article>
+
+            <section className="mt-24 rounded-lg bg-muted p-8 md:p-12 not-prose max-w-4xl mx-auto">
+                <div className="flex flex-col items-center space-y-4 text-center">
+                    <WorthaftIcon className="h-16 w-16 text-primary" />
+                    <div className="space-y-2">
+                        <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-4xl">Testen Sie Ihren Wortschatz</h2>
+                        <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed">
+                        Haben Sie in der Lernvollzugsanstalt gut aufgepasst? Beweisen Sie es und erraten Sie das tägliche Wort mit fünf Buchstaben.
+                        </p>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                        <Link href="/worthaft">
+                        <Button size="lg">Jetzt spielen</Button>
+                        </Link>
+                        <Link href="/worthaft/ueber">
+                            <Button size="lg" variant="outline">Mehr zu Worthaft</Button>
+                        </Link>
+                    </div>
+                </div>
+            </section>
 
             {relatedArticles.length > 0 && (
               <section className="mt-24 border-t pt-16">
