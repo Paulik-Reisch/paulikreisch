@@ -8,7 +8,7 @@ import { de } from "date-fns/locale";
 import { type Metadata, type ResolvingMetadata } from 'next'
 import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, ArrowRight } from "lucide-react";
+import { Calendar, Clock, ArrowRight, Sparkles } from "lucide-react";
 import { ReadingProgressBar } from "@/components/ui/reading-progress-bar";
 import { ArticleRenderer } from "@/components/article/article-renderer";
 import Link from "next/link";
@@ -215,6 +215,10 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                         <div className="flex items-center gap-2">
                             <Clock className="w-4 h-4" />
                             <span>{article.readTime} Minuten Lesezeit</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Sparkles className="w-4 h-4" />
+                            <span>Bilder sind möglicherweise KI-generiert</span>
                         </div>
                     </div>
 
