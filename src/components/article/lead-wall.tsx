@@ -82,7 +82,7 @@ export function LeadWall({ onUnlock }: { onUnlock: () => void }) {
             </div>
             <Separator />
             <div className="mt-6 text-xs text-muted-foreground space-y-1">
-                <p>Danke, dass Sie uns unterstützen!</p>
+                <p className="font-bold text-lg text-green-600">Danke, dass Sie uns unterstützen!</p>
                 <p>
                     Einen Gastbeitrag verfassen oder uns einen Liebesbrief schreiben? E-Mail an uns:{' '}
                     <a href="mailto:philipp.l.paulik@gmail.com" className="underline">Philipp</a>{' & '}

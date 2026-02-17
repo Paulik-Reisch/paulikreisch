@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Twitter, Facebook, Linkedin, MoreHorizontal, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { type Article } from '@/lib/firestore';
@@ -104,7 +105,7 @@ export function ShareWall({ article, onUnlock }: { article: Article; onUnlock: (
             </div>
             <Separator />
             <div className="mt-6 text-xs text-muted-foreground space-y-1">
-                <p>Danke, dass Sie uns unterstützen!</p>
+                <p className="font-bold text-lg text-green-600">Danke, dass Sie uns unterstützen!</p>
                  <p>
                     Einen Gastbeitrag verfassen oder uns einen Liebesbrief schreiben? E-Mail an uns:{' '}
                     <a href="mailto:philipp.l.paulik@gmail.com" className="underline">Philipp</a>{' & '}
