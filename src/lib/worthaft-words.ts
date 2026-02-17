@@ -1849,7 +1849,7 @@ export const WORDS = [
     "woran",
     "worin",
     "worte",
-    "worum",
+    "warum",
     "wovon",
     "wrack",
     "wucht",
@@ -1997,5 +1997,4 @@ export const WORDS = [
     "häher",
     "fries",
     "graus",
-    ];
-]
+];
