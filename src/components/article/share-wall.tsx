@@ -2,7 +2,6 @@
 
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Twitter, Facebook, Linkedin, MoreHorizontal, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { type Article } from '@/lib/firestore';
@@ -69,7 +68,7 @@ export function ShareWall({ article, onUnlock }: { article: Article; onUnlock: (
   };
 
   return (
-    <div className="bg-muted py-8 px-6 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.03)] mt-[15px] rounded-lg">
+    <div className="bg-muted py-8 px-6 mt-[15px] rounded-lg">
       <div className="max-w-xl mx-auto text-center">
         <h2 className="font-headline text-2xl font-bold mt-4">Teilen und weiterlesen</h2>
         <p className="text-muted-foreground mt-2 mb-6">Teilen Sie diesen Artikel, um den Rest des Inhalts sofort freizuschalten.</p>
