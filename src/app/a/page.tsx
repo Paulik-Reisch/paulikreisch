@@ -146,15 +146,6 @@ export default async function ArticlesPage() {
       <Header />
       <main className="flex-1 py-12 md:py-20">
         <div className="container px-4 md:px-6">
-          <header className="text-center mb-12">
-              <Badge>Magazin</Badge>
-              <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl mt-4 text-balance">
-                  Archiv des Wahnsinns
-              </h1>
-              <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl mt-4 text-balance">
-                  Stöbern Sie durch unsere Sammlung satirischer Meisterwerke. Frisch aus der Feder der Zyniker.
-              </p>
-          </header>
           
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {articles.map(article => (
