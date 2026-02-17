@@ -6,7 +6,8 @@ import { subscribeToNewsletterAction } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Loader2, Lock } from 'lucide-react';
+import { Loader2, Lock, Check } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 
 const initialNewsletterState = { success: undefined, error: undefined, message: undefined };
 
@@ -18,6 +19,16 @@ function SubmitButton() {
     </Button>
   );
 }
+
+const reasons = [
+    { text: "IMMER kostenlos" },
+    { text: "IMMER werbefrei" },
+    { text: "IMMER öffentlich zugänglich" },
+    { text: "IMMER (hoffentlich) lustig" },
+    { text: "IMMER unabhängig geschrieben" },
+    { text: "IMMER ohne Tracking-Exzesse" },
+    { text: "IMMER mit Herzblut gemacht" },
+];
 
 export function LeadWall({ onUnlock }: { onUnlock: () => void }) {
   const { toast } = useToast();
@@ -49,6 +60,30 @@ export function LeadWall({ onUnlock }: { onUnlock: () => void }) {
           <Button variant="link" onClick={onUnlock} className="mt-2 text-xs text-muted-foreground w-full">
             Nein danke, ich möchte nur weiterlesen.
           </Button>
+        </div>
+
+        <div className="mt-8 text-center">
+            <Separator />
+            <div className="py-6">
+                <h4 className="font-semibold text-sm mb-4">Warum eine Wall?</h4>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-2 text-xs text-muted-foreground">
+                    {reasons.map((reason, i) => (
+                        <div key={i} className="flex items-center gap-2">
+                            <Check className="h-4 w-4 text-green-500" />
+                            <span>{reason.text}</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+            <Separator />
+            <div className="mt-6 text-xs text-muted-foreground space-y-1">
+                <p>Danke, dass Sie uns unterstützen!</p>
+                <p>
+                    Schreiben Sie uns gerne eine E-Mail:{' '}
+                    <a href="mailto:philipp.l.paulik@gmail.com" className="underline">Philipp</a>{' & '}
+                    <a href="mailto:maximilian.reisch@t-online.de" className="underline">Max</a>.
+                </p>
+            </div>
         </div>
       </div>
     </div>
