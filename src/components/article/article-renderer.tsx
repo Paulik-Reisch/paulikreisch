@@ -47,7 +47,7 @@ export function ArticleRenderer({ article }: { article: Article }) {
             className="relative"
           >
             <div className="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-t from-background to-transparent" />
-            <div className="relative pt-24">
+            <div className="relative pt-12">
               <WallComponent />
             </div>
           </motion.div>

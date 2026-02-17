@@ -35,7 +35,7 @@ export function LeadWall({ onUnlock }: { onUnlock: () => void }) {
   }, [state, toast, onUnlock]);
 
   return (
-    <div className="bg-background/80 backdrop-blur-sm py-12 px-6 shadow-[0_-8px_20px_rgba(0,0,0,0.05)] border-b">
+    <div className="bg-background/80 backdrop-blur-sm py-12 px-6 shadow-[0_-8px_20px_rgba(0,0,0,0.05)]">
       <div className="max-w-xl mx-auto text-center">
         <Lock className="mx-auto h-12 w-12 text-primary" />
         <h2 className="font-headline text-2xl font-bold mt-4">Lesen Sie den ganzen Artikel</h2>
