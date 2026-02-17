@@ -18,6 +18,11 @@ const reasons = [
     { text: "IMMER unabhängig geschrieben" },
     { text: "IMMER ohne Tracking-Exzesse" },
     { text: "IMMER mit Herzblut gemacht" },
+    { text: "IMMER mit einer Prise Wahnsinn" },
+    { text: "IMMER auf der Seite des Lesers" },
+    { text: "IMMER gegen den Strom" },
+    { text: "IMMER ein Grund zum Schmunzeln" },
+    { text: "IMMER ehrlich (manchmal zu sehr)" },
 ];
 
 
@@ -89,7 +94,7 @@ export function ShareWall({ article, onUnlock }: { article: Article; onUnlock: (
             <Separator />
              <div className="py-6 space-y-4">
                 <h4 className="font-semibold text-sm">Warum eine Wall?</h4>
-                <ul className="space-y-2 text-xs text-left text-muted-foreground max-w-xs mx-auto">
+                <ul className="space-y-2 text-sm text-left text-muted-foreground max-w-xs mx-auto">
                     {reasons.map((reason, i) => (
                         <li key={i} className="flex items-center gap-2">
                             <Check className="h-4 w-4 text-green-500 shrink-0" />
