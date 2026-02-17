@@ -46,7 +46,7 @@ export function LeadWall({ onUnlock }: { onUnlock: () => void }) {
   }, [state, toast, onUnlock]);
 
   return (
-    <div className="bg-background/80 backdrop-blur-sm py-8 px-6 shadow-xl">
+    <div className="bg-gradient-to-t from-background via-background/90 to-background/80 backdrop-blur-sm py-8 px-6 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.03)]">
       <div className="max-w-xl mx-auto text-center">
         <Lock className="mx-auto h-12 w-12 text-primary" />
         <h2 className="font-headline text-2xl font-bold mt-4">Lesen Sie den ganzen Artikel</h2>
@@ -64,24 +64,27 @@ export function LeadWall({ onUnlock }: { onUnlock: () => void }) {
 
         <div className="mt-8 text-center">
             <Separator />
-            <div className="py-6">
-                <h4 className="font-semibold text-sm mb-4">Warum eine Wall?</h4>
-                <div className="space-y-2 text-xs text-left text-muted-foreground max-w-xs mx-auto">
+             <div className="py-6 space-y-4">
+                <h4 className="font-semibold text-sm">Warum eine Wall?</h4>
+                <ul className="space-y-2 text-xs text-left text-muted-foreground max-w-xs mx-auto">
                     {reasons.map((reason, i) => (
-                        <div key={i} className="flex items-center gap-2">
+                        <li key={i} className="flex items-center gap-2">
                             <Check className="h-4 w-4 text-green-500 shrink-0" />
                             <span>{reason.text}</span>
-                        </div>
+                        </li>
                     ))}
-                </div>
+                </ul>
             </div>
             <Separator />
             <div className="mt-6 text-xs text-muted-foreground space-y-1">
                 <p>Danke, dass Sie uns unterstützen!</p>
                 <p>
-                    Schreiben Sie uns gerne eine E-Mail:{' '}
+                    Einen Gastbeitrag verfassen oder uns einen Liebesbrief schreiben? E-Mail an uns:{' '}
                     <a href="mailto:philipp.l.paulik@gmail.com" className="underline">Philipp</a>{' & '}
                     <a href="mailto:maximilian.reisch@t-online.de" className="underline">Max</a>.
+                </p>
+                <p className="text-xs text-muted-foreground/80 mt-1">
+                    Brieftauben-, wie auch Flaschenpost empfangen wir derzeit nicht.
                 </p>
             </div>
         </div>
