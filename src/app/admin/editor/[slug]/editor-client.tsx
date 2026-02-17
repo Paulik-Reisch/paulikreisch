@@ -132,11 +132,11 @@ export function ArticleEditorClient({ article }: { article?: Article }) {
        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
                 <Label htmlFor="imageUrl">Bild-URL</Label>
-                <Input id="imageUrl" name="imageUrl" defaultValue={article?.imageUrl} required />
+                <Input id="imageUrl" name="imageUrl" defaultValue={article?.imageUrl || 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/artikel%2Fcover%2Fpr_placeholder_image.png?alt=media&token=13907512-8791-4a27-a92d-285fb50628d9'} required />
             </div>
             <div className="space-y-2">
                 <Label htmlFor="imageAlt">Bild-Alternativtext</Label>
-                <Input id="imageAlt" name="imageAlt" defaultValue={article?.imageAlt} required />
+                <Input id="imageAlt" name="imageAlt" defaultValue={article?.imageAlt || 'Paulik & Reisch Satire'} required />
             </div>
        </div>
 
