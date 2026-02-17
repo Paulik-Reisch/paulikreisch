@@ -271,7 +271,7 @@ export async function sendNewsletterAction(
     await sendCampaign(newsletter.subject, newsletter.content);
 
     revalidatePath("/admin");
-    return { success: true, message: `Kampagne erfolgreich an die Audience versendet.` };
+    return { success: true, message: `Kampagne wurde erfolgreich zum Versand an die Gruppe übergeben.` };
 
   } catch (e) {
     const error = e as Error;

@@ -7,7 +7,7 @@ runConfig:
   # more instances in response to increased traffic.
   maxInstances: 1
   secrets:
-    - secret: RESEND_API_KEY
-    - secret: RESEND_AUDIENCE_ID
+    - secret: MAILERSEND_API_KEY
+    - secret: MAILERSEND_GROUP_ID
 buildConfig:
   memoryMiB: 2048

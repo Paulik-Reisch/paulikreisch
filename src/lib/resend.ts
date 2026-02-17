@@ -1,86 +1,80 @@
 "use server";
 
 import "server-only";
-import { Resend } from 'resend';
+import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
 
-let resendInstance: Resend | null = null;
+let mailerSendInstance: MailerSend | null = null;
 
-function getResend() {
-    if (resendInstance) return resendInstance;
+function getMailerSend() {
+    if (mailerSendInstance) return mailerSendInstance;
 
-    const resendApiKey = process.env.RESEND_API_KEY;
-    if (resendApiKey) {
-        resendInstance = new Resend(resendApiKey);
-        return resendInstance;
+    const apiKey = process.env.MAILERSEND_API_KEY;
+    if (apiKey) {
+        mailerSendInstance = new MailerSend({ apiKey });
+        return mailerSendInstance;
     }
     
-    console.warn("RESEND_API_KEY is not set. Resend functionality will be disabled.");
+    console.warn("MAILERSEND_API_KEY is not set. MailerSend functionality will be disabled.");
     return null;
 }
 
-
-/**
- * Adds a contact to the configured Resend audience.
- * @param email The email of the contact to add.
- * @returns The result of the create contact operation.
- */
 export async function addContact(email: string) {
-    const resend = getResend();
-    const audienceId = process.env.RESEND_AUDIENCE_ID;
+    const mailerSend = getMailerSend();
+    const groupId = process.env.MAILERSEND_GROUP_ID;
 
-    if (!resend || !audienceId) {
-        console.error("Resend is not configured. Missing RESEND_API_KEY or RESEND_AUDIENCE_ID.");
+    if (!mailerSend || !groupId) {
+        console.error("MailerSend is not configured. Missing MAILERSEND_API_KEY or MAILERSEND_GROUP_ID.");
         if (process.env.NODE_ENV !== 'production') {
-            console.log(`[DEV ONLY] Simulating Resend contact add for ${email}.`);
+            console.log(`[DEV ONLY] Simulating MailerSend contact add for ${email}.`);
             return { id: 'dev-simulated-contact' };
         }
-        throw new Error("Resend ist auf dem Server nicht konfiguriert.");
+        throw new Error("E-Mail-Dienst ist auf dem Server nicht konfiguriert.");
     }
     
-    const { data, error } = await resend.contacts.create({
-        email,
-        audienceId,
-        unsubscribed: false,
-    });
-
-    if (error) {
-        // Re-throw to be handled by the action
-        throw error;
+    try {
+        const recipients = [new Recipient(email, "")]; // Name is optional.
+        await mailerSend.groups.addRecipients(groupId, recipients);
+        return { success: true };
+    } catch (e: any) {
+        console.error("MailerSend addContact error:", e.body || e);
+        throw new Error("Fehler bei der Anmeldung zum Newsletter. Möglicherweise ist diese E-Mail bereits registriert.");
     }
-
-    return data;
 }
 
-/**
- * Sends a campaign email to the configured Resend audience.
- * @param subject The subject of the email.
- * @param htmlContent The HTML content of the email.
- */
 export async function sendCampaign(subject: string, htmlContent: string) {
-    const resend = getResend();
-    const audienceId = process.env.RESEND_AUDIENCE_ID;
+    const mailerSend = getMailerSend();
+    const groupId = process.env.MAILERSEND_GROUP_ID;
 
-    if (!resend || !audienceId) {
-        console.error("Resend is not configured. Missing RESEND_API_KEY or RESEND_AUDIENCE_ID.");
-        throw new Error("Resend ist auf dem Server nicht konfiguriert.");
+    if (!mailerSend || !groupId) {
+        console.error("MailerSend ist nicht konfiguriert. MAILERSEND_API_KEY oder MAILERSEND_GROUP_ID fehlt.");
+        throw new Error("E-Mail-Dienst ist auf dem Server nicht konfiguriert.");
     }
 
     try {
-        const { data, error } = await resend.emails.send({
-            from: 'Paulik & Reisch <newsletter@paulik-reisch.de>',
-            to: [audienceId],
-            subject: subject,
-            html: htmlContent,
-        });
+        const { body } = await mailerSend.groups.getRecipients(groupId, { limit: 1000 });
+        const recipients: Recipient[] = body.data.map((r: any) => new Recipient(r.email, r.name || ""));
 
-        if (error) {
-            throw error;
+        if (recipients.length === 0) {
+            console.log("Keine Empfänger in der Gruppe, Kampagne nicht gesendet.");
+            return { message: "Keine Empfänger gefunden." };
         }
 
-        return data;
+        const sentFrom = new Sender("newsletter@paulik-reisch.de", "Paulik & Reisch");
+
+        const emailParams = new EmailParams()
+            .setFrom(sentFrom)
+            .setTo(recipients)
+            .setReplyTo(sentFrom)
+            .setSubject(subject)
+            .setHtml(htmlContent)
+            .setText(htmlContent.replace(/<[^>]*>?/gm, ''));
+
+        const response = await mailerSend.email.send(emailParams);
+        
+        return { id: response.headers['x-message-id'] };
 
     } catch (e: any) {
-        console.error(`Failed to send campaign:`, e);
-        throw new Error(e.message || 'Could not send campaign via Resend.');
+        console.error(`Fehler beim Senden der Kampagne:`, e.body || e);
+        throw new Error(e.message || 'Konnte Kampagne nicht via MailerSend versenden.');
     }
 }

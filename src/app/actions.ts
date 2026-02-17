@@ -72,10 +72,7 @@ export async function subscribeToNewsletterAction(
     } catch (e) {
         console.error(e);
         const error = e as any;
-        if (error.name === 'validation_error' && error.message.includes('`email` must be unique')) {
-            return { success: true, message: `Diese E-Mail-Adresse ist bereits registriert.` };
-        }
-        return { error: "Anmeldung fehlgeschlagen. Das Internet ist wahrscheinlich wieder kaputt." };
+        return { error: error.message || "Anmeldung fehlgeschlagen. Das Internet ist wahrscheinlich wieder kaputt." };
     }
 }
 
