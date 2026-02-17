@@ -1,3 +1,4 @@
+
 'use client';
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
@@ -16,8 +17,73 @@ export default function ShopPage() {
             document.body.classList.remove('shop-page');
         }
     }, []);
+
+    const jsonLdBook1 = {
+        "@context": "https://schema.org/",
+        "@type": "Book",
+        "name": "Hallo Welt",
+        "author": [
+            { "@type": "Person", "name": "Philipp Paulik" },
+            { "@type": "Person", "name": "Maximilian Reisch" }
+        ],
+        "illustrator": { "@type": "Person", "name": "Luin Schiffbauer" },
+        "workExample": [{
+            "@type": "Book",
+            "isbn": "979-8879791693",
+            "bookEdition": "1. Auflage",
+            "bookFormat": "https://schema.org/Paperback",
+            "numberOfPages": "106"
+        }],
+        "image": "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-hw1_900px.png?alt=media&token=42ce90a3-ed34-49d2-8e09-5258d0dfc484",
+        "description": "Zwischen Euphorie und Überforderung: Fragmente des Schülerdaseins. Eine Sammlung von Episoden, die das jugendliche Dasein beleuchten.",
+        "offers": {
+            "@type": "Offer",
+            "price": "10.99",
+            "priceCurrency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "seller": {
+                "@type": "Organization",
+                "name": "Amazon"
+            },
+            "url": "https://amzn.eu/d/02nS59t2"
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "5",
+            "bestRating": "5",
+            "ratingCount": "5"
+        }
+    };
+    
+    const jsonLdBook2 = {
+        "@context": "https://schema.org/",
+        "@type": "Book",
+        "name": "Hallo Welt 2",
+        "author": [
+            { "@type": "Person", "name": "Philipp Paulik" },
+            { "@type": "Person", "name": "Maximilian Reisch" }
+        ],
+        "image": "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw2%2Fcover-hw2-900px.png?alt=media&token=9479f94f-e21d-4fe8-82d5-b668781bd724",
+        "description": "Wie das Leben funktioniert (Platzhalter). Die Fortsetzung der satirischen Reise.",
+        "offers": {
+            "@type": "Offer",
+            "price": "12.99",
+            "priceCurrency": "EUR",
+            "availability": "https://schema.org/PreOrder"
+        }
+    };
+
+
     return (
         <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBook1) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBook2) }}
+            />
             <Header />
             <main>
                 {/* === SEKTION 1: SHOP (HERO) === */}
