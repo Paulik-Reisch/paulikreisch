@@ -22,7 +22,7 @@ function PinterestArticleCard({ article }: { article: Article }) {
         <div className="flex-grow">
           <Badge variant="secondary" className="mb-2">{article.category}</Badge>
           <Link href={`/a/${article.slug}`}>
-            <h3 className="text-lg font-bold font-headline leading-snug group-hover:text-primary transition-colors line-clamp-2">
+            <h3 className="text-lg font-bold font-serifHeadline leading-snug group-hover:text-primary transition-colors line-clamp-2">
               {article.title}
             </h3>
           </Link>

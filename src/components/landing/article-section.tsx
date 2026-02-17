@@ -45,7 +45,7 @@ function ArticleCard({ article }: { article: Article }) {
             </div>
           </div>
           <Link href={`/a/${article.slug}`}>
-            <h3 className="text-2xl font-bold font-headline tracking-tight leading-snug group-hover:text-primary transition-colors">
+            <h3 className="text-2xl font-bold font-serifHeadline tracking-tight leading-snug group-hover:text-primary transition-colors">
               {article.title}
             </h3>
           </Link>
