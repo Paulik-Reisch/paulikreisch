@@ -3,14 +3,14 @@
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Twitter, Facebook, Linkedin, Link as LinkIcon } from 'lucide-react';
+import { Twitter, Facebook, Linkedin, MoreHorizontal } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { type Article } from '@/lib/firestore';
 
 export function SocialShare({ article }: { article: Article }) {
   const { toast } = useToast();
   const pathname = usePathname();
-  const url = `https://paulik-reisch.de${pathname}`;
+  const url = `https://paulik-reisch.de${pathname}?utm_source=social_share_card&utm_medium=social&utm_campaign=${article.slug}`;
   const text = `Interessanter Artikel: "${article.title}" von Paulik & Reisch`;
 
   const shareLinks = {
@@ -18,14 +18,31 @@ export function SocialShare({ article }: { article: Article }) {
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
     linkedin: `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(article.title)}&summary=${encodeURIComponent(article.teaser)}&source=Paulik%20%26%20Reisch`,
   };
-
-  const copyLink = () => {
-    navigator.clipboard.writeText(url);
-    toast({
-      title: 'Link kopiert!',
-      description: 'Der Link zum Artikel wurde in die Zwischenablage kopiert.',
-    });
+  
+  const handleNativeShare = async () => {
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: article.title,
+                text: text,
+                url: url,
+            });
+        } catch (error) {
+            console.error('Fehler beim nativen Teilen:', error);
+            toast({
+                variant: "destructive",
+                title: "Teilen fehlgeschlagen",
+                description: "Ihr Browser hat das Teilen verhindert.",
+            });
+        }
+    } else {
+        toast({
+            title: "Nicht unterstützt",
+            description: "Ihr Browser unterstützt die native Teilen-Funktion nicht.",
+        });
+    }
   };
+
 
   return (
     <Card className="mt-16 not-prose">
@@ -49,9 +66,11 @@ export function SocialShare({ article }: { article: Article }) {
             <Linkedin className="h-5 w-5" />
           </Button>
         </a>
-        <Button variant="outline" size="icon" onClick={copyLink} aria-label="Link kopieren">
-          <LinkIcon className="h-5 w-5" />
-        </Button>
+        {typeof navigator !== 'undefined' && navigator.share && (
+          <Button variant="outline" size="icon" onClick={handleNativeShare} aria-label="Mehr Teilen-Optionen">
+            <MoreHorizontal className="h-5 w-5" />
+          </Button>
+        )}
       </CardContent>
     </Card>
   );
