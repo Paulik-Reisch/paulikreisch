@@ -51,7 +51,7 @@ export function LeadWall({ onUnlock }: { onUnlock: () => void }) {
   }, [state, toast, onUnlock]);
 
   return (
-    <div className="bg-muted py-8 px-6 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.03)]">
+    <div className="bg-muted py-8 px-6 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.03)] mt-[15px] rounded-lg">
       <div className="max-w-xl mx-auto text-center">
         <Lock className="mx-auto h-12 w-12 text-primary" />
         <h2 className="font-headline text-2xl font-bold mt-4">Lesen Sie den ganzen Artikel</h2>
@@ -71,7 +71,7 @@ export function LeadWall({ onUnlock }: { onUnlock: () => void }) {
             <Separator />
              <div className="py-6 space-y-4">
                 <h4 className="font-semibold text-sm">Warum eine Wall?</h4>
-                <ul className="space-y-2 text-sm text-left text-muted-foreground max-w-xs mx-auto">
+                <ul className="space-y-2 text-lg text-left text-muted-foreground max-w-xs mx-auto">
                     {reasons.map((reason, i) => (
                         <li key={i} className="flex items-center gap-2">
                             <Check className="h-4 w-4 text-green-500 shrink-0" />

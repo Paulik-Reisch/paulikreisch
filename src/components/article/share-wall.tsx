@@ -69,7 +69,7 @@ export function ShareWall({ article, onUnlock }: { article: Article; onUnlock: (
   };
 
   return (
-    <div className="bg-muted py-8 px-6 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.03)]">
+    <div className="bg-muted py-8 px-6 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.03)] mt-[15px] rounded-lg">
       <div className="max-w-xl mx-auto text-center">
         <h2 className="font-headline text-2xl font-bold mt-4">Teilen und weiterlesen</h2>
         <p className="text-muted-foreground mt-2 mb-6">Teilen Sie diesen Artikel, um den Rest des Inhalts sofort freizuschalten.</p>
@@ -94,7 +94,7 @@ export function ShareWall({ article, onUnlock }: { article: Article; onUnlock: (
             <Separator />
              <div className="py-6 space-y-4">
                 <h4 className="font-semibold text-sm">Warum eine Wall?</h4>
-                <ul className="space-y-2 text-sm text-left text-muted-foreground max-w-xs mx-auto">
+                <ul className="space-y-2 text-lg text-left text-muted-foreground max-w-xs mx-auto">
                     {reasons.map((reason, i) => (
                         <li key={i} className="flex items-center gap-2">
                             <Check className="h-4 w-4 text-green-500 shrink-0" />
