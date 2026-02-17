@@ -22,7 +22,7 @@ export function ShareWall({ article, onUnlock }: { article: Article; onUnlock: (
   const { toast } = useToast();
   const pathname = usePathname();
   const url = `https://paulik-reisch.de${pathname}?utm_source=share_wall&utm_medium=social_share&utm_campaign=${article.slug}`;
-  const text = `Spannender Artikel: "${article.title}" von Paulik & Reisch`;
+  const text = `Interessanter Artikel: "${article.title}" von Paulik & Reisch`;
 
   const shareLinks = {
     twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`,
@@ -61,7 +61,7 @@ export function ShareWall({ article, onUnlock }: { article: Article; onUnlock: (
   };
 
   return (
-    <div className="bg-background/80 backdrop-blur-sm py-8 px-6">
+    <div className="bg-background/80 backdrop-blur-sm py-8 px-6 shadow-xl">
       <div className="max-w-xl mx-auto text-center">
         <h2 className="font-headline text-2xl font-bold mt-4">Teilen und weiterlesen</h2>
         <p className="text-muted-foreground mt-2 mb-6">Teilen Sie diesen Artikel, um den Rest des Inhalts sofort freizuschalten.</p>
@@ -86,10 +86,10 @@ export function ShareWall({ article, onUnlock }: { article: Article; onUnlock: (
             <Separator />
             <div className="py-6">
                 <h4 className="font-semibold text-sm mb-4">Warum eine Wall?</h4>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-2 text-xs text-muted-foreground">
+                <div className="space-y-2 text-xs text-left text-muted-foreground max-w-xs mx-auto">
                     {reasons.map((reason, i) => (
                         <div key={i} className="flex items-center gap-2">
-                            <Check className="h-4 w-4 text-green-500" />
+                            <Check className="h-4 w-4 text-green-500 shrink-0" />
                             <span>{reason.text}</span>
                         </div>
                     ))}
