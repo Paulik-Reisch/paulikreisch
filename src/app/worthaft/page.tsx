@@ -15,7 +15,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { WORDS } from '@/lib/worthaft-words';
-import { Share2, Book, Newspaper } from 'lucide-react';
+import { Share2, Book, Newspaper, HelpCircle } from 'lucide-react';
 import Link from 'next/link';
 import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
 
@@ -471,7 +471,11 @@ export default function WorthaftPage() {
                     <div className="text-center mb-8">
                         <WorthaftIcon className="mx-auto h-12 w-12 mb-4 text-primary" />
                         <h1 className="text-4xl font-bold font-headline">Worthaft</h1>
-                        <p className="text-muted-foreground">Eine Hommage von <Link href="/ueber/autoren" className="underline">Paulik & Reisch</Link>. <Link href="/worthaft/ueber" className="underline">Wie funktioniert's?</Link></p>
+                        <p className="text-muted-foreground">Eine Hommage von <Link href="/ueber/autoren" className="underline">Paulik & Reisch</Link>.</p>
+                        <Link href="/worthaft/ueber" className="text-sm inline-flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors underline mt-1">
+                            <HelpCircle className="h-4 w-4" />
+                            <span>Wie funktioniert's?</span>
+                        </Link>
                     </div>
                     <div className="w-full max-w-xs sm:max-w-sm">
                         <Grid 
