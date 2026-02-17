@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -150,6 +151,8 @@ export function Footer() {
             Amazon Media EU S.à r.l. (Société à responsabilité limitée)</p>
             <br/>
             <p>Das Spiel "Worthaft" ist eine unabhängige Hommage und steht in keiner Verbindung zum Original "Wordle" der New York Times. Spieldaten wie Statistiken und Fortschritt werden ausschließlich lokal im Browser des Nutzers gespeichert. Es findet keine serverseitige Erfassung oder Auswertung der Spieldaten statt.</p>
+            <br/>
+            <p>Die auf dieser Webseite veröffentlichten satirischen Artikel dienen ausschließlich der Unterhaltung. Sie stellen keinen redaktionellen oder informativen Inhalt dar. Dargestellte Informationen können von der Wahrheit abweichen und haben nicht zum Ziel, Personen oder Institutionen zu diffamieren.</p>
           </div>
 
           <div className="flex-1 flex flex-col items-center md:items-end gap-2 min-w-[200px]">
