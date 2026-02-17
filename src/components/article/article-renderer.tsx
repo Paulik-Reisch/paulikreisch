@@ -46,7 +46,7 @@ export function ArticleRenderer({ article }: { article: Article }) {
             transition={{ duration: 0.5 }}
             className="relative"
           >
-            <div className="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-t from-background to-transparent" />
+            <div className="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-t from-muted to-transparent" />
             <div className="relative pt-4">
               <WallComponent />
             </div>
