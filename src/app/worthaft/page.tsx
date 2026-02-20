@@ -18,16 +18,6 @@ import { WORDS } from '@/lib/worthaft-words';
 import { Share2, Book, Newspaper, HelpCircle } from 'lucide-react';
 import Link from 'next/link';
 import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-    openGraph: {
-        images: ['https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Fpr_social-image.png?alt=media&token=0d3d2174-4852-417a-aca7-183b7203934d'],
-    },
-    twitter: {
-        images: ['https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Fpr_social-image.png?alt=media&token=0d3d2174-4852-417a-aca7-183b7203934d'],
-    }
-}
 
 const WORD_LENGTH = 5;
 const MAX_GUESSES = 6;
@@ -433,7 +423,6 @@ export default function WorthaftPage() {
     }, [guesses.length, gameState]);
 
     const shareResults = () => {
-        const title = 'WORTHAFT - Das Paulik & Reisch Spiel';
         const resultGrid = guesses.map(g => 
             g.statuses.map(s => {
                 if (s === 'correct') return '🟦';
@@ -442,7 +431,16 @@ export default function WorthaftPage() {
             }).join('')
         ).join('\n');
         
-        const text = `${title}\n\nIch habe das tägliche WORTHAFT gespielt. Mein Ergebnis:\n${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} Versuchen\n\n${resultGrid}\n\nJetzt fordere ich DICH heraus! DU BIST JETZT DRAN!\n\nhttps://paulik-reisch.de/worthaft`;
+        const text = `WORTHAFT - Das Paulik & Reisch Spiel
+
+Ich habe das tägliche WORTHAFT gespielt. Mein Ergebnis:
+${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} Versuchen
+
+${resultGrid}
+
+Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!
+
+https://paulik-reisch.de/worthaft`;
         
         navigator.clipboard.writeText(text).then(() => {
             toast({ title: 'Kopiert!', description: 'Ergebnis in die Zwischenablage kopiert. Teile es mit der Welt!' });
@@ -532,9 +530,9 @@ export default function WorthaftPage() {
                         </div>
                     </div>
                     <AlertDialogFooter className="mt-4 sm:justify-center flex-col sm:flex-col sm:space-x-0 gap-2">
-                        <Button size="lg" onClick={shareResults} className="w-full">
+                        <Button size="lg" onClick={shareResults} className="w-full h-auto py-4 text-base">
                             <Share2 className="mr-2 h-4 w-4" />
-                            Mein Ergebnis teilen und Freunde herausfordern
+                            <span>Mein Ergebnis teilen und Freunde herausfordern</span>
                         </Button>
                         <div className="text-center pt-2">
                             <p className="text-sm font-semibold">Nächstes Spiel in:</p>
