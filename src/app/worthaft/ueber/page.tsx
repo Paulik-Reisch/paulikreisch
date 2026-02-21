@@ -11,68 +11,111 @@ export const metadata: Metadata = {
     alternates: {
         canonical: '/worthaft/ueber',
     },
+    openGraph: {
+        title: 'Über Worthaft | Spielregeln & Hintergrund',
+        description: 'Eine Anleitung zu Worthaft, dem täglichen Worträtsel von Paulik & Reisch.',
+        url: 'https://paulik-reisch.de/worthaft/ueber',
+        type: 'article',
+    },
+    twitter: {
+        title: 'Über Worthaft | Spielregeln & Hintergrund',
+        description: 'So funktioniert Worthaft, das tägliche Worträtsel von Paulik & Reisch.',
+    }
 };
 
 export default function AboutWorthaftPage() {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: 'Wie spielt man Worthaft?',
+    description: 'Eine Anleitung zum täglichen deutschen Worträtsel "Worthaft".',
+    step: [
+      {
+        '@type': 'HowToStep',
+        name: 'Raten',
+        text: 'Sie haben sechs Versuche, das geheime deutsche Wort mit fünf Buchstaben zu erraten.',
+        url: 'https://paulik-reisch.de/worthaft/ueber#regeln',
+      },
+      {
+        '@type': 'HowToStep',
+        name: 'Hinweise erhalten',
+        text: 'Nach jedem Versuch geben Ihnen die Farben einen Hinweis: Blau für korrekte Position, Gelb für korrekten Buchstaben an falscher Position, und Grau, wenn der Buchstabe nicht im Wort enthalten ist.',
+        url: 'https://paulik-reisch.de/worthaft/ueber#regeln',
+      },
+      {
+        '@type': 'HowToStep',
+        name: 'Gewinnen',
+        text: 'Lösen Sie das Rätsel innerhalb von sechs Versuchen, um zu gewinnen.',
+        url: 'https://paulik-reisch.de/worthaft/ueber#regeln',
+      },
+    ],
+  };
+
   return (
-    <div className="flex flex-col min-h-screen bg-background">
-      <Header />
-      <main className="flex-1 py-12 md:py-24">
-        <div className="container max-w-3xl mx-auto px-4">
-          <article className="prose dark:prose-invert">
-            <Badge>Hintergrund</Badge>
-            <h1 className="font-headline mt-4">Über Worthaft</h1>
-            <p className="lead">
-              Eine Hommage an ein virales Phänomen, neu interpretiert mit dem
-              zynischen Charme von Paulik & Reisch.
-            </p>
-            <h2>Was ist das hier?</h2>
-            <p>
-              "Worthaft" ist unsere liebevolle, aber unlizenzierte Adaption des
-              weltberühmten Worträtselspiels "Wordle". Wir haben die Essenz des
-              Spiels genommen – das Raten eines Fünf-Buchstaben-Wortes in sechs
-              Versuchen – und es in unser eigenes satirisches Universum
-              verpflanzt. Warum? Weil wir es können. Und weil wir dachten, das
-              Internet braucht noch eine weitere Wordle-Kopie.
-            </p>
-            <h2>Die Regeln (als ob Sie sie nicht kennen würden)</h2>
-            <p>
-              Sie haben sechs Versuche, das geheime deutsche Wort mit fünf
-              Buchstaben zu erraten. Nach jedem Versuch geben Ihnen die Farben
-              einen Hinweis:
-            </p>
-            <ul>
-              <li>
-                <span className="p-2 rounded-md font-bold text-primary-foreground" style={{ backgroundColor: 'hsl(var(--primary))' }}>
-                  Blau
-                </span>
-                : Der Buchstabe ist korrekt und an der richtigen Stelle. Ein
-                seltener Moment der Klarheit in diesem Chaos.
-              </li>
-              <li>
-                <span className="p-2 rounded-md font-bold text-secondary-foreground" style={{ backgroundColor: 'hsl(var(--secondary))' }}>
-                  Gelb
-                </span>
-                : Der Buchstabe ist im Wort enthalten, aber an der falschen
-                Stelle. Wie eine gute Pointe, die noch nicht ganz sitzt.
-              </li>
-              <li>
-                <span className="p-2 rounded-md font-bold" style={{ backgroundColor: 'hsl(var(--muted))' }}>
-                  Grau
-                </span>
-                : Der Buchstabe kommt im Wort nicht vor. Ein weiterer falscher
-                Weg, genau wie das deutsche Bildungssystem.
-              </li>
-            </ul>
-            <div className="not-prose text-center mt-12">
-                <Link href="/worthaft">
-                    <Button size="lg">Genug gelesen, ich will spielen!</Button>
-                </Link>
-            </div>
-          </article>
-        </div>
-      </main>
-      <Footer />
-    </div>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <div className="flex flex-col min-h-screen bg-background">
+        <Header />
+        <main className="flex-1 py-12 md:py-24">
+          <div className="container max-w-3xl mx-auto px-4">
+            <article className="prose dark:prose-invert">
+              <Badge>Spielanleitung</Badge>
+              <h1 className="font-headline mt-4">Über Worthaft</h1>
+              <p className="lead">
+                Eine Hommage an ein virales Phänomen, neu interpretiert mit dem
+                zynischen Charme von <Link href="/ueber/autoren" className="text-link">Paulik & Reisch</Link>.
+              </p>
+              <h2>Was ist das hier?</h2>
+              <p>
+                "Worthaft" ist unsere liebevolle, aber unlizenzierte Adaption des
+                weltberühmten Worträtselspiels "Wordle". Wir haben die Essenz des
+                Spiels genommen – das Raten eines Fünf-Buchstaben-Wortes in sechs
+                Versuchen – und es in unser eigenes satirisches Universum
+                verpflanzt. Warum? Weil wir es können. Und weil wir dachten, das
+                Internet braucht noch eine weitere Wordle-Kopie.
+              </p>
+              <h2 id="regeln">Die Regeln (als ob Sie sie nicht kennen würden)</h2>
+              <p>
+                Sie haben sechs Versuche, das geheime deutsche Wort mit fünf
+                Buchstaben zu erraten. Nach jedem Versuch geben Ihnen die Farben
+                einen Hinweis:
+              </p>
+              <ul>
+                <li>
+                  <span className="p-2 rounded-md font-bold text-primary-foreground" style={{ backgroundColor: 'hsl(var(--primary))' }}>
+                    Blau
+                  </span>
+                  : Der Buchstabe ist korrekt und an der richtigen Stelle. Ein
+                  seltener Moment der Klarheit in diesem Chaos.
+                </li>
+                <li>
+                  <span className="p-2 rounded-md font-bold text-secondary-foreground" style={{ backgroundColor: 'hsl(var(--secondary))' }}>
+                    Gelb
+                  </span>
+                  : Der Buchstabe ist im Wort enthalten, aber an der falschen
+                  Stelle. Wie eine gute Pointe, die noch nicht ganz sitzt.
+                </li>
+                <li>
+                  <span className="p-2 rounded-md font-bold" style={{ backgroundColor: 'hsl(var(--muted))' }}>
+                    Grau
+                  </span>
+                  : Der Buchstabe kommt im Wort nicht vor. Ein weiterer falscher
+                  Weg, genau wie das deutsche Bildungssystem.
+                </li>
+              </ul>
+              <div className="not-prose text-center mt-12">
+                  <Link href="/worthaft">
+                      <Button size="lg">Genug gelesen, ich will spielen!</Button>
+                  </Link>
+              </div>
+            </article>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    </>
   );
 }

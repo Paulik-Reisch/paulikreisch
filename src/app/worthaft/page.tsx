@@ -156,13 +156,100 @@ export default function WorthaftPage() {
     const [timeToNextGame, setTimeToNextGame] = useState('');
     const [isShaking, setIsShaking] = useState(false);
 
-    const prevGameStateRef = useRef(gameState);
-    const prevGuessesLengthRef = useRef(guesses.length);
-    const originalFaviconRef = useRef<string | null>(null);
-    const blinkTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
     const getTodayString = () => new Date().toISOString().split('T')[0];
 
+    const initGame = useCallback((savedState?: DailyGameState) => {
+        if (savedState) {
+            setBoard(savedState.board);
+            setScore(savedState.score);
+            setStatus(savedState.status);
+            if (savedState.status !== 'playing') {
+                setIsCompletedToday(true);
+            }
+        } else {
+            let newBoard = addRandomTile(getEmptyBoard());
+            newBoard = addRandomTile(newBoard);
+            setBoard(newBoard);
+            setScore(0);
+            setStatus('playing');
+            setIsCompletedToday(false);
+            saveState(newBoard, 0, 'playing');
+        }
+    }, []);
+    
+    const saveState = useCallback((board: Board, score: number, status: GameStatus) => {
+        const dailyState: DailyState = {
+            date: getTodayString(),
+            board,
+            score,
+            status,
+        };
+        localStorage.setItem('unendlich-daily', JSON.stringify(dailyState));
+    }, []);
+
+    const checkGameOver = (board: Board): GameStatus => {
+        let has2048 = false;
+        let canMove = false;
+        for (let i = 0; i < GRID_SIZE; i++) {
+            for (let j = 0; j < GRID_SIZE; j++) {
+                if (board[i][j] === 2048) has2048 = true;
+                if (board[i][j] === 0) canMove = true;
+                if (i > 0 && board[i][j] === board[i-1][j]) canMove = true;
+                if (j > 0 && board[i][j] === board[i][j-1]) canMove = true;
+            }
+        }
+        if (has2048) return 'won';
+        if (!canMove) return 'lost';
+        return 'playing';
+    };
+
+    const handleMove = useCallback((direction: 'up' | 'down' | 'left' | 'right') => {
+        if (status !== 'playing') return;
+
+        let currentBoard = board;
+        let rotations = 0;
+        if (direction === 'down') { rotations = 1; }
+        if (direction === 'right') { rotations = 2; }
+        if (direction === 'up') { rotations = 3; }
+
+        for (let i = 0; i < rotations; i++) {
+            currentBoard = rotateBoard(currentBoard);
+        }
+        
+        let totalScore = 0;
+        let moved = false;
+        const newBoard = currentBoard.map(row => {
+            const { newRow, score: rowScore, moved: rowMoved } = moveRowLeft(row);
+            totalScore += rowScore;
+            if(rowMoved) moved = true;
+            return newRow;
+        });
+
+        for (let i = 0; i < rotations; i++) {
+            currentBoard = rotateBoard(newBoard);
+            currentBoard = rotateBoard(currentBoard);
+            currentBoard = rotateBoard(currentBoard);
+        }
+        
+        let finalBoard = newBoard;
+        for (let i = 0; i < (4 - rotations) % 4; i++) {
+            finalBoard = rotateBoard(finalBoard);
+        }
+
+        if (moved) {
+            finalBoard = addRandomTile(finalBoard);
+            const newScore = score + totalScore;
+            const newStatus = checkGameOver(finalBoard);
+            setBoard(finalBoard);
+            setScore(newScore);
+            setStatus(newStatus);
+            saveState(finalBoard, newScore, newStatus);
+            if (newStatus !== 'playing') {
+                setIsCompletedToday(true);
+            }
+        }
+    }, [board, status, score, saveState]);
+    
     useEffect(() => {
         const todayStr = getTodayString();
         setSolution(getWordOfTheDay());
@@ -195,10 +282,9 @@ export default function WorthaftPage() {
             }
         }
     }, []);
-
-    useEffect(() => {
-        if (gameState !== 'won' && gameState !== 'lost' && !isCompletedToday) return;
-
+    
+     useEffect(() => {
+        if (!isCompletedToday) return;
         const timer = setInterval(() => {
             const now = new Date();
             const tomorrow = new Date(now);
@@ -219,10 +305,8 @@ export default function WorthaftPage() {
                 `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
             );
         }, 1000);
-
         return () => clearInterval(timer);
-    }, [gameState, isCompletedToday]);
-
+    }, [isCompletedToday]);
 
     const handleChar = (char: string) => {
         if (gameState !== 'playing') return;
@@ -348,79 +432,6 @@ export default function WorthaftPage() {
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [handleKeyDown]);
-
-    // Effect for dynamic favicon
-    useEffect(() => {
-        if (typeof window === 'undefined' || typeof document === 'undefined') return;
-
-        const link = document.querySelector<HTMLLinkElement>("link[rel*='icon']");
-        if (!link) return;
-
-        // Store original favicon on first mount if not already set
-        if (originalFaviconRef.current === null) {
-            originalFaviconRef.current = link.href;
-        }
-        const originalFavicon = originalFaviconRef.current;
-
-        const drawFavicon = (text: string, textColor: string, bgColor: string): string => {
-            const canvas = document.createElement('canvas');
-            canvas.width = 32;
-            canvas.height = 32;
-            const ctx = canvas.getContext('2d');
-            if (!ctx) return originalFavicon;
-
-            ctx.fillStyle = bgColor;
-            ctx.fillRect(0, 0, 32, 32);
-
-            ctx.font = 'bold 24px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillStyle = textColor;
-            ctx.fillText(text, 16, 18);
-
-            return canvas.toDataURL('image/png');
-        };
-        
-        const blinkFavicon = (text: string, textColor: string, bgColor: string) => {
-            if (blinkTimeoutRef.current) {
-                clearTimeout(blinkTimeoutRef.current);
-            }
-
-            const newFavicon = drawFavicon(text, textColor, bgColor);
-            link.href = newFavicon;
-
-            blinkTimeoutRef.current = setTimeout(() => {
-                if (link.href === newFavicon) {
-                    link.href = originalFavicon;
-                }
-            }, 2000);
-        };
-        
-        const justGuessed = guesses.length > prevGuessesLengthRef.current;
-        const justFinished = gameState !== 'playing' && prevGameStateRef.current === 'playing';
-
-        if (justFinished) {
-            if (gameState === 'won') {
-                blinkFavicon('✅', '#FFFFFF', '#22c55e'); // green
-            } else { // lost
-                blinkFavicon('❌', '#FFFFFF', '#ef4444'); // red
-            }
-        } else if (justGuessed) {
-            blinkFavicon(`${guesses.length}`, 'hsl(220 85% 55%)', 'hsl(240 5% 96%)');
-        }
-
-        prevGameStateRef.current = gameState;
-        prevGuessesLengthRef.current = guesses.length;
-
-        return () => {
-            if (link && originalFavicon) {
-                link.href = originalFavicon;
-            }
-            if (blinkTimeoutRef.current) {
-                clearTimeout(blinkTimeoutRef.current);
-            }
-        };
-    }, [guesses.length, gameState]);
 
     const shareResults = () => {
         const resultGrid = guesses.map(g => 

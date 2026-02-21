@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Worthaft - Das tägliche Wortspiel von Paulik & Reisch',
   description: 'Spielen Sie Worthaft, das deutsche Worträtsel im Stil von Wordle. Erraten Sie täglich ein neues Wort mit fünf Buchstaben. Kostenlos und herausfordernd. Eine Hommage von Paulik & Reisch.',
-  keywords: ['Worthaft', 'Wordle', 'Wortspiel', 'Rätsel', 'Deutsch', 'Worträtsel', 'täglich', 'kostenlos', 'Paulik & Reisch', 'Wördle', 'Wortspiel online'],
+  keywords: ['Worthaft', 'Wordle', 'Wortspiel', 'Rätsel', 'Deutsch', 'Worträtsel', 'täglich', 'kostenlos', 'Paulik & Reisch', 'Wördle', 'Wortspiel online', 'Gehirnjogging', 'Logikspiel'],
   openGraph: {
     title: 'Worthaft - Das tägliche Wortspiel von Paulik & Reisch',
     description: 'Fordern Sie Ihren Wortschatz heraus! Erraten Sie das tägliche Wort mit fünf Buchstaben.',
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     canonical: '/worthaft',
   },
   icons: {
-    icon: 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Fworthaft.svg?alt=media&token=c63037f9-af2e-4fac-94b5-0679e776a14f',
+    icon: 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2FVector.png?alt=media&token=3f1ea786-eeb3-44e4-9f38-83547a1e3282',
   },
 };
 
