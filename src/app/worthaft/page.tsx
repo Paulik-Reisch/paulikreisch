@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
@@ -153,8 +154,7 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
 }) => (
     <>
         <div className="text-center">
-            <WorthaftIcon className="mx-auto h-16 w-16 mb-4 text-primary" />
-            <h3 className="text-2xl font-bold font-headline">
+            <h3 className="text-2xl font-bold font-headline mb-4">
                 {gameState === 'won' ? 'Gratulation!' : gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
             </h3>
             <p className="text-muted-foreground mt-1">
@@ -196,7 +196,7 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
                 Ergebnis teilen & Freunde herausfordern
             </Button>
              <Link href="/a" className="w-full">
-                <Button className="w-full" variant="outline">
+                <Button className="w-full" variant="ghost">
                     Lustige Artikel lesen
                 </Button>
             </Link>
