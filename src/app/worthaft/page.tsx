@@ -13,7 +13,7 @@ import {
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { WORDS } from '@/lib/worthaft-words';
-import { Share2, HelpCircle, Award, Book } from 'lucide-react';
+import { Share2, HelpCircle, Book, Newspaper } from 'lucide-react';
 import Link from 'next/link';
 import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
 import { Confetti } from '@/components/landing/confetti';
@@ -147,13 +147,13 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
     solution: string;
     guesses: { guess: string; statuses: LetterStatus[] }[];
     gameState: 'playing' | 'won' | 'lost';
-    stats: { games: number; wins: number; streak: number };
+    stats: { games: number; wins: number; streak: number; maxStreak: number; };
     timeToNextGame: string;
     shareResults: () => void;
 }) => (
     <>
         <div className="text-center">
-             <Award className={cn("mx-auto h-12 w-12 mb-4", gameState === 'won' ? 'text-yellow-500' : 'text-muted-foreground')} />
+            <WorthaftIcon className="mx-auto h-16 w-16 mb-4 text-primary" />
             <h3 className="text-2xl font-bold font-headline">
                 {gameState === 'won' ? 'Gratulation!' : gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
             </h3>
@@ -161,21 +161,34 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
                 Das Wort von Heute: <span className="font-bold text-primary">{solution}</span>
             </p>
         </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 my-6">
-            <div className="p-4 bg-muted rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Versuche</p>
-                <p className="text-2xl font-bold text-primary">{guesses.length > 0 ? `${guesses.length} / ${MAX_GUESSES}` : '-'}</p>
-            </div>
-            <div className="p-4 bg-muted rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Siegesserie</p>
-                <p className="text-2xl font-bold">{stats.streak}</p>
-            </div>
-             <div className="p-4 bg-muted rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Nächstes Spiel</p>
-                <p className="font-mono text-2xl font-bold">{timeToNextGame || '...'}</p>
+        
+        <div className="my-6">
+            <h4 className="text-center text-sm font-bold uppercase text-muted-foreground mb-3">Statistiken</h4>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div className="p-3 bg-muted rounded-lg text-center">
+                    <p className="text-2xl font-bold">{stats.games}</p>
+                    <p className="text-xs text-muted-foreground">Gespielt</p>
+                </div>
+                <div className="p-3 bg-muted rounded-lg text-center">
+                    <p className="text-2xl font-bold">{stats.games > 0 ? Math.round((stats.wins / stats.games) * 100) : 0}</p>
+                    <p className="text-xs text-muted-foreground">Gewinnrate %</p>
+                </div>
+                <div className="p-3 bg-muted rounded-lg text-center">
+                    <p className="text-2xl font-bold">{stats.streak}</p>
+                    <p className="text-xs text-muted-foreground">Aktuelle Serie</p>
+                </div>
+                <div className="p-3 bg-muted rounded-lg text-center">
+                    <p className="text-2xl font-bold">{stats.maxStreak}</p>
+                    <p className="text-xs text-muted-foreground">Beste Serie</p>
+                </div>
             </div>
         </div>
+
+        <div className="text-center mb-6">
+            <p className="font-semibold">Nächstes Spiel in:</p>
+            <p className="font-mono text-2xl font-bold">{timeToNextGame || '...'}</p>
+        </div>
+
 
         <div className="sm:justify-center flex flex-col gap-2">
             <Button size="lg" onClick={shareResults} className="h-14 text-lg">
@@ -187,11 +200,6 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
                     Lustige Artikel lesen
                 </Button>
             </Link>
-             <Link href="/shop" className="w-full">
-                <Button className="w-full" variant="outline">
-                    <Book className="mr-2 h-4 w-4"/> Buch bestellen
-                </Button>
-            </Link>
         </div>
     </>
 );
@@ -201,7 +209,7 @@ const GameEndDisplay = (props: {
     solution: string;
     guesses: { guess: string; statuses: LetterStatus[] }[];
     gameState: 'playing' | 'won' | 'lost';
-    stats: { games: number; wins: number; streak: number };
+    stats: { games: number; wins: number; streak: number; maxStreak: number; };
     timeToNextGame: string;
     shareResults: () => void;
 }) => {
@@ -237,7 +245,7 @@ export default function WorthaftPage() {
     const [activeIndex, setActiveIndex] = useState(0);
     const [gameState, setGameState] = useState<'playing' | 'won' | 'lost'>('playing');
     const [letterStatuses, setLetterStatuses] = useState<{ [key: string]: LetterStatus }>({});
-    const [stats, setStats] = useState({ games: 0, wins: 0, streak: 0 });
+    const [stats, setStats] = useState({ games: 0, wins: 0, streak: 0, maxStreak: 0 });
     const [isCompletedToday, setIsCompletedToday] = useState(false);
     const [timeToNextGame, setTimeToNextGame] = useState('');
     const [isShaking, setIsShaking] = useState(false);
@@ -261,7 +269,8 @@ export default function WorthaftPage() {
 
         const savedStats = localStorage.getItem('worthaft-stats');
         if (savedStats) {
-            setStats(JSON.parse(savedStats));
+            const parsedStats = JSON.parse(savedStats);
+            setStats({ games: 0, wins: 0, streak: 0, maxStreak: 0, ...parsedStats });
         }
 
         const savedGame = localStorage.getItem('worthaft-daily-game');
@@ -377,7 +386,13 @@ export default function WorthaftPage() {
         // Check game state
         if (guessWord === solution) {
             setGameState('won');
-            const newStats = { games: stats.games + 1, wins: stats.wins + 1, streak: stats.streak + 1 };
+            const newStreak = stats.streak + 1;
+            const newStats = { 
+                games: stats.games + 1, 
+                wins: stats.wins + 1, 
+                streak: newStreak, 
+                maxStreak: Math.max(stats.maxStreak || 0, newStreak) 
+            };
             setStats(newStats);
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
             saveState(newGuesses, 'won', newLetterStatuses);
@@ -387,7 +402,12 @@ export default function WorthaftPage() {
             }
         } else if (newGuesses.length === MAX_GUESSES) {
             setGameState('lost');
-            const newStats = { games: stats.games + 1, wins: stats.wins, streak: 0 };
+            const newStats = { 
+                games: stats.games + 1,
+                wins: stats.wins,
+                streak: 0,
+                maxStreak: stats.maxStreak
+            };
             setStats(newStats);
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
             saveState(newGuesses, 'lost', newLetterStatuses);
@@ -504,7 +524,7 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
             <main className="flex-1 py-8 md:py-12">
                 <div className="container max-w-md mx-auto flex flex-col items-center justify-center">
                     <div className="text-center mb-8">
-                        <WorthaftIcon className="mx-auto h-12 w-12 mb-4 text-primary" />
+                        <WorthaftIcon className="mx-auto h-16 w-16 mb-4 text-primary" />
                         <h1 className="text-4xl font-bold font-headline">Worthaft</h1>
                         <p className="text-muted-foreground">Eine Hommage von <Link href="/ueber/autoren" className="underline">Paulik & Reisch</Link>.</p>
                         <Link href="/worthaft/ueber" className="text-sm inline-flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors mt-2">
