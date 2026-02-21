@@ -84,12 +84,6 @@ export function Header() {
                             Worthaft Spiel
                         </Button>
                     </Link>
-                    <Link href="/unendlich">
-                        <Button variant="outline" className="w-full">
-                            <Infinity className="mr-2 h-4 w-4" />
-                            Unendlich Spiel
-                        </Button>
-                    </Link>
                     <Link href="/shop">
                         <Button variant="secondary" className="w-full">Buch Kaufen</Button>
                     </Link>
