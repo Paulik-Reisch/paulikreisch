@@ -10,9 +10,9 @@ import { useToast } from '@/hooks/use-toast';
 import {
   AlertDialog,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertDialogDescription,
 } from "@/components/ui/alert-dialog";
 import { Sheet, SheetContent, SheetClose } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -20,7 +20,6 @@ import { WORDS } from '@/lib/worthaft-words';
 import { Share2, HelpCircle, Book, Newspaper, X } from 'lucide-react';
 import Link from 'next/link';
 import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
-import { Confetti } from '@/components/landing/confetti';
 
 const WORD_LENGTH = 5;
 const MAX_GUESSES = 6;
@@ -154,7 +153,10 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
     stats: { games: number; wins: number; streak: number; maxStreak: number; };
     timeToNextGame: string;
     shareResults: () => void;
-}) => (
+}) => {
+    const winRate = stats.games > 0 ? Math.round((stats.wins / stats.games) * 100) : 0;
+    
+    return (
     <>
         <div className="my-6 text-center">
             <p className="text-sm uppercase font-bold text-muted-foreground">Ihr Ergebnis</p>
@@ -167,7 +169,7 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
                 <p className="text-xs text-muted-foreground">Gespielt</p>
             </div>
              <div className="p-2 bg-muted rounded-lg">
-                <p className="text-xl font-bold">{stats.wins}</p>
+                <p className="text-xl font-bold">{winRate}%</p>
                 <p className="text-xs text-muted-foreground">Gewonnen</p>
             </div>
              <div className="p-2 bg-muted rounded-lg">
@@ -193,12 +195,14 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
             </Button>
              <Link href="/a" className="w-full">
                 <Button className="w-full" variant="ghost">
+                    <Newspaper className="mr-2 h-4 w-4"/>
                     Lustige Artikel lesen
                 </Button>
             </Link>
         </div>
     </>
-);
+    )
+};
 
 const GameEndDisplay = (props: {
     isOpen: boolean;
@@ -218,15 +222,14 @@ const GameEndDisplay = (props: {
             <Sheet open={isOpen} onOpenChange={onOpenChange}>
                 <SheetContent side="bottom" className="p-6 pt-4 rounded-t-lg max-h-[90vh] overflow-y-auto">
                     <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-zinc-300 mb-4" />
-                    <div className="text-center">
-                        <WorthaftIcon className="mx-auto h-16 w-16 mb-4 text-primary" />
-                        <h3 className="text-2xl font-bold font-headline mb-4">
+                    <AlertDialogHeader className="text-center">
+                        <AlertDialogTitle className="text-2xl font-bold font-headline">
                             {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
-                        </h3>
-                        <p className="text-muted-foreground mt-1">
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className="text-muted-foreground pt-1">
                             Das Wort von Heute: <span className="font-bold text-primary">{rest.solution}</span>
-                        </p>
-                    </div>
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
                     <ResultsContent {...rest} />
                     <SheetClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
                         <X className="h-4 w-4" />
@@ -241,7 +244,6 @@ const GameEndDisplay = (props: {
         <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
             <AlertDialogContent>
                  <AlertDialogHeader className="text-center">
-                    <WorthaftIcon className="mx-auto h-16 w-16 text-primary" />
                     <AlertDialogTitle className="text-2xl font-bold font-headline">
                         {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
                     </AlertDialogTitle>
@@ -268,7 +270,6 @@ export default function WorthaftPage() {
     const [isCompletedToday, setIsCompletedToday] = useState(false);
     const [timeToNextGame, setTimeToNextGame] = useState('');
     const [isShaking, setIsShaking] = useState(false);
-    const [showConfetti, setShowConfetti] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const getTodayString = () => new Date().toISOString().split('T')[0];
@@ -418,9 +419,6 @@ export default function WorthaftPage() {
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
             saveState(newGuesses, 'won', newLetterStatuses);
             setIsCompletedToday(true);
-            if (newGuesses.length < 6) {
-                setShowConfetti(true);
-            }
             setTimeout(() => setIsDialogOpen(true), 1000);
         } else if (newGuesses.length === MAX_GUESSES) {
             setGameState('lost');
@@ -536,7 +534,6 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
 
     return (
         <div className="flex flex-col min-h-screen bg-background text-foreground">
-            {showConfetti && <Confetti onComplete={() => setTimeout(() => setShowConfetti(false), 0)} />}
              <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -580,3 +577,5 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
         </div>
     );
 }
+
+    
