@@ -254,6 +254,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
 
             <section className="mt-24 rounded-lg bg-muted p-8 md:p-12 not-prose max-w-4xl mx-auto">
                 <div className="flex flex-col items-center space-y-4 text-center">
+                    <WorthaftIcon className="mx-auto h-16 w-16 text-primary" />
                     <div className="space-y-2">
                         <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-4xl">Testen Sie Ihren Wortschatz</h2>
                         <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed">
