@@ -13,9 +13,10 @@ import {
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { WORDS } from '@/lib/worthaft-words';
-import { Share2, HelpCircle } from 'lucide-react';
+import { Share2, HelpCircle, Award, Book } from 'lucide-react';
 import Link from 'next/link';
 import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
+import { Confetti } from '@/components/landing/confetti';
 
 const WORD_LENGTH = 5;
 const MAX_GUESSES = 6;
@@ -152,6 +153,7 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
 }) => (
     <>
         <div className="text-center">
+             <Award className={cn("mx-auto h-12 w-12 mb-4", gameState === 'won' ? 'text-yellow-500' : 'text-muted-foreground')} />
             <h3 className="text-2xl font-bold font-headline">
                 {gameState === 'won' ? 'Gratulation!' : gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
             </h3>
@@ -160,45 +162,34 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
             </p>
         </div>
 
-        <div className="space-y-3 my-6">
-            {guesses.length > 0 && (
-                <div className="p-4 bg-muted rounded-lg text-center">
-                    <p className="text-sm text-muted-foreground">Ihre Quote von heute:</p>
-                    <p className="text-2xl font-bold text-primary">{guesses.length} {guesses.length === 1 ? 'Versuch' : 'Versuche'}</p>
-                </div>
-            )}
-        
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 my-6">
             <div className="p-4 bg-muted rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Statistik:</p>
-                <div className="flex justify-around items-center mt-2">
-                    <div className="text-center">
-                        <div className="text-2xl font-bold">{stats.games}</div>
-                        <div className="text-xs text-muted-foreground">Spiele</div>
-                    </div>
-                    <div className="text-center">
-                        <div className="text-2xl font-bold">{stats.games > 0 ? Math.round((stats.wins / stats.games) * 100) : 0}%</div>
-                        <div className="text-xs text-muted-foreground">Gewonnen</div>
-                    </div>
-                    <div className="text-center">
-                        <div className="text-2xl font-bold">{stats.streak}</div>
-                        <div className="text-xs text-muted-foreground">Siegesserie</div>
-                    </div>
-                </div>
+                <p className="text-sm text-muted-foreground">Versuche</p>
+                <p className="text-2xl font-bold text-primary">{guesses.length > 0 ? `${guesses.length} / ${MAX_GUESSES}` : '-'}</p>
             </div>
-
             <div className="p-4 bg-muted rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Nächstes Spiel in:</p>
-                <p className="font-mono text-2xl font-bold text-primary">{timeToNextGame}</p>
+                <p className="text-sm text-muted-foreground">Siegesserie</p>
+                <p className="text-2xl font-bold">{stats.streak}</p>
+            </div>
+             <div className="p-4 bg-muted rounded-lg text-center">
+                <p className="text-sm text-muted-foreground">Nächstes Spiel</p>
+                <p className="font-mono text-2xl font-bold">{timeToNextGame || '...'}</p>
             </div>
         </div>
 
-        <div className="sm:justify-center flex flex-col sm:space-x-0 gap-2">
+        <div className="sm:justify-center flex flex-col gap-2">
             <Button size="lg" onClick={shareResults} className="h-14 text-lg">
-                Ergebnis Teilen und herausfordern!
+                <Share2 className="mr-3 h-5 w-5"/>
+                Ergebnis teilen & Freunde herausfordern
             </Button>
-            <Link href="/a" className="w-full">
+             <Link href="/a" className="w-full">
                 <Button className="w-full" variant="outline">
-                    Den neusten Artikel lesen!
+                    Lustige Artikel lesen
+                </Button>
+            </Link>
+             <Link href="/shop" className="w-full">
+                <Button className="w-full" variant="outline">
+                    <Book className="mr-2 h-4 w-4"/> Buch bestellen
                 </Button>
             </Link>
         </div>
@@ -250,6 +241,7 @@ export default function WorthaftPage() {
     const [isCompletedToday, setIsCompletedToday] = useState(false);
     const [timeToNextGame, setTimeToNextGame] = useState('');
     const [isShaking, setIsShaking] = useState(false);
+    const [showConfetti, setShowConfetti] = useState(false);
 
     const getTodayString = () => new Date().toISOString().split('T')[0];
 
@@ -390,6 +382,9 @@ export default function WorthaftPage() {
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
             saveState(newGuesses, 'won', newLetterStatuses);
             setIsCompletedToday(true);
+            if (newGuesses.length < 6) {
+                setShowConfetti(true);
+            }
         } else if (newGuesses.length === MAX_GUESSES) {
             setGameState('lost');
             const newStats = { games: stats.games + 1, wins: stats.wins, streak: 0 };
@@ -500,6 +495,7 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
 
     return (
         <div className="flex flex-col min-h-screen bg-background text-foreground">
+            {showConfetti && <Confetti onComplete={() => setShowConfetti(false)} />}
              <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -511,7 +507,7 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
                         <WorthaftIcon className="mx-auto h-12 w-12 mb-4 text-primary" />
                         <h1 className="text-4xl font-bold font-headline">Worthaft</h1>
                         <p className="text-muted-foreground">Eine Hommage von <Link href="/ueber/autoren" className="underline">Paulik & Reisch</Link>.</p>
-                        <Link href="/worthaft/ueber" className="text-sm inline-flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors underline mt-1">
+                        <Link href="/worthaft/ueber" className="text-sm inline-flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors mt-2">
                             <HelpCircle className="h-4 w-4" />
                             <span>Wie funktioniert's?</span>
                         </Link>

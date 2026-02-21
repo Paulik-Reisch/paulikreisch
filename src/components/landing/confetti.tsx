@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
-const NUM_CONFETTI = 50;
 const COLORS = ['#fde132', '#00b3e3', '#ff6b6b', '#6bff6b'];
 
 interface ConfettiPiece {
@@ -18,11 +17,12 @@ interface ConfettiPiece {
   size: number;
 }
 
-export function Confetti({ onComplete }: { onComplete: () => void }) {
+export function Confetti({ onComplete, count = 150 }: { onComplete: () => void; count?: number }) {
   const [pieces, setPieces] = useState<ConfettiPiece[]>([]);
+  const animationFrameIdRef = useRef<number>();
 
   useEffect(() => {
-    const newPieces: ConfettiPiece[] = Array.from({ length: NUM_CONFETTI }).map((_, i) => {
+    const newPieces: ConfettiPiece[] = Array.from({ length: count }).map((_, i) => {
       const angle = Math.random() * Math.PI - 1.5 * Math.PI; // Shoot upwards
       const velocity = Math.random() * 8 + 4; // Initial velocity
       return {
@@ -39,44 +39,42 @@ export function Confetti({ onComplete }: { onComplete: () => void }) {
       };
     });
     setPieces(newPieces);
-    
-    const animationFrame = requestAnimationFrame(animate);
 
-    function animate() {
+    const animate = () => {
       setPieces(currentPieces => {
         const updatedPieces = currentPieces.map(p => {
-          // Apply gravity
-          p.vy += 0.2;
-          // Update position
+          p.vy += 0.2; // Gravity
           p.x += p.vx;
           p.y += p.vy;
-          // Update rotation
           p.rotation += p.rotationSpeed;
-          // Fade out
           if (p.y > 100) {
-              p.opacity -= 0.02;
+            p.opacity -= 0.02;
           }
           return p;
         }).filter(p => p.opacity > 0);
 
         if (updatedPieces.length === 0) {
-            onComplete();
-            return [];
+          onComplete();
+          return [];
         }
 
+        animationFrameIdRef.current = requestAnimationFrame(animate);
         return updatedPieces;
       });
+    };
 
-      requestAnimationFrame(animate);
-    }
-    
-    return () => cancelAnimationFrame(animationFrame);
+    animationFrameIdRef.current = requestAnimationFrame(animate);
 
-  }, [onComplete]);
+    return () => {
+      if (animationFrameIdRef.current) {
+        cancelAnimationFrame(animationFrameIdRef.current);
+      }
+    };
 
+  }, [onComplete, count]);
 
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    <div className="absolute inset-0 pointer-events-none overflow-hidden z-[100]">
       {pieces.map(p => (
         <div
           key={p.id}
@@ -89,7 +87,6 @@ export function Confetti({ onComplete }: { onComplete: () => void }) {
             backgroundColor: p.color,
             opacity: p.opacity,
             transform: `translate(-50%, -50%) rotate(${p.rotation}deg)`,
-            transition: 'transform 0.1s linear',
           }}
         />
       ))}
