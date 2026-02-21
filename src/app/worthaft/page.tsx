@@ -9,13 +9,10 @@ import { useToast } from '@/hooks/use-toast';
 import {
   AlertDialog,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { WORDS } from '@/lib/worthaft-words';
-import { Share2, Book, Newspaper, HelpCircle } from 'lucide-react';
+import { Share2, HelpCircle } from 'lucide-react';
 import Link from 'next/link';
 import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
 
@@ -159,6 +156,16 @@ export default function WorthaftPage() {
 
     const getTodayString = () => new Date().toISOString().split('T')[0];
 
+    const saveState = useCallback((newGuesses: { guess: string; statuses: LetterStatus[] }[], newStatus: 'won' | 'lost' | 'playing', newLetterStatuses: { [key: string]: LetterStatus }) => {
+        const dailyState: DailyGameState = {
+            date: getTodayString(),
+            guesses: newGuesses,
+            status: newStatus,
+            letterStatuses: newLetterStatuses
+        };
+        localStorage.setItem('worthaft-daily-game', JSON.stringify(dailyState));
+    }, []);
+
     useEffect(() => {
         const todayStr = getTodayString();
         setSolution(getWordOfTheDay());
@@ -273,29 +280,25 @@ export default function WorthaftPage() {
         setCurrentGuess(Array(WORD_LENGTH).fill(''));
         setActiveIndex(0);
 
-        const todayStr = getTodayString();
         // Check game state
         if (guessWord === solution) {
             setGameState('won');
             const newStats = { games: stats.games + 1, wins: stats.wins + 1, streak: stats.streak + 1 };
             setStats(newStats);
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
-            const dailyState: DailyGameState = { date: todayStr, guesses: newGuesses, status: 'won', letterStatuses: newLetterStatuses };
-            localStorage.setItem('worthaft-daily-game', JSON.stringify(dailyState));
+            saveState(newGuesses, 'won', newLetterStatuses);
             setIsCompletedToday(true);
         } else if (newGuesses.length === MAX_GUESSES) {
             setGameState('lost');
             const newStats = { games: stats.games + 1, wins: stats.wins, streak: 0 };
             setStats(newStats);
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
-            const dailyState: DailyGameState = { date: todayStr, guesses: newGuesses, status: 'lost', letterStatuses: newLetterStatuses };
-            localStorage.setItem('worthaft-daily-game', JSON.stringify(dailyState));
+            saveState(newGuesses, 'lost', newLetterStatuses);
             setIsCompletedToday(true);
         } else {
-            const dailyState: DailyGameState = { date: todayStr, guesses: newGuesses, status: 'playing', letterStatuses: newLetterStatuses };
-            localStorage.setItem('worthaft-daily-game', JSON.stringify(dailyState));
+             saveState(newGuesses, 'playing', newLetterStatuses);
         }
-    }, [currentGuess, gameState, guesses, letterStatuses, solution, stats, toast]);
+    }, [currentGuess, gameState, guesses, letterStatuses, solution, stats, toast, saveState]);
 
     const handleDelete = () => {
         if (gameState !== 'playing') return;
@@ -415,53 +418,54 @@ https://paulik-reisch.de/worthaft`;
             <Footer />
             <AlertDialog open={isDialogOpen || isCompletedToday}>
                 <AlertDialogContent>
-                    <AlertDialogHeader>
-                    <AlertDialogTitle className="text-center text-2xl font-headline">
-                        {isCompletedToday ? 'Sie haben bereits gespielt' : (gameState === 'won' ? 'Gratulation!' : 'Schade!')}
-                    </AlertDialogTitle>
-                    <AlertDialogDescription className="text-center">
-                        {gameState === 'won' 
-                            ? `Sie haben das Wort in ${guesses.length} Versuchen erraten.`
-                            : `Das richtige Wort war: `}
-                        <span className="font-bold text-lg text-primary">{solution}</span>
-                    </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <div className="text-center space-y-4">
-                        <h4 className="font-bold">Ihre Statistik</h4>
-                        <div className="flex justify-around">
-                            <div className="text-center">
-                                <div className="text-3xl font-bold">{stats.games}</div>
-                                <div className="text-xs">Spiele</div>
+                    <div className="text-center">
+                        <h3 className="text-2xl font-bold font-headline">
+                            {gameState === 'won' ? 'Gratulation!' : gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
+                        </h3>
+                        <p className="text-muted-foreground mt-1">
+                            Das Wort von Heute: <span className="font-bold text-primary">{solution}</span>
+                        </p>
+                    </div>
+
+                    <div className="space-y-3 my-6">
+                        {guesses.length > 0 && (
+                            <div className="p-4 bg-muted rounded-lg text-center">
+                                <p className="text-sm text-muted-foreground">Ihre Quote von heute:</p>
+                                <p className="text-2xl font-bold text-primary">{guesses.length} {guesses.length === 1 ? 'Versuch' : 'Versuche'}</p>
                             </div>
-                             <div className="text-center">
-                                <div className="text-3xl font-bold">{stats.games > 0 ? Math.round((stats.wins / stats.games) * 100) : 0}%</div>
-                                <div className="text-xs">Gewonnen</div>
+                        )}
+                    
+                        <div className="p-4 bg-muted rounded-lg text-center">
+                            <p className="text-sm text-muted-foreground">Statistik:</p>
+                            <div className="flex justify-around items-center mt-2">
+                                <div className="text-center">
+                                    <div className="text-2xl font-bold">{stats.games}</div>
+                                    <div className="text-xs text-muted-foreground">Spiele</div>
+                                </div>
+                                <div className="text-center">
+                                    <div className="text-2xl font-bold">{stats.games > 0 ? Math.round((stats.wins / stats.games) * 100) : 0}%</div>
+                                    <div className="text-xs text-muted-foreground">Gewonnen</div>
+                                </div>
+                                <div className="text-center">
+                                    <div className="text-2xl font-bold">{stats.streak}</div>
+                                    <div className="text-xs text-muted-foreground">Siegesserie</div>
+                                </div>
                             </div>
-                             <div className="text-center">
-                                <div className="text-3xl font-bold">{stats.streak}</div>
-                                <div className="text-xs">Siegesserie</div>
-                            </div>
+                        </div>
+
+                        <div className="p-4 bg-muted rounded-lg text-center">
+                            <p className="text-sm text-muted-foreground">Nächstes Spiel in:</p>
+                            <p className="font-mono text-2xl font-bold text-primary">{timeToNextGame}</p>
                         </div>
                     </div>
-                    <AlertDialogFooter className="mt-4 sm:justify-center flex-col sm:flex-col sm:space-x-0 gap-2">
-                        <Button size="lg" onClick={shareResults} className="w-full h-auto py-4 text-base">
-                            <Share2 className="mr-2 h-4 w-4" />
-                            <span>Mein Ergebnis teilen und Freunde herausfordern</span>
+
+                    <AlertDialogFooter className="sm:justify-center flex-col sm:flex-col sm:space-x-0 gap-2">
+                        <Button size="lg" onClick={shareResults}>
+                            Ergebnis Teilen und herausfordern!
                         </Button>
-                        <div className="text-center pt-2">
-                            <p className="text-sm font-semibold">Nächstes Spiel in:</p>
-                            <p className="font-mono text-lg font-bold text-primary">{timeToNextGame}</p>
-                        </div>
                         <Link href="/a" className="w-full">
                             <Button className="w-full" variant="outline">
-                                <Newspaper className="mr-2 h-4 w-4"/>
-                                Derweil einen lustigen Artikel lesen
-                            </Button>
-                        </Link>
-                        <Link href="/shop" className="w-full">
-                            <Button className="w-full">
-                                <Book className="mr-2 h-4 w-4"/>
-                                Derweil das Buch Hallo Welt bestellen
+                                Den neusten Artikel lesen!
                             </Button>
                         </Link>
                     </AlertDialogFooter>
