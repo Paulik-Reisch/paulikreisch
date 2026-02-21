@@ -214,6 +214,13 @@ export interface AnalyticsEvent {
     };
 }
 
+export interface Subscriber {
+    id: string;
+    email: string;
+    source: string;
+    subscribedAt: Timestamp;
+}
+
 
 
 const db = getFirestore(app);
@@ -1145,5 +1152,21 @@ export async function getRecentEvents(limit = 20): Promise<AnalyticsEvent[]> {
             ...data,
             timestamp: (data.timestamp as Timestamp).toDate().toISOString(),
         } as AnalyticsEvent;
+    });
+}
+
+export async function addSubscriber(data: { email: string; source: string; }) {
+    const subscribersCol = collection(db, 'subscribers');
+    // Check if email already exists to avoid duplicates
+    const q = query(subscribersCol, where("email", "==", data.email));
+    const snapshot = await getDocs(q);
+    if (!snapshot.empty) {
+        console.log(`Subscriber with email ${data.email} already exists in Firestore.`);
+        return; // Don't add duplicate
+    }
+    
+    await addDoc(subscribersCol, {
+        ...data,
+        subscribedAt: Timestamp.now()
     });
 }

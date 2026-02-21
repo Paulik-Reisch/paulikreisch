@@ -3,7 +3,7 @@
 'use server';
 
 import { z } from "zod";
-import { addOrder, addLog, getCountdownTarget, updateCountdownTarget, logAnalyticsEvent } from "@/lib/firestore";
+import { addOrder, addLog, getCountdownTarget, updateCountdownTarget, logAnalyticsEvent, addSubscriber } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/session";
 import { addContact } from "@/lib/resend";
@@ -66,13 +66,27 @@ export async function subscribeToNewsletterAction(
         };
     }
     
+    const { email, source } = validatedFields.data;
+
     try {
-        await addContact(validatedFields.data.email);
-        return { success: true, message: `Wir haben eine Bestätigungs-E-Mail an ${validatedFields.data.email} gesendet.` };
+        // First, add to the external service
+        await addContact(email);
     } catch (e) {
-        console.error(e);
+        console.error("Error adding contact to MailerSend, proceeding with Firestore fallback.", e);
+        // Don't re-throw, just log. The Firestore save is the fallback.
+    }
+
+    try {
+        // Always try to save to Firestore as a copy/fallback
+        await addSubscriber({ email, source: source || 'unknown' });
+        
+        // If we reach here, at least the Firestore part was successful.
+        return { success: true, message: `Wir haben eine Bestätigungs-E-Mail an ${email} gesendet.` };
+    } catch (e) {
+        console.error("Firestore subscriber save failed:", e);
+        // This is a more critical error if it's the only one that failed or both failed.
         const error = e as any;
-        return { error: error.message || "Anmeldung fehlgeschlagen. Das Internet ist wahrscheinlich wieder kaputt." };
+        return { error: error.message || "Anmeldung ist fehlgeschlagen." };
     }
 }
 

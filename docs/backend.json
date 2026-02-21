@@ -135,6 +135,28 @@
         }
       },
       "required": ["type", "timestamp", "path", "userId"]
+    },
+    "Subscriber": {
+      "title": "Subscriber",
+      "type": "object",
+      "description": "Represents a user who subscribed to the newsletter.",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "The subscriber's email address."
+        },
+        "source": {
+          "type": "string",
+          "description": "The source from where the subscription originated (e.g., 'footer', 'leadwall')."
+        },
+        "subscribedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp when the user subscribed."
+        }
+      },
+      "required": ["email", "subscribedAt"]
     }
   },
   "auth": {
@@ -166,6 +188,12 @@
             "$ref": "#/entities/AnalyticsEvent"
         },
         "description": "Collection of analytics events for internal tracking."
+    },
+    "/subscribers/{subscriberId}": {
+        "schema": {
+            "$ref": "#/entities/Subscriber"
+        },
+        "description": "Collection of newsletter subscribers, as a fallback."
     }
   }
 }
