@@ -174,7 +174,7 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
             </div>
              <div className="p-2 bg-muted rounded-lg">
                 <p className="text-xl font-bold">{stats.streak}</p>
-                <p className="text-xs text-muted-foreground">Serie</p>
+                <p className="text-xs text-muted-foreground">Gewinn-Serie</p>
             </div>
              <div className="p-2 bg-muted rounded-lg">
                 <p className="text-xl font-bold">{stats.maxStreak}</p>
@@ -243,7 +243,7 @@ const GameEndDisplay = (props: {
     return (
         <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
             <AlertDialogContent>
-                 <AlertDialogHeader className="text-center">
+                <AlertDialogHeader className="text-center">
                     <AlertDialogTitle className="text-2xl font-bold font-headline">
                         {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
                     </AlertDialogTitle>
