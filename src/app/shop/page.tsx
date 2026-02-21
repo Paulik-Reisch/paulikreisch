@@ -1,4 +1,3 @@
-
 'use client';
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
@@ -8,9 +7,20 @@ import { GooglePlayIcon } from "@/components/ui/icons/google-play-icon";
 import { ElevenReaderIcon } from "@/components/ui/icons/eleven-reader-icon";
 import { ShopNewsletterForm } from "./ShopNewsletterForm";
 import './shop.css';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function ShopPage() {
+    const [isHw2AlertOpen, setIsHw2AlertOpen] = useState(false);
+
     useEffect(() => {
         document.body.classList.add('shop-page');
         return () => {
@@ -132,18 +142,18 @@ export default function ShopPage() {
                                 <p className="book-desc">Wie das Leben funktioniert (Platzhalter)</p>
 
                                 <div className="action-area">
-                                    <a href="#" className="btn btn-amazon">
+                                    <button onClick={() => setIsHw2AlertOpen(true)} className="btn btn-amazon">
                                         <AmazonIcon />
                                         Bei Amazon kaufen
-                                    </a>
-                                    <a href="#" className="btn btn-google">
+                                    </button>
+                                    <button onClick={() => setIsHw2AlertOpen(true)} className="btn btn-google">
                                         <GooglePlayIcon />
                                         Google Play E-Book
-                                    </a>
-                                    <a href="#" className="link-11reader">
+                                    </button>
+                                    <button onClick={() => setIsHw2AlertOpen(true)} className="link-11reader">
                                         <ElevenReaderIcon />
                                         <span><small className="free-badge">Gratis hören auf</small> 11Reader</span>
-                                    </a>
+                                    </button>
                                 </div>
                             </article>
                         </div>
@@ -273,6 +283,19 @@ export default function ShopPage() {
                 </section>
             </main>
             <Footer />
+            <AlertDialog open={isHw2AlertOpen} onOpenChange={setIsHw2AlertOpen}>
+                <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Hinweis</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        Hallo Welt 2 ist bei diesem Händler derzeit <strong>noch nicht verfügbar!</strong>
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogAction>Verstanden</AlertDialogAction>
+                </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </>
     );
 }
