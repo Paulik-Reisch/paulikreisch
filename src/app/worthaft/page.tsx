@@ -9,8 +9,9 @@ import { useToast } from '@/hooks/use-toast';
 import {
   AlertDialog,
   AlertDialogContent,
-  AlertDialogFooter,
 } from "@/components/ui/alert-dialog";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { useIsMobile } from '@/hooks/use-mobile';
 import { WORDS } from '@/lib/worthaft-words';
 import { Share2, HelpCircle } from 'lucide-react';
 import Link from 'next/link';
@@ -141,6 +142,102 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
 };
 
 
+const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, shareResults }: {
+    solution: string;
+    guesses: { guess: string; statuses: LetterStatus[] }[];
+    gameState: 'playing' | 'won' | 'lost';
+    stats: { games: number; wins: number; streak: number };
+    timeToNextGame: string;
+    shareResults: () => void;
+}) => (
+    <>
+        <div className="text-center">
+            <h3 className="text-2xl font-bold font-headline">
+                {gameState === 'won' ? 'Gratulation!' : gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
+            </h3>
+            <p className="text-muted-foreground mt-1">
+                Das Wort von Heute: <span className="font-bold text-primary">{solution}</span>
+            </p>
+        </div>
+
+        <div className="space-y-3 my-6">
+            {guesses.length > 0 && (
+                <div className="p-4 bg-muted rounded-lg text-center">
+                    <p className="text-sm text-muted-foreground">Ihre Quote von heute:</p>
+                    <p className="text-2xl font-bold text-primary">{guesses.length} {guesses.length === 1 ? 'Versuch' : 'Versuche'}</p>
+                </div>
+            )}
+        
+            <div className="p-4 bg-muted rounded-lg text-center">
+                <p className="text-sm text-muted-foreground">Statistik:</p>
+                <div className="flex justify-around items-center mt-2">
+                    <div className="text-center">
+                        <div className="text-2xl font-bold">{stats.games}</div>
+                        <div className="text-xs text-muted-foreground">Spiele</div>
+                    </div>
+                    <div className="text-center">
+                        <div className="text-2xl font-bold">{stats.games > 0 ? Math.round((stats.wins / stats.games) * 100) : 0}%</div>
+                        <div className="text-xs text-muted-foreground">Gewonnen</div>
+                    </div>
+                    <div className="text-center">
+                        <div className="text-2xl font-bold">{stats.streak}</div>
+                        <div className="text-xs text-muted-foreground">Siegesserie</div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="p-4 bg-muted rounded-lg text-center">
+                <p className="text-sm text-muted-foreground">Nächstes Spiel in:</p>
+                <p className="font-mono text-2xl font-bold text-primary">{timeToNextGame}</p>
+            </div>
+        </div>
+
+        <div className="sm:justify-center flex flex-col sm:space-x-0 gap-2">
+            <Button size="lg" onClick={shareResults} className="h-14 text-lg">
+                Ergebnis Teilen und herausfordern!
+            </Button>
+            <Link href="/a" className="w-full">
+                <Button className="w-full" variant="outline">
+                    Den neusten Artikel lesen!
+                </Button>
+            </Link>
+        </div>
+    </>
+);
+
+const GameEndDisplay = (props: {
+    isOpen: boolean;
+    solution: string;
+    guesses: { guess: string; statuses: LetterStatus[] }[];
+    gameState: 'playing' | 'won' | 'lost';
+    stats: { games: number; wins: number; streak: number };
+    timeToNextGame: string;
+    shareResults: () => void;
+}) => {
+    const isMobile = useIsMobile();
+    const { isOpen, ...rest } = props;
+
+    if (isMobile) {
+        return (
+            <Sheet open={isOpen}>
+                <SheetContent side="bottom" className="p-6 pt-4 rounded-t-lg max-h-[90vh] overflow-y-auto">
+                    <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-zinc-300 mb-4" />
+                    <ResultsContent {...rest} />
+                </SheetContent>
+            </Sheet>
+        );
+    }
+
+    return (
+        <AlertDialog open={isOpen}>
+            <AlertDialogContent>
+                <ResultsContent {...rest} />
+            </AlertDialogContent>
+        </AlertDialog>
+    );
+};
+
+
 export default function WorthaftPage() {
     const { toast } = useToast();
     const [solution, setSolution] = useState('');
@@ -177,15 +274,20 @@ export default function WorthaftPage() {
 
         const savedGame = localStorage.getItem('worthaft-daily-game');
         if (savedGame) {
-            const dailyState: DailyGameState = JSON.parse(savedGame);
-            if (dailyState.date === todayStr) {
-                setGuesses(dailyState.guesses);
-                setGameState(dailyState.status);
-                setLetterStatuses(dailyState.letterStatuses || {});
+            try {
+                const dailyState: DailyGameState = JSON.parse(savedGame);
+                if (dailyState.date === todayStr) {
+                    setGuesses(dailyState.guesses);
+                    setGameState(dailyState.status);
+                    setLetterStatuses(dailyState.letterStatuses || {});
 
-                if (dailyState.status === 'won' || dailyState.status === 'lost') {
-                    setIsCompletedToday(true);
+                    if (dailyState.status === 'won' || dailyState.status === 'lost') {
+                        setIsCompletedToday(true);
+                    }
                 }
+            } catch (e) {
+                console.error("Failed to parse saved game state:", e);
+                localStorage.removeItem('worthaft-daily-game');
             }
         }
     }, []);
@@ -316,10 +418,10 @@ export default function WorthaftPage() {
         }
     };
     
-    const isDialogOpen = gameState === 'won' || gameState === 'lost';
+    const isDialogOpen = (gameState === 'won' || gameState === 'lost') || isCompletedToday;
 
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
-        if (isDialogOpen || isCompletedToday) return;
+        if (isDialogOpen) return;
 
         if (event.key === 'Enter') {
             handleEnter();
@@ -332,14 +434,14 @@ export default function WorthaftPage() {
         } else if (/^[a-zA-ZäöüÄÖÜ]$/.test(event.key)) {
             handleChar(event.key.toUpperCase());
         }
-    }, [isDialogOpen, isCompletedToday, handleEnter, handleDelete, handleChar]);
+    }, [isDialogOpen, handleEnter, handleDelete, handleChar]);
     
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [handleKeyDown]);
 
-    const shareResults = () => {
+    const shareResults = async () => {
         const resultGrid = guesses.map(g => 
             g.statuses.map(s => {
                 if (s === 'correct') return '🟦';
@@ -355,13 +457,25 @@ ${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} Versuchen
 
 ${resultGrid}
 
-Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!
-
-https://paulik-reisch.de/worthaft`;
+Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
         
-        navigator.clipboard.writeText(text).then(() => {
-            toast({ title: 'Kopiert!', description: 'Ergebnis in die Zwischenablage kopiert. Teile es mit der Welt!' });
-        });
+        const shareData = {
+            title: 'Worthaft - Das Paulik & Reisch Spiel',
+            text: text,
+            url: 'https://paulik-reisch.de/worthaft',
+        };
+        
+        if (navigator.share) {
+            try {
+                await navigator.share(shareData);
+            } catch (error) {
+                console.log('Teilen abgebrochen', error);
+            }
+        } else {
+            navigator.clipboard.writeText(`${text}\n\nhttps://paulik-reisch.de/worthaft`).then(() => {
+                toast({ title: 'Kopiert!', description: 'Ergebnis in die Zwischenablage kopiert. Teile es mit der Welt!' });
+            });
+        }
     }
 
     const jsonLd = {
@@ -416,61 +530,15 @@ https://paulik-reisch.de/worthaft`;
                 </div>
             </main>
             <Footer />
-            <AlertDialog open={isDialogOpen || isCompletedToday}>
-                <AlertDialogContent>
-                    <div className="text-center">
-                        <h3 className="text-2xl font-bold font-headline">
-                            {gameState === 'won' ? 'Gratulation!' : gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
-                        </h3>
-                        <p className="text-muted-foreground mt-1">
-                            Das Wort von Heute: <span className="font-bold text-primary">{solution}</span>
-                        </p>
-                    </div>
-
-                    <div className="space-y-3 my-6">
-                        {guesses.length > 0 && (
-                            <div className="p-4 bg-muted rounded-lg text-center">
-                                <p className="text-sm text-muted-foreground">Ihre Quote von heute:</p>
-                                <p className="text-2xl font-bold text-primary">{guesses.length} {guesses.length === 1 ? 'Versuch' : 'Versuche'}</p>
-                            </div>
-                        )}
-                    
-                        <div className="p-4 bg-muted rounded-lg text-center">
-                            <p className="text-sm text-muted-foreground">Statistik:</p>
-                            <div className="flex justify-around items-center mt-2">
-                                <div className="text-center">
-                                    <div className="text-2xl font-bold">{stats.games}</div>
-                                    <div className="text-xs text-muted-foreground">Spiele</div>
-                                </div>
-                                <div className="text-center">
-                                    <div className="text-2xl font-bold">{stats.games > 0 ? Math.round((stats.wins / stats.games) * 100) : 0}%</div>
-                                    <div className="text-xs text-muted-foreground">Gewonnen</div>
-                                </div>
-                                <div className="text-center">
-                                    <div className="text-2xl font-bold">{stats.streak}</div>
-                                    <div className="text-xs text-muted-foreground">Siegesserie</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="p-4 bg-muted rounded-lg text-center">
-                            <p className="text-sm text-muted-foreground">Nächstes Spiel in:</p>
-                            <p className="font-mono text-2xl font-bold text-primary">{timeToNextGame}</p>
-                        </div>
-                    </div>
-
-                    <AlertDialogFooter className="sm:justify-center flex-col sm:flex-col sm:space-x-0 gap-2">
-                        <Button size="lg" onClick={shareResults}>
-                            Ergebnis Teilen und herausfordern!
-                        </Button>
-                        <Link href="/a" className="w-full">
-                            <Button className="w-full" variant="outline">
-                                Den neusten Artikel lesen!
-                            </Button>
-                        </Link>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+            <GameEndDisplay 
+                isOpen={isDialogOpen}
+                solution={solution}
+                guesses={guesses}
+                gameState={gameState}
+                stats={stats}
+                timeToNextGame={timeToNextGame}
+                shareResults={shareResults}
+            />
         </div>
     );
 }
