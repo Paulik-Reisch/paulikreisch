@@ -131,7 +131,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
                         isCurrentRow && activeIndex === colIndex && 'border-primary ring-2 ring-primary scale-105',
                         status !== 'empty' && 'animate-in fade-in zoom-in-50'
                     )}
-                    style={{ animationDelay: `'''${colIndex * 100}ms'''` }}
+                    style={{ animationDelay: `\'\'\'${colIndex * 100}ms\'\'\'` }}
                 >
                     {letter}
                 </div>
@@ -154,6 +154,7 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
 }) => (
     <>
         <div className="text-center">
+            <WorthaftIcon className="mx-auto h-16 w-16 mb-4 text-primary" />
             <h3 className="text-2xl font-bold font-headline mb-4">
                 {gameState === 'won' ? 'Gratulation!' : gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
             </h3>
@@ -162,25 +163,23 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
             </p>
         </div>
         
-        <div className="my-6">
-            <h4 className="text-center text-sm font-bold uppercase text-muted-foreground mb-3">Statistiken</h4>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <div className="p-3 bg-muted rounded-lg text-center">
-                    <p className="text-2xl font-bold">{stats.games}</p>
-                    <p className="text-xs text-muted-foreground">Gespielt</p>
-                </div>
-                <div className="p-3 bg-muted rounded-lg text-center">
-                    <p className="text-2xl font-bold">{stats.games > 0 ? Math.round((stats.wins / stats.games) * 100) : 0}</p>
-                    <p className="text-xs text-muted-foreground">Gewinnrate %</p>
-                </div>
-                <div className="p-3 bg-muted rounded-lg text-center">
-                    <p className="text-2xl font-bold">{stats.streak}</p>
-                    <p className="text-xs text-muted-foreground">Aktuelle Serie</p>
-                </div>
-                <div className="p-3 bg-muted rounded-lg text-center">
-                    <p className="text-2xl font-bold">{stats.maxStreak}</p>
-                    <p className="text-xs text-muted-foreground">Beste Serie</p>
-                </div>
+        <div className="my-6 text-center">
+            <p className="text-sm uppercase font-bold text-muted-foreground">Ihr Ergebnis</p>
+            <p className="text-4xl font-bold">{gameState === 'won' ? guesses.length : 'X'} / {MAX_GUESSES}</p>
+        </div>
+
+        <div className="grid grid-cols-3 gap-2 text-center my-6">
+            <div className="p-2 bg-muted rounded-lg">
+                <p className="text-xl font-bold">{stats.games}</p>
+                <p className="text-xs text-muted-foreground">Gespielt</p>
+            </div>
+             <div className="p-2 bg-muted rounded-lg">
+                <p className="text-xl font-bold">{stats.streak}</p>
+                <p className="text-xs text-muted-foreground">Serie</p>
+            </div>
+             <div className="p-2 bg-muted rounded-lg">
+                <p className="text-xl font-bold">{stats.maxStreak}</p>
+                <p className="text-xs text-muted-foreground">Beste Serie</p>
             </div>
         </div>
 
@@ -206,6 +205,7 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
 
 const GameEndDisplay = (props: {
     isOpen: boolean;
+    onOpenChange: (open: boolean) => void;
     solution: string;
     guesses: { guess: string; statuses: LetterStatus[] }[];
     gameState: 'playing' | 'won' | 'lost';
@@ -214,11 +214,11 @@ const GameEndDisplay = (props: {
     shareResults: () => void;
 }) => {
     const isMobile = useIsMobile();
-    const { isOpen, ...rest } = props;
+    const { isOpen, onOpenChange, ...rest } = props;
 
     if (isMobile) {
         return (
-            <Sheet open={isOpen}>
+            <Sheet open={isOpen} onOpenChange={onOpenChange}>
                 <SheetContent side="bottom" className="p-6 pt-4 rounded-t-lg max-h-[90vh] overflow-y-auto">
                     <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-zinc-300 mb-4" />
                     <ResultsContent {...rest} />
@@ -228,7 +228,7 @@ const GameEndDisplay = (props: {
     }
 
     return (
-        <AlertDialog open={isOpen}>
+        <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
             <AlertDialogContent>
                 <ResultsContent {...rest} />
             </AlertDialogContent>
@@ -250,6 +250,7 @@ export default function WorthaftPage() {
     const [timeToNextGame, setTimeToNextGame] = useState('');
     const [isShaking, setIsShaking] = useState(false);
     const [showConfetti, setShowConfetti] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const getTodayString = () => new Date().toISOString().split('T')[0];
 
@@ -284,6 +285,7 @@ export default function WorthaftPage() {
 
                     if (dailyState.status === 'won' || dailyState.status === 'lost') {
                         setIsCompletedToday(true);
+                        setIsDialogOpen(true);
                     }
                 }
             } catch (e) {
@@ -400,6 +402,7 @@ export default function WorthaftPage() {
             if (newGuesses.length < 6) {
                 setShowConfetti(true);
             }
+            setTimeout(() => setIsDialogOpen(true), 1000);
         } else if (newGuesses.length === MAX_GUESSES) {
             setGameState('lost');
             const newStats = { 
@@ -412,6 +415,7 @@ export default function WorthaftPage() {
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
             saveState(newGuesses, 'lost', newLetterStatuses);
             setIsCompletedToday(true);
+            setTimeout(() => setIsDialogOpen(true), 1000);
         } else {
              saveState(newGuesses, 'playing', newLetterStatuses);
         }
@@ -433,8 +437,6 @@ export default function WorthaftPage() {
         }
     };
     
-    const isDialogOpen = (gameState === 'won' || gameState === 'lost') || isCompletedToday;
-
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
         if (isDialogOpen) return;
 
@@ -548,6 +550,7 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
             <Footer />
             <GameEndDisplay 
                 isOpen={isDialogOpen}
+                onOpenChange={setIsDialogOpen}
                 solution={solution}
                 guesses={guesses}
                 gameState={gameState}
