@@ -10,11 +10,14 @@ import { useToast } from '@/hooks/use-toast';
 import {
   AlertDialog,
   AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetClose } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { WORDS } from '@/lib/worthaft-words';
-import { Share2, HelpCircle, Book, Newspaper } from 'lucide-react';
+import { Share2, HelpCircle, Book, Newspaper, X } from 'lucide-react';
 import Link from 'next/link';
 import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
 import { Confetti } from '@/components/landing/confetti';
@@ -153,25 +156,19 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
     shareResults: () => void;
 }) => (
     <>
-        <div className="text-center">
-            <WorthaftIcon className="mx-auto h-16 w-16 mb-4 text-primary" />
-            <h3 className="text-2xl font-bold font-headline mb-4">
-                {gameState === 'won' ? 'Gratulation!' : gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
-            </h3>
-            <p className="text-muted-foreground mt-1">
-                Das Wort von Heute: <span className="font-bold text-primary">{solution}</span>
-            </p>
-        </div>
-        
         <div className="my-6 text-center">
             <p className="text-sm uppercase font-bold text-muted-foreground">Ihr Ergebnis</p>
             <p className="text-4xl font-bold">{gameState === 'won' ? guesses.length : 'X'} / {MAX_GUESSES}</p>
         </div>
 
-        <div className="grid grid-cols-3 gap-2 text-center my-6">
+        <div className="grid grid-cols-4 gap-2 text-center my-6">
             <div className="p-2 bg-muted rounded-lg">
                 <p className="text-xl font-bold">{stats.games}</p>
                 <p className="text-xs text-muted-foreground">Gespielt</p>
+            </div>
+             <div className="p-2 bg-muted rounded-lg">
+                <p className="text-xl font-bold">{stats.wins}</p>
+                <p className="text-xs text-muted-foreground">Gewonnen</p>
             </div>
              <div className="p-2 bg-muted rounded-lg">
                 <p className="text-xl font-bold">{stats.streak}</p>
@@ -221,7 +218,20 @@ const GameEndDisplay = (props: {
             <Sheet open={isOpen} onOpenChange={onOpenChange}>
                 <SheetContent side="bottom" className="p-6 pt-4 rounded-t-lg max-h-[90vh] overflow-y-auto">
                     <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-zinc-300 mb-4" />
+                    <div className="text-center">
+                        <WorthaftIcon className="mx-auto h-16 w-16 mb-4 text-primary" />
+                        <h3 className="text-2xl font-bold font-headline mb-4">
+                            {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
+                        </h3>
+                        <p className="text-muted-foreground mt-1">
+                            Das Wort von Heute: <span className="font-bold text-primary">{rest.solution}</span>
+                        </p>
+                    </div>
                     <ResultsContent {...rest} />
+                    <SheetClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+                        <X className="h-4 w-4" />
+                        <span className="sr-only">Close</span>
+                    </SheetClose>
                 </SheetContent>
             </Sheet>
         );
@@ -230,6 +240,15 @@ const GameEndDisplay = (props: {
     return (
         <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
             <AlertDialogContent>
+                 <AlertDialogHeader className="text-center">
+                    <WorthaftIcon className="mx-auto h-16 w-16 text-primary" />
+                    <AlertDialogTitle className="text-2xl font-bold font-headline">
+                        {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
+                    </AlertDialogTitle>
+                    <AlertDialogDescription className="text-muted-foreground pt-1">
+                        Das Wort von Heute: <span className="font-bold text-primary">{rest.solution}</span>
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
                 <ResultsContent {...rest} />
             </AlertDialogContent>
         </AlertDialog>
@@ -388,10 +407,10 @@ export default function WorthaftPage() {
         // Check game state
         if (guessWord === solution) {
             setGameState('won');
-            const newStreak = stats.streak + 1;
+            const newStreak = (stats.streak || 0) + 1;
             const newStats = { 
-                games: stats.games + 1, 
-                wins: stats.wins + 1, 
+                games: (stats.games || 0) + 1, 
+                wins: (stats.wins || 0) + 1, 
                 streak: newStreak, 
                 maxStreak: Math.max(stats.maxStreak || 0, newStreak) 
             };
@@ -406,10 +425,10 @@ export default function WorthaftPage() {
         } else if (newGuesses.length === MAX_GUESSES) {
             setGameState('lost');
             const newStats = { 
-                games: stats.games + 1,
-                wins: stats.wins,
+                games: (stats.games || 0) + 1,
+                wins: stats.wins || 0,
                 streak: 0,
-                maxStreak: stats.maxStreak
+                maxStreak: stats.maxStreak || 0
             };
             setStats(newStats);
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
@@ -517,7 +536,7 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
 
     return (
         <div className="flex flex-col min-h-screen bg-background text-foreground">
-            {showConfetti && <Confetti onComplete={() => setShowConfetti(false)} />}
+            {showConfetti && <Confetti onComplete={() => setTimeout(() => setShowConfetti(false), 0)} />}
              <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
