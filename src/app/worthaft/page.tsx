@@ -27,7 +27,8 @@ type LetterStatus = 'correct' | 'present' | 'absent' | 'empty' | 'tbd';
 type DailyGameState = {
   date: string;
   guesses: { guess: string; statuses: LetterStatus[] }[];
-  status: 'won' | 'lost';
+  status: 'won' | 'lost' | 'playing';
+  letterStatuses: { [key: string]: LetterStatus };
 };
 
 
@@ -158,98 +159,6 @@ export default function WorthaftPage() {
 
     const getTodayString = () => new Date().toISOString().split('T')[0];
 
-    const initGame = useCallback((savedState?: DailyGameState) => {
-        if (savedState) {
-            setBoard(savedState.board);
-            setScore(savedState.score);
-            setStatus(savedState.status);
-            if (savedState.status !== 'playing') {
-                setIsCompletedToday(true);
-            }
-        } else {
-            let newBoard = addRandomTile(getEmptyBoard());
-            newBoard = addRandomTile(newBoard);
-            setBoard(newBoard);
-            setScore(0);
-            setStatus('playing');
-            setIsCompletedToday(false);
-            saveState(newBoard, 0, 'playing');
-        }
-    }, []);
-    
-    const saveState = useCallback((board: Board, score: number, status: GameStatus) => {
-        const dailyState: DailyState = {
-            date: getTodayString(),
-            board,
-            score,
-            status,
-        };
-        localStorage.setItem('unendlich-daily', JSON.stringify(dailyState));
-    }, []);
-
-    const checkGameOver = (board: Board): GameStatus => {
-        let has2048 = false;
-        let canMove = false;
-        for (let i = 0; i < GRID_SIZE; i++) {
-            for (let j = 0; j < GRID_SIZE; j++) {
-                if (board[i][j] === 2048) has2048 = true;
-                if (board[i][j] === 0) canMove = true;
-                if (i > 0 && board[i][j] === board[i-1][j]) canMove = true;
-                if (j > 0 && board[i][j] === board[i][j-1]) canMove = true;
-            }
-        }
-        if (has2048) return 'won';
-        if (!canMove) return 'lost';
-        return 'playing';
-    };
-
-    const handleMove = useCallback((direction: 'up' | 'down' | 'left' | 'right') => {
-        if (status !== 'playing') return;
-
-        let currentBoard = board;
-        let rotations = 0;
-        if (direction === 'down') { rotations = 1; }
-        if (direction === 'right') { rotations = 2; }
-        if (direction === 'up') { rotations = 3; }
-
-        for (let i = 0; i < rotations; i++) {
-            currentBoard = rotateBoard(currentBoard);
-        }
-        
-        let totalScore = 0;
-        let moved = false;
-        const newBoard = currentBoard.map(row => {
-            const { newRow, score: rowScore, moved: rowMoved } = moveRowLeft(row);
-            totalScore += rowScore;
-            if(rowMoved) moved = true;
-            return newRow;
-        });
-
-        for (let i = 0; i < rotations; i++) {
-            currentBoard = rotateBoard(newBoard);
-            currentBoard = rotateBoard(currentBoard);
-            currentBoard = rotateBoard(currentBoard);
-        }
-        
-        let finalBoard = newBoard;
-        for (let i = 0; i < (4 - rotations) % 4; i++) {
-            finalBoard = rotateBoard(finalBoard);
-        }
-
-        if (moved) {
-            finalBoard = addRandomTile(finalBoard);
-            const newScore = score + totalScore;
-            const newStatus = checkGameOver(finalBoard);
-            setBoard(finalBoard);
-            setScore(newScore);
-            setStatus(newStatus);
-            saveState(finalBoard, newScore, newStatus);
-            if (newStatus !== 'playing') {
-                setIsCompletedToday(true);
-            }
-        }
-    }, [board, status, score, saveState]);
-    
     useEffect(() => {
         const todayStr = getTodayString();
         setSolution(getWordOfTheDay());
@@ -262,23 +171,14 @@ export default function WorthaftPage() {
         const savedGame = localStorage.getItem('worthaft-daily-game');
         if (savedGame) {
             const dailyState: DailyGameState = JSON.parse(savedGame);
-            if (dailyState.date === todayStr && (dailyState.status === 'won' || dailyState.status === 'lost')) {
+            if (dailyState.date === todayStr) {
                 setGuesses(dailyState.guesses);
                 setGameState(dailyState.status);
-                setIsCompletedToday(true);
+                setLetterStatuses(dailyState.letterStatuses || {});
 
-                const newLetterStatuses: { [key: string]: LetterStatus } = {};
-                dailyState.guesses.forEach(({ guess, statuses }) => {
-                    for (let i = 0; i < WORD_LENGTH; i++) {
-                        const letter = guess[i];
-                        const currentStatus = newLetterStatuses[letter];
-                        const newStatus = statuses[i];
-                        if (currentStatus !== 'correct') {
-                            newLetterStatuses[letter] = newStatus;
-                        }
-                    }
-                });
-                setLetterStatuses(newLetterStatuses);
+                if (dailyState.status === 'won' || dailyState.status === 'lost') {
+                    setIsCompletedToday(true);
+                }
             }
         }
     }, []);
@@ -380,7 +280,7 @@ export default function WorthaftPage() {
             const newStats = { games: stats.games + 1, wins: stats.wins + 1, streak: stats.streak + 1 };
             setStats(newStats);
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
-            const dailyState: DailyGameState = { date: todayStr, guesses: newGuesses, status: 'won' };
+            const dailyState: DailyGameState = { date: todayStr, guesses: newGuesses, status: 'won', letterStatuses: newLetterStatuses };
             localStorage.setItem('worthaft-daily-game', JSON.stringify(dailyState));
             setIsCompletedToday(true);
         } else if (newGuesses.length === MAX_GUESSES) {
@@ -388,9 +288,12 @@ export default function WorthaftPage() {
             const newStats = { games: stats.games + 1, wins: stats.wins, streak: 0 };
             setStats(newStats);
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
-            const dailyState: DailyGameState = { date: todayStr, guesses: newGuesses, status: 'lost' };
+            const dailyState: DailyGameState = { date: todayStr, guesses: newGuesses, status: 'lost', letterStatuses: newLetterStatuses };
             localStorage.setItem('worthaft-daily-game', JSON.stringify(dailyState));
             setIsCompletedToday(true);
+        } else {
+            const dailyState: DailyGameState = { date: todayStr, guesses: newGuesses, status: 'playing', letterStatuses: newLetterStatuses };
+            localStorage.setItem('worthaft-daily-game', JSON.stringify(dailyState));
         }
     }, [currentGuess, gameState, guesses, letterStatuses, solution, stats, toast]);
 
