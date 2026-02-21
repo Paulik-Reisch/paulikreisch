@@ -14,7 +14,7 @@ import {
   AlertDialogTitle,
   AlertDialogDescription,
 } from "@/components/ui/alert-dialog";
-import { Sheet, SheetContent, SheetClose } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetClose } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { WORDS } from '@/lib/worthaft-words';
 import { Share2, HelpCircle, Book, Newspaper, X } from 'lucide-react';
@@ -133,7 +133,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
                         isCurrentRow && activeIndex === colIndex && 'border-primary ring-2 ring-primary scale-105',
                         status !== 'empty' && 'animate-in fade-in zoom-in-50'
                     )}
-                    style={{ animationDelay: `\'\'\'${colIndex * 100}ms\'\'\'` }}
+                    style={{ animationDelay: `'''${colIndex * 100}ms'''` }}
                 >
                     {letter}
                 </div>
@@ -159,16 +159,17 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
     return (
     <>
         <div className="my-6 text-center">
+            <WorthaftIcon className="mx-auto h-16 w-16 mb-4 text-primary"/>
             <p className="text-sm uppercase font-bold text-muted-foreground">Ihr Ergebnis</p>
             <p className="text-4xl font-bold">{gameState === 'won' ? guesses.length : 'X'} / {MAX_GUESSES}</p>
         </div>
 
-        <div className="grid grid-cols-4 gap-2 text-center my-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center my-6">
             <div className="p-2 bg-muted rounded-lg">
                 <p className="text-xl font-bold">{stats.games}</p>
                 <p className="text-xs text-muted-foreground">Gespielt</p>
             </div>
-             <div className="p-2 bg-muted rounded-lg">
+            <div className="p-2 bg-muted rounded-lg">
                 <p className="text-xl font-bold">{winRate}%</p>
                 <p className="text-xs text-muted-foreground">Gewonnen</p>
             </div>
@@ -189,11 +190,11 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
 
 
         <div className="sm:justify-center flex flex-col gap-2">
-            <Button size="lg" onClick={shareResults} className="h-14 text-lg">
+            <Button size="lg" onClick={shareResults}>
                 <Share2 className="mr-3 h-5 w-5"/>
-                Ergebnis teilen & Freunde herausfordern
+                Teilen
             </Button>
-             <Link href="/a" className="w-full">
+            <Link href="/a" className="w-full">
                 <Button className="w-full" variant="ghost">
                     <Newspaper className="mr-2 h-4 w-4"/>
                     Lustige Artikel lesen
@@ -222,14 +223,14 @@ const GameEndDisplay = (props: {
             <Sheet open={isOpen} onOpenChange={onOpenChange}>
                 <SheetContent side="bottom" className="p-6 pt-4 rounded-t-lg max-h-[90vh] overflow-y-auto">
                     <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-zinc-300 mb-4" />
-                    <AlertDialogHeader className="text-center">
-                        <AlertDialogTitle className="text-2xl font-bold font-headline">
+                    <SheetHeader className="text-center">
+                        <SheetTitle className="text-2xl font-bold font-headline">
                             {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
-                        </AlertDialogTitle>
-                        <AlertDialogDescription className="text-muted-foreground pt-1">
+                        </SheetTitle>
+                        <SheetDescription className="text-muted-foreground pt-1">
                             Das Wort von Heute: <span className="font-bold text-primary">{rest.solution}</span>
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
+                        </SheetDescription>
+                    </SheetHeader>
                     <ResultsContent {...rest} />
                     <SheetClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
                         <X className="h-4 w-4" />
@@ -243,11 +244,11 @@ const GameEndDisplay = (props: {
     return (
         <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
             <AlertDialogContent>
-                <AlertDialogHeader className="text-center">
-                    <AlertDialogTitle className="text-2xl font-bold font-headline">
+                <AlertDialogHeader>
+                    <AlertDialogTitle className="text-2xl font-bold font-headline text-center">
                         {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
                     </AlertDialogTitle>
-                    <AlertDialogDescription className="text-muted-foreground pt-1">
+                    <AlertDialogDescription className="text-muted-foreground pt-1 text-center">
                         Das Wort von Heute: <span className="font-bold text-primary">{rest.solution}</span>
                     </AlertDialogDescription>
                 </AlertDialogHeader>
@@ -577,5 +578,3 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
         </div>
     );
 }
-
-    
