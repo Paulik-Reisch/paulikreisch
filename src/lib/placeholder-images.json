@@ -1,32 +1,3 @@
 {
-  "deathDevices": [
-    {
-      "title": "Sprungkasten",
-      "specialty": "Genickbruch-Garant",
-      "image": "https://picsum.photos/seed/sprungkasten/600/600",
-      "alt": "Ein alter Sprungkasten aus Holz in einer Turnhalle",
-      "aiHint": "gym vaulting box"
-    },
-    {
-      "title": "Medizinball",
-      "specialty": "Lungenkollaps-Kugel",
-      "image": "https://picsum.photos/seed/medizinball/600/600",
-      "alt": "Ein schwerer Medizinball auf dem Boden einer Turnhalle",
-      "aiHint": "gym medicine ball"
-    },
-    {
-      "title": "Sprungseil",
-      "specialty": "Stolperfalle des Schicksals",
-      "image": "https://picsum.photos/seed/sprungseil/600/600",
-      "alt": "Ein verknotetes Sprungseil",
-      "aiHint": "jumping rope"
-    },
-    {
-      "title": "Turnringe",
-      "specialty": "Schulter-Ausrenk-Maschine",
-      "image": "https://picsum.photos/seed/turnringe/600/600",
-      "alt": "Hölzerne Turnringe, die von der Decke einer Turnhalle hängen",
-      "aiHint": "gymnastic rings"
-    }
-  ]
+  "deathDevices": []
 }
