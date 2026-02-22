@@ -23,9 +23,6 @@ export function FeaturedArticleCard({ article, author }: { article: Article, aut
 
   return (
     <div className="group relative min-h-[450px] text-white overflow-hidden rounded-lg shadow-sm flex flex-col justify-end">
-      {/* This link is an overlay for the whole card */}
-      <Link href={`/a/${article.slug}`} className="absolute inset-0 z-10" aria-label={`Zum Artikel: ${article.title}`}/>
-      
       <Image
         src={article.imageUrl}
         alt={article.imageAlt}
@@ -33,16 +30,20 @@ export function FeaturedArticleCard({ article, author }: { article: Article, aut
         className="object-cover transition-transform duration-500 group-hover:scale-105 z-0"
         priority
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent z-0" />
-      <div className="relative z-20 p-8">
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent z-10" />
+
+      {/* This link is an overlay for the whole card */}
+      <Link href={`/a/${article.slug}`} className="absolute inset-0 z-20" aria-label={`Zum Artikel: ${article.title}`}/>
+      
+      <div className="relative z-30 p-8">
         <Badge variant="secondary" className="mb-4 bg-white/20 text-white border-transparent">{article.category}</Badge>
         <h2 className="text-3xl lg:text-4xl font-bold font-serifHeadline tracking-tight leading-snug line-clamp-3">
           {article.title}
         </h2>
         <div className="mt-6 flex items-center gap-4 text-sm text-white/80">
           {authorDetails.slug ? (
-              // This link needs a higher z-index to be clickable over the overlay
-              <Link href={`/autoren/${authorDetails.slug}`} className="relative z-20 flex items-center gap-2 group/author">
+              // This link is inside a z-30 container, so it is clickable over the z-20 overlay link
+              <Link href={`/autoren/${authorDetails.slug}`} className="relative flex items-center gap-2 group/author">
                   <Avatar className="h-8 w-8">
                       <AvatarImage src={authorDetails.avatarUrl} />
                       <AvatarFallback>{authorDetails.avatarFallback}</AvatarFallback>
