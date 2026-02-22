@@ -125,7 +125,7 @@ export default function SatireLandschaftPage() {
                 <div className="container mx-auto max-w-4xl px-4">
                     <article className="prose dark:prose-invert prose-lg max-w-none">
                         <header className="text-center mb-12">
-                            <h1 className="font-headline !text-4xl md:!text-6xl !mb-4">Top 100 Satire-Seiten: Warum Sie ohne Platz 6 Ihren Drucker und Ihr Leben niemals verstehen werden</h1>
+                            <h1 className="font-headline !text-4xl md:!text-6xl !mb-4">Top 100 Satire-Seiten: Lachen ist Gold! Wo ist der beste Content dafür?</h1>
                             <p className="lead !mt-2">Ein Strukturbericht zur globalen Satire-Industrie 2026.</p>
                         </header>
 
