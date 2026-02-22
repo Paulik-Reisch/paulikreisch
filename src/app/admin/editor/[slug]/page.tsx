@@ -1,5 +1,5 @@
 
-import { getArticleBySlug } from "@/lib/firestore";
+import { getArticleBySlug, getAuthors } from "@/lib/firestore";
 import { notFound } from "next/navigation";
 import { ArticleEditorClient } from "./editor-client";
 import { getSession } from "@/lib/session";
@@ -14,11 +14,13 @@ export default async function ArticleEditorPage({ params }: { params: { slug: st
   const { slug } = params;
   const isNew = slug === 'new';
 
+  const authors = await getAuthors();
+
   if (isNew) {
     return (
         <div>
             <h1 className="text-3xl font-bold font-headline mb-6">Neuer Artikel</h1>
-            <ArticleEditorClient />
+            <ArticleEditorClient authors={authors} />
         </div>
     )
   }
@@ -32,7 +34,7 @@ export default async function ArticleEditorPage({ params }: { params: { slug: st
   return (
     <div>
         <h1 className="text-3xl font-bold font-headline mb-6">Artikel bearbeiten</h1>
-        <ArticleEditorClient article={article} />
+        <ArticleEditorClient article={article} authors={authors} />
     </div>
   );
 }

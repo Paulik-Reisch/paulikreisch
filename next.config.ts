@@ -67,6 +67,16 @@ const nextConfig: NextConfig = {
         destination: '/a/:slug*',
         permanent: true,
       },
+       {
+        source: '/autor',
+        destination: '/autoren',
+        permanent: true,
+      },
+      {
+        source: '/autor/:slug*',
+        destination: '/autoren/:slug*',
+        permanent: true,
+      },
     ]
   },
 };

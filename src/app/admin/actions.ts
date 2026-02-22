@@ -89,6 +89,7 @@ const ArticleSchema = z.object({
   readTime: z.coerce.number().min(1, "Lesezeit muss mindestens 1 sein."),
   accessLevel: z.enum(['free', 'leadwall', 'sharewall']),
   author: z.enum(['redaktion', 'gastbeitrag']).optional(),
+  authorSlug: z.string().optional(),
   status: z.enum(['draft', 'published']).optional(),
 });
 
@@ -134,6 +135,10 @@ export async function updateArticleAction(prevState: ArticleActionState, formDat
         if (!dataToUpdate.status) {
             dataToUpdate.status = 'draft';
         }
+        if (dataToUpdate.authorSlug === "") {
+            (dataToUpdate as any).authorSlug = null;
+        }
+
 
         await updateArticle(originalSlug, dataToUpdate, session.user.id);
         revalidatePath("/admin");
@@ -142,6 +147,10 @@ export async function updateArticleAction(prevState: ArticleActionState, formDat
             revalidatePath(`/a/${validatedFields.data.slug}`);
         }
         revalidatePath('/a'); // Revalidate the overview page
+        revalidatePath('/autoren'); // Revalidate authors index
+        if (dataToUpdate.authorSlug) {
+            revalidatePath(`/autoren/${dataToUpdate.authorSlug}`);
+        }
         return { success: true, message: "Artikel erfolgreich aktualisiert.", newSlug: validatedFields.data.slug };
     } catch(e: any) {
         return { success: false, error: e.message };

@@ -89,6 +89,10 @@
           "description": "Art des Autors, z.B. Redaktion oder Gastbeitrag.",
           "enum": ["redaktion", "gastbeitrag"]
         },
+        "authorSlug": {
+            "type": "string",
+            "description": "Slug of the author from the authors collection."
+        },
         "status": {
           "type": "string",
           "description": "The publication status of the article.",

@@ -4,7 +4,7 @@
 import { useState, useEffect, useActionState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { type Article } from "@/lib/firestore";
+import { type Article, type Author } from "@/lib/firestore";
 import { createArticleAction, updateArticleAction, type ArticleActionState } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 const initialState: ArticleActionState = { success: false, error: null };
 
-export function ArticleEditorClient({ article }: { article?: Article }) {
+export function ArticleEditorClient({ article, authors }: { article?: Article, authors: Author[] }) {
   const router = useRouter();
   const { toast } = useToast();
   const isNew = !article;
@@ -98,7 +98,7 @@ export function ArticleEditorClient({ article }: { article?: Article }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="space-y-2">
             <Label htmlFor="accessLevel">Zugriffslevel</Label>
             <Select name="accessLevel" defaultValue={article?.accessLevel || 'free'}>
@@ -111,10 +111,23 @@ export function ArticleEditorClient({ article }: { article?: Article }) {
                 <SelectItem value="sharewall">Share-Wall (Teilen)</SelectItem>
               </SelectContent>
             </Select>
-            <p className="text-xs text-muted-foreground">Steuert, ob der Artikel eine Paywall, Leadwall oder Sharewall hat.</p>
         </div>
         <div className="space-y-2">
-            <Label htmlFor="author">Autor</Label>
+            <Label htmlFor="authorSlug">Autor</Label>
+            <Select name="authorSlug" defaultValue={article?.authorSlug}>
+              <SelectTrigger id="authorSlug">
+                <SelectValue placeholder="Autor auswählen..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">Kein spezifischer Autor</SelectItem>
+                {authors.map(author => (
+                    <SelectItem key={author.id} value={author.slug}>{author.firstName} {author.lastName}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+        </div>
+        <div className="space-y-2">
+            <Label htmlFor="author">Autoren-Typ (Legacy)</Label>
             <Select name="author" defaultValue={article?.author || 'redaktion'}>
               <SelectTrigger id="author">
                 <SelectValue placeholder="Autor auswählen" />
@@ -124,7 +137,6 @@ export function ArticleEditorClient({ article }: { article?: Article }) {
                 <SelectItem value="gastbeitrag">Gastbeitrag</SelectItem>
               </SelectContent>
             </Select>
-            <p className="text-xs text-muted-foreground">Bestimmt, wer als Autor des Artikels angezeigt wird.</p>
         </div>
       </div>
 
