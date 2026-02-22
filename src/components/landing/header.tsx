@@ -47,7 +47,7 @@ export function Header() {
         <div className="flex items-center gap-4">
             <nav className="hidden md:flex items-center gap-4">
                 <Link href="/a">
-                    <Button variant="ghost">Lustige Artikel</Button>
+                    <Button variant="ghost">Paulik & Reisch Satire Magazin</Button>
                 </Link>
                 <Link href="/worthaft">
                     <Button variant="ghost">
@@ -76,7 +76,7 @@ export function Header() {
                       </div>
                     </a>
                     <Link href="/a">
-                        <Button variant="default" className="w-full">Lustige Artikel</Button>
+                        <Button variant="default" className="w-full">Paulik & Reisch Satire Magazin</Button>
                     </Link>
                     <Link href="/worthaft">
                         <Button variant="outline" className="w-full">
