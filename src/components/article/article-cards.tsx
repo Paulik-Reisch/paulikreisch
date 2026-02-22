@@ -11,66 +11,6 @@ import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 
-export function FeaturedArticleCard({ article, author }: { article: Article, author: Author | null }) {
-  const authorDetails = {
-    name: author ? `${author.firstName} ${author.lastName}` : (article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Paulik & Reisch'),
-    avatarUrl: author ? author.profilePictureUrl : (article.author === 'gastbeitrag' 
-      ? 'https://picsum.photos/seed/guest-author/100/100' 
-      : 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522'),
-    avatarFallback: author ? `${author.firstName[0]}${author.lastName[0]}` : (article.author === 'gastbeitrag' ? 'G' : 'PR'),
-    slug: author?.slug
-  }
-
-  return (
-    <article className="group relative min-h-[450px] text-white overflow-hidden rounded-lg shadow-sm">
-      <Image
-        src={article.imageUrl}
-        alt={article.imageAlt}
-        fill
-        className="object-cover transition-transform duration-500 group-hover:scale-105 z-0"
-        priority
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent z-10" />
-      
-      <div className="relative z-30 flex flex-col justify-end h-full p-8">
-        <Badge variant="secondary" className="mb-4 bg-white/20 text-white border-transparent self-start">{article.category}</Badge>
-        <Link href={`/a/${article.slug}`}>
-          <h2 className="text-3xl lg:text-4xl font-bold font-serifHeadline tracking-tight leading-snug line-clamp-3 text-left group-hover:underline">
-            {article.title}
-          </h2>
-        </Link>
-        <div className="mt-6 flex items-center gap-4 text-sm text-white/80">
-          {authorDetails.slug ? (
-              // This link is inside a z-30 container, so it is clickable over the z-20 overlay link
-              <Link href={`/autoren/${authorDetails.slug}`} className="relative flex items-center gap-2 group/author">
-                  <Avatar className="h-8 w-8">
-                      <AvatarImage src={authorDetails.avatarUrl} />
-                      <AvatarFallback>{authorDetails.avatarFallback}</AvatarFallback>
-                  </Avatar>
-                  <span className="font-semibold group-hover/author:underline">{authorDetails.name}</span>
-              </Link>
-          ) : (
-              <div className="flex items-center gap-2">
-                  <Avatar className="h-8 w-8">
-                      <AvatarImage src={authorDetails.avatarUrl} />
-                      <AvatarFallback>{authorDetails.avatarFallback}</AvatarFallback>
-                  </Avatar>
-                  <span className="font-semibold">{authorDetails.name}</span>
-              </div>
-          )}
-          <span className="opacity-50">|</span>
-           <div className="flex items-center gap-1.5">
-              <Calendar className="w-4 h-4" />
-              <time dateTime={article.publishedDate}>
-                {format(new Date(article.publishedDate), "dd. MMM yyyy", { locale: de })}
-              </time>
-            </div>
-        </div>
-      </div>
-    </article>
-  );
-}
-
 export function StandardArticleCard({ article, author }: { article: Article, author: Author | null }) {
     const authorDetails = {
         name: author ? `${author.firstName} ${author.lastName}` : (article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Paulik & Reisch'),
@@ -110,12 +50,12 @@ export function StandardArticleCard({ article, author }: { article: Article, aut
                   <span className="font-semibold group-hover/author:text-primary transition-colors">{authorDetails.name}</span>
               </Link>
             ) : (
-              <div className="flex items-center gap-2">
-                <Avatar className="h-6 w-6">
-                    <AvatarImage src={authorDetails.avatarUrl} />
-                    <AvatarFallback className="text-xs">{authorDetails.avatarFallback}</AvatarFallback>
-                </Avatar>
-                <span className="font-semibold">{authorDetails.name}</span>
+              <div className="flex items-center gap-2 font-semibold">
+                  <Avatar className="h-6 w-6">
+                      <AvatarImage src={authorDetails.avatarUrl} />
+                      <AvatarFallback className="text-xs">{authorDetails.avatarFallback}</AvatarFallback>
+                  </Avatar>
+                  <span>{authorDetails.name}</span>
               </div>
             )}
           <div className="flex items-center gap-1.5">

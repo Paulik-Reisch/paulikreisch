@@ -3,7 +3,8 @@ import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import Link from "next/link";
 import type { Metadata, ResolvingMetadata } from 'next';
-import { FeaturedArticleCard, StandardArticleCard, ListArticleCard } from "@/components/article/article-cards";
+import { StandardArticleCard } from "@/components/article/article-cards";
+import { Badge } from "@/components/ui/badge";
 
 export async function generateMetadata(
   {},
@@ -61,10 +62,6 @@ export default async function ArticlesPage() {
     );
   }
   
-  const featuredArticle = articles[0];
-  const standardArticles = articles.slice(1, 5);
-  const listArticles = articles.slice(5);
-
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
@@ -108,32 +105,25 @@ export default async function ArticlesPage() {
       />
       <Header />
       <main className="flex-1 py-12 md:py-20">
-        <div className="container px-4 md:px-6 space-y-16">
+        <div className="container px-4 md:px-6">
           
+          <header className="text-center mb-12">
+              <Badge>Magazin</Badge>
+              <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl mt-4 text-balance">
+                  Archiv des Wahnsinns
+              </h1>
+              <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl mt-4 text-balance">
+                  Stöbern Sie durch unsere Sammlung satirischer Meisterwerke. Frisch aus der Feder der Zyniker.
+              </p>
+          </header>
+
           <section>
-             <FeaturedArticleCard article={featuredArticle} author={featuredArticle.authorSlug ? authorsMap.get(featuredArticle.authorSlug) ?? null : null} />
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {articles.map(article => (
+                <StandardArticleCard key={article.id} article={article} author={article.authorSlug ? authorsMap.get(article.authorSlug) ?? null : null} />
+              ))}
+            </div>
           </section>
-
-          {standardArticles.length > 0 && (
-            <section>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                {standardArticles.map(article => (
-                  <StandardArticleCard key={article.id} article={article} author={article.authorSlug ? authorsMap.get(article.authorSlug) ?? null : null} />
-                ))}
-              </div>
-            </section>
-          )}
-
-          {listArticles.length > 0 && (
-            <section>
-               <h2 className="text-3xl font-bold font-headline text-center mb-8">Weitere Artikel</h2>
-               <div className="max-w-3xl mx-auto space-y-4">
-                {listArticles.map(article => (
-                  <ListArticleCard key={article.id} article={article} author={article.authorSlug ? authorsMap.get(article.authorSlug) ?? null : null} />
-                ))}
-               </div>
-            </section>
-          )}
 
         </div>
       </main>
