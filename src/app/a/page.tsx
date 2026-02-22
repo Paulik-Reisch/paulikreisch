@@ -108,8 +108,7 @@ export default async function ArticlesPage() {
         <div className="container px-4 md:px-6">
           
           <header className="text-center mb-12">
-              <Badge>Magazin</Badge>
-              <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl mt-4 text-balance">
+              <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl text-balance">
                   Paulik & Reisch Satire Magazin
               </h1>
               <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl mt-4 text-balance">
