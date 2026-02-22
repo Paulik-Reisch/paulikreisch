@@ -22,16 +22,16 @@ function NewsletterFormContent() {
   return (
     <div className="space-y-4">
       <div className="flex space-x-2">
-        <Input 
-          name="email" 
-          aria-label="E-Mail-Adresse" 
-          className="max-w-lg flex-1 bg-white/20 text-white placeholder:text-white/80 border-white/50 focus:ring-white" 
-          placeholder="E-Mail-Adresse eingeben" 
-          type="email" 
-          required 
+        <Input
+          name="email"
+          aria-label="E-Mail-Adresse"
+          className="max-w-lg flex-1 bg-background placeholder:text-muted-foreground"
+          placeholder="E-Mail-Adresse eingeben"
+          type="email"
+          required
         />
         <input type="hidden" name="source" value="footer-newsletter" />
-        <Button type="submit" disabled={pending || !isConsentGiven} variant="secondary">
+        <Button type="submit" disabled={pending || !isConsentGiven} variant="default">
           {pending ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -42,15 +42,15 @@ function NewsletterFormContent() {
         </Button>
       </div>
       <div className="flex items-start space-x-3 px-1">
-        <Checkbox 
-          id="terms" 
-          checked={isConsentGiven} 
-          onCheckedChange={(checked) => setIsConsentGiven(checked as boolean)} 
-          className="border-white/80 data-[state=checked]:bg-white data-[state=checked]:text-black mt-1" 
+        <Checkbox
+          id="terms"
+          checked={isConsentGiven}
+          onCheckedChange={(checked) => setIsConsentGiven(checked as boolean)}
+          className="mt-1"
         />
-        <Label htmlFor="terms" className="text-xs text-white/90 text-left leading-snug">
+        <Label htmlFor="terms" className="text-xs text-secondary-foreground/90 text-left leading-snug">
           Ich stimme zu, den Newsletter zu erhalten und habe die{' '}
-          <Link href="/datenschutz" className="underline hover:text-white font-bold" target="_blank" rel="noopener noreferrer">
+          <Link href="/datenschutz" className="underline hover:text-secondary-foreground font-bold" target="_blank" rel="noopener noreferrer">
             Datenschutzerklärung
           </Link> gelesen.
         </Label>
@@ -78,11 +78,11 @@ export function Newsletter() {
   }, [state, toast]);
 
   return (
-    <section id="newsletter" aria-labelledby="newsletter-heading" className="w-full py-20 md:py-24 lg:py-32 bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500">
+    <section id="newsletter" aria-labelledby="newsletter-heading" className="w-full py-20 md:py-24 lg:py-32 bg-secondary">
       <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="space-y-3">
-          <h2 id="newsletter-heading" className="text-3xl font-bold font-headline tracking-tighter md:text-4xl text-white">Immer mehr zu Lachen!</h2>
-          <p className="mx-auto max-w-[600px] text-white/90 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
+          <h2 id="newsletter-heading" className="text-3xl font-bold font-headline tracking-tighter md:text-4xl text-secondary-foreground">Immer mehr zu Lachen!</h2>
+          <p className="mx-auto max-w-[600px] text-secondary-foreground/90 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
             Erhalten Sie exklusive Inhalte und Updates direkt in Ihren Posteingang. Wir versprechen, Sie nicht zuzuspammen.
           </p>
         </div>
