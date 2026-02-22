@@ -114,12 +114,12 @@ export function ArticleEditorClient({ article, authors }: { article?: Article, a
         </div>
         <div className="space-y-2">
             <Label htmlFor="authorSlug">Autor</Label>
-            <Select name="authorSlug" defaultValue={article?.authorSlug}>
+            <Select name="authorSlug" defaultValue={article?.authorSlug || 'none'}>
               <SelectTrigger id="authorSlug">
                 <SelectValue placeholder="Autor auswählen..." />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Kein spezifischer Autor</SelectItem>
+                <SelectItem value="none">Kein spezifischer Autor</SelectItem>
                 {authors.map(author => (
                     <SelectItem key={author.id} value={author.slug}>{author.firstName} {author.lastName}</SelectItem>
                 ))}

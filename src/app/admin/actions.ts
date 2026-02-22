@@ -106,7 +106,11 @@ export async function createArticleAction(prevState: ArticleActionState, formDat
     }
     
     try {
-        const newSlug = await addArticle(validatedFields.data, session.user.id);
+        const articleData = { ...validatedFields.data };
+        if (articleData.authorSlug === 'none') {
+            articleData.authorSlug = undefined;
+        }
+        const newSlug = await addArticle(articleData, session.user.id);
         revalidatePath("/admin");
         revalidatePath("/a", "layout");
         return { success: true, message: "Artikel erfolgreich erstellt.", newSlug };
@@ -135,7 +139,7 @@ export async function updateArticleAction(prevState: ArticleActionState, formDat
         if (!dataToUpdate.status) {
             dataToUpdate.status = 'draft';
         }
-        if (dataToUpdate.authorSlug === "") {
+        if (dataToUpdate.authorSlug === "" || dataToUpdate.authorSlug === "none") {
             (dataToUpdate as any).authorSlug = null;
         }
 

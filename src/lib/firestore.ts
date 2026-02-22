@@ -1,4 +1,5 @@
 
+
 import { app } from "@/app/firebase";
 import { 
     getFirestore, 
@@ -353,9 +354,9 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
 
 export async function getArticlesByAuthorSlug(authorSlug: string): Promise<Article[]> {
     const articlesCol = collection(db, 'articles');
-    const q = query(articlesCol, where('authorSlug', '==', authorSlug), where('status', '==', 'published'), orderBy('publishedDate', 'desc'));
+    const q = query(articlesCol, where('authorSlug', '==', authorSlug), orderBy('publishedDate', 'desc'));
     const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => {
+    const authorArticles = snapshot.docs.map(doc => {
         const data = doc.data();
         return {
             id: doc.id,
@@ -366,6 +367,7 @@ export async function getArticlesByAuthorSlug(authorSlug: string): Promise<Artic
             status: data.status || 'published',
         } as Article;
     });
+    return authorArticles.filter(article => article.status === 'published');
 }
 
 
