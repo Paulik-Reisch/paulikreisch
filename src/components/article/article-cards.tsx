@@ -23,16 +23,16 @@ export function FeaturedArticleCard({ article, author }: { article: Article, aut
 
   return (
     <Link href={`/a/${article.slug}`} className="block group">
-      <Card className="relative min-h-[450px] text-white overflow-hidden flex flex-col justify-end">
+      <div className="relative min-h-[450px] text-white overflow-hidden rounded-lg shadow-sm flex flex-col justify-end">
         <Image
           src={article.imageUrl}
           alt={article.imageAlt}
           fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105 -z-10"
+          className="object-cover transition-transform duration-500 group-hover:scale-105 z-0"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent z-0" />
-        <CardContent className="relative z-10 p-8">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent z-10" />
+        <div className="relative z-20 p-8">
           <Badge variant="secondary" className="mb-4 bg-white/20 text-white border-transparent">{article.category}</Badge>
           <h2 className="text-3xl lg:text-4xl font-bold font-serifHeadline tracking-tight leading-snug line-clamp-3">
             {article.title}
@@ -63,8 +63,8 @@ export function FeaturedArticleCard({ article, author }: { article: Article, aut
                 </time>
               </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </Link>
   );
 }
