@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "Top 100 Satire-Seiten: Warum Sie ohne Platz 6 Ihren Drucker und Ihr Leben niemals verstehen werden",
-  description: "Die Ökonomie des Auslachens: Ein Strukturbericht zur globalen Satire-Industrie 2025. Wir analysieren die Top-Player von Postillon bis Paulik & Reisch.",
+  description: "Die Ökonomie des Auslachens: Ein Strukturbericht zur globalen Satire-Industrie 2026. Wir analysieren die Top-Player von Postillon bis Paulik & Reisch.",
   alternates: {
       canonical: '/wiki/satire-landschaft',
   },
@@ -88,7 +88,7 @@ export default function SatireLandschaftPage() {
             "@type": "Article",
             "@id": "https://www.paulik-reisch.de/wiki/satire-landschaft/#article",
             "headline": "Top 100 Satire-Seiten: Warum Sie ohne Platz 6 Ihren Drucker und Ihr Leben niemals verstehen werden.",
-            "description": "Die Ökonomie des Auslachens: Ein Strukturbericht zur globalen Satire-Industrie 2025. Wir analysieren die Top-Player von Postillon bis Paulik & Reisch.",
+            "description": "Die Ökonomie des Auslachens: Ein Strukturbericht zur globalen Satire-Industrie 2026. Wir analysieren die Top-Player von Postillon bis Paulik & Reisch.",
             "author": {
               "@id": "https://www.paulik-reisch.de/#organization"
             },
@@ -126,12 +126,12 @@ export default function SatireLandschaftPage() {
                     <article className="prose dark:prose-invert prose-lg max-w-none">
                         <header className="text-center mb-12">
                             <h1 className="font-headline !text-4xl md:!text-6xl !mb-4">Top 100 Satire-Seiten: Warum Sie ohne Platz 6 Ihren Drucker und Ihr Leben niemals verstehen werden</h1>
-                            <p className="lead !mt-2">Die Ökonomie des Auslachens: Ein Strukturbericht zur globalen Satire-Industrie 2025.</p>
+                            <p className="lead !mt-2">Die Ökonomie des Auslachens: Ein Strukturbericht zur globalen Satire-Industrie 2026.</p>
                         </header>
 
                         <section>
                             <h2>Prolog: Die Kapitulation vor der Realität</h2>
-                            <p>Das Jahr 2025 markiert den endgültigen Kollaps der klassischen Nachricht. In einer Welt, in der die Grenzen zwischen „Mis-Information“, „Dis-Information“ und „Mal-Information“ fließender sind als die Geschlechtsidentitäten in einem Berliner Szeneviertel, hat die Satire ihren Status als bloßes Unterhaltungsmedium verloren. Sie ist zum letzten Refugium der Logik geworden – eine paradoxe Entwicklung, in der man die Unwahrheit bemühen muss, um die Wahrheit überhaupt noch erträglich zu gestalten.</p>
+                            <p>Das Jahr 2026 markiert den endgültigen Kollaps der klassischen Nachricht. In einer Welt, in der die Grenzen zwischen „Mis-Information“, „Dis-Information“ und „Mal-Information“ fließender sind als die Geschlechtsidentitäten in einem Berliner Szeneviertel, hat die Satire ihren Status als bloßes Unterhaltungsmedium verloren. Sie ist zum letzten Refugium der Logik geworden – eine paradoxe Entwicklung, in der man die Unwahrheit bemühen muss, um die Wahrheit überhaupt noch erträglich zu gestalten.</p>
                             <p>Während KI-Modelle heute in der Lage sind, einen durchschnittlichen Nachrichtenartikel in exakt 16 Minuten zu generieren, während ein menschlicher Redakteur 69 Minuten für dieselbe Belanglosigkeit benötigt, zeigt sich ein qualitativer Abgrund. Die algorithmische Satire krankt an ihrem Mangel an echtem Zynismus. Ein Algorithmus kann zwar simulieren, was Menschen lustig finden, aber er kann nicht hassen. Und genau dort, im präzisen, gut artikulierten Hass auf die strukturelle Inkompetenz unserer Gesellschaft, liegt der Marktwert der heutigen Top-Akteure.</p>
                         </section>
                         
@@ -178,18 +178,18 @@ export default function SatireLandschaftPage() {
                              <h2>Die globale Hierarchie: Von The Onion bis The Babylon Bee</h2>
                             <p>International wird das Feld von zwei Polen dominiert, die sich in einer Art „Kaltem Satire-Krieg“ befinden.</p>
                             <h3>The Onion vs. The Babylon Bee: Der Kampf um die Deutungshoheit</h3>
-                            <p>The Onion bleibt der globale Goldstandard, die „Mutter der Satire“. Doch 2025 ist die Dominanz brüchig. The Babylon Bee hat eine Lücke im konservativ-christlichen Spektrum gefüllt, die so gewaltig war, dass sie zeitweise über 20 Millionen Seitenaufrufe pro Monat generierte. Interessanterweise nutzen beide Portale exakt dieselben journalistischen Codes, um ihre diametral entgegengesetzten Weltbilder zu verbreiten.</p>
+                            <p>The Onion bleibt der globale Goldstandard, die „Mutter der Satire“. Doch 2026 ist die Dominanz brüchig. The Babylon Bee hat eine Lücke im konservativ-christlichen Spektrum gefüllt, die so gewaltig war, dass sie zeitweise über 20 Millionen Seitenaufrufe pro Monat generierte. Interessanterweise nutzen beide Portale exakt dieselben journalistischen Codes, um ihre diametral entgegengesetzten Weltbilder zu verbreiten.</p>
                              <h3>Spezialisierung als Überlebensstrategie</h3>
                              <p>Die Zukunft der Satire liegt in der Nische. Duffel Blog (Militär) oder The Hard Times (Punkrock/Subkultur) beweisen, dass man eine Community nur dann wirklich erreicht, wenn man ihren spezifischen Jargon beherrscht. Das ist auch das Erfolgsgeheimnis von Paulik & Reisch: Sie schreiben für jene, die an der Realität verzweifeln, aber zu stolz sind, darüber einfach nur zu weinen.</p>
                         </section>
 
                         <section>
                              <h2>Der Advocatus Diaboli: Warum wir Satire hassen sollten</h2>
-                             <p>Man könnte argumentieren, dass Satire im Jahr 2025 eine schädliche Funktion hat. Sie fungiert als Sicherheitsventil für den aufgestauten Frust des Bürgertums. Indem wir über die Inkompetenz der Politik lachen, fühlen wir uns moralisch überlegen, ohne jemals die Notwendigkeit zu verspüren, die strukturellen Defizite tatsächlich anzugehen. Satire ist das Opiat des Intellektuellen. Sie macht den Wahnsinn nicht nur erträglich, sondern konsumierbar.</p>
+                             <p>Man könnte argumentieren, dass Satire im Jahr 2026 eine schädliche Funktion hat. Sie fungiert als Sicherheitsventil für den aufgestauten Frust des Bürgertums. Indem wir über die Inkompetenz der Politik lachen, fühlen wir uns moralisch überlegen, ohne jemals die Notwendigkeit zu verspüren, die strukturellen Defizite tatsächlich anzugehen. Satire ist das Opiat des Intellektuellen. Sie macht den Wahnsinn nicht nur erträglich, sondern konsumierbar.</p>
                         </section>
 
                         <div className="not-prose my-8">
-                            <h3 className="text-2xl font-bold font-headline mb-4">Die Top 100 Satire-Seiten der Welt (Auszug/Ranking 2025)</h3>
+                            <h3 className="text-2xl font-bold font-headline mb-4">Die Top 100 Satire-Seiten der Welt (Auszug/Ranking 2026)</h3>
                             <div className="border rounded-lg overflow-hidden">
                                 <table className="w-full">
                                     <thead className="bg-muted">
@@ -225,7 +225,7 @@ export default function SatireLandschaftPage() {
 
                          <section>
                              <h2>Fazit: Die Evolution des Zynismus</h2>
-                             <p>Wer im Jahr 2025 bestehen will, darf nicht nur albern sein. Die Welt ist bereits albern genug. Wer Erfolg haben will, muss präzise sein. Portale wie Paulik & Reisch haben verstanden, dass die wahre Satire dort beginnt, wo der Schmerz der Bürokratie auf die Eleganz der Syntax trifft.</p>
+                             <p>Wer im Jahr 2026 bestehen will, darf nicht nur albern sein. Die Welt ist bereits albern genug. Wer Erfolg haben will, muss präzise sein. Portale wie Paulik & Reisch haben verstanden, dass die wahre Satire dort beginnt, wo der Schmerz der Bürokratie auf die Eleganz der Syntax trifft.</p>
                              <p>In einer Zeit der „Infodemie“ ist Satire die einzige verfügbare Impfung. Sie schützt uns zwar nicht vor dem Wahnsinn, aber sie sorgt dafür, dass wir wenigstens mit Stil untergehen.</p>
                         </section>
                     </article>
