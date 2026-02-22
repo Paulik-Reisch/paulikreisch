@@ -40,12 +40,12 @@ function ArticleCard({ article }: { article: Article }) {
               </div>
               <div className="flex items-center gap-1.5">
                 <Clock className="w-4 h-4" />
-                <span>{article.readTime} min Lesezeit</span>
+                <span>{article.readTime} min</span>
               </div>
             </div>
           </div>
           <Link href={`/a/${article.slug}`}>
-            <h3 className="text-2xl font-bold font-serifHeadline tracking-tight leading-snug group-hover:text-primary transition-colors">
+            <h3 className="text-2xl font-bold font-serifHeadline tracking-tight leading-snug group-hover:text-primary transition-colors line-clamp-2">
               {article.title}
             </h3>
           </Link>
@@ -65,41 +65,108 @@ function ArticleCard({ article }: { article: Article }) {
   );
 }
 
+function FeaturedArticleCard({ article }: { article: Article }) {
+    return (
+        <Card className="overflow-hidden group w-full">
+            <div className="grid md:grid-cols-2">
+                <div className="order-2 md:order-1">
+                    <CardContent className="p-6 sm:p-8 flex flex-col h-full">
+                        <div className="flex-grow">
+                            <Badge>Neuester Artikel</Badge>
+                            <Link href={`/a/${article.slug}`} className="mt-4 block">
+                                <h3 className="text-3xl lg:text-4xl font-bold font-serifHeadline tracking-tight leading-snug group-hover:text-primary transition-colors text-balance">
+                                    {article.title}
+                                </h3>
+                            </Link>
+                            <p className="mt-4 text-muted-foreground line-clamp-3 text-balance">
+                                {article.teaser}
+                            </p>
+                        </div>
+                        <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
+                            <div className="flex items-center gap-1.5">
+                                <Calendar className="w-4 h-4" />
+                                <time dateTime={article.publishedDate}>
+                                {format(new Date(article.publishedDate), "dd. MMMM yyyy", { locale: de })}
+                                </time>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <Clock className="w-4 h-4" />
+                                <span>{article.readTime} min Lesezeit</span>
+                            </div>
+                        </div>
+                         <div className="mt-6">
+                            <Link href={`/a/${article.slug}`}>
+                                <Button>
+                                Jetzt lesen <ArrowRight className="ml-2 h-4 w-4" />
+                                </Button>
+                            </Link>
+                        </div>
+                    </CardContent>
+                </div>
+                 <div className="order-1 md:order-2 overflow-hidden aspect-video md:aspect-auto">
+                     <Link href={`/a/${article.slug}`} className="block h-full">
+                        <Image
+                            src={article.imageUrl}
+                            alt={article.imageAlt}
+                            width={800}
+                            height={600}
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                    </Link>
+                </div>
+            </div>
+        </Card>
+    );
+}
+
 
 export async function ArticleSection() {
   const articles = await getArticles();
   
+  if (articles.length === 0) {
+    return null;
+  }
+
+  const latestArticle = articles[0];
+  const otherArticles = articles.slice(1);
+  
   return (
-    <section id="articles" aria-labelledby="articles-heading" className="w-full py-20 md:py-24 lg:py-32 bg-background text-foreground">
+    <section id="articles" aria-labelledby="articles-heading" className="w-full py-20 md:py-24 lg:py-32 bg-muted/40 text-foreground">
       <div className="container px-4 md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
           <div className="space-y-4">
-            <h2 id="articles-heading" className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Neueste Satire-Artikel</h2>
+            <h2 id="articles-heading" className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Aus dem Magazin</h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
               Frisch aus der Feder der Zyniker. Unsere Beobachtungen zum aktuellen Weltgeschehen.
             </p>
           </div>
         </div>
         
-        <Carousel 
-          opts={{
-            align: "start",
-            loop: true,
-          }}
-          className="w-full max-w-7xl mx-auto"
-        >
-          <CarouselContent>
-            {articles.map((article) => (
-              <CarouselItem key={article.id} className="md:basis-1/2 lg:basis-1/3">
-                <div className="p-1 h-full">
-                  <ArticleCard article={article} />
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="hidden sm:flex -left-4 md:-left-12" />
-          <CarouselNext className="hidden sm:flex -right-4 md:-right-12" />
-        </Carousel>
+        <div className="mb-16">
+            <FeaturedArticleCard article={latestArticle} />
+        </div>
+
+        {otherArticles.length > 0 && (
+            <Carousel 
+            opts={{
+                align: "start",
+                loop: true,
+            }}
+            className="w-full max-w-7xl mx-auto"
+            >
+            <CarouselContent>
+                {otherArticles.map((article) => (
+                <CarouselItem key={article.id} className="md:basis-1/2 lg:basis-1/3">
+                    <div className="p-1 h-full">
+                    <ArticleCard article={article} />
+                    </div>
+                </CarouselItem>
+                ))}
+            </CarouselContent>
+            <CarouselPrevious className="hidden sm:flex -left-4 md:-left-12" />
+            <CarouselNext className="hidden sm:flex -right-4 md:-right-12" />
+            </Carousel>
+        )}
 
       </div>
     </section>
