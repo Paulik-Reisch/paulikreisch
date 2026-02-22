@@ -17,8 +17,82 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function UeberAutorenPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "NewsMediaOrganization",
+        "@id": "https://www.paulik-reisch.de/#organization",
+        "name": "Paulik & Reisch",
+        "url": "https://www.paulik-reisch.de",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522"
+        },
+        "slogan": "Die Speerspitze der modernen Satire",
+        "genre": ["Satire", "Comedy", "News"],
+        "knowsAbout": ["Politiksatire", "Gesellschaftskritik", "Fake News Satire"]
+      },
+      {
+        "@type": "Article",
+        "@id": "https://www.paulik-reisch.de/wiki/satire-landschaft/#article",
+        "headline": "Die deutsche Satire-Landschaft: Von Postillon bis Paulik & Reisch",
+        "description": "Eine Analyse der wichtigsten Satire-Magazine wie Der Postillon, TITANIC, heute-show und warum Paulik & Reisch die nächste Evolution ist.",
+        "author": {
+          "@id": "https://www.paulik-reisch.de/#organization"
+        },
+        "publisher": {
+          "@id": "https://www.paulik-reisch.de/#organization"
+        },
+        "about": [
+          {
+            "@type": "Thing",
+            "name": "Satire",
+            "sameAs": "https://de.wikipedia.org/wiki/Satire"
+          }
+        ],
+        "mentions": [
+          {
+            "@type": "NewsMediaOrganization",
+            "name": "Der Postillon",
+            "sameAs": "https://www.wikidata.org/wiki/Q1196263"
+          },
+          {
+            "@type": "NewsMediaOrganization",
+            "name": "Titanic",
+            "sameAs": "https://www.wikidata.org/wiki/Q314545"
+          },
+          {
+            "@type": "TVSeries",
+            "name": "heute-show",
+            "sameAs": "https://www.wikidata.org/wiki/Q1616442"
+          },
+          {
+            "@type": "NewsMediaOrganization",
+            "name": "Die Tagespresse",
+            "sameAs": "https://www.wikidata.org/wiki/Q15805565"
+          },
+          {
+            "@type": "NewsMediaOrganization",
+            "name": "The Onion",
+            "sameAs": "https://www.wikidata.org/wiki/Q1185031"
+          },
+          {
+            "@type": "NewsMediaOrganization",
+            "name": "ZDF Magazin Royale",
+            "sameAs": "https://www.wikidata.org/wiki/Q98748118"
+          }
+        ]
+      }
+    ]
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Header />
       <main className="flex-1">
         <section className="w-full py-12 md:py-20 lg:py-24">
