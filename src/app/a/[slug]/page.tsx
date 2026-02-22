@@ -181,8 +181,8 @@ export default async function ArticlePage({ params }: { params: { slug: string }
   };
 
   const author = {
-    name: article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Unsere Autoren',
-    subtitle: article.author === 'gastbeitrag' ? 'Von einem externen Autor' : 'Paulik & Reisch',
+    name: article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Paulik & Reisch',
+    subtitle: article.author === 'gastbeitrag' ? 'Von einem externen Autor' : 'Satire-Magazin',
     avatarUrl: article.author === 'gastbeitrag' 
       ? 'https://picsum.photos/seed/guest-author/100/100' 
       : 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522',

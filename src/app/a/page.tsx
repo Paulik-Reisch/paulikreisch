@@ -12,7 +12,6 @@ import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { Metadata, ResolvingMetadata } from 'next';
 
-// Corresponds to .card-featured
 function FeaturedArticleCard({ article }: { article: Article }) {
   const author = {
     name: article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Paulik & Reisch',
@@ -60,7 +59,6 @@ function FeaturedArticleCard({ article }: { article: Article }) {
   );
 }
 
-// Corresponds to .card-standard
 function StandardArticleCard({ article }: { article: Article }) {
     const author = {
         name: article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Paulik & Reisch',
@@ -109,7 +107,6 @@ function StandardArticleCard({ article }: { article: Article }) {
   );
 }
 
-// Corresponds to .list-card
 function ListArticleCard({ article }: { article: Article }) {
   const author = {
     name: article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Paulik & Reisch',
