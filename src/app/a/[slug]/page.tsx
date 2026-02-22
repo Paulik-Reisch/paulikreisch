@@ -1,4 +1,4 @@
-import { getArticleBySlug, getArticles, getSeoMetadata, type Article } from "@/lib/firestore";
+import { getArticleBySlug, getArticles, getSeoMetadata, type Article, getAuthorBySlug, getAuthors, type Author } from "@/lib/firestore";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
@@ -21,14 +21,16 @@ type Props = {
   params: { slug: string }
 }
 
-function ArticleCard({ article }: { article: Article }) {
-    const author = {
-        name: article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Paulik & Reisch',
-        avatarUrl: article.author === 'gastbeitrag' 
+function ArticleCard({ article, author }: { article: Article, author: Author | null }) {
+    const authorDetails = {
+        name: author ? `${author.firstName} ${author.lastName}` : (article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Paulik & Reisch'),
+        avatarUrl: author ? author.profilePictureUrl : (article.author === 'gastbeitrag' 
           ? 'https://picsum.photos/seed/guest-author/100/100' 
-          : 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522',
-        avatarFallback: article.author === 'gastbeitrag' ? 'G' : 'PR',
-    }
+          : 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522'),
+        avatarFallback: author ? `${author.firstName[0]}${author.lastName[0]}` : (article.author === 'gastbeitrag' ? 'G' : 'PR'),
+        slug: author?.slug,
+    };
+
   return (
     <Card className="flex flex-col h-full overflow-hidden group">
       <Link href={`/a/${article.slug}`} className="block overflow-hidden">
@@ -50,13 +52,23 @@ function ArticleCard({ article }: { article: Article }) {
           </Link>
         </div>
         <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
-          <div className="flex items-center gap-2 font-semibold">
-             <Avatar className="h-6 w-6">
-                <AvatarImage src={author.avatarUrl} />
-                <AvatarFallback className="text-xs">{author.avatarFallback}</AvatarFallback>
-            </Avatar>
-            <span>{author.name}</span>
-          </div>
+          {authorDetails.slug ? (
+            <Link href={`/autoren/${authorDetails.slug}`} className="flex items-center gap-2 group/author">
+                <Avatar className="h-6 w-6">
+                    <AvatarImage src={authorDetails.avatarUrl} />
+                    <AvatarFallback className="text-xs">{authorDetails.avatarFallback}</AvatarFallback>
+                </Avatar>
+                <span className="font-semibold group-hover/author:text-primary transition-colors">{authorDetails.name}</span>
+            </Link>
+          ) : (
+            <div className="flex items-center gap-2 font-semibold">
+                <Avatar className="h-6 w-6">
+                    <AvatarImage src={authorDetails.avatarUrl} />
+                    <AvatarFallback className="text-xs">{authorDetails.avatarFallback}</AvatarFallback>
+                </Avatar>
+                <span>{authorDetails.name}</span>
+            </div>
+          )}
           <div className="flex items-center gap-1.5">
             <Calendar className="w-4 h-4" />
             <time dateTime={article.publishedDate}>
@@ -140,15 +152,19 @@ export default async function ArticlePage({ params }: { params: { slug: string }
   const slug = params.slug;
   const session = await getSession();
 
-  const [article, seoData, allArticles] = await Promise.all([
+  const [article, seoData, allArticles, allAuthors] = await Promise.all([
     getArticleBySlug(slug),
     getSeoMetadata(`a-${slug}`),
     getArticles(), // This now only gets published articles
+    getAuthors(),
   ]);
 
   if (!article || (article.status !== 'published' && !session)) {
     notFound();
   }
+
+  const authorsMap = new Map(allAuthors.map(author => [author.slug, author]));
+  const articleAuthor = article.authorSlug ? authorsMap.get(article.authorSlug) : null;
 
   const relatedArticles = allArticles
     .filter(a => a.slug !== slug)
@@ -181,12 +197,11 @@ export default async function ArticlePage({ params }: { params: { slug: string }
   };
 
   const author = {
-    name: article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Paulik & Reisch',
-    subtitle: article.author === 'gastbeitrag' ? 'Von einem externen Autor' : 'Satire-Magazin',
-    avatarUrl: article.author === 'gastbeitrag' 
-      ? 'https://picsum.photos/seed/guest-author/100/100' 
-      : 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522',
-    avatarFallback: article.author === 'gastbeitrag' ? 'G' : 'PR',
+    name: articleAuthor ? `${articleAuthor.firstName} ${articleAuthor.lastName}` : (article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Paulik & Reisch'),
+    subtitle: articleAuthor ? 'Autor bei Paulik & Reisch' : (article.author === 'gastbeitrag' ? 'Von einem externen Autor' : 'Satire-Magazin'),
+    avatarUrl: articleAuthor ? articleAuthor.profilePictureUrl : (article.author === 'gastbeitrag' ? 'https://picsum.photos/seed/guest-author/100/100' : 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522'),
+    avatarFallback: articleAuthor ? `${articleAuthor.firstName[0]}${articleAuthor.lastName[0]}` : (article.author === 'gastbeitrag' ? 'G' : 'PR'),
+    slug: article.authorSlug,
   }
 
   return (
@@ -221,14 +236,29 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                     </div>
 
                     <div className="mt-8 flex items-center gap-4 not-prose">
-                        <Avatar className="h-12 w-12">
-                            <AvatarImage src={author.avatarUrl} alt={`Avatar für ${author.name}`} />
-                            <AvatarFallback>{author.avatarFallback}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                            <p className="font-semibold text-foreground">{author.name}</p>
-                            <p className="text-sm text-muted-foreground">{author.subtitle}</p>
-                        </div>
+                        {author.slug ? (
+                            <Link href={`/autoren/${author.slug}`} className="flex items-center gap-4 group">
+                                <Avatar className="h-12 w-12">
+                                    <AvatarImage src={author.avatarUrl} alt={`Avatar für ${author.name}`} />
+                                    <AvatarFallback>{author.avatarFallback}</AvatarFallback>
+                                </Avatar>
+                                <div>
+                                    <p className="font-semibold text-foreground group-hover:text-primary transition-colors">{author.name}</p>
+                                    <p className="text-sm text-muted-foreground">{author.subtitle}</p>
+                                </div>
+                            </Link>
+                        ) : (
+                            <div className="flex items-center gap-4">
+                                <Avatar className="h-12 w-12">
+                                    <AvatarImage src={author.avatarUrl} alt={`Avatar für ${author.name}`} />
+                                    <AvatarFallback>{author.avatarFallback}</AvatarFallback>
+                                </Avatar>
+                                <div>
+                                    <p className="font-semibold text-foreground">{author.name}</p>
+                                    <p className="text-sm text-muted-foreground">{author.subtitle}</p>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     <div className="mt-8 text-lg text-muted-foreground text-balance prose" dangerouslySetInnerHTML={{ __html: article.teaser }} />
@@ -275,9 +305,10 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                       Das könnte Sie auch interessieren
                   </h2>
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-                      {relatedArticles.map((relatedArticle) => (
-                          <ArticleCard key={relatedArticle.id} article={relatedArticle} />
-                      ))}
+                      {relatedArticles.map((relatedArticle) => {
+                          const relatedAuthor = relatedArticle.authorSlug ? authorsMap.get(relatedArticle.authorSlug) : null;
+                          return <ArticleCard key={relatedArticle.id} article={relatedArticle} author={relatedAuthor ?? null} />
+                      })}
                   </div>
               </section>
             )}

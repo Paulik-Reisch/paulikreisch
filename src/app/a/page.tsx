@@ -1,4 +1,4 @@
-import { getArticles, getSeoMetadata, type Article } from "@/lib/firestore";
+import { getArticles, getSeoMetadata, type Article, getAuthors, type Author } from "@/lib/firestore";
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import Link from "next/link";
@@ -12,13 +12,14 @@ import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { Metadata, ResolvingMetadata } from 'next';
 
-function FeaturedArticleCard({ article }: { article: Article }) {
-  const author = {
-    name: article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Paulik & Reisch',
-    avatarUrl: article.author === 'gastbeitrag' 
+function FeaturedArticleCard({ article, author }: { article: Article, author: Author | null }) {
+  const authorDetails = {
+    name: author ? `${author.firstName} ${author.lastName}` : (article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Paulik & Reisch'),
+    avatarUrl: author ? author.profilePictureUrl : (article.author === 'gastbeitrag' 
       ? 'https://picsum.photos/seed/guest-author/100/100' 
-      : 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522',
-    avatarFallback: article.author === 'gastbeitrag' ? 'G' : 'PR',
+      : 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522'),
+    avatarFallback: author ? `${author.firstName[0]}${author.lastName[0]}` : (article.author === 'gastbeitrag' ? 'G' : 'PR'),
+    slug: author?.slug
   }
 
   return (
@@ -38,13 +39,23 @@ function FeaturedArticleCard({ article }: { article: Article }) {
             {article.title}
           </h2>
           <div className="mt-6 flex items-center gap-4 text-sm text-white/80">
-            <div className="flex items-center gap-2">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src={author.avatarUrl} />
-                <AvatarFallback>{author.avatarFallback}</AvatarFallback>
-              </Avatar>
-              <span className="font-semibold">{author.name}</span>
-            </div>
+            {authorDetails.slug ? (
+                <Link href={`/autoren/${authorDetails.slug}`} className="flex items-center gap-2 group/author" onClick={(e) => e.stopPropagation()}>
+                    <Avatar className="h-8 w-8">
+                        <AvatarImage src={authorDetails.avatarUrl} />
+                        <AvatarFallback>{authorDetails.avatarFallback}</AvatarFallback>
+                    </Avatar>
+                    <span className="font-semibold group-hover/author:underline">{authorDetails.name}</span>
+                </Link>
+            ) : (
+                <div className="flex items-center gap-2">
+                    <Avatar className="h-8 w-8">
+                        <AvatarImage src={authorDetails.avatarUrl} />
+                        <AvatarFallback>{authorDetails.avatarFallback}</AvatarFallback>
+                    </Avatar>
+                    <span className="font-semibold">{authorDetails.name}</span>
+                </div>
+            )}
             <span className="opacity-50">|</span>
              <div className="flex items-center gap-1.5">
                 <Calendar className="w-4 h-4" />
@@ -59,13 +70,14 @@ function FeaturedArticleCard({ article }: { article: Article }) {
   );
 }
 
-function StandardArticleCard({ article }: { article: Article }) {
-    const author = {
-        name: article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Paulik & Reisch',
-        avatarUrl: article.author === 'gastbeitrag' 
+function StandardArticleCard({ article, author }: { article: Article, author: Author | null }) {
+    const authorDetails = {
+        name: author ? `${author.firstName} ${author.lastName}` : (article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Paulik & Reisch'),
+        avatarUrl: author ? author.profilePictureUrl : (article.author === 'gastbeitrag' 
           ? 'https://picsum.photos/seed/guest-author/100/100' 
-          : 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522',
-        avatarFallback: article.author === 'gastbeitrag' ? 'G' : 'PR',
+          : 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522'),
+        avatarFallback: author ? `${author.firstName[0]}${author.lastName[0]}` : (article.author === 'gastbeitrag' ? 'G' : 'PR'),
+        slug: author?.slug
     }
   return (
     <Card className="flex flex-col h-full overflow-hidden group">
@@ -88,13 +100,23 @@ function StandardArticleCard({ article }: { article: Article }) {
           </Link>
         </div>
         <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
-           <div className="flex items-center gap-2">
-              <Avatar className="h-6 w-6">
-                  <AvatarImage src={author.avatarUrl} />
-                  <AvatarFallback className="text-xs">{author.avatarFallback}</AvatarFallback>
-              </Avatar>
-              <span className="font-semibold">{author.name}</span>
-          </div>
+           {authorDetails.slug ? (
+              <Link href={`/autoren/${authorDetails.slug}`} className="flex items-center gap-2 group/author">
+                  <Avatar className="h-6 w-6">
+                      <AvatarImage src={authorDetails.avatarUrl} />
+                      <AvatarFallback className="text-xs">{authorDetails.avatarFallback}</AvatarFallback>
+                  </Avatar>
+                  <span className="font-semibold group-hover/author:text-primary transition-colors">{authorDetails.name}</span>
+              </Link>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Avatar className="h-6 w-6">
+                    <AvatarImage src={authorDetails.avatarUrl} />
+                    <AvatarFallback className="text-xs">{authorDetails.avatarFallback}</AvatarFallback>
+                </Avatar>
+                <span className="font-semibold">{authorDetails.name}</span>
+              </div>
+            )}
           <div className="flex items-center gap-1.5">
             <Calendar className="w-4 h-4" />
             <time dateTime={article.publishedDate}>
@@ -107,13 +129,14 @@ function StandardArticleCard({ article }: { article: Article }) {
   );
 }
 
-function ListArticleCard({ article }: { article: Article }) {
-  const author = {
-    name: article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Paulik & Reisch',
-    avatarUrl: article.author === 'gastbeitrag' 
-      ? 'https://picsum.photos/seed/guest-author/100/100' 
-      : 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522',
-    avatarFallback: article.author === 'gastbeitrag' ? 'G' : 'PR',
+function ListArticleCard({ article, author }: { article: Article, author: Author | null }) {
+  const authorDetails = {
+      name: author ? `${author.firstName} ${author.lastName}` : (article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Paulik & Reisch'),
+      avatarUrl: author ? author.profilePictureUrl : (article.author === 'gastbeitrag' 
+        ? 'https://picsum.photos/seed/guest-author/100/100' 
+        : 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522'),
+      avatarFallback: author ? `${author.firstName[0]}${author.lastName[0]}` : (article.author === 'gastbeitrag' ? 'G' : 'PR'),
+      slug: author?.slug
   }
   return (
     <Link href={`/a/${article.slug}`} className="block">
@@ -121,11 +144,23 @@ function ListArticleCard({ article }: { article: Article }) {
         <div className="flex items-start gap-4">
           <div className="flex-grow">
             <div className="flex items-center gap-2 mb-2">
-                <Avatar className="h-6 w-6">
-                    <AvatarImage src={author.avatarUrl} />
-                    <AvatarFallback className="text-xs">{author.avatarFallback}</AvatarFallback>
-                </Avatar>
-                <span className="text-sm font-semibold group-hover:text-primary transition-colors">{author.name}</span>
+                {authorDetails.slug ? (
+                    <Link href={`/autoren/${authorDetails.slug}`} className="flex items-center gap-2 group/author" onClick={(e) => e.stopPropagation()}>
+                        <Avatar className="h-6 w-6">
+                            <AvatarImage src={authorDetails.avatarUrl} />
+                            <AvatarFallback className="text-xs">{authorDetails.avatarFallback}</AvatarFallback>
+                        </Avatar>
+                        <span className="text-sm font-semibold group-hover/author:text-primary transition-colors">{authorDetails.name}</span>
+                    </Link>
+                ) : (
+                    <div className="flex items-center gap-2">
+                        <Avatar className="h-6 w-6">
+                            <AvatarImage src={authorDetails.avatarUrl} />
+                            <AvatarFallback className="text-xs">{authorDetails.avatarFallback}</AvatarFallback>
+                        </Avatar>
+                        <span className="text-sm font-semibold">{authorDetails.name}</span>
+                    </div>
+                )}
             </div>
             <h3 className="text-lg font-bold font-serifHeadline leading-snug line-clamp-2">
               {article.title}
@@ -188,7 +223,8 @@ export async function generateMetadata(
 
 
 export default async function ArticlesPage() {
-  const articles = await getArticles();
+  const [articles, authors] = await Promise.all([getArticles(), getAuthors()]);
+  const authorsMap = new Map(authors.map(author => [author.slug, author]));
 
   if (articles.length === 0) {
     return (
@@ -255,14 +291,14 @@ export default async function ArticlesPage() {
         <div className="container px-4 md:px-6 space-y-16">
           
           <section>
-             <FeaturedArticleCard article={featuredArticle} />
+             <FeaturedArticleCard article={featuredArticle} author={featuredArticle.authorSlug ? authorsMap.get(featuredArticle.authorSlug) ?? null : null} />
           </section>
 
           {standardArticles.length > 0 && (
             <section>
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 {standardArticles.map(article => (
-                  <StandardArticleCard key={article.id} article={article} />
+                  <StandardArticleCard key={article.id} article={article} author={article.authorSlug ? authorsMap.get(article.authorSlug) ?? null : null} />
                 ))}
               </div>
             </section>
@@ -273,7 +309,7 @@ export default async function ArticlesPage() {
                <h2 className="text-3xl font-bold font-headline text-center mb-8">Weitere Artikel</h2>
                <div className="max-w-3xl mx-auto space-y-4">
                 {listArticles.map(article => (
-                  <ListArticleCard key={article.id} article={article} />
+                  <ListArticleCard key={article.id} article={article} author={article.authorSlug ? authorsMap.get(article.authorSlug) ?? null : null} />
                 ))}
                </div>
             </section>
