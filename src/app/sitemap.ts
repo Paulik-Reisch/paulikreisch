@@ -55,6 +55,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/lp-palabrotas/mehr-erfahren', priority: 0.5 },
     { path: '/vibecoding/anleitung', priority: 0.5 },
     { path: '/wiki/satire', priority: 0.6 },
+    { path: '/wiki/satire-landschaft', priority: 0.8 },
     { path: '/worthaft', priority: 0.8 },
     { path: '/worthaft/ueber', priority: 0.6 },
   ];

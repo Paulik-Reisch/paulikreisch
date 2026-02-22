@@ -97,7 +97,7 @@ export async function generateMetadata(
   }
 
   const previousImages = (await parent).openGraph?.images || []
-  const title = seoData?.title || article.title;
+  const title = seoData?.title || `${article.title} | Paulik & Reisch`;
   const description = seoData?.metaDescription || article.teaser;
   const authors = seoData?.authorName?.split(',').map(s => s.trim()) || ['Philipp Paulik', 'Maximilian Reisch'];
 
@@ -123,7 +123,7 @@ export async function generateMetadata(
     },
     robots: seoData?.robots || 'index, follow',
     openGraph: {
-      title: seoData?.ogTitle || title,
+      title: seoData?.ogTitle || `${article.title} - Paulik & Reisch`,
       description: seoData?.ogDescription || description,
       url: seoData?.canonicalUrl || `/a/${slug}`,
       siteName: seoData?.ogSiteName || 'Paulik & Reisch',
@@ -138,8 +138,8 @@ export async function generateMetadata(
       }
     },
     twitter: {
-      card: seoData?.twitterCard as "summary" | "summary_large_image" | "app" | "player" | undefined || 'summary_large_image',
-      title: seoData?.twitterTitle || title,
+      card: 'summary_large_image',
+      title: seoData?.twitterTitle || `${article.title} - Paulik & Reisch`,
       description: seoData?.twitterDescription || description,
       site: seoData?.twitterSite,
       creator: seoData?.twitterCreator,
