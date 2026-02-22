@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { logoutAction } from "./actions";
 import Link from "next/link";
 import { Logo } from "@/components/ui/logo";
-import { LogOut, Home, Newspaper, BarChart3, Presentation, Sparkles } from "lucide-react";
+import { LogOut, Home, Newspaper, BarChart3, Presentation, Sparkles, Users } from "lucide-react";
 
 export function AdminHeader() {
   return (
@@ -21,6 +21,12 @@ export function AdminHeader() {
                     <Button variant="ghost">
                         <Newspaper className="mr-2 h-4 w-4" />
                         Artikel
+                    </Button>
+                </Link>
+                 <Link href="/admin/authors">
+                    <Button variant="ghost">
+                        <Users className="mr-2 h-4 w-4" />
+                        Autoren
                     </Button>
                 </Link>
                 <Link href="/admin/lp">

@@ -193,6 +193,16 @@ export interface Article {
     status: 'draft' | 'published';
 }
 
+export interface Author {
+    id: string;
+    slug: string;
+    firstName: string;
+    lastName: string;
+    profilePictureUrl: string;
+    bio: string;
+    websiteUrl?: string;
+}
+
 export interface LandingPage {
     id: string;
     slug: string;
@@ -406,6 +416,100 @@ export async function deleteArticle(slug: string, user: string) {
     await addLog(user, 'Artikel gelöscht', `Slug: ${slug}`);
 }
 
+// --- AUTHORS ---
+
+export async function getAuthors(): Promise<Author[]> {
+    const authorsCol = collection(db, 'authors');
+    const q = query(authorsCol, orderBy("lastName", "asc"));
+    const snapshot = await getDocs(q);
+    if (snapshot.empty) {
+        // Create default author if none exist
+        const defaultAuthor: Omit<Author, 'id'> = {
+            slug: 'paulik-reisch',
+            firstName: 'Paulik',
+            lastName: '& Reisch',
+            profilePictureUrl: 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522',
+            bio: 'Satire-Autoren und Meister des alltäglichen Wahnsinns.',
+            websiteUrl: 'https://paulik-reisch.de'
+        };
+        const docRef = doc(db, 'authors', 'paulik-reisch');
+        await setDoc(docRef, defaultAuthor);
+        return [{ id: 'paulik-reisch', ...defaultAuthor }];
+    }
+    return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    } as Author));
+}
+
+export async function getAuthorBySlug(slug: string): Promise<Author | null> {
+    const docRef = doc(db, 'authors', slug);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        return {
+            id: docSnap.id,
+            ...docSnap.data()
+        } as Author;
+    }
+    return null;
+}
+
+export async function addAuthor(authorData: Omit<Author, 'id'>, user: string): Promise<string> {
+    const slug = authorData.slug || `${authorData.firstName}-${authorData.lastName}`.toLowerCase().replace(/\s+/g, '-');
+    const docRef = doc(db, 'authors', slug);
+    
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        throw new Error(`Autor-Slug "${slug}" existiert bereits.`);
+    }
+
+    await setDoc(docRef, { ...authorData, slug });
+    await addLog(user, 'Autor erstellt', `Slug: ${slug}`);
+    return slug;
+}
+
+export async function updateAuthor(originalSlug: string, dataToUpdate: Partial<Omit<Author, 'id'>>, user: string) {
+    const { slug: newSlug, ...restData } = dataToUpdate;
+
+    if (!newSlug || originalSlug === newSlug) {
+        const docRef = doc(db, 'authors', originalSlug);
+        await updateDoc(docRef, restData);
+        await addLog(user, 'Autor aktualisiert', `Slug: ${originalSlug}`);
+    } else {
+        const oldDocRef = doc(db, 'authors', originalSlug);
+        const newDocRef = doc(db, 'authors', newSlug);
+
+        const newDocSnap = await getDoc(newDocRef);
+        if (newDocSnap.exists()) {
+            throw new Error(`Autor-Slug "${newSlug}" existiert bereits.`);
+        }
+
+        const oldDocSnap = await getDoc(oldDocRef);
+        if (!oldDocSnap.exists()) {
+             throw new Error(`Originalautor mit Slug "${originalSlug}" nicht gefunden.`);
+        }
+        
+        const oldData = oldDocSnap.data();
+        const batch = writeBatch(db);
+        
+        const newData = {
+            ...oldData,
+            ...dataToUpdate,
+        };
+
+        batch.set(newDocRef, newData);
+        batch.delete(oldDocRef);
+        
+        await batch.commit();
+        await addLog(user, 'Autor verschoben/aktualisiert', `Von ${originalSlug} zu ${newSlug}`);
+    }
+}
+
+export async function deleteAuthor(slug: string, user: string) {
+    const docRef = doc(db, 'authors', slug);
+    await deleteDoc(docRef);
+    await addLog(user, 'Autor gelöscht', `Slug: ${slug}`);
+}
 
 // --- COUNTDOWN ---
 export async function getCountdownTarget(): Promise<Date> {

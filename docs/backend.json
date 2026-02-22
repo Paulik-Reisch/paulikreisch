@@ -97,6 +97,20 @@
       },
       "required": ["title", "slug", "category", "imageUrl", "teaser", "content", "readTime", "publishedDate", "accessLevel", "status"]
     },
+    "Author": {
+      "title": "Author",
+      "type": "object",
+      "description": "Represents an author of articles.",
+      "properties": {
+        "slug": { "type": "string", "description": "URL-friendly identifier for the author." },
+        "firstName": { "type": "string", "description": "The author's first name." },
+        "lastName": { "type": "string", "description": "The author's last name." },
+        "profilePictureUrl": { "type": "string", "format": "uri", "description": "URL for the author's profile picture." },
+        "bio": { "type": "string", "description": "A short biography of the author." },
+        "websiteUrl": { "type": "string", "format": "uri", "description": "A personal or professional website URL for backlinking." }
+      },
+      "required": ["slug", "firstName", "lastName", "profilePictureUrl", "bio"]
+    },
     "LandingPage": {
       "title": "Landing Page",
       "type": "object",
@@ -176,6 +190,12 @@
         "$ref": "#/entities/Article"
       },
       "description": "Collection of premium satire articles."
+    },
+     "/authors/{authorId}": {
+      "schema": {
+        "$ref": "#/entities/Author"
+      },
+      "description": "Collection of author profiles."
     },
     "/landing_pages/{lpId}": {
       "schema": {
