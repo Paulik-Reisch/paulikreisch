@@ -2,7 +2,7 @@ import { getArticles, getSeoMetadata, type Article } from "@/lib/firestore";
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import Link from "next/link";
-import { ArrowRight, Calendar, Clock, User } from "lucide-react";
+import { ArrowRight, Calendar, Clock } from "lucide-react";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
@@ -63,7 +63,11 @@ function FeaturedArticleCard({ article }: { article: Article }) {
 // Corresponds to .card-standard
 function StandardArticleCard({ article }: { article: Article }) {
     const author = {
-        name: article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'P. & R.',
+        name: article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Paulik & Reisch',
+        avatarUrl: article.author === 'gastbeitrag' 
+          ? 'https://picsum.photos/seed/guest-author/100/100' 
+          : 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522',
+        avatarFallback: article.author === 'gastbeitrag' ? 'G' : 'PR',
     }
   return (
     <Card className="flex flex-col h-full overflow-hidden group">
@@ -85,10 +89,13 @@ function StandardArticleCard({ article }: { article: Article }) {
             </h3>
           </Link>
         </div>
-        <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
-          <div className="flex items-center gap-1.5 font-semibold">
-            <User className="w-4 h-4" />
-            <span>{author.name}</span>
+        <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
+           <div className="flex items-center gap-2">
+              <Avatar className="h-6 w-6">
+                  <AvatarImage src={author.avatarUrl} />
+                  <AvatarFallback className="text-xs">{author.avatarFallback}</AvatarFallback>
+              </Avatar>
+              <span className="font-semibold">{author.name}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <Calendar className="w-4 h-4" />

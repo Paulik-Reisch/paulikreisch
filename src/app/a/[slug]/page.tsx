@@ -7,7 +7,7 @@ import { de } from "date-fns/locale";
 import { type Metadata, type ResolvingMetadata } from 'next'
 import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, ArrowRight, Sparkles, User } from "lucide-react";
+import { Calendar, Clock, ArrowRight, Sparkles } from "lucide-react";
 import { ReadingProgressBar } from "@/components/ui/reading-progress-bar";
 import { ArticleRenderer } from "@/components/article/article-renderer";
 import Link from "next/link";
@@ -23,7 +23,11 @@ type Props = {
 
 function ArticleCard({ article }: { article: Article }) {
     const author = {
-        name: article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'P. & R.',
+        name: article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Paulik & Reisch',
+        avatarUrl: article.author === 'gastbeitrag' 
+          ? 'https://picsum.photos/seed/guest-author/100/100' 
+          : 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522',
+        avatarFallback: article.author === 'gastbeitrag' ? 'G' : 'PR',
     }
   return (
     <Card className="flex flex-col h-full overflow-hidden group">
@@ -45,9 +49,12 @@ function ArticleCard({ article }: { article: Article }) {
             </h3>
           </Link>
         </div>
-        <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
-          <div className="flex items-center gap-1.5 font-semibold">
-            <User className="w-4 h-4" />
+        <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
+          <div className="flex items-center gap-2 font-semibold">
+             <Avatar className="h-6 w-6">
+                <AvatarImage src={author.avatarUrl} />
+                <AvatarFallback className="text-xs">{author.avatarFallback}</AvatarFallback>
+            </Avatar>
             <span>{author.name}</span>
           </div>
           <div className="flex items-center gap-1.5">
