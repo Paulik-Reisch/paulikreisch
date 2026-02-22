@@ -190,6 +190,7 @@ export interface Article {
     publishedDate: string;
     accessLevel: 'free' | 'leadwall' | 'sharewall';
     author?: 'redaktion' | 'gastbeitrag';
+    authorSlug?: string;
     status: 'draft' | 'published';
 }
 
@@ -350,6 +351,23 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
     return null;
 }
 
+export async function getArticlesByAuthorSlug(authorSlug: string): Promise<Article[]> {
+    const articlesCol = collection(db, 'articles');
+    const q = query(articlesCol, where('authorSlug', '==', authorSlug), where('status', '==', 'published'), orderBy('publishedDate', 'desc'));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+            id: doc.id,
+            ...data,
+            slug: doc.id,
+            publishedDate: (data.publishedDate as Timestamp).toDate().toISOString(),
+            author: data.author || 'redaktion',
+            status: data.status || 'published',
+        } as Article;
+    });
+}
+
 
 export async function addArticle(articleData: Omit<Article, 'id' | 'publishedDate' | 'status'>, user: string): Promise<string> {
     const slug = articleData.slug || articleData.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
@@ -366,6 +384,7 @@ export async function addArticle(articleData: Omit<Article, 'id' | 'publishedDat
         publishedDate: Timestamp.now(),
         accessLevel: articleData.accessLevel || 'free',
         author: articleData.author || 'redaktion',
+        authorSlug: articleData.authorSlug || null,
         status: 'draft',
     };
     await setDoc(docRef, dataWithTimestamp);
