@@ -67,8 +67,27 @@ const hw1: Product = {
 };
 
 export default async function Home() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "NewsMediaOrganization",
+    "@id": "https://www.paulik-reisch.de/#organization",
+    "name": "Paulik & Reisch",
+    "url": "https://www.paulik-reisch.de",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522"
+    },
+    "slogan": "Die Speerspitze der modernen Satire",
+    "genre": ["Satire", "Comedy", "News"],
+    "knowsAbout": ["Politiksatire", "Gesellschaftskritik", "Fake News Satire"]
+  };
+
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Header />
       <main className="flex-1">
         <Hero product={hw1} />
