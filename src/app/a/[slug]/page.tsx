@@ -1,4 +1,3 @@
-
 import { getArticleBySlug, getArticles, getSeoMetadata, type Article } from "@/lib/firestore";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/landing/header";
@@ -8,7 +7,7 @@ import { de } from "date-fns/locale";
 import { type Metadata, type ResolvingMetadata } from 'next'
 import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, ArrowRight, Sparkles } from "lucide-react";
+import { Calendar, Clock, ArrowRight, Sparkles, User } from "lucide-react";
 import { ReadingProgressBar } from "@/components/ui/reading-progress-bar";
 import { ArticleRenderer } from "@/components/article/article-renderer";
 import Link from "next/link";
@@ -23,6 +22,9 @@ type Props = {
 }
 
 function ArticleCard({ article }: { article: Article }) {
+    const author = {
+        name: article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'P. & R.',
+    }
   return (
     <Card className="flex flex-col h-full overflow-hidden group">
       <Link href={`/a/${article.slug}`} className="block overflow-hidden">
@@ -36,36 +38,24 @@ function ArticleCard({ article }: { article: Article }) {
       </Link>
       <CardContent className="p-6 flex flex-col flex-grow">
         <div className="flex-grow">
-          <div className="flex justify-between items-center mb-2">
-            <Badge variant="secondary">{article.category}</Badge>
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
-              <div className="flex items-center gap-1.5">
-                <Calendar className="w-4 h-4" />
-                <time dateTime={article.publishedDate}>
-                  {format(new Date(article.publishedDate), "dd. MMM yyyy", { locale: de })}
-                </time>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Clock className="w-4 h-4" />
-                <span>{article.readTime} min</span>
-              </div>
-            </div>
-          </div>
-          <Link href={`/a/${article.slug}`}>
-            <h3 className="text-2xl font-bold font-serifHeadline tracking-tight leading-snug group-hover:text-primary transition-colors line-clamp-2">
+          <Badge variant="secondary">{article.category}</Badge>
+          <Link href={`/a/${article.slug}`} className="mt-2 block">
+            <h3 className="text-xl font-bold font-serifHeadline tracking-tight leading-snug group-hover:text-primary transition-colors line-clamp-2">
               {article.title}
             </h3>
           </Link>
-          <p className="mt-3 text-muted-foreground line-clamp-3 text-balance">
-            {article.teaser}
-          </p>
         </div>
-        <div className="mt-6">
-          <Link href={`/a/${article.slug}`}>
-            <Button variant="link" className="p-0 h-auto">
-              Weiterlesen <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+        <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
+          <div className="flex items-center gap-1.5 font-semibold">
+            <User className="w-4 h-4" />
+            <span>{author.name}</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Calendar className="w-4 h-4" />
+            <time dateTime={article.publishedDate}>
+              {format(new Date(article.publishedDate), "dd. MMM yyyy", { locale: de })}
+            </time>
+          </div>
         </div>
       </CardContent>
     </Card>
@@ -290,5 +280,3 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     </div>
   );
 }
-
-    

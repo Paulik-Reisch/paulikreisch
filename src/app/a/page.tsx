@@ -1,18 +1,70 @@
-
 import { getArticles, getSeoMetadata, type Article } from "@/lib/firestore";
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import Link from "next/link";
-import { ArrowRight, Calendar, Clock } from "lucide-react";
+import { ArrowRight, Calendar, Clock, User } from "lucide-react";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
-import type { Metadata, ResolvingMetadata } from 'next'
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import type { Metadata, ResolvingMetadata } from 'next';
 
-function ArticleCard({ article }: { article: Article }) {
+// Corresponds to .card-featured
+function FeaturedArticleCard({ article }: { article: Article }) {
+  const author = {
+    name: article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Paulik & Reisch',
+    avatarUrl: article.author === 'gastbeitrag' 
+      ? 'https://picsum.photos/seed/guest-author/100/100' 
+      : 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522',
+    avatarFallback: article.author === 'gastbeitrag' ? 'G' : 'PR',
+  }
+
+  return (
+    <Link href={`/a/${article.slug}`} className="block group">
+      <Card className="relative min-h-[450px] text-white overflow-hidden flex flex-col justify-end">
+        <Image
+          src={article.imageUrl}
+          alt={article.imageAlt}
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-105 -z-10"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent z-0" />
+        <CardContent className="relative z-10 p-8">
+          <Badge variant="secondary" className="mb-4 bg-white/20 text-white border-transparent">{article.category}</Badge>
+          <h2 className="text-3xl lg:text-4xl font-bold font-serifHeadline tracking-tight leading-snug line-clamp-3">
+            {article.title}
+          </h2>
+          <div className="mt-6 flex items-center gap-4 text-sm text-white/80">
+            <div className="flex items-center gap-2">
+              <Avatar className="h-8 w-8">
+                <AvatarImage src={author.avatarUrl} />
+                <AvatarFallback>{author.avatarFallback}</AvatarFallback>
+              </Avatar>
+              <span className="font-semibold">{author.name}</span>
+            </div>
+            <span className="opacity-50">|</span>
+             <div className="flex items-center gap-1.5">
+                <Calendar className="w-4 h-4" />
+                <time dateTime={article.publishedDate}>
+                  {format(new Date(article.publishedDate), "dd. MMM yyyy", { locale: de })}
+                </time>
+              </div>
+          </div>
+        </CardContent>
+      </Card>
+    </Link>
+  );
+}
+
+// Corresponds to .card-standard
+function StandardArticleCard({ article }: { article: Article }) {
+    const author = {
+        name: article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'P. & R.',
+    }
   return (
     <Card className="flex flex-col h-full overflow-hidden group">
       <Link href={`/a/${article.slug}`} className="block overflow-hidden">
@@ -26,39 +78,71 @@ function ArticleCard({ article }: { article: Article }) {
       </Link>
       <CardContent className="p-6 flex flex-col flex-grow">
         <div className="flex-grow">
-          <div className="flex justify-between items-center mb-2">
-            <Badge variant="secondary">{article.category}</Badge>
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
-              <div className="flex items-center gap-1.5">
-                <Calendar className="w-4 h-4" />
-                <time dateTime={article.publishedDate}>
-                  {format(new Date(article.publishedDate), "dd. MMM yyyy", { locale: de })}
-                </time>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Clock className="w-4 h-4" />
-                <span>{article.readTime} min</span>
-              </div>
-            </div>
-          </div>
-          <Link href={`/a/${article.slug}`}>
-            <h3 className="text-2xl font-bold font-serifHeadline tracking-tight leading-snug group-hover:text-primary transition-colors line-clamp-2">
+          <Badge variant="secondary">{article.category}</Badge>
+          <Link href={`/a/${article.slug}`} className="mt-2 block">
+            <h3 className="text-xl font-bold font-serifHeadline tracking-tight leading-snug group-hover:text-primary transition-colors line-clamp-2">
               {article.title}
             </h3>
           </Link>
-          <p className="mt-3 text-muted-foreground line-clamp-3 text-balance">
-            {article.teaser}
-          </p>
         </div>
-        <div className="mt-6">
-          <Link href={`/a/${article.slug}`}>
-            <Button variant="link" className="p-0 h-auto">
-              Weiterlesen <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+        <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
+          <div className="flex items-center gap-1.5 font-semibold">
+            <User className="w-4 h-4" />
+            <span>{author.name}</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Calendar className="w-4 h-4" />
+            <time dateTime={article.publishedDate}>
+              {format(new Date(article.publishedDate), "dd. MMM yyyy", { locale: de })}
+            </time>
+          </div>
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+// Corresponds to .list-card
+function ListArticleCard({ article }: { article: Article }) {
+  const author = {
+    name: article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Paulik & Reisch',
+    avatarUrl: article.author === 'gastbeitrag' 
+      ? 'https://picsum.photos/seed/guest-author/100/100' 
+      : 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522',
+    avatarFallback: article.author === 'gastbeitrag' ? 'G' : 'PR',
+  }
+  return (
+    <Link href={`/a/${article.slug}`} className="block">
+      <Card className="p-4 hover:bg-muted transition-colors group">
+        <div className="flex items-start gap-4">
+          <div className="flex-grow">
+            <div className="flex items-center gap-2 mb-2">
+                <Avatar className="h-6 w-6">
+                    <AvatarImage src={author.avatarUrl} />
+                    <AvatarFallback className="text-xs">{author.avatarFallback}</AvatarFallback>
+                </Avatar>
+                <span className="text-sm font-semibold group-hover:text-primary transition-colors">{author.name}</span>
+            </div>
+            <h3 className="text-lg font-bold font-serifHeadline leading-snug line-clamp-2">
+              {article.title}
+            </h3>
+             <div className="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
+                <Badge variant="outline">{article.category}</Badge>
+                <time dateTime={article.publishedDate}>
+                  {format(new Date(article.publishedDate), "dd. MMM yyyy", { locale: de })}
+                </time>
+             </div>
+          </div>
+          <Image
+            src={article.imageUrl}
+            alt={article.imageAlt}
+            width={100}
+            height={100}
+            className="rounded-md object-cover aspect-square"
+          />
+        </div>
+      </Card>
+    </Link>
   );
 }
 
@@ -101,7 +185,26 @@ export async function generateMetadata(
 
 export default async function ArticlesPage() {
   const articles = await getArticles();
+
+  if (articles.length === 0) {
+    return (
+      <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
+        <Header />
+        <main className="flex-1 py-12 md:py-20">
+          <div className="container px-4 md:px-6 text-center">
+            <h1 className="text-2xl font-bold">Keine Artikel gefunden</h1>
+            <p className="text-muted-foreground">Die Autoren sind wahrscheinlich im Urlaub.</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
   
+  const featuredArticle = articles[0];
+  const standardArticles = articles.slice(1, 5);
+  const listArticles = articles.slice(5);
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
@@ -145,13 +248,32 @@ export default async function ArticlesPage() {
       />
       <Header />
       <main className="flex-1 py-12 md:py-20">
-        <div className="container px-4 md:px-6">
+        <div className="container px-4 md:px-6 space-y-16">
           
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {articles.map(article => (
-              <ArticleCard key={article.id} article={article} />
-            ))}
-          </div>
+          <section>
+             <FeaturedArticleCard article={featuredArticle} />
+          </section>
+
+          {standardArticles.length > 0 && (
+            <section>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {standardArticles.map(article => (
+                  <StandardArticleCard key={article.id} article={article} />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {listArticles.length > 0 && (
+            <section>
+               <h2 className="text-3xl font-bold font-headline text-center mb-8">Weitere Artikel</h2>
+               <div className="max-w-3xl mx-auto space-y-4">
+                {listArticles.map(article => (
+                  <ListArticleCard key={article.id} article={article} />
+                ))}
+               </div>
+            </section>
+          )}
 
         </div>
       </main>
@@ -159,5 +281,3 @@ export default async function ArticlesPage() {
     </div>
   );
 }
-
-    
