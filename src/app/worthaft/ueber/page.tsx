@@ -3,25 +3,6 @@ import { Footer } from "@/components/landing/footer";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-    title: 'Über Worthaft | Spielregeln & Hintergrund',
-    description: 'Erfahren Sie alles über Worthaft, die satirische Wordle-Hommage von Paulik & Reisch. So funktionieren die Regeln für unser tägliches deutsches Worträtsel.',
-    alternates: {
-        canonical: '/worthaft/ueber',
-    },
-    openGraph: {
-        title: 'Über Worthaft | Spielregeln & Hintergrund',
-        description: 'Eine Anleitung zu Worthaft, dem täglichen Worträtsel von Paulik & Reisch.',
-        url: 'https://paulik-reisch.de/worthaft/ueber',
-        type: 'article',
-    },
-    twitter: {
-        title: 'Über Worthaft | Spielregeln & Hintergrund',
-        description: 'So funktioniert Worthaft, das tägliche Worträtsel von Paulik & Reisch.',
-    }
-};
 
 export default function AboutWorthaftPage() {
   const jsonLd = {
