@@ -110,7 +110,7 @@ export default async function ArticlesPage() {
           <header className="text-center mb-12">
               <Badge>Magazin</Badge>
               <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl mt-4 text-balance">
-                  Archiv des Wahnsinns
+                  Paulik & Reisch Satire Magazin
               </h1>
               <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl mt-4 text-balance">
                   Stöbern Sie durch unsere Sammlung satirischer Meisterwerke. Frisch aus der Feder der Zyniker.
