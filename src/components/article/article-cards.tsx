@@ -22,50 +22,52 @@ export function FeaturedArticleCard({ article, author }: { article: Article, aut
   }
 
   return (
-    <Link href={`/a/${article.slug}`} className="block group">
-      <div className="relative min-h-[450px] text-white overflow-hidden rounded-lg shadow-sm flex flex-col justify-end">
-        <Image
-          src={article.imageUrl}
-          alt={article.imageAlt}
-          fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105 z-0"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent z-10" />
-        <div className="relative z-20 p-8">
-          <Badge variant="secondary" className="mb-4 bg-white/20 text-white border-transparent">{article.category}</Badge>
-          <h2 className="text-3xl lg:text-4xl font-bold font-serifHeadline tracking-tight leading-snug line-clamp-3">
-            {article.title}
-          </h2>
-          <div className="mt-6 flex items-center gap-4 text-sm text-white/80">
-            {authorDetails.slug ? (
-                <Link href={`/autoren/${authorDetails.slug}`} className="flex items-center gap-2 group/author" onClick={(e) => e.stopPropagation()}>
-                    <Avatar className="h-8 w-8">
-                        <AvatarImage src={authorDetails.avatarUrl} />
-                        <AvatarFallback>{authorDetails.avatarFallback}</AvatarFallback>
-                    </Avatar>
-                    <span className="font-semibold group-hover/author:underline">{authorDetails.name}</span>
-                </Link>
-            ) : (
-                <div className="flex items-center gap-2">
-                    <Avatar className="h-8 w-8">
-                        <AvatarImage src={authorDetails.avatarUrl} />
-                        <AvatarFallback>{authorDetails.avatarFallback}</AvatarFallback>
-                    </Avatar>
-                    <span className="font-semibold">{authorDetails.name}</span>
-                </div>
-            )}
-            <span className="opacity-50">|</span>
-             <div className="flex items-center gap-1.5">
-                <Calendar className="w-4 h-4" />
-                <time dateTime={article.publishedDate}>
-                  {format(new Date(article.publishedDate), "dd. MMM yyyy", { locale: de })}
-                </time>
+    <div className="group relative min-h-[450px] text-white overflow-hidden rounded-lg shadow-sm flex flex-col justify-end">
+      {/* This link is an overlay for the whole card */}
+      <Link href={`/a/${article.slug}`} className="absolute inset-0 z-10" aria-label={`Zum Artikel: ${article.title}`}/>
+      
+      <Image
+        src={article.imageUrl}
+        alt={article.imageAlt}
+        fill
+        className="object-cover transition-transform duration-500 group-hover:scale-105 z-0"
+        priority
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent z-0" />
+      <div className="relative z-20 p-8">
+        <Badge variant="secondary" className="mb-4 bg-white/20 text-white border-transparent">{article.category}</Badge>
+        <h2 className="text-3xl lg:text-4xl font-bold font-serifHeadline tracking-tight leading-snug line-clamp-3">
+          {article.title}
+        </h2>
+        <div className="mt-6 flex items-center gap-4 text-sm text-white/80">
+          {authorDetails.slug ? (
+              // This link needs a higher z-index to be clickable over the overlay
+              <Link href={`/autoren/${authorDetails.slug}`} className="relative z-20 flex items-center gap-2 group/author">
+                  <Avatar className="h-8 w-8">
+                      <AvatarImage src={authorDetails.avatarUrl} />
+                      <AvatarFallback>{authorDetails.avatarFallback}</AvatarFallback>
+                  </Avatar>
+                  <span className="font-semibold group-hover/author:underline">{authorDetails.name}</span>
+              </Link>
+          ) : (
+              <div className="flex items-center gap-2">
+                  <Avatar className="h-8 w-8">
+                      <AvatarImage src={authorDetails.avatarUrl} />
+                      <AvatarFallback>{authorDetails.avatarFallback}</AvatarFallback>
+                  </Avatar>
+                  <span className="font-semibold">{authorDetails.name}</span>
               </div>
-          </div>
+          )}
+          <span className="opacity-50">|</span>
+           <div className="flex items-center gap-1.5">
+              <Calendar className="w-4 h-4" />
+              <time dateTime={article.publishedDate}>
+                {format(new Date(article.publishedDate), "dd. MMM yyyy", { locale: de })}
+              </time>
+            </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
 
@@ -138,13 +140,14 @@ export function ListArticleCard({ article, author }: { article: Article, author:
       slug: author?.slug
   }
   return (
-    <Link href={`/a/${article.slug}`} className="block">
-      <Card className="p-4 hover:bg-muted transition-colors group">
+    <div className="relative group">
+      <Link href={`/a/${article.slug}`} className="absolute inset-0 z-10" aria-label={`Zum Artikel: ${article.title}`}/>
+      <Card className="p-4 group-hover:bg-muted transition-colors">
         <div className="flex items-start gap-4">
           <div className="flex-grow">
             <div className="flex items-center gap-2 mb-2">
                 {authorDetails.slug ? (
-                    <Link href={`/autoren/${authorDetails.slug}`} className="flex items-center gap-2 group/author" onClick={(e) => e.stopPropagation()}>
+                    <Link href={`/autoren/${authorDetails.slug}`} className="relative z-20 flex items-center gap-2 group/author">
                         <Avatar className="h-6 w-6">
                             <AvatarImage src={authorDetails.avatarUrl} />
                             <AvatarFallback className="text-xs">{authorDetails.avatarFallback}</AvatarFallback>
@@ -152,7 +155,7 @@ export function ListArticleCard({ article, author }: { article: Article, author:
                         <span className="text-sm font-semibold group-hover/author:text-primary transition-colors">{authorDetails.name}</span>
                     </Link>
                 ) : (
-                    <div className="flex items-center gap-2">
+                    <div className="relative z-20 flex items-center gap-2">
                         <Avatar className="h-6 w-6">
                             <AvatarImage src={authorDetails.avatarUrl} />
                             <AvatarFallback className="text-xs">{authorDetails.avatarFallback}</AvatarFallback>
@@ -180,6 +183,6 @@ export function ListArticleCard({ article, author }: { article: Article, author:
           />
         </div>
       </Card>
-    </Link>
+    </div>
   );
 }
