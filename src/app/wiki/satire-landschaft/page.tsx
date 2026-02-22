@@ -1,3 +1,4 @@
+
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import type { Metadata } from 'next';
@@ -42,7 +43,23 @@ export default function SatireLandschaftPage() {
             },
             "slogan": "Die Speerspitze der modernen Satire",
             "genre": ["Satire", "Comedy", "News"],
-            "knowsAbout": ["Politiksatire", "Gesellschaftskritik", "Fake News Satire"]
+            "knowsAbout": ["Politiksatire", "Gesellschaftskritik", "Fake News Satire"],
+            "hasPart": [
+                {
+                  "@type": "WebPage",
+                  "@id": "https://www.paulik-reisch.de/a",
+                  "name": "Paulik & Reisch Satire Magazin",
+                  "url": "https://www.paulik-reisch.de/a",
+                  "description": "Eine kuratierte Sammlung satirischer Meisterwerke, die den alltäglichen Wahnsinn auf die Schippe nehmen."
+                },
+                {
+                  "@type": "WebPage",
+                  "@id": "https://www.paulik-reisch.de/autoren",
+                  "name": "Unsere Autoren",
+                  "url": "https://www.paulik-reisch.de/autoren",
+                  "description": "Lernen Sie die kreativen Köpfe hinter den satirischen Artikeln und Büchern von Paulik & Reisch kennen."
+                }
+              ]
           },
           {
             "@type": "Article",
