@@ -31,15 +31,14 @@ export function FeaturedArticleCard({ article, author }: { article: Article, aut
         priority
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent z-10" />
-
-      {/* This link is an overlay for the whole card */}
-      <Link href={`/a/${article.slug}`} className="absolute inset-0 z-20" aria-label={`Zum Artikel: ${article.title}`}/>
       
       <div className="relative z-30 flex flex-col justify-end h-full p-8">
         <Badge variant="secondary" className="mb-4 bg-white/20 text-white border-transparent self-start">{article.category}</Badge>
-        <h2 className="text-3xl lg:text-4xl font-bold font-serifHeadline tracking-tight leading-snug line-clamp-3 text-left">
-          {article.title}
-        </h2>
+        <Link href={`/a/${article.slug}`}>
+          <h2 className="text-3xl lg:text-4xl font-bold font-serifHeadline tracking-tight leading-snug line-clamp-3 text-left group-hover:underline">
+            {article.title}
+          </h2>
+        </Link>
         <div className="mt-6 flex items-center gap-4 text-sm text-white/80">
           {authorDetails.slug ? (
               // This link is inside a z-30 container, so it is clickable over the z-20 overlay link
@@ -141,9 +140,7 @@ export function ListArticleCard({ article, author }: { article: Article, author:
       slug: author?.slug
   }
   return (
-    <div className="relative group">
-      <Link href={`/a/${article.slug}`} className="absolute inset-0 z-10" aria-label={`Zum Artikel: ${article.title}`}/>
-      <Card className="p-4 group-hover:bg-muted transition-colors">
+    <Card className="p-4 group hover:bg-muted transition-colors">
         <div className="flex items-start gap-4">
           <div className="flex-grow">
             <div className="flex items-center gap-2 mb-2">
@@ -165,9 +162,11 @@ export function ListArticleCard({ article, author }: { article: Article, author:
                     </div>
                 )}
             </div>
-            <h3 className="text-lg font-bold font-serifHeadline leading-snug line-clamp-2">
-              {article.title}
-            </h3>
+             <Link href={`/a/${article.slug}`}>
+                <h3 className="text-lg font-bold font-serifHeadline leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+                {article.title}
+                </h3>
+             </Link>
              <div className="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
                 <Badge variant="outline">{article.category}</Badge>
                 <time dateTime={article.publishedDate}>
@@ -175,15 +174,16 @@ export function ListArticleCard({ article, author }: { article: Article, author:
                 </time>
              </div>
           </div>
-          <Image
-            src={article.imageUrl}
-            alt={article.imageAlt}
-            width={100}
-            height={100}
-            className="rounded-md object-cover aspect-square"
-          />
+           <Link href={`/a/${article.slug}`} className="block flex-shrink-0">
+                <Image
+                    src={article.imageUrl}
+                    alt={article.imageAlt}
+                    width={100}
+                    height={100}
+                    className="rounded-md object-cover aspect-square"
+                />
+            </Link>
         </div>
       </Card>
-    </div>
   );
 }
