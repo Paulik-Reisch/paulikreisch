@@ -1,3 +1,4 @@
+
 import { getArticleBySlug, getArticles, getSeoMetadata, type Article, getAuthorBySlug, getAuthors, type Author } from "@/lib/firestore";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/landing/header";
@@ -45,11 +46,9 @@ function ArticleCard({ article, author }: { article: Article, author: Author | n
       <CardContent className="p-6 flex flex-col flex-grow">
         <div className="flex-grow">
           <Badge variant="secondary">{article.category}</Badge>
-          <Link href={`/a/${article.slug}`} className="mt-2 block">
-            <h3 className="text-xl font-bold font-serifHeadline tracking-tight leading-snug group-hover:text-primary transition-colors line-clamp-2">
-              {article.title}
-            </h3>
-          </Link>
+          <h3 className="text-xl font-bold font-serifHeadline tracking-tight leading-snug group-hover:text-primary transition-colors line-clamp-2 mt-2">
+            {article.title}
+          </h3>
         </div>
         <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
           {authorDetails.slug ? (
@@ -97,7 +96,7 @@ export async function generateMetadata(
   }
 
   const previousImages = (await parent).openGraph?.images || []
-  const title = seoData?.title || `${article.title} | Paulik & Reisch`;
+  const title = `[PUNCHLINE] - ${seoData?.title || article.title} | Paulik & Reisch`;
   const description = seoData?.metaDescription || article.teaser;
   const authors = seoData?.authorName?.split(',').map(s => s.trim()) || ['Philipp Paulik', 'Maximilian Reisch'];
 
@@ -170,6 +169,18 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     .filter(a => a.slug !== slug)
     .slice(0, 3);
 
+  const authorLd = articleAuthor
+    ? {
+        '@type': 'Person',
+        name: `${articleAuthor.firstName} ${articleAuthor.lastName}`,
+        url: `https://paulik-reisch.de/autoren/${articleAuthor.slug}`
+      }
+    : {
+        '@type': 'Organization',
+        name: 'Paulik & Reisch',
+        url: 'https://paulik-reisch.de'
+      };
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': seoData?.articleType || 'SatiricalArticle',
@@ -180,13 +191,11 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     headline: seoData?.title || article.title,
     description: seoData?.metaDescription || article.teaser,
     image: seoData?.ogImage || article.imageUrl,
-    author: {
-      '@type': 'Person',
-      name: seoData?.authorName || 'Paulik & Reisch',
-    },
+    author: authorLd,
     publisher: {
       '@type': 'Organization',
       name: seoData?.publisher || 'Paulik & Reisch',
+      url: 'https://paulik-reisch.de',
       logo: {
         '@type': 'ImageObject',
         url: 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522',
@@ -318,3 +327,5 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     </div>
   );
 }
+
+    

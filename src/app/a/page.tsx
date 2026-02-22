@@ -1,3 +1,4 @@
+
 import { getArticles, getSeoMetadata, type Article, getAuthors, type Author } from "@/lib/firestore";
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
@@ -78,22 +79,40 @@ export default async function ArticlesPage() {
     },
     'mainEntity': {
       '@type': 'ItemList',
-      'itemListElement': articles.map((article, index) => ({
-        '@type': 'ListItem',
-        'position': index + 1,
-        'item': {
-          '@type': 'Article',
-          'headline': article.title,
-          'url': `https://paulik-reisch.de/a/${article.slug}`,
-          'image': article.imageUrl,
-          'datePublished': article.publishedDate,
-          'author': [
-            { "@type": "Person", "name": "Philipp Paulik" },
-            { "@type": "Person", "name": "Maximilian Reisch" }
-          ],
-          'description': article.teaser
-        }
-      })),
+      'itemListElement': articles.map((article, index) => {
+        const articleAuthor = article.authorSlug ? authorsMap.get(article.authorSlug) : null;
+        const authorLd = articleAuthor ? {
+          '@type': 'Person',
+          name: `${articleAuthor.firstName} ${articleAuthor.lastName}`,
+          url: `https://paulik-reisch.de/autoren/${articleAuthor.slug}`
+        } : {
+          '@type': 'Organization',
+          name: 'Paulik & Reisch',
+          url: 'https://paulik-reisch.de'
+        };
+
+        return {
+          '@type': 'ListItem',
+          'position': index + 1,
+          'item': {
+            '@type': 'Article',
+            'headline': article.title,
+            'url': `https://paulik-reisch.de/a/${article.slug}`,
+            'image': article.imageUrl,
+            'datePublished': article.publishedDate,
+            'author': authorLd,
+            'publisher': {
+                '@type': 'Organization',
+                'name': 'Paulik & Reisch',
+                'logo': {
+                    '@type': 'ImageObject',
+                    'url': 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522'
+                }
+            },
+            'description': article.teaser
+          }
+        };
+      }),
     }
   };
 
@@ -130,3 +149,5 @@ export default async function ArticlesPage() {
     </div>
   );
 }
+
+    

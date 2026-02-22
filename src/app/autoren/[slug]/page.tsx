@@ -190,3 +190,5 @@ export default async function AuthorPage({ params }: Props) {
     </div>
   );
 }
+
+    

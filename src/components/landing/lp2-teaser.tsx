@@ -1,53 +1,20 @@
+
 import Link from 'next/link';
-import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
-import { Button } from '@/components/ui/button';
 import { ArrowRight, Clock } from 'lucide-react';
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from '@/components/ui/button';
 import { Badge } from "@/components/ui/badge";
 import { getArticles, type Article } from '@/lib/firestore';
+import { StandardArticleCard } from '../article/article-cards';
+import { getAuthors, type Author } from "@/lib/firestore";
 
-function PinterestArticleCard({ article }: { article: Article }) {
-  return (
-    <Card className="flex flex-col h-full overflow-hidden group break-inside-avoid">
-      <Link href={`/a/${article.slug}`} className="block overflow-hidden">
-        <Image
-          src={article.imageUrl}
-          alt={article.imageAlt}
-          width={500}
-          height={500}
-          className="w-full h-auto transition-transform duration-500 group-hover:scale-105"
-        />
-      </Link>
-      <CardContent className="p-4 flex flex-col flex-grow">
-        <div className="flex-grow">
-          <Badge variant="secondary" className="mb-2">{article.category}</Badge>
-          <Link href={`/a/${article.slug}`}>
-            <h3 className="text-lg font-bold font-serifHeadline leading-snug group-hover:text-primary transition-colors line-clamp-2">
-              {article.title}
-            </h3>
-          </Link>
-          <p className="mt-2 text-sm text-muted-foreground line-clamp-3 text-balance">
-            {article.teaser}
-          </p>
-        </div>
-        <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
-           <Link href={`/a/${article.slug}`}>
-            <Button variant="link" className="p-0 h-auto text-xs">
-              Weiterlesen <ArrowRight className="ml-1 h-3 w-3" />
-            </Button>
-          </Link>
-          <div className="flex items-center gap-1.5">
-            <Clock className="w-3 h-3" />
-            <span>{article.readTime} min</span>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
 
 export async function LP2Teaser() {
-  const articles = await getArticles();
+  const [articles, authors] = await Promise.all([getArticles(), getAuthors()]);
+  const authorsMap = new Map(authors.map(author => [author.slug, author]));
+
+  if (articles.length === 0) {
+    return null;
+  }
 
   return (
     <section id="premium-teaser" aria-labelledby="premium-teaser-heading" className="w-full py-20 md:py-24 lg:py-32 bg-background text-foreground">
@@ -63,16 +30,10 @@ export async function LP2Teaser() {
           </div>
         </div>
         
-        <div className="relative">
-          <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-background to-transparent z-10 pointer-events-none" />
-
-          <div className="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-4 space-y-4">
-            {articles.map((article) => (
-              <PinterestArticleCard key={article.id} article={article} />
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {articles.slice(0, 6).map(article => (
+                <StandardArticleCard key={article.id} article={article} author={article.authorSlug ? authorsMap.get(article.authorSlug) ?? null : null} />
             ))}
-          </div>
-          
-          <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-background to-transparent z-10 pointer-events-none" />
         </div>
 
         <div className="mt-12 text-center">
@@ -88,3 +49,5 @@ export async function LP2Teaser() {
     </section>
   );
 }
+
+    

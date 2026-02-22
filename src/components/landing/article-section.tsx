@@ -1,134 +1,17 @@
-import { ArrowRight, Calendar, Clock } from "lucide-react";
+
 import Link from "next/link";
-import { format } from "date-fns";
-import { de } from "date-fns/locale";
 import { getArticles, type Article } from "@/lib/firestore";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
-
-function ArticleCard({ article }: { article: Article }) {
-  return (
-    <Card className="flex flex-col h-full overflow-hidden group">
-      <Link href={`/a/${article.slug}`} className="block overflow-hidden">
-        <Image
-          src={article.imageUrl}
-          alt={article.imageAlt}
-          width={800}
-          height={450}
-          className="aspect-video object-cover w-full transition-transform duration-500 group-hover:scale-105"
-        />
-      </Link>
-      <CardContent className="p-6 flex flex-col flex-grow">
-        <div className="flex-grow">
-          <div className="flex justify-between items-center mb-2">
-            <Badge variant="secondary">{article.category}</Badge>
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
-              <div className="flex items-center gap-1.5">
-                <Calendar className="w-4 h-4" />
-                <time dateTime={article.publishedDate}>
-                  {format(new Date(article.publishedDate), "dd. MMM yyyy", { locale: de })}
-                </time>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Clock className="w-4 h-4" />
-                <span>{article.readTime} min</span>
-              </div>
-            </div>
-          </div>
-          <Link href={`/a/${article.slug}`}>
-            <h3 className="text-2xl font-bold font-serifHeadline tracking-tight leading-snug group-hover:text-primary transition-colors line-clamp-2">
-              {article.title}
-            </h3>
-          </Link>
-          <p className="mt-3 text-muted-foreground line-clamp-3 text-balance">
-            {article.teaser}
-          </p>
-        </div>
-        <div className="mt-6">
-          <Link href={`/a/${article.slug}`}>
-            <Button variant="link" className="p-0 h-auto">
-              Weiterlesen <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-function FeaturedArticleCard({ article }: { article: Article }) {
-    return (
-        <Card className="overflow-hidden group w-full">
-            <div className="grid md:grid-cols-2">
-                <div className="order-2 md:order-1">
-                    <CardContent className="p-6 sm:p-8 flex flex-col h-full">
-                        <div className="flex-grow">
-                            <Badge>Neuester Artikel</Badge>
-                            <Link href={`/a/${article.slug}`} className="mt-4 block">
-                                <h3 className="text-3xl lg:text-4xl font-bold font-serifHeadline tracking-tight leading-snug group-hover:text-primary transition-colors text-balance">
-                                    {article.title}
-                                </h3>
-                            </Link>
-                            <p className="mt-4 text-muted-foreground line-clamp-3 text-balance">
-                                {article.teaser}
-                            </p>
-                        </div>
-                        <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
-                            <div className="flex items-center gap-1.5">
-                                <Calendar className="w-4 h-4" />
-                                <time dateTime={article.publishedDate}>
-                                {format(new Date(article.publishedDate), "dd. MMMM yyyy", { locale: de })}
-                                </time>
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                                <Clock className="w-4 h-4" />
-                                <span>{article.readTime} min Lesezeit</span>
-                            </div>
-                        </div>
-                         <div className="mt-6">
-                            <Link href={`/a/${article.slug}`}>
-                                <Button>
-                                Jetzt lesen <ArrowRight className="ml-2 h-4 w-4" />
-                                </Button>
-                            </Link>
-                        </div>
-                    </CardContent>
-                </div>
-                 <div className="order-1 md:order-2 overflow-hidden aspect-video md:aspect-auto">
-                     <Link href={`/a/${article.slug}`} className="block h-full">
-                        <Image
-                            src={article.imageUrl}
-                            alt={article.imageAlt}
-                            width={800}
-                            height={600}
-                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                    </Link>
-                </div>
-            </div>
-        </Card>
-    );
-}
+import { StandardArticleCard } from "../article/article-cards";
+import { getAuthors, type Author } from "@/lib/firestore";
 
 
 export async function ArticleSection() {
-  const articles = await getArticles();
+  const [articles, authors] = await Promise.all([getArticles(), getAuthors()]);
+  const authorsMap = new Map(authors.map(author => [author.slug, author]));
   
   if (articles.length === 0) {
     return null;
   }
-
-  const latestArticle = articles[0];
-  const otherArticles = articles.slice(1);
   
   return (
     <section id="articles" aria-labelledby="articles-heading" className="w-full py-20 md:py-24 lg:py-32 bg-muted/40 text-foreground">
@@ -142,33 +25,15 @@ export async function ArticleSection() {
           </div>
         </div>
         
-        <div className="mb-16">
-            <FeaturedArticleCard article={latestArticle} />
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {articles.slice(0, 3).map(article => (
+                <StandardArticleCard key={article.id} article={article} author={article.authorSlug ? authorsMap.get(article.authorSlug) ?? null : null} />
+            ))}
         </div>
-
-        {otherArticles.length > 0 && (
-            <Carousel 
-            opts={{
-                align: "start",
-                loop: true,
-            }}
-            className="w-full max-w-7xl mx-auto"
-            >
-            <CarouselContent>
-                {otherArticles.map((article) => (
-                <CarouselItem key={article.id} className="md:basis-1/2 lg:basis-1/3">
-                    <div className="p-1 h-full">
-                    <ArticleCard article={article} />
-                    </div>
-                </CarouselItem>
-                ))}
-            </CarouselContent>
-            <CarouselPrevious className="hidden sm:flex -left-4 md:-left-12" />
-            <CarouselNext className="hidden sm:flex -right-4 md:-right-12" />
-            </Carousel>
-        )}
 
       </div>
     </section>
   );
 }
+
+    

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { type Article, type Author } from "@/lib/firestore";
@@ -34,8 +35,8 @@ export function StandardArticleCard({ article, author }: { article: Article, aut
       <CardContent className="p-6 flex flex-col flex-grow">
         <div className="flex-grow">
           <Badge variant="secondary">{article.category}</Badge>
-          <Link href={`/a/${article.slug}`} className="mt-2 block">
-            <h3 className="text-xl font-bold font-serifHeadline tracking-tight leading-snug group-hover:text-primary transition-colors line-clamp-2">
+          <Link href={`/a/${article.slug}`}>
+            <h3 className="text-xl font-bold font-serifHeadline tracking-tight leading-snug group-hover:text-primary transition-colors line-clamp-2 mt-2">
               {article.title}
             </h3>
           </Link>
@@ -70,60 +71,4 @@ export function StandardArticleCard({ article, author }: { article: Article, aut
   );
 }
 
-export function ListArticleCard({ article, author }: { article: Article, author: Author | null }) {
-  const authorDetails = {
-      name: author ? `${author.firstName} ${author.lastName}` : (article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Paulik & Reisch'),
-      avatarUrl: author ? author.profilePictureUrl : (article.author === 'gastbeitrag' 
-        ? 'https://picsum.photos/seed/guest-author/100/100' 
-        : 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522'),
-      avatarFallback: author ? `${author.firstName[0]}${author.lastName[0]}` : (article.author === 'gastbeitrag' ? 'G' : 'PR'),
-      slug: author?.slug
-  }
-  return (
-    <Card className="p-4 group hover:bg-muted transition-colors">
-        <div className="flex items-start gap-4">
-          <div className="flex-grow">
-            <div className="flex items-center gap-2 mb-2">
-                {authorDetails.slug ? (
-                    <Link href={`/autoren/${authorDetails.slug}`} className="relative z-20 flex items-center gap-2 group/author">
-                        <Avatar className="h-6 w-6">
-                            <AvatarImage src={authorDetails.avatarUrl} />
-                            <AvatarFallback className="text-xs">{authorDetails.avatarFallback}</AvatarFallback>
-                        </Avatar>
-                        <span className="text-sm font-semibold group-hover/author:text-primary transition-colors">{authorDetails.name}</span>
-                    </Link>
-                ) : (
-                    <div className="relative z-20 flex items-center gap-2">
-                        <Avatar className="h-6 w-6">
-                            <AvatarImage src={authorDetails.avatarUrl} />
-                            <AvatarFallback className="text-xs">{authorDetails.avatarFallback}</AvatarFallback>
-                        </Avatar>
-                        <span className="text-sm font-semibold">{authorDetails.name}</span>
-                    </div>
-                )}
-            </div>
-             <Link href={`/a/${article.slug}`}>
-                <h3 className="text-lg font-bold font-serifHeadline leading-snug line-clamp-2 group-hover:text-primary transition-colors">
-                {article.title}
-                </h3>
-             </Link>
-             <div className="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
-                <Badge variant="outline">{article.category}</Badge>
-                <time dateTime={article.publishedDate}>
-                  {format(new Date(article.publishedDate), "dd. MMM yyyy", { locale: de })}
-                </time>
-             </div>
-          </div>
-           <Link href={`/a/${article.slug}`} className="block flex-shrink-0">
-                <Image
-                    src={article.imageUrl}
-                    alt={article.imageAlt}
-                    width={100}
-                    height={100}
-                    className="rounded-md object-cover aspect-square"
-                />
-            </Link>
-        </div>
-      </Card>
-  );
-}
+    
