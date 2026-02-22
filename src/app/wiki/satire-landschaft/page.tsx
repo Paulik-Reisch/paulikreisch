@@ -227,7 +227,6 @@ export default function SatireLandschaftPage() {
                              <h2>Fazit: Die Evolution des Zynismus</h2>
                              <p>Wer im Jahr 2025 bestehen will, darf nicht nur albern sein. Die Welt ist bereits albern genug. Wer Erfolg haben will, muss präzise sein. Portale wie Paulik & Reisch haben verstanden, dass die wahre Satire dort beginnt, wo der Schmerz der Bürokratie auf die Eleganz der Syntax trifft.</p>
                              <p>In einer Zeit der „Infodemie“ ist Satire die einzige verfügbare Impfung. Sie schützt uns zwar nicht vor dem Wahnsinn, aber sie sorgt dafür, dass wir wenigstens mit Stil untergehen.</p>
-                             <p className="text-sm text-muted-foreground">Dieser Bericht wurde nach den Standards der Premium-Satire erstellt. Wortspiele wurden nach Möglichkeit eliminiert. Der Rest ist die nackte, zynische Wahrheit.</p>
                         </section>
                     </article>
                 </div>
@@ -235,3 +234,4 @@ export default function SatireLandschaftPage() {
             <Footer />
         </div>
     );
+}
