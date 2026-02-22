@@ -22,7 +22,7 @@ export function FeaturedArticleCard({ article, author }: { article: Article, aut
   }
 
   return (
-    <div className="group relative min-h-[450px] text-white overflow-hidden rounded-lg shadow-sm flex flex-col justify-end">
+    <article className="group relative min-h-[450px] text-white overflow-hidden rounded-lg shadow-sm">
       <Image
         src={article.imageUrl}
         alt={article.imageAlt}
@@ -35,9 +35,9 @@ export function FeaturedArticleCard({ article, author }: { article: Article, aut
       {/* This link is an overlay for the whole card */}
       <Link href={`/a/${article.slug}`} className="absolute inset-0 z-20" aria-label={`Zum Artikel: ${article.title}`}/>
       
-      <div className="relative z-30 p-8">
-        <Badge variant="secondary" className="mb-4 bg-white/20 text-white border-transparent">{article.category}</Badge>
-        <h2 className="text-3xl lg:text-4xl font-bold font-serifHeadline tracking-tight leading-snug line-clamp-3">
+      <div className="relative z-30 flex flex-col justify-end h-full p-8">
+        <Badge variant="secondary" className="mb-4 bg-white/20 text-white border-transparent self-start">{article.category}</Badge>
+        <h2 className="text-3xl lg:text-4xl font-bold font-serifHeadline tracking-tight leading-snug line-clamp-3 text-left">
           {article.title}
         </h2>
         <div className="mt-6 flex items-center gap-4 text-sm text-white/80">
@@ -68,7 +68,7 @@ export function FeaturedArticleCard({ article, author }: { article: Article, aut
             </div>
         </div>
       </div>
-    </div>
+    </article>
   );
 }
 
