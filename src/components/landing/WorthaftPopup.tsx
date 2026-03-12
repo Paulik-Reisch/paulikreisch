@@ -62,7 +62,7 @@ export function WorthaftPopup() {
                 className="cursor-pointer"
               >
                 <Image
-                  src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulikreisch.firebasestorage.app/o/logos%2Fworthaft-svg-pop.svg?alt=media&token=58d0f0ef-bbfc-4b8a-9a37-360ab65bbd8c"
+                  src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Fwhf.png?alt=media&token=45f48f98-1fca-4824-bb85-01a226c47df0"
                   alt="Worthaft Spiel Popup"
                   width={500}
                   height={500}
