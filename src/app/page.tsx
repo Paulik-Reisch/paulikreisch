@@ -61,7 +61,7 @@ const hw1: Product = {
     title: "Hallo Welt",
     subtitle: "Erhebliche Kritik am unerhörten Bildungsgang der Lernvollzugsanstalt SK-S",
     price: 10.99,
-    imageSrc: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulikreisch.firebasestorage.app/o/cover-mockup-1.png?alt=media&token=c82b73e5-76bd-490d-a65f-008a3bfac00b",
+    imageSrc: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-mockup-1.png?alt=media&token=c736447b-585c-410e-b2c9-b3fd9c726c58",
     aiHint: "book cover satire",
     amazonLink: "https://www.amazon.de/Hallo-Welt-unerh%C3%B6rten-Bildungsgang-Lernvollzugsanstalt/dp/3982548803",
     description: "Die satirische Abrechnung mit dem Schulsystem, Lehrern als Beamtenrobotern und dem täglichen Wahnsinn des Erwachsenwerdens."
@@ -76,7 +76,7 @@ export default async function Home() {
     "url": "https://www.paulikreisch.de",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulikreisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522"
+      "url": "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522"
     },
     "slogan": "Die Speerspitze der modernen Satire",
     "genre": ["Satire", "Comedy", "News"],

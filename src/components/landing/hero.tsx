@@ -45,7 +45,7 @@ export function Hero({ product }: { product?: Product }) {
     return () => clearInterval(interval);
   }, [heroTexts.length]);
 
-  const imageSrc = product?.imageSrc || "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/cover-mockup-1.png?alt=media&token=c82b73e5-76bd-490d-a65f-008a3bfac00b";
+  const imageSrc = product?.imageSrc || "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-mockup-1.png?alt=media&token=c736447b-585c-410e-b2c9-b3fd9c726c58";
   const imageHint = product?.aiHint || "book cover";
   const bookTitle = product?.title || 'Hallo Welt';
   const fullBookTitle = product?.subtitle ? `${bookTitle}: ${product.subtitle}` : bookTitle;
