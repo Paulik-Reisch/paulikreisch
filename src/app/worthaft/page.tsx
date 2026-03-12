@@ -158,16 +158,7 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
     
     return (
     <>
-        <div className="my-6 text-center">
-             <div className="w-full mb-4 px-4 sm:px-0">
-                 <Image 
-                    src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Fafterplay-image.png?alt=media&token=f16a9800-cb1e-425b-88c3-0227e3ef58a0" 
-                    alt="Spielergebnis Grafik"
-                    width={400}
-                    height={200}
-                    className="w-full h-auto rounded-lg shadow-md"
-                 />
-            </div>
+        <div className="text-center">
             <p className="text-sm uppercase font-bold text-muted-foreground">Ihr Ergebnis</p>
             <p className="text-4xl font-bold">{gameState === 'won' ? guesses.length : 'X'} / {MAX_GUESSES}</p>
         </div>
@@ -229,17 +220,25 @@ const GameEndDisplay = (props: {
     if (isMobile) {
         return (
             <Sheet open={isOpen} onOpenChange={onOpenChange}>
-                <SheetContent side="bottom" className="p-6 pt-4 rounded-t-lg max-h-[90vh] overflow-y-auto">
-                    <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-zinc-300 mb-4" />
-                    <SheetHeader className="text-center">
-                        <SheetTitle className="text-2xl font-bold font-headline">
-                            {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
-                        </SheetTitle>
-                        <SheetDescription className="text-muted-foreground pt-1">
-                            Das Wort von Heute: <span className="font-bold text-primary">{rest.solution}</span>
-                        </SheetDescription>
-                    </SheetHeader>
-                    <ResultsContent {...rest} />
+                <SheetContent side="bottom" className="p-0 pt-0 rounded-t-lg max-h-[90vh] overflow-y-auto">
+                     <Image 
+                        src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulikreisch.firebasestorage.app/o/logos%2Fafterplay-image.png?alt=media&token=f16a9800-cb1e-425b-88c3-0227e3ef58a0" 
+                        alt="Spielergebnis Grafik"
+                        width={400}
+                        height={200}
+                        className="w-full h-auto rounded-t-lg"
+                     />
+                    <div className="p-6">
+                        <SheetHeader className="text-center">
+                            <SheetTitle className="text-2xl font-bold font-headline">
+                                {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
+                            </SheetTitle>
+                            <SheetDescription className="text-muted-foreground pt-1">
+                                Das Wort von Heute: <span className="font-bold text-primary">{rest.solution}</span>
+                            </SheetDescription>
+                        </SheetHeader>
+                        <ResultsContent {...rest} />
+                    </div>
                     <SheetClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
                         <X className="h-4 w-4" />
                         <span className="sr-only">Close</span>
@@ -251,16 +250,25 @@ const GameEndDisplay = (props: {
 
     return (
         <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
-            <AlertDialogContent>
-                <AlertDialogHeader>
-                    <AlertDialogTitle className="text-2xl font-bold font-headline text-center">
-                        {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
-                    </AlertDialogTitle>
-                    <AlertDialogDescription className="text-muted-foreground pt-1 text-center">
-                        Das Wort von Heute: <span className="font-bold text-primary">{rest.solution}</span>
-                    </AlertDialogDescription>
-                </AlertDialogHeader>
-                <ResultsContent {...rest} />
+            <AlertDialogContent className="p-0 sm:rounded-lg">
+                <Image 
+                    src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulikreisch.firebasestorage.app/o/logos%2Fafterplay-image.png?alt=media&token=f16a9800-cb1e-425b-88c3-0227e3ef58a0" 
+                    alt="Spielergebnis Grafik"
+                    width={400}
+                    height={200}
+                    className="w-full h-auto rounded-t-lg"
+                 />
+                <div className="p-6">
+                    <AlertDialogHeader>
+                        <AlertDialogTitle className="text-2xl font-bold font-headline text-center">
+                            {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className="text-muted-foreground pt-1 text-center">
+                            Das Wort von Heute: <span className="font-bold text-primary">{rest.solution}</span>
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <ResultsContent {...rest} />
+                </div>
             </AlertDialogContent>
         </AlertDialog>
     );
