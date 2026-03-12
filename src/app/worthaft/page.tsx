@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
@@ -20,6 +19,7 @@ import { WORDS } from '@/lib/worthaft-words';
 import { Share2, HelpCircle, Book, Newspaper, X } from 'lucide-react';
 import Link from 'next/link';
 import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
+import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
 
 const WORD_LENGTH = 5;
 const MAX_GUESSES = 6;
@@ -159,7 +159,15 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
     return (
     <>
         <div className="my-6 text-center">
-            <WorthaftIcon className="mx-auto h-16 w-16 mb-4 text-primary"/>
+             <div className="w-full mb-4 px-4 sm:px-0">
+                 <Image 
+                    src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Fafterplay-image.png?alt=media&token=f16a9800-cb1e-425b-88c3-0227e3ef58a0" 
+                    alt="Spielergebnis Grafik"
+                    width={400}
+                    height={200}
+                    className="w-full h-auto rounded-lg shadow-md"
+                 />
+            </div>
             <p className="text-sm uppercase font-bold text-muted-foreground">Ihr Ergebnis</p>
             <p className="text-4xl font-bold">{gameState === 'won' ? guesses.length : 'X'} / {MAX_GUESSES}</p>
         </div>
