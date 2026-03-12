@@ -15,7 +15,7 @@ export function cn(...inputs: ClassValue[]) {
  */
 export function createTrackedUrl(baseUrl: string, campaign: string, medium: string, content?: string): string {
   const url = new URL(baseUrl);
-  url.searchParams.set('utm_source', 'paulik-reisch.de');
+  url.searchParams.set('utm_source', 'paulikreisch.de');
   url.searchParams.set('utm_campaign', campaign);
   url.searchParams.set('utm_medium', medium);
   if (content) {

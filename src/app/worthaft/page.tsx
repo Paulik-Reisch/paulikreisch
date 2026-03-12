@@ -497,7 +497,7 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
         const shareData = {
             title: 'Worthaft - Das Paulik & Reisch Spiel',
             text: text,
-            url: 'https://paulik-reisch.de/worthaft',
+            url: 'https://paulikreisch.de/worthaft',
         };
         
         if (navigator.share) {
@@ -507,7 +507,7 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
                 console.log('Teilen abgebrochen', error);
             }
         } else {
-            navigator.clipboard.writeText(`${text}\n\nhttps://paulik-reisch.de/worthaft`).then(() => {
+            navigator.clipboard.writeText(`${text}\n\nhttps://paulikreisch.de/worthaft`).then(() => {
                 toast({ title: 'Kopiert!', description: 'Ergebnis in die Zwischenablage kopiert. Teile es mit der Welt!' });
             });
         }
@@ -518,7 +518,7 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
         '@type': 'WebApplication',
         name: 'Worthaft',
         description: 'Ein tägliches Worträtselspiel im Stil von Wordle, präsentiert von den Satire-Autoren Paulik & Reisch.',
-        url: 'https://paulik-reisch.de/worthaft',
+        url: 'https://paulikreisch.de/worthaft',
         applicationCategory: 'GameApplication',
         operatingSystem: 'Any',
         offers: {
@@ -528,7 +528,7 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
         publisher: {
           '@type': 'Organization',
           name: 'Paulik & Reisch',
-          url: 'https://paulik-reisch.de'
+          url: 'https://paulikreisch.de'
         },
         keywords: 'Wordle, Wortspiel, Rätsel, Deutsch, Worthaft'
     };

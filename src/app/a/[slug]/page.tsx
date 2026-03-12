@@ -173,12 +173,12 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     ? {
         '@type': 'Person',
         name: `${articleAuthor.firstName} ${articleAuthor.lastName}`,
-        url: `https://paulik-reisch.de/autoren/${articleAuthor.slug}`
+        url: `https://paulikreisch.de/autoren/${articleAuthor.slug}`
       }
     : {
         '@type': 'Organization',
         name: 'Paulik & Reisch',
-        url: 'https://paulik-reisch.de'
+        url: 'https://paulikreisch.de'
       };
 
   const jsonLd = {
@@ -186,7 +186,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     '@type': seoData?.articleType || 'SatiricalArticle',
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://paulik-reisch.de/a/${slug}`,
+      '@id': `https://paulikreisch.de/a/${slug}`,
     },
     headline: seoData?.title || article.title,
     description: seoData?.metaDescription || article.teaser,
@@ -195,7 +195,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     publisher: {
       '@type': 'Organization',
       name: seoData?.publisher || 'Paulik & Reisch',
-      url: 'https://paulik-reisch.de',
+      url: 'https://paulikreisch.de',
       logo: {
         '@type': 'ImageObject',
         url: 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522',
@@ -327,5 +327,3 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     </div>
   );
 }
-
-    

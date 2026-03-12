@@ -3,7 +3,7 @@ import { MetadataRoute } from 'next';
 import { getLegalPages, getPublishedExcerpts, getArticles } from '@/lib/firestore';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://paulik-reisch.de';
+  const baseUrl = 'https://paulikreisch.de';
 
   // 1. Get dynamic pages from Firestore
   const legalPagesPromise = getLegalPages();

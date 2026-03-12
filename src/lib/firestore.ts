@@ -354,9 +354,9 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
 
 export async function getArticlesByAuthorSlug(authorSlug: string): Promise<Article[]> {
     const articlesCol = collection(db, 'articles');
-    const q = query(articlesCol, where('authorSlug', '==', authorSlug), orderBy('publishedDate', 'desc'));
+    const q = query(articlesCol, where('authorSlug', '==', authorSlug), where('status', '==', 'published'), orderBy('publishedDate', 'desc'));
     const snapshot = await getDocs(q);
-    const authorArticles = snapshot.docs.map(doc => {
+    return snapshot.docs.map(doc => {
         const data = doc.data();
         return {
             id: doc.id,
@@ -367,7 +367,6 @@ export async function getArticlesByAuthorSlug(authorSlug: string): Promise<Artic
             status: data.status || 'published',
         } as Article;
     });
-    return authorArticles.filter(article => article.status === 'published');
 }
 
 
@@ -451,7 +450,7 @@ export async function getAuthors(): Promise<Author[]> {
             lastName: '& Reisch',
             profilePictureUrl: 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522',
             bio: 'Satire-Autoren und Meister des alltäglichen Wahnsinns.',
-            websiteUrl: 'https://paulik-reisch.de'
+            websiteUrl: 'https://paulikreisch.de'
         };
         const docRef = doc(db, 'authors', 'paulik-reisch');
         await setDoc(docRef, defaultAuthor);

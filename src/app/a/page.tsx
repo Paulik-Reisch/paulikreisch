@@ -68,7 +68,7 @@ export default async function ArticlesPage() {
     '@type': 'CollectionPage',
     "name": "Satirische Artikel | Das Paulik & Reisch Magazin",
     "description": "Eine kuratierte Sammlung satirischer Meisterwerke, die den alltäglichen Wahnsinn auf die Schippe nehmen. Von Gesellschaftskritik bis Technik-Alpträume.",
-    "url": "https://paulik-reisch.de/a",
+    "url": "https://paulikreisch.de/a",
     "publisher": {
       "@type": "Organization",
       "name": "Paulik & Reisch",
@@ -84,11 +84,11 @@ export default async function ArticlesPage() {
         const authorLd = articleAuthor ? {
           '@type': 'Person',
           name: `${articleAuthor.firstName} ${articleAuthor.lastName}`,
-          url: `https://paulik-reisch.de/autoren/${articleAuthor.slug}`
+          url: `https://paulikreisch.de/autoren/${articleAuthor.slug}`
         } : {
           '@type': 'Organization',
           name: 'Paulik & Reisch',
-          url: 'https://paulik-reisch.de'
+          url: 'https://paulikreisch.de'
         };
 
         return {
@@ -97,7 +97,7 @@ export default async function ArticlesPage() {
           'item': {
             '@type': 'Article',
             'headline': article.title,
-            'url': `https://paulik-reisch.de/a/${article.slug}`,
+            'url': `https://paulikreisch.de/a/${article.slug}`,
             'image': article.imageUrl,
             'datePublished': article.publishedDate,
             'author': authorLd,
@@ -149,5 +149,3 @@ export default async function ArticlesPage() {
     </div>
   );
 }
-
-    

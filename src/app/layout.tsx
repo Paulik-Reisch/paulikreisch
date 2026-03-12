@@ -9,7 +9,7 @@ import { FirebaseClientProvider } from '@/firebase/client-provider';
 import { GlobalTracker } from '@/components/analytics/global-tracker';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://paulik-reisch.de'),
+  metadataBase: new URL('https://paulikreisch.de'),
   title: {
     default: 'Paulik & Reisch | Premium Humor und Satire',
     template: '%s | Paulik & Reisch',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
       title: 'Paulik & Reisch',
       description: 'Premium Humor und Satire',
-      url: 'https://paulik-reisch.de',
+      url: 'https://paulikreisch.de',
       siteName: 'Paulik & Reisch',
       locale: 'de_DE',
       type: 'website',

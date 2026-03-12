@@ -22,9 +22,9 @@ export default function UeberAutorenPage() {
     "@graph": [
       {
         "@type": "NewsMediaOrganization",
-        "@id": "https://www.paulik-reisch.de/#organization",
+        "@id": "https://www.paulikreisch.de/#organization",
         "name": "Paulik & Reisch",
-        "url": "https://www.paulik-reisch.de",
+        "url": "https://www.paulikreisch.de",
         "logo": {
           "@type": "ImageObject",
           "url": "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522"
@@ -35,30 +35,30 @@ export default function UeberAutorenPage() {
         "hasPart": [
             {
               "@type": "WebPage",
-              "@id": "https://www.paulik-reisch.de/a",
+              "@id": "https://www.paulikreisch.de/a",
               "name": "Paulik & Reisch Satire Magazin",
-              "url": "https://www.paulik-reisch.de/a",
+              "url": "https://www.paulikreisch.de/a",
               "description": "Eine kuratierte Sammlung satirischer Meisterwerke, die den alltäglichen Wahnsinn auf die Schippe nehmen."
             },
             {
               "@type": "WebPage",
-              "@id": "https://www.paulik-reisch.de/autoren",
+              "@id": "https://www.paulikreisch.de/autoren",
               "name": "Unsere Autoren",
-              "url": "https://www.paulik-reisch.de/autoren",
+              "url": "https://www.paulikreisch.de/autoren",
               "description": "Lernen Sie die kreativen Köpfe hinter den satirischen Artikeln und Büchern von Paulik & Reisch kennen."
             }
           ]
       },
       {
         "@type": "Article",
-        "@id": "https://www.paulik-reisch.de/wiki/satire-landschaft/#article",
+        "@id": "https://www.paulikreisch.de/wiki/satire-landschaft/#article",
         "headline": "Die deutsche Satire-Landschaft: Von Postillon bis Paulik & Reisch",
         "description": "Eine Analyse der wichtigsten Satire-Magazine wie Der Postillon, TITANIC, heute-show und warum Paulik & Reisch die nächste Evolution ist.",
         "author": {
-          "@id": "https://www.paulik-reisch.de/#organization"
+          "@id": "https://www.paulikreisch.de/#organization"
         },
         "publisher": {
-          "@id": "https://www.paulik-reisch.de/#organization"
+          "@id": "https://www.paulikreisch.de/#organization"
         },
         "about": [
           {

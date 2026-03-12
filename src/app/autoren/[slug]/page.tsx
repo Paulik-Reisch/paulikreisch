@@ -110,23 +110,23 @@ export default async function AuthorPage({ params }: Props) {
     '@graph': [
         {
             '@type': 'ProfilePage',
-            '@id': `https://paulik-reisch.de/autoren/${author.slug}`,
-            'url': `https://paulik-reisch.de/autoren/${author.slug}`,
+            '@id': `https://paulikreisch.de/autoren/${author.slug}`,
+            'url': `https://paulikreisch.de/autoren/${author.slug}`,
             'name': `${fullName} - Autorenprofil | Paulik & Reisch`,
-            'mainEntity': {'@id': `https://paulik-reisch.de/autoren/${author.slug}#person`}
+            'mainEntity': {'@id': `https://paulikreisch.de/autoren/${author.slug}#person`}
         },
         {
             '@type': 'Person',
-            '@id': `https://paulik-reisch.de/autoren/${author.slug}#person`,
+            '@id': `https://paulikreisch.de/autoren/${author.slug}#person`,
             'name': fullName,
             'description': author.bio,
             'image': author.profilePictureUrl,
-            'url': `https://paulik-reisch.de/autoren/${author.slug}`,
-            'mainEntityOfPage': {'@id': `https://paulik-reisch.de/autoren/${author.slug}`},
+            'url': `https://paulikreisch.de/autoren/${author.slug}`,
+            'mainEntityOfPage': {'@id': `https://paulikreisch.de/autoren/${author.slug}`},
             'worksFor': {
                 '@type': 'Organization',
                 'name': 'Paulik & Reisch',
-                'url': 'https://paulik-reisch.de'
+                'url': 'https://paulikreisch.de'
             },
             ...(author.websiteUrl ? { 'sameAs': [author.websiteUrl] } : {})
         }
@@ -190,5 +190,3 @@ export default async function AuthorPage({ params }: Props) {
     </div>
   );
 }
-
-    

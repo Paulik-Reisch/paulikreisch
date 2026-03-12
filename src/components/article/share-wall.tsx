@@ -29,7 +29,7 @@ const reasons = [
 export function ShareWall({ article, onUnlock }: { article: Article; onUnlock: () => void }) {
   const { toast } = useToast();
   const pathname = usePathname();
-  const url = createTrackedUrl(`https://paulik-reisch.de${pathname}`, 'share-wall', 'social-share', article.slug);
+  const url = createTrackedUrl(`https://paulikreisch.de${pathname}`, 'share-wall', 'social-share', article.slug);
   const text = `Interessanter Artikel: "${article.title}" von Paulik & Reisch`;
 
   const shareLinks = {
