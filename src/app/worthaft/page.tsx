@@ -226,7 +226,7 @@ const GameEndDisplay = (props: {
                         alt="Spielergebnis Grafik"
                         width={400}
                         height={200}
-                        className="w-full h-auto"
+                        className="w-full h-auto rounded-t-lg"
                      />
                     <div className="p-6">
                         <SheetHeader className="text-center">
@@ -256,7 +256,7 @@ const GameEndDisplay = (props: {
                     alt="Spielergebnis Grafik"
                     width={400}
                     height={200}
-                    className="w-full h-auto"
+                    className="w-full h-auto rounded-t-lg"
                  />
                 <div className="p-6">
                     <AlertDialogHeader>
@@ -362,7 +362,9 @@ export default function WorthaftPage() {
         const newGuess = [...currentGuess];
         newGuess[activeIndex] = char;
         setCurrentGuess(newGuess);
-        setActiveIndex((prev) => (prev + 1) % WORD_LENGTH);
+        if (activeIndex < WORD_LENGTH - 1) {
+            setActiveIndex((prev) => prev + 1);
+        }
     };
 
     const handleEnter = useCallback(() => {
