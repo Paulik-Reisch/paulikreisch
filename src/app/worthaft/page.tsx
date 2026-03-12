@@ -220,13 +220,13 @@ const GameEndDisplay = (props: {
     if (isMobile) {
         return (
             <Sheet open={isOpen} onOpenChange={onOpenChange}>
-                <SheetContent side="bottom" className="p-0 pt-0 rounded-t-lg max-h-[90vh] overflow-y-auto">
+                <SheetContent side="bottom" className="p-0 pt-0 max-h-[90vh] overflow-y-auto">
                      <Image 
-                        src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulikreisch.firebasestorage.app/o/logos%2Fafterplay-image.png?alt=media&token=f16a9800-cb1e-425b-88c3-0227e3ef58a0" 
+                        src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Fafterplay-image.png?alt=media&token=25d1d2cf-b09c-4eaf-95f1-bf3cbae2e648"
                         alt="Spielergebnis Grafik"
                         width={400}
                         height={200}
-                        className="w-full h-auto rounded-t-lg"
+                        className="w-full h-auto"
                      />
                     <div className="p-6">
                         <SheetHeader className="text-center">
@@ -250,13 +250,13 @@ const GameEndDisplay = (props: {
 
     return (
         <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
-            <AlertDialogContent className="p-0 sm:rounded-lg">
+            <AlertDialogContent className="p-0">
                 <Image 
-                    src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulikreisch.firebasestorage.app/o/logos%2Fafterplay-image.png?alt=media&token=f16a9800-cb1e-425b-88c3-0227e3ef58a0" 
+                    src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Fafterplay-image.png?alt=media&token=25d1d2cf-b09c-4eaf-95f1-bf3cbae2e648"
                     alt="Spielergebnis Grafik"
                     width={400}
                     height={200}
-                    className="w-full h-auto rounded-t-lg"
+                    className="w-full h-auto"
                  />
                 <div className="p-6">
                     <AlertDialogHeader>
