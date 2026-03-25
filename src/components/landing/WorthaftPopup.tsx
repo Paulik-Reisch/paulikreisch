@@ -14,14 +14,46 @@ export function WorthaftPopup() {
 
   useEffect(() => {
     const hasSeenPopup = sessionStorage.getItem(POPUP_STORAGE_KEY);
-    if (!hasSeenPopup) {
-      const timer = setTimeout(() => {
+    if (hasSeenPopup) {
+      return;
+    }
+
+    let inactivityTimer: ReturnType<typeof setTimeout>;
+
+    const showPopup = () => {
+      // Final check to ensure it hasn't been shown by another tab or interaction
+      if (!sessionStorage.getItem(POPUP_STORAGE_KEY)) {
         setIsOpen(true);
         sessionStorage.setItem(POPUP_STORAGE_KEY, 'true');
-      }, 3000);
+      }
+    };
 
-      return () => clearTimeout(timer);
-    }
+    const resetTimer = () => {
+      clearTimeout(inactivityTimer);
+      // Set to 1 minute (60000 ms)
+      inactivityTimer = setTimeout(showPopup, 60000); 
+    };
+
+    const activityEvents: (keyof WindowEventMap)[] = ['mousemove', 'keydown', 'scroll', 'click'];
+    
+    const handleActivity = () => {
+      resetTimer();
+    };
+
+    activityEvents.forEach(event => {
+      window.addEventListener(event, handleActivity, { passive: true });
+    });
+
+    // Start the initial timer
+    resetTimer();
+
+    // Cleanup function
+    return () => {
+      clearTimeout(inactivityTimer);
+      activityEvents.forEach(event => {
+        window.removeEventListener(event, handleActivity);
+      });
+    };
   }, []);
 
   const closePopup = () => {
