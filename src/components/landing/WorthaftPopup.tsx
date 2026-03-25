@@ -99,7 +99,7 @@ export function WorthaftPopup() {
                   width={500}
                   height={500}
                   priority
-                  className="drop-shadow-2xl"
+                  className="drop-shadow-2xl h-auto w-auto max-h-[80vh] max-w-[80vw]"
                 />
               </motion.div>
             </Link>
