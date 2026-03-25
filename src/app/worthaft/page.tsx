@@ -289,7 +289,13 @@ export default function WorthaftPage() {
     const [isShaking, setIsShaking] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-    const getTodayString = () => new Date().toISOString().split('T')[0];
+    const getTodayString = () => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = (today.getMonth() + 1).toString().padStart(2, '0');
+        const day = today.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
 
     const saveState = useCallback((newGuesses: { guess: string; statuses: LetterStatus[] }[], newStatus: 'won' | 'lost' | 'playing', newLetterStatuses: { [key: string]: LetterStatus }) => {
         const dailyState: DailyGameState = {
@@ -363,7 +369,7 @@ export default function WorthaftPage() {
         newGuess[activeIndex] = char;
         setCurrentGuess(newGuess);
         if (activeIndex < WORD_LENGTH - 1) {
-            setActiveIndex((prev) => prev + 1);
+            setActiveIndex(activeIndex + 1);
         }
     };
 
