@@ -12,11 +12,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogDescription,
+  AlertDialogFooter,
 } from "@/components/ui/alert-dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetClose } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { WORDS } from '@/lib/worthaft-words';
-import { Share2, HelpCircle, Book, Newspaper, X } from 'lucide-react';
+import { Share2, HelpCircle, Book, Newspaper, X, Lightbulb } from 'lucide-react';
 import Link from 'next/link';
 import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
 import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
@@ -31,6 +32,7 @@ type DailyGameState = {
   guesses: { guess: string; statuses: LetterStatus[] }[];
   status: 'won' | 'lost' | 'playing';
   letterStatuses: { [key: string]: LetterStatus };
+  hotTipUsed?: boolean;
 };
 
 
@@ -133,7 +135,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
                         isCurrentRow && activeIndex === colIndex && 'border-primary ring-2 ring-primary scale-105',
                         status !== 'empty' && 'animate-in fade-in zoom-in-50'
                     )}
-                    style={{ animationDelay: `'''${colIndex * 100}ms'''` }}
+                    style={{ animationDelay: `${colIndex * 100}ms` }}
                 >
                     {letter}
                 </div>
@@ -289,6 +291,11 @@ export default function WorthaftPage() {
     const [isShaking, setIsShaking] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+    // Joker "Hot Tip" state
+    const [showHotTipDialog, setShowHotTipDialog] = useState(false);
+    const [hotTipUsed, setHotTipUsed] = useState(false);
+    const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
+
     const getTodayString = () => {
         const today = new Date();
         const year = today.getFullYear();
@@ -297,12 +304,13 @@ export default function WorthaftPage() {
         return `${year}-${month}-${day}`;
     };
 
-    const saveState = useCallback((newGuesses: { guess: string; statuses: LetterStatus[] }[], newStatus: 'won' | 'lost' | 'playing', newLetterStatuses: { [key: string]: LetterStatus }) => {
+    const saveState = useCallback((newGuesses: { guess: string; statuses: LetterStatus[] }[], newStatus: 'won' | 'lost' | 'playing', newLetterStatuses: { [key: string]: LetterStatus }, newHotTipUsed: boolean) => {
         const dailyState: DailyGameState = {
             date: getTodayString(),
             guesses: newGuesses,
             status: newStatus,
-            letterStatuses: newLetterStatuses
+            letterStatuses: newLetterStatuses,
+            hotTipUsed: newHotTipUsed
         };
         localStorage.setItem('worthaft-daily-game', JSON.stringify(dailyState));
     }, []);
@@ -325,6 +333,8 @@ export default function WorthaftPage() {
                     setGuesses(dailyState.guesses);
                     setGameState(dailyState.status);
                     setLetterStatuses(dailyState.letterStatuses || {});
+                    setHotTipUsed(dailyState.hotTipUsed || false);
+
 
                     if (dailyState.status === 'won' || dailyState.status === 'lost') {
                         setIsCompletedToday(true);
@@ -362,6 +372,33 @@ export default function WorthaftPage() {
         }, 1000);
         return () => clearInterval(timer);
     }, [isCompletedToday]);
+
+    // Inactivity timer for "Hot Tip"
+    useEffect(() => {
+        const resetInactivityTimer = () => {
+            if (inactivityTimerRef.current) {
+                clearTimeout(inactivityTimerRef.current);
+            }
+            if (gameState !== 'playing' || hotTipUsed || isDialogOpen || showHotTipDialog) {
+                return;
+            }
+            inactivityTimerRef.current = setTimeout(() => {
+                setShowHotTipDialog(true);
+            }, 30000); // 30 seconds
+        };
+
+        resetInactivityTimer();
+
+        const activityEvents: (keyof WindowEventMap)[] = ['keydown', 'mousemove', 'click', 'touchstart'];
+        activityEvents.forEach(event => window.addEventListener(event, resetInactivityTimer));
+
+        return () => {
+            if (inactivityTimerRef.current) {
+                clearTimeout(inactivityTimerRef.current);
+            }
+            activityEvents.forEach(event => window.removeEventListener(event, resetInactivityTimer));
+        };
+    }, [gameState, hotTipUsed, isDialogOpen, showHotTipDialog]);
 
     const handleChar = (char: string) => {
         if (gameState !== 'playing') return;
@@ -442,7 +479,7 @@ export default function WorthaftPage() {
             };
             setStats(newStats);
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
-            saveState(newGuesses, 'won', newLetterStatuses);
+            saveState(newGuesses, 'won', newLetterStatuses, hotTipUsed);
             setIsCompletedToday(true);
             setTimeout(() => setIsDialogOpen(true), 1000);
         } else if (newGuesses.length === MAX_GUESSES) {
@@ -455,13 +492,13 @@ export default function WorthaftPage() {
             };
             setStats(newStats);
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
-            saveState(newGuesses, 'lost', newLetterStatuses);
+            saveState(newGuesses, 'lost', newLetterStatuses, hotTipUsed);
             setIsCompletedToday(true);
             setTimeout(() => setIsDialogOpen(true), 1000);
         } else {
-             saveState(newGuesses, 'playing', newLetterStatuses);
+             saveState(newGuesses, 'playing', newLetterStatuses, hotTipUsed);
         }
-    }, [currentGuess, gameState, guesses, letterStatuses, solution, stats, toast, saveState]);
+    }, [currentGuess, gameState, guesses, letterStatuses, solution, stats, toast, saveState, hotTipUsed]);
 
     const handleDelete = () => {
         if (gameState !== 'playing') return;
@@ -480,7 +517,7 @@ export default function WorthaftPage() {
     };
     
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
-        if (isDialogOpen) return;
+        if (isDialogOpen || showHotTipDialog) return;
 
         if (event.key === 'Enter') {
             handleEnter();
@@ -493,7 +530,7 @@ export default function WorthaftPage() {
         } else if (/^[a-zA-ZäöüÄÖÜ]$/.test(event.key)) {
             handleChar(event.key.toUpperCase());
         }
-    }, [isDialogOpen, handleEnter, handleDelete, handleChar]);
+    }, [isDialogOpen, showHotTipDialog, handleEnter, handleDelete, handleChar]);
     
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
@@ -536,6 +573,53 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
             });
         }
     }
+
+    const handleAcceptHotTip = () => {
+        if (hotTipUsed || gameState !== 'playing') return;
+
+        const correctlyGuessedIndices = new Set<number>();
+        guesses.forEach(g => {
+            g.statuses.forEach((status, index) => {
+                if (status === 'correct') {
+                    correctlyGuessedIndices.add(index);
+                }
+            });
+        });
+
+        const revealableIndices = [];
+        for (let i = 0; i < WORD_LENGTH; i++) {
+            if (!correctlyGuessedIndices.has(i)) {
+                revealableIndices.push(i);
+            }
+        }
+
+        if (revealableIndices.length > 0) {
+            const jokerIndex = revealableIndices[Math.floor(Math.random() * revealableIndices.length)];
+            const jokerLetter = solution[jokerIndex];
+            const newGuess = [...currentGuess];
+            newGuess[jokerIndex] = jokerLetter;
+            setCurrentGuess(newGuess);
+
+            setHotTipUsed(true);
+            saveState(guesses, 'playing', letterStatuses, true);
+            setShowHotTipDialog(false);
+            toast({
+                title: 'Heißer Tipp!',
+                description: `Ein Buchstabe wurde für dich aufgedeckt.`,
+            });
+        } else {
+            toast({
+                variant: 'destructive',
+                title: 'Kein Tipp verfügbar',
+                description: 'Du hast bereits alle Buchstaben korrekt erraten!',
+            });
+            setShowHotTipDialog(false);
+        }
+    };
+
+    const handleDeclineHotTip = () => {
+        setShowHotTipDialog(false);
+    };
 
     const jsonLd = {
         '@context': 'https://schema.org',
@@ -599,6 +683,23 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
                 timeToNextGame={timeToNextGame}
                 shareResults={shareResults}
             />
+            <AlertDialog open={showHotTipDialog} onOpenChange={setShowHotTipDialog}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle className="flex items-center gap-2">
+                            <Lightbulb className="h-6 w-6 text-yellow-400" />
+                            Heißer Tipp!
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Du scheinst festzustecken. Möchtest du einen zufälligen, korrekten Buchstaben aufdecken? Du kannst diesen Joker nur einmal pro Spiel verwenden.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <Button variant="outline" onClick={handleDeclineHotTip}>Nein, danke</Button>
+                        <Button onClick={handleAcceptHotTip}>Ja, bitte!</Button>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }
