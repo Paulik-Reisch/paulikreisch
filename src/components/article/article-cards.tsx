@@ -61,7 +61,7 @@ export function StandardArticleCard({ article, author }: { article: Article, aut
             )}
           <div className="flex items-center gap-1.5">
             <Calendar className="w-4 h-4" />
-            <time dateTime={article.publishedDate}>
+            <time dateTime={article.publishedDate} suppressHydrationWarning>
               {format(new Date(article.publishedDate), "dd. MMM yyyy", { locale: de })}
             </time>
           </div>
