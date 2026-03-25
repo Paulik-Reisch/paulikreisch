@@ -17,7 +17,7 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetClose } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { WORDS } from '@/lib/worthaft-words';
-import { Share2, HelpCircle, Book, Newspaper, X, Lightbulb } from 'lucide-react';
+import { Share2, HelpCircle, Book, Newspaper, X } from 'lucide-react';
 import Link from 'next/link';
 import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
 import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
@@ -252,7 +252,7 @@ const GameEndDisplay = (props: {
 
     return (
         <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
-            <AlertDialogContent className="p-0">
+            <AlertDialogContent className="p-0 max-w-sm">
                 <Image 
                     src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Fafterplay-image.png?alt=media&token=25d1d2cf-b09c-4eaf-95f1-bf3cbae2e648"
                     alt="Spielergebnis Grafik"
@@ -654,10 +654,15 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
                         <WorthaftIcon className="mx-auto h-16 w-16 mb-4 text-primary" />
                         <h1 className="text-4xl font-bold font-headline">Worthaft</h1>
                         <p className="text-muted-foreground">Eine Hommage von <Link href="/ueber/autoren" className="underline">Paulik & Reisch</Link>.</p>
-                        <Link href="/worthaft/ueber" className="text-sm inline-flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors mt-2">
-                            <HelpCircle className="h-4 w-4" />
-                            <span>Wie funktioniert's?</span>
-                        </Link>
+                        <div className="flex items-center justify-center gap-4 mt-2">
+                            <Link href="/worthaft/ueber" className="text-sm inline-flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors">
+                                <HelpCircle className="h-4 w-4" />
+                                <span>Wie funktioniert's?</span>
+                            </Link>
+                             <Button variant="link" className="text-sm gap-1.5 text-amber-600 hover:text-amber-700" onClick={() => setShowHotTipDialog(true)} disabled={hotTipUsed || gameState !== 'playing'}>
+                                🔥 Heißer Tipp
+                            </Button>
+                        </div>
                     </div>
                     <div className="w-full max-w-xs sm:max-w-sm">
                         <Grid 
@@ -683,21 +688,29 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
                 timeToNextGame={timeToNextGame}
                 shareResults={shareResults}
             />
-            <AlertDialog open={showHotTipDialog} onOpenChange={setShowHotTipDialog}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle className="flex items-center gap-2">
-                            <Lightbulb className="h-6 w-6 text-yellow-400" />
-                            Heißer Tipp!
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Du scheinst festzustecken. Möchtest du einen zufälligen, korrekten Buchstaben aufdecken? Du kannst diesen Joker nur einmal pro Spiel verwenden.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <Button variant="outline" onClick={handleDeclineHotTip}>Nein, danke</Button>
-                        <Button onClick={handleAcceptHotTip}>Ja, bitte!</Button>
-                    </AlertDialogFooter>
+             <AlertDialog open={showHotTipDialog} onOpenChange={setShowHotTipDialog}>
+                <AlertDialogContent className="p-0 max-w-sm">
+                     <Image
+                        src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Ftippbyplay-image.png?alt=media&token=38df2b8b-1917-4af2-9ed3-c370e27fbb12"
+                        alt="Heißer Tipp Grafik"
+                        width={400}
+                        height={200}
+                        className="w-full h-auto rounded-t-lg"
+                    />
+                    <div className="p-6 pt-4">
+                        <AlertDialogHeader className="text-center">
+                            <AlertDialogTitle className="text-2xl font-bold font-headline">
+                                Heißer Tipp! 🔥
+                            </AlertDialogTitle>
+                            <AlertDialogDescription className="pt-2 text-balance">
+                                Achtung, nicht verbrennen! Du kannst diesen Joker nur einmal pro Tag nutzen. Wähle den Zeitpunkt weise.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter className="mt-6 flex-col-reverse sm:flex-row gap-2">
+                            <Button variant="outline" onClick={handleDeclineHotTip} className="w-full">Nein, danke</Button>
+                            <Button onClick={handleAcceptHotTip} className="w-full">Ja, Tipp nutzen!</Button>
+                        </AlertDialogFooter>
+                    </div>
                 </AlertDialogContent>
             </AlertDialog>
         </div>
