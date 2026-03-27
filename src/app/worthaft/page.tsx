@@ -7,13 +7,13 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-} from "@/components/ui/alert-dialog";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetClose } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { WORDS } from '@/lib/worthaft-words';
@@ -21,6 +21,8 @@ import { Share2, HelpCircle, Book, Newspaper, X } from 'lucide-react';
 import Link from 'next/link';
 import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
 import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 
 const WORD_LENGTH = 5;
 const MAX_GUESSES = 6;
@@ -241,18 +243,14 @@ const GameEndDisplay = (props: {
                         </SheetHeader>
                         <ResultsContent {...rest} />
                     </div>
-                    <SheetClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
-                        <X className="h-4 w-4" />
-                        <span className="sr-only">Close</span>
-                    </SheetClose>
                 </SheetContent>
             </Sheet>
         );
     }
 
     return (
-        <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
-            <AlertDialogContent className="p-0 max-w-sm">
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
+            <DialogContent className="p-0 max-w-sm">
                 <Image 
                     src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Fafterplay-image.png?alt=media&token=25d1d2cf-b09c-4eaf-95f1-bf3cbae2e648"
                     alt="Spielergebnis Grafik"
@@ -261,21 +259,82 @@ const GameEndDisplay = (props: {
                     className="w-full h-auto rounded-t-lg"
                  />
                 <div className="p-6">
-                    <AlertDialogHeader>
-                        <AlertDialogTitle className="text-2xl font-bold font-headline text-center">
+                    <DialogHeader>
+                        <DialogTitle className="text-2xl font-bold font-headline text-center">
                             {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
-                        </AlertDialogTitle>
-                        <AlertDialogDescription className="text-muted-foreground pt-1 text-center">
+                        </DialogTitle>
+                        <DialogDescription className="text-muted-foreground pt-1 text-center">
                             Das Wort von Heute: <span className="font-bold text-primary">{rest.solution}</span>
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
+                        </DialogDescription>
+                    </DialogHeader>
                     <ResultsContent {...rest} />
                 </div>
-            </AlertDialogContent>
-        </AlertDialog>
+            </DialogContent>
+        </Dialog>
     );
 };
 
+
+const HotTipDisplay = ({ isOpen, onOpenChange, onAccept, onDecline, onDisablePermanentlyChange, isPermanentlyDisabled }: {
+    isOpen: boolean;
+    onOpenChange: (open: boolean) => void;
+    onAccept: () => void;
+    onDecline: () => void;
+    onDisablePermanentlyChange: (checked: boolean) => void;
+    isPermanentlyDisabled: boolean;
+}) => {
+    const isMobile = useIsMobile();
+    
+    const content = (
+        <>
+            <Image
+                src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Ftippbyplay-image.png?alt=media&token=38df2b8b-1917-4af2-9ed3-c370e27fbb12"
+                alt="Heißer Tipp Grafik"
+                width={400}
+                height={200}
+                className="w-full h-auto rounded-t-lg"
+            />
+            <div className="p-6 pt-4">
+                <DialogHeader className="text-center">
+                    <DialogTitle className="text-2xl font-bold font-headline">
+                        Heißer Tipp! 🔥
+                    </DialogTitle>
+                    <DialogDescription className="pt-2 text-balance">
+                        Achtung, nicht verbrennen! Du kannst diesen Joker nur einmal pro Tag nutzen. Wähle den Zeitpunkt weise.
+                    </DialogDescription>
+                </DialogHeader>
+                 <div className="flex items-center space-x-2 mt-6">
+                    <Checkbox id="disable-hot-tip" checked={isPermanentlyDisabled} onCheckedChange={(checked) => onDisablePermanentlyChange(checked as boolean)} />
+                    <Label htmlFor="disable-hot-tip" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                        Dieses Popup nicht mehr anzeigen.
+                    </Label>
+                </div>
+                <DialogFooter className="mt-6 flex-col-reverse sm:flex-row gap-2">
+                    <Button variant="outline" onClick={onDecline} className="w-full">Nein, danke</Button>
+                    <Button onClick={onAccept} className="w-full">Ja, Tipp nutzen!</Button>
+                </DialogFooter>
+            </div>
+        </>
+    );
+
+    if (isMobile) {
+        return (
+            <Sheet open={isOpen} onOpenChange={onOpenChange}>
+                <SheetContent side="bottom" className="p-0 pt-0 max-h-[90vh] overflow-y-auto rounded-t-lg">
+                    {content}
+                </SheetContent>
+            </Sheet>
+        );
+    }
+
+    return (
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
+            <DialogContent className="p-0 max-w-sm">
+                {content}
+            </DialogContent>
+        </Dialog>
+    );
+}
 
 export default function WorthaftPage() {
     const { toast } = useToast();
@@ -295,6 +354,10 @@ export default function WorthaftPage() {
     const [showHotTipDialog, setShowHotTipDialog] = useState(false);
     const [hotTipUsed, setHotTipUsed] = useState(false);
     const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
+    const [dontShowHotTipAgain, setDontShowHotTipAgain] = useState(false);
+    const [isHotTipPopupDisabled, setIsHotTipPopupDisabled] = useState(false);
+    const [glossEffect, setGlossEffect] = useState(false);
+
 
     const getTodayString = () => {
         const today = new Date();
@@ -316,6 +379,9 @@ export default function WorthaftPage() {
     }, []);
 
     useEffect(() => {
+        const disabled = localStorage.getItem('worthaft-hottip-disabled') === 'true';
+        setIsHotTipPopupDisabled(disabled);
+
         const todayStr = getTodayString();
         setSolution(getWordOfTheDay());
 
@@ -379,12 +445,12 @@ export default function WorthaftPage() {
             if (inactivityTimerRef.current) {
                 clearTimeout(inactivityTimerRef.current);
             }
-            if (gameState !== 'playing' || hotTipUsed || isDialogOpen || showHotTipDialog) {
+            if (gameState !== 'playing' || hotTipUsed || isDialogOpen || showHotTipDialog || isHotTipPopupDisabled) {
                 return;
             }
             inactivityTimerRef.current = setTimeout(() => {
                 setShowHotTipDialog(true);
-            }, 30000); // 30 seconds
+            }, 180000); // 3 minutes
         };
 
         resetInactivityTimer();
@@ -398,7 +464,19 @@ export default function WorthaftPage() {
             }
             activityEvents.forEach(event => window.removeEventListener(event, resetInactivityTimer));
         };
-    }, [gameState, hotTipUsed, isDialogOpen, showHotTipDialog]);
+    }, [gameState, hotTipUsed, isDialogOpen, showHotTipDialog, isHotTipPopupDisabled]);
+    
+    // Gloss effect for "Hot Tip" button
+    useEffect(() => {
+        const glossInterval = setInterval(() => {
+            if (hotTipUsed || gameState !== 'playing') return;
+            setGlossEffect(true);
+            setTimeout(() => setGlossEffect(false), 1000); // Animation duration is 1s
+        }, 30000);
+
+        return () => clearInterval(glossInterval);
+    }, [hotTipUsed, gameState]);
+
 
     const handleChar = (char: string) => {
         if (gameState !== 'playing') return;
@@ -602,7 +680,6 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
 
             setHotTipUsed(true);
             saveState(guesses, 'playing', letterStatuses, true);
-            setShowHotTipDialog(false);
             toast({
                 title: 'Heißer Tipp!',
                 description: `Ein Buchstabe wurde für dich aufgedeckt.`,
@@ -613,11 +690,20 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
                 title: 'Kein Tipp verfügbar',
                 description: 'Du hast bereits alle Buchstaben korrekt erraten!',
             });
-            setShowHotTipDialog(false);
         }
+        
+        if (dontShowHotTipAgain) {
+            localStorage.setItem('worthaft-hottip-disabled', 'true');
+            setIsHotTipPopupDisabled(true);
+        }
+        setShowHotTipDialog(false);
     };
 
     const handleDeclineHotTip = () => {
+        if (dontShowHotTipAgain) {
+            localStorage.setItem('worthaft-hottip-disabled', 'true');
+            setIsHotTipPopupDisabled(true);
+        }
         setShowHotTipDialog(false);
     };
 
@@ -659,7 +745,15 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
                                 <HelpCircle className="h-4 w-4" />
                                 <span>Wie funktioniert's?</span>
                             </Link>
-                             <Button variant="link" className="text-sm gap-1.5 text-amber-600 hover:text-amber-700" onClick={() => setShowHotTipDialog(true)} disabled={hotTipUsed || gameState !== 'playing'}>
+                             <Button
+                                variant="link"
+                                className={cn(
+                                    "relative overflow-hidden text-sm gap-1.5 text-amber-600 hover:text-amber-700",
+                                    glossEffect && "animate-slide-gloss"
+                                )}
+                                onClick={() => setShowHotTipDialog(true)}
+                                disabled={hotTipUsed || gameState !== 'playing'}
+                            >
                                 🔥 Heißer Tipp
                             </Button>
                         </div>
@@ -688,31 +782,14 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
                 timeToNextGame={timeToNextGame}
                 shareResults={shareResults}
             />
-             <AlertDialog open={showHotTipDialog} onOpenChange={setShowHotTipDialog}>
-                <AlertDialogContent className="p-0 max-w-sm">
-                     <Image
-                        src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Ftippbyplay-image.png?alt=media&token=38df2b8b-1917-4af2-9ed3-c370e27fbb12"
-                        alt="Heißer Tipp Grafik"
-                        width={400}
-                        height={200}
-                        className="w-full h-auto rounded-t-lg"
-                    />
-                    <div className="p-6 pt-4">
-                        <AlertDialogHeader className="text-center">
-                            <AlertDialogTitle className="text-2xl font-bold font-headline">
-                                Heißer Tipp! 🔥
-                            </AlertDialogTitle>
-                            <AlertDialogDescription className="pt-2 text-balance">
-                                Achtung, nicht verbrennen! Du kannst diesen Joker nur einmal pro Tag nutzen. Wähle den Zeitpunkt weise.
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter className="mt-6 flex-col-reverse sm:flex-row gap-2">
-                            <Button variant="outline" onClick={handleDeclineHotTip} className="w-full">Nein, danke</Button>
-                            <Button onClick={handleAcceptHotTip} className="w-full">Ja, Tipp nutzen!</Button>
-                        </AlertDialogFooter>
-                    </div>
-                </AlertDialogContent>
-            </AlertDialog>
+             <HotTipDisplay 
+                isOpen={showHotTipDialog}
+                onOpenChange={setShowHotTipDialog}
+                onAccept={handleAcceptHotTip}
+                onDecline={handleDeclineHotTip}
+                isPermanentlyDisabled={dontShowHotTipAgain}
+                onDisablePermanentlyChange={setDontShowHotTipAgain}
+            />
         </div>
     );
 }
