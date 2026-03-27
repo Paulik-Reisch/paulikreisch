@@ -364,7 +364,6 @@ export default function WorthaftPage() {
     const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
     const [dontShowHotTipAgain, setDontShowHotTipAgain] = useState(false);
     const [isHotTipPopupDisabled, setIsHotTipPopupDisabled] = useState(false);
-    const [glossEffect, setGlossEffect] = useState(false);
 
 
     const getTodayString = () => {
@@ -474,17 +473,6 @@ export default function WorthaftPage() {
         };
     }, [gameState, hotTipUsed, isDialogOpen, showHotTipDialog, isHotTipPopupDisabled]);
     
-    // Gloss effect for "Hot Tip" button
-    useEffect(() => {
-        const glossInterval = setInterval(() => {
-            if (hotTipUsed || gameState !== 'playing') return;
-            setGlossEffect(true);
-            setTimeout(() => setGlossEffect(false), 2000);
-        }, 30000);
-
-        return () => clearInterval(glossInterval);
-    }, [hotTipUsed, gameState]);
-
 
     const handleChar = (char: string) => {
         if (gameState !== 'playing') return;
@@ -753,17 +741,13 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
                                 <HelpCircle className="h-4 w-4" />
                                 <span>Wie funktioniert's?</span>
                             </Link>
-                             <Button
-                                variant="outline"
-                                className={cn(
-                                    "relative text-sm gap-1.5 text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-900/20",
-                                    glossEffect && "animate-intense-glow"
-                                )}
+                             <button
+                                className="feuer-button"
                                 onClick={() => setShowHotTipDialog(true)}
                                 disabled={hotTipUsed || gameState !== 'playing'}
-                            >
-                                🔥 Heißer Tipp
-                            </Button>
+                              >
+                                <span className="btn-text">🔥 Heißer Tipp</span>
+                              </button>
                         </div>
                     </div>
                     <div className="w-full max-w-xs sm:max-w-sm">

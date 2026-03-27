@@ -230,14 +230,109 @@
     pointer-events: none;
   }
   
-  @keyframes intense-glow {
-    0% { box-shadow: 0 0 5px #fca5a5, 0 0 10px #ef4444, 0 0 15px #f59e0b; }
-    50% { box-shadow: 0 0 10px #f59e0b, 0 0 20px #ef4444, 0 0 30px #fca5a5; }
-    100% { box-shadow: 0 0 5px #fca5a5, 0 0 10px #ef4444, 0 0 15px #f59e0b; }
+  /* Feuer-Button für "Heißer Tipp" */
+  .feuer-button {
+    position: relative;
+    padding: 14px 28px;
+    background-color: transparent;
+    border: none;
+    border-radius: 50px; /* Pillen-Form */
+    overflow: hidden; /* Versteckt die eckigen Ränder der Rotation */
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 15px rgba(255, 69, 0, 0.2); /* Sanfter oranger Schatten */
   }
 
-  .animate-intense-glow {
-    animation: intense-glow 2s ease-in-out infinite;
-    border-color: #f59e0b;
+  .feuer-button:hover:not(:disabled) {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(255, 69, 0, 0.5);
+  }
+
+  .feuer-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none;
+  }
+
+  .feuer-button::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background: conic-gradient(
+      from 0deg,
+      /* Erstes farbiges Segment (0-15% = 54°) */
+      #ff0000 0deg,
+      #ff8c00 27deg,
+      #ffff00 54deg,
+      /* Erste Lücke (15-50% = 54-180°) */
+      transparent 54deg,
+      transparent 180deg,
+      /* Zweites farbiges Segment (50-65% = 180-234°) */
+      #ff0000 180deg,
+      #ff8c00 207deg,
+      #ffff00 234deg,
+      /* Zweite Lücke (65-100% = 234-360°) */
+      transparent 234deg,
+      transparent 360deg
+    );
+    animation: feuerRotationSmooth 21s ease-in-out infinite;
+    z-index: 1;
+  }
+
+  .feuer-button:disabled::before {
+      animation: none;
+      opacity: 0;
+  }
+
+  .feuer-button::after {
+    content: "";
+    position: absolute;
+    inset: 3px; 
+    background-color: #1a1a1a;
+    border-radius: 47px;
+    z-index: 2;
+  }
+
+  .btn-text {
+    position: relative;
+    z-index: 3;
+    color: white; 
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  @keyframes feuerRotationSmooth {
+    0% { 
+      transform: translate(-50%, -50%) rotate(0deg);
+      opacity: 0;
+    }
+    66.7% { 
+      transform: translate(-50%, -50%) rotate(0deg);
+      opacity: 0;
+    }
+    71.4% {
+      transform: translate(-50%, -50%) rotate(0deg);
+      opacity: 1;
+    }
+    78.6% { 
+      transform: translate(-50%, -50%) rotate(360deg);
+      opacity: 1;
+    }
+    95.2% { 
+      transform: translate(-50%, -50%) rotate(720deg);
+      opacity: 1;
+    }
+    100% { 
+      transform: translate(-50%, -50%) rotate(720deg);
+      opacity: 0;
+    }
   }
 }
