@@ -322,6 +322,9 @@ const HotTipDisplay = ({ isOpen, onOpenChange, onAccept, onDecline, onDisablePer
             <Sheet open={isOpen} onOpenChange={onOpenChange}>
                 <SheetContent side="bottom" className="p-0 pt-0 max-h-[90vh] overflow-y-auto rounded-t-lg">
                     {content}
+                    <SheetClose className="absolute right-4 top-4 rounded-full p-1 bg-background/50 hover:bg-background/80">
+                        <X className="h-5 w-5" />
+                    </SheetClose>
                 </SheetContent>
             </Sheet>
         );
@@ -331,6 +334,9 @@ const HotTipDisplay = ({ isOpen, onOpenChange, onAccept, onDecline, onDisablePer
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogContent className="p-0 max-w-sm">
                 {content}
+                <DialogClose className="absolute right-4 top-4 rounded-full p-1 bg-background/50 hover:bg-background/80">
+                    <X className="h-5 w-5" />
+                </DialogClose>
             </DialogContent>
         </Dialog>
     );
@@ -471,7 +477,7 @@ export default function WorthaftPage() {
         const glossInterval = setInterval(() => {
             if (hotTipUsed || gameState !== 'playing') return;
             setGlossEffect(true);
-            setTimeout(() => setGlossEffect(false), 1000); // Animation duration is 1s
+            setTimeout(() => setGlossEffect(false), 2000);
         }, 30000);
 
         return () => clearInterval(glossInterval);
@@ -746,10 +752,10 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
                                 <span>Wie funktioniert's?</span>
                             </Link>
                              <Button
-                                variant="link"
+                                variant="outline"
                                 className={cn(
-                                    "relative overflow-hidden text-sm gap-1.5 text-amber-600 hover:text-amber-700",
-                                    glossEffect && "animate-slide-gloss"
+                                    "relative text-sm gap-1.5 text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-900/20",
+                                    glossEffect && "animate-intense-glow"
                                 )}
                                 onClick={() => setShowHotTipDialog(true)}
                                 disabled={hotTipUsed || gameState !== 'playing'}
