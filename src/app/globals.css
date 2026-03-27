@@ -292,7 +292,7 @@
     content: "";
     position: absolute;
     inset: 3px; 
-    background-color: #1a1a1a;
+    background-color: #f8f9fa;
     border-radius: 47px;
     z-index: 2;
   }
@@ -300,7 +300,7 @@
   .btn-text {
     position: relative;
     z-index: 3;
-    color: white; 
+    color: #1a1a1a; 
     font-size: 1.1rem;
     font-weight: 700;
     letter-spacing: 0.5px;
