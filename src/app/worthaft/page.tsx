@@ -85,7 +85,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
                 else onChar(key);
               }}
               className={cn(
-                'h-14 sm:h-12 font-bold text-sm sm:text-base transition-colors duration-300 flex-1 p-0 rounded-[3px]',
+                'h-14 sm:h-12 font-bold text-sm sm:text-base transition-colors duration-300 flex-1 p-0 rounded-md',
                 key.length > 1 ? 'px-2' : 'sm:flex-none sm:w-12',
                 getStatusClass(key)
               )}
@@ -138,7 +138,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
                     key={colIndex}
                     onClick={() => isCurrentRow && onCellClick(colIndex)}
                     className={cn(
-                        'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-sm transition-all duration-300 relative',
+                        'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-md transition-all duration-300 relative',
                         getStatusClass(status),
                         isCurrentRow && 'cursor-pointer',
                         isCurrentRow && hasLetter && !isJokerCell && 'border-muted-foreground',
@@ -336,7 +336,7 @@ const HotTipDisplay = ({ isOpen, onOpenChange, onAccept, onDecline, onDisablePer
                         Du kannst diesen Joker einmal pro Tag nutzen. Wähle den Zeitpunkt weise.
                     </DialogDescription>
                 </DialogHeader>
-                <div className="flex items-center space-x-2 mt-4 justify-center">
+                <div className="flex items-center space-x-2 mt-4 justify-start">
                     <Checkbox id="disable-hot-tip" checked={isPermanentlyDisabled} onCheckedChange={onDisablePermanentlyChange} />
                     <Label htmlFor="disable-hot-tip" className="text-sm text-muted-foreground">Nicht mehr anzeigen</Label>
                 </div>
@@ -353,11 +353,6 @@ const HotTipDisplay = ({ isOpen, onOpenChange, onAccept, onDecline, onDisablePer
             <Sheet open={isOpen} onOpenChange={onOpenChange}>
                 <SheetContent side="bottom" className="p-0 pt-0 max-h-[90vh] overflow-y-auto rounded-t-lg">
                     {content}
-                    <SheetClose asChild>
-                        <button className="absolute right-4 top-4 rounded-full p-1 bg-background/50 hover:bg-background/80">
-                            <X className="h-5 w-5" />
-                        </button>
-                    </SheetClose>
                 </SheetContent>
             </Sheet>
         );
@@ -367,11 +362,6 @@ const HotTipDisplay = ({ isOpen, onOpenChange, onAccept, onDecline, onDisablePer
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogContent className="p-0 max-w-sm">
                 {content}
-                <DialogClose asChild>
-                    <button className="absolute right-4 top-4 rounded-full p-1 bg-background/50 hover:bg-background/80">
-                        <X className="h-5 w-5" />
-                    </button>
-                </DialogClose>
             </DialogContent>
         </Dialog>
     );
@@ -424,15 +414,24 @@ export default function WorthaftPage() {
     }, []);
 
     useEffect(() => {
-        const audio = audioRef.current;
-        if (audio) {
-            audio.play().then(() => {
-                setIsMuted(false);
-            }).catch(error => {
-                console.log("Autoplay was prevented. User must interact to play audio.", error);
-                setIsMuted(true);
-            });
+        if (!audioRef.current) {
+            audioRef.current = new Audio("https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Fworthaft.mp3?alt=media&token=50d6e7f0-001e-42d1-ab2a-7b5ac24b5b29");
+            audioRef.current.loop = true;
         }
+
+        const playAudio = async () => {
+            if (audioRef.current) {
+                try {
+                    await audioRef.current.play();
+                    setIsMuted(audioRef.current.muted);
+                } catch (error) {
+                    console.log("Autoplay was prevented. User must interact to play audio.", error);
+                    setIsMuted(true);
+                }
+            }
+        };
+        playAudio();
+
     }, []);
 
     useEffect(() => {
@@ -460,8 +459,17 @@ export default function WorthaftPage() {
                     if (dailyState.jokerPosition) {
                         setJokerPosition(dailyState.jokerPosition);
                         const newCurrentGuess = Array(WORD_LENGTH).fill('');
+                        
+                        // Prefill joker for all rows
+                        dailyState.guesses.forEach((g, i) => {
+                          if (i >= dailyState.jokerPosition!.guessIndex) {
+                            // This part is for visual restoration, the logic of current guess handles the active row
+                          }
+                        })
+                        
                         newCurrentGuess[dailyState.jokerPosition.letterIndex] = getWordOfTheDay()[dailyState.jokerPosition.letterIndex];
                         setCurrentGuess(newCurrentGuess);
+
                         const firstEmptyIndex = newCurrentGuess.findIndex(l => l === '');
                         setActiveIndex(firstEmptyIndex !== -1 ? firstEmptyIndex : 0);
                     }
@@ -527,7 +535,7 @@ export default function WorthaftPage() {
             if (inactivityTimerRef.current) {
                 clearTimeout(inactivityTimerRef.current);
             }
-            activityEvents.forEach(event => window.removeEventListener(event, resetInactivityTimer));
+            activityEvents.forEach(event => window.removeEventListener(event, handleActivity));
         };
     }, [gameState, hotTipUsed, isDialogOpen, showHotTipDialog, isHotTipPopupDisabled]);
     
@@ -641,19 +649,27 @@ export default function WorthaftPage() {
     const handleDelete = () => {
         if (gameState !== 'playing') return;
         const newGuess = [...currentGuess];
-        // If current cell has a letter, delete it and stay.
+        
+        // Prevent deleting the joker letter
+        if (jokerPosition && jokerPosition.guessIndex === guesses.length && activeIndex === jokerPosition.letterIndex) {
+            return;
+        }
+
         if (newGuess[activeIndex] && activeIndex === currentGuess.length-1) {
             newGuess[activeIndex] = '';
             setCurrentGuess(newGuess);
         } else if (activeIndex > 0) {
-            // If current cell is empty, move to previous and delete that one.
             const prevIndex = activeIndex - 1;
-            newGuess[prevIndex] = '';
-            setCurrentGuess(newGuess);
-            setActiveIndex(prevIndex);
+            if (!(jokerPosition && jokerPosition.guessIndex === guesses.length && prevIndex === jokerPosition.letterIndex)) {
+                newGuess[prevIndex] = '';
+                setCurrentGuess(newGuess);
+                setActiveIndex(prevIndex);
+            }
         } else if (activeIndex === 0) {
-            newGuess[0] = '';
-            setCurrentGuess(newGuess);
+             if (!(jokerPosition && jokerPosition.guessIndex === guesses.length && activeIndex === jokerPosition.letterIndex)) {
+                newGuess[0] = '';
+                setCurrentGuess(newGuess);
+             }
         }
     };
     
@@ -690,11 +706,11 @@ export default function WorthaftPage() {
             }).join('')
         ).join('\n');
         
-        const tipUsedLine = hotTipUsed ? ` (mit 1 Heißem Tipp 🔥)` : "";
+        const tipUsedLine = hotTipUsed ? `(1 Heißer Tipp verwendet 🔥)` : "";
 
         const text = `Worthaft - Das Paulik & Reisch Spiel
 
-Ich habe das tägliche Worthaft gespielt. Mein Ergebnis: ${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} Versuchen${tipUsedLine}
+Ich habe das tägliche Worthaft gespielt. Mein Ergebnis: ${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} Versuchen ${tipUsedLine}
 
 ${resultGrid}
 
@@ -822,7 +838,6 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            <audio ref={audioRef} src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Fworthaft.mp3?alt=media&token=50d6e7f0-001e-42d1-ab2a-7b5ac24b5b29" loop autoPlay />
             <Header />
             <main className="flex-1 py-8 md:py-12">
                 <div className="container max-w-md mx-auto flex flex-col items-center justify-center">
@@ -887,3 +902,4 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
     
 
     
+
