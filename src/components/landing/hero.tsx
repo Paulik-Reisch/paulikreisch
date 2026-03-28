@@ -5,7 +5,7 @@ import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Product } from "@/lib/firestore";
-import { ChevronDown } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import SplitText from "../ui/SplitText";
 
 const heroTexts = [
@@ -98,7 +98,7 @@ export function Hero({ product }: { product?: Product }) {
       </div>
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:block">
         <a href="#articles" aria-label="Nach unten scrollen">
-          <ChevronDown className="h-8 w-8 text-muted-foreground animate-bounce" />
+          <ArrowDown className="h-8 w-8 text-muted-foreground animate-bounce" />
         </a>
       </div>
     </section>
