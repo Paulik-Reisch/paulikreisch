@@ -292,7 +292,7 @@
     content: "";
     position: absolute;
     inset: 3px; 
-    background-color: #f8f9fa;
+    background-color: hsl(var(--color-leche));
     border-radius: 47px;
     z-index: 2;
   }
@@ -334,5 +334,9 @@
       transform: translate(-50%, -50%) rotate(720deg);
       opacity: 0;
     }
+  }
+
+  .bg-joker-gradient {
+    background-image: linear-gradient(to top right, #fde68a, #f59e0b, #ef4444);
   }
 }

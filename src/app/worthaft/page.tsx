@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { Header } from '@/components/landing/header';
 import { Footer } from '@/components/landing/footer';
 import { cn } from '@/lib/utils';
@@ -42,12 +43,15 @@ type DailyGameState = {
 
 // Select a word for the day
 const getWordOfTheDay = () => {
-  const startDate = new Date('2024-01-01');
-  const today = new Date();
-  today.setHours(0,0,0,0); // Normalize to start of day
-  const diffTime = Math.abs(today.getTime() - startDate.getTime());
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-  return WORDS[diffDays % WORDS.length].toUpperCase();
+    const today = new Date();
+    // Use local date parts to create a date string, avoiding timezone conversions.
+    const todayString = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+    const startDate = new Date('2024-01-01');
+    const localToday = new Date(todayString); // This will be in the client's local timezone at 00:00:00
+
+    const diffTime = Math.abs(localToday.getTime() - startDate.getTime());
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    return WORDS[diffDays % WORDS.length].toUpperCase();
 };
 
 const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (value: string) => void; onEnter: () => void; onDelete: () => void; letterStatuses: { [key: string]: LetterStatus } }) => {
@@ -95,13 +99,14 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
   );
 };
 
-const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, onCellClick }: { 
+const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, onCellClick, jokerReveal }: { 
     guesses: { guess: string; statuses: LetterStatus[] }[]; 
     currentGuess: string[]; 
     isShaking: boolean; 
     currentRowIndex: number;
     activeIndex: number;
     onCellClick: (index: number) => void;
+    jokerReveal: { index: number; key: number } | null;
 }) => {
   const rows = Array.from({ length: MAX_GUESSES });
   const getStatusClass = (status: LetterStatus) => {
@@ -126,22 +131,48 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
             const letter = isCurrentRow ? currentGuess[colIndex] : guessInfo?.guess[colIndex];
             const status = guessInfo?.statuses[colIndex] || 'empty';
             const hasLetter = !!letter;
+            const isJokerCell = jokerReveal && jokerReveal.index === colIndex && isCurrentRow;
 
             return (
                 <div
                     key={colIndex}
                     onClick={() => isCurrentRow && onCellClick(colIndex)}
                     className={cn(
-                        'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-md transition-all duration-300',
+                        'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-md transition-all duration-300 relative',
                         getStatusClass(status),
                         isCurrentRow && 'cursor-pointer',
-                        isCurrentRow && hasLetter && 'border-muted-foreground',
+                        isCurrentRow && hasLetter && !isJokerCell && 'border-muted-foreground',
                         isCurrentRow && activeIndex === colIndex && 'border-primary ring-2 ring-primary scale-105',
-                        status !== 'empty' && 'animate-in fade-in zoom-in-50'
+                        status !== 'empty' && 'animate-in fade-in zoom-in-50',
+                        isJokerCell && 'bg-joker-gradient text-primary-foreground border-transparent'
                     )}
                     style={{ animationDelay: `${colIndex * 100}ms` }}
                 >
-                    {letter}
+                    {isJokerCell ? (
+                        <motion.div
+                            key={jokerReveal.key}
+                            className="w-full h-full"
+                            style={{ transformStyle: 'preserve-3d' }}
+                            initial={{ rotateY: 0 }}
+                            animate={{ rotateY: 180 }}
+                            transition={{ duration: 0.8, ease: 'easeInOut' }}
+                        >
+                            <motion.div
+                                className="absolute inset-0 flex items-center justify-center"
+                                style={{ backfaceVisibility: 'hidden' }}
+                            >
+                                🔥
+                            </motion.div>
+                            <motion.div
+                                className="absolute inset-0 flex items-center justify-center"
+                                style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+                            >
+                                {letter}
+                            </motion.div>
+                        </motion.div>
+                    ) : (
+                        letter
+                    )}
                 </div>
             );
           })}
@@ -226,13 +257,13 @@ const GameEndDisplay = (props: {
     if (isMobile) {
         return (
             <Sheet open={isOpen} onOpenChange={onOpenChange}>
-                <SheetContent side="bottom" className="p-0 pt-0 max-h-[90vh] overflow-y-auto">
+                <SheetContent side="bottom" className="p-0 pt-0 max-h-[90vh] overflow-y-auto rounded-t-lg">
                      <Image 
                         src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Fafterplay-image.png?alt=media&token=25d1d2cf-b09c-4eaf-95f1-bf3cbae2e648"
                         alt="Spielergebnis Grafik"
                         width={400}
                         height={200}
-                        className="w-full h-auto rounded-t-lg"
+                        className="w-full h-auto"
                      />
                     <div className="p-6">
                         <SheetHeader className="text-center">
@@ -252,13 +283,13 @@ const GameEndDisplay = (props: {
 
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
-            <DialogContent className="p-0 max-w-sm">
+            <DialogContent className="p-0 max-w-sm rounded-t-lg overflow-hidden">
                 <Image 
                     src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Fafterplay-image.png?alt=media&token=25d1d2cf-b09c-4eaf-95f1-bf3cbae2e648"
                     alt="Spielergebnis Grafik"
                     width={400}
                     height={200}
-                    className="w-full h-auto rounded-t-lg"
+                    className="w-full h-auto"
                  />
                 <div className="p-6">
                     <DialogHeader>
@@ -364,6 +395,7 @@ export default function WorthaftPage() {
     const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
     const [dontShowHotTipAgain, setDontShowHotTipAgain] = useState(false);
     const [isHotTipPopupDisabled, setIsHotTipPopupDisabled] = useState(false);
+    const [jokerReveal, setJokerReveal] = useState<{ index: number; key: number } | null>(null);
 
 
     const getTodayString = () => {
@@ -578,7 +610,7 @@ export default function WorthaftPage() {
         if (gameState !== 'playing') return;
         const newGuess = [...currentGuess];
         // If current cell has a letter, delete it and stay.
-        if (newGuess[activeIndex]) {
+        if (newGuess[activeIndex] && activeIndex === currentGuess.length-1) {
             newGuess[activeIndex] = '';
             setCurrentGuess(newGuess);
         } else if (activeIndex > 0) {
@@ -587,6 +619,9 @@ export default function WorthaftPage() {
             newGuess[prevIndex] = '';
             setCurrentGuess(newGuess);
             setActiveIndex(prevIndex);
+        } else if (activeIndex === 0) {
+            newGuess[0] = '';
+            setCurrentGuess(newGuess);
         }
     };
     
@@ -659,6 +694,13 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
                 }
             });
         });
+        
+        currentGuess.forEach((letter, index) => {
+            if (letter === solution[index]) {
+                correctlyGuessedIndices.add(index);
+            }
+        });
+
 
         const revealableIndices = [];
         for (let i = 0; i < WORD_LENGTH; i++) {
@@ -670,9 +712,12 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
         if (revealableIndices.length > 0) {
             const jokerIndex = revealableIndices[Math.floor(Math.random() * revealableIndices.length)];
             const jokerLetter = solution[jokerIndex];
+            
             const newGuess = [...currentGuess];
             newGuess[jokerIndex] = jokerLetter;
             setCurrentGuess(newGuess);
+
+            setJokerReveal({ index: jokerIndex, key: Date.now() });
 
             setHotTipUsed(true);
             saveState(guesses, 'playing', letterStatuses, true);
@@ -758,6 +803,7 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
                             currentRowIndex={guesses.length}
                             activeIndex={activeIndex}
                             onCellClick={setActiveIndex}
+                            jokerReveal={jokerReveal}
                         />
                         <Keyboard onChar={handleChar} onEnter={handleEnter} onDelete={handleDelete} letterStatuses={letterStatuses} />
                     </div>
