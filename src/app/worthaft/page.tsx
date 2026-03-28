@@ -86,8 +86,8 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
                 else onChar(key);
               }}
               className={cn(
-                'h-12 font-bold text-sm sm:text-base transition-colors duration-300 flex-1 p-0',
-                key.length > 1 ? 'px-2' : 'sm:flex-none sm:w-10',
+                'h-14 sm:h-12 font-bold text-sm sm:text-base transition-colors duration-300 flex-1 p-0 rounded-sm',
+                key.length > 1 ? 'px-2' : 'sm:flex-none sm:w-12',
                 getStatusClass(key)
               )}
             >
@@ -139,7 +139,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
                     key={colIndex}
                     onClick={() => isCurrentRow && onCellClick(colIndex)}
                     className={cn(
-                        'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-md transition-all duration-300 relative',
+                        'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-sm transition-all duration-300 relative',
                         getStatusClass(status),
                         isCurrentRow && 'cursor-pointer',
                         isCurrentRow && hasLetter && !isJokerCell && 'border-muted-foreground',
@@ -337,8 +337,13 @@ const HotTipDisplay = ({ isOpen, onOpenChange, onAccept, onDecline, onDisablePer
                         Du kannst diesen Joker einmal pro Tag nutzen. Wähle den Zeitpunkt weise.
                     </DialogDescription>
                 </DialogHeader>
+                <div className="flex items-center space-x-2 mt-4 justify-center">
+                    <Checkbox id="disable-hot-tip" checked={isPermanentlyDisabled} onCheckedChange={onDisablePermanentlyChange} />
+                    <Label htmlFor="disable-hot-tip" className="text-sm text-muted-foreground">Nicht mehr anzeigen</Label>
+                </div>
                 <DialogFooter className="mt-6 flex-col-reverse sm:flex-row gap-2">
-                    <Button onClick={onAccept} className="w-full">Verstanden!</Button>
+                    <Button onClick={onDecline} variant="ghost" className="w-full">Ablehnen</Button>
+                    <Button onClick={onAccept} className="w-full">Joker nutzen!</Button>
                 </DialogFooter>
             </div>
         </>
@@ -349,8 +354,10 @@ const HotTipDisplay = ({ isOpen, onOpenChange, onAccept, onDecline, onDisablePer
             <Sheet open={isOpen} onOpenChange={onOpenChange}>
                 <SheetContent side="bottom" className="p-0 pt-0 max-h-[90vh] overflow-y-auto rounded-t-lg">
                     {content}
-                    <SheetClose className="absolute right-4 top-4 rounded-full p-1 bg-background/50 hover:bg-background/80">
-                        <X className="h-5 w-5" />
+                    <SheetClose asChild>
+                        <button className="absolute right-4 top-4 rounded-full p-1 bg-background/50 hover:bg-background/80">
+                            <X className="h-5 w-5" />
+                        </button>
                     </SheetClose>
                 </SheetContent>
             </Sheet>
@@ -361,8 +368,10 @@ const HotTipDisplay = ({ isOpen, onOpenChange, onAccept, onDecline, onDisablePer
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogContent className="p-0 max-w-sm">
                 {content}
-                <DialogClose className="absolute right-4 top-4 rounded-full p-1 bg-background/50 hover:bg-background/80">
-                    <X className="h-5 w-5" />
+                <DialogClose asChild>
+                    <button className="absolute right-4 top-4 rounded-full p-1 bg-background/50 hover:bg-background/80">
+                        <X className="h-5 w-5" />
+                    </button>
                 </DialogClose>
             </DialogContent>
         </Dialog>
@@ -437,6 +446,11 @@ export default function WorthaftPage() {
                     setHotTipUsed(dailyState.hotTipUsed || false);
                     if (dailyState.jokerPosition) {
                         setJokerPosition(dailyState.jokerPosition);
+                        const newCurrentGuess = Array(WORD_LENGTH).fill('');
+                        newCurrentGuess[dailyState.jokerPosition.letterIndex] = getWordOfTheDay()[dailyState.jokerPosition.letterIndex];
+                        setCurrentGuess(newCurrentGuess);
+                        const firstEmptyIndex = newCurrentGuess.findIndex(l => l === '');
+                        setActiveIndex(firstEmptyIndex !== -1 ? firstEmptyIndex : 0);
                     }
 
 
@@ -569,8 +583,14 @@ export default function WorthaftPage() {
         }
         setLetterStatuses(newLetterStatuses);
         
-        setCurrentGuess(Array(WORD_LENGTH).fill(''));
-        setActiveIndex(0);
+        const newCurrentGuess = Array(WORD_LENGTH).fill('');
+        if (jokerPosition) {
+            newCurrentGuess[jokerPosition.letterIndex] = solution[jokerPosition.letterIndex];
+        }
+        setCurrentGuess(newCurrentGuess);
+
+        const firstEmptyIndex = newCurrentGuess.findIndex(l => l === '');
+        setActiveIndex(firstEmptyIndex !== -1 ? firstEmptyIndex : 0);
 
         // Check game state
         if (guessWord === solution) {
@@ -659,9 +679,9 @@ export default function WorthaftPage() {
         
         const tipUsedLine = hotTipUsed ? ` (mit 1 Heißem Tipp 🔥)` : "";
 
-        const text = `WORTHAFT - Das Paulik & Reisch Spiel
+        const text = `Worthaft - Das Paulik & Reisch Spiel
 
-Ich habe das tägliche WORTHAFT gespielt. Mein Ergebnis: ${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} Versuchen${tipUsedLine}
+Ich habe das tägliche Worthaft gespielt. Mein Ergebnis: ${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} Versuchen${tipUsedLine}
 
 ${resultGrid}
 
@@ -681,7 +701,7 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
             }
         } else {
             navigator.clipboard.writeText(`${text}\n\nhttps://paulikreisch.de/worthaft`).then(() => {
-                toast({ title: 'Kopiert!', description: 'Ergebnis in die Zwischenablage kopiert. Teile es mit der Welt!' });
+                toast({ title: 'Kopiert!', description: 'Ergebnis in die Zwischenablage kopiert.' });
             });
         }
     }
@@ -789,7 +809,7 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
                         <div className="flex items-center justify-center gap-4 mt-2">
                             <Link href="/worthaft/ueber" className="text-sm inline-flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors">
                                 <HelpCircle className="h-4 w-4" />
-                                <span>Wie funktioniert's?</span>
+                                <span>Spielanleitung</span>
                             </Link>
                              <button
                                 className="feuer-button"
@@ -836,5 +856,7 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
         </div>
     );
 }
+
+    
 
     
