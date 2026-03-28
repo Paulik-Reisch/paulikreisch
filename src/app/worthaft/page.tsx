@@ -19,7 +19,7 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetClose } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { WORDS } from '@/lib/worthaft-words';
-import { Share2, HelpCircle, Book, Newspaper, X, Volume2, VolumeX, Delete } from 'lucide-react';
+import { Share2, HelpCircle, Book, Newspaper, X, Volume2, VolumeX, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
 import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
@@ -85,12 +85,12 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
                 else onChar(key);
               }}
               className={cn(
-                'h-14 sm:h-12 font-bold text-sm sm:text-base transition-colors duration-300 flex-1 p-0 rounded-md',
-                key.length > 1 ? 'px-2' : 'sm:flex-none sm:w-12',
+                'h-14 sm:h-12 font-bold text-sm sm:text-base transition-colors duration-300 flex-1 p-0 rounded-[4px] sm:flex-none sm:w-12',
+                key.length > 1 ? 'px-2' : '',
                 getStatusClass(key)
               )}
             >
-              {key === 'DELETE' ? <Delete className="mx-auto h-6 w-6" /> : key}
+              {key === 'DELETE' ? <ArrowLeft className="mx-auto h-6 w-6" /> : key}
             </Button>
           ))}
         </div>
@@ -138,7 +138,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
                     key={colIndex}
                     onClick={() => isCurrentRow && onCellClick(colIndex)}
                     className={cn(
-                        'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-md transition-all duration-300 relative',
+                        'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded',
                         getStatusClass(status),
                         isCurrentRow && 'cursor-pointer',
                         isCurrentRow && hasLetter && !isJokerCell && 'border-muted-foreground',
@@ -328,7 +328,7 @@ const HotTipDisplay = ({ isOpen, onOpenChange, onAccept, onDecline, onDisablePer
                 className="w-full h-auto rounded-t-lg"
             />
             <div className="p-6 pt-4">
-                <DialogHeader className="text-center">
+                <DialogHeader className="text-left">
                     <DialogTitle className="text-2xl font-bold font-headline">
                         Heißer Tipp! 🔥
                     </DialogTitle>
@@ -341,8 +341,7 @@ const HotTipDisplay = ({ isOpen, onOpenChange, onAccept, onDecline, onDisablePer
                     <Label htmlFor="disable-hot-tip" className="text-sm text-muted-foreground">Nicht mehr anzeigen</Label>
                 </div>
                 <DialogFooter className="mt-6 flex-col-reverse sm:flex-row gap-2">
-                    <Button onClick={onDecline} className="w-full" variant="outline">Ablehnen</Button>
-                    <Button onClick={onAccept} className="w-full">Tipp nutzen!</Button>
+                    <Button onClick={onAccept} className="w-full">Verstanden!</Button>
                 </DialogFooter>
             </div>
         </>
@@ -459,15 +458,9 @@ export default function WorthaftPage() {
                     if (dailyState.jokerPosition) {
                         setJokerPosition(dailyState.jokerPosition);
                         const newCurrentGuess = Array(WORD_LENGTH).fill('');
-                        
-                        // Prefill joker for all rows
-                        dailyState.guesses.forEach((g, i) => {
-                          if (i >= dailyState.jokerPosition!.guessIndex) {
-                            // This part is for visual restoration, the logic of current guess handles the active row
-                          }
-                        })
-                        
-                        newCurrentGuess[dailyState.jokerPosition.letterIndex] = getWordOfTheDay()[dailyState.jokerPosition.letterIndex];
+                        if (dailyState.guesses.length === dailyState.jokerPosition.guessIndex) {
+                            newCurrentGuess[dailyState.jokerPosition.letterIndex] = getWordOfTheDay()[dailyState.jokerPosition.letterIndex];
+                        }
                         setCurrentGuess(newCurrentGuess);
 
                         const firstEmptyIndex = newCurrentGuess.findIndex(l => l === '');
@@ -605,7 +598,7 @@ export default function WorthaftPage() {
         setLetterStatuses(newLetterStatuses);
         
         const newCurrentGuess = Array(WORD_LENGTH).fill('');
-        if (jokerPosition && newGuesses.length > jokerPosition.guessIndex) {
+        if (jokerPosition && newGuesses.length >= jokerPosition.guessIndex) {
              newCurrentGuess[jokerPosition.letterIndex] = solution[jokerPosition.letterIndex];
         }
         setCurrentGuess(newCurrentGuess);
