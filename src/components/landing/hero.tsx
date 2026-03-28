@@ -59,7 +59,7 @@ export function Hero({ product }: { product?: Product }) {
         <div className="flex flex-col-reverse md:grid items-center gap-6 md:grid-cols-2 lg:gap-12">
           <div className="flex flex-col justify-center space-y-8 text-center md:text-left">
             <div className="space-y-4 min-h-[12rem] flex flex-col justify-center animate-in fade-in slide-in-from-top-12 duration-1000">
-                <h1 id="main-hero-heading" className="font-headline text-3xl sm:text-4xl md:text-5xl xl:text-7xl/none text-balance">
+                <h1 id="main-hero-heading" className="font-headline text-3xl sm:text-4xl md:text-5xl xl:text-7xl text-balance">
                     <SplitText
                         key={key} // Use key to force re-render and re-animate
                         text={heroTexts[textIndex]}
