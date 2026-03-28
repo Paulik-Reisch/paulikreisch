@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Header } from '@/components/landing/header';
 import { Footer } from '@/components/landing/footer';
 import { cn } from '@/lib/utils';
@@ -341,8 +341,8 @@ const HotTipDisplay = ({ isOpen, onOpenChange, onAccept, onDecline, onDisablePer
                     <Label htmlFor="disable-hot-tip" className="text-sm text-muted-foreground">Nicht mehr anzeigen</Label>
                 </div>
                 <DialogFooter className="mt-6 flex-col-reverse sm:flex-row gap-2">
-                    <Button onClick={onDecline} variant="ghost" className="w-full">Ablehnen</Button>
-                    <Button onClick={onAccept} className="w-full">Joker nutzen!</Button>
+                    <Button onClick={onDecline} className="w-full" variant="outline">Ablehnen</Button>
+                    <Button onClick={onAccept} className="w-full">Tipp nutzen!</Button>
                 </DialogFooter>
             </div>
         </>
@@ -414,7 +414,7 @@ export default function WorthaftPage() {
     }, []);
 
     useEffect(() => {
-        if (!audioRef.current) {
+        if (typeof window !== 'undefined' && !audioRef.current) {
             audioRef.current = new Audio("https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Fworthaft.mp3?alt=media&token=50d6e7f0-001e-42d1-ab2a-7b5ac24b5b29");
             audioRef.current.loop = true;
         }
@@ -535,7 +535,7 @@ export default function WorthaftPage() {
             if (inactivityTimerRef.current) {
                 clearTimeout(inactivityTimerRef.current);
             }
-            activityEvents.forEach(event => window.removeEventListener(event, handleActivity));
+            activityEvents.forEach(event => window.removeEventListener(event, resetInactivityTimer));
         };
     }, [gameState, hotTipUsed, isDialogOpen, showHotTipDialog, isHotTipPopupDisabled]);
     
@@ -605,8 +605,8 @@ export default function WorthaftPage() {
         setLetterStatuses(newLetterStatuses);
         
         const newCurrentGuess = Array(WORD_LENGTH).fill('');
-        if (jokerPosition) {
-            newCurrentGuess[jokerPosition.letterIndex] = solution[jokerPosition.letterIndex];
+        if (jokerPosition && newGuesses.length > jokerPosition.guessIndex) {
+             newCurrentGuess[jokerPosition.letterIndex] = solution[jokerPosition.letterIndex];
         }
         setCurrentGuess(newCurrentGuess);
 
@@ -898,8 +898,3 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
         </div>
     );
 }
-
-    
-
-    
-
