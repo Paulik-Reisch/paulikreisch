@@ -19,7 +19,7 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetClose } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { WORDS } from '@/lib/worthaft-words';
-import { Share2, HelpCircle, Book, Newspaper, X, Volume2, VolumeX, ArrowLeft } from 'lucide-react';
+import { Share2, HelpCircle, Book, Newspaper, X, Volume2, VolumeX, ArrowLeft, Delete } from 'lucide-react';
 import Link from 'next/link';
 import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
 import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
@@ -85,8 +85,8 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
                 else onChar(key);
               }}
               className={cn(
-                'h-14 sm:h-12 font-bold text-sm sm:text-base transition-colors duration-300 flex-1 p-0 rounded-[4px] sm:flex-none sm:w-12',
-                key.length > 1 ? 'px-2' : '',
+                'h-14 sm:h-12 font-bold text-sm sm:text-base transition-colors duration-300 flex-1 p-0 rounded-[4px] sm:flex-none',
+                key.length > 1 ? 'sm:w-auto px-4' : 'sm:w-12',
                 getStatusClass(key)
               )}
             >
@@ -138,7 +138,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
                     key={colIndex}
                     onClick={() => isCurrentRow && onCellClick(colIndex)}
                     className={cn(
-                        'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded',
+                        'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-[4px]',
                         getStatusClass(status),
                         isCurrentRow && 'cursor-pointer',
                         isCurrentRow && hasLetter && !isJokerCell && 'border-muted-foreground',
@@ -419,10 +419,9 @@ export default function WorthaftPage() {
         }
 
         const playAudio = async () => {
-            if (audioRef.current) {
+            if (audioRef.current && !isMuted) {
                 try {
                     await audioRef.current.play();
-                    setIsMuted(audioRef.current.muted);
                 } catch (error) {
                     console.log("Autoplay was prevented. User must interact to play audio.", error);
                     setIsMuted(true);
