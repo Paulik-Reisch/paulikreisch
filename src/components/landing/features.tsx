@@ -16,7 +16,7 @@ export function Features() {
           </div>
         </div>
         <div className="mx-auto max-w-3xl py-12">
-          <Accordion type="single" collapsible className="w-full" defaultValue="item-1">
+          <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1" className="bg-white/10 border-white/20 border rounded-lg px-6 mb-4">
               <AccordionTrigger className="hover:no-underline text-xl font-bold font-headline text-left">
                 <div className="flex items-center gap-4">
