@@ -334,18 +334,11 @@ const HotTipDisplay = ({ isOpen, onOpenChange, onAccept, onDecline, onDisablePer
                         Heißer Tipp! 🔥
                     </DialogTitle>
                     <DialogDescription className="pt-2 text-balance">
-                        Achtung, nicht verbrennen! Du kannst diesen Joker nur einmal pro Tag nutzen. Wähle den Zeitpunkt weise.
+                        Du kannst diesen Joker einmal pro Tag nutzen. Wähle den Zeitpunkt weise.
                     </DialogDescription>
                 </DialogHeader>
-                 <div className="flex items-center space-x-2 mt-6">
-                    <Checkbox id="disable-hot-tip" checked={isPermanentlyDisabled} onCheckedChange={(checked) => onDisablePermanentlyChange(checked as boolean)} />
-                    <Label htmlFor="disable-hot-tip" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                        Dieses Popup nicht mehr anzeigen.
-                    </Label>
-                </div>
                 <DialogFooter className="mt-6 flex-col-reverse sm:flex-row gap-2">
-                    <Button variant="outline" onClick={onDecline} className="w-full">Nein, danke</Button>
-                    <Button onClick={onAccept} className="w-full">Ja, Tipp nutzen!</Button>
+                    <Button onClick={onAccept} className="w-full">Verstanden!</Button>
                 </DialogFooter>
             </div>
         </>
@@ -793,7 +786,6 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
                     <div className="text-center mb-8">
                         <WorthaftIcon className="mx-auto h-16 w-16 mb-4 text-primary" />
                         <h1 className="text-4xl font-bold font-headline">Worthaft</h1>
-                        <p className="text-muted-foreground">Eine Hommage von <Link href="/ueber/autoren" className="underline">Paulik & Reisch</Link>.</p>
                         <div className="flex items-center justify-center gap-4 mt-2">
                             <Link href="/worthaft/ueber" className="text-sm inline-flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors">
                                 <HelpCircle className="h-4 w-4" />
