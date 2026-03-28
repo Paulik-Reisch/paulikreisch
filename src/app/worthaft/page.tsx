@@ -38,6 +38,7 @@ type DailyGameState = {
   status: 'won' | 'lost' | 'playing';
   letterStatuses: { [key: string]: LetterStatus };
   hotTipUsed?: boolean;
+  jokerPosition?: { guessIndex: number; letterIndex: number };
 };
 
 
@@ -396,6 +397,7 @@ export default function WorthaftPage() {
     const [dontShowHotTipAgain, setDontShowHotTipAgain] = useState(false);
     const [isHotTipPopupDisabled, setIsHotTipPopupDisabled] = useState(false);
     const [jokerReveal, setJokerReveal] = useState<{ index: number; key: number } | null>(null);
+    const [jokerPosition, setJokerPosition] = useState<{ guessIndex: number; letterIndex: number } | null>(null);
 
 
     const getTodayString = () => {
@@ -406,13 +408,14 @@ export default function WorthaftPage() {
         return `${year}-${month}-${day}`;
     };
 
-    const saveState = useCallback((newGuesses: { guess: string; statuses: LetterStatus[] }[], newStatus: 'won' | 'lost' | 'playing', newLetterStatuses: { [key: string]: LetterStatus }, newHotTipUsed: boolean) => {
+    const saveState = useCallback((newGuesses: { guess: string; statuses: LetterStatus[] }[], newStatus: 'won' | 'lost' | 'playing', newLetterStatuses: { [key: string]: LetterStatus }, newHotTipUsed: boolean, newJokerPosition: { guessIndex: number; letterIndex: number } | null) => {
         const dailyState: DailyGameState = {
             date: getTodayString(),
             guesses: newGuesses,
             status: newStatus,
             letterStatuses: newLetterStatuses,
-            hotTipUsed: newHotTipUsed
+            hotTipUsed: newHotTipUsed,
+            jokerPosition: newJokerPosition || undefined
         };
         localStorage.setItem('worthaft-daily-game', JSON.stringify(dailyState));
     }, []);
@@ -439,6 +442,9 @@ export default function WorthaftPage() {
                     setGameState(dailyState.status);
                     setLetterStatuses(dailyState.letterStatuses || {});
                     setHotTipUsed(dailyState.hotTipUsed || false);
+                    if (dailyState.jokerPosition) {
+                        setJokerPosition(dailyState.jokerPosition);
+                    }
 
 
                     if (dailyState.status === 'won' || dailyState.status === 'lost') {
@@ -585,7 +591,7 @@ export default function WorthaftPage() {
             };
             setStats(newStats);
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
-            saveState(newGuesses, 'won', newLetterStatuses, hotTipUsed);
+            saveState(newGuesses, 'won', newLetterStatuses, hotTipUsed, jokerPosition);
             setIsCompletedToday(true);
             setTimeout(() => setIsDialogOpen(true), 1000);
         } else if (newGuesses.length === MAX_GUESSES) {
@@ -598,13 +604,13 @@ export default function WorthaftPage() {
             };
             setStats(newStats);
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
-            saveState(newGuesses, 'lost', newLetterStatuses, hotTipUsed);
+            saveState(newGuesses, 'lost', newLetterStatuses, hotTipUsed, jokerPosition);
             setIsCompletedToday(true);
             setTimeout(() => setIsDialogOpen(true), 1000);
         } else {
-             saveState(newGuesses, 'playing', newLetterStatuses, hotTipUsed);
+             saveState(newGuesses, 'playing', newLetterStatuses, hotTipUsed, jokerPosition);
         }
-    }, [currentGuess, gameState, guesses, letterStatuses, solution, stats, toast, saveState, hotTipUsed]);
+    }, [currentGuess, gameState, guesses, letterStatuses, solution, stats, toast, saveState, hotTipUsed, jokerPosition]);
 
     const handleDelete = () => {
         if (gameState !== 'playing') return;
@@ -647,18 +653,22 @@ export default function WorthaftPage() {
     }, [handleKeyDown]);
 
     const shareResults = async () => {
-        const resultGrid = guesses.map(g => 
-            g.statuses.map(s => {
+        const resultGrid = guesses.map((g, guessIndex) => 
+            g.statuses.map((s, letterIndex) => {
+                if (jokerPosition && jokerPosition.guessIndex === guessIndex && jokerPosition.letterIndex === letterIndex) {
+                    return '🔥';
+                }
                 if (s === 'correct') return '🟦';
                 if (s === 'present') return '🟨';
                 return '⬛';
             }).join('')
         ).join('\n');
         
+        const tipUsedLine = hotTipUsed ? ` (mit 1 Heißem Tipp 🔥)` : "";
+
         const text = `WORTHAFT - Das Paulik & Reisch Spiel
 
-Ich habe das tägliche WORTHAFT gespielt. Mein Ergebnis:
-${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} Versuchen
+Ich habe das tägliche WORTHAFT gespielt. Mein Ergebnis: ${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} Versuchen${tipUsedLine}
 
 ${resultGrid}
 
@@ -719,8 +729,11 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
 
             setJokerReveal({ index: jokerIndex, key: Date.now() });
 
+            const newJokerPosition = { guessIndex: guesses.length, letterIndex: jokerIndex };
+            setJokerPosition(newJokerPosition);
+
             setHotTipUsed(true);
-            saveState(guesses, 'playing', letterStatuses, true);
+            saveState(guesses, 'playing', letterStatuses, true, newJokerPosition);
             toast({
                 title: 'Heißer Tipp!',
                 description: `Ein Buchstabe wurde für dich aufgedeckt.`,
