@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
@@ -20,7 +19,7 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetClose } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { WORDS } from '@/lib/worthaft-words';
-import { Share2, HelpCircle, Book, Newspaper, X } from 'lucide-react';
+import { Share2, HelpCircle, Book, Newspaper, X, Volume2, VolumeX, Delete } from 'lucide-react';
 import Link from 'next/link';
 import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
 import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
@@ -86,12 +85,12 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
                 else onChar(key);
               }}
               className={cn(
-                'h-14 sm:h-12 font-bold text-sm sm:text-base transition-colors duration-300 flex-1 p-0 rounded-sm',
+                'h-14 sm:h-12 font-bold text-sm sm:text-base transition-colors duration-300 flex-1 p-0 rounded-[3px]',
                 key.length > 1 ? 'px-2' : 'sm:flex-none sm:w-12',
                 getStatusClass(key)
               )}
             >
-              {key === 'DELETE' ? '⌫' : key}
+              {key === 'DELETE' ? <Delete className="mx-auto h-6 w-6" /> : key}
             </Button>
           ))}
         </div>
@@ -391,6 +390,8 @@ export default function WorthaftPage() {
     const [timeToNextGame, setTimeToNextGame] = useState('');
     const [isShaking, setIsShaking] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isMuted, setIsMuted] = useState(true);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
 
     // Joker "Hot Tip" state
     const [showHotTipDialog, setShowHotTipDialog] = useState(false);
@@ -420,6 +421,18 @@ export default function WorthaftPage() {
             jokerPosition: newJokerPosition || undefined
         };
         localStorage.setItem('worthaft-daily-game', JSON.stringify(dailyState));
+    }, []);
+
+    useEffect(() => {
+        const audio = audioRef.current;
+        if (audio) {
+            audio.play().then(() => {
+                setIsMuted(false);
+            }).catch(error => {
+                console.log("Autoplay was prevented. User must interact to play audio.", error);
+                setIsMuted(true);
+            });
+        }
     }, []);
 
     useEffect(() => {
@@ -774,6 +787,15 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
         setShowHotTipDialog(false);
     };
 
+    const toggleMute = () => {
+        if (audioRef.current) {
+            const shouldMute = !isMuted;
+            audioRef.current.muted = shouldMute;
+            setIsMuted(shouldMute);
+        }
+    };
+
+
     const jsonLd = {
         '@context': 'https://schema.org',
         '@type': 'WebApplication',
@@ -800,13 +822,14 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
+            <audio ref={audioRef} src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Fworthaft.mp3?alt=media&token=50d6e7f0-001e-42d1-ab2a-7b5ac24b5b29" loop autoPlay />
             <Header />
             <main className="flex-1 py-8 md:py-12">
                 <div className="container max-w-md mx-auto flex flex-col items-center justify-center">
                     <div className="text-center mb-8">
                         <WorthaftIcon className="mx-auto h-16 w-16 mb-4 text-primary" />
                         <h1 className="text-4xl font-bold font-headline">Worthaft</h1>
-                        <div className="flex items-center justify-center gap-4 mt-2">
+                        <div className="flex items-center justify-center gap-2 mt-2">
                             <Link href="/worthaft/ueber" className="text-sm inline-flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors">
                                 <HelpCircle className="h-4 w-4" />
                                 <span>Spielanleitung</span>
@@ -818,6 +841,10 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
                               >
                                 <span className="btn-text">🔥 Heißer Tipp</span>
                               </button>
+                            <Button onClick={toggleMute} variant="ghost" size="icon" className="text-muted-foreground">
+                                {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
+                                <span className="sr-only">Ton an/aus</span>
+                            </Button>
                         </div>
                     </div>
                     <div className="w-full max-w-xs sm:max-w-sm">

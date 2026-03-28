@@ -12,7 +12,7 @@ export function WorthaftTeaser() {
           <div className="space-y-2">
             <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-4xl md:text-5xl">Testen Sie Ihren Wortschatz</h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-              Haben Sie in der Lernvollzugsanstalt gut aufgepasst? Beweisen Sie es und erraten Sie das tägliche Wort mit fünf Buchstaben.
+              Haben Sie in der Lernvollzugsanstalt gut aufgepasst? Beweisen Sie es und erraten das tägliche Wort!
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
