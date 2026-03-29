@@ -14,9 +14,8 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-  DialogClose,
 } from "@/components/ui/dialog";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetClose } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { WORDS } from '@/lib/worthaft-words';
 import { Share2, HelpCircle, Book, Newspaper, X, Volume2, VolumeX, ArrowLeft, Delete } from 'lucide-react';
@@ -86,7 +85,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
               }}
               className={cn(
                 'h-14 sm:h-12 font-bold text-sm sm:text-base transition-colors duration-300 flex-1 p-0 rounded-[4px] sm:flex-none',
-                key.length > 1 ? 'sm:w-auto px-4' : 'sm:w-12',
+                 key.length > 1 ? 'px-4' : 'sm:w-12',
                 getStatusClass(key)
               )}
             >
@@ -336,7 +335,7 @@ const HotTipDisplay = ({ isOpen, onOpenChange, onAccept, onDecline, onDisablePer
                         Du kannst diesen Joker einmal pro Tag nutzen. Wähle den Zeitpunkt weise.
                     </DialogDescription>
                 </DialogHeader>
-                <div className="flex items-center space-x-2 mt-4 justify-start">
+                <div className="flex items-center space-x-2 mt-4">
                     <Checkbox id="disable-hot-tip" checked={isPermanentlyDisabled} onCheckedChange={onDisablePermanentlyChange} />
                     <Label htmlFor="disable-hot-tip" className="text-sm text-muted-foreground">Nicht mehr anzeigen</Label>
                 </div>
@@ -413,24 +412,32 @@ export default function WorthaftPage() {
     }, []);
 
     useEffect(() => {
-        if (typeof window !== 'undefined' && !audioRef.current) {
+        // Initialize audio element on client
+        if (!audioRef.current) {
             audioRef.current = new Audio("https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Fworthaft.mp3?alt=media&token=50d6e7f0-001e-42d1-ab2a-7b5ac24b5b29");
             audioRef.current.loop = true;
         }
-
-        const playAudio = async () => {
-            if (audioRef.current && !isMuted) {
-                try {
-                    await audioRef.current.play();
-                } catch (error) {
-                    console.log("Autoplay was prevented. User must interact to play audio.", error);
-                    setIsMuted(true);
-                }
-            }
-        };
-        playAudio();
-
     }, []);
+
+    useEffect(() => {
+        // Effect to play/pause audio when isMuted changes
+        if (audioRef.current) {
+            if (isMuted) {
+                audioRef.current.pause();
+            } else {
+                // Attempt to play. This might fail if there hasn't been user interaction.
+                audioRef.current.play().catch(error => {
+                    console.error("Audio autoplay was prevented. User interaction is required.", error);
+                    // If play fails, we should reflect the state by setting muted to true again.
+                    setIsMuted(true);
+                });
+            }
+        }
+    }, [isMuted]);
+
+    const toggleMute = () => {
+        setIsMuted(prev => !prev);
+    };
 
     useEffect(() => {
         const disabled = localStorage.getItem('worthaft-hottip-disabled') === 'true';
@@ -794,15 +801,6 @@ Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
         }
         setShowHotTipDialog(false);
     };
-
-    const toggleMute = () => {
-        if (audioRef.current) {
-            const shouldMute = !isMuted;
-            audioRef.current.muted = shouldMute;
-            setIsMuted(shouldMute);
-        }
-    };
-
 
     const jsonLd = {
         '@context': 'https://schema.org',
