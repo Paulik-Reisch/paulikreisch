@@ -49,10 +49,10 @@ function NewsletterFormContent() {
           className="mt-1"
         />
         <Label htmlFor="terms" className="text-xs text-secondary-foreground/90 text-left leading-snug">
-          Ich stimme zu, den Newsletter zu erhalten und die{' '}
+          Ich habe die{' '}
           <Link href="/datenschutz" className="underline hover:text-secondary-foreground font-bold" target="_blank" rel="noopener noreferrer">
             Datenschutzerklärung
-          </Link> gelesen zu haben.
+          </Link> gelesen.
         </Label>
       </div>
     </div>

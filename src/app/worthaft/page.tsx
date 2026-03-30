@@ -217,7 +217,7 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
             </div>
             <div className="p-2 bg-muted rounded-lg">
                 <p className="text-xl font-bold">{winRate}%</p>
-                <p className="text-xs text-muted-foreground">Gewonnen</p>
+                <p className="text-xs text-muted-foreground">Gewinnrate</p>
             </div>
              <div className="p-2 bg-muted rounded-lg">
                 <p className="text-xl font-bold">{stats.streak}</p>
@@ -240,12 +240,6 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
                 <Share2 className="mr-3 h-5 w-5"/>
                 Teilen
             </Button>
-            <Link href="/a" className="w-full">
-                <Button className="w-full" variant="ghost">
-                    <Newspaper className="mr-2 h-4 w-4"/>
-                    Lustige Artikel lesen
-                </Button>
-            </Link>
         </div>
     </>
     )
@@ -281,7 +275,7 @@ const GameEndDisplay = (props: {
                                 {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
                             </SheetTitle>
                             <SheetDescription className="text-muted-foreground pt-1">
-                                Das Wort von Heute: <span className="font-bold text-primary">{rest.solution}</span>
+                                Das heutige Wort: <span className="font-bold text-primary">{rest.solution}</span>
                             </SheetDescription>
                         </SheetHeader>
                         <ResultsContent {...rest} />
@@ -307,7 +301,7 @@ const GameEndDisplay = (props: {
                             {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
                         </DialogTitle>
                         <DialogDescription className="text-muted-foreground pt-1 text-center">
-                            Das Wort von Heute: <span className="font-bold text-primary">{rest.solution}</span>
+                            Das heutige Wort: <span className="font-bold text-primary">{rest.solution}</span>
                         </DialogDescription>
                     </DialogHeader>
                     <ResultsContent {...rest} />
