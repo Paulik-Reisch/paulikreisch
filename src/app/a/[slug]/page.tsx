@@ -294,7 +294,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                     <div className="space-y-2">
                         <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-4xl">Testen Sie Ihren Wortschatz</h2>
                         <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed">
-                        Haben Sie in der Lernvollzugsanstalt gut aufgepasst? Beweisen Sie es und erraten das tägliche Wort!
+                        Sie kennen sich mit der deutschen Sprache aus? Beweisen Sie es und erraten das tägliche Wort!
                         </p>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-4 pt-4">

@@ -78,9 +78,6 @@ export function Hero({ product }: { product?: Product }) {
               <Link href="/shop">
                 <Button size="lg" variant="secondary">Jetzt kaufen</Button>
               </Link>
-              <Link href="/a">
-                <Button size="lg" variant="default">Lustige Artikel</Button>
-              </Link>
             </div>
           </div>
           <div className="relative w-full max-w-sm mx-auto md:max-w-none animate-in fade-in zoom-in-50 duration-1000">

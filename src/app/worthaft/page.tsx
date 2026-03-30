@@ -136,6 +136,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
             const hasLetter = !!letter;
             const jokerPositionInFile = jokerReveal;
             const isJokerCell = jokerPositionInFile && jokerPositionInFile.index === colIndex && isCurrentRow;
+            const status: LetterStatus = guessInfo?.statuses[colIndex] || 'empty';
 
             return (
                 <div
@@ -654,7 +655,7 @@ export default function WorthaftPage() {
 
         // If game is still playing, prepare the next row
         let newCurrentGuess = Array(WORD_LENGTH).fill('');
-        if (gameState === 'playing' && jokerPosition && newGuesses.length === jokerPosition.guessIndex) {
+        if (jokerPosition && newGuesses.length === jokerPosition.guessIndex) {
              newCurrentGuess[jokerPosition.letterIndex] = solution[jokerPosition.letterIndex];
         }
         setCurrentGuess(newCurrentGuess);
@@ -876,11 +877,14 @@ Jetzt fordere ich Dich heraus!`;
                                 <span>Spielanleitung</span>
                             </Link>
                              <button
-                                className="feuer-button text-sm p-0 h-auto"
+                                className="text-sm p-0 h-auto font-semibold text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1.5"
                                 onClick={() => setShowHotTipDialog(true)}
                                 disabled={hotTipUsed || gameState !== 'playing'}
                               >
-                                <span className="btn-text">🔥 Heißer Tipp</span>
+                                <span className="feuer-button !p-0 !h-auto !shadow-none !bg-transparent before:!hidden after:!hidden">
+                                  <span className="btn-text !text-sm">🔥</span>
+                                </span>
+                                Heißer Tipp
                               </button>
                             <Button onClick={toggleMute} variant="ghost" size="icon" className="text-muted-foreground">
                                 {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
@@ -925,3 +929,4 @@ Jetzt fordere ich Dich heraus!`;
         </div>
     );
 }
+
