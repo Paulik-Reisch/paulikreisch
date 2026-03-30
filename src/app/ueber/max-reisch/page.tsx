@@ -39,8 +39,7 @@ export default function MaxReischPage() {
             <div className="md:col-span-2 space-y-4">
               <h2 className="font-headline text-3xl font-bold">Über Maximilian</h2>
               <article className="prose dark:prose-invert max-w-none">
-                <p>Maximilian Reisch ist das strategische Gehirn und die strukturelle Kraft hinter dem satirischen Duo 'Paulik & Reisch'. Während Philipp Paulik das Chaos entfesselt, ist es Max, der diesem Chaos eine Form gibt, es in lesbare Sätze fasst und sicherstellt, dass die Pointen nicht nur zünden, sondern auch nachhaltig im Gedächtnis bleiben.</p>
-                <p>Mit einem scharfen Blick für Details und einer Vorliebe für syntaktische Präzision verwandelt er alltägliche Absurditäten in pointierte Gesellschaftskritik. Seine Arbeit sorgt dafür, dass die 'Hallo Welt'-Reihe nicht nur ein Feuerwerk an Gags ist, sondern auch eine intelligente und zusammenhängende Satire.</p>
+                <p>Maximilian Reisch ist das strategische Gehirn und die strukturelle Kraft hinter dem satirischen Duo 'Paulik & Reisch'. Während Philipp das Chaos entfesselt, ist es Max, der diesem Chaos eine Form gibt, es in lesbare Sätze fasst und sicherstellt, dass die Pointen nicht nur zünden, sondern auch nachhaltig im Gedächtnis bleiben. Mit einem scharfen Blick für Details und einer Vorliebe für syntaktische Präzision verwandelt er alltägliche Absurditäten in pointierte Gesellschaftskritik.</p>
               </article>
             </div>
           </div>

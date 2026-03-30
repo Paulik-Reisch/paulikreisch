@@ -43,7 +43,7 @@ export function Hero({ product }: { product?: Product }) {
     }, 4000); // Change text every 4 seconds
 
     return () => clearInterval(interval);
-  }, [heroTexts.length]);
+  }, []);
 
   const imageSrc = product?.imageSrc || "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-mockup-1.png?alt=media&token=c736447b-585c-410e-b2c9-b3fd9c726c58";
   const imageHint = product?.aiHint || "book cover";
@@ -59,7 +59,7 @@ export function Hero({ product }: { product?: Product }) {
         <div className="flex flex-col-reverse md:grid items-center gap-6 md:grid-cols-2 lg:gap-12">
           <div className="flex flex-col justify-center space-y-8 text-center md:text-left">
             <div className="space-y-4 min-h-[12rem] flex flex-col justify-center animate-in fade-in slide-in-from-top-12 duration-1000">
-                <h1 id="main-hero-heading" className="font-headline text-3xl sm:text-4xl md:text-5xl xl:text-7xl text-balance">
+                <h1 id="main-hero-heading" className="font-headline text-3xl sm:text-4xl md:text-5xl xl:text-7xl text-balance py-12">
                     <SplitText
                         key={key} // Use key to force re-render and re-animate
                         text={heroTexts[textIndex]}
