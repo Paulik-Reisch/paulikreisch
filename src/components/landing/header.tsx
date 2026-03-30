@@ -1,7 +1,8 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Logo } from "../ui/logo";
@@ -17,6 +18,8 @@ import { Menu, Infinity } from 'lucide-react';
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,6 +31,10 @@ export function Header() {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  if (pathname === '/worthaft' && isMobile) {
+    return null;
+  }
 
   return (
     <header className={cn(
