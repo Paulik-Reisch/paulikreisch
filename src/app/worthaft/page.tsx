@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
@@ -148,9 +149,9 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
                     className={cn(
                         'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-[4px]',
                         getStatusClass(status),
-                        isCurrentRow && 'cursor-pointer',
+                        isCurrentRow && !isJokerCell && 'cursor-pointer',
                         isCurrentRow && hasLetter && !isJokerCell && 'border-muted-foreground',
-                        isCurrentRow && activeIndex === colIndex && 'border-primary ring-2 ring-primary scale-105',
+                        isCurrentRow && activeIndex === colIndex && !isJokerCell && 'border-primary ring-2 ring-primary scale-105',
                         status !== 'empty' && 'animate-in fade-in zoom-in-50',
                         isJokerCell && 'bg-joker-gradient text-primary-foreground border-transparent'
                     )}
@@ -328,10 +329,6 @@ const HotTipDisplay = ({ isOpen, onOpenChange, onAccept, onDecline, onDisablePer
     
     const content = (
         <>
-            <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-                <X className="h-4 w-4" />
-                <span className="sr-only">Close</span>
-            </DialogPrimitive.Close>
             <Image
                 src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Ftippbyplay-image.png?alt=media&token=38df2b8b-1917-4af2-9ed3-c370e27fbb12"
                 alt="Heißer Tipp Grafik"
@@ -630,7 +627,7 @@ export default function WorthaftPage() {
         setLetterStatuses(newLetterStatuses);
         
         const newCurrentGuess = Array(WORD_LENGTH).fill('');
-        if (jokerPosition && newGuesses.length >= jokerPosition.guessIndex) {
+        if (jokerPosition && newGuesses.length === jokerPosition.guessIndex) {
              newCurrentGuess[jokerPosition.letterIndex] = solution[jokerPosition.letterIndex];
         }
         setCurrentGuess(newCurrentGuess);
@@ -673,33 +670,31 @@ export default function WorthaftPage() {
 
     const handleDelete = () => {
         if (gameState !== 'playing') return;
+    
         const newGuess = [...currentGuess];
         
-        let currentIndex = activeIndex;
-
-        // If the current cell has a character and is not the joker, delete it and stay.
-        if (newGuess[currentIndex] !== '' && !(jokerPosition && jokerPosition.guessIndex === guesses.length && currentIndex === jokerPosition.letterIndex)) {
-            newGuess[currentIndex] = '';
+        // If current cell is not empty and is not the joker, just clear it and stay.
+        // This handles the case where user clicks a filled cell and hits delete.
+        if (newGuess[activeIndex] !== '' && !(jokerPosition && jokerPosition.guessIndex === guesses.length && activeIndex === jokerPosition.letterIndex)) {
+            newGuess[activeIndex] = '';
             setCurrentGuess(newGuess);
             return;
         }
-
-        // Otherwise (cell is empty or is joker), move back and delete.
-        let targetIndex = currentIndex - 1;
-        
-        if (targetIndex < 0) return; // At the start, can't delete further back.
-
-        // If the new target is the joker, skip it.
-        if (jokerPosition && jokerPosition.guessIndex === guesses.length && targetIndex === jokerPosition.letterIndex) {
-            targetIndex--;
+    
+        // Otherwise, behave like a regular backspace: delete the character to the left of the cursor.
+        let indexToDelete = activeIndex - 1;
+    
+        // Skip joker if we land on it
+        if (jokerPosition && jokerPosition.guessIndex === guesses.length && indexToDelete === jokerPosition.letterIndex) {
+            indexToDelete--;
         }
-
-        if (targetIndex < 0) return; // Check again after potentially skipping.
-
-        // Delete the character at the new target and move the cursor there.
-        newGuess[targetIndex] = '';
-        setCurrentGuess(newGuess);
-        setActiveIndex(targetIndex);
+    
+        // If there's a valid character to delete
+        if (indexToDelete >= 0) {
+            newGuess[indexToDelete] = '';
+            setCurrentGuess(newGuess);
+            setActiveIndex(indexToDelete); // Move cursor to the now-empty spot
+        }
     };
     
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
