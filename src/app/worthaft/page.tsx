@@ -15,6 +15,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { WORDS } from '@/lib/worthaft-words';
@@ -89,7 +90,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
                 getStatusClass(key)
               )}
             >
-              {key === 'DELETE' ? <Delete className="mx-auto h-6 w-6" /> : key}
+              {key === 'DELETE' ? "←" : key}
             </Button>
           ))}
         </div>
@@ -327,6 +328,10 @@ const HotTipDisplay = ({ isOpen, onOpenChange, onAccept, onDecline, onDisablePer
     
     const content = (
         <>
+            <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                <X className="h-4 w-4" />
+                <span className="sr-only">Close</span>
+            </DialogPrimitive.Close>
             <Image
                 src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Ftippbyplay-image.png?alt=media&token=38df2b8b-1917-4af2-9ed3-c370e27fbb12"
                 alt="Heißer Tipp Grafik"
@@ -574,7 +579,7 @@ export default function WorthaftPage() {
         if (gameState !== 'playing') return;
 
         if (currentGuess.includes('')) {
-            toast({ variant: 'destructive', title: 'Unvollständiges Wort'});
+            toast({ variant: 'destructive', title: 'Unvollständiges Wort', duration: 2000 });
             setIsShaking(true);
             setTimeout(() => setIsShaking(false), 600);
             return;
@@ -583,7 +588,7 @@ export default function WorthaftPage() {
         const guessWord = currentGuess.join('');
 
         if (!WORDS.includes(guessWord.toLowerCase())) {
-            toast({ variant: 'destructive', title: 'Ungültiges Wort'});
+            toast({ variant: 'destructive', title: 'Ungültiges Wort', duration: 2000 });
             setIsShaking(true);
             setTimeout(() => setIsShaking(false), 600);
             return;
@@ -754,7 +759,7 @@ Jetzt fordere ich Dich heraus!`;
             }
         } else {
             navigator.clipboard.writeText(`${''}${text}\n\nhttps://paulikreisch.de/worthaft`).then(() => {
-                toast({ title: 'Kopiert!', description: 'Ergebnis in die Zwischenablage kopiert.' });
+                toast({ title: 'Kopiert!', description: 'Ergebnis in die Zwischenablage kopiert.', duration: 2000 });
             });
         }
     }
@@ -803,12 +808,14 @@ Jetzt fordere ich Dich heraus!`;
             toast({
                 title: 'Heißer Tipp!',
                 description: `Ein Buchstabe wurde für dich aufgedeckt.`,
+                duration: 3000
             });
         } else {
             toast({
                 variant: 'destructive',
                 title: 'Kein Tipp verfügbar',
                 description: 'Du hast bereits alle Buchstaben korrekt erraten!',
+                duration: 3000
             });
         }
         
@@ -865,7 +872,7 @@ Jetzt fordere ich Dich heraus!`;
                                 <span>Spielanleitung</span>
                             </Link>
                              <button
-                                className="feuer-button px-3 py-1.5 text-sm"
+                                className="feuer-button px-2 py-1 text-sm"
                                 onClick={() => setShowHotTipDialog(true)}
                                 disabled={hotTipUsed || gameState !== 'playing'}
                               >
@@ -913,3 +920,5 @@ Jetzt fordere ich Dich heraus!`;
         </div>
     );
 }
+
+    

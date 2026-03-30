@@ -301,9 +301,6 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                         <Link href="/worthaft">
                         <Button size="lg">Jetzt spielen</Button>
                         </Link>
-                        <Link href="/worthaft/ueber">
-                            <Button size="lg" variant="outline">Mehr zu Worthaft</Button>
-                        </Link>
                     </div>
                 </div>
             </section>

@@ -19,9 +19,6 @@ export function WorthaftTeaser() {
             <Link href="/worthaft">
               <Button size="lg">Jetzt spielen</Button>
             </Link>
-             <Link href="/worthaft/ueber">
-                <Button size="lg" variant="outline">Mehr zu Worthaft</Button>
-            </Link>
           </div>
         </div>
       </div>
