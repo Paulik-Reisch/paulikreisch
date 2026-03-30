@@ -233,7 +233,7 @@
   /* Feuer-Button für "Heißer Tipp" */
   .feuer-button {
     position: relative;
-    padding: 14px 28px;
+    padding: 8px 16px;
     background-color: transparent;
     border: none;
     border-radius: 50px; /* Pillen-Form */
@@ -300,13 +300,13 @@
   .btn-text {
     position: relative;
     z-index: 3;
-    color: #1a1a1a; 
-    font-size: 1.1rem;
-    font-weight: 700;
+    color: #1a1a1a;
+    font-size: 0.875rem;
+    font-weight: 600;
     letter-spacing: 0.5px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
   }
 
   @keyframes feuerRotationSmooth {

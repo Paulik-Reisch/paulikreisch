@@ -115,11 +115,11 @@ export function Footer() {
             <h3 className="text-sm font-bold uppercase text-gray-500 mb-5 tracking-wider">Kontakt</h3>
             <div className="text-[15px] text-gray-600 space-y-3">
               <p>
-                <a href="mailto:philipp.l.paulik@gmail.com" className="hover:text-[#f08e6c]">Philipp (E-Mail)</a><br/>
-                <a href="mailto:maximilian.reisch@t-online.de" className="hover:text-[#f08e6c]">Max (E-Mail)</a>
+                <a href="mailto:philipp.l.paulik@gmail.com" className="hover:text-[#f08e6c]">Philipp</a><br/>
+                <a href="mailto:maximilian.reisch@t-online.de" className="hover:text-[#f08e6c]">Max</a>
               </p>
               <p>© Paulik & Reisch</p>
-              <p>Neunk.-Seelsch., & Wintersch.<br/>Deutschland</p>
+              <p>Neunk.-Seelsch., Winterscheid<br/>Deutschland</p>
             </div>
           </div>
 
