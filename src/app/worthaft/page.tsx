@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
@@ -205,7 +206,7 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
     return (
     <>
         <div className="text-center">
-            <p className="text-sm uppercase font-bold text-muted-foreground">Ihr Ergebnis</p>
+            <p className="text-sm uppercase font-bold text-muted-foreground">Ergebnis</p>
             <p className="text-4xl font-bold">{gameState === 'won' ? guesses.length : 'X'} / {MAX_GUESSES}</p>
         </div>
 
@@ -625,19 +626,11 @@ export default function WorthaftPage() {
             }
         }
         setLetterStatuses(newLetterStatuses);
-        
-        const newCurrentGuess = Array(WORD_LENGTH).fill('');
-        if (jokerPosition && newGuesses.length === jokerPosition.guessIndex) {
-             newCurrentGuess[jokerPosition.letterIndex] = solution[jokerPosition.letterIndex];
-        }
-        setCurrentGuess(newCurrentGuess);
 
-        const firstEmptyIndex = newCurrentGuess.findIndex(l => l === '');
-        setActiveIndex(firstEmptyIndex !== -1 ? firstEmptyIndex : 0);
-
-        // Check game state
+        // Check game state immediately
         if (guessWord === solution) {
             setGameState('won');
+            setCurrentGuess(Array(WORD_LENGTH).fill('')); // Clear the next line
             const newStreak = (stats.streak || 0) + 1;
             const newStats = { 
                 games: (stats.games || 0) + 1, 
@@ -650,8 +643,12 @@ export default function WorthaftPage() {
             saveState(newGuesses, 'won', newLetterStatuses, hotTipUsed, jokerPosition);
             setIsCompletedToday(true);
             setTimeout(() => setIsDialogOpen(true), 1000);
-        } else if (newGuesses.length === MAX_GUESSES) {
+            return;
+        } 
+        
+        if (newGuesses.length === MAX_GUESSES) {
             setGameState('lost');
+            setCurrentGuess(Array(WORD_LENGTH).fill('')); // Clear the next line
             const newStats = { 
                 games: (stats.games || 0) + 1,
                 wins: stats.wins || 0,
@@ -663,37 +660,50 @@ export default function WorthaftPage() {
             saveState(newGuesses, 'lost', newLetterStatuses, hotTipUsed, jokerPosition);
             setIsCompletedToday(true);
             setTimeout(() => setIsDialogOpen(true), 1000);
-        } else {
-             saveState(newGuesses, 'playing', newLetterStatuses, hotTipUsed, jokerPosition);
+            return;
         }
+
+        // If game is still playing, prepare the next row
+        const newCurrentGuess = Array(WORD_LENGTH).fill('');
+        if (jokerPosition && newGuesses.length === jokerPosition.guessIndex) {
+             newCurrentGuess[jokerPosition.letterIndex] = solution[jokerPosition.letterIndex];
+        }
+        setCurrentGuess(newCurrentGuess);
+
+        const firstEmptyIndex = newCurrentGuess.findIndex(l => l === '');
+        setActiveIndex(firstEmptyIndex !== -1 ? firstEmptyIndex : 0);
+
+        saveState(newGuesses, 'playing', newLetterStatuses, hotTipUsed, jokerPosition);
+
     }, [currentGuess, gameState, guesses, letterStatuses, solution, stats, toast, saveState, hotTipUsed, jokerPosition]);
 
     const handleDelete = () => {
         if (gameState !== 'playing') return;
     
         const newGuess = [...currentGuess];
-        
-        // If current cell is not empty and is not the joker, just clear it and stay.
-        // This handles the case where user clicks a filled cell and hits delete.
-        if (newGuess[activeIndex] !== '' && !(jokerPosition && jokerPosition.guessIndex === guesses.length && activeIndex === jokerPosition.letterIndex)) {
+        const isJokerHere = jokerPosition && jokerPosition.guessIndex === guesses.length;
+
+        // If active cell has a non-joker letter, clear it.
+        if (newGuess[activeIndex] !== '' && !(isJokerHere && activeIndex === jokerPosition.letterIndex)) {
             newGuess[activeIndex] = '';
             setCurrentGuess(newGuess);
             return;
         }
-    
-        // Otherwise, behave like a regular backspace: delete the character to the left of the cursor.
-        let indexToDelete = activeIndex - 1;
-    
-        // Skip joker if we land on it
-        if (jokerPosition && jokerPosition.guessIndex === guesses.length && indexToDelete === jokerPosition.letterIndex) {
-            indexToDelete--;
-        }
-    
-        // If there's a valid character to delete
-        if (indexToDelete >= 0) {
-            newGuess[indexToDelete] = '';
-            setCurrentGuess(newGuess);
-            setActiveIndex(indexToDelete); // Move cursor to the now-empty spot
+
+        // Find previous non-joker cell to delete from.
+        let prevIndex = activeIndex - 1;
+        while (prevIndex >= 0) {
+            if (isJokerHere && prevIndex === jokerPosition.letterIndex) {
+                prevIndex--;
+                continue;
+            }
+            if (newGuess[prevIndex] !== '') {
+                newGuess[prevIndex] = '';
+                setCurrentGuess(newGuess);
+                setActiveIndex(prevIndex);
+                return;
+            }
+            prevIndex--;
         }
     };
     
@@ -705,13 +715,21 @@ export default function WorthaftPage() {
         } else if (event.key === 'Backspace') {
             handleDelete();
         } else if (event.key === 'ArrowLeft') {
-            setActiveIndex(prev => (prev - 1 + WORD_LENGTH) % WORD_LENGTH);
+            let nextIndex = activeIndex - 1;
+             if (jokerPosition && jokerPosition.guessIndex === guesses.length && nextIndex === jokerPosition.letterIndex) {
+                nextIndex--;
+            }
+            setActiveIndex(Math.max(0, nextIndex));
         } else if (event.key === 'ArrowRight') {
-            setActiveIndex(prev => (prev + 1) % WORD_LENGTH);
+            let nextIndex = activeIndex + 1;
+            if (jokerPosition && jokerPosition.guessIndex === guesses.length && nextIndex === jokerPosition.letterIndex) {
+                nextIndex++;
+            }
+            setActiveIndex(Math.min(WORD_LENGTH - 1, nextIndex));
         } else if (/^[a-zA-ZäöüÄÖÜ]$/.test(event.key)) {
             handleChar(event.key.toUpperCase());
         }
-    }, [isDialogOpen, showHotTipDialog, handleEnter, handleDelete, handleChar]);
+    }, [isDialogOpen, showHotTipDialog, handleEnter, handleDelete, handleChar, activeIndex, jokerPosition, guesses.length]);
     
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
