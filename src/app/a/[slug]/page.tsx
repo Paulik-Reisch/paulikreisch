@@ -16,7 +16,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getSession } from "@/lib/session";
-import { WorthaftIcon } from "@/components/ui/icons/worthaft-icon";
 
 type Props = {
   params: { slug: string }
@@ -172,7 +171,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
   const authorLd = articleAuthor
     ? {
         '@type': 'Person',
-        name: `${articleAuthor.firstName} ${articleAuthor.lastName}`,
+        name: `${author.firstName} ${author.lastName}`,
         url: `https://paulikreisch.de/autoren/${articleAuthor.slug}`
       }
     : {
@@ -288,23 +287,6 @@ export default async function ArticlePage({ params }: { params: { slug: string }
 
             </article>
 
-            <section className="mt-24 rounded-lg bg-muted p-8 md:p-12 not-prose max-w-4xl mx-auto">
-                <div className="flex flex-col items-center space-y-4 text-center">
-                    <WorthaftIcon className="mx-auto h-16 w-16 text-primary" />
-                    <div className="space-y-2">
-                        <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-4xl">Testen Sie Ihren Wortschatz</h2>
-                        <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed">
-                        Sie kennen sich mit der deutschen Sprache aus? Beweisen Sie es und erraten das tägliche Wort!
-                        </p>
-                    </div>
-                    <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                        <Link href="/worthaft">
-                        <Button size="lg">Jetzt spielen</Button>
-                        </Link>
-                    </div>
-                </div>
-            </section>
-
             {relatedArticles.length > 0 && (
               <section className="mt-24 border-t pt-16">
                   <h2 className="text-3xl font-bold font-headline text-center mb-12">
@@ -324,3 +306,5 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     </div>
   );
 }
+
+    

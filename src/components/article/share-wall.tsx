@@ -112,7 +112,7 @@ export function ShareWall({ article, onUnlock }: { article: Article; onUnlock: (
                     <a href="mailto:maximilian.reisch@t-online.de" className="underline">Max</a>.
                 </p>
                 <p className="text-xs text-muted-foreground/80 mt-1">
-                    Brieftauben-, wie auch Flaschenpost empfangen wir derzeit nicht.
+                    Brieftauben und Flaschenpost empfangen wir derzeit nicht.
                 </p>
             </div>
         </div>
