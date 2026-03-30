@@ -151,7 +151,7 @@ export default async function ArticlesPage() {
                   Archiv des Wahnsinns
               </h1>
               <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl mt-4 text-balance">
-                  Stöbern Sie durch unsere Sammlung satirischer Meisterwerke. Frisch aus der Feder der Zyniker.
+                  Stöbern Sie durch unsere Sammlung satirischer Meisterwerke.
               </p>
           </header>
           

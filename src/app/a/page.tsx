@@ -5,7 +5,6 @@ import { Footer } from "@/components/landing/footer";
 import Link from "next/link";
 import type { Metadata, ResolvingMetadata } from 'next';
 import { StandardArticleCard } from "@/components/article/article-cards";
-import { WorthaftTeaser } from "@/components/landing/worthaft-teaser";
 
 export async function generateMetadata(
   {},
@@ -83,8 +82,8 @@ export default async function ArticlesPage() {
         const articleAuthor = article.authorSlug ? authorsMap.get(article.authorSlug) : null;
         const authorLd = articleAuthor ? {
           '@type': 'Person',
-          name: `${articleAuthor.firstName} ${articleAuthor.lastName}`,
-          url: `https://paulikreisch.de/autoren/${articleAuthor.slug}`
+          name: `${''}${articleAuthor.firstName} ${''}${articleAuthor.lastName}`,
+          url: `https://paulikreisch.de/autoren/${''}${articleAuthor.slug}`
         } : {
           '@type': 'Organization',
           name: 'Paulik & Reisch',
@@ -97,7 +96,7 @@ export default async function ArticlesPage() {
           'item': {
             '@type': 'Article',
             'headline': article.title,
-            'url': `https://paulikreisch.de/a/${article.slug}`,
+            'url': `https://paulikreisch.de/a/${''}${article.slug}`,
             'image': article.imageUrl,
             'datePublished': article.publishedDate,
             'author': authorLd,
@@ -142,8 +141,6 @@ export default async function ArticlesPage() {
                 </div>
             </div>
         </section>
-        
-        <WorthaftTeaser />
       </main>
       <Footer />
     </div>

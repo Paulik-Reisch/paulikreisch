@@ -25,7 +25,7 @@ export async function LP2Teaser() {
               Mehr Satire und Humor
             </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-              Für alle, die nach »Hallo Welt« nicht genug bekommen: Entdecken Sie unsere Wand der Absurditäten. Top-aktuelle, humorvolle Artikel über alles, was die Welt gerade bewegt.
+              Für alle, die nach »Hallo Welt« nicht genug bekommen: Entdecken Sie unsere Wand der Absurditäten.
             </p>
           </div>
         </div>
