@@ -164,14 +164,10 @@ export default async function ArticlePage({ params }: { params: { slug: string }
   const authorsMap = new Map(allAuthors.map(author => [author.slug, author]));
   const articleAuthor = article.authorSlug ? authorsMap.get(article.authorSlug) : null;
 
-  const relatedArticles = allArticles
-    .filter(a => a.slug !== slug)
-    .slice(0, 3);
-
   const authorLd = articleAuthor
     ? {
         '@type': 'Person',
-        name: `${author.firstName} ${author.lastName}`,
+        name: `${articleAuthor.firstName} ${articleAuthor.lastName}`,
         url: `https://paulikreisch.de/autoren/${articleAuthor.slug}`
       }
     : {
@@ -203,6 +199,10 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     datePublished: seoData?.datePublished || new Date(article.publishedDate).toISOString(),
     dateModified: seoData?.dateModified || new Date(article.publishedDate).toISOString(),
   };
+
+  const relatedArticles = allArticles
+    .filter(a => a.slug !== slug)
+    .slice(0, 3);
 
   const author = {
     name: articleAuthor ? `${articleAuthor.firstName} ${articleAuthor.lastName}` : (article.author === 'gastbeitrag' ? 'Gastbeitrag' : 'Paulik & Reisch'),
@@ -306,5 +306,3 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     </div>
   );
 }
-
-    
