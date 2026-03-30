@@ -47,7 +47,7 @@ export function Features() {
                 </div>
               </AccordionTrigger>
               <AccordionContent className="text-base text-primary-foreground/80 pt-2 text-left">
-                Lernen Sie, wie man mit Problemen der Schulzeit umgeht – von der Umgehung des Sportunterrichts bis zur Manipulation der Noten.
+                Lernen Sie, wie man mit den Problemen der Schulzeit fertig wird – von der Umgehung des Sportunterrichts bis zur Manipulation der Noten.
               </AccordionContent>
             </AccordionItem>
           </Accordion>

@@ -12,12 +12,12 @@ const reviews = [
     {
         stars: 5,
         text: "»Ich habe gelacht, geweint, und meine Lebensentscheidungen in Frage gestellt. Meistens letzteres.«",
-        author: "Ein Literaturkritiker",
+        author: "Literaturkritiker",
     },
     {
         stars: 4,
         text: "»Dieses Buch hat mir gezeigt, dass mein Leben gar nicht so chaotisch ist.«",
-        author: "Eine dankbare Leserin",
+        author: "dankbare Leserin",
     },
     {
         stars: 5,
@@ -32,7 +32,7 @@ const reviews = [
     {
         stars: 5,
         text: "»Endlich ein Buch, das so denkt wie ich! Jetzt fühle ich mich weniger allein mit meinen seltsamen Gedanken.«",
-        author: "Ein Seelenverwandter",
+        author: "Seelenverwandter",
     },
     {
         stars: 4,
@@ -42,32 +42,32 @@ const reviews = [
     {
         stars: 5,
         text: "»Pflichtlektüre für jeden, der jemals eine Schule von innen gesehen hat. Es ist, als hätten die Autoren meine Gedanken gestohlen.«",
-        author: "Ehemaliger Insasse",
+        author: "ehemaliger Insasse",
     },
     {
         stars: 5,
         text: "»Ich habe es meinem Lehrer geschenkt. Er hat nicht mehr mit mir gesprochen. Beste Investition meines Lebens.«",
-        author: "Ein Rebell",
+        author: "Rebell",
     },
     {
         stars: 4,
         text: "»Einige Passagen sind so absurd, dass sie wahr sein müssen. Ein schmerzhaftes Vergnügen.«",
-        author: "Realistischer Zyniker",
+        author: "realistischer Zyniker",
     },
     {
         stars: 5,
         text: "»Dieses Buch ist der Grund, warum ich jetzt Therapeut bin. Und auch der Grund, warum ich einen brauche.«",
-        author: "Ein Betroffener",
+        author: "Betroffener",
     },
     {
         stars: 2,
         text: "»Ich verstehe den Hype nicht. Das ist doch alles völlig normaler Schulalltag.«",
-        author: "Ein Lehrer (vermutlich)",
+        author: "Lehrer (vermutlich)",
     },
     {
         stars: 5,
         text: "»Ich habe versucht, das Buch als Entschuldigung für meinen Sohn zu verwenden. Hat nicht geklappt, aber der Richter hat gelacht.«",
-        author: "Engagierter Vater",
+        author: "engagierter Vater",
     }
 ]
 
@@ -78,7 +78,7 @@ export function Testimonials() {
       <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
         <div className="space-y-3">
           <h2 id="testimonials-heading" className="text-3xl font-bold font-headline tracking-tighter md:text-4xl/tight">
-            Begeisterte Kritiken von unseren Fans
+            Begeisterte Kritik von unseren Fans
           </h2>
           <p className="mx-auto max-w-[600px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
             Verlassen Sie sich nicht nur auf unser Wort.

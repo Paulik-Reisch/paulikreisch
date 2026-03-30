@@ -56,7 +56,7 @@ export function Header() {
                     </Button>
                 </Link>
                 <Link href="/shop">
-                    <Button variant="secondary">Buch Kaufen</Button>
+                    <Button variant="secondary">Buch kaufen</Button>
                 </Link>
             </nav>
             <div className="md:hidden">

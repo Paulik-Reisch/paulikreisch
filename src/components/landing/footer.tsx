@@ -84,7 +84,7 @@ export function Footer() {
               <li>
                 <Link href="/worthaft" className="text-gray-600 hover:text-[#f08e6c] text-[15px] inline-flex items-center gap-2">
                     <WorthaftIcon className="h-4 w-4" />
-                    <span>Worthaft Spiel</span>
+                    <span>Worthaft</span>
                 </Link>
               </li>
             </ul>
@@ -119,7 +119,7 @@ export function Footer() {
                 <a href="mailto:philipp.l.paulik@gmail.com" className="hover:text-[#f08e6c]">Philipp (E-Mail)</a><br/>
                 <a href="mailto:maximilian.reisch@t-online.de" className="hover:text-[#f08e6c]">Max (E-Mail)</a>
               </p>
-              <p>© Paulik Reisch</p>
+              <p>© Paulik & Reisch</p>
               <p>Neunk.-Seelsch., & Wintersch.<br/>Deutschland</p>
             </div>
           </div>
@@ -131,7 +131,7 @@ export function Footer() {
               Zum Newsletter anmelden.
             </p>
             <form ref={formRef} action={formAction} className="flex flex-col gap-2.5 items-start">
-              <Input type="email" name="email" placeholder="E-Mail eingeben" className="bg-white border-gray-300 rounded-sm" required />
+              <Input type="email" name="email" placeholder="E-Mail-Adresse eingeben" className="bg-white border-gray-300 rounded-sm" required />
               <input type="hidden" name="source" value="main-footer" />
               <SubmitButton />
             </form>

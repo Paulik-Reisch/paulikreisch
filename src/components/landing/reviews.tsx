@@ -13,12 +13,12 @@ const reviews = [
     {
         stars: 5,
         text: "»Ich dachte, ich hätte schon alles gelesen. Dann kam 'Hallo Welt' und hat mein Gehirn neu verkabelt.«",
-        author: "Ein Literaturkritiker",
+        author: "Literaturkritiker",
     },
     {
         stars: 4,
         text: "»Dieses Buch hat mir gezeigt, dass mein Leben gar nicht so chaotisch ist.«",
-        author: "Eine dankbare Leserin",
+        author: "dankbare Leserin",
     },
     {
         stars: 5,
@@ -33,7 +33,7 @@ const reviews = [
     {
         stars: 5,
         text: "»Endlich ein Buch, das so denkt wie ich! Jetzt fühle ich mich weniger allein mit meinen seltsamen Gedanken.«",
-        author: "Ein Seelenverwandter",
+        author: "Seelenverwandter",
     },
     {
         stars: 4,

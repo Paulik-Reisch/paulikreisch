@@ -553,7 +553,7 @@ export default function WorthaftPage() {
         if (gameState !== 'playing') return;
 
         if (currentGuess.includes('')) {
-            toast({ variant: 'destructive', title: 'Unvollständiges Wort', description: 'Bitte füllen Sie alle Felder aus.' });
+            toast({ variant: 'destructive', title: 'Unvollständiges Wort'});
             setIsShaking(true);
             setTimeout(() => setIsShaking(false), 600);
             return;
@@ -562,7 +562,7 @@ export default function WorthaftPage() {
         const guessWord = currentGuess.join('');
 
         if (!WORDS.includes(guessWord.toLowerCase())) {
-            toast({ variant: 'destructive', title: 'Ungültiges Wort', description: 'Dieses Wort steht nicht in unserem Duden.' });
+            toast({ variant: 'destructive', title: 'Ungültiges Wort'});
             setIsShaking(true);
             setTimeout(() => setIsShaking(false), 600);
             return;
@@ -707,16 +707,16 @@ export default function WorthaftPage() {
         
         const tipUsedLine = hotTipUsed ? `(1 Heißer Tipp verwendet 🔥)` : "";
 
-        const text = `Worthaft - Das Paulik & Reisch Spiel
+        const text = `Worthaft – Das Paulik & Reisch Spiel
 
 Ich habe das tägliche Worthaft gespielt. Mein Ergebnis: ${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} Versuchen ${tipUsedLine}
 
 ${resultGrid}
 
-Jetzt fordere ich DICH heraus! DU BIST JETZT DRAN!`;
+Jetzt fordere ich Dich heraus!`;
         
         const shareData = {
-            title: 'Worthaft - Das Paulik & Reisch Spiel',
+            title: 'Worthaft – Das Paulik & Reisch Spiel',
             text: text,
             url: 'https://paulikreisch.de/worthaft',
         };

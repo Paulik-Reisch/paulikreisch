@@ -9,7 +9,7 @@ export default function AboutWorthaftPage() {
     '@context': 'https://schema.org',
     '@type': 'HowTo',
     name: 'Wie spielt man Worthaft?',
-    description: 'Eine Anleitung zum täglichen deutschen Worträtsel "Worthaft".',
+    description: 'Eine Anleitung zum täglichen Rätsel "Worthaft".',
     step: [
       {
         '@type': 'HowToStep',
@@ -42,14 +42,10 @@ export default function AboutWorthaftPage() {
         <Header />
         <main className="flex-1 py-12 md:py-24">
           <div className="container max-w-3xl mx-auto px-4">
-            <article className="prose dark:prose-invert">
-              <Badge>Spielanleitung</Badge>
-              <h1 className="font-headline mt-4">Über Worthaft</h1>
-              <p className="lead">
-                Eine Hommage an ein virales Phänomen, neu interpretiert mit dem
-                zynischen Charme von <Link href="/ueber/autoren" className="text-link">Paulik & Reisch</Link>.
-              </p>
-              <h2 id="regeln">Regeln</h2>
+            <header className="text-center mb-12">
+                <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl">Spielanleitung</h1>
+            </header>
+            <article className="prose dark:prose-invert" id="regeln">
               <p>
                 Sie haben sechs Versuche, das Wort mit fünf
                 Buchstaben zu erraten. Nach jedem Versuch geben Ihnen die Farben

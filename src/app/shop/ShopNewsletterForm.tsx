@@ -38,7 +38,7 @@ export function ShopNewsletterForm() {
   return (
     <>
       <form ref={formRef} action={formAction} className="newsletter-form">
-        <input type="email" name="email" placeholder="Deine E-Mail Adresse" className="newsletter-input" required />
+        <input type="email" name="email" placeholder="Ihre E-Mail Adresse" className="newsletter-input" required />
         <input type="hidden" name="source" value="shop-page-newsletter" />
         <SubmitButton />
       </form>
