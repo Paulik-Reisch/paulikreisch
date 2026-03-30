@@ -85,7 +85,7 @@ export function Header() {
                         </Button>
                     </Link>
                     <Link href="/shop">
-                        <Button variant="secondary" className="w-full">Buch Kaufen</Button>
+                        <Button variant="secondary" className="w-full">Buch kaufen</Button>
                     </Link>
                   </div>
                 </SheetContent>

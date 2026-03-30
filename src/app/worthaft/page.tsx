@@ -60,8 +60,8 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
   const rows = [
     ['Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P'],
     ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
-    ['Y', 'X', 'C', 'V', 'B', 'N', 'M'],
-    ['ENTER', 'Ü', 'Ö', 'Ä', 'ẞ', 'DELETE'],
+    ['Y', 'X', 'C', 'V', 'B', 'N', 'M', 'Ü', 'Ö', 'Ä', 'ẞ'],
+    ['SEND', 'DELETE'],
   ];
 
   const getStatusClass = (key: string) => {
@@ -83,17 +83,17 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
               key={key}
               variant="outline"
               onClick={() => {
-                if (key === 'ENTER') onEnter();
+                if (key === 'SEND') onEnter();
                 else if (key === 'DELETE') onDelete();
                 else onChar(key);
               }}
               className={cn(
-                'h-12 font-bold text-sm sm:text-base transition-colors duration-300 rounded-[4px] p-0',
-                 key.length > 1 ? 'flex-1 px-2' : 'w-7 sm:w-10',
+                'h-14 sm:h-12 font-bold text-sm sm:text-base transition-colors duration-300 flex-1 p-0 rounded-[4px]',
+                 key.length > 1 ? 'sm:flex-none sm:w-16 px-2' : 'sm:flex-none sm:w-10',
                 getStatusClass(key)
               )}
             >
-              {key === 'DELETE' ? "←" : key === 'ENTER' ? 'SEND' : key}
+              {key === 'DELETE' ? <ArrowLeft className="mx-auto h-6 w-6" /> : key}
             </Button>
           ))}
         </div>
@@ -102,7 +102,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
   );
 };
 
-const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, onCellClick, jokerReveal }: { 
+const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, onCellClick, jokerReveal, jokerPosition }: { 
     guesses: { guess: string; statuses: LetterStatus[] }[]; 
     currentGuess: string[]; 
     isShaking: boolean; 
@@ -110,6 +110,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
     activeIndex: number;
     onCellClick: (index: number) => void;
     jokerReveal: { index: number; key: number } | null;
+    jokerPosition: { guessIndex: number; letterIndex: number } | null;
 }) => {
   const rows = Array.from({ length: MAX_GUESSES });
   const getStatusClass = (status: LetterStatus) => {
@@ -132,7 +133,6 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
             const guessInfo = guesses[rowIndex];
             const isCurrentRow = rowIndex === guesses.length;
             const letter = isCurrentRow ? currentGuess[colIndex] : guessInfo?.guess[colIndex];
-            const status = guessInfo?.statuses[colIndex] || 'empty';
             const hasLetter = !!letter;
             const jokerPositionInFile = jokerReveal;
             const isJokerCell = jokerPositionInFile && jokerPositionInFile.index === colIndex && isCurrentRow;
@@ -423,16 +423,15 @@ export default function WorthaftPage() {
     }, []);
 
     const toggleMute = () => {
+        if (!audioRef.current) return;
         setIsMuted(prev => {
             const shouldBeMuted = !prev;
-            if (audioRef.current) {
-                if (shouldBeMuted) {
-                    audioRef.current.pause();
-                } else {
-                    audioRef.current.play().catch(error => {
-                        console.error("Audio autoplay was prevented. User interaction is required.", error);
-                    });
-                }
+            if (shouldBeMuted) {
+                audioRef.current?.pause();
+            } else {
+                audioRef.current?.play().catch(error => {
+                    console.error("Audio autoplay was prevented. User interaction is required.", error);
+                });
             }
             return shouldBeMuted;
         });
@@ -654,8 +653,8 @@ export default function WorthaftPage() {
         }
 
         // If game is still playing, prepare the next row
-        const newCurrentGuess = Array(WORD_LENGTH).fill('');
-        if (jokerPosition && newGuesses.length === jokerPosition.guessIndex) {
+        let newCurrentGuess = Array(WORD_LENGTH).fill('');
+        if (gameState === 'playing' && jokerPosition && newGuesses.length === jokerPosition.guessIndex) {
              newCurrentGuess[jokerPosition.letterIndex] = solution[jokerPosition.letterIndex];
         }
         setCurrentGuess(newCurrentGuess);
@@ -690,7 +689,9 @@ export default function WorthaftPage() {
         }
 
         if (prevIndex >= 0) {
-            newGuess[prevIndex] = '';
+            if(!(isJokerHere && prevIndex === jokerPosition.letterIndex)) {
+                newGuess[prevIndex] = '';
+            }
             setCurrentGuess(newGuess);
             setActiveIndex(prevIndex);
         }
@@ -875,7 +876,7 @@ Jetzt fordere ich Dich heraus!`;
                                 <span>Spielanleitung</span>
                             </Link>
                              <button
-                                className="feuer-button"
+                                className="feuer-button text-sm p-0 h-auto"
                                 onClick={() => setShowHotTipDialog(true)}
                                 disabled={hotTipUsed || gameState !== 'playing'}
                               >
@@ -896,6 +897,7 @@ Jetzt fordere ich Dich heraus!`;
                             activeIndex={activeIndex}
                             onCellClick={setActiveIndex}
                             jokerReveal={jokerReveal}
+                            jokerPosition={jokerPosition}
                         />
                         <Keyboard onChar={handleChar} onEnter={handleEnter} onDelete={handleDelete} letterStatuses={letterStatuses} />
                     </div>
