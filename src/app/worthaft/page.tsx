@@ -18,7 +18,7 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { WORDS } from '@/lib/worthaft-words';
-import { Share2, HelpCircle, Book, Newspaper, X, Volume2, VolumeX, ArrowLeft, Delete } from 'lucide-react';
+import { Share2, HelpCircle, Book, Newspaper, X, Volume2, VolumeX, Delete } from 'lucide-react';
 import Link from 'next/link';
 import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
 import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
@@ -44,7 +44,7 @@ type DailyGameState = {
 const getWordOfTheDay = () => {
     const today = new Date();
     // Use local date parts to create a date string, avoiding timezone conversions.
-    const todayString = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+    const todayString = `${''}${today.getFullYear()}-${''}${today.getMonth() + 1}-${''}${today.getDate()}`;
     const startDate = new Date('2024-01-01');
     const localToday = new Date(todayString); // This will be in the client's local timezone at 00:00:00
 
@@ -72,9 +72,9 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
 
   return (
     <div className="space-y-1.5 mt-8">
-      {rows.map((row, i) => (
-        <div key={i} className="flex justify-center gap-1.5">
-          {row.map((key) => (
+      {rows.map((i, rowIndex) => (
+        <div key={rowIndex} className="flex justify-center gap-1.5">
+          {i.map((key) => (
             <Button
               key={key}
               variant="outline"
@@ -85,11 +85,11 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
               }}
               className={cn(
                 'h-14 sm:h-12 font-bold text-sm sm:text-base transition-colors duration-300 flex-1 p-0 rounded-[4px] sm:flex-none',
-                 key.length > 1 ? 'px-4' : 'sm:w-12',
+                 key.length > 1 ? 'sm:flex-1 px-2' : 'sm:w-12',
                 getStatusClass(key)
               )}
             >
-              {key === 'DELETE' ? <ArrowLeft className="mx-auto h-6 w-6" /> : key}
+              {key === 'DELETE' ? <Delete className="mx-auto h-6 w-6" /> : key}
             </Button>
           ))}
         </div>
@@ -130,12 +130,20 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
             const letter = isCurrentRow ? currentGuess[colIndex] : guessInfo?.guess[colIndex];
             const status = guessInfo?.statuses[colIndex] || 'empty';
             const hasLetter = !!letter;
-            const isJokerCell = jokerReveal && jokerReveal.index === colIndex && isCurrentRow;
+            const jokerPositionInFile = jokerReveal;
+            const isJokerCell = jokerPositionInFile && jokerPositionInFile.index === colIndex && isCurrentRow;
 
             return (
                 <div
                     key={colIndex}
-                    onClick={() => isCurrentRow && onCellClick(colIndex)}
+                    onClick={() => {
+                        if (isCurrentRow) {
+                           if (jokerPositionInFile && jokerPositionInFile.index === colIndex) {
+                               return; // Don't allow selecting the joker cell
+                           }
+                           onCellClick(colIndex);
+                       }
+                   }}
                     className={cn(
                         'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-[4px]',
                         getStatusClass(status),
@@ -145,11 +153,11 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
                         status !== 'empty' && 'animate-in fade-in zoom-in-50',
                         isJokerCell && 'bg-joker-gradient text-primary-foreground border-transparent'
                     )}
-                    style={{ animationDelay: `${colIndex * 100}ms` }}
+                    style={{ animationDelay: `${''}${colIndex * 100}ms` }}
                 >
                     {isJokerCell ? (
                         <motion.div
-                            key={jokerReveal.key}
+                            key={jokerPositionInFile.key}
                             className="w-full h-full"
                             style={{ transformStyle: 'preserve-3d' }}
                             initial={{ rotateY: 0 }}
@@ -335,9 +343,9 @@ const HotTipDisplay = ({ isOpen, onOpenChange, onAccept, onDecline, onDisablePer
                         Du kannst diesen Joker einmal pro Tag nutzen. Wähle den Zeitpunkt weise.
                     </DialogDescription>
                 </DialogHeader>
-                <div className="flex items-center space-x-2 mt-4">
+                 <div className="flex items-center space-x-2 mt-4 text-left">
                     <Checkbox id="disable-hot-tip" checked={isPermanentlyDisabled} onCheckedChange={onDisablePermanentlyChange} />
-                    <Label htmlFor="disable-hot-tip" className="text-sm text-muted-foreground">Nicht mehr anzeigen</Label>
+                    <Label htmlFor="disable-hot-tip" className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-muted-foreground">Nicht mehr anzeigen</Label>
                 </div>
                 <DialogFooter className="mt-6 flex-col-reverse sm:flex-row gap-2">
                     <Button onClick={onAccept} className="w-full">Verstanden!</Button>
@@ -396,7 +404,7 @@ export default function WorthaftPage() {
         const year = today.getFullYear();
         const month = (today.getMonth() + 1).toString().padStart(2, '0');
         const day = today.getDate().toString().padStart(2, '0');
-        return `${year}-${month}-${day}`;
+        return `${''}${year}-${''}${month}-${''}${day}`;
     };
 
     const saveState = useCallback((newGuesses: { guess: string; statuses: LetterStatus[] }[], newStatus: 'won' | 'lost' | 'playing', newLetterStatuses: { [key: string]: LetterStatus }, newHotTipUsed: boolean, newJokerPosition: { guessIndex: number; letterIndex: number } | null) => {
@@ -419,24 +427,20 @@ export default function WorthaftPage() {
         }
     }, []);
 
-    useEffect(() => {
-        // Effect to play/pause audio when isMuted changes
-        if (audioRef.current) {
-            if (isMuted) {
-                audioRef.current.pause();
-            } else {
-                // Attempt to play. This might fail if there hasn't been user interaction.
-                audioRef.current.play().catch(error => {
-                    console.error("Audio autoplay was prevented. User interaction is required.", error);
-                    // If play fails, we should reflect the state by setting muted to true again.
-                    setIsMuted(true);
-                });
-            }
-        }
-    }, [isMuted]);
-
     const toggleMute = () => {
-        setIsMuted(prev => !prev);
+        setIsMuted(prev => {
+            const shouldBeMuted = !prev;
+            if (audioRef.current) {
+                if (shouldBeMuted) {
+                    audioRef.current.pause();
+                } else {
+                    audioRef.current.play().catch(error => {
+                        console.error("Audio autoplay was prevented. User interaction is required.", error);
+                    });
+                }
+            }
+            return shouldBeMuted;
+        });
     };
 
     useEffect(() => {
@@ -542,10 +546,27 @@ export default function WorthaftPage() {
     const handleChar = (char: string) => {
         if (gameState !== 'playing') return;
         const newGuess = [...currentGuess];
+
+        // Do not allow overwriting the joker letter
+        if (jokerPosition && jokerPosition.guessIndex === guesses.length && activeIndex === jokerPosition.letterIndex) {
+            return;
+        }
+        
         newGuess[activeIndex] = char;
         setCurrentGuess(newGuess);
-        if (activeIndex < WORD_LENGTH - 1) {
-            setActiveIndex(activeIndex + 1);
+
+        // Advance cursor, skipping joker if necessary
+        let nextIndex = activeIndex + 1;
+        if (nextIndex < WORD_LENGTH) {
+            if (jokerPosition && jokerPosition.guessIndex === guesses.length && nextIndex === jokerPosition.letterIndex) {
+                if (nextIndex + 1 < WORD_LENGTH) {
+                    setActiveIndex(nextIndex + 1);
+                } else {
+                    setActiveIndex(nextIndex);
+                }
+            } else {
+                setActiveIndex(nextIndex);
+            }
         }
     };
 
@@ -649,27 +670,31 @@ export default function WorthaftPage() {
         if (gameState !== 'playing') return;
         const newGuess = [...currentGuess];
         
-        // Prevent deleting the joker letter
-        if (jokerPosition && jokerPosition.guessIndex === guesses.length && activeIndex === jokerPosition.letterIndex) {
+        let currentIndex = activeIndex;
+
+        // If the current cell has a character and is not the joker, delete it and stay.
+        if (newGuess[currentIndex] !== '' && !(jokerPosition && jokerPosition.guessIndex === guesses.length && currentIndex === jokerPosition.letterIndex)) {
+            newGuess[currentIndex] = '';
+            setCurrentGuess(newGuess);
             return;
         }
 
-        if (newGuess[activeIndex] && activeIndex === currentGuess.length-1) {
-            newGuess[activeIndex] = '';
-            setCurrentGuess(newGuess);
-        } else if (activeIndex > 0) {
-            const prevIndex = activeIndex - 1;
-            if (!(jokerPosition && jokerPosition.guessIndex === guesses.length && prevIndex === jokerPosition.letterIndex)) {
-                newGuess[prevIndex] = '';
-                setCurrentGuess(newGuess);
-                setActiveIndex(prevIndex);
-            }
-        } else if (activeIndex === 0) {
-             if (!(jokerPosition && jokerPosition.guessIndex === guesses.length && activeIndex === jokerPosition.letterIndex)) {
-                newGuess[0] = '';
-                setCurrentGuess(newGuess);
-             }
+        // Otherwise (cell is empty or is joker), move back and delete.
+        let targetIndex = currentIndex - 1;
+        
+        if (targetIndex < 0) return; // At the start, can't delete further back.
+
+        // If the new target is the joker, skip it.
+        if (jokerPosition && jokerPosition.guessIndex === guesses.length && targetIndex === jokerPosition.letterIndex) {
+            targetIndex--;
         }
+
+        if (targetIndex < 0) return; // Check again after potentially skipping.
+
+        // Delete the character at the new target and move the cursor there.
+        newGuess[targetIndex] = '';
+        setCurrentGuess(newGuess);
+        setActiveIndex(targetIndex);
     };
     
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
@@ -728,7 +753,7 @@ Jetzt fordere ich Dich heraus!`;
                 console.log('Teilen abgebrochen', error);
             }
         } else {
-            navigator.clipboard.writeText(`${text}\n\nhttps://paulikreisch.de/worthaft`).then(() => {
+            navigator.clipboard.writeText(`${''}${text}\n\nhttps://paulikreisch.de/worthaft`).then(() => {
                 toast({ title: 'Kopiert!', description: 'Ergebnis in die Zwischenablage kopiert.' });
             });
         }
@@ -840,7 +865,7 @@ Jetzt fordere ich Dich heraus!`;
                                 <span>Spielanleitung</span>
                             </Link>
                              <button
-                                className="feuer-button"
+                                className="feuer-button px-3 py-1.5 text-sm"
                                 onClick={() => setShowHotTipDialog(true)}
                                 disabled={hotTipUsed || gameState !== 'playing'}
                               >
