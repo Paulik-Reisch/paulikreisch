@@ -42,12 +42,12 @@ export function ShopNewsletterForm() {
         <input type="hidden" name="source" value="shop-page-newsletter" />
         <SubmitButton />
       </form>
-      <div className="flex items-start space-x-3 mt-4 justify-center max-w-sm mx-auto">
+      <div className="flex items-center space-x-3 mt-4 justify-center max-w-sm mx-auto">
         <Checkbox 
           id="shop-newsletter-terms"
           checked={isConsentGiven}
           onCheckedChange={(checked) => setIsConsentGiven(checked as boolean)}
-          className="border-white/80 data-[state=checked]:bg-white data-[state=checked]:text-black mt-1"
+          className="border-white/80 data-[state=checked]:bg-white data-[state=checked]:text-black"
         />
         <Label htmlFor="shop-newsletter-terms" className="text-xs text-white/90 text-left leading-snug">
           Ich stimme zu, den Newsletter zu erhalten und habe die{' '}

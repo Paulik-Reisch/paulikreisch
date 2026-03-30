@@ -41,12 +41,11 @@ function NewsletterFormContent() {
           )}
         </Button>
       </div>
-      <div className="flex items-start space-x-3 px-1">
+      <div className="flex items-center space-x-3 px-1">
         <Checkbox
           id="terms"
           checked={isConsentGiven}
           onCheckedChange={(checked) => setIsConsentGiven(checked as boolean)}
-          className="mt-1"
         />
         <Label htmlFor="terms" className="text-xs text-secondary-foreground/90 text-left leading-snug">
           Ich habe die{' '}

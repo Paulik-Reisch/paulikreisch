@@ -28,7 +28,7 @@ const reviews = [
     {
         stars: 3,
         text: "»Ich bin mir nicht sicher, was ich da gelesen habe, aber ich konnte nicht aufhören.«",
-        author: "Verwirrt, aber fasziniert",
+        author: "verwirrt, aber fasziniert",
     },
     {
         stars: 5,

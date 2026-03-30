@@ -51,7 +51,7 @@ export default function PhilippPaulikPage() {
               <h2 className="font-headline text-3xl font-bold">Über Philipp</h2>
               <article className="prose dark:prose-invert max-w-none">
                 <p>Philipp Paulik ist der Funke, der das satirische Feuer der 'Hallo Welt'-Reihe entfacht. Als einer der beiden Autoren ist er der Meister des kreativen Chaos und der unkonventionellen Ideen. Seine Fähigkeit, die absurdesten Alltagsbeobachtungen in scharfzüngige Kritik zu verwandeln, bildet das Herzstück der Serie.</p>
-                <p>Getrieben von einer gesunden Portion Zynismus und zu viel Koffein, sorgt Philipp dafür, dass keine Pointe zu gewagt und kein Thema zu heilig ist. Sein Schreiben ist ein direkter Angriff auf die Monotonie des Alltags und eine Einladung, die Welt mit einem Lachen zu hinterfragen. Besuchen Sie sein persönliches Portfolio, um mehr über seine weiteren Projekte und kreativen Eskapaden zu erfahren.</p>
+                <p>Getrieben von einer gesunden Portion Zynismus und zu viel Koffein, sorgt Philipp dafür, dass keine Pointe zu gewagt und kein Thema zu heilig ist. Sein Schreiben ist ein direkter Angriff auf die Monotonie des Alltags und eine Einladung, die Welt mit einem Lachen zu hinterfragen. Besuchen Sie sein persönliches Portfolio, um mehr über seine anderen Projekte und kreativen Eskapaden zu erfahren.</p>
               </article>
               <div className="pt-4">
                 <a href={portfolioUrl} target="_blank" rel="noopener noreferrer">
