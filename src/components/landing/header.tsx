@@ -36,6 +36,8 @@ export function Header() {
     return null;
   }
 
+  const showMagazineLink = !pathname.startsWith('/a');
+
   return (
     <header className={cn(
       "px-4 lg:px-6 h-14 flex items-center sticky top-0 z-40 w-full bg-background/95 backdrop-blur-sm transition-all duration-300",
@@ -53,9 +55,11 @@ export function Header() {
         
         <div className="flex items-center gap-4">
             <nav className="hidden md:flex items-center gap-4">
-                <Link href="/a">
-                    <Button variant="ghost">Paulik & Reisch Satire-Magazin</Button>
-                </Link>
+                {showMagazineLink && (
+                  <Link href="/a">
+                      <Button variant="ghost">Paulik & Reisch Satire-Magazin</Button>
+                  </Link>
+                )}
                 <Link href="/worthaft">
                     <Button variant="ghost">
                         <WorthaftIcon className="mr-2 h-4 w-4" />
@@ -82,9 +86,11 @@ export function Header() {
                           <span className="font-headline font-semibold text-lg ml-2">Paulik & Reisch</span>
                       </div>
                     </a>
-                    <Link href="/a">
-                        <Button variant="default" className="w-full">Paulik & Reisch Satire-Magazin</Button>
-                    </Link>
+                    {showMagazineLink && (
+                      <Link href="/a">
+                          <Button variant="default" className="w-full">Paulik & Reisch Satire-Magazin</Button>
+                      </Link>
+                    )}
                     <Link href="/worthaft">
                         <Button variant="outline" className="w-full">
                             <WorthaftIcon className="mr-2 h-4 w-4" />
