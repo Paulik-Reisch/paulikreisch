@@ -71,7 +71,7 @@ export default function SatireLandschaftPage() {
                 {
                   "@type": "WebPage",
                   "@id": "https://www.paulikreisch.de/a",
-                  "name": "Paulik & Reisch Satire Magazin",
+                  "name": "Paulik & Reisch Satire-Magazin",
                   "url": "https://www.paulikreisch.de/a",
                   "description": "Eine kuratierte Sammlung satirischer Meisterwerke, die den alltäglichen Wahnsinn auf die Schippe nehmen."
                 },

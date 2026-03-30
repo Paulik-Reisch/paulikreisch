@@ -42,7 +42,7 @@ export default function AboutWorthaftPage() {
         <Header />
         <main className="flex-1 py-12 md:py-24">
           <div className="container max-w-3xl mx-auto px-4">
-            <header className="text-center mb-12">
+            <header className="mb-12">
                 <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl">Spielanleitung</h1>
             </header>
             <article className="prose dark:prose-invert" id="regeln">
