@@ -60,8 +60,8 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
   const rows = [
     ['Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P'],
     ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
-    ['Y', 'X', 'C', 'V', 'B', 'N', 'M', 'Ü', 'Ö', 'Ä', 'ẞ'],
-    ['SEND', 'DELETE'],
+    ['Y', 'X', 'C', 'V', 'B', 'N', 'M'],
+    ['SEND', 'Ü', 'Ö', 'Ä', 'ẞ', 'DELETE'],
   ];
 
   const getStatusClass = (key: string) => {
@@ -77,7 +77,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
   return (
     <div className="space-y-1.5 mt-8">
       {rows.map((i, rowIndex) => (
-        <div key={rowIndex} className="flex justify-center gap-1">
+        <div key={rowIndex} className="flex justify-center gap-1 sm:gap-1.5">
           {i.map((key) => (
             <Button
               key={key}
@@ -88,8 +88,10 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
                 else onChar(key);
               }}
               className={cn(
-                'h-14 sm:h-12 font-bold text-sm sm:text-base transition-colors duration-300 flex-1 p-0 rounded-[4px]',
-                 key.length > 1 ? 'sm:flex-none sm:w-16 px-2' : 'sm:flex-none sm:w-10',
+                'font-bold text-sm sm:text-base transition-colors duration-300 p-0 rounded-[4px]',
+                 key.length > 1
+                    ? 'flex-[1.5] h-14 sm:h-12 px-2'
+                    : 'flex-1 aspect-square',
                 getStatusClass(key)
               )}
             >
@@ -102,10 +104,10 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
   );
 };
 
-const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, onCellClick, jokerReveal, jokerPosition }: { 
-    guesses: { guess: string; statuses: LetterStatus[] }[]; 
-    currentGuess: string[]; 
-    isShaking: boolean; 
+const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, onCellClick, jokerReveal, jokerPosition }: {
+    guesses: { guess: string; statuses: LetterStatus[] }[];
+    currentGuess: string[];
+    isShaking: boolean;
     currentRowIndex: number;
     activeIndex: number;
     onCellClick: (index: number) => void;
@@ -137,21 +139,22 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
             const jokerPositionInFile = jokerReveal;
             const isJokerCell = jokerPositionInFile && jokerPositionInFile.index === colIndex && isCurrentRow;
             const status: LetterStatus = guessInfo?.statuses[colIndex] || 'empty';
+            const isJokerProtected = isCurrentRow && jokerPosition && jokerPosition.guessIndex === guesses.length && colIndex === jokerPosition.letterIndex;
 
             return (
                 <div
                     key={colIndex}
                     onClick={() => {
-                        if (isCurrentRow && !(jokerPosition && jokerPosition.guessIndex === guesses.length && colIndex === jokerPosition.letterIndex)) {
+                        if (isCurrentRow && !isJokerProtected) {
                            onCellClick(colIndex);
                        }
                    }}
                     className={cn(
                         'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-[4px]',
                         getStatusClass(status),
-                        isCurrentRow && !(jokerPosition && jokerPosition.guessIndex === guesses.length && colIndex === jokerPosition.letterIndex) && 'cursor-pointer',
-                        isCurrentRow && hasLetter && !(jokerPosition && jokerPosition.guessIndex === guesses.length && colIndex === jokerPosition.letterIndex) && 'border-muted-foreground',
-                        isCurrentRow && activeIndex === colIndex && !(jokerPosition && jokerPosition.guessIndex === guesses.length && colIndex === jokerPosition.letterIndex) && 'border-primary ring-2 ring-primary scale-105',
+                        isCurrentRow && !isJokerProtected && 'cursor-pointer',
+                        isCurrentRow && hasLetter && !isJokerProtected && 'border-muted-foreground',
+                        isCurrentRow && activeIndex === colIndex && !isJokerProtected && 'border-primary ring-2 ring-primary scale-105',
                         status !== 'empty' && 'animate-in fade-in zoom-in-50',
                         isJokerCell && 'bg-joker-gradient text-primary-foreground border-transparent'
                     )}
@@ -404,15 +407,28 @@ export default function WorthaftPage() {
     };
 
     const saveState = useCallback((newGuesses: { guess: string; statuses: LetterStatus[] }[], newStatus: 'won' | 'lost' | 'playing', newLetterStatuses: { [key: string]: LetterStatus }, newHotTipUsed: boolean, newJokerPosition: { guessIndex: number; letterIndex: number } | null) => {
-        const dailyState: DailyGameState = {
-            date: getTodayString(),
-            guesses: newGuesses,
-            status: newStatus,
-            letterStatuses: newLetterStatuses,
-            hotTipUsed: newHotTipUsed,
-            jokerPosition: newJokerPosition || undefined
-        };
-        localStorage.setItem('worthaft-daily-game', JSON.stringify(dailyState));
+        if (newStatus === 'won' || newStatus === 'lost') {
+             const dailyState: DailyGameState = {
+                date: getTodayString(),
+                guesses: newGuesses,
+                status: newStatus,
+                letterStatuses: newLetterStatuses,
+                hotTipUsed: newHotTipUsed,
+                jokerPosition: newJokerPosition || undefined
+            };
+            localStorage.setItem('worthaft-daily-game', JSON.stringify(dailyState));
+        } else {
+            // Only save playing state if there's something to save
+             const dailyState: DailyGameState = {
+                date: getTodayString(),
+                guesses: newGuesses,
+                status: 'playing',
+                letterStatuses: newLetterStatuses,
+                hotTipUsed: newHotTipUsed,
+                jokerPosition: newJokerPosition || undefined,
+            };
+            localStorage.setItem('worthaft-daily-game', JSON.stringify(dailyState));
+        }
     }, []);
 
     useEffect(() => {
@@ -541,9 +557,10 @@ export default function WorthaftPage() {
     const handleChar = (char: string) => {
         if (gameState !== 'playing') return;
         const newGuess = [...currentGuess];
+        const isJokerHere = jokerPosition && jokerPosition.guessIndex === guesses.length;
 
         // Do not allow overwriting the joker letter
-        if (jokerPosition && jokerPosition.guessIndex === guesses.length && activeIndex === jokerPosition.letterIndex) {
+        if (isJokerHere && activeIndex === jokerPosition.letterIndex) {
             return;
         }
         
@@ -553,13 +570,10 @@ export default function WorthaftPage() {
         // Advance cursor, skipping joker if necessary
         let nextIndex = activeIndex + 1;
         if (nextIndex < WORD_LENGTH) {
-            if (jokerPosition && jokerPosition.guessIndex === guesses.length && nextIndex === jokerPosition.letterIndex) {
-                if (nextIndex + 1 < WORD_LENGTH) {
-                    setActiveIndex(nextIndex + 1);
-                } else {
-                    setActiveIndex(nextIndex);
-                }
-            } else {
+             if (isJokerHere && nextIndex === jokerPosition.letterIndex) {
+                nextIndex++;
+            }
+            if (nextIndex < WORD_LENGTH) {
                 setActiveIndex(nextIndex);
             }
         }
@@ -654,16 +668,15 @@ export default function WorthaftPage() {
         }
 
         // If game is still playing, prepare the next row
-        let newCurrentGuess = Array(WORD_LENGTH).fill('');
-        if (jokerPosition && newGuesses.length === jokerPosition.guessIndex) {
-             newCurrentGuess[jokerPosition.letterIndex] = solution[jokerPosition.letterIndex];
+        if (gameState === 'playing') {
+            let newCurrentGuess = Array(WORD_LENGTH).fill('');
+            setCurrentGuess(newCurrentGuess);
+
+            const firstEmptyIndex = newCurrentGuess.findIndex(l => l === '');
+            setActiveIndex(firstEmptyIndex !== -1 ? firstEmptyIndex : 0);
+
+            saveState(newGuesses, 'playing', newLetterStatuses, hotTipUsed, jokerPosition);
         }
-        setCurrentGuess(newCurrentGuess);
-
-        const firstEmptyIndex = newCurrentGuess.findIndex(l => l === '');
-        setActiveIndex(firstEmptyIndex !== -1 ? firstEmptyIndex : 0);
-
-        saveState(newGuesses, 'playing', newLetterStatuses, hotTipUsed, jokerPosition);
 
     }, [currentGuess, gameState, guesses, letterStatuses, solution, stats, toast, saveState, hotTipUsed, jokerPosition]);
 
@@ -671,30 +684,24 @@ export default function WorthaftPage() {
         if (gameState !== 'playing') return;
         const newGuess = [...currentGuess];
         const isJokerHere = jokerPosition && jokerPosition.guessIndex === guesses.length;
-    
-        let currentIndex = activeIndex;
-    
-        // If the current cell has a letter, clear it.
-        if (newGuess[currentIndex] !== '' && !(isJokerHere && currentIndex === jokerPosition.letterIndex)) {
-            newGuess[currentIndex] = '';
+
+        // If the current cell has a letter (and is not a joker), clear it.
+        if (newGuess[activeIndex] !== '' && !(isJokerHere && activeIndex === jokerPosition.letterIndex)) {
+            newGuess[activeIndex] = '';
             setCurrentGuess(newGuess);
             return;
         }
-    
-        // If the current cell is empty or a joker, move to the previous cell.
-        let prevIndex = currentIndex - 1;
-        
-        // Skip over the joker if we land on it
-        if (isJokerHere && prevIndex === jokerPosition.letterIndex) {
-            prevIndex--;
-        }
 
-        if (prevIndex >= 0) {
-            if(!(isJokerHere && prevIndex === jokerPosition.letterIndex)) {
+        // If the current cell is empty or a joker, move to the previous settable cell and clear it.
+        let prevIndex = activeIndex - 1;
+        while (prevIndex >= 0) {
+            if (!(isJokerHere && prevIndex === jokerPosition.letterIndex)) {
                 newGuess[prevIndex] = '';
+                setCurrentGuess(newGuess);
+                setActiveIndex(prevIndex);
+                return;
             }
-            setCurrentGuess(newGuess);
-            setActiveIndex(prevIndex);
+            prevIndex--;
         }
     };
     
@@ -893,10 +900,10 @@ Jetzt fordere ich Dich heraus!`;
                         </div>
                     </div>
                     <div className="w-full max-w-sm">
-                        <Grid 
-                            guesses={guesses} 
-                            currentGuess={currentGuess} 
-                            isShaking={isShaking} 
+                        <Grid
+                            guesses={guesses}
+                            currentGuess={currentGuess}
+                            isShaking={isShaking}
                             currentRowIndex={guesses.length}
                             activeIndex={activeIndex}
                             onCellClick={setActiveIndex}
@@ -908,7 +915,7 @@ Jetzt fordere ich Dich heraus!`;
                 </div>
             </main>
             <Footer />
-            <GameEndDisplay 
+            <GameEndDisplay
                 isOpen={isDialogOpen}
                 onOpenChange={setIsDialogOpen}
                 solution={solution}
@@ -918,7 +925,7 @@ Jetzt fordere ich Dich heraus!`;
                 timeToNextGame={timeToNextGame}
                 shareResults={shareResults}
             />
-             <HotTipDisplay 
+             <HotTipDisplay
                 isOpen={showHotTipDialog}
                 onOpenChange={setShowHotTipDialog}
                 onAccept={handleAcceptHotTip}
@@ -929,4 +936,3 @@ Jetzt fordere ich Dich heraus!`;
         </div>
     );
 }
-
