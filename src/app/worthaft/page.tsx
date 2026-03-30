@@ -21,7 +21,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { WORDS } from '@/lib/worthaft-words';
-import { Share2, HelpCircle, Book, Newspaper, X, Volume2, VolumeX, Delete } from 'lucide-react';
+import { Share2, HelpCircle, Book, Newspaper, X, Volume2, VolumeX, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
 import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
@@ -58,9 +58,10 @@ const getWordOfTheDay = () => {
 
 const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (value: string) => void; onEnter: () => void; onDelete: () => void; letterStatuses: { [key: string]: LetterStatus } }) => {
   const rows = [
-    ['Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P', 'Ü'],
-    ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ö', 'Ä'],
-    ['ENTER', 'Y', 'X', 'C', 'V', 'B', 'N', 'M', 'DELETE'],
+    ['Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P'],
+    ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+    ['Y', 'X', 'C', 'V', 'B', 'N', 'M'],
+    ['ENTER', 'Ü', 'Ö', 'Ä', 'ẞ', 'DELETE'],
   ];
 
   const getStatusClass = (key: string) => {
@@ -76,7 +77,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
   return (
     <div className="space-y-1.5 mt-8">
       {rows.map((i, rowIndex) => (
-        <div key={rowIndex} className="flex justify-center gap-1.5">
+        <div key={rowIndex} className="flex justify-center gap-1">
           {i.map((key) => (
             <Button
               key={key}
@@ -87,12 +88,12 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
                 else onChar(key);
               }}
               className={cn(
-                'h-14 sm:h-12 font-bold text-sm sm:text-base transition-colors duration-300 flex-1 p-0 rounded-[4px] sm:flex-none',
-                 key.length > 1 ? 'sm:flex-1 px-2' : 'sm:w-12',
+                'h-12 font-bold text-sm sm:text-base transition-colors duration-300 rounded-[4px] p-0',
+                 key.length > 1 ? 'flex-1 px-2' : 'w-7 sm:w-10',
                 getStatusClass(key)
               )}
             >
-              {key === 'DELETE' ? "←" : key}
+              {key === 'DELETE' ? "←" : key === 'ENTER' ? 'SEND' : key}
             </Button>
           ))}
         </div>
@@ -140,19 +141,16 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
                 <div
                     key={colIndex}
                     onClick={() => {
-                        if (isCurrentRow) {
-                           if (jokerPositionInFile && jokerPositionInFile.index === colIndex) {
-                               return; // Don't allow selecting the joker cell
-                           }
+                        if (isCurrentRow && !(jokerPosition && jokerPosition.guessIndex === guesses.length && colIndex === jokerPosition.letterIndex)) {
                            onCellClick(colIndex);
                        }
                    }}
                     className={cn(
                         'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-[4px]',
                         getStatusClass(status),
-                        isCurrentRow && !isJokerCell && 'cursor-pointer',
-                        isCurrentRow && hasLetter && !isJokerCell && 'border-muted-foreground',
-                        isCurrentRow && activeIndex === colIndex && !isJokerCell && 'border-primary ring-2 ring-primary scale-105',
+                        isCurrentRow && !(jokerPosition && jokerPosition.guessIndex === guesses.length && colIndex === jokerPosition.letterIndex) && 'cursor-pointer',
+                        isCurrentRow && hasLetter && !(jokerPosition && jokerPosition.guessIndex === guesses.length && colIndex === jokerPosition.letterIndex) && 'border-muted-foreground',
+                        isCurrentRow && activeIndex === colIndex && !(jokerPosition && jokerPosition.guessIndex === guesses.length && colIndex === jokerPosition.letterIndex) && 'border-primary ring-2 ring-primary scale-105',
                         status !== 'empty' && 'animate-in fade-in zoom-in-50',
                         isJokerCell && 'bg-joker-gradient text-primary-foreground border-transparent'
                     )}
@@ -624,7 +622,6 @@ export default function WorthaftPage() {
         // Check game state immediately
         if (guessWord === solution) {
             setGameState('won');
-            setCurrentGuess(Array(WORD_LENGTH).fill('')); // Clear the next line
             const newStreak = (stats.streak || 0) + 1;
             const newStats = { 
                 games: (stats.games || 0) + 1, 
@@ -642,7 +639,6 @@ export default function WorthaftPage() {
         
         if (newGuesses.length === MAX_GUESSES) {
             setGameState('lost');
-            setCurrentGuess(Array(WORD_LENGTH).fill('')); // Clear the next line
             const newStats = { 
                 games: (stats.games || 0) + 1,
                 wins: stats.wins || 0,
@@ -673,33 +669,33 @@ export default function WorthaftPage() {
 
     const handleDelete = () => {
         if (gameState !== 'playing') return;
-    
         const newGuess = [...currentGuess];
         const isJokerHere = jokerPosition && jokerPosition.guessIndex === guesses.length;
-
-        // If active cell has a non-joker letter, clear it.
-        if (newGuess[activeIndex] !== '' && !(isJokerHere && activeIndex === jokerPosition.letterIndex)) {
-            newGuess[activeIndex] = '';
+    
+        let currentIndex = activeIndex;
+    
+        // If the current cell has a letter, clear it.
+        if (newGuess[currentIndex] !== '' && !(isJokerHere && currentIndex === jokerPosition.letterIndex)) {
+            newGuess[currentIndex] = '';
             setCurrentGuess(newGuess);
             return;
         }
-
-        // Find previous non-joker cell to delete from.
-        let prevIndex = activeIndex - 1;
-        while (prevIndex >= 0) {
-            if (isJokerHere && prevIndex === jokerPosition.letterIndex) {
-                prevIndex--;
-                continue;
-            }
-            if (newGuess[prevIndex] !== '') {
-                newGuess[prevIndex] = '';
-                setCurrentGuess(newGuess);
-                setActiveIndex(prevIndex);
-                return;
-            }
+    
+        // If the current cell is empty or a joker, move to the previous cell.
+        let prevIndex = currentIndex - 1;
+        
+        // Skip over the joker if we land on it
+        if (isJokerHere && prevIndex === jokerPosition.letterIndex) {
             prevIndex--;
         }
+
+        if (prevIndex >= 0) {
+            newGuess[prevIndex] = '';
+            setCurrentGuess(newGuess);
+            setActiveIndex(prevIndex);
+        }
     };
+    
     
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
         if (isDialogOpen || showHotTipDialog) return;
@@ -720,7 +716,7 @@ export default function WorthaftPage() {
                 nextIndex++;
             }
             setActiveIndex(Math.min(WORD_LENGTH - 1, nextIndex));
-        } else if (/^[a-zA-ZäöüÄÖÜ]$/.test(event.key)) {
+        } else if (/^[a-zA-ZäöüÄÖÜß]$/.test(event.key)) {
             handleChar(event.key.toUpperCase());
         }
     }, [isDialogOpen, showHotTipDialog, handleEnter, handleDelete, handleChar, activeIndex, jokerPosition, guesses.length]);
@@ -879,7 +875,7 @@ Jetzt fordere ich Dich heraus!`;
                                 <span>Spielanleitung</span>
                             </Link>
                              <button
-                                className="feuer-button px-2 py-1 text-sm"
+                                className="feuer-button"
                                 onClick={() => setShowHotTipDialog(true)}
                                 disabled={hotTipUsed || gameState !== 'playing'}
                               >
@@ -891,7 +887,7 @@ Jetzt fordere ich Dich heraus!`;
                             </Button>
                         </div>
                     </div>
-                    <div className="w-full max-w-xs sm:max-w-sm">
+                    <div className="w-full max-w-sm">
                         <Grid 
                             guesses={guesses} 
                             currentGuess={currentGuess} 
@@ -927,5 +923,3 @@ Jetzt fordere ich Dich heraus!`;
         </div>
     );
 }
-
-    
