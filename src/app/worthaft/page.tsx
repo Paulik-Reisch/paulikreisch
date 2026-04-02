@@ -72,52 +72,45 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
       default: return 'bg-muted hover:bg-accent';
     }
   };
-  
-  const renderKey = (key: string) => {
-    const isSpecialKey = key === 'SEND' || key === 'DELETE';
-    return (
-        <Button
-            key={key}
-            variant="outline"
-            onClick={() => {
-                if (key === 'SEND') onEnter();
-                else if (key === 'DELETE') onDelete();
-                else onChar(key);
-            }}
-            className={cn(
-                'font-bold uppercase flex items-center justify-center p-0 transition-colors duration-300 rounded-none',
-                'aspect-square', // Enforce square aspect ratio
-                isSpecialKey ? 'flex-[1.5]' : 'flex-1', // Give special keys more width
-                getStatusClass(key)
-            )}
-        >
-            {key === 'DELETE' ? (
-                <ArrowLeft className="mx-auto h-5 w-5 sm:h-6 sm:w-6" />
-            ) : (
-                <span className="text-xs sm:text-base">{key}</span>
-            )}
-        </Button>
-    );
-  }
+
+  const handleKeyClick = (key: string) => {
+    if (key === 'SEND') onEnter();
+    else if (key === 'DELETE') onDelete();
+    else onChar(key);
+  };
 
   return (
-    <div className="space-y-1.5 mt-8 w-full max-w-full flex flex-col">
-        {/* Row 1 */}
-        <div className="flex justify-center gap-1.5 w-full">
-            {rows[0].map(key => renderKey(key))}
+    <div className="w-full flex flex-col items-center gap-1.5 mt-8">
+      {rows.map((row, i) => (
+        <div key={i} className="flex flex-row justify-center gap-1.5 w-full">
+          {/* Spacers to create the inset keyboard layout */}
+          {i === 1 && <div style={{flex: 0.5}} />}
+          {i === 2 && <div style={{flex: 1.5}} />}
+          
+          {row.map(key => {
+            const isSpecialKey = key === 'SEND' || key === 'DELETE';
+            
+            return (
+              <Button
+                key={key}
+                onClick={() => handleKeyClick(key)}
+                variant="outline"
+                className={cn(
+                  'p-0 font-bold uppercase rounded-none flex items-center justify-center transition-colors duration-300',
+                  'h-auto aspect-square', // Force square aspect ratio
+                  isSpecialKey ? 'flex-[1.5]' : 'flex-1', // Make special keys wider
+                  getStatusClass(key)
+                )}
+              >
+                {key === 'DELETE' ? <ArrowLeft className="h-5 w-5" /> : <span className="text-xs sm:text-base">{key}</span>}
+              </Button>
+            );
+          })}
+
+          {i === 1 && <div style={{flex: 0.5}} />}
+          {i === 2 && <div style={{flex: 1.5}} />}
         </div>
-        {/* Row 2 */}
-        <div className="flex justify-center gap-1.5 w-full px-[5%]">
-            {rows[1].map(key => renderKey(key))}
-        </div>
-        {/* Row 3 */}
-        <div className="flex justify-center gap-1.5 w-full px-[15%]">
-             {rows[2].map(key => renderKey(key))}
-        </div>
-        {/* Row 4 */}
-        <div className="flex justify-center gap-1.5 w-full">
-            {rows[3].map(key => renderKey(key))}
-        </div>
+      ))}
     </div>
   );
 };
@@ -154,7 +147,6 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
             const guessInfo = guesses[rowIndex];
             const isCurrentRow = rowIndex === guesses.length;
             
-            // This was the bug: Don't show the current guess if the game is won or lost.
             const letter = (isCurrentRow && gameState === 'playing') ? currentGuess[colIndex] : guessInfo?.guess[colIndex];
             
             const hasLetter = !!letter;
@@ -603,23 +595,9 @@ export default function WorthaftPage() {
     const handleEnter = useCallback(() => {
         if (gameState !== 'playing') return;
 
-        if (currentGuess.includes('')) {
-            toast({ variant: 'destructive', title: 'Unvollständiges Wort', duration: 2000 });
-            setIsShaking(true);
-            setTimeout(() => setIsShaking(false), 600);
-            return;
-        }
-
         const guessWord = currentGuess.join('');
-
-        if (!WORDS.includes(guessWord.toLowerCase())) {
-            toast({ variant: 'destructive', title: 'Ungültiges Wort', duration: 2000 });
-            setIsShaking(true);
-            setTimeout(() => setIsShaking(false), 600);
-            return;
-        }
         
-        // This is the correct place to check for win condition, before setting new state.
+        // This must be checked before word validity.
         if (guessWord === solution) {
             const newStatuses: LetterStatus[] = Array(WORD_LENGTH).fill('correct');
             const newGuess = { guess: guessWord, statuses: newStatuses };
@@ -647,10 +625,24 @@ export default function WorthaftPage() {
             setTimeout(() => {
                 setIsDialogOpen(true);
             }, 1200);
-            return; // --- IMPORTANT: Exit early after win
+            return;
+        }
+
+        if (currentGuess.includes('')) {
+            toast({ variant: 'destructive', title: 'Unvollständiges Wort', duration: 2000 });
+            setIsShaking(true);
+            setTimeout(() => setIsShaking(false), 600);
+            return;
         }
 
 
+        if (!WORDS.includes(guessWord.toLowerCase())) {
+            toast({ variant: 'destructive', title: 'Ungültiges Wort', duration: 2000 });
+            setIsShaking(true);
+            setTimeout(() => setIsShaking(false), 600);
+            return;
+        }
+        
         const newStatuses: LetterStatus[] = Array(WORD_LENGTH).fill('absent');
         const solutionLetters = solution.split('');
 
@@ -969,5 +961,3 @@ Jetzt fordere ich Dich heraus!`;
         </div>
     );
 }
-
-    
