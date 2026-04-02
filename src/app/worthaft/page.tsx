@@ -60,8 +60,8 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
   const rows = [
     ['Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P'],
     ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
-    ['Y', 'X', 'C', 'V', 'B', 'N', 'M'],
-    ['SEND', 'Ü', 'Ö', 'Ä', 'ẞ', 'DELETE'],
+    ['SEND', 'Y', 'X', 'C', 'V', 'B', 'N', 'M', 'DELETE'],
+    ['Ü', 'Ö', 'Ä', 'ẞ']
   ];
 
   const getStatusClass = (key: string) => {
@@ -77,7 +77,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
   return (
     <div className="space-y-1.5 mt-8 w-full flex flex-col items-center">
       {rows.map((row, rowIndex) => (
-        <div key={rowIndex} className="flex justify-center gap-1.5">
+        <div key={rowIndex} className="flex justify-center gap-1.5 w-full">
           {row.map((key) => (
             <Button
               key={key}
@@ -88,9 +88,8 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
                 else onChar(key);
               }}
               className={cn(
-                'p-0 font-bold uppercase flex items-center justify-center transition-colors duration-300 aspect-square rounded-none',
-                getStatusClass(key),
-                key.length > 1 ? 'w-12' : 'w-8'
+                'p-0 font-bold uppercase flex-1 flex items-center justify-center transition-colors duration-300 aspect-square rounded-none',
+                getStatusClass(key)
               )}
             >
               {key === 'DELETE' ? <ArrowLeft className="mx-auto h-6 w-6" /> : key}
@@ -102,7 +101,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
   );
 };
 
-const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, onCellClick, jokerReveal, jokerPosition }: {
+const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, onCellClick, jokerReveal, jokerPosition, gameState }: {
     guesses: { guess: string; statuses: LetterStatus[] }[];
     currentGuess: string[];
     isShaking: boolean;
@@ -111,6 +110,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
     onCellClick: (index: number) => void;
     jokerReveal: { index: number; key: number } | null;
     jokerPosition: { guessIndex: number; letterIndex: number } | null;
+    gameState: 'playing' | 'won' | 'lost';
 }) => {
   const rows = Array.from({ length: MAX_GUESSES });
   const getStatusClass = (status: LetterStatus) => {
@@ -915,6 +915,7 @@ Jetzt fordere ich Dich heraus!`;
                             onCellClick={setActiveIndex}
                             jokerReveal={jokerReveal}
                             jokerPosition={jokerPosition}
+                            gameState={gameState}
                         />
                         <Keyboard onChar={handleChar} onEnter={handleEnter} onDelete={handleDelete} letterStatuses={letterStatuses} />
                     </div>
