@@ -37,6 +37,7 @@ export function Header() {
   }
 
   const showMagazineLink = !pathname.startsWith('/a');
+  const showWorthaftLink = pathname !== '/worthaft';
 
   return (
     <header className={cn(
@@ -60,12 +61,14 @@ export function Header() {
                       <Button variant="ghost">Paulik & Reisch Satire-Magazin</Button>
                   </Link>
                 )}
-                <Link href="/worthaft">
-                    <Button variant="ghost">
-                        <WorthaftIcon className="mr-2 h-4 w-4" />
-                        Worthaft
-                    </Button>
-                </Link>
+                {showWorthaftLink && (
+                  <Link href="/worthaft">
+                      <Button variant="ghost">
+                          <WorthaftIcon className="mr-2 h-4 w-4" />
+                          Worthaft
+                      </Button>
+                  </Link>
+                )}
                 <Link href="/shop">
                     <Button variant="secondary">Buch kaufen</Button>
                 </Link>
@@ -91,12 +94,14 @@ export function Header() {
                           <Button variant="default" className="w-full">Paulik & Reisch Satire-Magazin</Button>
                       </Link>
                     )}
-                    <Link href="/worthaft">
-                        <Button variant="outline" className="w-full">
-                            <WorthaftIcon className="mr-2 h-4 w-4" />
-                            Worthaft Spiel
-                        </Button>
-                    </Link>
+                    {showWorthaftLink && (
+                      <Link href="/worthaft">
+                          <Button variant="outline" className="w-full">
+                              <WorthaftIcon className="mr-2 h-4 w-4" />
+                              Worthaft Spiel
+                          </Button>
+                      </Link>
+                    )}
                     <Link href="/shop">
                         <Button variant="secondary" className="w-full">Buch kaufen</Button>
                     </Link>
