@@ -127,7 +127,7 @@ export function Footer() {
           <div className="text-left">
             <h3 className="text-sm font-bold uppercase text-gray-500 mb-5 tracking-wider">Stay Connected</h3>
             <p className="text-[15px] text-gray-600 mb-5">
-              Zum Newsletter anmelden.
+              Zum Newsletter anmelden
             </p>
             <form ref={formRef} action={formAction} className="flex flex-col gap-2.5 items-start">
               <Input type="email" name="email" placeholder="E-Mail-Adresse eingeben" className="bg-white border-gray-300 rounded-sm" required />

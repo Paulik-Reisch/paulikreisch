@@ -167,15 +167,15 @@ export default function ShopPage() {
                         <div className="quote-grid">
                             <div className="quote-card">
                                 <p className="quote-text">»Ich habe das Buch im Zug gelesen und war so gefesselt, dass ich meinen Halt verpasste. Musste 30 km zurücklaufen. Aber es hat sich gelohnt!«</p>
-                                <cite className="quote-author">Ein zufriedener Pendler</cite>
+                                <cite className="quote-author">zufriedener Pendler</cite>
                             </div>
                             <div className="quote-card">
                                 <p className="quote-text">»Seit ich das Buch verschlungen habe, sehe ich überall nur noch Bürokratie-Wahnsinn. Sogar mein Toaster will jetzt einen Antrag in dreifacher Ausführung!«</p>
-                                <cite className="quote-author">Ein paranoider Leser</cite>
+                                <cite className="quote-author">paranoider Leser</cite>
                             </div>
                             <div className="quote-card">
                                 <p className="quote-text">»Endlich ein Buch, das so denkt wie ich! Jetzt fühle ich mich weniger alleine.«</p>
-                                <cite className="quote-author">Ein Seelenverwandter</cite>
+                                <cite className="quote-author">Seelenverwandter</cite>
                             </div>
                         </div>
                     </div>

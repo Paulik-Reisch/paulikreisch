@@ -17,19 +17,19 @@ const heroItems = [
     {
         type: 'quote',
         text: 'Ich habe das Buch im Zug gelesen und war so gefesselt, dass ich meinen Halt verpasste. Musste 30 km zurücklaufen. Aber es hat sich gelohnt!',
-        author: 'ein zufriedener Pendler',
+        author: 'zufriedener Pendler',
         color: 'bg-yellow-100 dark:bg-yellow-900/30'
     },
     {
         type: 'quote',
         text: 'Seit ich das Buch verschlungen habe, sehe ich überall nur noch Bürokratie-Wahnsinn. Sogar mein Toaster will jetzt einen Antrag in dreifacher Ausführung!',
-        author: 'ein paranoider Leser',
+        author: 'paranoider Leser',
         color: 'bg-green-100 dark:bg-green-900/30'
     },
      {
         type: 'quote',
         text: 'Endlich ein Buch, das so denkt wie ich! Jetzt fühle ich mich weniger alleine.',
-        author: 'ein Seelenverwandter',
+        author: 'Seelenverwandter',
         color: 'bg-indigo-100 dark:bg-indigo-900/30'
     },
 ]

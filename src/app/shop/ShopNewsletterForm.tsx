@@ -50,7 +50,7 @@ export function ShopNewsletterForm() {
           className="border-white/80 data-[state=checked]:bg-white data-[state=checked]:text-black"
         />
         <Label htmlFor="shop-newsletter-terms" className="text-xs text-white/90 text-left leading-snug">
-          Ich stimme zu, den Newsletter zu erhalten und habe die{' '}
+          Ich habe die{' '}
           <Link href="/datenschutz" className="underline hover:text-white font-bold" target="_blank" rel="noopener noreferrer">
             Datenschutzerklärung
           </Link> gelesen.
