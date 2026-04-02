@@ -75,7 +75,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
   };
 
   return (
-    <div className="space-y-1.5 mt-8 w-full">
+    <div className="space-y-1.5 mt-8 w-full flex flex-col items-center">
       {rows.map((row, rowIndex) => (
         <div key={rowIndex} className="flex justify-center gap-1.5">
           {row.map((key) => (
@@ -132,7 +132,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
           {Array.from({ length: WORD_LENGTH }).map((_, colIndex) => {
             const guessInfo = guesses[rowIndex];
             const isCurrentRow = rowIndex === guesses.length;
-            const letter = isCurrentRow ? currentGuess[colIndex] : guessInfo?.guess[colIndex];
+            const letter = (isCurrentRow && gameState === 'playing') ? currentGuess[colIndex] : guessInfo?.guess[colIndex];
             const hasLetter = !!letter;
             const jokerPositionInFile = jokerReveal;
             const isJokerCell = jokerPositionInFile && jokerPositionInFile.index === colIndex && isCurrentRow;
@@ -546,7 +546,7 @@ export default function WorthaftPage() {
             if (inactivityTimerRef.current) {
                 clearTimeout(inactivityTimerRef.current);
             }
-            activityEvents.forEach(event => window.removeEventListener(event, resetInactivityTimer));
+            activityEvents.forEach(event => window.removeEventListener(event, handleActivity));
         };
     }, [gameState, hotTipUsed, isDialogOpen, showHotTipDialog, isHotTipPopupDisabled]);
     
@@ -620,7 +620,7 @@ export default function WorthaftPage() {
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
             saveState(newGuesses, 'won', newLetterStatuses, hotTipUsed, jokerPosition);
             setIsCompletedToday(true);
-            setTimeout(() => setIsDialogOpen(true), 1000);
+            setTimeout(() => setIsDialogOpen(true), 1200);
             return; // --- IMPORTANT: Exit early after win
         }
 
@@ -654,8 +654,13 @@ export default function WorthaftPage() {
             const letter = guessWord[i];
             const currentStatus = newLetterStatuses[letter];
             const newStatus = newStatuses[i];
-            if (currentStatus !== 'correct') {
-                newLetterStatuses[letter] = newStatus;
+            // Only upgrade status: absent -> present -> correct
+            if (newStatus === 'correct') {
+                newLetterStatuses[letter] = 'correct';
+            } else if (newStatus === 'present' && currentStatus !== 'correct') {
+                newLetterStatuses[letter] = 'present';
+            } else if (newStatus === 'absent' && !currentStatus) {
+                newLetterStatuses[letter] = 'absent';
             }
         }
         setLetterStatuses(newLetterStatuses);
@@ -672,7 +677,7 @@ export default function WorthaftPage() {
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
             saveState(newGuesses, 'lost', newLetterStatuses, hotTipUsed, jokerPosition);
             setIsCompletedToday(true);
-            setTimeout(() => setIsDialogOpen(true), 1000);
+            setTimeout(() => setIsDialogOpen(true), 1200);
         } else {
             // Game is still playing, prepare the next row
             setCurrentGuess(Array(WORD_LENGTH).fill(''));
