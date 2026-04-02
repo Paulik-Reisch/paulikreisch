@@ -84,8 +84,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
       {rows.map((row, i) => (
         <div key={i} className="flex flex-row justify-center gap-1.5 w-full">
           {/* Spacers to create the inset keyboard layout */}
-          {i === 1 && <div style={{flex: 0.5}} />}
-          {i === 2 && <div style={{flex: 1.5}} />}
+          {i === 1 && <div className="w-[4%]" />}
           
           {row.map(key => {
             const isSpecialKey = key === 'SEND' || key === 'DELETE';
@@ -96,9 +95,8 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
                 onClick={() => handleKeyClick(key)}
                 variant="outline"
                 className={cn(
-                  'p-0 font-bold uppercase rounded-none flex items-center justify-center transition-colors duration-300',
-                  'h-auto aspect-square', // Force square aspect ratio
-                  isSpecialKey ? 'flex-[1.5]' : 'flex-1', // Make special keys wider
+                  'p-0 font-bold uppercase rounded-none flex items-center justify-center transition-colors duration-300 aspect-square',
+                  'w-[8%]',
                   getStatusClass(key)
                 )}
               >
@@ -107,8 +105,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
             );
           })}
 
-          {i === 1 && <div style={{flex: 0.5}} />}
-          {i === 2 && <div style={{flex: 1.5}} />}
+          {i === 1 && <div className="w-[4%]" />}
         </div>
       ))}
     </div>
@@ -539,20 +536,20 @@ export default function WorthaftPage() {
         return () => clearInterval(timer);
     }, [isCompletedToday]);
 
+    const resetInactivityTimer = useCallback(() => {
+        if (inactivityTimerRef.current) {
+            clearTimeout(inactivityTimerRef.current);
+        }
+        if (gameState !== 'playing' || hotTipUsed || isDialogOpen || showHotTipDialog || isHotTipPopupDisabled) {
+            return;
+        }
+        inactivityTimerRef.current = setTimeout(() => {
+            setShowHotTipDialog(true);
+        }, 180000); // 3 minutes
+    }, [gameState, hotTipUsed, isDialogOpen, showHotTipDialog, isHotTipPopupDisabled]);
+
     // Inactivity timer for "Hot Tip"
     useEffect(() => {
-        const resetInactivityTimer = () => {
-            if (inactivityTimerRef.current) {
-                clearTimeout(inactivityTimerRef.current);
-            }
-            if (gameState !== 'playing' || hotTipUsed || isDialogOpen || showHotTipDialog || isHotTipPopupDisabled) {
-                return;
-            }
-            inactivityTimerRef.current = setTimeout(() => {
-                setShowHotTipDialog(true);
-            }, 180000); // 3 minutes
-        };
-
         resetInactivityTimer();
 
         const activityEvents: (keyof WindowEventMap)[] = ['keydown', 'mousemove', 'click', 'touchstart'];
@@ -564,7 +561,7 @@ export default function WorthaftPage() {
             }
             activityEvents.forEach(event => window.removeEventListener(event, resetInactivityTimer));
         };
-    }, [gameState, hotTipUsed, isDialogOpen, showHotTipDialog, isHotTipPopupDisabled]);
+    }, [resetInactivityTimer]);
     
 
     const handleChar = (char: string) => {
