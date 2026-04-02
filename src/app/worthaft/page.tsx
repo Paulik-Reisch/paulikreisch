@@ -88,10 +88,10 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
                 else onChar(key);
               }}
               className={cn(
-                'p-0 font-bold uppercase rounded-md flex items-center justify-center transition-colors duration-300 aspect-square grow',
+                'p-0 font-bold uppercase rounded-md flex items-center justify-center transition-colors duration-300 aspect-square',
                 (key === 'SEND' || key === 'DELETE')
-                  ? 'basis-[12%]'
-                  : 'basis-[8%]',
+                  ? 'flex-[1.5]'
+                  : 'flex-1',
                 getStatusClass(key)
               )}
             >
@@ -635,7 +635,6 @@ export default function WorthaftPage() {
         if (guessWord === solution) {
             setGameState('won');
             setCurrentGuess(Array(WORD_LENGTH).fill(''));
-            setJokerPosition(null);
             const newStreak = (stats.streak || 0) + 1;
             const newStats = { 
                 games: (stats.games || 0) + 1, 
@@ -645,7 +644,7 @@ export default function WorthaftPage() {
             };
             setStats(newStats);
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
-            saveState(newGuesses, 'won', newLetterStatuses, hotTipUsed, null);
+            saveState(newGuesses, 'won', newLetterStatuses, hotTipUsed, jokerPosition);
             setIsCompletedToday(true);
             setTimeout(() => setIsDialogOpen(true), 1000);
         } else if (newGuesses.length === MAX_GUESSES) {
@@ -864,7 +863,7 @@ Jetzt fordere ich Dich heraus!`;
             />
             <Header />
             <main className="flex-1 py-8 md:py-12">
-                <div className="w-full max-w-sm mx-auto p-2 sm:p-0 flex flex-col items-center justify-start">
+                <div className="w-full max-w-sm mx-auto px-2 sm:px-0 flex flex-col items-center justify-start">
                     <div className="text-center mb-8">
                         <WorthaftIcon className="mx-auto h-16 w-16 mb-4 text-primary" />
                         <h1 className="text-4xl font-bold font-headline">Worthaft</h1>
