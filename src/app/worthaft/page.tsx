@@ -77,7 +77,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
   return (
     <div className="space-y-1.5 mt-8 w-full">
       {rows.map((row, rowIndex) => (
-        <div key={rowIndex} className="flex w-full justify-center gap-1.5">
+        <div key={rowIndex} className="flex justify-center gap-1.5">
           {row.map((key) => (
             <Button
               key={key}
@@ -89,9 +89,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
               }}
               className={cn(
                 'p-0 font-bold uppercase rounded-md flex items-center justify-center transition-colors duration-300 aspect-square',
-                (key === 'SEND' || key === 'DELETE')
-                  ? 'flex-[1.5]'
-                  : 'flex-1',
+                (key === 'SEND' || key === 'DELETE') ? 'w-12' : 'w-8',
                 getStatusClass(key)
               )}
             >
@@ -596,6 +594,36 @@ export default function WorthaftPage() {
             setTimeout(() => setIsShaking(false), 600);
             return;
         }
+        
+        // This is the correct place to check for win condition, before setting new state.
+        if (guessWord === solution) {
+            const newStatuses: LetterStatus[] = Array(WORD_LENGTH).fill('correct');
+            const newGuess = { guess: guessWord, statuses: newStatuses };
+            const newGuesses = [...guesses, newGuess];
+            const newLetterStatuses = { ...letterStatuses };
+             for (let i = 0; i < WORD_LENGTH; i++) {
+                newLetterStatuses[guessWord[i]] = 'correct';
+            }
+            
+            setGuesses(newGuesses);
+            setLetterStatuses(newLetterStatuses);
+            setGameState('won');
+            
+            const newStreak = (stats.streak || 0) + 1;
+            const newStats = { 
+                games: (stats.games || 0) + 1, 
+                wins: (stats.wins || 0) + 1, 
+                streak: newStreak, 
+                maxStreak: Math.max(stats.maxStreak || 0, newStreak) 
+            };
+            setStats(newStats);
+            localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
+            saveState(newGuesses, 'won', newLetterStatuses, hotTipUsed, jokerPosition);
+            setIsCompletedToday(true);
+            setTimeout(() => setIsDialogOpen(true), 1000);
+            return; // --- IMPORTANT: Exit early after win
+        }
+
 
         const newStatuses: LetterStatus[] = Array(WORD_LENGTH).fill('absent');
         const solutionLetters = solution.split('');
@@ -632,24 +660,8 @@ export default function WorthaftPage() {
         }
         setLetterStatuses(newLetterStatuses);
 
-        if (guessWord === solution) {
-            setGameState('won');
-            setCurrentGuess(Array(WORD_LENGTH).fill(''));
-            const newStreak = (stats.streak || 0) + 1;
-            const newStats = { 
-                games: (stats.games || 0) + 1, 
-                wins: (stats.wins || 0) + 1, 
-                streak: newStreak, 
-                maxStreak: Math.max(stats.maxStreak || 0, newStreak) 
-            };
-            setStats(newStats);
-            localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
-            saveState(newGuesses, 'won', newLetterStatuses, hotTipUsed, jokerPosition);
-            setIsCompletedToday(true);
-            setTimeout(() => setIsDialogOpen(true), 1000);
-        } else if (newGuesses.length === MAX_GUESSES) {
+        if (newGuesses.length === MAX_GUESSES) {
             setGameState('lost');
-            setCurrentGuess(Array(WORD_LENGTH).fill(''));
             const newStats = { 
                 games: (stats.games || 0) + 1,
                 wins: stats.wins || 0,
