@@ -77,7 +77,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
   return (
     <div className="space-y-1.5 mt-8 w-full">
       {rows.map((row, rowIndex) => (
-        <div key={rowIndex} className="flex w-full justify-center gap-1 sm:gap-1.5">
+        <div key={rowIndex} className="flex w-full justify-center gap-1.5">
           {row.map((key) => (
             <Button
               key={key}
@@ -88,10 +88,10 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
                 else onChar(key);
               }}
               className={cn(
-                'p-0 font-bold uppercase rounded-md flex items-center justify-center transition-colors duration-300',
-                'h-auto', // Let width dictate height
-                'aspect-square', // Force square aspect ratio
-                key.length > 1 ? 'flex-grow-[1.5] text-xs' : 'flex-grow', // Use flex-grow to distribute width
+                'p-0 font-bold uppercase rounded-md flex items-center justify-center transition-colors duration-300 aspect-square grow',
+                (key === 'SEND' || key === 'DELETE')
+                  ? 'basis-[12%]'
+                  : 'basis-[8%]',
                 getStatusClass(key)
               )}
             >
@@ -635,6 +635,7 @@ export default function WorthaftPage() {
         if (guessWord === solution) {
             setGameState('won');
             setCurrentGuess(Array(WORD_LENGTH).fill(''));
+            setJokerPosition(null);
             const newStreak = (stats.streak || 0) + 1;
             const newStats = { 
                 games: (stats.games || 0) + 1, 
@@ -644,7 +645,7 @@ export default function WorthaftPage() {
             };
             setStats(newStats);
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
-            saveState(newGuesses, 'won', newLetterStatuses, hotTipUsed, jokerPosition);
+            saveState(newGuesses, 'won', newLetterStatuses, hotTipUsed, null);
             setIsCompletedToday(true);
             setTimeout(() => setIsDialogOpen(true), 1000);
         } else if (newGuesses.length === MAX_GUESSES) {
@@ -863,7 +864,7 @@ Jetzt fordere ich Dich heraus!`;
             />
             <Header />
             <main className="flex-1 py-8 md:py-12">
-                <div className="w-full max-w-lg mx-auto p-2 sm:p-4 flex flex-col items-center justify-center">
+                <div className="w-full max-w-sm mx-auto p-2 sm:p-0 flex flex-col items-center justify-start">
                     <div className="text-center mb-8">
                         <WorthaftIcon className="mx-auto h-16 w-16 mb-4 text-primary" />
                         <h1 className="text-4xl font-bold font-headline">Worthaft</h1>
