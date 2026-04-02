@@ -25,6 +25,7 @@ import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
 import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
+import { Loader2 } from 'lucide-react';
 
 const WORD_LENGTH = 5;
 const MAX_GUESSES = 6;
@@ -58,8 +59,8 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
   const rows = [
     ['Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P'],
     ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
-    ['SEND', 'Y', 'X', 'C', 'V', 'B', 'N', 'M', 'DELETE'],
-    ['Ü', 'Ö', 'Ä', 'ẞ'],
+    ['Y', 'X', 'C', 'V', 'B', 'N', 'M'],
+    ['SEND', 'Ü', 'Ö', 'Ä', 'ẞ', 'DELETE'],
   ];
 
   const getStatusClass = (key: string) => {
@@ -84,8 +85,9 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
                 else onChar(key);
             }}
             className={cn(
-                'font-bold uppercase flex items-center justify-center h-full p-0 transition-colors duration-300 rounded-none aspect-square',
-                isSpecialKey ? 'flex-[1.5]' : 'flex-1',
+                'font-bold uppercase flex items-center justify-center p-0 transition-colors duration-300 rounded-none',
+                'aspect-square', // Enforce square aspect ratio
+                isSpecialKey ? 'flex-[1.5]' : 'flex-1', // Give special keys more width
                 getStatusClass(key)
             )}
         >
@@ -99,21 +101,21 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
   }
 
   return (
-    <div className="space-y-1.5 mt-8 w-full flex flex-col items-center">
+    <div className="space-y-1.5 mt-8 w-full max-w-full flex flex-col">
         {/* Row 1 */}
         <div className="flex justify-center gap-1.5 w-full">
             {rows[0].map(key => renderKey(key))}
         </div>
         {/* Row 2 */}
-        <div className="flex justify-center gap-1.5 w-[90%]">
+        <div className="flex justify-center gap-1.5 w-full px-[5%]">
             {rows[1].map(key => renderKey(key))}
         </div>
         {/* Row 3 */}
-        <div className="flex justify-center gap-1.5 w-full">
-            {rows[2].map(key => renderKey(key))}
+        <div className="flex justify-center gap-1.5 w-full px-[15%]">
+             {rows[2].map(key => renderKey(key))}
         </div>
         {/* Row 4 */}
-        <div className="flex justify-center gap-1.5 w-[50%]">
+        <div className="flex justify-center gap-1.5 w-full">
             {rows[3].map(key => renderKey(key))}
         </div>
     </div>
@@ -151,7 +153,10 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
           {Array.from({ length: WORD_LENGTH }).map((_, colIndex) => {
             const guessInfo = guesses[rowIndex];
             const isCurrentRow = rowIndex === guesses.length;
-            const letter = isCurrentRow && gameState === 'playing' ? currentGuess[colIndex] : guessInfo?.guess[colIndex];
+            
+            // This was the bug: Don't show the current guess if the game is won or lost.
+            const letter = (isCurrentRow && gameState === 'playing') ? currentGuess[colIndex] : guessInfo?.guess[colIndex];
+            
             const hasLetter = !!letter;
             const jokerPositionInFile = jokerReveal;
             const isJokerCell = jokerPositionInFile && jokerPositionInFile.index === colIndex && isCurrentRow;
