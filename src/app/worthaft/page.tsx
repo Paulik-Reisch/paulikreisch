@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
@@ -61,6 +59,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
     ['Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P'],
     ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
     ['SEND', 'Y', 'X', 'C', 'V', 'B', 'N', 'M', 'DELETE'],
+    ['Ü', 'Ö', 'Ä', 'ẞ'],
   ];
 
   const getStatusClass = (key: string) => {
@@ -72,49 +71,51 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
       default: return 'bg-muted hover:bg-accent';
     }
   };
+  
+  const renderKey = (key: string) => {
+    const isSpecialKey = key === 'SEND' || key === 'DELETE';
+    return (
+        <Button
+            key={key}
+            variant="outline"
+            onClick={() => {
+                if (key === 'SEND') onEnter();
+                else if (key === 'DELETE') onDelete();
+                else onChar(key);
+            }}
+            className={cn(
+                'font-bold uppercase flex items-center justify-center h-full p-0 transition-colors duration-300 rounded-none aspect-square',
+                isSpecialKey ? 'flex-[1.5]' : 'flex-1',
+                getStatusClass(key)
+            )}
+        >
+            {key === 'DELETE' ? (
+                <ArrowLeft className="mx-auto h-5 w-5 sm:h-6 sm:w-6" />
+            ) : (
+                <span className="text-xs sm:text-base">{key}</span>
+            )}
+        </Button>
+    );
+  }
 
   return (
     <div className="space-y-1.5 mt-8 w-full flex flex-col items-center">
-      {rows.map((row, rowIndex) => (
-        <div key={rowIndex} className="flex justify-center gap-1.5 w-full">
-          {row.map((key) => {
-            const isLetterKey = key.length === 1;
-            return (
-              <Button
-                key={key}
-                variant="outline"
-                onClick={() => {
-                  if (key === 'SEND') onEnter();
-                  else if (key === 'DELETE') onDelete();
-                  else onChar(key);
-                }}
-                className={cn(
-                  'h-14 font-bold uppercase flex items-center justify-center transition-colors duration-300 rounded-none',
-                  isLetterKey ? 'flex-1 aspect-square' : 'px-4 flex-[1.5]',
-                  getStatusClass(key)
-                )}
-              >
-                {key === 'DELETE' ? <ArrowLeft className="mx-auto h-6 w-6" /> : key}
-              </Button>
-            );
-          })}
+        {/* Row 1 */}
+        <div className="flex justify-center gap-1.5 w-full">
+            {rows[0].map(key => renderKey(key))}
         </div>
-      ))}
-       <div className="flex justify-center gap-1.5 w-full">
-            {['Ü', 'Ö', 'Ä', 'ẞ'].map(key => (
-                 <Button
-                    key={key}
-                    variant="outline"
-                    onClick={() => onChar(key)}
-                    className={cn(
-                        'h-14 font-bold uppercase flex items-center justify-center transition-colors duration-300 rounded-none flex-1 aspect-square',
-                        getStatusClass(key)
-                    )}
-                    >
-                    {key}
-                </Button>
-            ))}
-      </div>
+        {/* Row 2 */}
+        <div className="flex justify-center gap-1.5 w-[90%]">
+            {rows[1].map(key => renderKey(key))}
+        </div>
+        {/* Row 3 */}
+        <div className="flex justify-center gap-1.5 w-full">
+            {rows[2].map(key => renderKey(key))}
+        </div>
+        {/* Row 4 */}
+        <div className="flex justify-center gap-1.5 w-[50%]">
+            {rows[3].map(key => renderKey(key))}
+        </div>
     </div>
   );
 };
@@ -150,7 +151,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
           {Array.from({ length: WORD_LENGTH }).map((_, colIndex) => {
             const guessInfo = guesses[rowIndex];
             const isCurrentRow = rowIndex === guesses.length;
-            const letter = (isCurrentRow && gameState === 'playing') ? currentGuess[colIndex] : guessInfo?.guess[colIndex];
+            const letter = isCurrentRow && gameState === 'playing' ? currentGuess[colIndex] : guessInfo?.guess[colIndex];
             const hasLetter = !!letter;
             const jokerPositionInFile = jokerReveal;
             const isJokerCell = jokerPositionInFile && jokerPositionInFile.index === colIndex && isCurrentRow;
@@ -638,7 +639,9 @@ export default function WorthaftPage() {
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
             saveState(newGuesses, 'won', newLetterStatuses, hotTipUsed, jokerPosition);
             setIsCompletedToday(true);
-            setTimeout(() => setIsDialogOpen(true), 1200);
+            setTimeout(() => {
+                setIsDialogOpen(true);
+            }, 1200);
             return; // --- IMPORTANT: Exit early after win
         }
 
@@ -898,7 +901,7 @@ Jetzt fordere ich Dich heraus!`;
             />
             <Header />
             <main className="flex-1 py-8 md:py-12">
-                <div className="w-full max-w-sm mx-auto px-2 sm:px-0 flex flex-col items-center justify-start">
+                <div className="w-full max-w-sm mx-auto px-1 sm:px-0 flex flex-col items-center justify-start">
                     <div className="text-center mb-8">
                         <WorthaftIcon className="mx-auto h-16 w-16 mb-4 text-primary" />
                         <h1 className="text-4xl font-bold font-headline">Worthaft</h1>
