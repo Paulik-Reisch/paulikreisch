@@ -80,11 +80,10 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
   };
 
   return (
-    <div className="w-full flex flex-col items-center gap-1.5 mt-8">
+    <div className="w-full flex flex-col items-center gap-1.5 mt-8 px-1">
       {rows.map((row, i) => (
         <div key={i} className="flex flex-row justify-center gap-1.5 w-full">
-          {/* Spacers to create the inset keyboard layout */}
-          {i === 1 && <div className="w-[4%]" />}
+          {i === 1 && <div className="w-[5%]" />}
           
           {row.map(key => {
             const isSpecialKey = key === 'SEND' || key === 'DELETE';
@@ -95,8 +94,8 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
                 onClick={() => handleKeyClick(key)}
                 variant="outline"
                 className={cn(
-                  'p-0 font-bold uppercase rounded-none flex items-center justify-center transition-colors duration-300 aspect-square',
-                  'w-[8%]',
+                  'p-0 font-bold uppercase rounded-sm flex items-center justify-center transition-colors duration-300 aspect-square',
+                  isSpecialKey ? 'w-[12%]' : 'w-[8.5%]',
                   getStatusClass(key)
                 )}
               >
@@ -105,7 +104,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
             );
           })}
 
-          {i === 1 && <div className="w-[4%]" />}
+          {i === 1 && <div className="w-[5%]" />}
         </div>
       ))}
     </div>
@@ -144,7 +143,12 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
             const guessInfo = guesses[rowIndex];
             const isCurrentRow = rowIndex === guesses.length;
             
-            const letter = (isCurrentRow && gameState === 'playing') ? currentGuess[colIndex] : guessInfo?.guess[colIndex];
+            let letter;
+            if (isCurrentRow && gameState === 'playing') {
+                letter = currentGuess[colIndex];
+            } else if (guessInfo) {
+                letter = guessInfo.guess[colIndex];
+            }
             
             const hasLetter = !!letter;
             const jokerPositionInFile = jokerReveal;
@@ -161,7 +165,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
                        }
                    }}
                     className={cn(
-                        'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-none',
+                        'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-sm',
                         getStatusClass(status),
                         isCurrentRow && !isJokerProtected && 'cursor-pointer',
                         isCurrentRow && hasLetter && !isJokerProtected && 'border-muted-foreground',
@@ -553,13 +557,17 @@ export default function WorthaftPage() {
         resetInactivityTimer();
 
         const activityEvents: (keyof WindowEventMap)[] = ['keydown', 'mousemove', 'click', 'touchstart'];
-        activityEvents.forEach(event => window.addEventListener(event, resetInactivityTimer));
+        const handleActivity = () => {
+          resetInactivityTimer();
+        };
+
+        activityEvents.forEach(event => window.addEventListener(event, handleActivity));
 
         return () => {
             if (inactivityTimerRef.current) {
                 clearTimeout(inactivityTimerRef.current);
             }
-            activityEvents.forEach(event => window.removeEventListener(event, resetInactivityTimer));
+            activityEvents.forEach(event => window.removeEventListener(event, handleActivity));
         };
     }, [resetInactivityTimer]);
     
@@ -593,6 +601,13 @@ export default function WorthaftPage() {
         if (gameState !== 'playing') return;
 
         const guessWord = currentGuess.join('');
+
+        if (currentGuess.includes('')) {
+            toast({ variant: 'destructive', title: 'Unvollständiges Wort', duration: 2000 });
+            setIsShaking(true);
+            setTimeout(() => setIsShaking(false), 600);
+            return;
+        }
         
         // This must be checked before word validity.
         if (guessWord === solution) {
@@ -622,13 +637,6 @@ export default function WorthaftPage() {
             setTimeout(() => {
                 setIsDialogOpen(true);
             }, 1200);
-            return;
-        }
-
-        if (currentGuess.includes('')) {
-            toast({ variant: 'destructive', title: 'Unvollständiges Wort', duration: 2000 });
-            setIsShaking(true);
-            setTimeout(() => setIsShaking(false), 600);
             return;
         }
 
