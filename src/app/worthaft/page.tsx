@@ -47,7 +47,7 @@ type DailyGameState = {
 const getWordOfTheDay = () => {
     const today = new Date();
     // Use local date parts to create a date string, avoiding timezone conversions.
-    const todayString = `${''}${today.getFullYear()}-${''}${today.getMonth() + 1}-${''}${today.getDate()}`;
+    const todayString = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
     const startDate = new Date('2024-01-01');
     const localToday = new Date(todayString); // This will be in the client's local timezone at 00:00:00
 
@@ -61,7 +61,6 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
     ['Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P'],
     ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
     ['SEND', 'Y', 'X', 'C', 'V', 'B', 'N', 'M', 'DELETE'],
-    ['Ü', 'Ö', 'Ä', 'ẞ']
   ];
 
   const getStatusClass = (key: string) => {
@@ -78,25 +77,44 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
     <div className="space-y-1.5 mt-8 w-full flex flex-col items-center">
       {rows.map((row, rowIndex) => (
         <div key={rowIndex} className="flex justify-center gap-1.5 w-full">
-          {row.map((key) => (
-            <Button
-              key={key}
-              variant="outline"
-              onClick={() => {
-                if (key === 'SEND') onEnter();
-                else if (key === 'DELETE') onDelete();
-                else onChar(key);
-              }}
-              className={cn(
-                'p-0 font-bold uppercase flex-1 flex items-center justify-center transition-colors duration-300 aspect-square rounded-none',
-                getStatusClass(key)
-              )}
-            >
-              {key === 'DELETE' ? <ArrowLeft className="mx-auto h-6 w-6" /> : key}
-            </Button>
-          ))}
+          {row.map((key) => {
+            const isLetterKey = key.length === 1;
+            return (
+              <Button
+                key={key}
+                variant="outline"
+                onClick={() => {
+                  if (key === 'SEND') onEnter();
+                  else if (key === 'DELETE') onDelete();
+                  else onChar(key);
+                }}
+                className={cn(
+                  'h-14 font-bold uppercase flex items-center justify-center transition-colors duration-300 rounded-none',
+                  isLetterKey ? 'flex-1 aspect-square' : 'px-4 flex-[1.5]',
+                  getStatusClass(key)
+                )}
+              >
+                {key === 'DELETE' ? <ArrowLeft className="mx-auto h-6 w-6" /> : key}
+              </Button>
+            );
+          })}
         </div>
       ))}
+       <div className="flex justify-center gap-1.5 w-full">
+            {['Ü', 'Ö', 'Ä', 'ẞ'].map(key => (
+                 <Button
+                    key={key}
+                    variant="outline"
+                    onClick={() => onChar(key)}
+                    className={cn(
+                        'h-14 font-bold uppercase flex items-center justify-center transition-colors duration-300 rounded-none flex-1 aspect-square',
+                        getStatusClass(key)
+                    )}
+                    >
+                    {key}
+                </Button>
+            ))}
+      </div>
     </div>
   );
 };
@@ -155,7 +173,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
                         isCurrentRow && activeIndex === colIndex && !isJokerProtected && 'border-primary ring-2 ring-primary scale-105',
                         status !== 'empty' && 'animate-in fade-in zoom-in-50'
                     )}
-                    style={{ animationDelay: `${''}${colIndex * 100}ms` }}
+                    style={{ animationDelay: `${colIndex * 100}ms` }}
                 >
                     {isJokerCell ? (
                         <motion.div
@@ -400,7 +418,7 @@ export default function WorthaftPage() {
         const year = today.getFullYear();
         const month = (today.getMonth() + 1).toString().padStart(2, '0');
         const day = today.getDate().toString().padStart(2, '0');
-        return `${''}${year}-${''}${month}-${''}${day}`;
+        return `${year}-${month}-${day}`;
     };
 
     const saveState = useCallback((newGuesses: { guess: string; statuses: LetterStatus[] }[], newStatus: 'won' | 'lost' | 'playing', newLetterStatuses: { [key: string]: LetterStatus }, newHotTipUsed: boolean, newJokerPosition: { guessIndex: number; letterIndex: number } | null) => {
@@ -546,7 +564,7 @@ export default function WorthaftPage() {
             if (inactivityTimerRef.current) {
                 clearTimeout(inactivityTimerRef.current);
             }
-            activityEvents.forEach(event => window.removeEventListener(event, handleActivity));
+            activityEvents.forEach(event => window.removeEventListener(event, resetInactivityTimer));
         };
     }, [gameState, hotTipUsed, isDialogOpen, showHotTipDialog, isHotTipPopupDisabled]);
     
@@ -776,7 +794,7 @@ Jetzt fordere ich Dich heraus!`;
                 console.log('Teilen abgebrochen', error);
             }
         } else {
-            navigator.clipboard.writeText(`${''}${text}\n\nhttps://paulikreisch.de/worthaft`).then(() => {
+            navigator.clipboard.writeText(`${text}\n\nhttps://paulikreisch.de/worthaft`).then(() => {
                 toast({ title: 'Kopiert!', description: 'Ergebnis in die Zwischenablage kopiert.', duration: 2000 });
             });
         }
@@ -943,3 +961,5 @@ Jetzt fordere ich Dich heraus!`;
         </div>
     );
 }
+
+    
