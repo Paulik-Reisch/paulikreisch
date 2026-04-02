@@ -75,10 +75,10 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
   };
 
   return (
-    <div className="space-y-1.5 mt-8">
-      {rows.map((i, rowIndex) => (
-        <div key={rowIndex} className="flex justify-center gap-1 sm:gap-1.5">
-          {i.map((key) => (
+    <div className="space-y-1.5 mt-8 w-full">
+      {rows.map((row, rowIndex) => (
+        <div key={rowIndex} className="flex w-full justify-center gap-1 sm:gap-1.5">
+          {row.map((key) => (
             <Button
               key={key}
               variant="outline"
@@ -88,10 +88,11 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
                 else onChar(key);
               }}
               className={cn(
-                'font-bold text-sm sm:text-base transition-colors duration-300 p-0 rounded-[4px]',
-                 key.length > 1
-                    ? 'flex-[1.5] h-14 sm:h-12 px-2'
-                    : 'flex-1 aspect-square',
+                'h-14 font-bold rounded-sm p-0 uppercase transition-colors duration-300',
+                'flex items-center justify-center min-w-0', // Allow shrinking
+                key.length > 1
+                  ? 'flex-grow-[1.5] text-xs px-1' // Wider keys
+                  : 'flex-grow-[1]', // Letter keys
                 getStatusClass(key)
               )}
             >
@@ -633,7 +634,6 @@ export default function WorthaftPage() {
         }
         setLetterStatuses(newLetterStatuses);
 
-        // Check game state immediately
         if (guessWord === solution) {
             setGameState('won');
             const newStreak = (stats.streak || 0) + 1;
@@ -648,10 +648,7 @@ export default function WorthaftPage() {
             saveState(newGuesses, 'won', newLetterStatuses, hotTipUsed, jokerPosition);
             setIsCompletedToday(true);
             setTimeout(() => setIsDialogOpen(true), 1000);
-            return;
-        } 
-        
-        if (newGuesses.length === MAX_GUESSES) {
+        } else if (newGuesses.length === MAX_GUESSES) {
             setGameState('lost');
             const newStats = { 
                 games: (stats.games || 0) + 1,
@@ -664,20 +661,12 @@ export default function WorthaftPage() {
             saveState(newGuesses, 'lost', newLetterStatuses, hotTipUsed, jokerPosition);
             setIsCompletedToday(true);
             setTimeout(() => setIsDialogOpen(true), 1000);
-            return;
-        }
-
-        // If game is still playing, prepare the next row
-        if (gameState === 'playing') {
-            let newCurrentGuess = Array(WORD_LENGTH).fill('');
-            setCurrentGuess(newCurrentGuess);
-
-            const firstEmptyIndex = newCurrentGuess.findIndex(l => l === '');
-            setActiveIndex(firstEmptyIndex !== -1 ? firstEmptyIndex : 0);
-
+        } else {
+            // Game is still playing, prepare the next row
+            setCurrentGuess(Array(WORD_LENGTH).fill(''));
+            setActiveIndex(0);
             saveState(newGuesses, 'playing', newLetterStatuses, hotTipUsed, jokerPosition);
         }
-
     }, [currentGuess, gameState, guesses, letterStatuses, solution, stats, toast, saveState, hotTipUsed, jokerPosition]);
 
     const handleDelete = () => {
@@ -899,7 +888,7 @@ Jetzt fordere ich Dich heraus!`;
                             </Button>
                         </div>
                     </div>
-                    <div className="w-full max-w-sm">
+                    <div className="w-full">
                         <Grid
                             guesses={guesses}
                             currentGuess={currentGuess}
