@@ -88,9 +88,9 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
                 else onChar(key);
               }}
               className={cn(
-                'p-0 font-bold uppercase rounded-md flex items-center justify-center transition-colors duration-300 aspect-square',
-                (key === 'SEND' || key === 'DELETE') ? 'w-12' : 'w-8',
-                getStatusClass(key)
+                'p-0 font-bold uppercase flex items-center justify-center transition-colors duration-300 aspect-square rounded-none',
+                getStatusClass(key),
+                key.length > 1 ? 'w-12' : 'w-8'
               )}
             >
               {key === 'DELETE' ? <ArrowLeft className="mx-auto h-6 w-6" /> : key}
@@ -148,7 +148,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
                        }
                    }}
                     className={cn(
-                        'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-[4px]',
+                        'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-none',
                         getStatusClass(status),
                         isCurrentRow && !isJokerProtected && 'cursor-pointer',
                         isCurrentRow && hasLetter && !isJokerProtected && 'border-muted-foreground',
