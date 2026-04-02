@@ -88,11 +88,10 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
                 else onChar(key);
               }}
               className={cn(
-                'h-14 font-bold rounded-sm p-0 uppercase transition-colors duration-300',
-                'flex items-center justify-center min-w-0', // Allow shrinking
-                key.length > 1
-                  ? 'flex-grow-[1.5] text-xs px-1' // Wider keys
-                  : 'flex-grow-[1]', // Letter keys
+                'p-0 font-bold uppercase rounded-md flex items-center justify-center transition-colors duration-300',
+                'h-auto', // Let width dictate height
+                'aspect-square', // Force square aspect ratio
+                key.length > 1 ? 'flex-grow-[1.5] text-xs' : 'flex-grow', // Use flex-grow to distribute width
                 getStatusClass(key)
               )}
             >
@@ -156,8 +155,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
                         isCurrentRow && !isJokerProtected && 'cursor-pointer',
                         isCurrentRow && hasLetter && !isJokerProtected && 'border-muted-foreground',
                         isCurrentRow && activeIndex === colIndex && !isJokerProtected && 'border-primary ring-2 ring-primary scale-105',
-                        status !== 'empty' && 'animate-in fade-in zoom-in-50',
-                        isJokerCell && 'bg-joker-gradient text-primary-foreground border-transparent'
+                        status !== 'empty' && 'animate-in fade-in zoom-in-50'
                     )}
                     style={{ animationDelay: `${''}${colIndex * 100}ms` }}
                 >
@@ -636,6 +634,7 @@ export default function WorthaftPage() {
 
         if (guessWord === solution) {
             setGameState('won');
+            setCurrentGuess(Array(WORD_LENGTH).fill(''));
             const newStreak = (stats.streak || 0) + 1;
             const newStats = { 
                 games: (stats.games || 0) + 1, 
@@ -650,6 +649,7 @@ export default function WorthaftPage() {
             setTimeout(() => setIsDialogOpen(true), 1000);
         } else if (newGuesses.length === MAX_GUESSES) {
             setGameState('lost');
+            setCurrentGuess(Array(WORD_LENGTH).fill(''));
             const newStats = { 
                 games: (stats.games || 0) + 1,
                 wins: stats.wins || 0,
@@ -863,7 +863,7 @@ Jetzt fordere ich Dich heraus!`;
             />
             <Header />
             <main className="flex-1 py-8 md:py-12">
-                <div className="container max-w-md mx-auto flex flex-col items-center justify-center">
+                <div className="w-full max-w-lg mx-auto p-2 sm:p-4 flex flex-col items-center justify-center">
                     <div className="text-center mb-8">
                         <WorthaftIcon className="mx-auto h-16 w-16 mb-4 text-primary" />
                         <h1 className="text-4xl font-bold font-headline">Worthaft</h1>
