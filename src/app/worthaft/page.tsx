@@ -80,22 +80,26 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
   };
 
   return (
-    <div className="w-full flex flex-col items-center gap-1.5 mt-8 px-1">
+    <div className="w-full flex flex-col items-center gap-1.5 mt-8">
       {rows.map((row, i) => (
         <div key={i} className="flex flex-row justify-center gap-1.5 w-full">
-          {i === 1 && <div className="w-[5%]" />}
-          
           {row.map(key => {
-            const isSpecialKey = key === 'SEND' || key === 'DELETE';
-            
+            const isSend = key === 'SEND';
+            const isDelete = key === 'DELETE';
+
+            let widthClass = 'w-[9.5%]'; // Base width for letter keys
+            if (isSend || isDelete) {
+              widthClass = 'w-[14.75%]'; // Larger width for SEND and DELETE
+            }
+
             return (
               <Button
                 key={key}
                 onClick={() => handleKeyClick(key)}
                 variant="outline"
                 className={cn(
-                  'p-0 font-bold uppercase rounded-sm flex items-center justify-center transition-colors duration-300 aspect-square',
-                  isSpecialKey ? 'w-[12%]' : 'w-[8.5%]',
+                  'h-auto p-0 font-bold uppercase flex items-center justify-center transition-colors duration-300 aspect-square rounded-none',
+                   widthClass,
                   getStatusClass(key)
                 )}
               >
@@ -103,8 +107,6 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
               </Button>
             );
           })}
-
-          {i === 1 && <div className="w-[5%]" />}
         </div>
       ))}
     </div>
@@ -165,7 +167,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
                        }
                    }}
                     className={cn(
-                        'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-sm',
+                        'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-none',
                         getStatusClass(status),
                         isCurrentRow && !isJokerProtected && 'cursor-pointer',
                         isCurrentRow && hasLetter && !isJokerProtected && 'border-muted-foreground',
@@ -554,13 +556,14 @@ export default function WorthaftPage() {
 
     // Inactivity timer for "Hot Tip"
     useEffect(() => {
-        resetInactivityTimer();
-
-        const activityEvents: (keyof WindowEventMap)[] = ['keydown', 'mousemove', 'click', 'touchstart'];
         const handleActivity = () => {
           resetInactivityTimer();
         };
 
+        resetInactivityTimer();
+
+        const activityEvents: (keyof WindowEventMap)[] = ['keydown', 'mousemove', 'click', 'touchstart'];
+        
         activityEvents.forEach(event => window.addEventListener(event, handleActivity));
 
         return () => {
@@ -622,6 +625,7 @@ export default function WorthaftPage() {
             setGuesses(newGuesses);
             setLetterStatuses(newLetterStatuses);
             setGameState('won');
+            setCurrentGuess(Array(WORD_LENGTH).fill('')); // Clear current guess
             
             const newStreak = (stats.streak || 0) + 1;
             const newStats = { 
@@ -690,6 +694,7 @@ export default function WorthaftPage() {
 
         if (newGuesses.length === MAX_GUESSES) {
             setGameState('lost');
+            setCurrentGuess(Array(WORD_LENGTH).fill('')); // Clear current guess
             const newStats = { 
                 games: (stats.games || 0) + 1,
                 wins: stats.wins || 0,
