@@ -154,7 +154,7 @@ export function Footer() {
             <p>Die auf dieser Webseite veröffentlichten satirischen Artikel dienen ausschließlich der Unterhaltung. Sie stellen keinen redaktionellen oder informativen Inhalt dar. Dargestellte Informationen können von der Wahrheit abweichen und haben nicht zum Ziel, Personen oder Institutionen zu diffamieren.</p>
           </div>
 
-          <div className="flex-1 flex flex-col items-center md:items-end gap-2 min-w-[200px] text-center md:text-right">
+          <div className="flex-1 flex flex-col items-end gap-2 min-w-[200px] text-right">
             <span className="opacity-90">© {new Date().getFullYear()} Paulik & Reisch. Alle Rechte vorbehalten.</span>
             <Link href="/impressum" className="opacity-90 hover:opacity-100 hover:underline">Impressum</Link>
             <Link href="/datenschutz" className="opacity-90 hover:opacity-100 hover:underline">Datenschutz</Link>
