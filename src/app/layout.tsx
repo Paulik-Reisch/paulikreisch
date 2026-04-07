@@ -18,6 +18,7 @@ export const metadata: Metadata = {
   applicationName: 'Paulik & Reisch',
   authors: [{ name: 'Philipp Paulik' }, { name: 'Maximilian Reisch' }],
   keywords: ['Satire', 'Humor', 'Buch', 'Autoren', 'Paulik', 'Reisch', 'Hallo Welt', 'lustige Bücher', 'deutsche Autoren', 'Schulsatire', 'Premium Satire'],
+  viewport: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no',
   openGraph: {
       title: 'Paulik & Reisch',
       description: 'Premium Humor und Satire',
