@@ -88,9 +88,12 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
             const isDelete = key === 'DELETE';
 
             let widthClass = 'w-[9.5%]'; // Base width for letter keys
-            if (isSend || isDelete) {
-              widthClass = 'w-[14.75%]'; // Larger width for SEND and DELETE
+            if (isSend) {
+                widthClass = 'w-[14.75%]'; // Larger width for SEND
+            } else if (isDelete) {
+                widthClass = 'w-[14.75%]' // Larger width for DELETE
             }
+
 
             return (
               <Button
@@ -564,13 +567,13 @@ export default function WorthaftPage() {
 
         const activityEvents: (keyof WindowEventMap)[] = ['keydown', 'mousemove', 'click', 'touchstart'];
         
-        activityEvents.forEach(event => window.addEventListener(event, handleActivity));
+        activityEvents.forEach(event => window.addEventListener(event, resetInactivityTimer));
 
         return () => {
             if (inactivityTimerRef.current) {
                 clearTimeout(inactivityTimerRef.current);
             }
-            activityEvents.forEach(event => window.removeEventListener(event, handleActivity));
+            activityEvents.forEach(event => window.removeEventListener(event, resetInactivityTimer));
         };
     }, [resetInactivityTimer]);
     
@@ -908,7 +911,7 @@ Jetzt fordere ich Dich heraus!`;
             />
             <Header />
             <main className="flex-1 py-8 md:py-12">
-                <div className="w-full max-w-sm mx-auto px-1 sm:px-0 flex flex-col items-center justify-start">
+                <div className="w-full max-w-sm mx-auto px-4 sm:px-0 flex flex-col items-center justify-start">
                     <div className="text-center mb-8">
                         <WorthaftIcon className="mx-auto h-16 w-16 mb-4 text-primary" />
                         <h1 className="text-4xl font-bold font-headline">Worthaft</h1>
