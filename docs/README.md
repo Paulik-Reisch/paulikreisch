@@ -13,6 +13,7 @@ für **Einsteiger** (Philipp + Max), ohne unnötig viel Fachchinesisch.
 | [collaborate.md](collaborate.md) | Wie **du + Max gemeinsam** arbeiten | Wenn ihr den Workflow festlegt |
 | [publish.md](publish.md) | **Live schalten** (dev.paulikreisch.de ↔ paulikreisch.de) | Vor jedem Deploy |
 | [version.md](version.md) | Mit **Versionen** umgehen (v1.2.0, Rollback) | Wenn ihr Meilensteine markiert |
+| [max-so-klappts.md](max-so-klappts.md) | **Für Max:** wo liegt Code/App/DB, KI-Tools, Änderungen per GH | Einsteiger-Leitfaden für Max |
 
 ## Der schnelle Ablauf
 
