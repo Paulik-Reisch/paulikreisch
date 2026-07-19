@@ -14,6 +14,7 @@ für **Einsteiger** (Philipp + Max), ohne unnötig viel Fachchinesisch.
 | [publish.md](publish.md) | **Live schalten** (dev.paulikreisch.de ↔ paulikreisch.de) | Vor jedem Deploy |
 | [version.md](version.md) | Mit **Versionen** umgehen (v1.2.0, Rollback) | Wenn ihr Meilensteine markiert |
 | [max-so-klappts.md](max-so-klappts.md) | **Für Max:** wo liegt Code/App/DB, KI-Tools, Änderungen per GH | Einsteiger-Leitfaden für Max |
+| [tools.md](tools.md) | **Tools:** was Pflicht ist, was optional (Git/Firebase/VS Code/Claude/Hermes/OpenCode) | Überblick vor Setup |
 
 ## Der schnelle Ablauf
 
