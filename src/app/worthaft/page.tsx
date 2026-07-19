@@ -903,7 +903,7 @@ Jetzt selber spielen:`;
                         <div className="flex items-center justify-center gap-2 mt-2">
                             <Link href="/worthaft/ueber" className="text-sm inline-flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors">
                                 <HelpCircle className="h-4 w-4" />
-                                <span>Spielanleitung</span>
+                                <span>Anleitung</span>
                             </Link>
                              <button
                                 className="text-sm p-0 h-auto font-semibold text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1.5"
