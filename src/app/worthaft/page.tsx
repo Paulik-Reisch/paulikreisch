@@ -774,11 +774,11 @@ export default function WorthaftPage() {
 
         const text = `Worthaft – Das Paulik & Reisch Spiel
 
-Ich habe das tägliche Worthaft gespielt. Mein Ergebnis: ${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} Versuchen ${tipUsedLine}
+Mein Ergebnis: ${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} ${tipUsedLine}
 
 ${resultGrid}
 
-Jetzt fordere ich Dich heraus!`;
+Jetzt selber spielen:`;
         
         const shareData = {
             title: 'Worthaft – Das Paulik & Reisch Spiel',
@@ -960,55 +960,3 @@ Jetzt fordere ich Dich heraus!`;
         </div>
     );
 }
-
-const GameEndDisplay = (props: {
-    isOpen: boolean;
-    onOpenChange: (open: boolean) => void;
-    solution: string;
-    guesses: { guess: string; statuses: LetterStatus[] }[];
-    gameState: 'playing' | 'won' | 'lost';
-    stats: { games: number; wins: number; streak: number; maxStreak: number; };
-    timeToNextGame: string;
-    shareResults: () => void;
-}) => {
-    const isMobile = useIsMobile();
-    const { isOpen, onOpenChange, ...rest } = props;
-
-    if (isMobile) {
-        return (
-            <Sheet open={isOpen} onOpenChange={onOpenChange}>
-                <SheetContent side="bottom" className="p-0 pt-0 max-h-[90vh] overflow-y-auto rounded-t-lg">
-                    <div className="p-6">
-                        <SheetHeader className="text-center">
-                            <SheetTitle className="text-2xl font-bold font-headline">
-                                {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
-                            </SheetTitle>
-                            <SheetDescription className="text-muted-foreground pt-1">
-                                Das heutige Wort: <span className="font-bold text-primary">{rest.solution}</span>
-                            </SheetDescription>
-                        </SheetHeader>
-                        <ResultsContent {...rest} />
-                    </div>
-                </SheetContent>
-            </Sheet>
-        );
-    }
-
-    return (
-        <Dialog open={isOpen} onOpenChange={onOpenChange}>
-            <DialogContent className="p-0 max-w-sm rounded-t-lg overflow-hidden">
-                <div className="p-6">
-                    <DialogHeader>
-                        <DialogTitle className="text-2xl font-bold font-headline text-center">
-                            {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
-                        </DialogTitle>
-                        <DialogDescription className="text-muted-foreground pt-1 text-center">
-                            Das heutige Wort: <span className="font-bold text-primary">{rest.solution}</span>
-                        </DialogDescription>
-                    </DialogHeader>
-                    <ResultsContent {...rest} />
-                </div>
-            </DialogContent>
-        </Dialog>
-    );
-};
