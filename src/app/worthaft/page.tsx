@@ -15,11 +15,10 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { WORDS } from '@/lib/worthaft-words';
-import { Share2, HelpCircle, Book, Newspaper, X, Volume2, VolumeX, ArrowLeft } from 'lucide-react';
+import { Share2, HelpCircle, Volume2, VolumeX, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
 import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
@@ -68,7 +67,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
     switch (status) {
       case 'correct': return 'bg-primary text-primary-foreground';
       case 'present': return 'bg-secondary text-secondary-foreground';
-      case 'absent': return 'bg-muted text-muted-foreground opacity-60';
+      case 'absent': return 'bg-neutral-600 text-neutral-100 border-neutral-600 opacity-80';
       default: return 'bg-muted hover:bg-accent';
     }
   };
