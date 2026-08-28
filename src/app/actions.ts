@@ -44,6 +44,7 @@ export async function createOrderAction(
 const SubscriberSchema = z.object({
     email: z.string().email("Bitte geben Sie eine gültige E-Mail-Adresse ein."),
     source: z.string().optional(),
+    consent: z.string().refine((v) => v === "true", "Sie müssen Datenschutz & AGB akzeptieren."),
 });
 
 export async function subscribeToNewsletterAction(
@@ -57,6 +58,7 @@ export async function subscribeToNewsletterAction(
     const validatedFields = SubscriberSchema.safeParse({
         email: formData.get("email"),
         source: formData.get("source"),
+        consent: formData.get("consent"),
     });
 
     if (!validatedFields.success) {

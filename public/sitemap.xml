@@ -6,88 +6,70 @@
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
 <url>
-  <loc>https://paulik-reisch.de/</loc>
-  <lastmod>2024-07-29T12:00:00+00:00</lastmod>
+  <loc>https://paulikreisch.de/</loc>
+  <lastmod>2026-08-28T12:00:00+00:00</lastmod>
+  <changefreq>daily</changefreq>
+  <priority>1.0</priority>
 </url>
 <url>
-  <loc>https://paulik-reisch.de/lp2</loc>
-  <lastmod>2024-07-29T12:00:00+00:00</lastmod>
+  <loc>https://paulikreisch.de/worthaft</loc>
+  <lastmod>2026-08-28T12:00:00+00:00</lastmod>
+  <changefreq>daily</changefreq>
+  <priority>0.9</priority>
 </url>
 <url>
-  <loc>https://paulik-reisch.de/lp3</loc>
-  <lastmod>2024-07-29T12:00:00+00:00</lastmod>
+  <loc>https://paulikreisch.de/worthaft/ueber</loc>
+  <lastmod>2026-08-28T12:00:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.6</priority>
 </url>
 <url>
-  <loc>https://paulik-reisch.de/lp4</loc>
-  <lastmod>2024-07-29T12:00:00+00:00</lastmod>
+  <loc>https://paulikreisch.de/impressum</loc>
+  <lastmod>2026-08-28T12:00:00+00:00</lastmod>
+  <changefreq>yearly</changefreq>
+  <priority>0.3</priority>
 </url>
 <url>
-  <loc>https://paulik-reisch.de/excerpt-6</loc>
-  <lastmod>2024-07-29T12:00:00+00:00</lastmod>
+  <loc>https://paulikreisch.de/datenschutz</loc>
+  <lastmod>2026-08-28T12:00:00+00:00</lastmod>
+  <changefreq>yearly</changefreq>
+  <priority>0.3</priority>
 </url>
 <url>
-  <loc>https://paulik-reisch.de/lp-schule-straflager</loc>
-  <lastmod>2024-07-29T12:00:00+00:00</lastmod>
+  <loc>https://paulikreisch.de/cookie-richtlinie</loc>
+  <lastmod>2026-08-28T12:00:00+00:00</lastmod>
+  <changefreq>yearly</changefreq>
+  <priority>0.3</priority>
 </url>
 <url>
-  <loc>https://paulik-reisch.de/lp-lehrer-roboter</loc>
-  <lastmod>2024-07-29T12:00:00+00:00</lastmod>
+  <loc>https://paulikreisch.de/transparenz</loc>
+  <lastmod>2026-08-28T12:00:00+00:00</lastmod>
+  <changefreq>yearly</changefreq>
+  <priority>0.3</priority>
 </url>
 <url>
-  <loc>https://paulik-reisch.de/lp-mensa-todesfalle</loc>
-  <lastmod>2024-07-29T12:00:00+00:00</lastmod>
+  <loc>https://paulikreisch.de/widerruf</loc>
+  <lastmod>2026-08-28T12:00:00+00:00</lastmod>
+  <changefreq>yearly</changefreq>
+  <priority>0.3</priority>
 </url>
 <url>
-  <loc>https://paulik-reisch.de/lp-busfahren-mutprobe</loc>
-  <lastmod>2024-07-29T12:00:00+00:00</lastmod>
+  <loc>https://paulikreisch.de/urheberrecht</loc>
+  <lastmod>2026-08-28T12:00:00+00:00</lastmod>
+  <changefreq>yearly</changefreq>
+  <priority>0.3</priority>
 </url>
 <url>
-  <loc>https://paulik-reisch.de/lp-sport-ist-mord</loc>
-  <lastmod>2024-07-29T12:00:00+00:00</lastmod>
+  <loc>https://paulikreisch.de/barrierefreiheit</loc>
+  <lastmod>2026-08-28T12:00:00+00:00</lastmod>
+  <changefreq>yearly</changefreq>
+  <priority>0.3</priority>
 </url>
 <url>
-  <loc>https://paulik-reisch.de/lp-schulzeiten-genickbruch</loc>
-  <lastmod>2024-07-29T12:00:00+00:00</lastmod>
-</url>
-<url>
-  <loc>https://paulik-reisch.de/lp-corona-satire</loc>
-  <lastmod>2024-07-29T12:00:00+00:00</lastmod>
-</url>
-<url>
-  <loc>https://paulik-reisch.de/lp-buerokratie-simulator</loc>
-  <lastmod>2024-07-29T12:00:00+00:00</lastmod>
-</url>
-<url>
-  <loc>https://paulik-reisch.de/lp-internet-deutschland</loc>
-  <lastmod>2024-07-29T12:00:00+00:00</lastmod>
-</url>
-<url>
-  <loc>https://paulik-reisch.de/lp-mietenwahnsinn</loc>
-  <lastmod>2024-07-29T12:00:00+00:00</lastmod>
-</url>
-<url>
-  <loc>https://paulik-reisch.de/lp-fussnoten-generator</loc>
-  <lastmod>2024-07-29T12:00:00+00:00</lastmod>
-</url>
-<url>
-  <loc>https://paulik-reisch.de/lp-lehrer-noten-simulator</loc>
-  <lastmod>2024-07-29T12:00:00+00:00</lastmod>
-</url>
-<url>
-  <loc>https://paulik-reisch.de/lp-buerokratie-generator</loc>
-  <lastmod>2024-07-29T12:00:00+00:00</lastmod>
-</url>
-<url>
-  <loc>https://paulik-reisch.de/lp-db-ausreden-bot</loc>
-  <lastmod>2024-07-29T12:00:00+00:00</lastmod>
-</url>
-<url>
-  <loc>https://paulik-reisch.de/lp-satire-typ-test</loc>
-  <lastmod>2024-07-29T12:00:00+00:00</lastmod>
-</url>
-<url>
-  <loc>https://paulik-reisch.de/lp-beamten-wartezeiten-simulator</loc>
-  <lastmod>2024-07-29T12:00:00+00:00</lastmod>
+  <loc>https://paulikreisch.de/agb</loc>
+  <lastmod>2026-08-28T12:00:00+00:00</lastmod>
+  <changefreq>yearly</changefreq>
+  <priority>0.3</priority>
 </url>
 
 </urlset>

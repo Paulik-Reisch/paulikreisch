@@ -12,6 +12,9 @@
 - [Datenschutz](https://paulikreisch.de/datenschutz): Datenschutzerklärung nach DSGVO, BDSG und TDDDG.
 - [Cookie-Richtlinie](https://paulikreisch.de/cookie-richtlinie): Übersicht über eingesetzte Cookies und die Consent-Verwaltung.
 - [Transparenzhinweise](https://paulikreisch.de/transparenz): Kennzeichnung KI-generierter Inhalte gemäß Art. 50 EU AI Act (Verordnung (EU) 2024/1689).
+- [Widerrufsbelehrung](https://paulikreisch.de/widerruf): Informationen zum Widerrufsrecht beim Erwerb unserer Bücher.
+- [Urheberrecht](https://paulikreisch.de/urheberrecht): Urheberrechtliche Hinweise zu sämtlichen Inhalten.
+- [Barrierefreiheit](https://paulikreisch.de/barrierefreiheit): Erklärung zur Barrierefreiheit (BITV 2.0 / WCAG 2.1 AA).
 - [AGB](https://paulikreisch.de/agb): Allgemeine Geschäftsbedingungen.
 
 ## Optional

@@ -132,6 +132,16 @@ export function Footer() {
             <form ref={formRef} action={formAction} className="flex flex-col gap-2.5 items-start">
               <Input type="email" name="email" placeholder="E-Mail-Adresse eingeben" className="bg-white border-gray-300 rounded-sm" required />
               <input type="hidden" name="source" value="main-footer" />
+              <label className="flex items-start gap-2 text-xs text-gray-500 leading-snug cursor-pointer">
+                <input type="checkbox" name="consent" value="true" required className="mt-0.5 h-3.5 w-3.5 shrink-0 rounded-sm border-gray-300" />
+                <span>
+                  Mit dem Klick akzeptiere ich die{' '}
+                  <Link href="/datenschutz" className="underline hover:text-[#f08e6c]">Datenschutzerklärung</Link>
+                  {' '}und die{' '}
+                  <Link href="/agb" className="underline hover:text-[#f08e6c]">AGB</Link>
+                  {' '}und willige in den Newsletter-Versand ein.
+                </span>
+              </label>
               <SubmitButton />
             </form>
           </div>
