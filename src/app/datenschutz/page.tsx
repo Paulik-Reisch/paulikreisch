@@ -18,8 +18,12 @@ export default function DatenschutzPage() {
 
             <h2>1. Verantwortlicher</h2>
             <p>
-              Verantwortlicher im Sinne von Art. 4 Nr. 7 DSGVO ist der im <a href="/impressum">Impressum</a>
-              genannte Anbieter. Bei Fragen zum Datenschutz erreichen Sie uns unter &lt;kontakt@paulikreisch.de&gt;.
+              Verantwortlicher im Sinne von Art. 4 Nr. 7 DSGVO ist:<br />
+              Philipp Paulik<br />
+              Mozartstraße 1<br />
+              53819 Neunkirchen-Seelscheid<br />
+              E-Mail: philipp.l.paulik@gmail.com<br />
+              Bei Fragen zum Datenschutz erreichen Sie uns unter der genannten E-Mail-Adresse.
             </p>
 
             <h2>2. Erhebung und Verarbeitung personenbezogener Daten</h2>

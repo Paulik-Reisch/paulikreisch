@@ -21,27 +21,24 @@ export default function ImpressumPage() {
               Paulik &amp; Reisch<br />
               Vertreten durch die Gesellschafter<br />
               Philipp Paulik und Maximilian Reisch<br />
-              &lt;Straße und Hausnummer&gt;<br />
-              &lt;PLZ&gt; &lt;Ort&gt;<br />
+              Mozartstraße 1<br />
+              53819 Neunkirchen-Seelscheid<br />
               Deutschland
             </p>
 
             <h2>Kontakt</h2>
             <p>
-              E-Mail: &lt;kontakt@paulikreisch.de&gt;<br />
-              Telefon: &lt;Telefonnummer zum Basistarif&gt;
+              E-Mail: philipp.l.paulik@gmail.com<br />
+              E-Mail: maximilian.reisch@t-online.de
             </p>
 
             <h2>Verantwortlich für journalistisch-redaktionelle Angebote</h2>
             <p>
               Gemäß § 18 Abs. 2 des Medienstaatsvertrags (MStV):<br />
-              &lt;Name der redaktionell verantwortlichen Person, ständiger Wohnsitz in der Bundesrepublik Deutschland&gt;
-            </p>
-
-            <h2>Umsatzsteueridentifikationsnummer</h2>
-            <p>
-              Umsatzsteuer-Identifikationsnummer gemäß § 27 a des Umsatzsteuergesetzes:
-              &lt;USt-IdNr. — sofern vorhanden; andernfalls diesen Absatz entfernen&gt;
+              Philipp Paulik<br />
+              Mozartstraße 1<br />
+              53819 Neunkirchen-Seelscheid<br />
+              Deutschland
             </p>
 
             <h2>EU-Streitbeilegung</h2>

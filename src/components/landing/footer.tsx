@@ -152,6 +152,8 @@ export function Footer() {
             <p>Das Spiel "Worthaft" ist eine unabhängige Hommage und steht in keiner Verbindung zum Original "Wordle" der New York Times. Spieldaten wie Statistiken und Fortschritt werden ausschließlich lokal im Browser des Nutzers gespeichert. Es findet keine serverseitige Erfassung oder Auswertung der Spieldaten statt.</p>
             <br/>
             <p>Die auf dieser Webseite veröffentlichten satirischen Artikel dienen ausschließlich der Unterhaltung. Sie stellen keinen redaktionellen oder informativen Inhalt dar. Dargestellte Informationen können von der Wahrheit abweichen und haben nicht zum Ziel, Personen oder Institutionen zu diffamieren.</p>
+            <br/>
+            <p>Die vorliegenden Inhalte werden mittels automatisierter Verfahren maschineller Sprachgenerierung (Künstliche Intelligenz) vorverarbeitet, wobei die finale redaktionelle Verantwortung und inhaltliche Prüfung gemäß § 18 Abs. 2 MStV bei der benannten natürlichen Person verbleibt. Eine Offenlegung im Sinne des Art. 50 Abs. 1 der Verordnung (EU) 2024/1689 (KI-Verordnung) erfolgt über die hierfür vorgesehene Transparenzerklärung. Die Nutzung der generierten Vorschläge begründet kein vertrauensschutzähnliches Verhältnis und entfaltet keine rechtliche Bindungswirkung gegenüber dem Anbieter. Etwaige Risiken im Sinne des Anhangs III der KI-Verordnung werden durch geeignete technische und organisatorische Maßnahmen auf ein Minimum reduziert.</p>
           </div>
 
           <div className="flex-1 flex flex-col items-end gap-2 min-w-[200px] text-right">
@@ -161,6 +163,9 @@ export function Footer() {
             <Link href="/cookie-richtlinie" className="opacity-90 hover:opacity-100 hover:underline">Cookie-Richtlinie</Link>
             <Link href="/transparenz" className="opacity-90 hover:opacity-100 hover:underline">Transparenzhinweise</Link>
             <Link href="/agb" className="opacity-90 hover:opacity-100 hover:underline">AGB</Link>
+            <Link href="/widerruf" className="opacity-90 hover:opacity-100 hover:underline">Widerruf</Link>
+            <Link href="/urheberrecht" className="opacity-90 hover:opacity-100 hover:underline">Urheberrecht</Link>
+            <Link href="/barrierefreiheit" className="opacity-90 hover:opacity-100 hover:underline">Barrierefreiheit</Link>
           </div>
 
         </div>
