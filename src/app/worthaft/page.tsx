@@ -24,7 +24,8 @@ import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
 import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { Loader2 } from 'lucide-react';
+import { Loader2, MessageSquare } from 'lucide-react';
+import FeedbackDrawer from './FeedbackDrawer';
 
 const WORD_LENGTH = 5;
 const MAX_GUESSES = 6;
@@ -389,6 +390,7 @@ export default function WorthaftPage() {
     const [timeToNextGame, setTimeToNextGame] = useState('');
     const [isShaking, setIsShaking] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
     const [isMuted, setIsMuted] = useState(true);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -495,7 +497,11 @@ export default function WorthaftPage() {
 
                     if (dailyState.status === 'won' || dailyState.status === 'lost') {
                         setIsCompletedToday(true);
-                        setIsDialogOpen(true);
+                        if (localStorage.getItem(`worthaft-feedback-${getTodayString()}`) === 'true') {
+                            setIsDialogOpen(true);
+                        } else {
+                            setIsFeedbackOpen(true);
+                        }
                     }
                 }
             } catch (e) {
@@ -627,7 +633,11 @@ export default function WorthaftPage() {
             saveState(newGuesses, 'won', newLetterStatuses, hotTipUsed, jokerPosition);
             setIsCompletedToday(true);
             setTimeout(() => {
-                setIsDialogOpen(true);
+                if (localStorage.getItem(`worthaft-feedback-${getTodayString()}`) === 'true') {
+                    setIsDialogOpen(true);
+                } else {
+                    setIsFeedbackOpen(true);
+                }
             }, 1200);
             return;
         }
@@ -693,7 +703,13 @@ export default function WorthaftPage() {
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
             saveState(newGuesses, 'lost', newLetterStatuses, hotTipUsed, jokerPosition);
             setIsCompletedToday(true);
-            setTimeout(() => setIsDialogOpen(true), 1200);
+            setTimeout(() => {
+                if (localStorage.getItem(`worthaft-feedback-${getTodayString()}`) === 'true') {
+                    setIsDialogOpen(true);
+                } else {
+                    setIsFeedbackOpen(true);
+                }
+            }, 1200);
         } else {
             // Game is still playing, prepare the next row
             setCurrentGuess(Array(WORD_LENGTH).fill(''));
@@ -906,15 +922,22 @@ Jetzt selber spielen:`;
                                 <span>Anleitung</span>
                             </Link>
                              <button
-                                className="text-sm p-0 h-auto font-semibold text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1.5"
-                                onClick={() => setShowHotTipDialog(true)}
-                                disabled={hotTipUsed || gameState !== 'playing'}
-                              >
-                                <span className="feuer-button !p-0 !h-auto !shadow-none !bg-transparent before:!hidden after:!hidden">
-                                  <span className="btn-text !text-sm">🔥</span>
-                                </span>
-                                Heißer Tipp
-                              </button>
+                               className="text-sm p-0 h-auto font-semibold text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1.5"
+                               onClick={() => setShowHotTipDialog(true)}
+                               disabled={hotTipUsed || gameState !== 'playing'}
+                             >
+                               <span className="feuer-button !p-0 !h-auto !shadow-none !bg-transparent before:!hidden after:!hidden">
+                                 <span className="btn-text !text-sm">🔥</span>
+                               </span>
+                               Heißer Tipp
+                             </button>
+                             <button
+                               className="text-sm p-0 h-auto font-semibold text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1.5"
+                               onClick={() => setIsFeedbackOpen(true)}
+                             >
+                               <MessageSquare className="h-4 w-4" />
+                               Feedback
+                             </button>
                             <Button onClick={toggleMute} variant="ghost" size="icon" className="text-muted-foreground">
                                 {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
                                 <span className="sr-only">Ton an/aus</span>
@@ -949,12 +972,24 @@ Jetzt selber spielen:`;
                 shareResults={shareResults}
             />
              <HotTipDisplay
-                isOpen={showHotTipDialog}
-                onOpenChange={setShowHotTipDialog}
-                onAccept={handleAcceptHotTip}
-                onDecline={handleDeclineHotTip}
-                isPermanentlyDisabled={dontShowHotTipAgain}
-                onDisablePermanentlyChange={setDontShowHotTipAgain}
+                 isOpen={showHotTipDialog}
+                 onOpenChange={setShowHotTipDialog}
+                 onAccept={handleAcceptHotTip}
+                 onDecline={handleDeclineHotTip}
+                 isPermanentlyDisabled={dontShowHotTipAgain}
+                 onDisablePermanentlyChange={setDontShowHotTipAgain}
+             />
+             <FeedbackDrawer
+                 isOpen={isFeedbackOpen}
+                 onOpenChange={(open) => {
+                     setIsFeedbackOpen(open);
+                     // Once the feedback drawer is closed (and feedback wasn't already given today),
+                     // show the results drawer behind/beside it.
+                     if (!open && localStorage.getItem(`worthaft-feedback-${getTodayString()}`) !== 'true') {
+                         setIsDialogOpen(true);
+                     }
+                 }}
+                solution={solution}
             />
         </div>
     );

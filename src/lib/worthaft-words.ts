@@ -15,7 +15,7 @@ export const WORDS = [
     "antik",
     "zicke",
     "plage",
-    "voran"
+    "voran",
     "tücke",
     "sicht",
     "keule",
