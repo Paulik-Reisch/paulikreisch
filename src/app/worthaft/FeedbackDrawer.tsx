@@ -48,7 +48,6 @@ export default function FeedbackDrawer({
   const [step, setStep] = useState<Step>('ask');
   const [vote, setVote] = useState<Vote>(null);
   const [reasons, setReasons] = useState<Set<string>>(new Set());
-  const [comment, setComment] = useState('');
   const [isSending, setIsSending] = useState(false);
 
   useEffect(() => {
@@ -56,7 +55,6 @@ export default function FeedbackDrawer({
       setStep('ask');
       setVote(null);
       setReasons(new Set());
-      setComment('');
       setIsSending(false);
     }
   }, [isOpen]);
@@ -84,7 +82,6 @@ export default function FeedbackDrawer({
       word: solution,
       vote,
       reasons: vote === 'down' ? Array.from(reasons) : [],
-      comment: comment.trim(),
       date: getTodayString(),
       createdAt: serverTimestamp(),
     };
@@ -236,19 +233,6 @@ export default function FeedbackDrawer({
                 </div>
               </div>
             )}
-
-            <div className="mb-5">
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Weiteres Feedback (optional)
-              </label>
-              <textarea
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                rows={3}
-                placeholder="Erzähl uns mehr..."
-                className="w-full resize-none rounded-md border border-input bg-background p-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
-              />
-            </div>
 
             <Button
               onClick={handleSubmit}

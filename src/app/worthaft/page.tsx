@@ -24,7 +24,7 @@ import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
 import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { Loader2, MessageSquare } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import FeedbackDrawer from './FeedbackDrawer';
 
 const WORD_LENGTH = 5;
@@ -39,6 +39,7 @@ type DailyGameState = {
   letterStatuses: { [key: string]: LetterStatus };
   hotTipUsed?: boolean;
   jokerPosition?: { guessIndex: number; letterIndex: number };
+  rowTimes?: number[]; // ms per submitted guess
 };
 
 
@@ -214,21 +215,30 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
 };
 
 
-const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, shareResults }: {
+const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, shareResults, rowTimes }: {
     solution: string;
     guesses: { guess: string; statuses: LetterStatus[] }[];
     gameState: 'playing' | 'won' | 'lost';
     stats: { games: number; wins: number; streak: number; maxStreak: number; };
     timeToNextGame: string;
     shareResults: () => void;
+    rowTimes: number[];
 }) => {
     const winRate = stats.games > 0 ? Math.round((stats.wins / stats.games) * 100) : 0;
+    const totalTime = rowTimes.reduce((sum, t) => sum + t, 0);
+    const formatDurationLocal = (ms: number) => {
+        const totalSeconds = Math.floor(ms / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    };
     
     return (
     <>
         <div className="text-center">
             <p className="text-sm uppercase font-bold text-muted-foreground">Ergebnis</p>
             <p className="text-4xl font-bold">{gameState === 'won' ? guesses.length : 'X'} / {MAX_GUESSES}</p>
+            <p className="text-sm text-muted-foreground mt-1">in {formatDurationLocal(totalTime)} Minuten</p>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center my-6">
@@ -275,6 +285,7 @@ const GameEndDisplay = (props: {
     stats: { games: number; wins: number; streak: number; maxStreak: number; };
     timeToNextGame: string;
     shareResults: () => void;
+    rowTimes: number[];
 }) => {
     const isMobile = useIsMobile();
     const { isOpen, onOpenChange, ...rest } = props;
@@ -392,6 +403,9 @@ export default function WorthaftPage() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
     const [isMuted, setIsMuted] = useState(true);
+    const [rowTimes, setRowTimes] = useState<number[]>([]); // ms per submitted guess
+    const [gameStartTime, setGameStartTime] = useState<number>(0);
+    const rowStartTimeRef = useRef<number>(0);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
     // Joker "Hot Tip" state
@@ -412,29 +426,25 @@ export default function WorthaftPage() {
         return `${year}-${month}-${day}`;
     };
 
-    const saveState = useCallback((newGuesses: { guess: string; statuses: LetterStatus[] }[], newStatus: 'won' | 'lost' | 'playing', newLetterStatuses: { [key: string]: LetterStatus }, newHotTipUsed: boolean, newJokerPosition: { guessIndex: number; letterIndex: number } | null) => {
-        if (newStatus === 'won' || newStatus === 'lost') {
-             const dailyState: DailyGameState = {
-                date: getTodayString(),
-                guesses: newGuesses,
-                status: newStatus,
-                letterStatuses: newLetterStatuses,
-                hotTipUsed: newHotTipUsed,
-                jokerPosition: newJokerPosition || undefined
-            };
-            localStorage.setItem('worthaft-daily-game', JSON.stringify(dailyState));
-        } else {
-            // Only save playing state if there's something to save
-             const dailyState: DailyGameState = {
-                date: getTodayString(),
-                guesses: newGuesses,
-                status: 'playing',
-                letterStatuses: newLetterStatuses,
-                hotTipUsed: newHotTipUsed,
-                jokerPosition: newJokerPosition || undefined,
-            };
-            localStorage.setItem('worthaft-daily-game', JSON.stringify(dailyState));
-        }
+    // Format a duration in ms as M:SS (or M:SS for tens of minutes).
+    const formatDuration = (ms: number) => {
+        const totalSeconds = Math.floor(ms / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    };
+
+    const saveState = useCallback((newGuesses: { guess: string; statuses: LetterStatus[] }[], newStatus: 'won' | 'lost' | 'playing', newLetterStatuses: { [key: string]: LetterStatus }, newHotTipUsed: boolean, newJokerPosition: { guessIndex: number; letterIndex: number } | null, newRowTimes: number[]) => {
+        const dailyState: DailyGameState = {
+            date: getTodayString(),
+            guesses: newGuesses,
+            status: newStatus,
+            letterStatuses: newLetterStatuses,
+            hotTipUsed: newHotTipUsed,
+            jokerPosition: newJokerPosition || undefined,
+            rowTimes: newRowTimes,
+        };
+        localStorage.setItem('worthaft-daily-game', JSON.stringify(dailyState));
     }, []);
 
     useEffect(() => {
@@ -466,6 +476,7 @@ export default function WorthaftPage() {
 
         const todayStr = getTodayString();
         setSolution(getWordOfTheDay());
+        setGameStartTime(Date.now());
 
         const savedStats = localStorage.getItem('worthaft-stats');
         if (savedStats) {
@@ -482,6 +493,7 @@ export default function WorthaftPage() {
                     setGameState(dailyState.status);
                     setLetterStatuses(dailyState.letterStatuses || {});
                     setHotTipUsed(dailyState.hotTipUsed || false);
+                    setRowTimes(dailyState.rowTimes || []);
                     if (dailyState.jokerPosition) {
                         setJokerPosition(dailyState.jokerPosition);
                         const newCurrentGuess = Array(WORD_LENGTH).fill('');
@@ -582,6 +594,11 @@ export default function WorthaftPage() {
         newGuess[activeIndex] = char;
         setCurrentGuess(newGuess);
 
+        // Start the per-row timer when the first letter of a fresh row is typed.
+        if (currentGuess.every((c) => c === '')) {
+            rowStartTimeRef.current = Date.now();
+        }
+
         // Advance cursor, skipping joker if necessary
         let nextIndex = activeIndex + 1;
         if (nextIndex < WORD_LENGTH) {
@@ -605,6 +622,10 @@ export default function WorthaftPage() {
             setTimeout(() => setIsShaking(false), 600);
             return;
         }
+
+        // Measure the time spent on this guess row.
+        const rowElapsed = rowStartTimeRef.current > 0 ? Date.now() - rowStartTimeRef.current : 0;
+        const newRowTimes = [...rowTimes, rowElapsed];
         
         // This must be checked before word validity.
         if (guessWord === solution) {
@@ -619,6 +640,7 @@ export default function WorthaftPage() {
             setGuesses(newGuesses);
             setLetterStatuses(newLetterStatuses);
             setGameState('won');
+            setRowTimes(newRowTimes);
             setCurrentGuess(Array(WORD_LENGTH).fill('')); // Clear current guess
             
             const newStreak = (stats.streak || 0) + 1;
@@ -630,7 +652,7 @@ export default function WorthaftPage() {
             };
             setStats(newStats);
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
-            saveState(newGuesses, 'won', newLetterStatuses, hotTipUsed, jokerPosition);
+            saveState(newGuesses, 'won', newLetterStatuses, hotTipUsed, jokerPosition, newRowTimes);
             setIsCompletedToday(true);
             setTimeout(() => {
                 if (localStorage.getItem(`worthaft-feedback-${getTodayString()}`) === 'true') {
@@ -701,7 +723,7 @@ export default function WorthaftPage() {
             };
             setStats(newStats);
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
-            saveState(newGuesses, 'lost', newLetterStatuses, hotTipUsed, jokerPosition);
+            saveState(newGuesses, 'lost', newLetterStatuses, hotTipUsed, jokerPosition, newRowTimes);
             setIsCompletedToday(true);
             setTimeout(() => {
                 if (localStorage.getItem(`worthaft-feedback-${getTodayString()}`) === 'true') {
@@ -714,9 +736,12 @@ export default function WorthaftPage() {
             // Game is still playing, prepare the next row
             setCurrentGuess(Array(WORD_LENGTH).fill(''));
             setActiveIndex(0);
-            saveState(newGuesses, 'playing', newLetterStatuses, hotTipUsed, jokerPosition);
+            setRowTimes(newRowTimes);
+            // Start the timer for the next row now (first keystroke will also reset if needed).
+            rowStartTimeRef.current = Date.now();
+            saveState(newGuesses, 'playing', newLetterStatuses, hotTipUsed, jokerPosition, newRowTimes);
         }
-    }, [currentGuess, gameState, guesses, letterStatuses, solution, stats, toast, saveState, hotTipUsed, jokerPosition]);
+    }, [currentGuess, gameState, guesses, letterStatuses, solution, stats, toast, saveState, hotTipUsed, jokerPosition, rowTimes]);
 
     const handleDelete = () => {
         if (gameState !== 'playing') return;
@@ -782,14 +807,16 @@ export default function WorthaftPage() {
                 if (s === 'correct') return '🟦';
                 if (s === 'present') return '🟨';
                 return '⬛';
-            }).join('')
+            }).join('') +
+            (rowTimes[guessIndex] !== undefined ? ` (${formatDuration(rowTimes[guessIndex])} Minuten)` : '')
         ).join('\n');
-        
+
+        const totalTime = rowTimes.reduce((sum, t) => sum + t, 0);
         const tipUsedLine = hotTipUsed ? `(1 Heißer Tipp verwendet 🔥)` : "";
 
         const text = `Worthaft – Das Paulik & Reisch Spiel
 
-Mein Ergebnis: ${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} ${tipUsedLine}
+Mein Ergebnis: ${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} innerhalb von ${formatDuration(totalTime)} Minuten ${tipUsedLine}
 
 ${resultGrid}
 
@@ -854,7 +881,7 @@ Jetzt selber spielen:`;
             setJokerPosition(newJokerPosition);
 
             setHotTipUsed(true);
-            saveState(guesses, 'playing', letterStatuses, true, newJokerPosition);
+            saveState(guesses, 'playing', letterStatuses, true, newJokerPosition, rowTimes);
             toast({
                 title: 'Heißer Tipp!',
                 description: `Ein Buchstabe wurde für dich aufgedeckt.`,
@@ -930,15 +957,8 @@ Jetzt selber spielen:`;
                                  <span className="btn-text !text-sm">🔥</span>
                                </span>
                                Heißer Tipp
-                             </button>
-                             <button
-                               className="text-sm p-0 h-auto font-semibold text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1.5"
-                               onClick={() => setIsFeedbackOpen(true)}
-                             >
-                               <MessageSquare className="h-4 w-4" />
-                               Feedback
-                             </button>
-                            <Button onClick={toggleMute} variant="ghost" size="icon" className="text-muted-foreground">
+                               </button>
+                               <Button onClick={toggleMute} variant="ghost" size="icon" className="text-muted-foreground">
                                 {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
                                 <span className="sr-only">Ton an/aus</span>
                             </Button>
@@ -970,6 +990,7 @@ Jetzt selber spielen:`;
                 stats={stats}
                 timeToNextGame={timeToNextGame}
                 shareResults={shareResults}
+                rowTimes={rowTimes}
             />
              <HotTipDisplay
                  isOpen={showHotTipDialog}
