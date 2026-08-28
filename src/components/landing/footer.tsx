@@ -159,6 +159,7 @@ export function Footer() {
             <Link href="/impressum" className="opacity-90 hover:opacity-100 hover:underline">Impressum</Link>
             <Link href="/datenschutz" className="opacity-90 hover:opacity-100 hover:underline">Datenschutz</Link>
             <Link href="/cookie-richtlinie" className="opacity-90 hover:opacity-100 hover:underline">Cookie-Richtlinie</Link>
+            <Link href="/transparenz" className="opacity-90 hover:opacity-100 hover:underline">Transparenzhinweise</Link>
             <Link href="/agb" className="opacity-90 hover:opacity-100 hover:underline">AGB</Link>
           </div>
 

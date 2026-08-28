@@ -66,7 +66,8 @@ export function CookieBanner() {
             </p>
             <p className="text-sm text-muted-foreground mt-2">
               Sie können Ihre Einwilligung jederzeit widerrufen oder anpassen. Weitere Informationen finden Sie in unserer{' '}
-              <Link href="/datenschutz" className="underline hover:text-primary">Datenschutzerklärung</Link>.
+              <Link href="/datenschutz" className="underline hover:text-primary">Datenschutzerklärung</Link> und in der{' '}
+              <Link href="/cookie-richtlinie" className="underline hover:text-primary">Cookie-Richtlinie</Link>.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 mt-8">
               <Button onClick={() => handleConsent('all')} className="flex-1 bg-foreground text-background hover:bg-foreground/80 h-12 text-base">Zustimmen</Button>
