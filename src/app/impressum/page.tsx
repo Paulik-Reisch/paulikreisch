@@ -1,33 +1,71 @@
-
-import { getLegalPage } from "@/lib/firestore";
-import { notFound } from "next/navigation";
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
-import { format } from "date-fns";
-import { de } from "date-fns/locale";
 
-// This is now a Server Component
-export default async function ImpressumPage() {
-  const page = await getLegalPage('impressum');
+export const metadata = {
+  title: "Impressum – Paulik & Reisch",
+  description: "Anbieterkennzeichnung von Paulik & Reisch gemäß §§ 5, 6 DDG.",
+};
 
-  if (!page) {
-    notFound();
-  }
-
-  const lastUpdatedDate = format(new Date(page.lastUpdated), "dd. MMMM yyyy", { locale: de });
-  const showTitle = page.showTitle !== false;
-  const showDate = page.showDate !== false;
-
+export default function ImpressumPage() {
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
       <Header />
       <main className="flex-1 py-12 md:py-24">
         <div className="container px-4 md:px-6">
-            <article className="prose prose-lg dark:prose-invert mx-auto">
-                {showTitle && <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">{page.title}</h1>}
-                {showDate && <p className="text-sm text-muted-foreground">Zuletzt aktualisiert am {lastUpdatedDate}</p>}
-                <div dangerouslySetInnerHTML={{ __html: page.content }} />
-            </article>
+          <article className="prose prose-lg dark:prose-invert mx-auto max-w-2xl">
+            <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">Impressum</h1>
+            <p className="text-sm text-muted-foreground">Angaben gemäß §§ 5, 6 des Digitale-Dienste-Gesetzes (DDG)</p>
+
+            <h2>Anbieter</h2>
+            <p>
+              Paulik &amp; Reisch<br />
+              Vertreten durch die Gesellschafter<br />
+              Philipp Paulik und Maximilian Reisch<br />
+              &lt;Straße und Hausnummer&gt;<br />
+              &lt;PLZ&gt; &lt;Ort&gt;<br />
+              Deutschland
+            </p>
+
+            <h2>Kontakt</h2>
+            <p>
+              E-Mail: &lt;kontakt@paulikreisch.de&gt;<br />
+              Telefon: &lt;Telefonnummer zum Basistarif&gt;
+            </p>
+
+            <h2>Verantwortlich für journalistisch-redaktionelle Angebote</h2>
+            <p>
+              Gemäß § 18 Abs. 2 des Medienstaatsvertrags (MStV):<br />
+              &lt;Name der redaktionell verantwortlichen Person, ständiger Wohnsitz in der Bundesrepublik Deutschland&gt;
+            </p>
+
+            <h2>Umsatzsteueridentifikationsnummer</h2>
+            <p>
+              Umsatzsteuer-Identifikationsnummer gemäß § 27 a des Umsatzsteuergesetzes:
+              &lt;USt-IdNr. — sofern vorhanden; andernfalls diesen Absatz entfernen&gt;
+            </p>
+
+            <h2>EU-Streitbeilegung</h2>
+            <p>
+              Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:
+              <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer"> https://ec.europa.eu/consumers/odr/</a>.
+              Wir sind nicht verpflichtet und nicht bereit, an Streitbeilegungsverfahren vor einer
+              Verbraucherschlichtungsstelle teilzunehmen.
+            </p>
+
+            <h2>Haftungshinweis</h2>
+            <p>
+              Für die Inhalte dieses Satire-Angebots gilt: Sämtliche Beiträge, Artikel und Texte verfolgen
+              ausschließlich einen unterhaltsamen, satirischen Zweck und sind nicht als Tatsachenbehauptungen
+              zu verstehen. Eine Haftung für die Richtigkeit, Vollständigkeit oder Aktualität der Inhalte wird
+              — soweit gesetzlich zulässig — ausgeschlossen.
+            </p>
+
+            <h2>Urheberrecht</h2>
+            <p>
+              Die durch die Betreiber dieser Seiten erstellten Inhalte und Werke auf diesen Seiten unterliegen
+              dem deutschen Urheberrecht. Beiträge Dritter sind als solche gekennzeichnet.
+            </p>
+          </article>
         </div>
       </main>
       <Footer />

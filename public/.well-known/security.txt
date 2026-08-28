@@ -1,0 +1,6 @@
+# Paulik & Reisch — Sicherheitskontakt (RFC 9116)
+Contact: mailto:security@paulikreisch.de
+Expires: 2027-12-31T00:00:00Z
+Preferred-Languages: de, en
+Canonical: https://paulikreisch.de/.well-known/security.txt
+Acknowledgments: https://paulikreisch.de/impressum

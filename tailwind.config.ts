@@ -100,10 +100,32 @@ export default {
             height: '0',
           },
         },
+        'warm-glow': {
+          '0%, 100%': {
+            opacity: '0.45',
+            transform: 'scale(1)',
+          },
+          '50%': {
+            opacity: '0.85',
+            transform: 'scale(1.04)',
+          },
+        },
+        'sun-glow': {
+          '0%, 100%': {
+            opacity: '0.5',
+            transform: 'scale(0.9)',
+          },
+          '50%': {
+            opacity: '0.95',
+            transform: 'scale(1.05)',
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'warm-glow': 'warm-glow 6s ease-in-out infinite',
+        'sun-glow': 'sun-glow 10s ease-in-out infinite',
       },
     },
   },

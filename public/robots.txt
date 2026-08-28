@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Curated overview for LLMs / AI agents:
+# https://paulikreisch.de/llms.txt
+
+Sitemap: https://paulikreisch.de/sitemap.xml

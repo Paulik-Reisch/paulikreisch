@@ -1,0 +1,19 @@
+# Paulik & Reisch
+
+> Paulik & Reisch ist eine deutsche Satire-Plattform mit tagesaktuellen Artikeln, Wortspielen und dem Worträtsel „Worthaft". Die Inhalte verfolgen einen satirischen, unterhaltsamen Zweck und sind nicht als Tatsachenbehauptungen zu verstehen.
+
+## Hauptseiten
+- [Startseite](https://paulikreisch.de/): Aktuelle Satire, Artikel und Projekte von Paulik & Reisch.
+- [Worthaft](https://paulikreisch.de/worthaft): Das tägliche deutsche Worträtsel im Stil von Wordle, präsentiert von Paulik & Reisch.
+- [Worthaft – Über das Spiel](https://paulikreisch.de/worthaft/ueber): Anleitung, Spielmechanik und rechtliche Hinweise zum Worträtsel.
+
+## Rechtliches & Transparenz
+- [Impressum](https://paulikreisch.de/impressum): Anbieterkennzeichnung gemäß §§ 5, 6 DDG.
+- [Datenschutz](https://paulikreisch.de/datenschutz): Datenschutzerklärung nach DSGVO, BDSG und TDDDG.
+- [Cookie-Richtlinie](https://paulikreisch.de/cookie-richtlinie): Übersicht über eingesetzte Cookies und die Consent-Verwaltung.
+- [Transparenzhinweise](https://paulikreisch.de/transparenz): Kennzeichnung KI-generierter Inhalte gemäß Art. 50 EU AI Act (Verordnung (EU) 2024/1689).
+- [AGB](https://paulikreisch.de/agb): Allgemeine Geschäftsbedingungen.
+
+## Optional
+- [Sitemap](https://paulikreisch.de/sitemap.xml): Vollständige Liste aller indexierbaren Seiten.
+- [security.txt](https://paulikreisch.de/.well-known/security.txt): Kontakt für verantwortungsbewusste Sicherheitsmeldungen (RFC 9116).

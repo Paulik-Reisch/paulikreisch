@@ -18,7 +18,7 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { WORDS } from '@/lib/worthaft-words';
-import { Share2, HelpCircle, Volume2, VolumeX, ArrowLeft } from 'lucide-react';
+import { Share2, HelpCircle, Volume2, VolumeX, ArrowLeft, X } from 'lucide-react';
 import Link from 'next/link';
 import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
 import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
@@ -102,7 +102,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
                 onClick={() => handleKeyClick(key)}
                 variant="outline"
                 className={cn(
-                  'h-auto p-0 font-bold uppercase flex items-center justify-center transition-colors duration-300 aspect-square rounded-none',
+                  'h-auto p-0 font-bold uppercase flex items-center justify-center transition-colors duration-300 aspect-square rounded-[5px] md:rounded-[10px]',
                    widthClass,
                   getStatusClass(key)
                 )}
@@ -403,6 +403,7 @@ export default function WorthaftPage() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
     const [isMuted, setIsMuted] = useState(true);
+    const [showInfoBanner, setShowInfoBanner] = useState(true);
     const [rowTimes, setRowTimes] = useState<number[]>([]); // ms per submitted guess
     const [gameStartTime, setGameStartTime] = useState<number>(0);
     const rowStartTimeRef = useRef<number>(0);
@@ -939,6 +940,31 @@ Jetzt selber spielen:`;
             />
             <Header />
             <main className="flex-1 py-8 md:py-12">
+                <div className="w-full max-w-2xl mx-auto px-4 sm:px-0 flex flex-col items-center justify-start">
+                    {/* Info-Banner: Hinweis auf die Feedback-Popups nach dem Spiel */}
+                    {showInfoBanner && (
+                    <div className="flex items-center gap-5 w-full mb-8 rounded-2xl border bg-muted/50 p-5 text-left relative">
+                        <button
+                            onClick={() => setShowInfoBanner(false)}
+                            aria-label="Banner schließen"
+                            className="absolute top-2 right-2 rounded-full p-1 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                        >
+                            <X className="h-4 w-4" />
+                        </button>
+                        <Image
+                            src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/Worthaft%2Fworthaft-2-0-beta.png?alt=media&token=ed5089ce-3117-4ad1-8e9e-6b2f1f6e31d6"
+                            alt="Worthaft 2.0 Beta"
+                            width={128}
+                            height={128}
+                            className="h-32 w-32 shrink-0 rounded-lg object-cover"
+                        />
+                        <div className="text-base leading-snug text-foreground/80">
+                            <p>Mit unseren neuen Updates wollen wir Worthaft noch besser machen — dein Feedback hilft uns dabei!</p>
+                            <p className="mt-1 text-sm text-muted-foreground">Nach jedem Spiel fragt dich ein kurzes Pop-up: Sag uns, wie dir das Rätsel gefallen hat. Ein Klick, mehr nicht.</p>
+                        </div>
+                    </div>
+                    )}
+                </div>
                 <div className="w-full max-w-sm mx-auto px-4 sm:px-0 flex flex-col items-center justify-start">
                     <div className="text-center mb-8">
                         <WorthaftIcon className="mx-auto h-16 w-16 mb-4 text-primary" />
@@ -978,8 +1004,36 @@ Jetzt selber spielen:`;
                         />
                         <Keyboard onChar={handleChar} onEnter={handleEnter} onDelete={handleDelete} letterStatuses={letterStatuses} />
                     </div>
+                    {/* Sonnenschein-Halbkreis-Glow hinter der Tastatur (laufende Motion) */}
+                    <div
+                        aria-hidden
+                        className="pointer-events-none relative -mt-10 flex justify-center overflow-visible"
+                    >
+                        <div
+                            className="h-48 w-[140%] max-w-3xl animate-sun-glow rounded-[50%]"
+                            style={{
+                                background: 'radial-gradient(ellipse at 50% 100%, rgba(255,210,61,0.85) 0%, rgba(255,236,138,0.6) 25%, rgba(255,140,25,0.35) 50%, rgba(58,96,255,0.18) 72%, transparent 100%)',
+                                filter: 'blur(45px)',
+                                transform: 'translateY(35%)',
+                            }}
+                        />
+                    </div>
                 </div>
             </main>
+            {/* Sonnenschein-Glow am unteren Rand über dem Footer */}
+            <div
+                aria-hidden
+                className="pointer-events-none fixed inset-x-0 bottom-0 z-0 h-64 overflow-hidden"
+                style={{ maskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 35%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 35%, transparent 100%)' }}
+            >
+                <Image
+                    src="/worthaft-sunshine.png"
+                    alt=""
+                    fill
+                    className="object-cover object-bottom opacity-70 animate-warm-glow"
+                    priority={false}
+                />
+            </div>
             <Footer />
             <GameEndDisplay
                 isOpen={isDialogOpen}

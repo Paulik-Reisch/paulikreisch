@@ -663,6 +663,51 @@ export async function getLegalPages(): Promise<LegalPage[]> {
     }
 }
 
+// Lokale Fallback-Inhalte, damit Legal-Seiten auch ohne Firestore-Dokument
+// (noch nicht angelegt / Fehler) funktionieren, statt eine 404 zu werfen.
+const LEGAL_FALLBACKS: Record<string, Omit<LegalPage, 'id'>> = {
+  impressum: {
+    title: 'Impressum',
+    content: '<p>Die rechtlichen Angaben gemäß §§ 5, 6 DDG werden derzeit finalisiert und an dieser Stelle hinterlegt. Bitte beachten Sie die aktuellsten Informationen unter <a href="/datenschutz">Datenschutz</a>.</p>',
+    components: [],
+    lastUpdated: new Date().toISOString(),
+    showTitle: true,
+    showDate: true,
+  },
+  'cookie-richtlinie': {
+    title: 'Cookie-Richtlinie',
+    content: '<p>Unsere Cookie-Richtlinie wird derzeit aktualisiert. Wesentliche Hinweise zur Verarbeitung finden Sie in unserer <a href="/datenschutz">Datenschutzerklärung</a>.</p>',
+    components: [],
+    lastUpdated: new Date().toISOString(),
+    showTitle: true,
+    showDate: true,
+  },
+  transparenz: {
+    title: 'Transparenzhinweise',
+    content: '<h2>Transparenzhinweise gemäß Art. 50 der Verordnung (EU) 2024/1689 (KI-Verordnung / AI Act)</h2><p>Die auf diesem Angebot veröffentlichten satirischen Beiträge, literarischen Texte sowie illustrativen und/oder audiovisuellen Darstellungen können ganz oder teilweise mittels Systemen künstlicher Intelligenz erzeugt, bearbeitet oder wesentlich beeinflusst worden sein. Sofern derartige Inhalte geeignet sind, als authentisch wahrgenommen zu werden, werden sie als künstlichen Ursprungs gekennzeichnet. Bei offensichtlich künstlerischen, kreativen, satirischen oder fiktionalen Werken beschränken sich die Transparenzpflichten auf eine geeignete Offenlegung.</p>',
+    components: [],
+    lastUpdated: new Date().toISOString(),
+    showTitle: true,
+    showDate: true,
+  },
+  datenschutz: {
+    title: 'Datenschutzerklärung',
+    content: '<p>Unsere Datenschutzerklärung wird derzeit finalisiert. Bitte beachten Sie die aktuellen Hinweise im Impressum.</p>',
+    components: [],
+    lastUpdated: new Date().toISOString(),
+    showTitle: true,
+    showDate: true,
+  },
+  agb: {
+    title: 'Allgemeine Geschäftsbedingungen',
+    content: '<p>Unsere Allgemeinen Geschäftsbedingungen werden derzeit finalisiert.</p>',
+    components: [],
+    lastUpdated: new Date().toISOString(),
+    showTitle: true,
+    showDate: true,
+  },
+};
+
 export async function getLegalPage(slug: string): Promise<LegalPage | null> {
     try {
         const docRef = doc(db, 'legal', slug);
@@ -680,12 +725,14 @@ export async function getLegalPage(slug: string): Promise<LegalPage | null> {
                 showDate: data.showDate,
             } as LegalPage;
         } else {
-            console.log(`No legal page found for slug: ${slug}`);
-            return null;
+            console.log(`No legal page found for slug: ${slug} — using local fallback`);
+            const fallback = LEGAL_FALLBACKS[slug];
+            return fallback ? { id: slug, ...fallback } : null;
         }
     } catch (error) {
         console.error(`Error fetching legal page for slug ${slug}:`, error);
-        return null;
+        const fallback = LEGAL_FALLBACKS[slug];
+        return fallback ? { id: slug, ...fallback } : null;
     }
 }
 
