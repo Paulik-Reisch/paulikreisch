@@ -38,11 +38,13 @@ export default function FeedbackDrawer({
   onOpenChange,
   solution,
   onSubmitted,
+  onClose,
 }: {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   solution: string;
   onSubmitted?: () => void;
+  onClose?: () => void;
 }) {
   const isMobile = useIsMobile();
   const [step, setStep] = useState<Step>('ask');
@@ -259,7 +261,7 @@ export default function FeedbackDrawer({
             <p className="mb-6 max-w-[280px] text-sm text-muted-foreground">
               Du hilfst uns dabei, Worthaft jeden Tag ein bisschen besser zu machen.
             </p>
-            <Button variant="outline" onClick={() => onOpenChange(false)} className="rounded-full px-6">
+            <Button variant="outline" onClick={() => (onClose ? onClose() : onOpenChange(false))} className="rounded-full px-6">
               Schließen
             </Button>
           </motion.div>
