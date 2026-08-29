@@ -730,7 +730,7 @@ const InvalidWordModal = ({
   const content = (
     <>
       <div className="mb-2 flex items-center gap-2 pr-6">
-        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-orange-500 text-orange-50">
+        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-foreground text-background">
           <HelpCircle className="h-4 w-4" />
         </span>
         <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
@@ -749,7 +749,7 @@ const InvalidWordModal = ({
         <Button
           onClick={() => handleSubmit(true)}
           disabled={isSubmitting}
-          className="w-full rounded-full bg-orange-500 text-orange-50 hover:bg-orange-600"
+          className="w-full rounded-full"
         >
           Ja, soll existieren
         </Button>
@@ -757,7 +757,7 @@ const InvalidWordModal = ({
           onClick={() => handleSubmit(false)}
           disabled={isSubmitting}
           variant="outline"
-          className="w-full rounded-full border-orange-500 text-orange-600 hover:bg-orange-50"
+          className="w-full rounded-full border-foreground text-foreground hover:bg-muted"
         >
           Nein, belassen
         </Button>
@@ -932,11 +932,13 @@ export default function WorthaftPage() {
 
                     if (dailyState.status === 'won' || dailyState.status === 'lost') {
                         setIsCompletedToday(true);
-                        if (localStorage.getItem(`worthaft-feedback-${getTodayString()}`) === 'true') {
-                            setIsDialogOpen(true);
-                        } else {
-                            setIsFeedbackOpen(true);
-                        }
+                        setTimeout(() => {
+                            if (localStorage.getItem(`worthaft-feedback-${getTodayString()}`) === 'true') {
+                                setIsDialogOpen(true);
+                            } else {
+                                setIsFeedbackOpen(true);
+                            }
+                        }, 2000);
                     }
                 }
             } catch (e) {
@@ -1193,7 +1195,7 @@ export default function WorthaftPage() {
     
     
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
-        if (isDialogOpen || showHotTipDialog) return;
+        if (isDialogOpen || showHotTipDialog || isFeedbackOpen || invalidWord !== null) return;
 
         if (event.key === 'Enter') {
             handleEnter();
