@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
@@ -11,6 +12,17 @@ import { ArrowLeft } from 'lucide-react';
 import { Logo } from '../ui/logo';
 
 const COOKIE_NAME = 'hallowelt_cookie_consent';
+
+// Auf diesen Routen wird der Consent-Banner nicht angezeigt (Legal-Pages).
+const HIDE_ON_PATHS = [
+  '/impressum',
+  '/datenschutz',
+  '/cookie-richtlinie',
+  '/urheberrecht',
+  '/widerruf',
+  '/barrierefreiheit',
+  '/transparenz',
+];
 
 type ConsentValue = {
   necessary: boolean;
@@ -25,23 +37,28 @@ const initialConsent: ConsentValue = {
 };
 
 export function CookieBanner() {
+  const pathname = usePathname();
   const [showBanner, setShowBanner] = useState(false);
   const [view, setView] = useState<'main' | 'settings'>('main');
   const [consent, setConsent] = useState<ConsentValue>(initialConsent);
 
+  // Auf Legal-Pages (Impressum, Datenschutz, etc.) den Banner niemals anzeigen.
+  const isLegalPage = HIDE_ON_PATHS.some(p => pathname === p || pathname.startsWith(`${p}/`));
+
   useEffect(() => {
+    if (isLegalPage) return;
     const storedConsent = localStorage.getItem(COOKIE_NAME);
     if (storedConsent === null) {
       const timer = setTimeout(() => setShowBanner(true), 500);
       return () => clearTimeout(timer);
     }
-  }, []);
+  }, [isLegalPage]);
 
   const handleConsent = (value: 'all' | 'necessary' | ConsentValue) => {
-    const consentValue = typeof value === 'string' 
+    const consentValue = typeof value === 'string'
       ? { necessary: true, analytics: value === 'all', marketing: value === 'all' }
       : value;
-    
+
     localStorage.setItem(COOKIE_NAME, JSON.stringify(consentValue));
     setShowBanner(false);
   };
@@ -49,8 +66,8 @@ export function CookieBanner() {
   const handleToggle = (category: keyof Omit<ConsentValue, 'necessary'>) => {
     setConsent(prev => ({ ...prev, [category]: !prev[category] }));
   };
-  
-  if (!showBanner) {
+
+  if (isLegalPage || !showBanner) {
     return null;
   }
 
@@ -59,10 +76,10 @@ export function CookieBanner() {
       <Card className="w-full max-w-lg shadow-2xl animate-in fade-in-0 zoom-in-95 duration-300">
         {view === 'main' ? (
           <div className="p-8">
-            <Logo className="h-10 w-auto mb-6 mx-auto text-foreground"/>
-            <h3 className="font-bold font-headline text-2xl text-center">{'Bevor Sie fortfahren\u00A0…'}</h3>
+            <Logo className="h-10 w-auto mb-6 mx-auto text-foreground" />
+            <h3 className="font-bold font-headline text-2xl text-center">{'Bevor Sie fortfahren …'}</h3>
             <p className="text-sm text-muted-foreground mt-4">
-              Wir und unsere Partner verwenden Cookies und andere Technologien, um Informationen auf Ihrem Gerät zu speichern und abzurufen. Dies hilft uns, die Nutzung der Website zu analysieren, die Leistung zu verbessern und Ihnen relevante Inhalte anzuzeigen. Indem Sie auf „Zustimmen“ klicken, willigen Sie in die Verwendung dieser Technologien für alle genannten Zwecke ein.
+              Wir und unsere Partner verwenden Cookies und andere Technologien, um Informationen auf Ihrem Gerät zu speichern und abzurufen. Dies hilft uns, die Nutzung der Website zu analysieren, die Leistung zu verbessern und Ihnen relevante Inhalte anzuzeigen. Indem Sie auf „Zustimmen" klicken, willigen Sie in die Verwendung dieser Technologien für alle genannten Zwecke ein.
             </p>
             <p className="text-sm text-muted-foreground mt-2">
               Sie können Ihre Einwilligung jederzeit widerrufen oder anpassen. Weitere Informationen finden Sie in unserer{' '}
