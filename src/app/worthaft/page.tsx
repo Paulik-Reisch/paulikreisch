@@ -700,6 +700,7 @@ const InvalidWordModal = ({
   onOpenChange: (open: boolean) => void;
   word: string;
 }) => {
+  const isMobile = useIsMobile();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fb, setFb] = useState<{ firestore: any } | null>(null);
 
@@ -726,51 +727,72 @@ const InvalidWordModal = ({
     }
   };
 
+  const content = (
+    <>
+      <div className="mb-2 flex items-center gap-2 pr-6">
+        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-orange-500 text-orange-50">
+          <HelpCircle className="h-4 w-4" />
+        </span>
+        <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+          Worthaft Wörter
+        </p>
+      </div>
+
+      <h2 className="font-headline mb-1.5 text-lg font-extrabold leading-snug sm:text-xl">
+        „{word}“ ist ein ungültiges Wort
+      </h2>
+      <p className="mb-5 text-sm text-muted-foreground">
+        Sollte dieses Wort existieren? Wir prüfen deine Vorschläge, um unsere Wortliste zu verbessern.
+      </p>
+
+      <div className="flex flex-col gap-2">
+        <Button
+          onClick={() => handleSubmit(true)}
+          disabled={isSubmitting}
+          className="w-full rounded-full bg-orange-500 text-orange-50 hover:bg-orange-600"
+        >
+          Ja, soll existieren
+        </Button>
+        <Button
+          onClick={() => handleSubmit(false)}
+          disabled={isSubmitting}
+          variant="outline"
+          className="w-full rounded-full border-orange-500 text-orange-600 hover:bg-orange-50"
+        >
+          Nein, belassen
+        </Button>
+      </div>
+    </>
+  );
+
+  if (isMobile) {
+    return (
+      <Sheet open={isOpen} onOpenChange={onOpenChange}>
+        <SheetContent side="bottom" className="p-0 pt-0 max-h-[90vh] overflow-y-auto rounded-t-lg">
+          <div className="p-6">
+            <SheetHeader className="text-left sr-only">
+              <SheetTitle>Ungültiges Wort</SheetTitle>
+              <SheetDescription>Sollte dieses Wort existieren?</SheetDescription>
+            </SheetHeader>
+            {content}
+          </div>
+        </SheetContent>
+      </Sheet>
+    );
+  }
+
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center px-4 py-6 sm:mx-0 sm:h-full sm:items-center">
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 20, opacity: 0 }}
-            className="relative w-full max-w-xs sm:max-w-lg"
-          >
-            <div className="border bg-white p-6 shadow-lg rounded-lg">
-              <div className="flex flex-col items-center py-4 text-center">
-                <span className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-orange-500 text-orange-100 animate-in zoom-in-95 duration-300">
-                  <HelpCircle className="h-8 w-8" />
-                </span>
-                <h2 className="font-headline mb-1.5 text-xl font-extrabold">
-                  „{word}“ ist ein ungültiges Wort
-                </h2>
-                <p className="mb-6 max-w-[280px] text-sm text-muted-foreground">
-                  Sollte dieses Wort existieren? Wir prüfen deine Vorschläge, um unsere Wortliste zu verbessern.
-                </p>
-                <div className="flex flex-row space-x-3">
-                  <Button
-                    variant="outline"
-                    onClick={() => handleSubmit(true)}
-                    disabled={isSubmitting}
-                    className="flex-1 h-12 rounded-[8px] border-orange-500 bg-orange-50 text-orange-600 hover:bg-orange-100/80 transition-colors"
-                  >
-                    Ja, soll existieren
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => handleSubmit(false)}
-                    disabled={isSubmitting}
-                    className="flex-1 h-12 rounded-[8px] border-orange-500 text-orange-600 hover:bg-orange-100/80 transition-colors"
-                  >
-                    Nein, belassen
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </motion.div>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="p-0 max-w-sm rounded-t-lg overflow-hidden">
+        <div className="p-6">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Ungültiges Wort</DialogTitle>
+            <DialogDescription>Sollte dieses Wort existieren?</DialogDescription>
+          </DialogHeader>
+          {content}
         </div>
-      )}
-    </AnimatePresence>
+      </DialogContent>
+    </Dialog>
   );
 };
 
