@@ -18,14 +18,63 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { WORDS } from '@/lib/worthaft-words';
-import { Share2, HelpCircle, Volume2, VolumeX, ArrowLeft, X } from 'lucide-react';
+import { Share2, HelpCircle, Volume2, VolumeX, ArrowLeft, X, Flame, Settings as Gear, Music, Info, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
 import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider';
 import { Loader2 } from 'lucide-react';
 import FeedbackDrawer from './FeedbackDrawer';
+
+// ---- Persisted Worthaft settings ----
+type WorthaftSettings = {
+  keyWidth: number;   // 0..100 -> scales key width
+  keySize: number;    // 0..100 -> scales key height / font
+  keyRadius: number;  // 0..100 -> border-radius px
+  hotTipEnabled: boolean;
+  musicEnabled: boolean;
+  animationsEnabled: boolean;
+};
+
+const DEFAULT_SETTINGS: WorthaftSettings = {
+  keyWidth: 60,
+  keySize: 60,
+  keyRadius: 35,
+  hotTipEnabled: true,
+  musicEnabled: false,
+  animationsEnabled: true,
+};
+
+const loadSettings = (): WorthaftSettings => {
+  try {
+    const raw = localStorage.getItem('worthaft-settings');
+    if (!raw) return DEFAULT_SETTINGS;
+    return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
+  } catch {
+    return DEFAULT_SETTINGS;
+  }
+};
+
+const useSettings = () => {
+  const [settings, setSettingsState] = useState<WorthaftSettings>(DEFAULT_SETTINGS);
+
+  useEffect(() => {
+    setSettingsState(loadSettings());
+  }, []);
+
+  const setSettings = useCallback((patch: Partial<WorthaftSettings>) => {
+    setSettingsState(prev => {
+      const next = { ...prev, ...patch };
+      try { localStorage.setItem('worthaft-settings', JSON.stringify(next)); } catch {}
+      return next;
+    });
+  }, []);
+
+  return [settings, setSettings] as const;
+};
 
 const WORD_LENGTH = 5;
 const MAX_GUESSES = 6;
@@ -56,7 +105,17 @@ const getWordOfTheDay = () => {
     return WORDS[diffDays % WORDS.length].toUpperCase();
 };
 
-const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (value: string) => void; onEnter: () => void; onDelete: () => void; letterStatuses: { [key: string]: LetterStatus } }) => {
+const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenSettings, hotTipUsed, gameState, settings }: {
+  onChar: (value: string) => void;
+  onEnter: () => void;
+  onDelete: () => void;
+  letterStatuses: { [key: string]: LetterStatus };
+  onHotTip: () => void;
+  onOpenSettings: () => void;
+  hotTipUsed: boolean;
+  gameState: 'playing' | 'won' | 'lost';
+  settings: WorthaftSettings;
+}) => {
   const rows = [
     ['Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P'],
     ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
@@ -80,44 +139,105 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses }: { onChar: (valu
     else onChar(key);
   };
 
+  // Map slider value (0..100) to a px-ish scale.
+  const widthPx = 26 + (settings.keyWidth / 100) * 24;   // ~26px..50px
+  const heightPx = 44 + (settings.keySize / 100) * 30;    // ~44px..74px
+  const fontPx = 12 + (settings.keySize / 100) * 10;      // ~12px..22px
+  const radiusPx = (settings.keyRadius / 100) * 24;        // ~0px..24px
+
+  const keyStyle = (extra?: string): React.CSSProperties => ({
+    width: `${widthPx}px`,
+    height: `${heightPx}px`,
+    fontSize: `${fontPx}px`,
+    borderRadius: `${radiusPx}px`,
+    ...(extra ? {} : {}),
+  });
+
+  const isHotTipActive = !hotTipUsed && gameState === 'playing' && settings.hotTipEnabled;
+
+  const letterRows = rows.slice(0, 3);
+
   return (
     <div className="w-full flex flex-col items-center gap-1.5 mt-8">
-      {rows.map((row, i) => (
+      {letterRows.map((row, i) => (
         <div key={i} className="flex flex-row justify-center gap-1.5 w-full">
           {row.map(key => {
-            const isSend = key === 'SEND';
-            const isDelete = key === 'DELETE';
-
-            let widthClass = 'w-[9.5%]'; // Base width for letter keys
-            if (isSend) {
-                widthClass = 'w-[14.75%]'; // Larger width for SEND
-            } else if (isDelete) {
-                widthClass = 'w-[14.75%]' // Larger width for DELETE
-            }
-
-
             return (
               <Button
                 key={key}
                 onClick={() => handleKeyClick(key)}
                 variant="outline"
+                style={keyStyle()}
                 className={cn(
-                  'h-auto p-0 font-bold uppercase flex items-center justify-center transition-colors duration-300 aspect-square rounded-[5px] md:rounded-[10px]',
-                   widthClass,
+                  'h-auto p-0 font-bold uppercase flex items-center justify-center transition-colors duration-300 rounded-[5px] md:rounded-[10px]',
                   getStatusClass(key)
                 )}
               >
-                {key === 'DELETE' ? <ArrowLeft className="h-5 w-5" /> : <span className="text-xs sm:text-base">{key}</span>}
+                {key === 'DELETE' ? <ArrowLeft className="h-5 w-5" /> : <span>{key}</span>}
               </Button>
             );
           })}
         </div>
       ))}
+
+      {/* Letzte Reihe: SEND + Sondertasten + die zwei Icon-Keys (🔥 Heißer Tipp, ⚙️ Einstellungen) */}
+      <div className="flex flex-row justify-center gap-1.5 w-full">
+        {['SEND', 'Ü', 'Ö', 'Ä', 'ẞ', 'DELETE'].map(key => {
+          const isSend = key === 'SEND';
+          const isDelete = key === 'DELETE';
+          const sendStyle: React.CSSProperties = {
+            ...keyStyle(),
+            width: `${widthPx * 1.55}px`,
+          };
+          return (
+            <Button
+              key={key}
+              onClick={() => handleKeyClick(key)}
+              variant="outline"
+              style={isSend ? sendStyle : keyStyle()}
+              className={cn(
+                'h-auto p-0 font-bold uppercase flex items-center justify-center transition-colors duration-300 rounded-[5px] md:rounded-[10px]',
+                getStatusClass(key)
+              )}
+            >
+              {key === 'DELETE' ? <ArrowLeft className="h-5 w-5" /> : <span>{key}</span>}
+            </Button>
+          );
+        })}
+
+        {/* 🔥 Heißer Tipp — reine Icon-Taste mit innerem Glow (nur wenn aktiviert) */}
+        {settings.hotTipEnabled && (
+          <Button
+            onClick={onHotTip}
+            disabled={hotTipUsed || gameState !== 'playing'}
+            variant="outline"
+            aria-label="Heißer Tipp – einen Buchstaben aufdecken"
+            style={keyStyle()}
+            className={cn(
+              "h-auto p-0 text-orange-500 border-orange-500/60 flex items-center justify-center transition-colors rounded-[5px] md:rounded-[10px] relative overflow-hidden",
+              isHotTipActive && settings.animationsEnabled && "flame-inner-glow"
+            )}
+          >
+            <Flame className="h-5 w-5" />
+          </Button>
+        )}
+
+        {/* ⚙️ Einstellungen — reine Icon-Taste */}
+        <Button
+          onClick={onOpenSettings}
+          variant="outline"
+          aria-label="Einstellungen öffnen"
+          style={keyStyle()}
+          className="h-auto p-0 flex items-center justify-center transition-colors rounded-[5px] md:rounded-[10px]"
+        >
+          <Gear className="h-5 w-5" />
+        </Button>
+      </div>
     </div>
   );
 };
 
-const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, onCellClick, jokerReveal, jokerPosition, gameState }: {
+const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, onCellClick, jokerReveal, jokerPosition, gameState, settings }: {
     guesses: { guess: string; statuses: LetterStatus[] }[];
     currentGuess: string[];
     isShaking: boolean;
@@ -127,6 +247,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
     jokerReveal: { index: number; key: number } | null;
     jokerPosition: { guessIndex: number; letterIndex: number } | null;
     gameState: 'playing' | 'won' | 'lost';
+    settings: WorthaftSettings;
 }) => {
   const rows = Array.from({ length: MAX_GUESSES });
   const getStatusClass = (status: LetterStatus) => {
@@ -138,32 +259,66 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
     }
   };
 
+  const radiusPx = (settings.keyRadius / 100) * 24;
+
+  // Die gewinnende Reihe ist die letzte eingereichte (bei 'won').
+  const winningRowIndex = gameState === 'won' ? guesses.length - 1 : -1;
+
   return (
     <div className="grid grid-rows-6 gap-1.5">
-      {rows.map((_, rowIndex) => (
+      {rows.map((_, rowIndex) => {
+        const guessInfo = guesses[rowIndex];
+        const isWonRow = rowIndex === winningRowIndex;
+
+        return (
         <div key={rowIndex} className={cn(
-          "grid grid-cols-5 gap-1.5",
-          isShaking && rowIndex === currentRowIndex && "animate-shake"
+          "grid grid-cols-5 gap-1.5 relative",
+          isShaking && rowIndex === currentRowIndex && "animate-shake",
+          isWonRow && settings.animationsEnabled && "win-shimmer"
         )}>
           {Array.from({ length: WORD_LENGTH }).map((_, colIndex) => {
-            const guessInfo = guesses[rowIndex];
             const isCurrentRow = rowIndex === guesses.length;
-            
+
             let letter;
             if (isCurrentRow && gameState === 'playing') {
                 letter = currentGuess[colIndex];
             } else if (guessInfo) {
                 letter = guessInfo.guess[colIndex];
             }
-            
+
             const hasLetter = !!letter;
             const jokerPositionInFile = jokerReveal;
             const isJokerCell = jokerPositionInFile && jokerPositionInFile.index === colIndex && isCurrentRow;
             const status: LetterStatus = guessInfo?.statuses[colIndex] || 'empty';
             const isJokerProtected = isCurrentRow && jokerPosition && jokerPosition.guessIndex === guesses.length && colIndex === jokerPosition.letterIndex;
 
+            const anims = settings.animationsEnabled;
+            const isSubmittedRow = !!guessInfo;
+
+            // Flip nur für bereits eingereichte Reihen (wenn Animationen an).
+            const flipDelay = `${colIndex * 0.25}s`;
+
+            // Win-Bounce: nur auf der gewinnenden Reihe, nacheinander.
+            const bounceDelay = isWonRow ? `${colIndex * 0.18}s` : undefined;
+            const isWonCorrect = isWonRow && status === 'correct';
+            // Gelbe Kachel: wie die anderen flippen, danach kurz hüpfen (erst NACH dem Flip ~0.5s).
+            const isPresent = status === 'present' && isSubmittedRow;
+            const presentBounceDelay = `${(0.25 * colIndex + 0.5).toFixed(2)}s`;
+
+            // Animation-String zusammensetzen (nur wenn Animationen aktiv).
+            let cellAnimation: string | undefined;
+            if (anims && isSubmittedRow) {
+              if (isWonCorrect) {
+                cellAnimation = `flip-in 0.5s ease ${flipDelay} both, bounce-up 0.6s ease ${bounceDelay} both, bounce-up-glow 0.6s ease ${bounceDelay} both`;
+              } else if (isPresent) {
+                cellAnimation = `flip-in 0.5s ease ${flipDelay} both, bounce-up 0.4s ease ${presentBounceDelay} both`;
+              } else {
+                cellAnimation = `flip-in 0.5s ease ${flipDelay} both`;
+              }
+            }
+
             return (
-                <div
+                <motion.div
                     key={colIndex}
                     onClick={() => {
                         if (isCurrentRow && !isJokerProtected) {
@@ -171,14 +326,18 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
                        }
                    }}
                     className={cn(
-                        'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold rounded-none',
+                        'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold',
                         getStatusClass(status),
                         isCurrentRow && !isJokerProtected && 'cursor-pointer',
                         isCurrentRow && hasLetter && !isJokerProtected && 'border-muted-foreground',
                         isCurrentRow && activeIndex === colIndex && !isJokerProtected && 'border-primary ring-2 ring-primary scale-105',
-                        status !== 'empty' && 'animate-in fade-in zoom-in-50'
+                        anims && isSubmittedRow && 'flip-in'
                     )}
-                    style={{ animationDelay: `${colIndex * 100}ms` }}
+                    style={{
+                      borderRadius: `${radiusPx}px`,
+                      animationDelay: anims && isSubmittedRow ? flipDelay : undefined,
+                      ...(cellAnimation ? { animation: cellAnimation } : {}),
+                    }}
                 >
                     {isJokerCell ? (
                         <motion.div
@@ -205,11 +364,12 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
                     ) : (
                         letter
                     )}
-                </div>
+                </motion.div>
             );
           })}
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 };
@@ -388,7 +548,160 @@ const HotTipDisplay = ({ isOpen, onOpenChange, onAccept, onDecline, onDisablePer
     );
 }
 
+const WorthaftSettingsDrawer = ({
+  isOpen,
+  onOpenChange,
+  settings,
+  setSettings,
+  onToggleMute,
+  isMuted,
+}: {
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  settings: WorthaftSettings;
+  setSettings: (patch: Partial<WorthaftSettings>) => void;
+  onToggleMute: () => void;
+  isMuted: boolean;
+}) => {
+  const isMobile = useIsMobile();
+
+  const content = (
+    <div className="p-6 pt-4">
+      <SheetHeader className="text-left mb-5">
+        <SheetTitle className="text-2xl font-bold font-headline flex items-center gap-2">
+          <Gear className="h-6 w-6" /> Einstellungen
+        </SheetTitle>
+        <SheetDescription className="text-muted-foreground pt-1">
+          Passe Worthaft an deinen Geschmack an.
+        </SheetDescription>
+      </SheetHeader>
+
+      <div className="space-y-6">
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <Label className="text-sm font-medium">Tastenbreite</Label>
+            <span className="text-xs text-muted-foreground">{settings.keyWidth}</span>
+          </div>
+          <Slider
+            value={[settings.keyWidth]}
+            onValueChange={([v]) => setSettings({ keyWidth: v })}
+            min={30}
+            max={100}
+            step={1}
+            className="w-full"
+          />
+        </div>
+
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <Label className="text-sm font-medium">Tastengröße</Label>
+            <span className="text-xs text-muted-foreground">{settings.keySize}</span>
+          </div>
+          <Slider
+            value={[settings.keySize]}
+            onValueChange={([v]) => setSettings({ keySize: v })}
+            min={30}
+            max={100}
+            step={1}
+            className="w-full"
+          />
+        </div>
+
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <Label className="text-sm font-medium">Tastenrundung</Label>
+            <span className="text-xs text-muted-foreground">{settings.keyRadius}</span>
+          </div>
+          <Slider
+            value={[settings.keyRadius]}
+            onValueChange={([v]) => setSettings({ keyRadius: v })}
+            min={0}
+            max={100}
+            step={1}
+            className="w-full"
+          />
+        </div>
+
+        <div className="flex items-center justify-between rounded-md border p-3">
+          <div className="flex items-center gap-2">
+            <Flame className="h-5 w-5 text-orange-500" />
+            <Label className="text-sm font-medium">Heißer Tipp aktiv</Label>
+          </div>
+          <Checkbox
+            checked={settings.hotTipEnabled}
+            onCheckedChange={(c) => setSettings({ hotTipEnabled: !!c })}
+          />
+        </div>
+
+        <div className="flex items-center justify-between rounded-md border p-3">
+          <div className="flex items-center gap-2">
+            <Music className="h-5 w-5" />
+            <div>
+              <Label className="text-sm font-medium">Hintergrundmusik</Label>
+              <p className="text-xs text-muted-foreground">{settings.musicEnabled ? 'An' : 'Aus'}{isMuted && settings.musicEnabled ? ' (stumm)' : ''}</p>
+            </div>
+          </div>
+          <Checkbox
+            checked={settings.musicEnabled}
+            onCheckedChange={(c) => {
+              const next = !!c;
+              setSettings({ musicEnabled: next });
+              // Musik = nicht stumm. Wenn an -> entstummen, wenn aus -> stummschalten.
+              if (next && isMuted) onToggleMute();
+              if (!next && !isMuted) onToggleMute();
+            }}
+          />
+        </div>
+
+        <div className="flex items-center justify-between rounded-md border p-3">
+          <div className="flex items-center gap-2">
+            <Sparkles className="h-5 w-5 text-primary" />
+            <Label className="text-sm font-medium">Animationen & Effekte</Label>
+          </div>
+          <Checkbox
+            checked={settings.animationsEnabled}
+            onCheckedChange={(c) => setSettings({ animationsEnabled: !!c })}
+          />
+        </div>
+
+        <Button
+          variant="outline"
+          className="w-full justify-start gap-2"
+          onClick={() => {
+            onOpenChange(false);
+            if (typeof window !== 'undefined') window.location.href = '/worthaft/ueber';
+          }}
+        >
+          <Info className="h-4 w-4" />
+          Wie funktioniert's? (Anleitung)
+        </Button>
+      </div>
+    </div>
+  );
+
+  if (isMobile) {
+    return (
+      <Sheet open={isOpen} onOpenChange={onOpenChange}>
+        <SheetContent side="bottom" className="p-0 pt-0 max-h-[90vh] overflow-y-auto rounded-t-lg">
+          {content}
+        </SheetContent>
+      </Sheet>
+    );
+  }
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="p-0 max-w-sm rounded-t-lg overflow-hidden">
+        {content}
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 export default function WorthaftPage() {
+    const router = useRouter();
+    const [settings, setSettings] = useSettings();
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const { toast } = useToast();
     const [solution, setSolution] = useState('');
     const [guesses, setGuesses] = useState<{ guess: string; statuses: LetterStatus[] }[]>([]);
@@ -470,6 +783,16 @@ export default function WorthaftPage() {
             return shouldBeMuted;
         });
     };
+
+    // Hintergrundmusik folgt der Settings-Option "musicEnabled" (nur wenn nicht stumm).
+    useEffect(() => {
+        if (!audioRef.current) return;
+        if (settings.musicEnabled && !isMuted) {
+            audioRef.current.play().catch(() => {});
+        } else {
+            audioRef.current.pause();
+        }
+    }, [settings.musicEnabled, isMuted]);
 
     useEffect(() => {
         const disabled = localStorage.getItem('worthaft-hottip-disabled') === 'true';
@@ -843,7 +1166,7 @@ Jetzt selber spielen:`;
     }
 
     const handleAcceptHotTip = () => {
-        if (hotTipUsed || gameState !== 'playing') return;
+        if (hotTipUsed || gameState !== 'playing' || !settings.hotTipEnabled) return;
 
         const correctlyGuessedIndices = new Set<number>();
         guesses.forEach(g => {
@@ -969,26 +1292,6 @@ Jetzt selber spielen:`;
                     <div className="text-center mb-8">
                         <WorthaftIcon className="mx-auto h-16 w-16 mb-4 text-primary" />
                         <h1 className="text-4xl font-bold font-headline">Worthaft</h1>
-                        <div className="flex items-center justify-center gap-2 mt-2">
-                            <Link href="/worthaft/ueber" className="text-sm inline-flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors">
-                                <HelpCircle className="h-4 w-4" />
-                                <span>Anleitung</span>
-                            </Link>
-                             <button
-                               className="text-sm p-0 h-auto font-semibold text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1.5"
-                               onClick={() => setShowHotTipDialog(true)}
-                               disabled={hotTipUsed || gameState !== 'playing'}
-                             >
-                               <span className="feuer-button !p-0 !h-auto !shadow-none !bg-transparent before:!hidden after:!hidden">
-                                 <span className="btn-text !text-sm">🔥</span>
-                               </span>
-                               Heißer Tipp
-                               </button>
-                               <Button onClick={toggleMute} variant="ghost" size="icon" className="text-muted-foreground">
-                                {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
-                                <span className="sr-only">Ton an/aus</span>
-                            </Button>
-                        </div>
                     </div>
                     <div className="w-full">
                         <Grid
@@ -1001,8 +1304,19 @@ Jetzt selber spielen:`;
                             jokerReveal={jokerReveal}
                             jokerPosition={jokerPosition}
                             gameState={gameState}
+                            settings={settings}
                         />
-                        <Keyboard onChar={handleChar} onEnter={handleEnter} onDelete={handleDelete} letterStatuses={letterStatuses} />
+                        <Keyboard
+                            onChar={handleChar}
+                            onEnter={handleEnter}
+                            onDelete={handleDelete}
+                            letterStatuses={letterStatuses}
+                            onHotTip={() => setShowHotTipDialog(true)}
+                            onOpenSettings={() => setIsSettingsOpen(true)}
+                            hotTipUsed={hotTipUsed}
+                            gameState={gameState}
+                            settings={settings}
+                        />
                     </div>
                     {/* Sonnenschein-Halbkreis-Glow hinter der Tastatur (laufende Motion) */}
                     <div
@@ -1058,13 +1372,26 @@ Jetzt selber spielen:`;
                  isOpen={isFeedbackOpen}
                  onOpenChange={(open) => {
                      setIsFeedbackOpen(open);
-                     // Once the feedback drawer is closed (and feedback wasn't already given today),
-                     // show the results drawer behind/beside it.
-                     if (!open && localStorage.getItem(`worthaft-feedback-${getTodayString()}`) !== 'true') {
+                     if (!open) {
+                         // Feedback abgeschlossen -> Statistik-Popup/drawer zeigen (unabhängig davon,
+                         // ob heute schon Feedback gegeben wurde).
                          setIsDialogOpen(true);
                      }
                  }}
+                 onClose={() => {
+                     // „Danke"-Screen geschlossen -> Feedback zu & Ergebnis-Modal auf.
+                     setIsFeedbackOpen(false);
+                     setIsDialogOpen(true);
+                 }}
                 solution={solution}
+            />
+            <WorthaftSettingsDrawer
+                isOpen={isSettingsOpen}
+                onOpenChange={setIsSettingsOpen}
+                settings={settings}
+                setSettings={setSettings}
+                onToggleMute={toggleMute}
+                isMuted={isMuted}
             />
         </div>
     );

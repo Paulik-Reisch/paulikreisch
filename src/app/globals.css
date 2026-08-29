@@ -339,4 +339,88 @@
   .bg-joker-gradient {
     background-image: linear-gradient(to top right, #fde68a, #f59e0b, #ef4444);
   }
+
+  /* Flammen-Glow für den "Heißer Tipp"-Button in der Worthaft-Tastatur */
+  @keyframes flame-glow {
+    0%, 100% {
+      box-shadow: 0 0 8px 2px rgba(255, 140, 0, 0.55), 0 0 18px 4px rgba(255, 69, 0, 0.30);
+      transform: scale(1);
+    }
+    50% {
+      box-shadow: 0 0 14px 4px rgba(255, 165, 0, 0.85), 0 0 30px 8px rgba(255, 90, 0, 0.55);
+      transform: scale(1.04);
+    }
+  }
+
+  .flame-glow {
+    animation: flame-glow 1.6s ease-in-out infinite;
+  }
+
+  /* Inner-Shader-Glow für die Heißer-Tipp-Taste (brennender Hintergrund) */
+  @keyframes flame-inner-pulse {
+    0%, 100% {
+      background-color: rgba(255, 94, 0, 0.12);
+      box-shadow: inset 0 0 12px 2px rgba(255, 140, 0, 0.45), inset 0 0 24px 6px rgba(255, 60, 0, 0.25);
+    }
+    50% {
+      background-color: rgba(255, 120, 0, 0.28);
+      box-shadow: inset 0 0 16px 4px rgba(255, 170, 0, 0.75), inset 0 0 32px 10px rgba(255, 80, 0, 0.45);
+    }
+  }
+
+  .flame-inner-glow {
+    animation: flame-inner-pulse 1.6s ease-in-out infinite;
+  }
+
+  /* Wordle-Flip: Kachel kippt auf die Rückseite (Statussfarbe) */
+  @keyframes flip-in {
+    0% { transform: rotateX(0deg); }
+    50% { transform: rotateX(90deg); }
+    100% { transform: rotateX(0deg); }
+  }
+  .flip-in {
+    animation: flip-in 0.5s ease-in-out both;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+  }
+
+  /* Shimmer über die ganze gewinnende Reihe: einmal L->R, dann R->L, dann weg */
+  @keyframes win-shimmer {
+    0%   { transform: translateX(-110%); opacity: 0; }
+    15%  { opacity: 1; }
+    50%  { transform: translateX(110%); opacity: 1; }
+    51%  { transform: translateX(110%); opacity: 1; }
+    85%  { transform: translateX(-110%); opacity: 1; }
+    100% { transform: translateX(-110%); opacity: 0; }
+  }
+  .win-shimmer::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 60%;
+    border-radius: inherit;
+    background: linear-gradient(
+      100deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.65) 50%,
+      transparent 100%
+    );
+    animation: win-shimmer 1.8s ease-in-out 0.15s 1 both;
+    pointer-events: none;
+  }
+
+  /* Einzelne Kachel hüpft in die Luft und landet wieder */
+  @keyframes bounce-up {
+    0% { transform: translateY(0); }
+    35% { transform: translateY(-22px); }
+    60% { transform: translateY(0); }
+    75% { transform: translateY(-8px); }
+    100% { transform: translateY(0); }
+  }
+  @keyframes bounce-up-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(34, 104, 255, 0); }
+    35% { box-shadow: 0 0 18px 4px rgba(34, 104, 255, 0.65); }
+  }
 }
