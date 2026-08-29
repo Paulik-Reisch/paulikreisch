@@ -205,8 +205,8 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
           );
         })}
 
-        {/* 🔥 Heißer Tipp — reine Icon-Taste mit innerem Glow (nur wenn aktiviert) */}
-        {settings.hotTipEnabled && (
+        {/* 🔥 Heißer Tipp — reine Icon-Taste mit innerem Glow; verschwindet komplett nach einmaliger Nutzung */}
+        {settings.hotTipEnabled && !hotTipUsed && (
           <Button
             onClick={onHotTip}
             disabled={hotTipUsed || gameState !== 'playing'}
@@ -340,27 +340,18 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
                     }}
                 >
                     {isJokerCell ? (
-                        <motion.div
-                            key={jokerPositionInFile.key}
-                            className="w-full h-full"
-                            style={{ transformStyle: 'preserve-3d' }}
-                            initial={{ rotateY: 0 }}
-                            animate={{ rotateY: 180 }}
-                            transition={{ duration: 0.8, ease: 'easeInOut' }}
-                        >
-                            <motion.div
-                                className="absolute inset-0 flex items-center justify-center"
-                                style={{ backfaceVisibility: 'hidden' }}
-                            >
-                                🔥
-                            </motion.div>
-                            <motion.div
-                                className="absolute inset-0 flex items-center justify-center"
-                                style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
-                            >
-                                {letter}
-                            </motion.div>
-                        </motion.div>
+                        <span className="relative flex w-full h-full items-center justify-center">
+                            {letter}
+                            {anims && (
+                                <span
+                                    key={jokerPositionInFile.key}
+                                    aria-hidden
+                                    className="flame-reveal pointer-events-none absolute inset-0 flex items-center justify-center text-4xl leading-none"
+                                >
+                                    🔥
+                                </span>
+                            )}
+                        </span>
                     ) : (
                         letter
                     )}
@@ -984,7 +975,7 @@ export default function WorthaftPage() {
                 } else {
                     setIsFeedbackOpen(true);
                 }
-            }, 1200);
+            }, 2000);
             return;
         }
 
