@@ -384,24 +384,30 @@
     backface-visibility: hidden;
   }
 
-  /* Shimmer über die ganze gewinnende Reihe */
+  /* Shimmer über die ganze gewinnende Reihe: einmal L->R, dann R->L, dann weg */
   @keyframes win-shimmer {
-    0% { background-position: -150% 0; }
-    100% { background-position: 250% 0; }
+    0%   { transform: translateX(-110%); opacity: 0; }
+    15%  { opacity: 1; }
+    50%  { transform: translateX(110%); opacity: 1; }
+    51%  { transform: translateX(110%); opacity: 1; }
+    85%  { transform: translateX(-110%); opacity: 1; }
+    100% { transform: translateX(-110%); opacity: 0; }
   }
   .win-shimmer::after {
     content: "";
     position: absolute;
-    inset: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 60%;
     border-radius: inherit;
     background: linear-gradient(
       100deg,
-      transparent 20%,
-      rgba(255, 255, 255, 0.55) 50%,
-      transparent 80%
+      transparent 0%,
+      rgba(255, 255, 255, 0.65) 50%,
+      transparent 100%
     );
-    background-size: 200% 100%;
-    animation: win-shimmer 1.1s ease-in-out 0.2s both;
+    animation: win-shimmer 1.8s ease-in-out 0.15s 1 both;
     pointer-events: none;
   }
 
@@ -416,13 +422,5 @@
   @keyframes bounce-up-glow {
     0%, 100% { box-shadow: 0 0 0 0 rgba(34, 104, 255, 0); }
     35% { box-shadow: 0 0 18px 4px rgba(34, 104, 255, 0.65); }
-  }
-
-  /* Gelbe (present) Kachel: einmal hüpfen + 360° X-Rotation */
-  @keyframes present-spin {
-    0% { transform: rotateX(0deg) translateY(0); }
-    40% { transform: rotateX(180deg) translateY(-18px); }
-    70% { transform: rotateX(320deg) translateY(0); }
-    100% { transform: rotateX(360deg) translateY(0); }
   }
 }

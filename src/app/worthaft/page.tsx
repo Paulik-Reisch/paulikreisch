@@ -301,18 +301,19 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
             // Win-Bounce: nur auf der gewinnenden Reihe, nacheinander.
             const bounceDelay = isWonRow ? `${colIndex * 0.18}s` : undefined;
             const isWonCorrect = isWonRow && status === 'correct';
-            // Gelbe Kachel: einmal hüpfen + 360° X-Rotation.
+            // Gelbe Kachel: wie die anderen flippen, danach kurz hüpfen (erst NACH dem Flip ~0.5s).
             const isPresent = status === 'present' && isSubmittedRow;
+            const presentBounceDelay = `${(0.25 * colIndex + 0.5).toFixed(2)}s`;
 
             // Animation-String zusammensetzen (nur wenn Animationen aktiv).
             let cellAnimation: string | undefined;
-            if (anims) {
+            if (anims && isSubmittedRow) {
               if (isWonCorrect) {
-                cellAnimation = `bounce-up 0.6s ease ${bounceDelay} both, bounce-up-glow 0.6s ease ${bounceDelay} both`;
+                cellAnimation = `flip-in 0.5s ease ${flipDelay} both, bounce-up 0.6s ease ${bounceDelay} both, bounce-up-glow 0.6s ease ${bounceDelay} both`;
               } else if (isPresent) {
-                cellAnimation = `present-spin 0.8s ease ${flipDelay} both`;
-              } else if (bounceDelay) {
-                cellAnimation = `bounce-up 0.6s ease ${bounceDelay} both`;
+                cellAnimation = `flip-in 0.5s ease ${flipDelay} both, bounce-up 0.4s ease ${presentBounceDelay} both`;
+              } else {
+                cellAnimation = `flip-in 0.5s ease ${flipDelay} both`;
               }
             }
 
