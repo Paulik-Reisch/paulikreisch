@@ -28,6 +28,8 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Loader2 } from 'lucide-react';
 import FeedbackDrawer from './FeedbackDrawer';
+import { initializeFirebase } from '@/firebase';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 
 // ---- Persisted Worthaft settings ----
 type WorthaftSettings = {
@@ -689,6 +691,89 @@ const WorthaftSettingsDrawer = ({
   );
 };
 
+const InvalidWordModal = ({
+  isOpen,
+  onOpenChange,
+  word,
+}: {
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  word: string;
+}) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [fb, setFb] = useState<{ firestore: any } | null>(null);
+
+  useEffect(() => {
+    const app = initializeFirebase();
+    setFb(app);
+  }, []);
+
+  const handleSubmit = async (shouldExist: boolean) => {
+    if (!fb) return;
+    setIsSubmitting(true);
+    try {
+      await addDoc(collection(fb.firestore, 'worthaft-word-suggestions'), {
+        word,
+        shouldExist,
+        date: new Date().toISOString().split('T')[0],
+        createdAt: serverTimestamp(),
+      });
+    } catch (err) {
+      console.error('Failed to save word suggestion:', err);
+    } finally {
+      setIsSubmitting(false);
+      onOpenChange(false);
+    }
+  };
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center px-4 py-6 sm:mx-0 sm:h-full sm:items-center">
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 20, opacity: 0 }}
+            className="relative w-full max-w-xs sm:max-w-lg"
+          >
+            <div className="border bg-white p-6 shadow-lg rounded-lg">
+              <div className="flex flex-col items-center py-4 text-center">
+                <span className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-orange-500 text-orange-100 animate-in zoom-in-95 duration-300">
+                  <HelpCircle className="h-8 w-8" />
+                </span>
+                <h2 className="font-headline mb-1.5 text-xl font-extrabold">
+                  „{word}“ ist ein ungültiges Wort
+                </h2>
+                <p className="mb-6 max-w-[280px] text-sm text-muted-foreground">
+                  Sollte dieses Wort existieren? Wir prüfen deine Vorschläge, um unsere Wortliste zu verbessern.
+                </p>
+                <div className="flex flex-row space-x-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => handleSubmit(true)}
+                    disabled={isSubmitting}
+                    className="flex-1 h-12 rounded-[8px] border-orange-500 bg-orange-50 text-orange-600 hover:bg-orange-100/80 transition-colors"
+                  >
+                    Ja, soll existieren
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => handleSubmit(false)}
+                    disabled={isSubmitting}
+                    className="flex-1 h-12 rounded-[8px] border-orange-500 text-orange-600 hover:bg-orange-100/80 transition-colors"
+                  >
+                    Nein, belassen
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
+  );
+};
+
 export default function WorthaftPage() {
     const router = useRouter();
     const [settings, setSettings] = useSettings();
@@ -706,6 +791,7 @@ export default function WorthaftPage() {
     const [isShaking, setIsShaking] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+    const [invalidWord, setInvalidWord] = useState<string | null>(null);
     const [isMuted, setIsMuted] = useState(true);
     const [showInfoBanner, setShowInfoBanner] = useState(true);
     const [rowTimes, setRowTimes] = useState<number[]>([]); // ms per submitted guess
@@ -981,7 +1067,7 @@ export default function WorthaftPage() {
 
 
         if (!WORDS.includes(guessWord.toLowerCase())) {
-            toast({ variant: 'destructive', title: 'Ungültiges Wort', duration: 2000 });
+            setInvalidWord(guessWord);
             setIsShaking(true);
             setTimeout(() => setIsShaking(false), 600);
             return;
@@ -1383,6 +1469,11 @@ Jetzt selber spielen:`;
                 setSettings={setSettings}
                 onToggleMute={toggleMute}
                 isMuted={isMuted}
+            />
+            <InvalidWordModal
+                isOpen={invalidWord !== null}
+                onOpenChange={(open) => { if (!open) setInvalidWord(null); }}
+                word={invalidWord ?? ''}
             />
         </div>
     );
