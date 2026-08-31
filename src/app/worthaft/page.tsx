@@ -31,20 +31,35 @@ import FeedbackDrawer from './FeedbackDrawer';
 import { initializeFirebase } from '@/firebase';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 
+// ---- Info Banner dismissed state ----
+const INFO_BANNER_DISMISSED_KEY = 'worthaft-info-banner-dismissed';
+
+const isInfoBannerDismissed = (): boolean => {
+  if (typeof window === 'undefined') return false;
+  return localStorage.getItem(INFO_BANNER_DISMISSED_KEY) === 'true';
+};
+
+const dismissInfoBanner = () => {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(INFO_BANNER_DISMISSED_KEY, 'true');
+};
+
 // ---- Persisted Worthaft settings ----
 type WorthaftSettings = {
-  keyWidth: number;   // 0..100 -> scales key width
-  keySize: number;    // 0..100 -> scales key height / font
-  keyRadius: number;  // 0..100 -> border-radius px
+  keyWidth: number;    // 0..100 -> scales key width (5 steps: 0, 25, 50, 75, 100)
+  keyHeight: number;   // 0..100 -> scales key height (5 steps: 0, 25, 50, 75, 100)
+  keySize: number;     // 0..100 -> scales key font size (5 steps: 0, 25, 50, 75, 100)
+  keyRadius: number;   // 0..100 -> border-radius px (5 steps: 0, 25, 50, 75, 100)
   hotTipEnabled: boolean;
   musicEnabled: boolean;
   animationsEnabled: boolean;
 };
 
 const DEFAULT_SETTINGS: WorthaftSettings = {
-  keyWidth: 60,
-  keySize: 60,
-  keyRadius: 35,
+  keyWidth: 50,    // step 2 of 5 (0, 25, 50, 75, 100)
+  keyHeight: 50,   // step 2 of 5
+  keySize: 50,     // step 2 of 5
+  keyRadius: 50,   // step 2 of 5 (was 35, now mapped to 5-step scale)
   hotTipEnabled: true,
   musicEnabled: false,
   animationsEnabled: true,
@@ -141,11 +156,11 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
     else onChar(key);
   };
 
-  // Map slider value (0..100) to a px-ish scale.
-  const widthPx = 26 + (settings.keyWidth / 100) * 24;   // ~26px..50px
-  const heightPx = 44 + (settings.keySize / 100) * 30;    // ~44px..74px
-  const fontPx = 12 + (settings.keySize / 100) * 10;      // ~12px..22px
-  const radiusPx = (settings.keyRadius / 100) * 24;        // ~0px..24px
+  // Map slider value (0..100, 5 steps) to a px-ish scale.
+    const widthPx = 26 + (settings.keyWidth / 100) * 24;    // ~26px..50px
+    const heightPx = 44 + (settings.keyHeight / 100) * 30;   // ~44px..74px
+    const fontPx = 12 + (settings.keySize / 100) * 10;       // ~12px..22px
+    const radiusPx = (settings.keyRadius / 100) * 24;         // ~0px..24px
 
   const keyStyle = (extra?: string): React.CSSProperties => ({
     width: `${widthPx}px`,
@@ -570,50 +585,65 @@ const WorthaftSettingsDrawer = ({
       </SheetHeader>
 
       <div className="space-y-6">
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <Label className="text-sm font-medium">Tastenbreite</Label>
-            <span className="text-xs text-muted-foreground">{settings.keyWidth}</span>
-          </div>
-          <Slider
-            value={[settings.keyWidth]}
-            onValueChange={([v]) => setSettings({ keyWidth: v })}
-            min={30}
-            max={100}
-            step={1}
-            className="w-full"
-          />
-        </div>
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <Label className="text-sm font-medium">Tastenbreite</Label>
+                  <span className="text-xs text-muted-foreground">{settings.keyWidth}</span>
+                </div>
+                <Slider
+                  value={[settings.keyWidth]}
+                  onValueChange={([v]) => setSettings({ keyWidth: v })}
+                  min={0}
+                  max={100}
+                  step={25}
+                  className="w-full"
+                />
+              </div>
 
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <Label className="text-sm font-medium">Tastengröße</Label>
-            <span className="text-xs text-muted-foreground">{settings.keySize}</span>
-          </div>
-          <Slider
-            value={[settings.keySize]}
-            onValueChange={([v]) => setSettings({ keySize: v })}
-            min={30}
-            max={100}
-            step={1}
-            className="w-full"
-          />
-        </div>
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <Label className="text-sm font-medium">Tastenhöhe</Label>
+                  <span className="text-xs text-muted-foreground">{settings.keyHeight}</span>
+                </div>
+                <Slider
+                  value={[settings.keyHeight]}
+                  onValueChange={([v]) => setSettings({ keyHeight: v })}
+                  min={0}
+                  max={100}
+                  step={25}
+                  className="w-full"
+                />
+              </div>
 
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <Label className="text-sm font-medium">Tastenrundung</Label>
-            <span className="text-xs text-muted-foreground">{settings.keyRadius}</span>
-          </div>
-          <Slider
-            value={[settings.keyRadius]}
-            onValueChange={([v]) => setSettings({ keyRadius: v })}
-            min={0}
-            max={100}
-            step={1}
-            className="w-full"
-          />
-        </div>
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <Label className="text-sm font-medium">Schriftgröße</Label>
+                  <span className="text-xs text-muted-foreground">{settings.keySize}</span>
+                </div>
+                <Slider
+                  value={[settings.keySize]}
+                  onValueChange={([v]) => setSettings({ keySize: v })}
+                  min={0}
+                  max={100}
+                  step={25}
+                  className="w-full"
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <Label className="text-sm font-medium">Tastenrundung</Label>
+                  <span className="text-xs text-muted-foreground">{settings.keyRadius}</span>
+                </div>
+                <Slider
+                  value={[settings.keyRadius]}
+                  onValueChange={([v]) => setSettings({ keyRadius: v })}
+                  min={0}
+                  max={100}
+                  step={25}
+                  className="w-full"
+                />
+              </div>
 
         <div className="flex items-center justify-between rounded-md border p-3">
           <div className="flex items-center gap-2">
@@ -1366,15 +1396,18 @@ Jetzt selber spielen:`;
             <main className="flex-1 py-8 md:py-12">
                 <div className="w-full max-w-2xl mx-auto px-4 sm:px-0 flex flex-col items-center justify-start">
                     {/* Info-Banner: Hinweis auf die Feedback-Popups nach dem Spiel */}
-                    {showInfoBanner && (
-                    <div className="flex items-center gap-5 w-full mb-8 rounded-2xl border bg-muted/50 p-5 text-left relative">
-                        <button
-                            onClick={() => setShowInfoBanner(false)}
-                            aria-label="Banner schließen"
-                            className="absolute top-2 right-2 rounded-full p-1 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
-                        >
-                            <X className="h-4 w-4" />
-                        </button>
+                    {!isInfoBannerDismissed() && showInfoBanner && (
+                                        <div className="flex items-center gap-5 w-full mb-8 rounded-2xl border bg-muted/50 p-5 text-left relative">
+                                            <button
+                                                onClick={() => {
+                                                  dismissInfoBanner();
+                                                  setShowInfoBanner(false);
+                                                }}
+                                                aria-label="Banner schließen"
+                                                className="absolute top-2 right-2 rounded-full p-1 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                                            >
+                                                <X className="h-4 w-4" />
+                                            </button>
                         <Image
                             src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/Worthaft%2Fworthaft-2-0-beta.png?alt=media&token=ed5089ce-3117-4ad1-8e9e-6b2f1f6e31d6"
                             alt="Worthaft 2.0 Beta"
