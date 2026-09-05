@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Header } from '@/components/landing/header';
 import { Footer } from '@/components/landing/footer';
 import { ChevronRight, FileText, ShoppingCart, Gamepad2, BookOpen, Users, Scale, Shield, Sparkles, ExternalLink, Search, Menu, X } from 'lucide-react';
@@ -183,9 +184,6 @@ function SitemapNodeComponent({ node, depth = 0, index = 0 }: { node: SitemapNod
     </div>
   );
 }
-
-import { useState } from 'react';
-import { AnimatePresence } from 'framer-motion';
 
 export default function SitemapPage() {
   return (
