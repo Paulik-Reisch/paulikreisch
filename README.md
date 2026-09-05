@@ -21,8 +21,9 @@ Eine einzige Codebase vereint drei Domänen:
 |-------|------|--------------|
 | **Marketing & Shop** | `src/app/page.tsx`, `src/app/shop`, `src/app/lp/*` | Landingpages, Buch-Store, Conversion-Funnel |
 | **Satire-Magazin** | `src/app/a`, `src/app/wiki`, `src/app/autoren` | Artikel-CMS mit Lead-/Share-Wall, Autoren, Wiki |
-| **Worthaft** (Game) | `src/app/worthaft` | Client-Side Wordle-Klon, 100 % lokal, ~2000 Wörter (`src/lib/worthaft-words.ts`) |
-| **Admin-CMS** | `src/app/admin` | Redaktionsbackend für alle Inhalte |
+|| **Worthaft** (Game) | `src/app/worthaft` | Client-Side Wordle-Klon, 100 % lokal, ~2000 Wörter (`src/lib/worthaft-words.ts`) ||
+|| **Game Labs** (Alpha) | `src/app/game-labs` | Experimentelle Mini-Games (Hangman, Worthaft Classic), nicht in Nav verlinkt, `robots: noindex` ||
+|| **Admin-CMS** | `src/app/admin` | Redaktionsbackend für alle Inhalte ||
 
 Infrastruktur: **Firebase** (Firestore + Storage) als Daten-/Asset-Layer, Deployment über **Firebase App Hosting**.
 
@@ -54,11 +55,13 @@ src/
 │   ├── a/[slug]/             # Satire-Artikel (SEO-optimiert, Lead-/Share-Wall)
 │   ├── admin/                # Redaktions-CMS (Artikel, Autoren, LP, SEO, Analytics, Storage, Logs)
 │   ├── worthaft/             # Browser-Wordle ("Worthaft")
+│   ├── game-labs/            # Alpha: Experimentelle Mini-Games (Hangman, Worthaft Classic)
+│   ├── sitemap/              # Visuelle Sitemap (/sitemap) — nur Guest-Seiten
 │   ├── lp/ , lp-*            # Kampagnen-Landingpages
 │   ├── wiki/ , autoren/      # Redaktionelle Sekundärseiten
 │   ├── login/                # Auth-Einstieg
 │   ├── shop/                 # Buch-Store + Newsletter-Form
-│   ├── sitemap.ts            # Dynamische Sitemap
+│   ├── sitemap.ts            # Dynamische XML-Sitemap (MetadataRoute)
 │   ├── firebase.ts           # Firebase-App-Init (Client)
 │   └── globals.css
 ├── components/
@@ -103,6 +106,18 @@ Der Admin-Bereich ist durch die Server-Actions abgesichert.
 Jede Route kann per `SeoMetadata`-Dokument (`src/lib/firestore.ts`) überschrieben
 werden. `generateMetadata` (`src/app/page.tsx` u. a.) liest diese Felder aus und
 setzt OpenGraph/Twitter/robots. Globale Defaults in `src/app/layout.tsx`.
+
+### Game Labs (Alpha)
+Unter `/game-labs` liegt eine experimentelle Spiele-Sammlung, die **nicht in der Navigation verlinkt** ist.
+- `robots: noindex` im Layout — wird nicht gecrawlt
+- Enthält: **Hangman** (Galgenmännchen, deutscher Wortschatz), **Worthaft Classic** (Original ohne Joker/Settings)
+- Entwicklungs-Sandbox für neue Mini-Games — separate Branch `game-labs`
+
+### Visuelle Sitemap (`/sitemap`)
+Interaktive Baum-Ansicht aller **Guest-öffentlichen Seiten** (keine Admin/Internal-Routen).
+- Dynamische Sitemap (`sitemap.ts`) für Suchmaschinen + visuelle Sitemap (`/sitemap`) für Besucher
+- Kategorisiert: Startseite, Satire-Magazin, Shop/Bücher, Worthaft, Game Labs, Landingpages, Rechtliches
+- Framer-Motion Animationen, aufklappbare Kategorien, Icon-Legende
 
 ---
 
