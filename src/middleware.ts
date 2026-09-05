@@ -4,7 +4,10 @@ import { NextResponse, type NextRequest } from 'next/server';
 // Erfüllt GSC "Adressänderung" Validierung: Homepage + alle Pfade 301
 // Firebase App Hosting behält beide Domains am selben Backend, daher Host-Check in Middleware.
 export function middleware(request: NextRequest) {
-  const host = request.headers.get('host')?.toLowerCase() ?? '';
+  const rawHost = request.headers.get('host')?.toLowerCase() ?? '';
+  const xfh = request.headers.get('x-forwarded-host')?.toLowerCase() ?? '';
+  // Firebase App Hosting / Cloud Run setzt original Host in x-forwarded-host, nicht in host
+  const host = xfh || rawHost;
   const pathname = request.nextUrl.pathname;
   const search = request.nextUrl.search;
 
