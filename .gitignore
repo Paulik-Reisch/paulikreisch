@@ -55,3 +55,7 @@ firestore-debug.log
 # local dev logs
 dev.out.log
 dev.err.log
+
+# claude code symlinks (generated from .agents/skills — don't commit dupes)
+.claude/skills/
+.claude/settings.local.json
