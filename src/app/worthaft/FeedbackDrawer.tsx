@@ -23,6 +23,7 @@ const REASONS = [
   'Es ist vulgär oder unangemessen',
   'Es ist zu speziell / ein Fachbegriff',
   'Die Schreibweise ist uneindeutig (z. B. ß/ss, Umlaute)',
+  'Es ist im Plural',
 ];
 
 function getTodayString() {

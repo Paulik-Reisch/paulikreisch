@@ -17,6 +17,14 @@ const games = [
     icon: '🎯',
   },
   {
+    id: 'hangman',
+    title: 'Hangman',
+    description: 'Klassisches Galgenmännchen mit deutschen Wörtern.',
+    status: 'alpha' as const,
+    href: '/game-labs/hangman',
+    icon: '🎭',
+  },
+  {
     id: 'worthaft-classic',
     title: 'Worthaft Classic',
     description: 'Original-Version ohne Joker, Animationen & Settings.',

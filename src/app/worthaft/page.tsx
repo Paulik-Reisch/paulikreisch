@@ -383,13 +383,14 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
 };
 
 
-const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, shareResults, rowTimes }: {
+const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, shareResults, shareSolution, rowTimes }: {
     solution: string;
     guesses: { guess: string; statuses: LetterStatus[] }[];
     gameState: 'playing' | 'won' | 'lost';
     stats: { games: number; wins: number; streak: number; maxStreak: number; };
     timeToNextGame: string;
     shareResults: () => void;
+    shareSolution: () => void;
     rowTimes: number[];
 }) => {
     const winRate = stats.games > 0 ? Math.round((stats.wins / stats.games) * 100) : 0;
@@ -435,11 +436,15 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
 
 
         <div className="sm:justify-center flex flex-col gap-2">
-            <Button size="lg" onClick={shareResults}>
-                <Share2 className="mr-3 h-5 w-5"/>
-                Teilen
-            </Button>
-        </div>
+                    <Button size="lg" onClick={shareResults}>
+                        <Share2 className="mr-3 h-5 w-5"/>
+                        Jetzt einen Freund herausfordern!
+                    </Button>
+                    <Button size="lg" variant="outline" onClick={shareSolution}>
+                        <Share2 className="mr-3 h-5 w-5"/>
+                        Jetzt Lösung teilen
+                    </Button>
+                </div>
     </>
     )
 };
@@ -453,6 +458,7 @@ const GameEndDisplay = (props: {
     stats: { games: number; wins: number; streak: number; maxStreak: number; };
     timeToNextGame: string;
     shareResults: () => void;
+    shareSolution: () => void;
     rowTimes: number[];
 }) => {
     const isMobile = useIsMobile();
@@ -1294,9 +1300,55 @@ Jetzt selber spielen:`;
                 toast({ title: 'Kopiert!', description: 'Ergebnis in die Zwischenablage kopiert.', duration: 2000 });
             });
         }
-    }
+            }
 
-    const handleAcceptHotTip = () => {
+            const shareSolution = async () => {
+                // Same grid but with solution revealed - all green since we know the answer
+                const resultGrid = guesses.map((g, guessIndex) =>
+                    g.statuses.map((s, letterIndex) => {
+                        if (jokerPosition && jokerPosition.guessIndex === guessIndex && jokerPosition.letterIndex === letterIndex) {
+                            return '🔥';
+                        }
+                        if (s === 'correct') return '🟦';
+                        if (s === 'present') return '🟨';
+                        return '⬛';
+                    }).join('') +
+                    (rowTimes[guessIndex] !== undefined ? ` (${formatDuration(rowTimes[guessIndex])} Minuten)` : '')
+                ).join('\n');
+
+                const totalTime = rowTimes.reduce((sum, t) => sum + t, 0);
+                const tipUsedLine = hotTipUsed ? `(1 Heißer Tipp verwendet 🔥)` : "";
+
+                const text = `Worthaft – Das Paulik & Reisch Spiel (LÖSUNG GELEAKT 🤫)
+
+        Mein Ergebnis: ${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} innerhalb von ${formatDuration(totalTime)} Minuten ${tipUsedLine}
+
+        Lösung: ${solution.toUpperCase()}
+
+        ${resultGrid}
+
+        Jetzt selber spielen:`;
+
+                const shareData = {
+                    title: 'Worthaft – Das Paulik & Reisch Spiel (Lösung)',
+                    text: text,
+                    url: 'https://paulikreisch.de/worthaft',
+                };
+
+                if (navigator.share) {
+                    try {
+                        await navigator.share(shareData);
+                    } catch (error) {
+                        console.log('Teilen abgebrochen', error);
+                    }
+                } else {
+                    navigator.clipboard.writeText(`${text}\n\nhttps://paulikreisch.de/worthaft`).then(() => {
+                        toast({ title: 'Kopiert!', description: 'Lösung in die Zwischenablage kopiert.', duration: 2000 });
+                    });
+                }
+            }
+
+            const handleAcceptHotTip = () => {
         if (hotTipUsed || gameState !== 'playing' || !settings.hotTipEnabled) return;
 
         const correctlyGuessedIndices = new Set<number>();
@@ -1484,16 +1536,17 @@ Jetzt selber spielen:`;
             </div>
             <Footer />
             <GameEndDisplay
-                isOpen={isDialogOpen}
-                onOpenChange={setIsDialogOpen}
-                solution={solution}
-                guesses={guesses}
-                gameState={gameState}
-                stats={stats}
-                timeToNextGame={timeToNextGame}
-                shareResults={shareResults}
-                rowTimes={rowTimes}
-            />
+                            isOpen={isDialogOpen}
+                            onOpenChange={setIsDialogOpen}
+                            solution={solution}
+                            guesses={guesses}
+                            gameState={gameState}
+                            stats={stats}
+                            timeToNextGame={timeToNextGame}
+                            shareResults={shareResults}
+                            shareSolution={shareSolution}
+                            rowTimes={rowTimes}
+                        />
              <HotTipDisplay
                  isOpen={showHotTipDialog}
                  onOpenChange={setShowHotTipDialog}
