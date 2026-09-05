@@ -105,11 +105,15 @@ export async function generateMetadata(
         {
             url: seoData.ogImage,
             alt: seoData.ogImageAlt || article.imageAlt,
+            width: 1200,
+            height: 630,
         }
     ] : (article.imageUrl ? [
         {
             url: article.imageUrl,
             alt: article.imageAlt,
+            width: 1200,
+            height: 630,
         }
     ] : []);
  
@@ -191,14 +195,20 @@ export default async function ArticlePage({ params }: { params: { slug: string }
   };
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': seoData?.articleType || 'SatiricalArticle',
+    '@type': seoData?.articleType || 'BlogPosting',
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': `https://paulikreisch.de/a/${slug}`,
     },
     headline: seoData?.title || article.title,
     description: seoData?.metaDescription || article.teaser,
-    image: seoData?.ogImage || article.imageUrl,
+    image: {
+      '@type': 'ImageObject',
+      url: seoData?.ogImage || article.imageUrl,
+      width: 1200,
+      height: 630,
+      caption: article.imageAlt,
+    },
     author: authorLd,
     publisher: {
       '@type': 'Organization',
@@ -207,10 +217,19 @@ export default async function ArticlePage({ params }: { params: { slug: string }
       logo: {
         '@type': 'ImageObject',
         url: 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522',
+        width: 512,
+        height: 512,
       },
     },
     datePublished: seoData?.datePublished || new Date(article.publishedDate).toISOString(),
     dateModified: seoData?.dateModified || new Date(article.publishedDate).toISOString(),
+    inLanguage: 'de-DE',
+    articleSection: article.category,
+    keywords: seoData?.keywords || article.category,
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      cssSelector: ['h1', '.prose'],
+    },
   };
 
   const relatedArticles = allArticles
