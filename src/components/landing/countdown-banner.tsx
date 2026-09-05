@@ -26,17 +26,14 @@ const getRandomMinute = () => {
 
 const getTargetDate = () => {
     const now = new Date();
-    // Move 6 hours into the future
-    const target = new Date(now.getTime() + 6 * 60 * 60 * 1000);
-
-    // Ensure the hour is odd
-    if (target.getHours() % 2 === 0) {
-        target.setHours(target.getHours() + 1);
+    // Ehrliche Scarcity: Monatsende 23:59 (wenn <48h übrig, nächsten Monat nehmen)
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+    const diffHours = (endOfMonth.getTime() - now.getTime()) / (1000*60*60);
+    if (diffHours < 48) {
+        const next = new Date(now.getFullYear(), now.getMonth() + 2, 0, 23, 59, 59);
+        return next;
     }
-
-    target.setMinutes(getRandomMinute());
-    target.setSeconds(0);
-    return target;
+    return endOfMonth;
 };
 
 
@@ -85,7 +82,7 @@ export function CountdownBanner() {
     return (
         <div className="flex flex-col items-center justify-center space-y-2 text-center">
              <h3 className="flex items-center justify-center gap-2 font-bold font-headline tracking-tighter text-2xl sm:text-3xl text-primary-foreground/90 text-balance whitespace-nowrap">
-                Verbleibende Angebotszeit:
+                Rabatt endet in:
             </h3>
             <div 
                 className={cn(

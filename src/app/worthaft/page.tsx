@@ -18,7 +18,7 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { WORDS } from '@/lib/worthaft-words';
-import { Share2, HelpCircle, Volume2, VolumeX, ArrowLeft, X, Flame, Settings as Gear, Music, Info, Sparkles } from 'lucide-react';
+import { Share2, ArrowRight, HelpCircle, Volume2, VolumeX, ArrowLeft, X, Flame, Settings as Gear, Music, Info, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
@@ -445,6 +445,23 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
                         Jetzt Lösung teilen
                     </Button>
                 </div>
+
+        {/* Worthaft-Loop: Retention → Buch CTA */}
+        <div className="mt-6 rounded-xl border bg-amber-50/70 dark:bg-amber-950/15 border-amber-200 dark:border-amber-900/30 p-4 text-left">
+          <p className="text-xs font-bold tracking-widest uppercase text-amber-700 dark:text-amber-300">Lesestoff danach</p>
+          <div className="flex gap-3 mt-2">
+            <img src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-hw1_900px.png?alt=media&token=42ce90a3-ed34-49d2-8e09-5258d0dfc484" alt="Hallo Welt" className="w-14 h-20 object-cover rounded-md shadow-sm shrink-0" loading="lazy" />
+            <div className="flex-1 min-w-0">
+              <p className="font-bold text-sm leading-tight">Hol dir das Buch für danach</p>
+              <p className="text-xs text-muted-foreground mt-1 leading-snug">106 Seiten Satire — die perfekte Belohnung nach dem täglichen Rätsel. 10,99 € auf Amazon. 4.8★</p>
+              <div className="flex flex-wrap gap-2 mt-3">
+                <Link href="/shop"><Button size="sm" className="gap-1">Zum Shop — 10,99 € <ArrowRight className="h-3.5 w-3.5" /></Button></Link>
+                <Link href="/checkliste"><Button size="sm" variant="outline">Gratis Checkliste holen</Button></Link>
+              </div>
+            </div>
+          </div>
+          <p className="text-[11px] text-muted-foreground mt-3">Tipp: Teile dein Ergebnis oben und fordere Freunde heraus — morgen gibt&apos;s ein neues Wort.</p>
+        </div>
     </>
     )
 };

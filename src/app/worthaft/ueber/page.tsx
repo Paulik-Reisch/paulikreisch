@@ -72,9 +72,12 @@ export default function AboutWorthaftPage() {
                     Der Buchstabe kommt im Wort nicht vor.
                 </li>
               </ul>
-              <div className="not-prose text-center mt-12">
+              <div className="not-prose text-center mt-12 flex flex-col items-center gap-3">
                   <Link href="/worthaft">
                       <Button size="lg">Genug gelesen, ich will spielen!</Button>
+                  </Link>
+                  <Link href="/shop" className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-4">
+                    Danach Lesestoff? Hol dir das Buch — 10,99 € auf Amazon →
                   </Link>
               </div>
             </article>

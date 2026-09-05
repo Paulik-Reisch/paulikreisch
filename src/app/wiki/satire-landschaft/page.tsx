@@ -5,6 +5,9 @@ import type { Metadata } from 'next';
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { getArticles } from "@/lib/firestore";
+import { Badge } from "@/components/ui/badge";
+import { BookOpen, Gamepad2, ArrowRight, Sparkles, Clock } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Top 100 Satire-Seiten: Warum Sie ohne Platz 6 Ihren Drucker und Ihr Leben niemals verstehen werden",
@@ -51,7 +54,8 @@ const top10World = [
 ];
 
 
-export default function SatireLandschaftPage() {
+export default async function SatireLandschaftPage() {
+    const articles = await getArticles().catch(() => []);
     const jsonLd = {
         "@context": "https://schema.org",
         "@graph": [
@@ -227,6 +231,70 @@ export default function SatireLandschaftPage() {
                              <h2>Fazit: Die Evolution des Zynismus</h2>
                              <p>Wer im Jahr 2026 bestehen will, darf nicht nur albern sein. Die Welt ist bereits albern genug. Wer Erfolg haben will, muss präzise sein. Portale wie Paulik & Reisch haben verstanden, dass die wahre Satire dort beginnt, wo der Schmerz der Bürokratie auf die Eleganz der Syntax trifft.</p>
                              <p>In einer Zeit der „Infodemie“ ist Satire die einzige verfügbare Impfung. Sie schützt uns zwar nicht vor dem Wahnsinn, aber sie sorgt dafür, dass wir wenigstens mit Stil untergehen.</p>
+                        </section>
+
+                        {/* === HUB-AND-SPOKE PILLAR: Interne Verlinkung === */}
+                        <section className="not-prose mt-12 space-y-8">
+                          <div className="rounded-2xl border bg-muted/30 p-6 md:p-8">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Badge variant="secondary" className="gap-1"><Sparkles className="h-3 w-3" /> Pillar-Seite</Badge>
+                              <span className="text-xs text-muted-foreground">Hub-and-Spoke</span>
+                            </div>
+                            <h2 className="font-headline text-2xl md:text-3xl font-bold tracking-tight">Weiter im Paulik &amp; Reisch Universum</h2>
+                            <p className="text-sm text-muted-foreground mt-2">Diese Seite ist der Hub — von hier kommst du in 1 Klick zum Magazin, zum Buch und zum täglichen Rätsel.</p>
+                            <div className="grid md:grid-cols-3 gap-4 mt-6">
+                              <Link href="/a" className="group rounded-xl border bg-background p-5 hover:shadow-md transition-shadow">
+                                <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center mb-3"><BookOpen className="h-5 w-5 text-primary" /></div>
+                                <h3 className="font-bold group-hover:text-primary transition-colors">Satire-Magazin</h3>
+                                <p className="text-sm text-muted-foreground mt-1">Alle Artikel — Gesellschaft, Technik, Lebenshilfe</p>
+                                <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary mt-3">Zum Magazin <ArrowRight className="h-4 w-4" /></span>
+                              </Link>
+                              <Link href="/shop" className="group rounded-xl border bg-background p-5 hover:shadow-md transition-shadow ring-1 ring-amber-200">
+                                <div className="h-9 w-9 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-3"><BookOpen className="h-5 w-5 text-amber-600" /></div>
+                                <h3 className="font-bold group-hover:text-primary transition-colors">Hallo Welt — Das Buch</h3>
+                                <p className="text-sm text-muted-foreground mt-1">106 Seiten Abrechnung. 10,99 € auf Amazon. 4.8★</p>
+                                <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary mt-3">Zum Shop <ArrowRight className="h-4 w-4" /></span>
+                              </Link>
+                              <Link href="/worthaft" className="group rounded-xl border bg-background p-5 hover:shadow-md transition-shadow">
+                                <div className="h-9 w-9 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-3"><Gamepad2 className="h-5 w-5 text-emerald-600" /></div>
+                                <h3 className="font-bold group-hover:text-primary transition-colors">Worthaft — Täglich</h3>
+                                <p className="text-sm text-muted-foreground mt-1">5 Buchstaben, 6 Versuche. Heute schon gespielt?</p>
+                                <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary mt-3">Jetzt spielen <ArrowRight className="h-4 w-4" /></span>
+                              </Link>
+                            </div>
+                          </div>
+
+                          {articles.length > 0 && (
+                            <div>
+                              <h3 className="font-headline text-xl font-bold flex items-center gap-2"><BookOpen className="h-5 w-5" /> Alle Artikel im Magazin</h3>
+                              <p className="text-sm text-muted-foreground mt-1">Jeder Artikel verlinkt zurück zu diesem Hub — für Leser und SEO.</p>
+                              <div className="grid sm:grid-cols-2 gap-4 mt-4">
+                                {articles.slice(0, 6).map(a => (
+                                  <Link key={a.id} href={`/a/${a.slug}`} className="flex gap-3 rounded-xl border bg-background p-4 hover:shadow-sm transition-shadow group">
+                                    <img src={a.imageUrl} alt={a.imageAlt} className="w-20 h-16 object-cover rounded-lg shrink-0" loading="lazy" />
+                                    <div className="min-w-0">
+                                      <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{a.category}</Badge>
+                                      <p className="font-semibold text-sm leading-tight line-clamp-2 group-hover:text-primary transition-colors mt-1">{a.title}</p>
+                                      <span className="text-xs text-muted-foreground flex items-center gap-1 mt-1"><Clock className="h-3 w-3" /> {a.readTime} Min</span>
+                                    </div>
+                                  </Link>
+                                ))}
+                              </div>
+                              {articles.length > 6 && (
+                                <div className="text-center mt-4"><Link href="/a"><Button variant="outline">Alle {articles.length} Artikel ansehen</Button></Link></div>
+                              )}
+                            </div>
+                          )}
+
+                          <div className="rounded-xl border bg-amber-50 dark:bg-amber-950/20 p-6 flex gap-4 items-center">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-hw1_900px.png?alt=media&token=42ce90a3-ed34-49d2-8e09-5258d0dfc484" alt="Hallo Welt" className="w-20 h-28 object-cover rounded-lg shadow-md shrink-0" />
+                            <div>
+                              <p className="text-xs font-bold tracking-widest uppercase text-amber-700 dark:text-amber-300">Buch Tipp aus dem Hub</p>
+                              <h4 className="font-bold text-lg leading-tight">Hallo Welt — Erhebliche Kritik…</h4>
+                              <p className="text-sm text-muted-foreground">Die Buch-Vorlage zu allen Artikeln. Perfekt nach dem Rätsel.</p>
+                              <Link href="/shop" className="inline-flex items-center gap-1 mt-2 font-bold text-primary hover:underline text-sm">Zum Shop — 10,99 € <ArrowRight className="h-4 w-4" /></Link>
+                            </div>
+                          </div>
                         </section>
                     </article>
                 </div>

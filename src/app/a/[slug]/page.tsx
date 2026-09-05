@@ -10,6 +10,8 @@ import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, ArrowRight, Sparkles } from "lucide-react";
 import { ReadingProgressBar } from "@/components/ui/reading-progress-bar";
+import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { Home } from "lucide-react";
 import { ArticleRenderer } from "@/components/article/article-renderer";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -176,6 +178,17 @@ export default async function ArticlePage({ params }: { params: { slug: string }
         url: 'https://paulikreisch.de'
       };
 
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://paulikreisch.de/' },
+      { '@type': 'ListItem', position: 2, name: 'Satire-Magazin', item: 'https://paulikreisch.de/a' },
+      { '@type': 'ListItem', position: 3, name: article.category, item: `https://paulikreisch.de/a?cat=${encodeURIComponent(article.category)}` },
+      { '@type': 'ListItem', position: 4, name: article.title, item: `https://paulikreisch.de/a/${slug}` },
+      { '@type': 'ListItem', position: 5, name: 'Satire-Landschaft', item: 'https://paulikreisch.de/wiki/satire-landschaft' },
+    ],
+  };
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': seoData?.articleType || 'SatiricalArticle',
@@ -219,8 +232,27 @@ export default async function ArticlePage({ params }: { params: { slug: string }
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
       <Header />
       <main className="flex-1 py-12 md:py-20">
+        <div className="container px-4 md:px-6">
+          <Breadcrumb className="mb-6">
+            <BreadcrumbList>
+              <BreadcrumbItem><BreadcrumbLink href="/"><Home className="h-3.5 w-3.5" /> Home</BreadcrumbLink></BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem><BreadcrumbLink href="/a">Satire-Magazin</BreadcrumbLink></BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem><BreadcrumbLink href={`/a?cat=${article.category}`}>{article.category}</BreadcrumbLink></BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem><BreadcrumbPage className="max-w-[20ch] truncate">{article.title}</BreadcrumbPage></BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem><BreadcrumbLink href="/wiki/satire-landschaft" className="text-primary">Pillar</BreadcrumbLink></BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
         <div className="container px-4 md:px-6">
             <article className="prose prose-lg prose-serif dark:prose-invert mx-auto max-w-4xl">
                 <header className="mb-12">
