@@ -12,7 +12,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useUser } from '@/firebase/provider';
 import { logEventAction } from '@/app/actions';
 import { usePathname } from 'next/navigation';
-import { FUNNEL, isSnoozed, isUnlocked, setUnlocked } from '@/lib/funnel';
+import { FUNNEL, isSnoozed, isUnlocked as checkFunnelUnlocked, setUnlocked } from '@/lib/funnel';
 import { BookOpen } from 'lucide-react';
 
 function injectContextualShop(html: string): string {
@@ -55,7 +55,7 @@ export function ArticleRenderer({ article }: { article: Article }) {
       setShowWall(false);
       return;
     }
-    if (isUnlocked()) {
+    if (checkFunnelUnlocked()) {
       setIsUnlocked(true);
       setShowWall(false);
       return;

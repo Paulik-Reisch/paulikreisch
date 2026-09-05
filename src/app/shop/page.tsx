@@ -23,6 +23,14 @@ export default function ShopPage() {
 
     useEffect(() => {
         document.body.classList.add('shop-page');
+        // Ads retargeting: view_shop for PMax/Meta audiences
+        try {
+          // @ts-ignore
+          if (typeof window !== 'undefined' && (window as any).gtag) (window as any).gtag('event', 'view_shop', { page_path: '/shop' });
+          // @ts-ignore
+          if (typeof window !== 'undefined' && (window as any).fbq) (window as any).fbq('track', 'ViewContent', { content_name: 'shop' });
+        } catch {}
+        import('@/app/actions').then(m => m.logEventAction('view_shop', 'anon', '/shop', { source: 'shop-page' }).catch(()=>{}));
         return () => {
             document.body.classList.remove('shop-page');
         }
@@ -116,7 +124,7 @@ export default function ShopPage() {
                                 <p className="book-desc">Erhebliche Kritik am unerhörten Bildungsgang der Lernvollzugsanstalt SK-S</p>
 
                                 <div className="action-area">
-                                    <a href="https://amzn.eu/d/02nS59t2" target="_blank" rel="noopener noreferrer" className="btn btn-amazon">
+                                    <a href="https://amzn.eu/d/02nS59t2" target="_blank" rel="noopener noreferrer" className="btn btn-amazon" onClick={() => { try { (window as any).gtag?.('event','click_amazon',{page_path:'/shop'}); (window as any).fbq?.('track','InitiateCheckout'); } catch {}; import('@/app/actions').then(m=>m.logEventAction('funnel_book_click','anon','/shop',{from:'shop-hero'}).catch(()=>{})); }}>
                                         <AmazonIcon />
                                         Bei Amazon kaufen
                                     </a>
