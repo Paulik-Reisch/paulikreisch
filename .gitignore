@@ -36,10 +36,22 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+tsconfig.tsbuildinfo
 
 .genkit/*
 .env*
 
-# firebase
+# firebase — debug logs only (configs stay tracked)
 firebase-debug.log
 firestore-debug.log
+
+# Firebase Studio IDE (cloud workspace only, not needed in repo)
+.idx/
+.vscode/
+
+# studio artefacts
+.modified
+
+# local dev logs
+dev.out.log
+dev.err.log
