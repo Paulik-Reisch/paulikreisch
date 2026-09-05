@@ -36,6 +36,7 @@
     "@radix-ui/react-toast": "^1.2.6",
     "@radix-ui/react-tooltip": "^1.1.8",
     "@uiw/react-codemirror": "^4.23.0",
+    "canvas-confetti": "^1.9.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "codemirror": "^6.0.1",
@@ -67,6 +68,7 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.13",
+    "@types/canvas-confetti": "^1.9.0",
     "@types/matter-js": "^0.19.6",
     "@types/node": "^20",
     "@types/react": "^18",

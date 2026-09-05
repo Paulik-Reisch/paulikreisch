@@ -14,7 +14,9 @@ type HeroVariant = {
   head: string;
   sub: string;
   img: string; // public/hero-ab/...
+  imgMobile: string; // public/hero-mobile/ 1:1
   alt: string;
+  altMobile: string;
   variant: "light" | "dark";
   objectPosition: string;
 };
@@ -26,7 +28,9 @@ const HEROS: HeroVariant[] = [
     head: "Die Wahrheit über den Lehreralltag.",
     sub: "Der Unterricht von der anderen Seite des Pults: ehrlich, böse, herzlich. Das perfekte Geschenk für Lehrkräfte mit Humor — und für alle, die ihnen eines schulden.",
     img: "/hero-ab/hero-13-lehrerin.jpg",
+    imgMobile: "/hero-mobile/32-tafel-kreide.jpg",
     alt: "Eine Lehrerin lacht herzlich und hält das Buch „Hallo Welt\" vor der Klassentafel",
+    altMobile: "Kreidetafel mit Zeichnung – mobiles Hero-Bild",
     variant: "light",
     objectPosition: "62% 28%",
   },
@@ -36,7 +40,9 @@ const HEROS: HeroVariant[] = [
     head: "Ein Buch gegen den Schulstress.",
     sub: "106 Seiten Ventil gegen Klausuren, Zeugnissprache und Heftführung. Satire, die den Schulwahnsinn ernst nimmt — damit du es nicht mehr musst.",
     img: "/hero-ab/hero-01-papier.jpg",
+    imgMobile: "/hero-mobile/45-buchstaben.jpg",
     alt: "Das Buch „Hallo Welt\" steht vor einem großen gelben Marker-Schwung auf Papier",
+    altMobile: "Buchstaben aus Holz auf Papier – mobiles Hero-Bild",
     variant: "light",
     objectPosition: "78% 42%",
   },
@@ -46,7 +52,9 @@ const HEROS: HeroVariant[] = [
     head: "Überleben in der Lernanstalt.",
     sub: "Aus 13 Jahren Feldforschung: Vertretungsstunden, Sitzordnungen, Zeugniskonferenzen. Der Schulalltag als Roman — mit Herz, ohne Schonung.",
     img: "/hero-ab/hero-03-tafel.jpg",
+    imgMobile: "/hero-mobile/35-spind.jpg",
     alt: "Das Buch „Hallo Welt\" steht auf einer Bank in einem leeren Schulflur mit Spinden im Morgenlicht",
+    altMobile: "Schulspinde im Flur – mobiles Hero-Bild",
     variant: "light",
     objectPosition: "72% 40%",
   },
@@ -56,7 +64,9 @@ const HEROS: HeroVariant[] = [
     head: "Lachen über den Schulwahnsinn.",
     sub: "Nebenwirkung Leselust: Eine Leserin verpasste ihren Halt und lief 30 Kilometer zurück. „Es hat sich gelohnt\", sagt sie. Deine Zugfahrt: verloren. Deine Laune: gerettet.",
     img: "/hero-ab/hero-12-zug-lachen.jpg",
+    imgMobile: "/hero-mobile/30-pausenhof.jpg",
     alt: "Eine junge Frau lacht beim Lesen des Buches „Hallo Welt\" am Zugfenster",
+    altMobile: "Pausenhof der Schule – mobiles Hero-Bild",
     variant: "dark",
     objectPosition: "100% 42%",
   },
@@ -66,7 +76,9 @@ const HEROS: HeroVariant[] = [
     head: "Für alle, die es überlebt haben.",
     sub: "Vater und Sohn auf dem Sofa, ein Buch, viel Gelächter: Der Schulwahnsinn verbindet Generationen. 106 Seiten zum Wiedererkennen — und Weiterempfehlen.",
     img: "/hero-ab/hero-16-vater-sohn.jpg",
+    imgMobile: "/hero-mobile/27-lehrertisch.jpg",
     alt: "Vater und Sohn sitzen auf dem Sofa und lachen gemeinsam über das Buch „Hallo Welt\"",
+    altMobile: "Lehrertisch mit Unterlagen – mobiles Hero-Bild",
     variant: "light",
     objectPosition: "58% 32%",
   },
@@ -156,16 +168,17 @@ export function HeroAb({ product }: { product?: Product }) {
   return (
     <section
       ref={ref}
+      suppressHydrationWarning
       aria-labelledby="hero-ab-heading"
       data-hero={renderHero.id}
       className={
         "hero-stage relative flex min-h-[clamp(540px,88vh,860px)] items-center overflow-hidden isolate " +
         (isDark ? "hero--dark text-[#f7f2e7]" : "hero--light text-[#1d1a15]") +
-        " max-md:min-h-[clamp(560px,96vh,820px)] max-md:items-end max-md:pb-[clamp(28px,6vw,56px)]"
+        " max-md:flex-col max-md:min-h-0 max-md:items-stretch max-md:pb-0"
       }
       style={{ background: isDark ? "#13110e" : "#f7f2e7" }}
     >
-      {/* Backdrop — hidden on mobile per spec */}
+      {/* Desktop Backdrop — hidden on mobile */}
       <Image
         data-hero-bg
         src={renderHero.img}
@@ -173,11 +186,11 @@ export function HeroAb({ product }: { product?: Product }) {
         fill
         priority
         fetchPriority="high"
-        sizes="100vw"
+        sizes="(max-width: 768px) 100vw, 100vw"
         className="hero-bg object-cover -z-[2] will-change-transform max-md:hidden"
         style={{ objectPosition: renderHero.objectPosition }}
       />
-      {/* Scrim — gradients aus Werkstatt */}
+      {/* Desktop Scrim — hidden on mobile */}
       <div
         aria-hidden="true"
         className="hero-scrim absolute inset-0 -z-[1] max-md:hidden"
@@ -193,19 +206,20 @@ export function HeroAb({ product }: { product?: Product }) {
               }
         }
       />
-      {/* Mobile: paper background, no image */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 -z-[1] hidden max-md:block"
-        style={{
-          background: isDark
-            ? "linear-gradient(180deg, #1a1815 0%, #13110e 60%, #0f0e0c 100%)"
-            : "linear-gradient(180deg, #f7f2e7 0%, #efe7d5 100%)",
-        }}
-      />
+      {/* Mobile: 1:1 Image full size über Text */}
+      <div className="hidden max-md:block relative w-full aspect-square overflow-hidden" style={{ background: isDark ? "#13110e" : "#efe7d5" }}>
+        <Image
+          src={renderHero.imgMobile}
+          alt={renderHero.altMobile}
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+      </div>
 
-      <div className="hero-in relative w-full">
-        <div className="mx-auto max-w-[1180px] px-[clamp(18px,4vw,40px)]">
+      <div className="hero-in relative w-full max-md:px-0">
+        <div className={"mx-auto max-w-[1180px] px-[clamp(18px,4vw,40px)] max-md:px-6 max-md:py-8 " + (isDark ? "max-md:bg-[#13110e] max-md:text-[#f7f2e7]" : "max-md:bg-[#f7f2e7]")}>
           <div
             className={
               "hero-copy max-w-[36em] " +

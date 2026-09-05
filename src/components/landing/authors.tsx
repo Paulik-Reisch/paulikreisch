@@ -1,124 +1,106 @@
 "use client";
 
 import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+
+type Author = {
+  name: string;
+  claim: string;
+  bio: string;
+  href: string;
+  src: string;
+};
+
+const AUTHORS: Author[] = [
+  {
+    name: "Philipp Paulik",
+    claim: "Der mit dem fragwürdigen Haarschnitt.",
+    bio: "Sorgt für das Chaos. Angetrieben von Kaffee und existenzieller Angst stellt er sicher, dass keine Handlung zu viel Sinn ergibt.",
+    href: "/ueber/philipp-paulik",
+    src: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/ersteller%2Fphilipp-paulik.png?alt=media&token=7e48b706-80fa-45cc-ae51-b6444bd7ccb3",
+  },
+  {
+    name: "Maximilian Reisch",
+    claim: "Der mit der Brille.",
+    bio: "Meister der Syntax und Satire. Sein Lebensziel: einen so verwirrenden Satz zu schreiben, dass er einen Nobelpreis gewinnt.",
+    href: "/ueber/max-reisch",
+    src: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/ersteller%2Fmax-reisch.png?alt=media&token=b8ded8f8-a5da-412f-aa2f-eb5ebebbc61a",
+  },
+  {
+    name: "Luin Schiffbauer",
+    claim: "Der Künstler hinter dem Chaos.",
+    bio: "Mit seinem einzigartigen Stil fängt er die Essenz der Satire ein und verleiht dem Wahnsinn ein unvergessliches Gesicht.",
+    href: "/ueber/luin-schiffbauer",
+    src: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/luin-schiffbauer.png?alt=media&token=61abe644-7d94-4bfc-8164-37447ac9279b",
+  },
+];
 
 export function Authors() {
   return (
-    <section id="authors" aria-labelledby="authors-heading" className="w-full py-20 md:py-24 lg:py-32 bg-subtle-yellow">
-      <div className="container px-4 md:px-6 animate-in fade-in-0 slide-in-from-top-12 duration-1000">
-        <div className="flex flex-col items-center justify-center space-y-4 text-center">
-          <div className="space-y-2">
-            <h2 id="authors-heading" className="text-3xl font-bold font-headline tracking-tighter sm:text-5xl">Treffen Sie die verdrehten Köpfe</h2>
-            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-balance">
-              Drei Individuen, eine Mission: den alltäglichen Wahnsinn dokumentieren.
-            </p>
-          </div>
+    <section
+      id="authors"
+      aria-labelledby="authors-heading"
+      className="w-full py-16 md:py-20 lg:py-24 bg-[#20347d] text-[#f7f2e7] border-t border-white/10 overflow-hidden relative"
+    >
+      {/* subtle texture like other sections */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(#f7f2e7 1.1px, transparent 1.1px)", backgroundSize: "22px 22px" }} />
+      <div aria-hidden="true" className="pointer-events-none absolute -top-28 -right-24 h-[520px] w-[520px] rounded-full bg-white/[0.06] blur-[0.5px]" />
+      <div className="relative container px-4 md:px-6">
+        {/* Header — Hero/Features harmonisch */}
+        <div className="mx-auto max-w-[720px] text-center">
+          <p className="text-[0.78rem] font-bold tracking-[0.14em] uppercase text-[#f3d9a8] mb-3">
+            Die Köpfe dahinter
+          </p>
+          <h2
+            id="authors-heading"
+            className="font-[Georgia,_Iowan_Old_Style,_Times_New_Roman,_serif] text-[clamp(1.9rem,4vw,2.7rem)] font-bold leading-[1.08] tracking-[-0.015em] text-balance text-white"
+          >
+            Treffen Sie die verdrehten Köpfe
+          </h2>
+          <p className="mx-auto mt-3 max-w-[600px] text-[clamp(1rem,1.6vw,1.12rem)] leading-relaxed text-[#dbe7ff]/85 text-balance">
+            Drei Individuen, eine Mission: den alltäglichen Wahnsinn dokumentieren.
+          </p>
         </div>
-        <div className="mx-auto grid max-w-5xl items-stretch gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:gap-12 mt-12">
-          
-          <article className="transform transition-transform duration-500 hover:scale-105 hover:-rotate-1 -rotate-2 h-full">
-            <Card className="h-full flex flex-col">
-                <CardHeader className="text-center">
-                <Image
-                    alt="Porträtfoto von Autor Philipp Paulik"
-                    className="mx-auto mb-4 rounded-full"
-                    data-ai-hint="funny portrait"
-                    height={120}
-                    src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/ersteller%2Fphilipp-paulik.png?alt=media&token=7e48b706-80fa-45cc-ae51-b6444bd7ccb3"
-                    sizes="120px"
-                    style={{
-                    aspectRatio: "120/120",
-                    objectFit: "cover",
-                    }}
-                    width={120}
-                />
-                <CardTitle className="font-headline text-primary">
-                    Philipp Paulik
-                </CardTitle>
-                <CardDescription>Der mit dem fragwürdigen Haarschnitt.</CardDescription>
-                </CardHeader>
-                <CardContent className="flex-grow">
-                <p className="text-sm text-muted-foreground">
-                    Paulik sorgt für das Chaos. Angetrieben von Kaffee und existenzieller Angst stellt er sicher, dass keine Handlung zu viel Sinn ergibt.
-                </p>
-                </CardContent>
-                <CardFooter className="justify-center">
-                  <Link href="/ueber/philipp-paulik">
-                    <Button variant="secondary">Mehr erfahren</Button>
-                  </Link>
-                </CardFooter>
-            </Card>
-          </article>
 
-          <article className="transform transition-transform duration-500 hover:scale-105 hover:rotate-1 rotate-2 h-full">
-             <Card className="h-full flex flex-col">
-                <CardHeader className="text-center">
-                <Image
-                    alt="Porträtfoto von Autor Maximilian Reisch"
-                    className="mx-auto mb-4 rounded-full"
-                    data-ai-hint="weird portrait"
-                    height={120}
-                    src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/ersteller%2Fmax-reisch.png?alt=media&token=b8ded8f8-a5da-412f-aa2f-eb5ebebbc61a"
-                    sizes="120px"
-                    style={{
-                    aspectRatio: "120/120",
-                    objectFit: "cover",
-                    }}
-                    width={120}
-                />
-                <CardTitle className="font-headline text-primary">Maximilian Reisch</CardTitle>
-                <CardDescription>Der mit der Brille.</CardDescription>
-                </CardHeader>
-                <CardContent className="flex-grow">
-                <p className="text-sm text-muted-foreground">
-                    Reisch ist ein Meister der Syntax und Satire. Sein Lebensziel ist es, einen so verwirrenden Satz zu schreiben, dass er einen Nobelpreis gewinnt.
-                </p>
-                </CardContent>
-                <CardFooter className="justify-center">
-                    <Link href="/ueber/max-reisch">
-                        <Button variant="secondary">Mehr erfahren</Button>
-                    </Link>
-                </CardFooter>
-            </Card>
-          </article>
+        {/* Cards — 3 nebeneinander, Paper + Plus-Hauch wie Features */}
+        <div className="mx-auto mt-10 md:mt-12 max-w-[1180px] grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
+          {AUTHORS.map((a, i) => (
+            <article
+              key={a.name}
+              className="group relative flex flex-col bg-white border border-[#e8ddd0] rounded-[18px] shadow-[0_2px_16px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_28px_rgba(0,0,0,0.10)] hover:-translate-y-[1px] transition-[box-shadow,transform] duration-200 overflow-hidden"
+            >
+              <div className="h-[3px] w-full bg-gradient-to-r from-[#ffe14d] via-[#ffcf4d] to-[#e8ddd0] opacity-90" aria-hidden="true" />
+              <div className="flex flex-1 flex-col p-7 text-center">
+                <div className="mx-auto relative">
+                  <div className="absolute -inset-1 rounded-full bg-[#ffe14d]/30 blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true" />
+                  <Image
+                    alt={`Porträt von ${a.name}`}
+                    className="relative mx-auto rounded-full border-[3px] border-white shadow-[0_2px_12px_rgba(0,0,0,0.12)]"
+                    height={112}
+                    src={a.src}
+                    sizes="112px"
+                    style={{ aspectRatio: "1/1", objectFit: "cover" }}
+                    width={112}
+                  />
+                </div>
 
-          <article className="transform transition-transform duration-500 hover:scale-105 hover:-rotate-1 -rotate-2 h-full md:col-span-2 lg:col-span-1">
-            <Card className="h-full flex flex-col">
-                <CardHeader className="text-center">
-                <Image
-                    alt="Porträtfoto von Illustrator Luin Schiffbauer"
-                    className="mx-auto mb-4 rounded-full"
-                    data-ai-hint="artist portrait"
-                    height={120}
-                    src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/luin-schiffbauer.png?alt=media&token=61abe644-7d94-4bfc-8164-37447ac9279b"
-                    sizes="120px"
-                    style={{
-                    aspectRatio: "120/120",
-                    objectFit: "cover",
-                    }}
-                    width={120}
-                />
-                <CardTitle className="font-headline text-primary">
-                    Luin Schiffbauer
-                </CardTitle>
-                <CardDescription>Der Künstler hinter dem Chaos.</CardDescription>
-                </CardHeader>
-                <CardContent className="flex-grow">
-                <p className="text-sm text-muted-foreground">
-                    Mit seinem einzigartigen Stil fängt er die Essenz der Satire ein und verleiht dem Wahnsinn ein unvergessliches Gesicht.
-                </p>
-                </CardContent>
-                <CardFooter className="justify-center">
-                    <Link href="/ueber/luin-schiffbauer">
-                        <Button variant="secondary">Mehr erfahren</Button>
-                    </Link>
-                </CardFooter>
-            </Card>
-          </article>
+                <h3 className="mt-4 font-[Georgia,_Iowan_Old_Style,_Times_New_Roman,_serif] text-[1.28rem] font-bold leading-tight tracking-[-0.015em] text-[#1d1a15]">
+                  {a.name}
+                </h3>
+                <p className="mt-1 text-[0.88rem] font-semibold tracking-wide text-[#9c2d22]">{a.claim}</p>
 
+                <p className="mt-3 flex-1 text-[0.94rem] leading-[1.6] text-[#4d463b] text-balance">{a.bio}</p>
+
+                <Link
+                  href={a.href}
+                  aria-label={`Mehr über ${a.name}`}
+                  className="mt-6 inline-flex items-center justify-center rounded-full border-2 border-[#1d1a15] bg-white px-5 py-2 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_2px_0_#1d1a15] transition-[transform,box-shadow,background] hover:bg-[#1d1a15] hover:text-white hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15]"
+                >
+                  Mehr erfahren
+                </Link>
+              </div>
+            </article>
+          ))}
         </div>
       </div>
     </section>

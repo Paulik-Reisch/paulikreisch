@@ -437,4 +437,19 @@
   .flame-reveal {
     animation: flame-reveal 3s ease-out 0.08s 1 both;
   }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(-100% - var(--gap))); }
+  }
+  .animate-marquee {
+    animation: marquee var(--duration) linear infinite;
+  }
+  @keyframes marquee-vertical {
+    from { transform: translateY(0); }
+    to { transform: translateY(calc(-100% - var(--gap))); }
+  }
+  .animate-marquee-vertical {
+    animation: marquee-vertical var(--duration) linear infinite;
+  }
 }

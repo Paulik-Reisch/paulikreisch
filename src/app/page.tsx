@@ -3,7 +3,6 @@ import { Header } from "@/components/landing/header";
 import { HeroAb } from "@/components/landing/hero-ab";
 import { Authors } from "@/components/landing/authors";
 import { Features } from "@/components/landing/features";
-import { LP2Teaser } from "@/components/landing/lp2-teaser";
 import { Testimonials } from "@/components/landing/testimonials";
 import { Newsletter } from "@/components/landing/newsletter";
 import { CtaBanner } from "@/components/landing/cta-banner";
@@ -102,14 +101,13 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Header />
-      <main className="flex-1">
+      <main className="flex-1" suppressHydrationWarning>
         <HeroAb product={hw1} />
         <WorthaftTeaser />
         <Features />
         <Authors />
         <Testimonials />
         <CtaBanner />
-        <LP2Teaser />
         <Newsletter />
       </main>
       <Footer />

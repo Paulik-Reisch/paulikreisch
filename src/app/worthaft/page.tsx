@@ -30,6 +30,22 @@ import { Loader2 } from 'lucide-react';
 import FeedbackDrawer from './FeedbackDrawer';
 import { initializeFirebase } from '@/firebase';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import confetti from 'canvas-confetti';
+
+// ---- Fireworks — 5s beidseitig, ohne Button, nur on Win ----
+const fireWorthaftFireworks = () => {
+  const duration = 5 * 1000;
+  const animationEnd = Date.now() + duration;
+  const defaults: Parameters<typeof confetti>[0] = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+  const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
+  const interval = window.setInterval(() => {
+    const timeLeft = animationEnd - Date.now();
+    if (timeLeft <= 0) return clearInterval(interval);
+    const particleCount = 50 * (timeLeft / duration);
+    confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+    confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+  }, 250);
+};
 
 // ---- Info Banner dismissed state ----
 const INFO_BANNER_DISMISSED_KEY = 'worthaft-info-banner-dismissed';
@@ -436,13 +452,9 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
 
 
         <div className="sm:justify-center flex flex-col gap-2">
-                    <Button size="lg" onClick={shareResults}>
+                    <Button size="lg" onClick={shareResults} className="w-full">
                         <Share2 className="mr-3 h-5 w-5"/>
                         Jetzt einen Freund herausfordern!
-                    </Button>
-                    <Button size="lg" variant="outline" onClick={shareSolution}>
-                        <Share2 className="mr-3 h-5 w-5"/>
-                        Jetzt Lösung teilen
                     </Button>
                 </div>
 
@@ -1118,6 +1130,13 @@ export default function WorthaftPage() {
             setGuesses(newGuesses);
             setLetterStatuses(newLetterStatuses);
             setGameState('won');
+            // 🎆 Fireworks — respektiert Animationen-Einstellung
+            try {
+              const raw = localStorage.getItem('worthaft-settings');
+              const parsed = raw ? JSON.parse(raw) : {};
+              const animOn = parsed.animationsEnabled !== false;
+              if (animOn) fireWorthaftFireworks();
+            } catch { fireWorthaftFireworks(); }
             setRowTimes(newRowTimes);
             setCurrentGuess(Array(WORD_LENGTH).fill('')); // Clear current guess
             
