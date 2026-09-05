@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { ArrowLeft, RotateCcw, Trophy, Heart, X } from 'lucide-react';
+import Link from 'next/link';
 
 const HANGMAN_WORDS = [
   'HAUS', 'BAUM', 'SCHUH', 'TISCH', 'STUHL', 'FENSTER', 'TÜR', 'DACH',
@@ -174,7 +175,7 @@ export default function HangmanPage() {
     }
   }, [word, guessedLetters, gameState, wrongGuesses]);
 
-  // Keyboard rows for German QWERTZ
+  // Keyboard rows for German QWERTZ - as clickable buttons
   const keyboardRows = [
     ['Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P'],
     ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ö', 'Ä'],
@@ -189,6 +190,14 @@ export default function HangmanPage() {
   const displayWord = word.split('').map(l => guessedLetters.has(l) ? l : '_').join(' ');
 
   const winRate = stats.games > 0 ? Math.round((stats.wins / stats.games) * 100) : 0;
+
+  // Auto-focus on first keyboard button when component mounts (desktop physical keyboard support)
+  useEffect(() => {
+    const firstButton = document.querySelector('button[onclick*="handleGuess"]');
+    if (firstButton) {
+      firstButton.focus();
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -253,7 +262,7 @@ export default function HangmanPage() {
           )}
         </AnimatePresence>
 
-        {/* Keyboard */}
+        {/* Keyboard - accessible with physical keyboard */}
         <div className="w-full max-w-md mb-8">
           {keyboardRows.map((row, rowIndex) => (
             <div key={rowIndex} className="flex justify-center gap-1.5 mb-1.5">
@@ -266,7 +275,11 @@ export default function HangmanPage() {
                     disabled={gameState !== 'playing' || guessedLetters.has(letter)}
                     variant={status === 'correct' ? 'default' : status === 'wrong' ? 'destructive' : 'outline'}
                     size="sm"
-                    className="h-10 w-10 min-w-0 font-bold transition-all"
+                    className={cn(
+                      'h-10 w-10 min-w-0 font-bold transition-all',
+                      'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:ring-2',
+                      'focus-visible:ring-primary'
+                    )}
                   >
                     {letter}
                   </Button>
