@@ -1,119 +1,105 @@
-
-
 'use server';
 
 import { z } from "zod";
-import { addOrder, addLog, getCountdownTarget, updateCountdownTarget, logAnalyticsEvent, addSubscriber } from "@/lib/firestore";
-import { revalidatePath } from "next/cache";
-import { getSession } from "@/lib/session";
-import { addContact } from "@/lib/resend";
-
-
-const OrderSchema = z.object({
-  payload: z.string(),
-});
-
-export async function createOrderAction(
-  prevState: any,
-  formData: FormData
-) {
-  const session = await getSession();
-  if (!session) {
-    return { success: false, error: "Nicht authentifiziert" };
-  }
-
-  const validatedFields = OrderSchema.safeParse({
-    payload: formData.get("payload"),
-  });
-
-  if (!validatedFields.success) {
-    return { success: false, error: "Ungültige Bestelldaten." };
-  }
-
-  try {
-    const orderData = JSON.parse(validatedFields.data.payload);
-    await addOrder(orderData, session.user.id);
-    revalidatePath("/admin");
-    return { success: true, error: null };
-  } catch (e) {
-    console.error(e);
-    return { success: false, error: "Bestellung konnte nicht gespeichert werden. Bitte erneut versuchen." };
-  }
-}
+import { addSubscriber } from "@/lib/firestore";
+import { addContact, sendTransactionalEmail } from "@/lib/resend";
+import { funnelEmails } from "@/lib/funnel-emails";
 
 const SubscriberSchema = z.object({
-    email: z.string().email("Bitte geben Sie eine gültige E-Mail-Adresse ein."),
-    source: z.string().optional(),
-    consent: z.string().refine((v) => v === "true", "Sie müssen Datenschutz & AGB akzeptieren."),
+  email: z.string().email("Bitte geben Sie eine gültige E-Mail-Adresse ein."),
+  source: z.string().optional(),
+  consent: z.string().optional(),
 });
 
 export async function subscribeToNewsletterAction(
-    prevState: {
-        success?: boolean;
-        error?: string;
-        message?: string;
-    },
-    formData: FormData
+  prevState: { success?: boolean; error?: string; message?: string },
+  formData: FormData
 ) {
-    const validatedFields = SubscriberSchema.safeParse({
-        email: formData.get("email"),
-        source: formData.get("source"),
-        consent: formData.get("consent"),
+  const rawConsent = formData.get("consent");
+  const source = (formData.get("source") as string) || "unknown";
+  const isFunnel = source.startsWith("funnel-");
+
+  // Funnel sources: consent via hidden field "true" or checkbox; footer-newsletter requires explicit
+  if (!isFunnel) {
+    const parsed = SubscriberSchema.safeParse({
+      email: formData.get("email"),
+      source,
+      consent: rawConsent,
     });
-
-    if (!validatedFields.success) {
-        const errorMessages = validatedFields.error.errors.map(e => e.message).join('. ');
-        return {
-            error: errorMessages,
-        };
+    // enforce consent for non-funnel
+    if (!parsed.success) {
+      const msg = parsed.error.errors.map((e) => e.message).join(". ");
+      return { error: msg };
     }
-    
-    const { email, source } = validatedFields.data;
+    if (parsed.data.consent !== "true") {
+      return { error: "Sie müssen Datenschutz & AGB akzeptieren." };
+    }
+  }
 
+  const email = String(formData.get("email") || "").trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { error: "Bitte geben Sie eine gültige E-Mail-Adresse ein." };
+  }
+  if (isFunnel && rawConsent !== "true" && rawConsent !== true) {
+    // funnel hidden consent must be "true"
+    // allow if source is funnel but consent missing -> still require
+    const c = String(rawConsent || "");
+    if (c !== "true") return { error: "Bitte stimmen Sie der Datenschutzerklärung zu." };
+  }
+
+  try {
+    await addContact(email);
+  } catch (e) {
+    console.error("MailerSend addContact failed, fallback to Firestore", e);
+  }
+
+  try {
+    await addSubscriber({ email, source });
+  } catch (e: any) {
+    console.error("Firestore addSubscriber failed", e);
+    return { error: e?.message || "Anmeldung fehlgeschlagen." };
+  }
+
+  // Day 0 transactional: checklist + bonus (only for funnel sources)
+  if (isFunnel) {
     try {
-        // First, add to the external service
-        await addContact(email);
+      const checklistUrl = "https://paulikreisch.de/checkliste-lernvollzugsanstalt.pdf";
+      const shopUrl = "https://paulikreisch.de/shop";
+      const { subject, html } = funnelEmails.day0;
+      const htmlContent = html({ checklistUrl, shopUrl });
+      await sendTransactionalEmail(email, subject, htmlContent);
     } catch (e) {
-        console.error("Error adding contact to MailerSend, proceeding with Firestore fallback.", e);
-        // Don't re-throw, just log. The Firestore save is the fallback.
+      console.error("Day0 mail failed (non-blocking)", e);
     }
-
+    // also queue future mails as Firestore docs for cron/manual send
     try {
-        // Always try to save to Firestore as a copy/fallback
-        await addSubscriber({ email, source: source || 'unknown' });
-        
-        // If we reach here, at least the Firestore part was successful.
-        return { success: true, message: `Wir haben eine Bestätigungs-E-Mail an ${email} gesendet.` };
+      const { addDocument } = await import("@/lib/firestore");
+      const now = Date.now();
+      const schedule = [
+        { day: "day1", delayMs: 1 * 24 * 60 * 60 * 1000 },
+        { day: "day3", delayMs: 3 * 24 * 60 * 60 * 1000 },
+        { day: "day5", delayMs: 5 * 24 * 60 * 60 * 1000 },
+        { day: "day7", delayMs: 7 * 24 * 60 * 60 * 1000 },
+      ];
+      for (const s of schedule) {
+        await addDocument("funnel_queue", {
+          email,
+          source,
+          day: s.day,
+          scheduledAt: new Date(now + s.delayMs).toISOString(),
+          sent: false,
+          createdAt: new Date().toISOString(),
+        }, "system-funnel");
+      }
     } catch (e) {
-        console.error("Firestore subscriber save failed:", e);
-        // This is a more critical error if it's the only one that failed or both failed.
-        const error = e as any;
-        return { error: error.message || "Anmeldung ist fehlgeschlagen." };
+      console.error("Funnel queue failed", e);
     }
-}
+  }
 
-
-export async function reduceCountdownAction(): Promise<{ newTargetDate: string } | { error: string }> {
-    try {
-        const currentTarget = await getCountdownTarget();
-        const timeReductions = [
-            15 * 60 * 1000,
-            60 * 60 * 1000,
-            3 * 60 * 60 * 1000,
-            4 * 24 * 60 * 60 * 1000,
-        ];
-        const randomReduction = timeReductions[Math.floor(Math.random() * timeReductions.length)];
-        const newTargetDate = new Date(currentTarget.getTime() - randomReduction);
-
-        await updateCountdownTarget(newTargetDate);
-
-        return { newTargetDate: newTargetDate.toISOString() };
-    } catch (e) {
-        console.error("Error reducing countdown:", e);
-        return { error: "Zeit konnte nicht reduziert werden." };
-    }
+  return { success: true, message: `Wir haben eine Bestätigungs-E-Mail an ${email} gesendet.` };
 }
 
 export async function logEventAction(type: 'page_view' | 'newsletter_subscription' | string, userId: string, path: string, params: object = {}) {
-    await logAnalyticsEvent(type, path, userId, params);
+  const { logAnalyticsEvent } = await import("@/lib/firestore");
+  await logAnalyticsEvent(type, path, userId, params);
 }
