@@ -80,15 +80,17 @@ export function Hero({ product }: { product?: Product }) {
               </Link>
             </div>
           </div>
-          <div className="relative w-full max-w-sm mx-auto md:max-w-none animate-in fade-in zoom-in-50 duration-1000">
+          <div className="relative w-full max-w-sm mx-auto md:max-w-none animate-in fade-in zoom-in-50 duration-1000" style={{ aspectRatio: '640 / 974' }}>
              <Image
                 alt={`Buchcover von '${fullBookTitle}'`}
                 className="mx-auto overflow-hidden rounded-xl object-contain transform transition-transform duration-500 hover:rotate-0 hover:scale-105"
                 data-ai-hint={imageHint}
-                height="974"
+                height={974}
                 src={imageSrc}
-                width="640"
+                width={640}
                 priority
+                fetchPriority="high"
+                sizes="(max-width: 768px) 90vw, 620px"
               />
           </div>
         </div>

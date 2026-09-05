@@ -72,14 +72,14 @@
     -moz-osx-font-smoothing: grayscale;
   }
   .prose-serif h1, .prose-serif h2, .prose-serif h3, .prose-serif h4, .prose-serif h5, .prose-serif h6 {
-    font-family: 'Lora', serif;
+    font-family: var(--font-lora), serif;
   }
   .prose-serif p,
   .prose-serif ul,
   .prose-serif ol,
   .prose-serif li,
   .prose-serif blockquote {
-     font-family: 'Source Serif Pro', serif;
+     font-family: var(--font-source-serif), serif;
   }
 }
 

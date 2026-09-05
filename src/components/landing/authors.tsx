@@ -26,13 +26,14 @@ export function Authors() {
                     alt="Porträtfoto von Autor Philipp Paulik"
                     className="mx-auto mb-4 rounded-full"
                     data-ai-hint="funny portrait"
-                    height="120"
+                    height={120}
                     src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/ersteller%2Fphilipp-paulik.png?alt=media&token=7e48b706-80fa-45cc-ae51-b6444bd7ccb3"
+                    sizes="120px"
                     style={{
                     aspectRatio: "120/120",
                     objectFit: "cover",
                     }}
-                    width="120"
+                    width={120}
                 />
                 <CardTitle className="font-headline text-primary">
                     Philipp Paulik
@@ -59,13 +60,14 @@ export function Authors() {
                     alt="Porträtfoto von Autor Maximilian Reisch"
                     className="mx-auto mb-4 rounded-full"
                     data-ai-hint="weird portrait"
-                    height="120"
+                    height={120}
                     src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/ersteller%2Fmax-reisch.png?alt=media&token=b8ded8f8-a5da-412f-aa2f-eb5ebebbc61a"
+                    sizes="120px"
                     style={{
                     aspectRatio: "120/120",
                     objectFit: "cover",
                     }}
-                    width="120"
+                    width={120}
                 />
                 <CardTitle className="font-headline text-primary">Maximilian Reisch</CardTitle>
                 <CardDescription>Der mit der Brille.</CardDescription>
@@ -90,13 +92,14 @@ export function Authors() {
                     alt="Porträtfoto von Illustrator Luin Schiffbauer"
                     className="mx-auto mb-4 rounded-full"
                     data-ai-hint="artist portrait"
-                    height="120"
+                    height={120}
                     src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/luin-schiffbauer.png?alt=media&token=61abe644-7d94-4bfc-8164-37447ac9279b"
+                    sizes="120px"
                     style={{
                     aspectRatio: "120/120",
                     objectFit: "cover",
                     }}
-                    width="120"
+                    width={120}
                 />
                 <CardTitle className="font-headline text-primary">
                     Luin Schiffbauer

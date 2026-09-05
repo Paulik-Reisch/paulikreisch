@@ -193,7 +193,7 @@ function BookCard({ book }: { book: Product }) {
                         <BookCarousel book={book} />
                     </div>
                     <div className="flex flex-col flex-grow mt-1">
-                        <h3 className="font-headline text-xl font-bold">{book.title}</h3>
+                        <h3 id={`book-${book.id}-title`} className="font-headline text-xl font-bold">{book.title}</h3>
                         <p className="text-xs text-muted-foreground min-h-[30px]">{book.subtitle}</p>
                         
                         <PriceDisplay book={book} />

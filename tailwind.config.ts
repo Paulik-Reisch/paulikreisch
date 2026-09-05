@@ -17,12 +17,12 @@ export default {
     },
     extend: {
       fontFamily: {
-        body: ['Inter', 'sans-serif'],
-        headline: ['Poppins', 'sans-serif'],
+        body: ['var(--font-inter)', 'sans-serif'],
+        headline: ['var(--font-poppins)', 'sans-serif'],
         code: ['monospace'],
-        handwritten: ['"Patrick Hand"', 'cursive'],
-        serif: ['"Source Serif Pro"', 'serif'],
-        serifHeadline: ['Lora', 'serif'],
+        handwritten: ['var(--font-patrick-hand)', 'cursive'],
+        serif: ['var(--font-source-serif)', 'serif'],
+        serifHeadline: ['var(--font-lora)', 'serif'],
       },
       colors: {
         background: 'hsl(var(--background))',

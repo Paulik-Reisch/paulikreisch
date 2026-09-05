@@ -6,6 +6,13 @@ import { CookieBanner } from '@/components/landing/cookie-banner';
 import { ThemeProvider } from '@/components/theme-provider';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 import { GlobalTracker } from '@/components/analytics/global-tracker';
+import { Poppins, Inter, Patrick_Hand, Lora, Source_Serif_4 } from 'next/font/google';
+
+const poppins = Poppins({ weight: ['700'], subsets: ['latin'], display: 'swap', variable: '--font-poppins' });
+const inter = Inter({ weight: ['400','700'], subsets: ['latin'], display: 'swap', variable: '--font-inter' });
+const patrickHand = Patrick_Hand({ weight: ['400'], subsets: ['latin'], display: 'swap', variable: '--font-patrick-hand' });
+const lora = Lora({ weight: ['400','700'], subsets: ['latin'], display: 'swap', variable: '--font-lora' });
+const sourceSerif = Source_Serif_4({ weight: ['400','700'], subsets: ['latin'], display: 'swap', variable: '--font-source-serif' });
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -25,7 +32,7 @@ export const metadata: Metadata = {
   keywords: ['Satire', 'Humor', 'Buch Hallo Welt', 'Paulik Reisch', 'Schulsatire', 'Worthaft', 'Lernvollzugsanstalt', 'deutsche Satire', 'lustige Bücher'],
   openGraph: {
       title: 'Paulik & Reisch | Satirische Literatur & humorvolle Bücher',
-      description: 'Schulsatire, Bürokratie-Wahnsinn, Worthaft täglich. Buch „Hallo Welt" — 106 Seiten Premium-Zynismus, 10,99€ auf Amazon. Jetzt entdecken.',
+      description: 'Schulsatire, Bürokratie-Wahnsinn, Worthaft täglich. Buch „Hallo Welt\" — 106 Seiten Premium-Zynismus, 10,99€ auf Amazon. Jetzt entdecken.',
       url: 'https://paulikreisch.de',
       siteName: 'Paulik & Reisch',
       locale: 'de_DE',
@@ -35,7 +42,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Paulik & Reisch | Satirische Literatur & humorvolle Bücher',
-    description: '106 Seiten Schulsatire die sitzen. „Hallo Welt" für 10,99€ + Worthaft + Magazin — täglich neuer Wahnsinn.',
+    description: '106 Seiten Schulsatire die sitzen. „Hallo Welt\" für 10,99€ + Worthaft + Magazin — täglich neuer Wahnsinn.',
     creator: '@paulikreisch',
     images: ['https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/Frame-social.png?alt=media&token=0bd72452-4230-4a07-8bec-0f557f2aa3c7'],
   },
@@ -103,12 +110,9 @@ export default function RootLayout({
   return (
     <html lang="de" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Inter:wght@400;700&family=Patrick+Hand&family=Lora:wght@400;700&family=Source+Serif+Pro:wght@400;700&display=swap" rel="stylesheet" />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
-      <body className="font-body antialiased">
+      <body className={`${poppins.variable} ${inter.variable} ${patrickHand.variable} ${lora.variable} ${sourceSerif.variable} font-body antialiased`}>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(globalJsonLd) }} />
         <ThemeProvider attribute="class" defaultTheme="light">
           <FirebaseClientProvider>

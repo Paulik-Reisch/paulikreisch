@@ -92,7 +92,7 @@ export function Testimonials() {
                              <Card as="figure" className="h-full transform transition-transform hover:scale-105 rotate-1 even:-rotate-1">
                                 <CardContent className="p-6 flex flex-col justify-between h-full">
                                 <div>
-                                    <div className="flex mb-2" aria-label={`Bewertung: ${review.stars} von 5 Sternen`}>
+                                    <div role="img" className="flex mb-2" aria-label={`Bewertung: ${review.stars} von 5 Sternen`}>
                                         {Array.from({ length: 5 }).map((_, i) => (
                                             <Star key={i} className={`w-5 h-5 ${i < review.stars ? 'fill-primary text-primary' : 'fill-muted stroke-muted-foreground'}`} />
                                         ))}
