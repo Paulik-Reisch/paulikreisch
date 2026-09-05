@@ -9,12 +9,14 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'Worthaft – Paulik & Reisch Satire',
-  description: 'Das tägliche Worträtsel von Paulik & Reisch: knackige Rätsel, deutsche Wörter und ein Hauch Satire. Probier Worthaft und werde zum Wort-Meister!',
-  applicationName: 'Worthaft – Paulik & Reisch Satire',
+  title: 'Worthaft: Das tägliche deutsche Worträtsel (Wordle auf Deutsch) | Paulik & Reisch',
+  description: 'Worthaft: Das tägliche deutsche Worträtsel — 5 Buchstaben, 6 Versuche, jeden Tag neu. Der Wordle auf Deutsch. Starte jetzt — 1 Minute, Sucht inklusive.',
+  applicationName: 'Worthaft — Paulik & Reisch',
+  alternates: { canonical: '/worthaft' },
   openGraph: {
-    title: 'Worthaft – Das Paulik & Reisch Worträtsel',
-    description: 'Ein tägliches Worträtsel mit deutschen Wörtern und satirischem Charme. Wie viele Versuche brauchst du? Jetzt spielen!',
+    title: 'Worthaft: Das tägliche deutsche Worträtsel (Wordle auf Deutsch)',
+    description: 'Wordle auf Deutsch — 5 Buchstaben, 6 Versuche, täglich neu. Wie viele brauchst du? Jetzt spielen!',
+    url: 'https://paulikreisch.de/worthaft',
     images: [
       {
         url: 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/Worthaft%2Fworthaft-2-0-beta.png?alt=media&token=ed5089ce-3117-4ad1-8e9e-6b2f1f6e31d6',

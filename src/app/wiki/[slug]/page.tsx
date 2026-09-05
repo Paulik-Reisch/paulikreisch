@@ -10,13 +10,9 @@ import { notFound } from "next/navigation";
 const articles: { [key: string]: any } = {
   satire: {
     title: "Satire",
-    summary:
-      "Die Satire ist eine Kunstform, mit der Personen, Ereignisse oder Zustände kritisiert, verspottet oder angeprangert werden. Sie bedient sich dazu der Übertreibung, der Ironie und des Spotts.",
-    image: {
-      src: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Gulliver_in_Brobdingnag.jpg/800px-Gulliver_in_Brobdingnag.jpg",
-      alt: "Gulliver in Brobdingnag, eine klassische satirische Darstellung.",
-      caption: "Gulliver wird vom Bauern in Brobdingnag dem König vorgeführt (Stich von James Gillray, 1803).",
-    },
+      summary:
+        "Die Satire ist eine Kunstform, mit der Personen, Ereignisse oder Zustände kritisiert, verspottet oder angeprangert werden. Sie bedient sich dazu der Übertreibung, der Ironie und des Spotts.",
+      image: null,
     content: `
       <p>Der Begriff Satire leitet sich vom lateinischen <i>satura lanx</i> ab, was so viel wie „mit Früchten gefüllte Schale“ bedeutet. Dies deutet auf die bunte Vielfalt der in der Satire behandelten Themen und Stile hin.</p>
       <h2>Merkmale der Satire</h2>
@@ -54,18 +50,20 @@ export default function WikiPage({ params }: { params: { slug: string } }) {
               <p className="text-lg text-muted-foreground">{article.summary}</p>
             </header>
 
-            <figure className="my-8">
-              <Image
-                src={article.image.src}
-                alt={article.image.alt}
-                width={800}
-                height={450}
-                className="rounded-lg shadow-md mx-auto"
-              />
-              <figcaption className="text-center text-xs text-muted-foreground mt-2">
-                {article.image.caption}
-              </figcaption>
-            </figure>
+            {article.image && (
+              <figure className="my-8">
+                <Image
+                  src={article.image.src}
+                  alt={article.image.alt}
+                  width={800}
+                  height={450}
+                  className="rounded-lg shadow-md mx-auto"
+                />
+                <figcaption className="text-center text-xs text-muted-foreground mt-2">
+                  {article.image.caption}
+                </figcaption>
+              </figure>
+            )}
 
             <div
               className="prose dark:prose-invert max-w-none"

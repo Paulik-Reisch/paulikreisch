@@ -97,7 +97,7 @@ export async function generateMetadata(
   }
 
   const previousImages = (await parent).openGraph?.images || []
-  const title = `[PUNCHLINE] - ${seoData?.title || article.title} | Paulik & Reisch`;
+  const title = seoData?.title || article.title;
   const description = seoData?.metaDescription || article.teaser;
   const authors = seoData?.authorName?.split(',').map(s => s.trim()) || ['Philipp Paulik', 'Maximilian Reisch'];
 

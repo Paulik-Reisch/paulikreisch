@@ -67,33 +67,30 @@ const hw1: Product = {
 };
 
 export default async function Home() {
+  // A4: Kein zweites Organization-Objekt — globale @id aus layout.tsx wiederverwenden
+  // Nur WebPage-Anreicherung (hasPart) auf der Homepage, keine Duplikat-Organization
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "NewsMediaOrganization",
-    "@id": "https://www.paulikreisch.de/#organization",
-    "name": "Paulik & Reisch",
-    "url": "https://www.paulikreisch.de",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522"
-    },
-    "slogan": "Die Speerspitze der modernen Satire",
-    "genre": ["Satire", "Comedy", "News"],
-    "knowsAbout": ["Politiksatire", "Gesellschaftskritik", "Fake News Satire"],
-    "hasPart": [
+    "@type": "WebPage",
+    "@id": "https://paulikreisch.de/#homepage",
+    url: "https://paulikreisch.de",
+    name: "Hallo Welt — Das satirische Buch über Schule | Paulik & Reisch",
+    isPartOf: { "@id": "https://paulikreisch.de/#website" },
+    about: { "@id": "https://paulikreisch.de/#organization" },
+    hasPart: [
         {
           "@type": "WebPage",
-          "@id": "https://www.paulikreisch.de/a",
-          "name": "Paulik & Reisch Satire-Magazin",
-          "url": "https://www.paulikreisch.de/a",
-          "description": "Eine kuratierte Sammlung satirischer Meisterwerke, die den alltäglichen Wahnsinn auf die Schippe nehmen."
+          "@id": "https://paulikreisch.de/a",
+          name: "Paulik & Reisch Satire-Magazin",
+          url: "https://paulikreisch.de/a",
+          description: "Eine kuratierte Sammlung satirischer Meisterwerke, die den alltäglichen Wahnsinn auf die Schippe nehmen."
         },
         {
           "@type": "WebPage",
-          "@id": "https://www.paulikreisch.de/autoren",
-          "name": "Unsere Autoren",
-          "url": "https://www.paulikreisch.de/autoren",
-          "description": "Lernen Sie die kreativen Köpfe hinter den satirischen Artikeln und Büchern von Paulik & Reisch kennen."
+          "@id": "https://paulikreisch.de/autoren",
+          name: "Unsere Autoren",
+          url: "https://paulikreisch.de/autoren",
+          description: "Lernen Sie die kreativen Köpfe hinter den satirischen Artikeln und Büchern von Paulik & Reisch kennen."
         }
       ]
   };

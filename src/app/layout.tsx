@@ -16,7 +16,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL('https://paulikreisch.de'),
   title: {
-    default: 'Paulik & Reisch | Satirische Literatur & humorvolle Bücher',
+    default: 'Hallo Welt — Das satirische Buch über Schule | Paulik & Reisch',
     template: '%s | Paulik & Reisch',
   },
   description: 'Satire die weh tut und heilt: Paulik & Reisch sezieren Schulsystem, Bürokratie und Alltag. Buch „Hallo Welt" (106 S., 10,99€) + tägliches Worthaft + Magazin.',
@@ -76,7 +76,8 @@ const globalJsonLd = {
       name: 'Paulik & Reisch',
       url: 'https://paulikreisch.de',
       logo: { '@type': 'ImageObject', url: 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522', width: 512, height: 512 },
-      sameAs: ['https://www.amazon.de/s?k=Paulik+Reisch'],
+      knowsAbout: ['Satire', 'Schulsatire', 'Bürokratie-Satire', 'deutsche Sprache', 'Bildungskritik', 'Wortspiel', 'humorvolle Bücher'],
+      sameAs: ['https://amzn.eu/d/02nS59t2', 'https://www.amazon.de/s?k=Paulik+Reisch'],
     },
     {
       '@type': 'WebSite',
