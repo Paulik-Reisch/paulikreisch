@@ -55,7 +55,7 @@ function ArticleCard({ article, author }: { article: Article, author: Author | n
           {authorDetails.slug ? (
             <Link href={`/autoren/${authorDetails.slug}`} className="flex items-center gap-2 group/author">
                 <Avatar className="h-6 w-6">
-                    <AvatarImage src={authorDetails.avatarUrl} />
+                    <AvatarImage src={authorDetails.avatarUrl} alt={`Avatar von ${authorDetails.name}`} />
                     <AvatarFallback className="text-xs">{authorDetails.avatarFallback}</AvatarFallback>
                 </Avatar>
                 <span className="font-semibold group-hover/author:text-primary transition-colors">{authorDetails.name}</span>
@@ -63,7 +63,7 @@ function ArticleCard({ article, author }: { article: Article, author: Author | n
           ) : (
             <div className="flex items-center gap-2 font-semibold">
                 <Avatar className="h-6 w-6">
-                    <AvatarImage src={authorDetails.avatarUrl} />
+                    <AvatarImage src={authorDetails.avatarUrl} alt={`Avatar von ${authorDetails.name}`} />
                     <AvatarFallback className="text-xs">{authorDetails.avatarFallback}</AvatarFallback>
                 </Avatar>
                 <span>{authorDetails.name}</span>

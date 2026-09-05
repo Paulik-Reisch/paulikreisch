@@ -105,6 +105,7 @@ const SplitText: React.FC<SplitTextProps> = ({
         wordsClass: 'split-word',
         charsClass: 'split-char',
         reduceWhiteSpace: false,
+        aria: 'hidden',
         onSplit: (self: GSAPSplitText) => {
           assignTargets(self);
           return gsap.fromTo(
