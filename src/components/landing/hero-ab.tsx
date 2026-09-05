@@ -73,7 +73,7 @@ const HEROS: HeroVariant[] = [
 ];
 
 function pickRandomIndex(): number {
-  // ?hero=1..5 erzwingt Variante (Debug), sonst sessionStorage-stabil, sonst random
+  // ?hero=1..5 erzwingt Variante (Debug), sonst jedes Reload neu random
   try {
     const sp = new URLSearchParams(window.location.search);
     const q = sp.get("hero");
@@ -82,19 +82,7 @@ function pickRandomIndex(): number {
       if (!Number.isNaN(n) && n >= 0 && n < HEROS.length) return n;
     }
   } catch {}
-  try {
-    const k = "hero_ab_v1";
-    const s = sessionStorage.getItem(k);
-    if (s !== null) {
-      const n = parseInt(s, 10);
-      if (!Number.isNaN(n) && n >= 0 && n < HEROS.length) return n;
-    }
-    const n = Math.floor(Math.random() * HEROS.length);
-    sessionStorage.setItem(k, String(n));
-    return n;
-  } catch {
-    return Math.floor(Math.random() * HEROS.length);
-  }
+  return Math.floor(Math.random() * HEROS.length);
 }
 
 export function HeroAb({ product }: { product?: Product }) {
@@ -224,15 +212,6 @@ export function HeroAb({ product }: { product?: Product }) {
               (isIn ? "[&>*]:!opacity-100 [&>*]:!translate-y-0" : "")
             }
           >
-            <p
-              className={
-                "hero-eyebrow text-[0.8rem] font-bold tracking-[0.14em] uppercase m-0 mb-[18px] opacity-0 translate-y-[18px] transition-[opacity,transform] duration-[600ms] " +
-                (isDark ? "text-[#f3d9a8]" : "text-[#9c2d22]")
-              }
-              style={{ transitionDelay: "0ms" }}
-            >
-              {renderHero.eyebrow}
-            </p>
             <h1
               id="hero-ab-heading"
               className="hero-head font-[Georgia,_Iowan_Old_Style,_Times_New_Roman,_serif] text-[clamp(2.1rem,5vw,3.6rem)] font-bold leading-[1.08] tracking-[-0.01em] m-0 mb-[0.45em] text-balance opacity-0 translate-y-[18px] transition-[opacity,transform] duration-[600ms] delay-[80ms]"
