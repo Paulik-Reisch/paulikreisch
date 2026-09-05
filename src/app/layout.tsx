@@ -28,6 +28,7 @@ export const metadata: Metadata = {
   },
   description: 'Satire die weh tut und heilt: Paulik & Reisch sezieren Schulsystem, Bürokratie und Alltag. Buch „Hallo Welt" (106 S., 10,99€) + tägliches Worthaft + Magazin.',
   applicationName: 'Paulik & Reisch',
+  appleWebApp: { title: 'Paulik & Reisch' },
   authors: [{ name: 'Philipp Paulik' }, { name: 'Maximilian Reisch' }],
   keywords: ['Satire', 'Humor', 'Buch Hallo Welt', 'Paulik Reisch', 'Schulsatire', 'Worthaft', 'Lernvollzugsanstalt', 'deutsche Satire', 'lustige Bücher'],
   openGraph: {
@@ -48,12 +49,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/icon.png', sizes: '512x512', type: 'image/png' },
     ],
     apple: [
-      { url: '/apple-touch-icon-180x180.png', sizes: '180x180' },
+      { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
     ],
   },
   robots: {
