@@ -110,7 +110,7 @@ export default function GameLabsPage() {
 
           {/* Detail View */}
           {view === 'detail' && selectedGame && (
-            <div className="max-w-2xl mx-auto animate-fade-in">
+            <div className="max-w-2xl mx-auto">
               <Card className="border-primary/20">
                 <CardHeader className="text-center">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-4">
@@ -191,7 +191,7 @@ export default function GameLabsPage() {
       </main>
       <Footer />
 
-      <style jsx`
+      <style jsx>{`
         @keyframes fade-in {
           from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }
@@ -199,7 +199,7 @@ export default function GameLabsPage() {
         .animate-fade-in {
           animation: fade-in 0.3s ease-out;
         }
-      `}
+      `}</style>
     </div>
   );
 }
