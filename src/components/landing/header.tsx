@@ -69,6 +69,9 @@ export function Header() {
                       </Button>
                   </Link>
                 )}
+                <Link href="/ratgeber">
+                    <Button variant="ghost">Ratgeber</Button>
+                </Link>
                 <Link href="/shop">
                     <Button variant="secondary">Buch kaufen</Button>
                 </Link>
@@ -102,6 +105,9 @@ export function Header() {
                           </Button>
                       </Link>
                     )}
+                    <Link href="/ratgeber">
+                        <Button variant="outline" className="w-full">Ratgeber</Button>
+                    </Link>
                     <Link href="/shop">
                         <Button variant="secondary" className="w-full">Buch kaufen</Button>
                     </Link>
