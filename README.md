@@ -1,14 +1,42 @@
 <div align="center">
 
-# Paulik & Reisch — Web-Plattform
+# 🎓📢 Paulik & Reisch
 
-**Satirische Literatur · Content-Funnel · Worthaft & Wiki**
+### *Zwei junge Autoren. Ein Bildungssystem. Null Gnade.*
+
 [![Live](https://img.shields.io/badge/Live-paulikreisch.de-brightgreen?style=for-the-badge)](https://paulikreisch.de)
+[![Buch](https://img.shields.io/badge/Buch-Hallo_Welt-amber?style=for-the-badge)](https://www.amazon.de/dp/B0CVXT9X4J)
+[![Bewertung](https://img.shields.io/badge/★★★★★-5.0%20auf%20Amazon-yellow?style=for-the-badge)](https://www.amazon.de/dp/B0CVXT9X4J)
 [![Next.js](https://img.shields.io/badge/Next.js-15.5.9-black?style=for-the-badge)](https://nextjs.org)
-[![Firebase](https://img.shields.io/badge/Firebase-App%20Hosting-orange?style=for-the-badge)](https://firebase.google.com)
 [![License](https://img.shields.io/badge/License-All_Rights_Reserved-red?style=for-the-badge)](#lizenz)
 
 </div>
+
+---
+
+## 📖 Das Buch: „Hallo Welt"
+
+> *Erhebliche Kritik am unerhörten Bildungsgang der Lernvollzugsanstalt SK-S*
+
+**Philipp Paulik** und **Maximilian Reisch** nehmen in ihrem Debüt die eigene Schule aufs Korn — in **36 Kapiteln** voller Satire, Ironie und schwarzem Humor sezieren sie den deutschen Schulalltag: dröger Unterricht, stinkende Toiletten, marode Klassenzimmer, absurde Bürokratie. Kein Klischee bleibt verschont.
+
+Aber „Hallo Welt" ist mehr als eine Abrechnung — es ist auch eine Liebeserklärung an all die skurrilen Eigenarten, die den Schulalltag so unterhaltsam machen. Fragmentarisch statt linear, wie ein Schulhofgespräch, das ständig abschweift: mal laut, mal leise, mal albern, mal bitterernst.
+
+| | |
+|---|---|
+| **Autoren** | Philipp Paulik, Maximilian Reisch |
+| **Umfang** | 106 Seiten, 36 Kapitel |
+| **Erschienen** | 17. Februar 2024 |
+| **Bewertung** | ★★★★★ 5.0 (Amazon) |
+| **Erhältlich** | [Amazon.de](https://www.amazon.de/dp/B0CVXT9X4J) — Taschenbuch & Kindle |
+
+> *„Man kommt durch's Lachen kaum noch zum Lesen!!! Müsste jede/r Lehrer:in in Deutschland lesen."* — Amazon-Rezension
+
+---
+
+## 🌐 Die Plattform
+
+Dieses Repo ist der Motor hinter [paulikreisch.de](https://paulikreisch.de): Buch-Shop, Satire-Magazin, ein Wort-Ratespiel namens **Worthaft** und ein Redaktions-Backend — alles in einer Next.js-Codebase.
 
 ---
 
