@@ -453,3 +453,7 @@
     animation: marquee-vertical var(--duration) linear infinite;
   }
 }
+
+/* Homepage anchors: sticky navigation remains visible. */
+html, body { overflow-x: clip; }
+.pr-home section[id], .pr-home main[id] { scroll-margin-top: 88px; }

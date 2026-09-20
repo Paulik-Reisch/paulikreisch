@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 
@@ -63,7 +64,7 @@ export default function DatenschutzPage() {
               Wir setzen Cookies und vergleichbare Technologien nur nach Ihrer Einwilligung ein
               (Art. 6 Abs. 1 lit. a DSGVO i. V. m. § 25 TDDDG). Notwendige Cookies, die für den Betrieb der
               Seite erforderlich sind, werden ohne Einwilligung gesetzt. Ihre Auswahl können Sie jederzeit über
-              den Consent-Dialog anpassen. Details entnehmen Sie der <a href="/cookie-richtlinie">Cookie-Richtlinie</a>.
+              den Consent-Dialog anpassen. Details entnehmen Sie der <Link href="/cookie-richtlinie">Cookie-Richtlinie</Link>.
             </p>
 
             <h2>4. Betroffenenrechte</h2>
@@ -78,7 +79,7 @@ export default function DatenschutzPage() {
             <p>
               Einzelne Inhalte dieser Seite können mithilfe Künstlicher Intelligenz erzeugt oder bearbeitet
               worden sein. Eine Kennzeichnung erfolgt gemäß Art. 50 der Verordnung (EU) 2024/1689 (EU AI Act)
-              in den <a href="/transparenz">Transparenzhinweisen</a>.
+              in den <Link href="/transparenz">Transparenzhinweisen</Link>.
             </p>
           </article>
         </div>

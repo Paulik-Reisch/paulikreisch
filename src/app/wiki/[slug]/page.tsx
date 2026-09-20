@@ -30,8 +30,8 @@ const articles: { [key: string]: any } = {
   },
 };
 
-export default function WikiPage({ params }: { params: { slug: string } }) {
-  const article = articles[params.slug];
+export default async function WikiPage({ params }: { params: Promise<{ slug: string }> }) {
+  const article = articles[(await params).slug];
 
   if (!article) {
     notFound();

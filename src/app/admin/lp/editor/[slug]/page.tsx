@@ -5,13 +5,13 @@ import { LpEditorClient } from "./editor-client";
 import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 
-export default async function LandingPageEditorPage({ params }: { params: { slug: string } }) {
+export default async function LandingPageEditorPage({ params }: { params: Promise<{ slug: string }> }) {
   const session = await getSession();
   if (!session) {
     redirect("/login");
   }
 
-  const { slug } = params;
+  const { slug } = await params;
   const isNew = slug === 'new';
 
   if (isNew) {

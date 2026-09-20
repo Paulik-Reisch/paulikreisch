@@ -66,7 +66,7 @@ export function SocialShare({ article }: { article: Article }) {
             <Linkedin className="h-5 w-5" />
           </Button>
         </a>
-        {typeof navigator !== 'undefined' && navigator.share && (
+        {typeof navigator !== 'undefined' && typeof navigator.share === 'function' && (
           <Button variant="outline" size="icon" onClick={handleNativeShare} aria-label="Mehr Teilen-Optionen">
             <MoreHorizontal className="h-5 w-5" />
           </Button>

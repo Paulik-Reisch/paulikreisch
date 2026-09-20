@@ -7,8 +7,8 @@ import { format } from "date-fns";
 import { de } from "date-fns/locale";
 
 // This is now a Server Component
-export default async function LegalPage({ params }: { params: { slug: string } }) {
-  const page = await getLegalPage(params.slug);
+export default async function LegalPage({ params }: { params: Promise<{ slug: string }> }) {
+  const page = await getLegalPage((await params).slug);
 
   if (!page) {
     notFound();

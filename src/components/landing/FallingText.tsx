@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useRef, useState, useEffect } from 'react';
@@ -166,7 +165,7 @@ const FallingText = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
         canvasContainerRef.current.removeChild(render.canvas);
       }
-      World.clear(engine.world);
+      World.clear(engine.world, false);
       Engine.clear(engine);
     };
   }, [effectStarted, gravity, wireframes, backgroundColor, mouseConstraintStiffness, text]);

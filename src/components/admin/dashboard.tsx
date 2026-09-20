@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
@@ -16,7 +15,7 @@ import {
     deleteNewsletterAction,
     duplicateNewsletterAction,
     updateExcerptAction
-} from "@/app/admin/actions";
+} from "@/components/admin/actions";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -58,6 +57,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui
 import { cn } from "@/lib/utils";
 
 type AdminDashboardProps = {
+    defaultTab?: string;
     initialNewsletters?: Newsletter[];
     initialLegalPages?: LegalPage[];
     initialPalabrotas?: Palabrota[];
@@ -65,14 +65,14 @@ type AdminDashboardProps = {
     initialExcerpts?: Excerpt[];
 };
 
-export function AdminDashboard({ 
+export function AdminDashboard({ defaultTab = "übersicht",
     initialNewsletters, 
     initialLegalPages, 
     initialPalabrotas, 
     initialChistes,
     initialExcerpts
 }: AdminDashboardProps) {
-    const [activeTab, setActiveTab] = useState("übersicht");
+    const [activeTab, setActiveTab] = useState(defaultTab);
     
     const newsletters = initialNewsletters || [];
     const legalPages = initialLegalPages || [];

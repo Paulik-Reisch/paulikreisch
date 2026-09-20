@@ -11,3 +11,10 @@ runConfig:
     - secret: MAILERSEND_GROUP_ID
 buildConfig:
   memoryMiB: 2048
+
+# Session signing key: value remains in Google Secret Manager.
+env:
+  - variable: SESSION_SECRET
+    secret: SESSION_SECRET@1
+    availability:
+      - RUNTIME

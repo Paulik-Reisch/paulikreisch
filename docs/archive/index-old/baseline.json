@@ -1,0 +1,13 @@
+{
+  "commit": "71b5426ed4d3178508582b34798bc09b791d0607",
+  "files": {
+    "src/app/page.tsx": "678178f24e650810a30334c6b9eed90d0a188c2664f482251fa64d0780f6f57a",
+    "src/components/landing/header.tsx": "8d6b70b8918951774abfa4898ecafb1e7903068bcced56cf8e70286e457d4de4",
+    "src/components/landing/footer.tsx": "ceedbc69612172a039285c11a79d013a5237c3f6455228c38751ed2f85d29956"
+  },
+  "normalizedFiles": {
+    "src/components/landing/header.tsx": "3751abd9b08f33f3b2ea59ca84312a32e80b3f9f1acba2e33e690963c09dd5fb",
+    "src/components/landing/footer.tsx": "a66b64c022540783fee9ca45f812e927ad8ce474a79c1e035a0b3f8d2921735e",
+    "docs/archive/index-old/page.tsx.txt": "b2b1542b0fc452a513654e81dc08e29b1018c81771444c3032e7896b80d64a3d"
+  }
+}

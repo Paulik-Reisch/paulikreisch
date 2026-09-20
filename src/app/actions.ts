@@ -15,7 +15,7 @@ export async function subscribeToNewsletterAction(
   prevState: { success?: boolean; error?: string; message?: string },
   formData: FormData
 ) {
-  const rawConsent = formData.get("consent");
+  const rawConsent: unknown = formData.get("consent");
   const source = (formData.get("source") as string) || "unknown";
   const isFunnel = source.startsWith("funnel-");
 

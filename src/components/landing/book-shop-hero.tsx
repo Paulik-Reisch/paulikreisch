@@ -53,25 +53,12 @@ export function BookShopHero() {
                     <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3 xl:basis-1/3">
                         <div className="p-2 h-full">
                         <Card className={`h-full flex flex-col justify-center items-center text-center p-6 ${item.color} transition-transform duration-300 hover:-translate-y-2`}>
-                            {item.type === 'quote' ? (
-                               <figure>
+                            <figure>
                                     <blockquote className="text-base font-semibold text-balance">
                                         <p>»{item.text}«</p>
                                     </blockquote>
                                     <figcaption className="mt-4 text-sm text-muted-foreground"><cite>- {item.author}</cite></figcaption>
                                 </figure>
-                            ) : (
-                                <CardContent className="p-0 flex flex-col justify-center items-center text-center h-full">
-                                    {item.icon && <item.icon className="w-10 h-10 mb-4 text-primary"/>}
-                                    <h3 className="text-xl font-bold font-headline text-balance">{item.title}</h3>
-                                    <p className="text-sm text-muted-foreground mt-2 text-balance">{item.description}</p>
-                                    <Link href={item.link || '#'} className="mt-4">
-                                        <Badge variant="secondary" className="hover:scale-105 transition-transform">
-                                            Ausprobieren <ArrowRight className="ml-2 h-3 w-3"/>
-                                        </Badge>
-                                    </Link>
-                                </CardContent>
-                            )}
                         
                         </Card>
                         </div>

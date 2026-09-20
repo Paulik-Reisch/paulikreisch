@@ -3,15 +3,15 @@ import { getLandingPageBySlug } from "@/lib/firestore";
 import { notFound } from "next/navigation";
 import type { Metadata } from 'next';
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const page = await getLandingPageBySlug(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const page = await getLandingPageBySlug((await params).slug);
   return {
     title: page?.title || "Landing Page",
   }
 }
 
-export default async function RenderedLandingPage({ params }: { params: { slug: string } }) {
-    const page = await getLandingPageBySlug(params.slug);
+export default async function RenderedLandingPage({ params }: { params: Promise<{ slug: string }> }) {
+    const page = await getLandingPageBySlug((await params).slug);
 
     if (!page) {
         notFound();

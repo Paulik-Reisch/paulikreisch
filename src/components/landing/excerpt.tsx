@@ -1,10 +1,9 @@
-
 "use client";
 
 import { useState } from "react";
 import { ExcerptGate } from "./ExcerptGate";
 import { Button } from "../ui/button";
-import { AlertTriangle, BookWarning, ShoppingCart } from "lucide-react";
+import { AlertTriangle, BookOpen, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 
 export function Excerpt() {

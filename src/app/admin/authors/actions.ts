@@ -1,4 +1,3 @@
-
 "use server";
 
 import { z } from "zod";
@@ -33,7 +32,7 @@ export async function createAuthorAction(prevState: AuthorActionState, formData:
     const validatedFields = AuthorSchema.safeParse(Object.fromEntries(formData.entries()));
 
     if (!validatedFields.success) {
-        return { success: false, error: "Validierungsfehler: " + validatedFields.error.flatten().fieldErrors.title?.join(', ') };
+        return { success: false, error: "Validierungsfehler: " + validatedFields.error.issues.map(issue => issue.message).join(', ') };
     }
     
     try {

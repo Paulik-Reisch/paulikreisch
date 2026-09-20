@@ -1,5 +1,3 @@
-
-
 "use server";
 
 import { z } from "zod";
@@ -61,7 +59,7 @@ export async function loginAction(
     const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
     const session = await encrypt({ user: { id: username }, expires });
 
-    cookies().set("session", session, { expires, httpOnly: true });
+    (await cookies()).set("session", session, { expires, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', path: '/' });
 
     await addLog(username, 'Login erfolgreich', `Benutzer '${username}' hat sich angemeldet.`);
     revalidatePath("/admin");
@@ -71,7 +69,7 @@ export async function loginAction(
 export async function logoutAction() {
     const session = await getSession();
     const user = session?.user.id || 'Unbekannt';
-    cookies().set("session", "", { expires: new Date(0) });
+    (await cookies()).set("session", "", { expires: new Date(0), path: '/' });
     await addLog(user, 'Logout', `Benutzer '${user}' hat sich abgemeldet.`);
     redirect('/login');
 }
@@ -328,7 +326,7 @@ export async function updateLegalPageAction(
     await updateLegalPage(pageId, finalData, session.user.id);
     revalidatePath("/admin");
     revalidatePath(`/${pageId}`);
-    return { success: true, message: "Seite erfolgreich aktualisiert." };
+    return { success: true, error: null, message: "Seite erfolgreich aktualisiert." };
   } catch (e) {
     const error = e as Error;
     return { success: false, error: "Fehler beim Aktualisieren: " + error.message };

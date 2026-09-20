@@ -59,3 +59,7 @@ dev.err.log
 # claude code symlinks (generated from .agents/skills — don't commit dupes)
 .claude/skills/
 .claude/settings.local.json
+
+!.env.example
+/playwright-report/
+/test-results/

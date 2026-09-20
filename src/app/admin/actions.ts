@@ -1,4 +1,3 @@
-
 "use server";
 
 import { z } from "zod";
@@ -54,7 +53,7 @@ export async function loginAction(
     const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
     const session = await encrypt({ user: { id: username }, expires });
 
-    cookies().set("session", session, { expires, httpOnly: true, path: '/' });
+    (await cookies()).set("session", session, { expires, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', path: '/' });
 
     await addLog(username, 'Login erfolgreich', `Benutzer '${username}' hat sich angemeldet.`);
     revalidatePath("/admin");
@@ -64,7 +63,7 @@ export async function loginAction(
 export async function logoutAction() {
     const session = await getSession();
     const user = session?.user.id || 'Unbekannt';
-    cookies().set("session", "", { expires: new Date(0), path: '/' });
+    (await cookies()).set("session", "", { expires: new Date(0), path: '/' });
     await addLog(user, 'Logout', `Benutzer '${user}' hat sich abgemeldet.`);
     redirect('/login');
 }

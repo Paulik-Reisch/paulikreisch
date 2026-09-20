@@ -4,13 +4,13 @@ import { SeoEditorClient } from "./editor-client";
 import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 
-export default async function SeoEditorPage({ params }: { params: { slug: string } }) {
+export default async function SeoEditorPage({ params }: { params: Promise<{ slug: string }> }) {
   const session = await getSession();
   if (!session) {
     redirect("/login");
   }
 
-  const { slug } = params;
+  const { slug } = await params;
   // We fetch metadata. If it's null, the editor will show empty fields.
   const metadata = await getSeoMetadata(slug);
 

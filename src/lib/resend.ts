@@ -3,6 +3,19 @@
 import "server-only";
 import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
 
+type GroupApi = {
+  addRecipients(groupId: string, recipients: Recipient[]): Promise<unknown>;
+  getRecipients(groupId: string, options: { limit: number }): Promise<{ body: { data: Array<{ email: string; name?: string }> } }>;
+};
+
+// MailerSend's SDK does not currently provide a newsletter groups API.
+// Keep the existing Firestore fallback and fail explicitly for campaigns.
+function getGroupApi(client: MailerSend): GroupApi {
+  const candidate = client as MailerSend & { groups?: GroupApi };
+  if (!candidate.groups) throw new Error('Newsletter-Gruppen sind mit dem installierten MailerSend-SDK nicht verfügbar. Bitte zuerst einen Listenanbieter anbinden.');
+  return candidate.groups;
+}
+
 let mailerSendInstance: MailerSend | null = null;
 function getMailerSend() {
   if (mailerSendInstance) return mailerSendInstance;
@@ -30,7 +43,7 @@ export async function addContact(email: string) {
   
   try {
     const recipients = [new Recipient(email, "")];
-    await mailerSend.groups.addRecipients(groupId, recipients);
+    await getGroupApi(mailerSend).addRecipients(groupId, recipients);
     return { success: true };
   } catch (e: any) {
     console.error("MailerSend addContact error:", e.body || e);
@@ -70,7 +83,7 @@ export async function sendCampaign(subject: string, htmlContent: string) {
   }
 
   try {
-    const { body } = await mailerSend.groups.getRecipients(groupId, { limit: 1000 });
+    const { body } = await getGroupApi(mailerSend).getRecipients(groupId, { limit: 1000 });
     const recipients: Recipient[] = body.data.map((r: any) => new Recipient(r.email, r.name || ""));
 
     if (recipients.length === 0) {

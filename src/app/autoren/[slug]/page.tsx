@@ -1,4 +1,3 @@
-
 import { getAuthorBySlug, getArticlesByAuthorSlug, type Author, type Article } from "@/lib/firestore";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/landing/header";
@@ -14,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 type Props = {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 function ArticleCard({ article }: { article: Article }) {
@@ -52,7 +51,7 @@ function ArticleCard({ article }: { article: Article }) {
 }
  
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const author = await getAuthorBySlug(params.slug);
+  const author = await getAuthorBySlug((await params).slug);
  
   if (!author) {
     return { title: "Autor nicht gefunden" }
@@ -73,10 +72,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: title,
       description: description,
       url: `/autoren/${author.slug}`,
-      profile: {
-        firstName: author.firstName,
-        lastName: author.lastName,
-      },
+      firstName: author.firstName,
+      lastName: author.lastName,
       images: [
         {
           url: author.profilePictureUrl,
@@ -95,8 +92,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function AuthorPage({ params }: Props) {
   const [author, articles] = await Promise.all([
-    getAuthorBySlug(params.slug),
-    getArticlesByAuthorSlug(params.slug)
+    getAuthorBySlug((await params).slug),
+    getArticlesByAuthorSlug((await params).slug)
   ]);
 
   if (!author) {

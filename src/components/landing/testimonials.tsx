@@ -100,7 +100,6 @@ export function Testimonials() {
               {reviews.map((review, i) => (
                 <CarouselItem key={i} className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
                   <Card
-                    as="figure"
                     className="h-full flex flex-col bg-white border border-[#e8ddd0] shadow-[0_2px_16px_rgba(0,0,0,0.06)] rounded-[14px] hover:shadow-[0_6px_24px_rgba(0,0,0,0.10)] transition-[transform,box-shadow] duration-200 hover:-translate-y-[1px]"
                   >
                     <CardContent className="p-6 flex flex-col justify-between h-full gap-4">
