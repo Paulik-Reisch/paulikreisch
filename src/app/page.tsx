@@ -1,117 +1,16 @@
+import type { Metadata } from 'next';
+import { HomePage } from '@/components/home/home-page';
+import { getHomeMetadata, homeStructuredData } from '@/lib/home-seo';
 
-import { Header } from "@/components/landing/header";
-import { HeroAb } from "@/components/landing/hero-ab";
-import { Authors } from "@/components/landing/authors";
-import { Features } from "@/components/landing/features";
-import { Testimonials } from "@/components/landing/testimonials";
-import { Newsletter } from "@/components/landing/newsletter";
-import { CtaBanner } from "@/components/landing/cta-banner";
-import { Footer } from "@/components/landing/footer";
-import { Product, getSeoMetadata } from "@/lib/firestore";
-import { CountdownBanner } from "@/components/landing/countdown-banner";
-import type { Metadata, ResolvingMetadata } from 'next'
-import { WorthaftTeaser } from '@/components/landing/worthaft-teaser';
-import { WorthaftPopup } from "@/components/landing/WorthaftPopup";
+export const revalidate = 3600;
 
-export async function generateMetadata(
-  {},
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  const seoData = await getSeoMetadata('home');
- 
-  if (!seoData) {
-    return {
-        title: "Paulik & Reisch | Satirische Literatur & humorvolle Bücher",
-        description: "Die offiziellen Autorenwerke von Philipp Paulik & Maximilian Reisch. Satirische Bücher, absurde Kurzgeschichten und tiefgründiger Unsinn über Schule, Bürokratie und den alltäglichen Wahnsinn."
-    }
-  }
- 
-  const previousImages = (await parent).openGraph?.images || []
-
-  return {
-    title: seoData.title,
-    description: seoData.metaDescription,
-    keywords: seoData.keywords,
-    openGraph: {
-      title: seoData.ogTitle,
-      description: seoData.ogDescription,
-      images: seoData.ogImage ? [seoData.ogImage, ...previousImages] : previousImages,
-      type: seoData.ogType as 'website' | 'article' | 'book' | 'profile' | undefined,
-    },
-    twitter: {
-      card: seoData.twitterCard as "summary" | "summary_large_image" | "app" | "player" | undefined,
-      title: seoData.twitterTitle,
-      description: seoData.twitterDescription,
-      images: seoData.twitterImage ? [seoData.twitterImage] : previousImages,
-      site: seoData.twitterSite,
-      creator: seoData.twitterCreator,
-    },
-    alternates: {
-        canonical: seoData.canonicalUrl || '/',
-    },
-    robots: seoData.robots,
-  }
+export async function generateMetadata(): Promise<Metadata> {
+  return getHomeMetadata();
 }
 
-
-const hw1: Product = {
-    id: "hw1",
-    title: "Hallo Welt",
-    subtitle: "Erhebliche Kritik am unerhörten Bildungsgang der Lernvollzugsanstalt SK-S",
-    price: 10.99,
-    imageSrc: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-mockup-1.png?alt=media&token=c736447b-585c-410e-b2c9-b3fd9c726c58",
-    aiHint: "book cover satire",
-    amazonLink: "https://www.amazon.de/Hallo-Welt-unerh%C3%B6rten-Bildungsgang-Lernvollzugsanstalt/dp/3982548803",
-    description: "Die satirische Abrechnung mit dem Schulsystem, Lehrern als Beamtenrobotern und dem täglichen Wahnsinn des Erwachsenwerdens."
-};
-
-export default async function Home() {
-  // A4: Kein zweites Organization-Objekt — globale @id aus layout.tsx wiederverwenden
-  // Nur WebPage-Anreicherung (hasPart) auf der Homepage, keine Duplikat-Organization
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "@id": "https://paulikreisch.de/#homepage",
-    url: "https://paulikreisch.de",
-    name: "Hallo Welt — Das satirische Buch über Schule | Paulik & Reisch",
-    isPartOf: { "@id": "https://paulikreisch.de/#website" },
-    about: { "@id": "https://paulikreisch.de/#organization" },
-    hasPart: [
-        {
-          "@type": "WebPage",
-          "@id": "https://paulikreisch.de/a",
-          name: "Paulik & Reisch Satire-Magazin",
-          url: "https://paulikreisch.de/a",
-          description: "Eine kuratierte Sammlung satirischer Meisterwerke, die den alltäglichen Wahnsinn auf die Schippe nehmen."
-        },
-        {
-          "@type": "WebPage",
-          "@id": "https://paulikreisch.de/autoren",
-          name: "Unsere Autoren",
-          url: "https://paulikreisch.de/autoren",
-          description: "Lernen Sie die kreativen Köpfe hinter den satirischen Artikeln und Büchern von Paulik & Reisch kennen."
-        }
-      ]
-  };
-
-  return (
-    <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <Header />
-      <main className="flex-1" suppressHydrationWarning>
-        <HeroAb product={hw1} />
-        <WorthaftTeaser />
-        <Features />
-        <Authors />
-        <Testimonials />
-        <CtaBanner />
-        <Newsletter />
-      </main>
-      <Footer />
-      <WorthaftPopup />
-    </div>
-  );
+export default function Home() {
+  return <>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homeStructuredData).replace(/</g, '\u003c') }} />
+    <HomePage />
+  </>;
 }

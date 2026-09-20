@@ -193,7 +193,7 @@ export default function HangmanPage() {
 
   // Auto-focus on first keyboard button when component mounts (desktop physical keyboard support)
   useEffect(() => {
-    const firstButton = document.querySelector('button[onclick*="handleGuess"]');
+    const firstButton = document.querySelector<HTMLButtonElement>('button[onclick*="handleGuess"]');
     if (firstButton) {
       firstButton.focus();
     }

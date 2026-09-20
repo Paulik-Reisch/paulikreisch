@@ -1,4 +1,4 @@
-import { getLegalPages, getPublishedExcerpts, getArticles } from '@/lib/firestore';
+import { getLegalPages, getArticles } from '@/lib/firestore';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,16 +11,15 @@ function escapeXml(str: string): string {
     .replace(/'/g, '&apos;');
 }
 
-function toW3C(date: Date): string {
-  return date.toISOString();
+function toW3C(date: Date): string | undefined {
+  return Number.isFinite(date.getTime()) ? date.toISOString() : undefined;
 }
 
 export async function GET() {
   const baseUrl = 'https://paulikreisch.de';
 
-  const [legalPages, excerpts, articles] = await Promise.all([
+  const [legalPages, articles] = await Promise.all([
     getLegalPages().catch(() => []),
-    getPublishedExcerpts().catch(() => []),
     getArticles().catch(() => []),
   ]);
 
@@ -28,7 +27,10 @@ export async function GET() {
     { path: '/', priority: 1.0, changefreq: 'weekly' },
     { path: '/a', priority: 0.9, changefreq: 'weekly' },
     { path: '/shop', priority: 0.9, changefreq: 'weekly' },
-    { path: '/exzerpte', priority: 0.7, changefreq: 'weekly' },
+    { path: '/ueber/autoren', priority: 0.7, changefreq: 'monthly' },
+    { path: '/ueber/philipp-paulik', priority: 0.6, changefreq: 'monthly' },
+    { path: '/ueber/max-reisch', priority: 0.6, changefreq: 'monthly' },
+    { path: '/ueber/luin-schiffbauer', priority: 0.6, changefreq: 'monthly' },
     { path: '/wiki/satire-landschaft', priority: 0.8, changefreq: 'weekly' },
     { path: '/worthaft', priority: 0.8, changefreq: 'weekly' },
     { path: '/worthaft/ueber', priority: 0.6, changefreq: 'monthly' },
@@ -65,34 +67,25 @@ export async function GET() {
     { path: '/barrierefreiheit', priority: 0.3, changefreq: 'yearly' },
   ];
 
-  const now = toW3C(new Date());
 
-  const urls: Array<{ loc: string; lastmod: string; changefreq: string; priority: number }> = [];
+  const urls: Array<{ loc: string; lastmod?: string; changefreq: string; priority: number }> = [];
 
   for (const p of staticPages) {
     urls.push({
       loc: `${baseUrl}${p.path}`,
-      lastmod: p.lastmod ?? now,
+      lastmod: p.lastmod,
       changefreq: p.changefreq,
       priority: p.priority,
     });
   }
 
   for (const page of legalPages as Array<{ id: string; lastUpdated: string | Date }>) {
+    if (/^(index-old|admin|internal|login)(\/|$)/.test(page.id)) continue;
     urls.push({
       loc: `${baseUrl}/${escapeXml(page.id)}`,
       lastmod: toW3C(new Date(page.lastUpdated)),
       changefreq: 'monthly',
       priority: 0.5,
-    });
-  }
-
-  for (const ex of excerpts as Array<{ slug: string; lastUpdated: string | Date }>) {
-    urls.push({
-      loc: `${baseUrl}/exzerpt/${escapeXml(ex.slug)}`,
-      lastmod: toW3C(new Date(ex.lastUpdated)),
-      changefreq: 'weekly',
-      priority: 0.7,
     });
   }
 
@@ -115,7 +108,7 @@ export async function GET() {
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${deduped
     .map(
-      (u) => `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${u.lastmod}</lastmod>\n    <changefreq>${u.changefreq}</changefreq>\n    <priority>${u.priority}</priority>\n  </url>`
+      (u) => `  <url>\n    <loc>${u.loc}</loc>${u.lastmod ? `\n    <lastmod>${u.lastmod}</lastmod>` : ''}\n    <changefreq>${u.changefreq}</changefreq>\n    <priority>${u.priority}</priority>\n  </url>`
     )
     .join('\n')}\n</urlset>`;
 

@@ -1,0 +1,21 @@
+name: Fehler melden
+description: Einen reproduzierbaren Fehler dokumentieren
+title: "[Fehler] "
+body:
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Schritte und betroffene URL
+      description: Keine Passwörter, E-Mail-Adressen oder Kundendaten einfügen.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Erwartetes und tatsächliches Verhalten
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Browser und Gerät

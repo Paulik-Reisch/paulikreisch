@@ -19,10 +19,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Edit, MoreHorizontal, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { useActionState } from 'react';
 import { deleteLandingPageAction } from "./actions";
 import type { LandingPage } from "@/lib/firestore";
 
 export function LandingPageActions({ page }: { page: LandingPage }) {
+  const [state, action, pending] = useActionState(deleteLandingPageAction, { success: false, error: null });
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -45,7 +47,8 @@ export function LandingPageActions({ page }: { page: LandingPage }) {
             </DropdownMenuItem>
           </AlertDialogTrigger>
           <AlertDialogContent>
-            <form action={deleteLandingPageAction}>
+            <form action={action}>
+              {state.error && <p role="alert">{state.error}</p>}
               <input type="hidden" name="slug" value={page.slug} />
               <AlertDialogHeader>
                 <AlertDialogTitle>Sind Sie sicher?</AlertDialogTitle>
@@ -55,7 +58,7 @@ export function LandingPageActions({ page }: { page: LandingPage }) {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Abbrechen</AlertDialogCancel>
-                <Button type="submit" variant="destructive">Löschen</Button>
+                <Button type="submit" variant="destructive" disabled={pending}>Löschen</Button>
               </AlertDialogFooter>
             </form>
           </AlertDialogContent>

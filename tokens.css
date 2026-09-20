@@ -1,0 +1,32 @@
+/* Hallmark · macrostructure: Marquee Hero · theme: Newsprint · anchor hue: warm yellow
+ * Genre: editorial · nav/footer: existing, preserved by request
+ * Audience: German satire readers · purpose: discover books, magazine and Worthaft
+ * Pre-emit critique: P4 H4 E4 S5 R4 V4 */
+.pr-home {
+  --color-paper: oklch(97% 0.015 85);
+  --color-paper-deep: oklch(93% 0.023 85);
+  --color-ink: oklch(24% 0.015 70);
+  --color-muted: oklch(46% 0.02 70);
+  --color-rule: oklch(81% 0.025 80);
+  --color-accent: oklch(91% 0.16 95);
+  --color-rust: oklch(43% 0.13 32);
+  --color-focus: oklch(47% 0.15 250);
+  --color-game: oklch(39% 0.06 155);
+  --color-game-tile: oklch(47% 0.06 155);
+  --font-display: var(--font-lora), Georgia, serif;
+  --font-copy: var(--font-source-serif), Georgia, serif;
+  --font-label: var(--font-inter), sans-serif;
+  --space-xs: .5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-section: clamp(4.5rem, 9vw, 8rem);
+  --text-display: clamp(3.2rem, 7.4vw, 7.4rem);
+  --text-heading: clamp(2.2rem, 4.5vw, 4.4rem);
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --ease-in: cubic-bezier(.7, 0, .84, 0);
+  --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+  --dur-short: 200ms;
+  --radius-button: 3px;
+}

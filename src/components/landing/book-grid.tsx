@@ -53,7 +53,7 @@ function BookCarousel({ book }: { book: Product }) {
   const images = [book.imageSrc, book.imageBackSrc].filter(Boolean) as string[];
 
   return (
-    <div onMouseEnter={plugin.current.stop} onMouseLeave={plugin.current.play}>
+    <div onMouseEnter={plugin.current.stop} onMouseLeave={() => plugin.current.play()}>
       <Carousel setApi={setApi} plugins={[plugin.current]} className="w-full">
         <CarouselContent>
           {images.map((src, index) => (

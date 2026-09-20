@@ -30,7 +30,7 @@ import { Bar, BarChart, XAxis, YAxis, CartesianGrid, Pie, PieChart, Cell, Legend
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatDistanceToNow } from 'date-fns';
 import { de } from 'date-fns/locale';
-import type { AnalyticsEvent } from "@/lib/firestore";
+import type { SerializedAnalyticsEvent as AnalyticsEvent } from "@/lib/firestore";
 
 const pageViewChartConfig = {
   pageViews: {

@@ -1,4 +1,3 @@
-
 import { getArticleBySlug, getArticles, getSeoMetadata, type Article, getAuthorBySlug, getAuthors, type Author } from "@/lib/firestore";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/landing/header";
@@ -20,7 +19,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getSession } from "@/lib/session";
 
 type Props = {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 function ArticleCard({ article, author }: { article: Article, author: Author | null }) {
@@ -85,7 +84,7 @@ export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const slug = params.slug;
+  const slug = (await params).slug;
   const seoSlug = `a-${slug}`;
   const [article, seoData] = await Promise.all([
       getArticleBySlug(slug),
@@ -134,12 +133,10 @@ export async function generateMetadata(
       images: [...openGraphImages, ...previousImages],
       locale: seoData?.language ? seoData.language.replace('-', '_') : 'de_DE',
       type: 'article',
-      article: {
         publishedTime: seoData?.datePublished || new Date(article.publishedDate).toISOString(),
         modifiedTime: seoData?.dateModified,
         authors: authors,
         tags: article.category ? [article.category] : undefined,
-      }
     },
     twitter: {
       card: 'summary_large_image',
@@ -152,8 +149,8 @@ export async function generateMetadata(
   }
 }
 
-export default async function ArticlePage({ params }: { params: { slug: string } }) {
-  const slug = params.slug;
+export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+  const slug = (await params).slug;
   const session = await getSession();
 
   const [article, seoData, allArticles, allAuthors] = await Promise.all([

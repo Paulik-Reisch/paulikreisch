@@ -84,7 +84,11 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({
         } else {
           // No user found, initiate anonymous sign in
           // This will trigger onAuthStateChanged again once signed in.
-          initiateAnonymousSignIn(auth);
+          if (process.env.NEXT_PUBLIC_LOCAL_PREVIEW === 'true') {
+            setUserAuthState({ user: null, isUserLoading: false, userError: null });
+          } else {
+            initiateAnonymousSignIn(auth);
+          }
         }
       },
       (error) => {

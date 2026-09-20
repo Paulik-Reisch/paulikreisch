@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 
@@ -56,7 +57,7 @@ export default function CookieRichtliniePage() {
             <h2>5. Weitere Informationen</h2>
             <p>
               Ausführliche Hinweise zur Datenverarbeitung finden Sie in unserer
-              <a href="/datenschutz">Datenschutzerklärung</a>.
+              <Link href="/datenschutz">Datenschutzerklärung</Link>.
             </p>
           </article>
         </div>

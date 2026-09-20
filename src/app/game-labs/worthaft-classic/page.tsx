@@ -556,7 +556,7 @@ export default function WorthaftClassicPage() {
         <div className="text-center text-sm text-muted-foreground mb-8">
           {stats.games > 0 && (
             <>
-              Gespielt: {stats.games} | Gewonnen: {stats.wins} ({winRate}%) | Serie: {stats.streak} | Best: {stats.maxStreak}
+              Gespielt: {stats.games} | Gewonnen: {stats.wins} ({stats.games > 0 ? Math.round(stats.wins / stats.games * 100) : 0}%) | Serie: {stats.streak} | Best: {stats.maxStreak}
             </>
           )}
         </div>

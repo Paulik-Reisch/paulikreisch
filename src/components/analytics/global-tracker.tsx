@@ -11,7 +11,7 @@ export function GlobalTracker() {
   const { user, isUserLoading } = useUser();
 
   useEffect(() => {
-    if (isUserLoading || !user) {
+    if (process.env.NEXT_PUBLIC_LOCAL_PREVIEW === 'true' || isUserLoading || !user) {
       return;
     }
 

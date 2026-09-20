@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { initializeFirebase } from '@/firebase';
+import { collection, getDocs } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableHead, TableHeader, TableRow, TableCell } from '@/components/ui/table';
 import { cn } from '@/lib/utils';

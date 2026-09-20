@@ -1,5 +1,3 @@
-
-
 import { app } from "@/app/firebase";
 import { 
     getFirestore, 
@@ -296,7 +294,6 @@ async function initializeArticles() {
 }
 
 export async function getAdminArticles(): Promise<Article[]> {
-    await initializeArticles();
     const articlesCol = collection(db, 'articles');
     const q = query(articlesCol, orderBy("publishedDate", "desc"));
     const snapshot = await getDocs(q);
@@ -314,7 +311,6 @@ export async function getAdminArticles(): Promise<Article[]> {
 }
 
 export async function getArticles(): Promise<Article[]> {
-    await initializeArticles();
     const articlesCol = collection(db, 'articles');
     // Query all articles and sort by date, then filter in code.
     // This avoids the need for a composite index on 'status' and 'publishedDate'.
@@ -443,7 +439,7 @@ export async function getAuthors(): Promise<Author[]> {
     const q = query(authorsCol, orderBy("lastName", "asc"));
     const snapshot = await getDocs(q);
     if (snapshot.empty) {
-        // Create default author if none exist
+        // A read may return a local fallback, but must never seed production data.
         const defaultAuthor: Omit<Author, 'id'> = {
             slug: 'paulik-reisch',
             firstName: 'Paulik',
@@ -452,8 +448,6 @@ export async function getAuthors(): Promise<Author[]> {
             bio: 'Satire-Autoren und Meister des alltäglichen Wahnsinns.',
             websiteUrl: 'https://paulikreisch.de'
         };
-        const docRef = doc(db, 'authors', 'paulik-reisch');
-        await setDoc(docRef, defaultAuthor);
         return [{ id: 'paulik-reisch', ...defaultAuthor }];
     }
     return snapshot.docs.map(doc => ({
@@ -541,7 +535,6 @@ export async function getCountdownTarget(): Promise<Date> {
     } else {
         // Initialize if it doesn't exist
         const initialDate = new Date('2026-08-01T00:00:00');
-        await setDoc(docRef, { hw2LaunchDate: Timestamp.fromDate(initialDate) });
         return initialDate;
     }
 }
@@ -636,13 +629,7 @@ export async function getLegalPages(): Promise<LegalPage[]> {
         const legalCol = collection(db, 'legal');
         const legalSnapshot = await getDocs(legalCol);
         if (legalSnapshot.empty) {
-            // If the collection is empty, create the default pages.
-            const batch = writeBatch(db);
-            for (const page of defaultLegalPages) {
-                const pageRef = doc(db, 'legal', page.id);
-                batch.set(pageRef, { title: page.title, content: page.content, components: page.components, lastUpdated: Timestamp.now(), showTitle: page.showTitle, showDate: page.showDate });
-            }
-            await batch.commit();
+            // Return local defaults without writing during page rendering.
             return defaultLegalPages;
         }
         return legalSnapshot.docs.map(doc => {
@@ -760,7 +747,6 @@ async function initializeLandingPages() {
 }
 
 export async function getLandingPages(): Promise<LandingPage[]> {
-    await initializeLandingPages();
     const lpCol = collection(db, 'landing_pages');
     const q = query(lpCol, orderBy("title", "asc"));
     const snapshot = await getDocs(q);
@@ -977,7 +963,6 @@ async function initializeExcerpts() {
 
 
 export async function getExcerpts(): Promise<Excerpt[]> {
-    await initializeExcerpts(); // Ensure excerpts exist
     const excerptsCol = collection(db, 'excerpts');
     const q = query(excerptsCol, orderBy("chapterNumber", "asc"));
     const excerptSnapshot = await getDocs(q);
@@ -1311,7 +1296,9 @@ export async function getDeviceBreakdown(): Promise<{ type: string; count: numbe
     ];
 }
 
-export async function getRecentEvents(limit = 20): Promise<AnalyticsEvent[]> {
+export type SerializedAnalyticsEvent = Omit<AnalyticsEvent, 'timestamp'> & { timestamp: string };
+
+export async function getRecentEvents(limit = 20): Promise<SerializedAnalyticsEvent[]> {
     const eventsCol = collection(db, 'analytics_events');
     const q = query(eventsCol, orderBy('timestamp', 'desc'), where('type', '==', 'page_view'));
     const snapshot = await getDocs(q);
@@ -1322,7 +1309,7 @@ export async function getRecentEvents(limit = 20): Promise<AnalyticsEvent[]> {
             id: doc.id,
             ...data,
             timestamp: (data.timestamp as Timestamp).toDate().toISOString(),
-        } as AnalyticsEvent;
+        } as SerializedAnalyticsEvent;
     });
 }
 

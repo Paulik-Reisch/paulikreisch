@@ -1,0 +1,111 @@
+/* Hallmark · macrostructure: Marquee Hero · theme: Newsprint · tone: literary, mischievous */
+.home { background: var(--color-paper); color: var(--color-ink); font-family: var(--font-label); }
+.home h1, .home h2, .home h3 { font-style: normal; min-width: 0; overflow-wrap: anywhere; }
+.home :is(a, button, summary):focus-visible { outline: 3px solid var(--color-focus); outline-offset: 5px; }
+.wrap { width: min(100% - 48px, 1280px); margin-inline: auto; }
+.skip { position: fixed; top: 8px; left: 16px; z-index: 100; padding: 12px 20px; background: var(--color-accent); transform: translateY(-200%); }
+.skip:focus { transform: none; }
+.edition { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-block: 16px; border-bottom: 1px solid var(--color-rule); font-size: 11px; text-transform: uppercase; letter-spacing: .13em; }
+.edition span:last-child { color: var(--color-muted); }
+.hero { position: relative; isolation: isolate; min-height: 610px; display: flex; align-items: center; overflow: clip; }
+.heroImage { object-fit: cover; object-position: 66% center; z-index: -1; }
+.heroCopy { padding-block: 56px; width: 59%; }
+.eyebrow { font-size: 11px; line-height: 1.6; letter-spacing: .13em; text-transform: uppercase; font-weight: 700; margin-bottom: 24px; }
+.hero h1 { font-family: var(--font-display); font-weight: 700; font-size: var(--text-display); letter-spacing: -.065em; line-height: 1.03; margin-bottom: 28px; }
+.hero h1 span { color: var(--color-rust); }
+.intro { font-family: var(--font-copy); font-size: clamp(1.12rem, 1.6vw, 1.4rem); line-height: 1.65; max-width: 37ch; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 28px; margin-top: 30px; }
+.button { display: inline-flex; gap: 20px; align-items: center; justify-content: space-between; min-height: 48px; padding: 14px 22px; background: var(--color-ink); color: var(--color-paper); border: 1px solid var(--color-ink); border-radius: var(--radius-button); font-size: 13px; font-weight: 700; white-space: nowrap; transition: transform var(--dur-short) var(--ease-out); }
+.button:hover { transform: translateY(-3px); }
+.button:active { transform: translateY(1px); }
+.textLink { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; border-bottom: 1px solid currentColor; font-size: 13px; font-weight: 700; white-space: nowrap; }
+.textLink:hover { color: var(--color-rust); }
+.caption { font-size: 11px; color: var(--color-muted); margin-top: 20px; }
+.directory { display: flex; gap: 24px; justify-content: space-between; align-items: center; flex-wrap: wrap; padding-block: 20px; border-block: 1px solid var(--color-ink); }
+.directory p { font-family: var(--font-copy); font-size: 18px; }
+.directory nav { display: flex; flex-wrap: wrap; gap: 10px 28px; }
+.directory a { font-size: 12px; min-height: 44px; display: inline-flex; align-items: center; gap: 14px; white-space: nowrap; }
+.directory a:hover { text-decoration: underline; text-underline-offset: 5px; }
+.section { padding-block: var(--space-section); }
+.section h2 { font-family: var(--font-display); font-size: var(--text-heading); letter-spacing: -.05em; line-height: 1.12; font-weight: 700; }
+.book { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1fr); gap: clamp(36px, 7vw, 112px); align-items: center; }
+.bookVisual { position: relative; aspect-ratio: 4/4.5; background: var(--color-paper-deep); overflow: clip; }
+.bookVisual img { object-fit: cover; object-position: 77% center; }
+.bookCaption { position: absolute; inset: auto 20px 20px; background: var(--color-paper); padding: 16px; display: flex; gap: 12px; justify-content: space-between; font-size: 11px; }
+.body { color: var(--color-muted); font-family: var(--font-copy); font-size: 20px; line-height: 1.7; margin-top: 24px; }
+.facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding-block: 28px; margin-top: 24px; border-block: 1px solid var(--color-rule); }
+.facts dt { font-size: 11px; color: var(--color-muted); }
+.facts dd { margin-top: 8px; font-family: var(--font-display); font-size: 23px; }
+.manifesto { background: var(--color-ink); color: var(--color-paper); padding-block: var(--space-section); }
+.manifesto p { max-width: 1020px; font-family: var(--font-display); font-size: clamp(2rem, 4.7vw, 4.7rem); line-height: 1.25; letter-spacing: -.04em; }
+.manifesto mark { background: none; color: var(--color-accent); }
+.manifesto small { display: block; margin-top: 32px; color: var(--color-paper-deep); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
+.sectionHead { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 40px; }
+.sectionHead .eyebrow { margin-bottom: 16px; }
+.stories { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 56px; }
+.storyImage { position: relative; aspect-ratio: 16/10; overflow: clip; margin-bottom: 24px; }
+.storyImage img { object-fit: cover; transition: transform 600ms var(--ease-out); }
+.storyImage:hover img { transform: scale(1.025); }
+.storyTitle { font-family: var(--font-display); font-weight: 700; font-size: 30px; line-height: 1.25; letter-spacing: -.025em; }
+.storyTitle a:hover { text-decoration: underline; text-underline-offset: 5px; }
+.storyList { display: flex; flex-direction: column; }
+.storyList article { padding-block: 24px; border-top: 1px solid var(--color-rule); }
+.storyList article:first-child { padding-top: 0; border-top: 0; }
+.storyList .eyebrow { margin-bottom: 12px; color: var(--color-muted); }
+.storyList .storyTitle { font-size: 25px; }
+.storyList .body { font-size: 17px; margin-top: 12px; }
+.game { background: var(--color-game); color: var(--color-paper); padding-block: 72px; }
+.gameGrid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 64px; align-items: center; }
+.game h2 { font-family: var(--font-display); font-size: var(--text-heading); line-height: 1.1; letter-spacing: -.04em; }
+.game .body { color: var(--color-paper-deep); max-width: 40ch; }
+.game .button { background: var(--color-paper); color: var(--color-game); border-color: var(--color-paper); margin-top: 28px; }
+.tiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; transform: rotate(-5deg); max-width: 420px; margin-inline: auto; }
+.tile { aspect-ratio: 1; display: grid; place-items: center; font-family: var(--font-display); font-size: clamp(22px, 3.4vw, 44px); font-weight: 700; background: var(--color-game-tile); border: 1px solid var(--color-paper-deep); }
+.tile:nth-child(3n) { background: var(--color-paper); color: var(--color-game); }
+.tile:nth-child(7), .tile:nth-child(9) { background: var(--color-accent); color: var(--color-ink); }
+.gameNote { margin-top: 32px; text-align: center; font-size: 11px; }
+.people { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+.portrait { position: relative; aspect-ratio: 4/4.4; background: var(--color-paper-deep); margin-bottom: 24px; overflow: clip; }
+.portrait img { object-fit: cover; filter: grayscale(1); transition: filter 300ms var(--ease-out); }
+.portrait:hover img { filter: grayscale(0); }
+.people h3 { font-family: var(--font-display); font-size: 25px; font-weight: 700; }
+.people .body { font-size: 17px; margin-top: 10px; }
+.people .textLink { margin-top: 16px; }
+.faq { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 64px; border-top: 1px solid var(--color-rule); }
+.faq details { border-bottom: 1px solid var(--color-rule); padding-block: 24px; }
+.faq details:first-child { padding-top: 0; }
+.faq summary { cursor: pointer; font-family: var(--font-copy); font-size: 22px; line-height: 1.4; padding-right: 12px; }
+.faq details p { font-family: var(--font-copy); color: var(--color-muted); font-size: 18px; line-height: 1.7; margin-top: 16px; }
+@media (min-width: 960px) { .bookCopy { position: sticky; top: 110px; } }
+@media (max-width: 959px) { .hero { min-height: 520px; } .heroCopy { width: 62%; } .hero h1 { font-size: clamp(3rem, 7vw, 5rem); } .book, .stories { gap: 32px; } .people { gap: 20px; } .gameGrid, .faq { gap: 36px; } }
+@media (max-width: 639px) {
+  .wrap { width: calc(100% - 48px); }
+  .edition { font-size: 9px; letter-spacing: .08em; }
+  .edition span:last-child { display: none; }
+  .hero { display: block; padding-bottom: 280px; min-height: auto; }
+  .heroCopy { width: 100%; padding-block: 36px 24px; }
+  .hero h1 { font-size: clamp(3.1rem, 12vw, 4.8rem); }
+  .heroImage { top: auto !important; height: 280px !important; object-position: 90% center; }
+  .hero .eyebrow { font-size: 10px; margin-bottom: 16px; }
+  .intro { max-width: none; font-size: 18px; }
+  .actions { gap: 16px; }
+  .button { font-size: 12px; padding-inline: 16px; gap: 16px; }
+  .directory { gap: 8px; }
+  .directory p { font-size: 17px; }
+  .directory nav { gap: 8px 20px; }
+  .book, .stories, .gameGrid, .faq { grid-template-columns: minmax(0, 1fr); }
+  .bookVisual { aspect-ratio: 4/3.6; }
+  .bookCaption { font-size: 10px; inset-inline: 12px; }
+  .sectionHead { display: block; }
+  .sectionHead > .textLink { margin-top: 20px; }
+  .people { grid-template-columns: minmax(0, 1fr); gap: 44px; }
+  .portrait { aspect-ratio: 4/3.6; }
+  .facts dd { font-size: 19px; }
+  .game { padding-block: 56px; }
+  .tiles { max-width: 300px; margin-top: 12px; }
+  .tile { font-size: 28px; }
+}
+@media (prefers-reduced-motion: reduce) { .home *, .home *::before, .home *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } .button:hover, .button:active, .storyImage:hover img { transform: none; } }
+
+/* Preserve footer copy while correcting its inherited low-contrast legal text. */
+.home :global(footer + div) { color: var(--color-muted); background: var(--color-paper-deep); }

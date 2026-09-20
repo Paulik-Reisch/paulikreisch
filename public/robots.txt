@@ -1,7 +1,6 @@
 User-agent: *
 Allow: /
 
-# Curated overview for LLMs / AI agents:
-# https://paulikreisch.de/llms.txt
-
-Sitemap: https://paulikreisch.de/sitemap.xml (XML — für Suchmaschinen; die visuelle /sitemap-Seite ist HTML)
+# index-old is intentionally crawlable so its noindex metadata can be read.
+# Public content overview: https://paulikreisch.de/llms.txt
+Sitemap: https://paulikreisch.de/sitemap.xml

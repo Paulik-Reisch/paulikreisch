@@ -1,8 +1,7 @@
-
 "use client";
 
 import { Palabrotas } from "@/components/landing/palabrotas";
-import { getPalabrotas } from "@/lib/firestore";
+import { getPalabrotas, type Palabrota } from "@/lib/firestore";
 import { unstable_noStore as noStore } from 'next/cache';
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";

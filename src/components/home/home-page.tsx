@@ -1,0 +1,110 @@
+import Image from 'next/image';
+import Link from 'next/link';
+import { ArrowDown, ArrowRight, ArrowUpRight } from 'lucide-react';
+import { Header } from '@/components/landing/header';
+import { Footer } from '@/components/landing/footer';
+import { HomeMotion } from './home-motion';
+import { homeBook, homeFaqs, homePeople } from '@/lib/home-content';
+import styles from './home.module.css';
+import '../../../tokens.css';
+
+const arrow = <ArrowUpRight size={17} aria-hidden="true" />;
+
+export function HomePage() {
+  return (
+    <div className={`pr-home ${styles.home}`}>
+      <a className={styles.skip} href="#inhalt">Zum Inhalt springen</a>
+      <Header />
+      <main id="inhalt" tabIndex={-1}>
+        <div className={`${styles.wrap} ${styles.edition}`}>
+          <span>Paulik & Reisch · Literatur mit Nebenwirkungen</span>
+          <span>Unabhängige Stimmen. Ziemlich deutsche Zustände.</span>
+        </div>
+        <section className={styles.hero} aria-labelledby="home-title">
+          <Image className={styles.heroImage} src="/hero-ab/hero-01-papier.jpg" alt="Das Buch Hallo Welt mit illustriertem Cover auf liniertem Papier" fill priority sizes="100vw" data-home-parallax />
+          <div className={styles.wrap}>
+            <div className={styles.heroCopy}>
+              <p className={styles.eyebrow}>Bücher, Satire & ein bisschen Widerstand</p>
+              <h1 id="home-title">Schule aus.<br /><span>Satire an.</span></h1>
+              <p className={styles.intro}>Manches kann man nur mit Humor ertragen. Wir haben ein Buch daraus gemacht. Und dann einfach weitergeschrieben.</p>
+              <div className={styles.actions}>
+                <Link href="/shop" className={styles.button}>„Hallo Welt“ entdecken {arrow}</Link>
+                <a href="#entdecken" className={styles.textLink}>Weiterblättern <ArrowDown size={15} aria-hidden="true" /></a>
+              </div>
+              <p className={styles.caption}>Von Philipp Paulik & Maximilian Reisch</p>
+            </div>
+          </div>
+        </section>
+        <div className={`${styles.wrap} ${styles.directory}`}>
+          <p>Für alle, die nicht alles ernst nehmen.</p>
+          <nav aria-label="Auf dieser Seite">
+            <a href="#buch">Das Buch <ArrowDown size={13} aria-hidden="true" /></a>
+            <a href="#entdecken">Lesestoff <ArrowDown size={13} aria-hidden="true" /></a>
+            <a href="#worthaft">Worthaft <ArrowDown size={13} aria-hidden="true" /></a>
+            <a href="#authors">Die Köpfe <ArrowDown size={13} aria-hidden="true" /></a>
+          </nav>
+        </div>
+        <section id="buch" aria-labelledby="book-title" className={`${styles.wrap} ${styles.section} ${styles.book}`}>
+          <figure className={styles.bookVisual}>
+            <Image src="/hero-ab/hero-03-tafel.jpg" alt="Hallo Welt vor einer Kreidetafel: ein Buch über den ganz normalen Schulwahnsinn" fill sizes="(max-width: 639px) 90vw, 45vw" />
+            <figcaption className={styles.bookCaption}><span>Hallo Welt · Das Debüt</span><span>Satire statt Stundenplan</span></figcaption>
+          </figure>
+          <div className={styles.bookCopy}>
+            <p className={styles.eyebrow}>Hallo Welt · Schulsatire</p>
+            <h2 id="book-title">Nicht für die Schule.<br />Fürs Überleben.</h2>
+            <p className={styles.body}>Vertretungsstunden, marode Klassenzimmer und die hohe Kunst der Schulbürokratie. „Hallo Welt“ nimmt den ganz normalen Wahnsinn auseinander — böse, herzlich und erschreckend vertraut.</p>
+            <p className={styles.body}>Eine satirische Abrechnung. Und eine Liebeserklärung an die Geschichten, die nach dem letzten Klingeln bleiben.</p>
+            <dl className={styles.facts}>
+              <div><dt>Umfang</dt><dd>{homeBook.pages} Seiten</dd></div>
+              <div><dt>Lesestoff</dt><dd>{homeBook.chapters} Kapitel</dd></div>
+              <div><dt>Haltung</dt><dd>Ungeschönt</dd></div>
+            </dl>
+            <div className={styles.actions}><Link className={styles.button} href="/shop">Zum Buch & zur Leseprobe {arrow}</Link></div>
+          </div>
+        </section>
+        <aside className={styles.manifesto} aria-label="Unsere Haltung">
+          <div className={styles.wrap}>
+            <p>Die Wirklichkeit liefert den Stoff.<br />Wir setzen nur noch <mark>einen drauf.</mark></p>
+            <small>Paulik & Reisch · Satire über Schule, Bürokratie und Alltag</small>
+          </div>
+        </aside>
+        <section id="entdecken" aria-labelledby="discover-title" className={`${styles.wrap} ${styles.section}`}>
+          <div className={styles.sectionHead}>
+            <div><p className={styles.eyebrow}>Zum Weiterlesen</p><h2 id="discover-title">Der Wahnsinn hat Methode.</h2></div>
+            <Link className={styles.textLink} href="/a">Ins Satire-Magazin {arrow}</Link>
+          </div>
+          <div className={styles.stories}>
+            <article>
+              <div className={styles.storyImage}><Image src="/hero-mobile/32-tafel-kreide.jpg" alt="Beschriebene Schultafel als Sinnbild für den Schulalltag" fill sizes="(max-width: 639px) 90vw, 50vw" /></div>
+              <p className={styles.eyebrow}>Schule & Gesellschaft</p>
+              <h3 className={styles.storyTitle}><Link href="/wiki/bildungskritik-satire">Wenn Lernen zur Verwaltungssache wird.</Link></h3>
+              <p className={styles.body}>Noten, Normen, nächste Reform: ein Blick auf das System, in dem wir groß werden. Und auf das, was Satire daran sichtbar macht.</p>
+              <Link className={styles.textLink} href="/wiki/bildungskritik-satire">Bildungskritik lesen {arrow}</Link>
+            </article>
+            <div className={styles.storyList}>
+              <article><p className={styles.eyebrow}>Sprache & Bürokratie</p><h3 className={styles.storyTitle}><Link href="/ratgeber/beamtendeutsch">Das ist kein Satz. Das ist ein Verwaltungsakt.</Link></h3><p className={styles.body}>Beamtendeutsch verstehen — sofern die zuständige Stelle nichts dagegen hat.</p><Link className={styles.textLink} href="/ratgeber/beamtendeutsch">Weiterlesen {arrow}</Link></article>
+              <article><p className={styles.eyebrow}>Schreiben & Satire</p><h3 className={styles.storyTitle}><Link href="/ratgeber/satire-schreiben">Aus einer Beobachtung wird eine Pointe.</Link></h3><p className={styles.body}>Wie Übertreibung, Ironie und der richtige Blickwinkel zusammenfinden.</p><Link className={styles.textLink} href="/ratgeber/satire-schreiben">Zum Schreibratgeber {arrow}</Link></article>
+              <article><p className={styles.eyebrow}>Für Menschen mit Humor</p><h3 className={styles.storyTitle}><Link href="/ratgeber/geschenk-lehrer">Ein Geschenk ohne Korrekturbedarf.</Link></h3><Link className={styles.textLink} href="/ratgeber/geschenk-lehrer">Geschenkideen entdecken {arrow}</Link></article>
+            </div>
+          </div>
+        </section>
+        <section id="worthaft" aria-labelledby="game-title" className={styles.game}>
+          <div className={`${styles.wrap} ${styles.gameGrid}`}>
+            <div><p className={styles.eyebrow}>Worthaft · Das tägliche Worträtsel</p><h2 id="game-title">Große Pause.<br />Fünf Buchstaben.</h2><p className={styles.body}>Ein Wort. Sechs Versuche. Jeden Tag ein neues Rätsel. Für alle, die auch in der Pause nicht ganz abschalten können.</p><Link href="/worthaft" className={styles.button}>Worthaft spielen <ArrowRight size={18} aria-hidden="true" /></Link><p className={styles.caption} style={{ color: 'inherit' }}>Kostenlos · auf Deutsch · Spielstand lokal im Browser</p></div>
+            <div><div className={styles.tiles} aria-hidden="true">{'PAUSEWORTESATZE'.split('').map((letter, i) => <span className={styles.tile} key={i}>{letter}</span>)}</div><p className={styles.gameNote}>Kleine Denkpause. Ganz ohne Benotung.</p></div>
+          </div>
+        </section>
+        <section id="authors" aria-labelledby="people-title" className={`${styles.wrap} ${styles.section}`}>
+          <div className={styles.sectionHead}><div><p className={styles.eyebrow}>Die Köpfe dahinter</p><h2 id="people-title">Nicht ganz unbeteiligt.</h2></div><Link className={styles.textLink} href="/ueber/autoren">Über uns {arrow}</Link></div>
+          <div className={styles.people}>{homePeople.map(person => <article key={person.name}><div className={styles.portrait}><Image src={person.image} alt={`Porträt von ${person.name}`} fill sizes="(max-width: 639px) 90vw, 30vw" /></div><p className={styles.eyebrow}>{person.role}</p><h3>{person.name}</h3><p className={styles.body}>{person.bio}</p><Link className={styles.textLink} href={person.href} aria-label={`Mehr über ${person.name}`}>Kennenlernen {arrow}</Link></article>)}</div>
+        </section>
+        <section aria-labelledby="faq-title" className={`${styles.wrap} ${styles.section} ${styles.faq}`}>
+          <div><p className={styles.eyebrow}>Kurz geklärt</p><h2 id="faq-title">Noch eine<br />Wortmeldung?</h2><p className={styles.body}>Die häufigsten Fragen. Diesmal mit ernst gemeinten Antworten.</p></div>
+          <div>{homeFaqs.map(faq => <details key={faq.question}><summary>{faq.question}</summary><p>{faq.answer}</p></details>)}</div>
+        </section>
+      </main>
+      <Footer />
+      <HomeMotion />
+    </div>
+  );
+}
