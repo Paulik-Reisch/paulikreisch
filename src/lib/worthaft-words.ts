@@ -749,6 +749,7 @@ export const WORDS = [
     "hauen",
     "wales",
     "clown",
+    "drang",
     "kerbe",
     "salbe",
     "blüte",
