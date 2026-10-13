@@ -967,6 +967,7 @@ export const WORDS = [
     "wille",
     "wegen",
     "inder",
+    "telos",
     "pflug",
     "hebel",
     "bravo",
