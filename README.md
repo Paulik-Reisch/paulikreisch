@@ -48,7 +48,7 @@ Die neue Startseite wird serverseitig ausgegeben. Nur Navigation, Formulare und 
 
 - **Quality** prüft Code, Typen, Build, Abhängigkeiten und Browserdarstellung.
 - **Dependabot** bereitet wöchentlich Paket- und Actions-Updates vor.
-- **CodeQL** ist für öffentliche Repositories vorbereitet; private benötigen GitHub Code Security.
+- **Security** prüft Produktionsabhängigkeiten und führt Semgrep-Quellcode-/Secret-Scans auch im privaten Repository aus; ohne CodeQL-Lizenz oder Semgrep-Konto.
 - **CODEOWNERS**, Pull-Request-Vorlage und Fehlerformular strukturieren Änderungen.
 
 Die Konfiguration wird durch den Push aktiv. Branch Protection sollte die `quality`-Prüfung und einen Review verlangen. Die Quality-Workflow-Datei selbst deployt nicht; die bestehende Firebase-GitHub-Anbindung kann Änderungen an `main` veröffentlichen. Kein automatisches Mergen von Updates.
