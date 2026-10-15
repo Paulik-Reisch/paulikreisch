@@ -54,7 +54,16 @@ export default function TransparenzPage() {
               Bei offensichtlich künstlerischen, kreativen, satirischen oder fiktionalen Werken beschränken
               sich die Transparenzpflichten auf eine Offenlegung in geeigneter Weise, die die Darstellung nicht
               behindert (Art. 50 Abs. 4 Satz 4 KI-Verordnung). Sämtliche Beiträge verfolgen ausschließlich
-              einen satirischen, unterhaltsamen Zweck.
+              einen satirischen, unterhaltsamen Zweck und haben nicht zum Ziel, Personen oder
+              Institutionen zu diffamieren.
+            </p>
+
+            <h2>6. Weitere Hinweise</h2>
+            <p>
+              Die satirische &quot;Hallo Welt&quot;-Bücherserie ist eine Idee und Kreation von Philipp Paulik
+              (Autor), Maximilian Reisch (Autor), Luin Schiffbauer (Illustrator) und weiteren Mitwirkenden.
+              Veröffentlicht und produziert durch Kindle Direct Publishing (KDP) der Amazon Distribution GmbH,
+              Leipzig sowie ggf. weiteren Verlags- und Produktionspartnern.
             </p>
           </article>
         </div>

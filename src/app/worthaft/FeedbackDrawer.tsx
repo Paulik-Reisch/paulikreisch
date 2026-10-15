@@ -9,21 +9,21 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { initializeFirebase } from '@/firebase';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { ThumbsUp, ThumbsDown, Check, MessageSquare, ShieldCheck } from 'lucide-react';
+import { getWorthaftVoteDescription, type WorthaftVote } from '@/lib/worthaft-feedback';
 
-type Vote = 'up' | 'down' | null;
+type Vote = WorthaftVote | null;
 type Step = 'ask' | 'details' | 'thanks';
 
 const REASONS = [
-  'Es ist ein Anglizismus / nicht deutsch',
-  'Es war zu schwer',
-  'Es ist kein Wort',
-  'Es war zu leicht',
-  'Es ist ein Eigenname (Person, Ort oder Marke)',
-  'Es ist veraltet oder wird kaum noch verwendet',
-  'Es ist vulgär oder unangemessen',
-  'Es ist zu speziell / ein Fachbegriff',
-  'Die Schreibweise ist uneindeutig (z. B. ß/ss, Umlaute)',
-  'Es ist im Plural',
+  'ist kein (deutsches) Wort.',
+  'ist zu schwer.',
+  'ist zu leicht.',
+  'ist ein Eigenname.',
+  'ist veraltet.',
+  'ist vulgär oder unangemessen.',
+  'ist zu speziell / ein Fachbegriff.',
+  'hat eine uneindeutige Schreibweise.',
+  'steht im Plural.',
 ];
 
 function getTodayString() {
@@ -111,7 +111,7 @@ export default function FeedbackDrawer({
             <ShieldCheck className="h-4 w-4" />
           </span>
           <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
-            Worthaft Feedback
+            Feedback
           </p>
         </div>
       )}
@@ -125,15 +125,8 @@ export default function FeedbackDrawer({
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.18 }}
           >
-            <h2 className="font-headline mb-1.5 text-lg font-extrabold leading-snug sm:text-xl">
-              Wir bemühen uns, Worthaft zu verbessern!
-            </h2>
-            <p className="mb-5 text-sm text-muted-foreground">
-              Gib uns deine Meinung zum heutigen Wort.
-            </p>
-
             <div className="mb-6 rounded-md bg-muted p-4 text-center">
-              <p className="mb-3 text-sm text-foreground/80">War das heutige Wort gut?</p>
+              <p className="mb-3 text-sm text-foreground/80">Wie war das heutige Wort?</p>
               <div className="flex items-center justify-center gap-1.5">
                 {solution.split('').map((letter, i) => (
                   <div
@@ -194,7 +187,7 @@ export default function FeedbackDrawer({
                 {vote === 'up' ? <ThumbsUp className="h-5 w-5" /> : <ThumbsDown className="h-5 w-5" />}
               </span>
               <p className="text-sm">
-                Dein Wort war <span className="font-bold uppercase tracking-wide">{solution}</span>
+                Du findest <span className="font-bold uppercase tracking-wide">{solution}</span> {vote && getWorthaftVoteDescription(vote)}.
               </p>
               <button
                 onClick={() => setStep('ask')}
@@ -206,8 +199,8 @@ export default function FeedbackDrawer({
 
             {vote === 'down' && (
               <div className="mb-4">
-                <h3 className="mb-0.5 text-base font-bold font-headline">Warum war das Wort nicht gut?</h3>
-                <p className="mb-3 text-xs text-muted-foreground">Mehrfachauswahl möglich</p>
+                <h3 className="mb-0.5 text-base font-bold font-headline">Das Wort ...</h3>
+                <p className="mb-3 text-xs text-muted-foreground">(Mehrfachauswahl möglich)</p>
                 <div className="max-h-[260px] space-y-2 overflow-y-auto pr-1">
                   {REASONS.map((reason) => {
                     const selected = reasons.has(reason);
@@ -242,7 +235,7 @@ export default function FeedbackDrawer({
               disabled={!canSubmit || isSending}
               className="w-full rounded-full"
             >
-              {isSending ? 'Wird gesendet...' : 'Feedback senden'}
+              {isSending ? 'Wird gesendet ...' : 'Feedback senden'}
             </Button>
           </motion.div>
         )}
@@ -259,9 +252,6 @@ export default function FeedbackDrawer({
               <Check className="h-8 w-8" />
             </span>
             <h2 className="font-headline mb-1.5 text-xl font-extrabold">Danke für dein Feedback!</h2>
-            <p className="mb-6 max-w-[280px] text-sm text-muted-foreground">
-              Du hilfst uns dabei, Worthaft jeden Tag ein bisschen besser zu machen.
-            </p>
             <Button variant="outline" onClick={() => (onClose ? onClose() : onOpenChange(false))} className="rounded-full px-6">
               Schließen
             </Button>
@@ -277,7 +267,7 @@ export default function FeedbackDrawer({
         <SheetContent side="bottom" className="p-0 pt-0 max-h-[90vh] overflow-y-auto rounded-t-lg">
           <div className="p-6">
             <SheetHeader className="text-left sr-only">
-              <SheetTitle>Worthaft Feedback</SheetTitle>
+              <SheetTitle>Feedback</SheetTitle>
               <SheetDescription>Bewerte das heutige Wort</SheetDescription>
             </SheetHeader>
             {content}
@@ -292,7 +282,7 @@ export default function FeedbackDrawer({
       <DialogContent className="p-0 max-w-sm rounded-t-lg overflow-hidden">
         <div className="p-6">
           <DialogHeader className="sr-only">
-            <DialogTitle>Worthaft Feedback</DialogTitle>
+            <DialogTitle>Feedback</DialogTitle>
             <DialogDescription>Bewerte das heutige Wort</DialogDescription>
           </DialogHeader>
           {content}

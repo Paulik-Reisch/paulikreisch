@@ -9,13 +9,13 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'Worthaft: Das tägliche deutsche Worträtsel (Wordle auf Deutsch) | Paulik & Reisch',
-  description: 'Worthaft: Das tägliche deutsche Worträtsel — 5 Buchstaben, 6 Versuche, jeden Tag neu. Der Wordle auf Deutsch. Starte jetzt — 1 Minute, Sucht inklusive.',
-  applicationName: 'Worthaft — Paulik & Reisch',
+  title: 'Worthaft | Paulik & Reisch',
+  description: 'Worthaft: Das tägliche deutsche Worträtsel',
+  applicationName: 'Worthaft | Paulik & Reisch',
   alternates: { canonical: '/worthaft' },
   openGraph: {
-    title: 'Worthaft: Das tägliche deutsche Worträtsel (Wordle auf Deutsch)',
-    description: 'Wordle auf Deutsch — 5 Buchstaben, 6 Versuche, täglich neu. Wie viele brauchst du? Jetzt spielen!',
+    title: 'Worthaft',
+    description: '',
     url: 'https://paulikreisch.de/worthaft',
     images: [
       {
@@ -25,6 +25,10 @@ export const metadata: Metadata = {
         alt: 'Worthaft – Das Paulik & Reisch Worträtsel',
       },
     ],
+  },
+  twitter: {
+    title: 'Worthaft',
+    description: '',
   },
   icons: {
     icon: '/worthaft_favicon.ico',

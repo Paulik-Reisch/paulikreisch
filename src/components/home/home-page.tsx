@@ -26,7 +26,7 @@ export function HomePage() {
             <div className={styles.heroCopy}>
               <p className={styles.eyebrow}>Bücher, Satire & ein bisschen Widerstand</p>
               <h1 id="home-title">Schule aus.<br /><span>Satire an.</span></h1>
-              <p className={styles.intro}>Manches kann man nur mit Humor ertragen. Wir haben ein Buch daraus gemacht. Und dann einfach weitergeschrieben.</p>
+              <p className={styles.intro}>Manches kann man nur mit Humor ertragen. Wir haben ein Buch daraus gemacht – und dann einfach weitergeschrieben.</p>
               <div className={styles.actions}>
                 <Link href="/shop" className={styles.button}>„Hallo Welt“ entdecken {arrow}</Link>
                 <a href="#entdecken" className={styles.textLink}>Weiterblättern <ArrowDown size={15} aria-hidden="true" /></a>
@@ -53,7 +53,7 @@ export function HomePage() {
             <p className={styles.eyebrow}>Hallo Welt · Schulsatire</p>
             <h2 id="book-title">Nicht für die Schule.<br />Fürs Überleben.</h2>
             <p className={styles.body}>Vertretungsstunden, marode Klassenzimmer und die hohe Kunst der Schulbürokratie. „Hallo Welt“ nimmt den ganz normalen Wahnsinn auseinander — böse, herzlich und erschreckend vertraut.</p>
-            <p className={styles.body}>Eine satirische Abrechnung. Und eine Liebeserklärung an die Geschichten, die nach dem letzten Klingeln bleiben.</p>
+            <p className={styles.body}>Eine satirische Abrechnung und Liebeserklärung an die Geschichten, die nach dem letzten Klingeln bleiben.</p>
             <dl className={styles.facts}>
               <div><dt>Umfang</dt><dd>{homeBook.pages} Seiten</dd></div>
               <div><dt>Lesestoff</dt><dd>{homeBook.chapters} Kapitel</dd></div>
@@ -71,14 +71,14 @@ export function HomePage() {
         <section id="entdecken" aria-labelledby="discover-title" className={`${styles.wrap} ${styles.section}`}>
           <div className={styles.sectionHead}>
             <div><p className={styles.eyebrow}>Zum Weiterlesen</p><h2 id="discover-title">Der Wahnsinn hat Methode.</h2></div>
-            <Link className={styles.textLink} href="/a">Ins Satire-Magazin {arrow}</Link>
+            <Link className={styles.textLink} href="/a">Zum Satire-Magazin {arrow}</Link>
           </div>
           <div className={styles.stories}>
             <article>
               <div className={styles.storyImage}><Image src="/hero-mobile/32-tafel-kreide.jpg" alt="Beschriebene Schultafel als Sinnbild für den Schulalltag" fill sizes="(max-width: 639px) 90vw, 50vw" /></div>
               <p className={styles.eyebrow}>Schule & Gesellschaft</p>
               <h3 className={styles.storyTitle}><Link href="/wiki/bildungskritik-satire">Wenn Lernen zur Verwaltungssache wird.</Link></h3>
-              <p className={styles.body}>Noten, Normen, nächste Reform: ein Blick auf das System, in dem wir groß werden. Und auf das, was Satire daran sichtbar macht.</p>
+              <p className={styles.body}>Noten, Normen, nächste Reform: ein Blick auf das System, in dem wir groß werden.</p>
               <Link className={styles.textLink} href="/wiki/bildungskritik-satire">Bildungskritik lesen {arrow}</Link>
             </article>
             <div className={styles.storyList}>
@@ -90,8 +90,8 @@ export function HomePage() {
         </section>
         <section id="worthaft" aria-labelledby="game-title" className={styles.game}>
           <div className={`${styles.wrap} ${styles.gameGrid}`}>
-            <div><p className={styles.eyebrow}>Worthaft · Das tägliche Worträtsel</p><h2 id="game-title">Große Pause.<br />Fünf Buchstaben.</h2><p className={styles.body}>Ein Wort. Sechs Versuche. Jeden Tag ein neues Rätsel. Für alle, die auch in der Pause nicht ganz abschalten können.</p><Link href="/worthaft" className={styles.button}>Worthaft spielen <ArrowRight size={18} aria-hidden="true" /></Link><p className={styles.caption} style={{ color: 'inherit' }}>Kostenlos · auf Deutsch · Spielstand lokal im Browser</p></div>
-            <div><div className={styles.tiles} aria-hidden="true">{'PAUSEWORTESATZE'.split('').map((letter, i) => <span className={styles.tile} key={i}>{letter}</span>)}</div><p className={styles.gameNote}>Kleine Denkpause. Ganz ohne Benotung.</p></div>
+            <div><p className={styles.eyebrow}>Worthaft · Das tägliche Worträtsel</p><h2 id="game-title">Große Pause.<br />Fünf Buchstaben.</h2><p className={styles.body}>Sechs Versuche, ein Wort zu erraten.</p><Link href="/worthaft" className={styles.button}>Worthaft spielen <ArrowRight size={18} aria-hidden="true" /></Link><p className={styles.caption} style={{ color: 'inherit' }}>Kostenlos · auf Deutsch · Spielstand lokal im Browser</p></div>
+            <div><div className={styles.tiles} aria-hidden="true">{'PAUSEWORTESATZE'.split('').map((letter, i) => <span className={styles.tile} key={i}>{letter}</span>)}</div></div>
           </div>
         </section>
         <section id="authors" aria-labelledby="people-title" className={`${styles.wrap} ${styles.section}`}>
@@ -99,7 +99,7 @@ export function HomePage() {
           <div className={styles.people}>{homePeople.map(person => <article key={person.name}><div className={styles.portrait}><Image src={person.image} alt={`Porträt von ${person.name}`} fill sizes="(max-width: 639px) 90vw, 30vw" /></div><p className={styles.eyebrow}>{person.role}</p><h3>{person.name}</h3><p className={styles.body}>{person.bio}</p><Link className={styles.textLink} href={person.href} aria-label={`Mehr über ${person.name}`}>Kennenlernen {arrow}</Link></article>)}</div>
         </section>
         <section aria-labelledby="faq-title" className={`${styles.wrap} ${styles.section} ${styles.faq}`}>
-          <div><p className={styles.eyebrow}>Kurz geklärt</p><h2 id="faq-title">Noch eine<br />Wortmeldung?</h2><p className={styles.body}>Die häufigsten Fragen. Diesmal mit ernst gemeinten Antworten.</p></div>
+          <div><p className={styles.eyebrow}>Kurz erklärt</p><h2 id="faq-title">Noch eine<br />Wortmeldung?</h2><p className={styles.body}>Die häufigsten Fragen. Diesmal mit ernst gemeinten Antworten.</p></div>
           <div>{homeFaqs.map(faq => <details key={faq.question}><summary>{faq.question}</summary><p>{faq.answer}</p></details>)}</div>
         </section>
       </main>

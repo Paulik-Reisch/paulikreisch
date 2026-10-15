@@ -18,10 +18,9 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { WORDS } from '@/lib/worthaft-words';
-import { Share2, ArrowRight, HelpCircle, Volume2, VolumeX, ArrowLeft, X, Flame, Settings as Gear, Music, Info, Sparkles } from 'lucide-react';
+import { Share2, ArrowRight, Delete, HelpCircle, Volume2, VolumeX, Flame, Settings as Gear, Music, Info, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { WorthaftIcon } from '@/components/ui/icons/worthaft-icon';
 import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
@@ -31,6 +30,14 @@ import FeedbackDrawer from './FeedbackDrawer';
 import { initializeFirebase } from '@/firebase';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import confetti from 'canvas-confetti';
+import { getWorthaftKeyDimensions, normalizeWorthaftSliderValue } from '@/lib/worthaft-settings';
+import { canInteractWithWorthaftGame } from '@/lib/worthaft-game-state';
+import { isWorthaftAntiWord } from '@/lib/worthaft-anti-words';
+import {
+  createInvalidWorthaftWord,
+  getInvalidWordVoteAction,
+  type InvalidWorthaftWord,
+} from '@/lib/worthaft-invalid-word';
 
 // ---- Fireworks — 5s beidseitig, ohne Button, nur on Win ----
 const fireWorthaftFireworks = () => {
@@ -47,35 +54,22 @@ const fireWorthaftFireworks = () => {
   }, 250);
 };
 
-// ---- Info Banner dismissed state ----
-const INFO_BANNER_DISMISSED_KEY = 'worthaft-info-banner-dismissed';
-
-const isInfoBannerDismissed = (): boolean => {
-  if (typeof window === 'undefined') return false;
-  return localStorage.getItem(INFO_BANNER_DISMISSED_KEY) === 'true';
-};
-
-const dismissInfoBanner = () => {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(INFO_BANNER_DISMISSED_KEY, 'true');
-};
-
 // ---- Persisted Worthaft settings ----
 type WorthaftSettings = {
-  keyWidth: number;    // 0..100 -> scales key width (5 steps: 0, 25, 50, 75, 100)
-  keyHeight: number;   // 0..100 -> scales key height (5 steps: 0, 25, 50, 75, 100)
-  keySize: number;     // 0..100 -> scales key font size (5 steps: 0, 25, 50, 75, 100)
-  keyRadius: number;   // 0..100 -> border-radius px (5 steps: 0, 25, 50, 75, 100)
+  keyWidth: number;
+  keyHeight: number;
+  keySize: number;
+  keyRadius: number;
   hotTipEnabled: boolean;
   musicEnabled: boolean;
   animationsEnabled: boolean;
 };
 
 const DEFAULT_SETTINGS: WorthaftSettings = {
-  keyWidth: 50,    // step 2 of 5 (0, 25, 50, 75, 100)
-  keyHeight: 50,   // step 2 of 5
-  keySize: 50,     // step 2 of 5
-  keyRadius: 50,   // step 2 of 5 (was 35, now mapped to 5-step scale)
+  keyWidth: 2,
+  keyHeight: 2,
+  keySize: 2,
+  keyRadius: 2,
   hotTipEnabled: true,
   musicEnabled: false,
   animationsEnabled: true,
@@ -85,7 +79,15 @@ const loadSettings = (): WorthaftSettings => {
   try {
     const raw = localStorage.getItem('worthaft-settings');
     if (!raw) return DEFAULT_SETTINGS;
-    return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
+    const savedSettings = JSON.parse(raw);
+    return {
+      ...DEFAULT_SETTINGS,
+      ...savedSettings,
+      keyWidth: normalizeWorthaftSliderValue(savedSettings.keyWidth),
+      keyHeight: normalizeWorthaftSliderValue(savedSettings.keyHeight),
+      keySize: normalizeWorthaftSliderValue(savedSettings.keySize),
+      keyRadius: normalizeWorthaftSliderValue(savedSettings.keyRadius),
+    };
   } catch {
     return DEFAULT_SETTINGS;
   }
@@ -172,11 +174,9 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
     else onChar(key);
   };
 
-  // Map slider value (0..100, 5 steps) to a px-ish scale.
-    const widthPx = 26 + (settings.keyWidth / 100) * 24;    // ~26px..50px
-    const heightPx = 44 + (settings.keyHeight / 100) * 30;   // ~44px..74px
-    const fontPx = 12 + (settings.keySize / 100) * 10;       // ~12px..22px
-    const radiusPx = (settings.keyRadius / 100) * 24;         // ~0px..24px
+    const { width: widthPx, height: heightPx } = getWorthaftKeyDimensions(settings.keyWidth, settings.keyHeight);
+    const fontPx = 12 + (settings.keySize / 4) * 10;
+    const radiusPx = (settings.keyRadius / 4) * 24;
 
   const keyStyle = (extra?: string): React.CSSProperties => ({
     width: `${widthPx}px`,
@@ -206,7 +206,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
                   getStatusClass(key)
                 )}
               >
-                {key === 'DELETE' ? <ArrowLeft className="h-5 w-5" /> : <span>{key}</span>}
+                {key === 'DELETE' ? <Delete className="h-5 w-5" /> : key === 'SEND' ? <ArrowRight className="h-5 w-5" /> : <span>{key}</span>}
               </Button>
             );
           })}
@@ -217,7 +217,6 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
       <div className="flex flex-row justify-center gap-1.5 w-full">
         {['SEND', 'Ü', 'Ö', 'Ä', 'ẞ', 'DELETE'].map(key => {
           const isSend = key === 'SEND';
-          const isDelete = key === 'DELETE';
           const sendStyle: React.CSSProperties = {
             ...keyStyle(),
             width: `${widthPx * 1.55}px`,
@@ -226,6 +225,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
             <Button
               key={key}
               onClick={() => handleKeyClick(key)}
+              aria-label={isSend ? 'Wort prüfen' : key === 'DELETE' ? 'Rücktaste' : undefined}
               variant="outline"
               style={isSend ? sendStyle : keyStyle()}
               className={cn(
@@ -233,7 +233,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
                 getStatusClass(key)
               )}
             >
-              {key === 'DELETE' ? <ArrowLeft className="h-5 w-5" /> : <span>{key}</span>}
+              {key === 'DELETE' ? <Delete className="h-5 w-5" /> : isSend ? <ArrowRight className="h-5 w-5" /> : <span>{key}</span>}
             </Button>
           );
         })}
@@ -324,6 +324,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
             const isJokerCell = jokerPositionInFile && jokerPositionInFile.index === colIndex && isCurrentRow;
             const status: LetterStatus = guessInfo?.statuses[colIndex] || 'empty';
             const isJokerProtected = isCurrentRow && jokerPosition && jokerPosition.guessIndex === guesses.length && colIndex === jokerPosition.letterIndex;
+            const isCellEditable = canInteractWithWorthaftGame(gameState) && isCurrentRow && !isJokerProtected;
 
             const anims = settings.animationsEnabled;
             const isSubmittedRow = !!guessInfo;
@@ -354,16 +355,14 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
                 <motion.div
                     key={colIndex}
                     onClick={() => {
-                        if (isCurrentRow && !isJokerProtected) {
-                           onCellClick(colIndex);
-                       }
-                   }}
+                        if (isCellEditable) onCellClick(colIndex);
+                    }}
                     className={cn(
                         'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold',
                         getStatusClass(status),
-                        isCurrentRow && !isJokerProtected && 'cursor-pointer',
+                        isCellEditable && 'cursor-pointer',
                         isCurrentRow && hasLetter && !isJokerProtected && 'border-muted-foreground',
-                        isCurrentRow && activeIndex === colIndex && !isJokerProtected && 'border-primary ring-2 ring-primary scale-105',
+                        isCellEditable && activeIndex === colIndex && 'border-primary ring-2 ring-primary scale-105',
                         anims && isSubmittedRow && 'flip-in'
                     )}
                     style={{
@@ -454,26 +453,9 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
         <div className="sm:justify-center flex flex-col gap-2">
                     <Button size="lg" onClick={shareResults} className="w-full">
                         <Share2 className="mr-3 h-5 w-5"/>
-                        Jetzt einen Freund herausfordern!
+                        Teilen
                     </Button>
                 </div>
-
-        {/* Worthaft-Loop: Retention → Buch CTA */}
-        <div className="mt-6 rounded-xl border bg-amber-50/70 dark:bg-amber-950/15 border-amber-200 dark:border-amber-900/30 p-4 text-left">
-          <p className="text-xs font-bold tracking-widest uppercase text-amber-700 dark:text-amber-300">Lesestoff danach</p>
-          <div className="flex gap-3 mt-2">
-            <img src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-hw1_900px.png?alt=media&token=42ce90a3-ed34-49d2-8e09-5258d0dfc484" alt="Hallo Welt" className="w-14 h-20 object-cover rounded-md shadow-sm shrink-0" loading="lazy" />
-            <div className="flex-1 min-w-0">
-              <p className="font-bold text-sm leading-tight">Hol dir das Buch für danach</p>
-              <p className="text-xs text-muted-foreground mt-1 leading-snug">106 Seiten Satire — die perfekte Belohnung nach dem täglichen Rätsel. 10,99 € auf Amazon. 4.8★</p>
-              <div className="flex flex-wrap gap-2 mt-3">
-                <Link href="/shop"><Button size="sm" className="gap-1">Zum Shop — 10,99 € <ArrowRight className="h-3.5 w-3.5" /></Button></Link>
-                <Link href="/checkliste"><Button size="sm" variant="outline">Gratis Checkliste holen</Button></Link>
-              </div>
-            </div>
-          </div>
-          <p className="text-[11px] text-muted-foreground mt-3">Tipp: Teile dein Ergebnis oben und fordere Freunde heraus — morgen gibt&apos;s ein neues Wort.</p>
-        </div>
     </>
     )
 };
@@ -496,7 +478,15 @@ const GameEndDisplay = (props: {
     if (isMobile) {
         return (
             <Sheet open={isOpen} onOpenChange={onOpenChange}>
-                <SheetContent side="bottom" className="p-0 pt-0 max-h-[90vh] overflow-y-auto rounded-t-lg">
+                <SheetContent
+                    side="bottom"
+                    className="p-0 pt-0 max-h-[90vh] overflow-y-auto rounded-xl"
+                    style={{
+                        left: '1rem',
+                        right: '1rem',
+                        bottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)',
+                    }}
+                >
                     <div className="p-6">
                         <SheetHeader className="text-center">
                             <SheetTitle className="text-2xl font-bold font-headline">
@@ -533,43 +523,27 @@ const GameEndDisplay = (props: {
 };
 
 
-const HotTipDisplay = ({ isOpen, onOpenChange, onAccept, onDecline, onDisablePermanentlyChange, isPermanentlyDisabled }: {
+const HotTipDisplay = ({ isOpen, onOpenChange, onAccept }: {
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
     onAccept: () => void;
-    onDecline: () => void;
-    onDisablePermanentlyChange: (checked: boolean) => void;
-    isPermanentlyDisabled: boolean;
 }) => {
     const isMobile = useIsMobile();
     
     const content = (
-        <>
-            <Image
-                src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/logos%2Ftippbyplay-image.png?alt=media&token=38df2b8b-1917-4af2-9ed3-c370e27fbb12"
-                alt="Heißer Tipp Grafik"
-                width={400}
-                height={200}
-                className="w-full h-auto rounded-t-lg"
-            />
-            <div className="p-6 pt-4">
-                <DialogHeader className="text-left">
-                    <DialogTitle className="text-2xl font-bold font-headline">
-                        Heißer Tipp! 🔥
-                    </DialogTitle>
-                    <DialogDescription className="pt-2 text-balance">
-                        Du kannst diesen Joker einmal pro Tag nutzen. Wähle den Zeitpunkt weise.
-                    </DialogDescription>
-                </DialogHeader>
-                 <div className="flex items-center space-x-2 mt-4 text-left">
-                    <Checkbox id="disable-hot-tip" checked={isPermanentlyDisabled} onCheckedChange={onDisablePermanentlyChange} />
-                    <Label htmlFor="disable-hot-tip" className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-muted-foreground">Nicht mehr anzeigen</Label>
-                </div>
-                <DialogFooter className="mt-6 flex-col-reverse sm:flex-row gap-2">
-                    <Button onClick={onAccept} className="w-full">Verstanden!</Button>
-                </DialogFooter>
-            </div>
-        </>
+        <div className="p-6">
+            <DialogHeader className="text-left">
+                <DialogTitle className="text-2xl font-bold font-headline">
+                    Heißer Tipp! 🔥
+                </DialogTitle>
+                <DialogDescription className="pt-2 text-balance">
+                    Du kannst diesen Joker einmal pro Tag nutzen. Wähle den Zeitpunkt weise.
+                </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="mt-6 flex-col-reverse sm:flex-row gap-2">
+                <Button onClick={onAccept} className="w-full">Verstanden!</Button>
+            </DialogFooter>
+        </div>
     );
 
     if (isMobile) {
@@ -614,9 +588,6 @@ const WorthaftSettingsDrawer = ({
         <SheetTitle className="text-2xl font-bold font-headline flex items-center gap-2">
           <Gear className="h-6 w-6" /> Einstellungen
         </SheetTitle>
-        <SheetDescription className="text-muted-foreground pt-1">
-          Passe Worthaft an deinen Geschmack an.
-        </SheetDescription>
       </SheetHeader>
 
       <div className="space-y-6">
@@ -629,8 +600,8 @@ const WorthaftSettingsDrawer = ({
                   value={[settings.keyWidth]}
                   onValueChange={([v]) => setSettings({ keyWidth: v })}
                   min={0}
-                  max={100}
-                  step={25}
+                  max={4}
+                  step={1}
                   className="w-full"
                 />
               </div>
@@ -644,8 +615,8 @@ const WorthaftSettingsDrawer = ({
                   value={[settings.keyHeight]}
                   onValueChange={([v]) => setSettings({ keyHeight: v })}
                   min={0}
-                  max={100}
-                  step={25}
+                  max={4}
+                  step={1}
                   className="w-full"
                 />
               </div>
@@ -659,8 +630,8 @@ const WorthaftSettingsDrawer = ({
                   value={[settings.keySize]}
                   onValueChange={([v]) => setSettings({ keySize: v })}
                   min={0}
-                  max={100}
-                  step={25}
+                  max={4}
+                  step={1}
                   className="w-full"
                 />
               </div>
@@ -674,8 +645,8 @@ const WorthaftSettingsDrawer = ({
                   value={[settings.keyRadius]}
                   onValueChange={([v]) => setSettings({ keyRadius: v })}
                   min={0}
-                  max={100}
-                  step={25}
+                  max={4}
+                  step={1}
                   className="w-full"
                 />
               </div>
@@ -731,7 +702,7 @@ const WorthaftSettingsDrawer = ({
           }}
         >
           <Info className="h-4 w-4" />
-          Wie funktioniert's? (Anleitung)
+          Anleitung
         </Button>
       </div>
     </div>
@@ -757,25 +728,26 @@ const WorthaftSettingsDrawer = ({
 };
 
 const InvalidWordModal = ({
-  isOpen,
   onOpenChange,
-  word,
+  submission,
 }: {
-  isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  word: string;
+  submission: InvalidWorthaftWord;
 }) => {
+  const { word, isKnownInvalid } = submission;
   const isMobile = useIsMobile();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fb, setFb] = useState<{ firestore: any } | null>(null);
+  const [showReviewedMessage, setShowReviewedMessage] = useState(false);
 
   useEffect(() => {
+    if (isKnownInvalid) return;
     const app = initializeFirebase();
     setFb(app);
-  }, []);
+  }, [isKnownInvalid]);
 
   const handleSubmit = async (shouldExist: boolean) => {
-    if (!fb) return;
+    if (!fb || isKnownInvalid) return;
     setIsSubmitting(true);
     try {
       await addDoc(collection(fb.firestore, 'worthaft-word-suggestions'), {
@@ -792,6 +764,21 @@ const InvalidWordModal = ({
     }
   };
 
+  const handleVote = (shouldExist: boolean) => {
+    const action = getInvalidWordVoteAction(isKnownInvalid, shouldExist);
+    if (action === 'show-reviewed-message') {
+      setShowReviewedMessage(true);
+    } else if (action === 'dismiss') {
+      onOpenChange(false);
+    } else {
+      void handleSubmit(shouldExist);
+    }
+  };
+
+  const dialogDescription = showReviewedMessage
+    ? 'Wir haben das Wort bereits überprüft und erachten es als ungültig.'
+    : 'Sollte dieses Wort existieren?';
+
   const content = (
     <>
       <div className="mb-2 flex items-center gap-2 pr-6">
@@ -806,38 +793,46 @@ const InvalidWordModal = ({
       <h2 className="font-headline mb-1.5 text-lg font-extrabold leading-snug sm:text-xl">
         „{word}“ ist ein ungültiges Wort
       </h2>
-      <p className="mb-5 text-sm text-muted-foreground">
-        Sollte dieses Wort existieren? Wir prüfen deine Vorschläge, um unsere Wortliste zu verbessern.
-      </p>
+      {showReviewedMessage ? (
+        <p className="text-sm text-muted-foreground">
+          Wir haben das Wort bereits überprüft und erachten es als ungültig.
+        </p>
+      ) : (
+        <>
+          <p className="mb-5 text-sm text-muted-foreground">
+            Sollte dieses Wort existieren?
+          </p>
 
-      <div className="flex flex-col gap-2">
-        <Button
-          onClick={() => handleSubmit(true)}
-          disabled={isSubmitting}
-          className="w-full rounded-full"
-        >
-          Ja, soll existieren
-        </Button>
-        <Button
-          onClick={() => handleSubmit(false)}
-          disabled={isSubmitting}
-          variant="outline"
-          className="w-full rounded-full border-foreground text-foreground hover:bg-muted"
-        >
-          Nein, belassen
-        </Button>
-      </div>
+          <div className="flex flex-col gap-2">
+            <Button
+              onClick={() => handleVote(true)}
+              disabled={isSubmitting}
+              className="w-full rounded-full"
+            >
+              Ja
+            </Button>
+            <Button
+              onClick={() => handleVote(false)}
+              disabled={isSubmitting}
+              variant="outline"
+              className="w-full rounded-full border-foreground text-foreground hover:bg-muted"
+            >
+              Nein
+            </Button>
+          </div>
+        </>
+      )}
     </>
   );
 
   if (isMobile) {
     return (
-      <Sheet open={isOpen} onOpenChange={onOpenChange}>
+      <Sheet open onOpenChange={onOpenChange}>
         <SheetContent side="bottom" className="p-0 pt-0 max-h-[90vh] overflow-y-auto rounded-t-lg">
           <div className="p-6">
             <SheetHeader className="text-left sr-only">
               <SheetTitle>Ungültiges Wort</SheetTitle>
-              <SheetDescription>Sollte dieses Wort existieren?</SheetDescription>
+              <SheetDescription>{dialogDescription}</SheetDescription>
             </SheetHeader>
             {content}
           </div>
@@ -847,12 +842,12 @@ const InvalidWordModal = ({
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+    <Dialog open onOpenChange={onOpenChange}>
       <DialogContent className="p-0 max-w-sm rounded-t-lg overflow-hidden">
         <div className="p-6">
           <DialogHeader className="sr-only">
             <DialogTitle>Ungültiges Wort</DialogTitle>
-            <DialogDescription>Sollte dieses Wort existieren?</DialogDescription>
+            <DialogDescription>{dialogDescription}</DialogDescription>
           </DialogHeader>
           {content}
         </div>
@@ -878,9 +873,8 @@ export default function WorthaftPage() {
     const [isShaking, setIsShaking] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
-    const [invalidWord, setInvalidWord] = useState<string | null>(null);
+    const [invalidWord, setInvalidWord] = useState<InvalidWorthaftWord | null>(null);
     const [isMuted, setIsMuted] = useState(true);
-    const [showInfoBanner, setShowInfoBanner] = useState(true);
     const [rowTimes, setRowTimes] = useState<number[]>([]); // ms per submitted guess
     const [gameStartTime, setGameStartTime] = useState<number>(0);
     const rowStartTimeRef = useRef<number>(0);
@@ -890,7 +884,6 @@ export default function WorthaftPage() {
     const [showHotTipDialog, setShowHotTipDialog] = useState(false);
     const [hotTipUsed, setHotTipUsed] = useState(false);
     const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
-    const [dontShowHotTipAgain, setDontShowHotTipAgain] = useState(false);
     const [isHotTipPopupDisabled, setIsHotTipPopupDisabled] = useState(false);
     const [jokerReveal, setJokerReveal] = useState<{ index: number; key: number } | null>(null);
     const [jokerPosition, setJokerPosition] = useState<{ guessIndex: number; letterIndex: number } | null>(null);
@@ -1162,8 +1155,9 @@ export default function WorthaftPage() {
         }
 
 
-        if (!WORDS.includes(guessWord.toLowerCase())) {
-            setInvalidWord(guessWord);
+        const isKnownAntiWord = isWorthaftAntiWord(guessWord);
+        if (isKnownAntiWord || !WORDS.includes(guessWord.toLowerCase())) {
+            setInvalidWord(createInvalidWorthaftWord(guessWord, isKnownAntiWord));
             setIsShaking(true);
             setTimeout(() => setIsShaking(false), 600);
             return;
@@ -1267,9 +1261,10 @@ export default function WorthaftPage() {
     
     
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
-        if (isDialogOpen || showHotTipDialog || isFeedbackOpen || invalidWord !== null) return;
+        if (!canInteractWithWorthaftGame(gameState) || isDialogOpen || showHotTipDialog || isFeedbackOpen || invalidWord !== null) return;
 
         if (event.key === 'Enter') {
+            event.preventDefault();
             handleEnter();
         } else if (event.key === 'Backspace') {
             handleDelete();
@@ -1288,7 +1283,7 @@ export default function WorthaftPage() {
         } else if (/^[a-zA-ZäöüÄÖÜß]$/.test(event.key)) {
             handleChar(event.key.toUpperCase());
         }
-    }, [isDialogOpen, showHotTipDialog, handleEnter, handleDelete, handleChar, activeIndex, jokerPosition, guesses.length]);
+    }, [gameState, isDialogOpen, showHotTipDialog, isFeedbackOpen, invalidWord, handleEnter, handleDelete, handleChar, activeIndex, jokerPosition, guesses.length]);
     
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
@@ -1305,19 +1300,19 @@ export default function WorthaftPage() {
                 if (s === 'present') return '🟨';
                 return '⬛';
             }).join('') +
-            (rowTimes[guessIndex] !== undefined ? ` (${formatDuration(rowTimes[guessIndex])} Minuten)` : '')
+            (rowTimes[guessIndex] !== undefined ? ` (${formatDuration(rowTimes[guessIndex])})` : '')
         ).join('\n');
 
         const totalTime = rowTimes.reduce((sum, t) => sum + t, 0);
         const tipUsedLine = hotTipUsed ? `(1 Heißer Tipp verwendet 🔥)` : "";
 
-        const text = `Worthaft – Das Paulik & Reisch Spiel
+        const text = `Worthaft
 
 Mein Ergebnis: ${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} innerhalb von ${formatDuration(totalTime)} Minuten ${tipUsedLine}
 
 ${resultGrid}
 
-Jetzt selber spielen:`;
+Jetzt spielen:`;
         
         const shareData = {
             title: 'Worthaft – Das Paulik & Reisch Spiel',
@@ -1349,15 +1344,14 @@ Jetzt selber spielen:`;
                         if (s === 'present') return '🟨';
                         return '⬛';
                     }).join('') +
-                    (rowTimes[guessIndex] !== undefined ? ` (${formatDuration(rowTimes[guessIndex])} Minuten)` : '')
+                    (rowTimes[guessIndex] !== undefined ? ` (${formatDuration(rowTimes[guessIndex])})` : '')
                 ).join('\n');
 
                 const totalTime = rowTimes.reduce((sum, t) => sum + t, 0);
-                const tipUsedLine = hotTipUsed ? `(1 Heißer Tipp verwendet 🔥)` : "";
 
                 const text = `Worthaft – Das Paulik & Reisch Spiel (LÖSUNG GELEAKT 🤫)
 
-        Mein Ergebnis: ${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} innerhalb von ${formatDuration(totalTime)} Minuten ${tipUsedLine}
+        Mein Ergebnis: ${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} innerhalb von ${formatDuration(totalTime)} Minuten
 
         Lösung: ${solution.toUpperCase()}
 
@@ -1439,18 +1433,6 @@ Jetzt selber spielen:`;
             });
         }
         
-        if (dontShowHotTipAgain) {
-            localStorage.setItem('worthaft-hottip-disabled', 'true');
-            setIsHotTipPopupDisabled(true);
-        }
-        setShowHotTipDialog(false);
-    };
-
-    const handleDeclineHotTip = () => {
-        if (dontShowHotTipAgain) {
-            localStorage.setItem('worthaft-hottip-disabled', 'true');
-            setIsHotTipPopupDisabled(true);
-        }
         setShowHotTipDialog(false);
     };
 
@@ -1482,39 +1464,7 @@ Jetzt selber spielen:`;
             />
             <Header />
             <main className="flex-1 py-8 md:py-12">
-                <div className="w-full max-w-2xl mx-auto px-4 sm:px-0 flex flex-col items-center justify-start">
-                    {/* Info-Banner: Hinweis auf die Feedback-Popups nach dem Spiel */}
-                    {!isInfoBannerDismissed() && showInfoBanner && (
-                                        <div className="flex items-center gap-5 w-full mb-8 rounded-2xl border bg-muted/50 p-5 text-left relative">
-                                            <button
-                                                onClick={() => {
-                                                  dismissInfoBanner();
-                                                  setShowInfoBanner(false);
-                                                }}
-                                                aria-label="Banner schließen"
-                                                className="absolute top-2 right-2 rounded-full p-1 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
-                                            >
-                                                <X className="h-4 w-4" />
-                                            </button>
-                        <Image
-                            src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/Worthaft%2Fworthaft-2-0-beta.png?alt=media&token=ed5089ce-3117-4ad1-8e9e-6b2f1f6e31d6"
-                            alt="Worthaft 2.0 Beta"
-                            width={128}
-                            height={128}
-                            className="h-32 w-32 shrink-0 rounded-lg object-cover"
-                        />
-                        <div className="text-base leading-snug text-foreground/80">
-                            <p>Mit unseren neuen Updates wollen wir Worthaft noch besser machen — dein Feedback hilft uns dabei!</p>
-                            <p className="mt-1 text-sm text-muted-foreground">Nach jedem Spiel fragt dich ein kurzes Pop-up: Sag uns, wie dir das Rätsel gefallen hat. Ein Klick, mehr nicht.</p>
-                        </div>
-                    </div>
-                    )}
-                </div>
                 <div className="w-full max-w-sm mx-auto px-4 sm:px-0 flex flex-col items-center justify-start">
-                    <div className="text-center mb-8">
-                        <WorthaftIcon className="mx-auto h-16 w-16 mb-4 text-primary" />
-                        <h1 className="text-4xl font-bold font-headline">Worthaft</h1>
-                    </div>
                     <div className="w-full">
                         <Grid
                             guesses={guesses}
@@ -1587,9 +1537,6 @@ Jetzt selber spielen:`;
                  isOpen={showHotTipDialog}
                  onOpenChange={setShowHotTipDialog}
                  onAccept={handleAcceptHotTip}
-                 onDecline={handleDeclineHotTip}
-                 isPermanentlyDisabled={dontShowHotTipAgain}
-                 onDisablePermanentlyChange={setDontShowHotTipAgain}
              />
              <FeedbackDrawer
                  isOpen={isFeedbackOpen}
@@ -1616,11 +1563,12 @@ Jetzt selber spielen:`;
                 onToggleMute={toggleMute}
                 isMuted={isMuted}
             />
-            <InvalidWordModal
-                isOpen={invalidWord !== null}
-                onOpenChange={(open) => { if (!open) setInvalidWord(null); }}
-                word={invalidWord ?? ''}
-            />
+            {invalidWord && (
+                <InvalidWordModal
+                    onOpenChange={(open) => { if (!open) setInvalidWord(null); }}
+                    submission={invalidWord}
+                />
+            )}
         </div>
     );
 }

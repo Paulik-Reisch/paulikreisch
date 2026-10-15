@@ -6,8 +6,8 @@
     "src/components/landing/footer.tsx": "ceedbc69612172a039285c11a79d013a5237c3f6455228c38751ed2f85d29956"
   },
   "normalizedFiles": {
-    "src/components/landing/header.tsx": "3751abd9b08f33f3b2ea59ca84312a32e80b3f9f1acba2e33e690963c09dd5fb",
-    "src/components/landing/footer.tsx": "a66b64c022540783fee9ca45f812e927ad8ce474a79c1e035a0b3f8d2921735e",
+    "src/components/landing/header.tsx": "3732c952ec04c4a101b8bba6b5bd70de70be75cab27785dbfdce456b06da74bd",
+    "src/components/landing/footer.tsx": "fa150da369b55be8c3675856b9ed2561b5516de6afd08fd38cd80cbaaa9c7562",
     "docs/archive/index-old/page.tsx.txt": "b2b1542b0fc452a513654e81dc08e29b1018c81771444c3032e7896b80d64a3d"
   }
 }
