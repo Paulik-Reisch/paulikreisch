@@ -1,5 +1,11 @@
 export const WORTHAFT_ANTI_WORDS: readonly string[] = [
   'putos',
+  'putot',
+  'miose',
+  'lochs',
+  'putor',
+  'rinse',
+  'pinse',
 ];
 
 export const isWorthaftAntiWord = (
