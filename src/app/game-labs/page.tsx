@@ -67,7 +67,7 @@ export default function GameLabsPage() {
             </div>
             <h1 className="font-headline font-bold text-4xl md:text-5xl mb-4">Game Labs</h1>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Experimentelle Mini-Games, Rätsel & Prototypen von Paulik & Reisch.
+              Experimentelle Mini-Games, Rätsel &amp; Prototypen von Paulik &amp; Reisch.
             </p>
           </header>
 
@@ -168,7 +168,7 @@ export default function GameLabsPage() {
                       </li>
                       <li className="flex items-center gap-2">
                         <span className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs">3</span>
-                        Daten & Fortschritt können bei Updates verloren gehen.
+                        Daten &amp; Fortschritt können bei Updates verloren gehen.
                       </li>
                       <li className="flex items-center gap-2">
                         <span className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs">4</span>

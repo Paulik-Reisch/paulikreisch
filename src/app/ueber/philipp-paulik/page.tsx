@@ -32,7 +32,7 @@ export default function PhilippPaulikPage() {
       <main className="flex-1 py-12 md:py-20">
         <div className="container mx-auto max-w-3xl px-4">
           <header className="text-center mb-12">
-            <Badge variant="secondary" className="text-lg">Autor & Kreativkopf</Badge>
+            <Badge variant="secondary" className="text-lg">Autor &amp; Kreativkopf</Badge>
             <h1 className="font-headline text-5xl md:text-7xl font-bold tracking-tighter mt-4">
               Philipp Paulik
             </h1>
@@ -40,7 +40,7 @@ export default function PhilippPaulikPage() {
           <div className="grid md:grid-cols-3 gap-8 md:gap-12 items-start">
             <div className="md:col-span-1 flex justify-center">
               <Image 
-                src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/ersteller%2Fphilipp-paulik.png?alt=media&token=7e48b706-80fa-45cc-ae51-b6444bd7ccb3"
+                src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/ersteller%2Fphilipp-paulik.png?alt=media&amp;token=7e48b706-80fa-45cc-ae51-b6444bd7ccb3"
                 alt="Porträt von Philipp Paulik" 
                 width={250} 
                 height={250} 

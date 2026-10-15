@@ -43,13 +43,13 @@ export function PalabrotasStoryMockup() {
                     </div>
                      <div className="flex items-center gap-2">
                         <Image
-                            src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522"
+                            src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&amp;token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522"
                             alt="Logo"
                             width={24}
                             height={24}
                             className="rounded-full"
                         />
-                        <span className="text-xs font-semibold text-white">Paulik & Reisch</span>
+                        <span className="text-xs font-semibold text-white">Paulik &amp; Reisch</span>
                     </div>
                 </div>
 

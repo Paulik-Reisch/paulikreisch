@@ -20,7 +20,7 @@ export function PremiumBanner() {
         <div className="flex items-center justify-center p-3 text-center">
           <p className="text-sm font-medium">
             <span className="md:hidden">Die neue Premium-Erfahrung!</span>
-            <span className="hidden md:inline">Paulik & Reisch launchen die ultimative Premium-Erfahrung für Sie.</span>
+            <span className="hidden md:inline">Paulik &amp; Reisch launchen die ultimative Premium-Erfahrung für Sie.</span>
             <Link
               href={premiumUrl}
               target="_blank"

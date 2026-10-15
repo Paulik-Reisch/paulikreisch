@@ -21,7 +21,7 @@ export function InArticleBookBanner({ compact = false }: { compact?: boolean }) 
     <div className={`not-prose rounded-xl border bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 overflow-hidden ${compact ? 'p-4' : 'p-5 md:p-6'} mt-8`}>
       <div className="flex gap-4 items-center">
         <img
-          src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-hw1_900px.png?alt=media&token=42ce90a3-ed34-49d2-8e09-5258d0dfc484"
+          src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-hw1_900px.png?alt=media&amp;token=42ce90a3-ed34-49d2-8e09-5258d0dfc484"
           alt="Hallo Welt Buchcover"
           className="w-14 h-18 md:w-20 md:h-28 object-cover rounded-lg shadow-md shrink-0"
           loading="lazy"
@@ -32,7 +32,7 @@ export function InArticleBookBanner({ compact = false }: { compact?: boolean }) 
             Davon gibt's 106 Seiten mehr: <span className="text-primary">Hallo Welt</span>
           </h3>
           <p className="text-xs md:text-sm text-muted-foreground mt-1 line-clamp-2">
-            Die satirische Abrechnung mit Schule & Bürokratie — von Pfeffer bis Lernvollzugsanstalt.
+            Die satirische Abrechnung mit Schule &amp; Bürokratie — von Pfeffer bis Lernvollzugsanstalt.
           </p>
           <div className="flex items-center gap-2 mt-2">
             <span className="flex items-center gap-1 text-xs font-semibold">

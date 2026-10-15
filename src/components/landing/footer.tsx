@@ -65,7 +65,7 @@ export function Footer() {
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(#1d1a15 1.1px, transparent 1.1px)", backgroundSize: "22px 22px" }} />
         <div className="relative container mx-auto max-w-7xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[0.55fr_0.85fr_0.85fr_1.75fr] gap-x-8 gap-y-10">
           <div className="text-left">
-            <Link href="/" aria-label="Paulik & Reisch – Startseite" className="inline-flex text-[#1d1a15] transition-colors hover:text-[#9c2d22]">
+            <Link href="/" aria-label="Paulik &amp; Reisch – Startseite" className="inline-flex text-[#1d1a15] transition-colors hover:text-[#9c2d22]">
               <Logo className="w-28 md:w-32" />
             </Link>
             <p className="mt-2 text-[15px] font-bold text-[#1d1a15]">Paulik &amp; Reisch</p>
@@ -135,7 +135,7 @@ export function Footer() {
       <div className="border-t bg-muted px-5 py-4 text-xs text-muted-foreground">
         <div className="container mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 sm:flex-row">
           <span className="text-center sm:text-left">
-            © {new Date().getFullYear()} Paulik & Reisch. Alle Rechte vorbehalten.
+            © {new Date().getFullYear()} Paulik &amp; Reisch. Alle Rechte vorbehalten.
           </span>
           <nav aria-label="Rechtliche Informationen" className="flex flex-wrap justify-center gap-x-4 gap-y-2 sm:justify-end">
             <Link href="/impressum" className="hover:text-foreground hover:underline">Impressum</Link>

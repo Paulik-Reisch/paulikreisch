@@ -685,7 +685,7 @@ const WorthaftSettingsDrawer = ({
         <div className="flex items-center justify-between rounded-md border p-3">
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
-            <Label className="text-sm font-medium">Animationen & Effekte</Label>
+            <Label className="text-sm font-medium">Animationen &amp; Effekte</Label>
           </div>
           <Checkbox
             checked={settings.animationsEnabled}

@@ -6,8 +6,11 @@
     "src/components/landing/footer.tsx": "ceedbc69612172a039285c11a79d013a5237c3f6455228c38751ed2f85d29956"
   },
   "normalizedFiles": {
-    "src/components/landing/header.tsx": "3732c952ec04c4a101b8bba6b5bd70de70be75cab27785dbfdce456b06da74bd",
-    "src/components/landing/footer.tsx": "fa150da369b55be8c3675856b9ed2561b5516de6afd08fd38cd80cbaaa9c7562",
     "docs/archive/index-old/page.tsx.txt": "b2b1542b0fc452a513654e81dc08e29b1018c81771444c3032e7896b80d64a3d"
-  }
+  },
+  "compiledFiles": {
+    "src/components/landing/header.tsx": "4bd07f1a29aae4af747a6cfc0d39c3888905c810ae9472b0f0c7d352f44faacf",
+    "src/components/landing/footer.tsx": "8880e411106e34f892018fc737b1e6410f4e3d7c9d4c2aa0422aacc2558c71f8"
+  },
+  "compiledFilesNote": "Header/footer emitted JavaScript was verified byte-identical before and after JSX ampersand escaping in a677590. Compilation hashes allow equivalent escaping while detecting content or behavior changes. Historical source hashes in files remain unchanged."
 }

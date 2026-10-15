@@ -23,7 +23,7 @@ export default async function AdminLoginPage() {
         <div className="w-full max-w-md flex flex-col items-center text-center">
           <div className="flex flex-col items-center justify-center text-center mb-12">
               <AdminIcon />
-              <h1 className="font-semibold text-2xl mt-4">Paulik & Reisch</h1>
+              <h1 className="font-semibold text-2xl mt-4">Paulik &amp; Reisch</h1>
           </div>
           <LoginForm />
         </div>

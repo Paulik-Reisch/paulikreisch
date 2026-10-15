@@ -307,7 +307,7 @@ const GameEndDisplay = (props: {
                     <DialogContent className="max-w-lg">
                         <DialogHeader className="text-center">
                             <DialogTitle className="font-headline">Spiel beendet</DialogTitle>
-                            <DialogDescription>Deine Statistiken & Teilen</DialogDescription>
+                            <DialogDescription>Deine Statistiken &amp; Teilen</DialogDescription>
                         </DialogHeader>
                         <ResultsContent
                             solution={props.solution}

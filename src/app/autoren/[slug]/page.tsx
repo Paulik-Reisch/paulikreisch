@@ -12,6 +12,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
+import { SafeRichText } from '@/components/security/safe-rich-text';
+import { serializeJsonLd } from '@/lib/serialize-json-ld';
+
 type Props = {
   params: Promise<{ slug: string }>
 }
@@ -130,12 +133,13 @@ export default async function AuthorPage({ params }: Props) {
     ]
   };
 
+  // serializeJsonLd escapes every <; safe-rich-text.test.ts covers script-breakout payloads.
+  // nosemgrep: typescript.react.security.audit.react-dangerouslysetinnerhtml.react-dangerouslysetinnerhtml
+  const authorJsonLd = <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />;
+
   return (
     <div className="flex flex-col min-h-[100dvh] bg-muted/30 text-foreground">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      {authorJsonLd}
       <Header />
       <main className="flex-1 py-12 md:py-20">
         <div className="container px-4 md:px-6">
@@ -152,7 +156,7 @@ export default async function AuthorPage({ params }: Props) {
                     </div>
                     <div className="md:col-span-2 space-y-4">
                         <h1 className="text-4xl sm:text-5xl font-extrabold font-serifHeadline tracking-tight">{fullName}</h1>
-                        <div className="prose prose-lg dark:prose-invert" dangerouslySetInnerHTML={{ __html: author.bio }} />
+                        <SafeRichText className="prose prose-lg dark:prose-invert" html={author.bio} />
                         
                         {author.websiteUrl && (
                            <div className="pt-4 flex gap-4">

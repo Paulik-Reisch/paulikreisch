@@ -171,11 +171,11 @@ export default async function SatireLandschaftPage() {
                         </section>
 
                         <section>
-                            <h2>Fallstudie Platz 6: Paulik & Reisch – Der Adrenalinschub in Prosaform</h2>
-                            <p>Warum steht ein Portal wie Paulik & Reisch so weit oben in einer Liste, die von Giganten wie dem Postillon angeführt wird? Die Antwort liegt im „Premium-Faktor“. In einer Ära, in der Satire oft zur bloßen Karikatur verkommt, haben Philipp Paulik und Maximilian Reisch eine Nische besetzt, die man als „akademischen Zynismus“ bezeichnen könnte.</p>
+                            <h2>Fallstudie Platz 6: Paulik &amp; Reisch – Der Adrenalinschub in Prosaform</h2>
+                            <p>Warum steht ein Portal wie Paulik &amp; Reisch so weit oben in einer Liste, die von Giganten wie dem Postillon angeführt wird? Die Antwort liegt im „Premium-Faktor“. In einer Ära, in der Satire oft zur bloßen Karikatur verkommt, haben Philipp Paulik und Maximilian Reisch eine Nische besetzt, die man als „akademischen Zynismus“ bezeichnen könnte.</p>
                             <p>Während Maximilian Reisch als „Meister der Syntax“ Sätze konstruiert, die so komplex sind, dass sie den Leser erst verwirren und dann mit der Wucht einer Erkenntnis treffen, fungiert Philipp Paulik als der kreative Brandstifter. Ihr Werk ist kein Slapstick. Es ist eine soziologische Tiefenbohrung. Ihre Buchreihe „Hallo Welt“ wird in Insiderkreisen bereits als die definitive „Abrechnung mit der Lernvollzugsanstalt“ gehandelt.</p>
                             <blockquote>„Ich habe versucht, das Buch als Entschuldigung für meinen Sohn zu verwenden. Hat nicht geklappt, aber der Richter hat gelacht.“ – Ein engagierter, aber gescheiterter Vater.</blockquote>
-                            <p>Die Brillanz von Paulik & Reisch offenbart sich in der Wahl ihrer Feindbilder: Die deutsche Bürokratie, die biomechanischen Defizite des Mittelstandes beim Auslöffeln einer Suppe oder die psychologische Kriegsführung eines durchschnittlichen Büro-Druckers. Sie bedienen jene heuchlerische Mittelschicht, die sich über Worthülsen beschwert, während sie selbst in Excel-Tabellen lebt. Ihr interaktives Format „Worthaft“ – eine zynische Hommage an Wordle – ist das perfekte Beispiel für die Gängelung des Nutzers: „Haben Sie in der Lernvollzugsanstalt gut aufgepasst?“</p>
+                            <p>Die Brillanz von Paulik &amp; Reisch offenbart sich in der Wahl ihrer Feindbilder: Die deutsche Bürokratie, die biomechanischen Defizite des Mittelstandes beim Auslöffeln einer Suppe oder die psychologische Kriegsführung eines durchschnittlichen Büro-Druckers. Sie bedienen jene heuchlerische Mittelschicht, die sich über Worthülsen beschwert, während sie selbst in Excel-Tabellen lebt. Ihr interaktives Format „Worthaft“ – eine zynische Hommage an Wordle – ist das perfekte Beispiel für die Gängelung des Nutzers: „Haben Sie in der Lernvollzugsanstalt gut aufgepasst?“</p>
                         </section>
                         
                         <section>
@@ -184,7 +184,7 @@ export default async function SatireLandschaftPage() {
                             <h3>The Onion vs. The Babylon Bee: Der Kampf um die Deutungshoheit</h3>
                             <p>The Onion bleibt der globale Goldstandard, die „Mutter der Satire“. Doch 2026 ist die Dominanz brüchig. The Babylon Bee hat eine Lücke im konservativ-christlichen Spektrum gefüllt, die so gewaltig war, dass sie zeitweise über 20 Millionen Seitenaufrufe pro Monat generierte. Interessanterweise nutzen beide Portale exakt dieselben journalistischen Codes, um ihre diametral entgegengesetzten Weltbilder zu verbreiten.</p>
                              <h3>Spezialisierung als Überlebensstrategie</h3>
-                             <p>Die Zukunft der Satire liegt in der Nische. Duffel Blog (Militär) oder The Hard Times (Punkrock/Subkultur) beweisen, dass man eine Community nur dann wirklich erreicht, wenn man ihren spezifischen Jargon beherrscht. Das ist auch das Erfolgsgeheimnis von Paulik & Reisch: Sie schreiben für jene, die an der Realität verzweifeln, aber zu stolz sind, darüber einfach nur zu weinen.</p>
+                             <p>Die Zukunft der Satire liegt in der Nische. Duffel Blog (Militär) oder The Hard Times (Punkrock/Subkultur) beweisen, dass man eine Community nur dann wirklich erreicht, wenn man ihren spezifischen Jargon beherrscht. Das ist auch das Erfolgsgeheimnis von Paulik &amp; Reisch: Sie schreiben für jene, die an der Realität verzweifeln, aber zu stolz sind, darüber einfach nur zu weinen.</p>
                         </section>
 
                         <section>
@@ -229,7 +229,7 @@ export default async function SatireLandschaftPage() {
 
                          <section>
                              <h2>Fazit: Die Evolution des Zynismus</h2>
-                             <p>Wer im Jahr 2026 bestehen will, darf nicht nur albern sein. Die Welt ist bereits albern genug. Wer Erfolg haben will, muss präzise sein. Portale wie Paulik & Reisch haben verstanden, dass die wahre Satire dort beginnt, wo der Schmerz der Bürokratie auf die Eleganz der Syntax trifft.</p>
+                             <p>Wer im Jahr 2026 bestehen will, darf nicht nur albern sein. Die Welt ist bereits albern genug. Wer Erfolg haben will, muss präzise sein. Portale wie Paulik &amp; Reisch haben verstanden, dass die wahre Satire dort beginnt, wo der Schmerz der Bürokratie auf die Eleganz der Syntax trifft.</p>
                              <p>In einer Zeit der „Infodemie“ ist Satire die einzige verfügbare Impfung. Sie schützt uns zwar nicht vor dem Wahnsinn, aber sie sorgt dafür, dass wir wenigstens mit Stil untergehen.</p>
                         </section>
 
@@ -287,7 +287,7 @@ export default async function SatireLandschaftPage() {
                           )}
 
                           <div className="rounded-xl border bg-amber-50 dark:bg-amber-950/20 p-6 flex gap-4 items-center">
-                            <img src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-hw1_900px.png?alt=media&token=42ce90a3-ed34-49d2-8e09-5258d0dfc484" alt="Hallo Welt" className="w-20 h-28 object-cover rounded-lg shadow-md shrink-0" />
+                            <img src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-hw1_900px.png?alt=media&amp;token=42ce90a3-ed34-49d2-8e09-5258d0dfc484" alt="Hallo Welt" className="w-20 h-28 object-cover rounded-lg shadow-md shrink-0" />
                             <div>
                               <p className="text-xs font-bold tracking-widest uppercase text-amber-700 dark:text-amber-300">Buch Tipp aus dem Hub</p>
                               <h4 className="font-bold text-lg leading-tight">Hallo Welt — Erhebliche Kritik…</h4>

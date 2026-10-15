@@ -119,7 +119,7 @@ function InfoSheet({ word, onClose }: { word: Palabrota, onClose: () => void }) 
                 <DetailRow label="Beispielsatz">
                     <blockquote className="border-l-4 border-white/30 pl-4 py-1 my-0 text-lg">"{word.beispiel}"</blockquote>
                 </DetailRow>
-                <DetailRow label="Kontext & Nuancen">
+                <DetailRow label="Kontext &amp; Nuancen">
                     <p>{word.kontext}</p>
                 </DetailRow>
                  <DetailRow label="Steigerung">
@@ -227,13 +227,13 @@ export function PalabrotasStory({ words, onClose }: { words: Palabrota[], onClos
              <div className="flex items-center justify-between p-4">
                  <div className="flex items-center gap-3">
                     <Image
-                      src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522"
-                      alt="Paulik & Reisch Logo"
+                      src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/p_und_r-logo.png?alt=media&amp;token=e1b7c172-fa61-47f4-a4e4-f92fe0ffa522"
+                      alt="Paulik &amp; Reisch Logo"
                       width={32}
                       height={32}
                       className="rounded-full"
                     />
-                    <span className="hidden sm:block font-headline font-semibold text-white">Paulik & Reisch</span>
+                    <span className="hidden sm:block font-headline font-semibold text-white">Paulik &amp; Reisch</span>
                      <Badge
                         style={{ backgroundColor: currentColor, color: 'black' }}
                         className="border-none transition-colors duration-300"

@@ -93,7 +93,7 @@ export function Header() {
             <a className="flex items-center justify-center" href="/">
               <div className="flex items-center gap-2">
                 <Logo className="h-8 w-auto" />
-                <span className="font-headline font-semibold text-lg ml-2 hidden sm:inline text-[#1d1a15]">Paulik & Reisch</span>
+                <span className="font-headline font-semibold text-lg ml-2 hidden sm:inline text-[#1d1a15]">Paulik &amp; Reisch</span>
               </div>
             </a>
             {isWorthaftPage && (
@@ -169,7 +169,7 @@ export function Header() {
           <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-[#e8ddd0]/80">
             <Link href="/" onClick={() => setOpen(false)} className="flex items-center gap-2">
               <Logo className="h-7 w-auto" />
-              <span className="font-headline font-semibold text-[1.05rem] text-[#1d1a15]">Paulik & Reisch</span>
+              <span className="font-headline font-semibold text-[1.05rem] text-[#1d1a15]">Paulik &amp; Reisch</span>
             </Link>
             <button
               aria-label="Menü schließen"
@@ -211,7 +211,7 @@ export function Header() {
           </nav>
 
           <div className="px-6 pb-6 pt-4 text-[0.82rem] leading-relaxed text-[#9a9184] border-t border-[#e8ddd0]/60">
-            Paulik & Reisch · Satire, die den Schulwahnsinn ernst nimmt.
+            Paulik &amp; Reisch · Satire, die den Schulwahnsinn ernst nimmt.
           </div>
         </div>
       </div>

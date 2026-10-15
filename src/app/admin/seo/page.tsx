@@ -65,7 +65,7 @@ export default async function SeoAdminPage() {
     return (
         <div className="space-y-8">
             <header>
-                <h1 className="text-3xl font-bold font-headline">SEO & AEO Management</h1>
+                <h1 className="text-3xl font-bold font-headline">SEO &amp; AEO Management</h1>
                 <p className="text-muted-foreground">Verwalten Sie die Metadaten, um Ihr Ranking in Suchmaschinen und KI-Assistenten zu optimieren.</p>
             </header>
 
@@ -118,7 +118,7 @@ export default async function SeoAdminPage() {
                 
                  <Card>
                     <CardHeader>
-                        <CardTitle>Statische & Rechtliche Seiten</CardTitle>
+                        <CardTitle>Statische &amp; Rechtliche Seiten</CardTitle>
                         <CardDescription>SEO für die Hauptseiten und rechtliche Hinweise.</CardDescription>
                     </CardHeader>
                     <CardContent>

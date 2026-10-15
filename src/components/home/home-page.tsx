@@ -17,21 +17,21 @@ export function HomePage() {
       <Header />
       <main id="inhalt" tabIndex={-1}>
         <div className={`${styles.wrap} ${styles.edition}`}>
-          <span>Paulik & Reisch · Literatur mit Nebenwirkungen</span>
+          <span>Paulik &amp; Reisch · Literatur mit Nebenwirkungen</span>
           <span>Unabhängige Stimmen. Ziemlich deutsche Zustände.</span>
         </div>
         <section className={styles.hero} aria-labelledby="home-title">
           <Image className={styles.heroImage} src="/hero-ab/hero-01-papier.jpg" alt="Das Buch Hallo Welt mit illustriertem Cover auf liniertem Papier" fill priority sizes="100vw" data-home-parallax />
           <div className={styles.wrap}>
             <div className={styles.heroCopy}>
-              <p className={styles.eyebrow}>Bücher, Satire & ein bisschen Widerstand</p>
+              <p className={styles.eyebrow}>Bücher, Satire &amp; ein bisschen Widerstand</p>
               <h1 id="home-title">Schule aus.<br /><span>Satire an.</span></h1>
               <p className={styles.intro}>Manches kann man nur mit Humor ertragen. Wir haben ein Buch daraus gemacht – und dann einfach weitergeschrieben.</p>
               <div className={styles.actions}>
                 <Link href="/shop" className={styles.button}>„Hallo Welt“ entdecken {arrow}</Link>
                 <a href="#entdecken" className={styles.textLink}>Weiterblättern <ArrowDown size={15} aria-hidden="true" /></a>
               </div>
-              <p className={styles.caption}>Von Philipp Paulik & Maximilian Reisch</p>
+              <p className={styles.caption}>Von Philipp Paulik &amp; Maximilian Reisch</p>
             </div>
           </div>
         </section>
@@ -59,13 +59,13 @@ export function HomePage() {
               <div><dt>Lesestoff</dt><dd>{homeBook.chapters} Kapitel</dd></div>
               <div><dt>Haltung</dt><dd>Ungeschönt</dd></div>
             </dl>
-            <div className={styles.actions}><Link className={styles.button} href="/shop">Zum Buch & zur Leseprobe {arrow}</Link></div>
+            <div className={styles.actions}><Link className={styles.button} href="/shop">Zum Buch &amp; zur Leseprobe {arrow}</Link></div>
           </div>
         </section>
         <aside className={styles.manifesto} aria-label="Unsere Haltung">
           <div className={styles.wrap}>
             <p>Die Wirklichkeit liefert den Stoff.<br />Wir setzen nur noch <mark>einen drauf.</mark></p>
-            <small>Paulik & Reisch · Satire über Schule, Bürokratie und Alltag</small>
+            <small>Paulik &amp; Reisch · Satire über Schule, Bürokratie und Alltag</small>
           </div>
         </aside>
         <section id="entdecken" aria-labelledby="discover-title" className={`${styles.wrap} ${styles.section}`}>
@@ -76,14 +76,14 @@ export function HomePage() {
           <div className={styles.stories}>
             <article>
               <div className={styles.storyImage}><Image src="/hero-mobile/32-tafel-kreide.jpg" alt="Beschriebene Schultafel als Sinnbild für den Schulalltag" fill sizes="(max-width: 639px) 90vw, 50vw" /></div>
-              <p className={styles.eyebrow}>Schule & Gesellschaft</p>
+              <p className={styles.eyebrow}>Schule &amp; Gesellschaft</p>
               <h3 className={styles.storyTitle}><Link href="/wiki/bildungskritik-satire">Wenn Lernen zur Verwaltungssache wird.</Link></h3>
               <p className={styles.body}>Noten, Normen, nächste Reform: ein Blick auf das System, in dem wir groß werden.</p>
               <Link className={styles.textLink} href="/wiki/bildungskritik-satire">Bildungskritik lesen {arrow}</Link>
             </article>
             <div className={styles.storyList}>
-              <article><p className={styles.eyebrow}>Sprache & Bürokratie</p><h3 className={styles.storyTitle}><Link href="/ratgeber/beamtendeutsch">Das ist kein Satz. Das ist ein Verwaltungsakt.</Link></h3><p className={styles.body}>Beamtendeutsch verstehen — sofern die zuständige Stelle nichts dagegen hat.</p><Link className={styles.textLink} href="/ratgeber/beamtendeutsch">Weiterlesen {arrow}</Link></article>
-              <article><p className={styles.eyebrow}>Schreiben & Satire</p><h3 className={styles.storyTitle}><Link href="/ratgeber/satire-schreiben">Aus einer Beobachtung wird eine Pointe.</Link></h3><p className={styles.body}>Wie Übertreibung, Ironie und der richtige Blickwinkel zusammenfinden.</p><Link className={styles.textLink} href="/ratgeber/satire-schreiben">Zum Schreibratgeber {arrow}</Link></article>
+              <article><p className={styles.eyebrow}>Sprache &amp; Bürokratie</p><h3 className={styles.storyTitle}><Link href="/ratgeber/beamtendeutsch">Das ist kein Satz. Das ist ein Verwaltungsakt.</Link></h3><p className={styles.body}>Beamtendeutsch verstehen — sofern die zuständige Stelle nichts dagegen hat.</p><Link className={styles.textLink} href="/ratgeber/beamtendeutsch">Weiterlesen {arrow}</Link></article>
+              <article><p className={styles.eyebrow}>Schreiben &amp; Satire</p><h3 className={styles.storyTitle}><Link href="/ratgeber/satire-schreiben">Aus einer Beobachtung wird eine Pointe.</Link></h3><p className={styles.body}>Wie Übertreibung, Ironie und der richtige Blickwinkel zusammenfinden.</p><Link className={styles.textLink} href="/ratgeber/satire-schreiben">Zum Schreibratgeber {arrow}</Link></article>
               <article><p className={styles.eyebrow}>Für Menschen mit Humor</p><h3 className={styles.storyTitle}><Link href="/ratgeber/geschenk-lehrer">Ein Geschenk ohne Korrekturbedarf.</Link></h3><Link className={styles.textLink} href="/ratgeber/geschenk-lehrer">Geschenkideen entdecken {arrow}</Link></article>
             </div>
           </div>

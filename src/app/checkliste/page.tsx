@@ -25,7 +25,7 @@ export default function ChecklistePage() {
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
       <header className="border-b bg-background/80 backdrop-blur sticky top-0 z-10">
         <div className="container flex items-center justify-between py-3 px-4 md:px-6">
-          <Link href="/" className="font-headline font-bold">Paulik & Reisch</Link>
+          <Link href="/" className="font-headline font-bold">Paulik &amp; Reisch</Link>
           <Link href="/shop"><Button size="sm" variant="outline">Zum Buch</Button></Link>
         </div>
       </header>
@@ -68,7 +68,7 @@ export default function ChecklistePage() {
             </div>
 
             <div className="mt-8 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 border p-5 flex gap-4 items-center">
-              <img src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-hw1_900px.png?alt=media&token=42ce90a3-ed34-49d2-8e09-5258d0dfc484" alt="Hallo Welt" className="w-16 h-20 object-cover rounded-md shadow shrink-0" />
+              <img src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-hw1_900px.png?alt=media&amp;token=42ce90a3-ed34-49d2-8e09-5258d0dfc484" alt="Hallo Welt" className="w-16 h-20 object-cover rounded-md shadow shrink-0" />
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-bold tracking-widest text-amber-700 dark:text-amber-300 uppercase">Was jetzt?</p>
                 <p className="font-bold">Die ganze Abrechnung: Hallo Welt — 106 Seiten</p>
@@ -78,7 +78,7 @@ export default function ChecklistePage() {
             </div>
             <div className="sm:hidden mt-4"><Link href="/shop" className="block"><Button size="sm" className="w-full gap-2">Zum Shop — 10,99 €</Button></Link></div>
 
-            <p className="text-[11px] text-muted-foreground/60 text-center mt-6">© Paulik & Reisch 2026 · Satire. Kein pädagogischer Ratgeber. Lachen auf eigene Gefahr.</p>
+            <p className="text-[11px] text-muted-foreground/60 text-center mt-6">© Paulik &amp; Reisch 2026 · Satire. Kein pädagogischer Ratgeber. Lachen auf eigene Gefahr.</p>
           </div>
 
           <div className="mt-8 flex justify-center gap-3">

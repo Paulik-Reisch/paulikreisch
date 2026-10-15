@@ -72,7 +72,7 @@ export function ShareWall({ article, onUnlock }: { article: Article; onUnlock: (
     <div className="bg-gradient-to-b from-muted to-background border border-border rounded-2xl shadow-xl py-8 px-6 md:px-10 mt-8 relative overflow-hidden">
       <div className="absolute -top-24 -right-24 w-72 h-72 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
       <div className="max-w-2xl mx-auto text-center relative">
-        <p className="text-xs font-bold tracking-widest text-primary uppercase mb-2">Teilen & Weiterlesen</p>
+        <p className="text-xs font-bold tracking-widest text-primary uppercase mb-2">Teilen &amp; Weiterlesen</p>
         <h2 className="font-headline text-2xl md:text-3xl font-extrabold">Unterstütze uns mit 1 Klick</h2>
         <p className="text-muted-foreground mt-2 text-sm md:text-base">
           Teile den Artikel — du schaltest den Rest + <strong className="text-foreground">Gratis-Kapitel PDF</strong> frei. So wächst Satire ohne Paywall.
@@ -119,7 +119,7 @@ export function ShareWall({ article, onUnlock }: { article: Article; onUnlock: (
 
         <div className="mt-8 flex items-center gap-4 text-left bg-background border rounded-xl p-4">
           <img
-            src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-hw1_900px.png?alt=media&token=42ce90a3-ed34-49d2-8e09-5258d0dfc484"
+            src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-hw1_900px.png?alt=media&amp;token=42ce90a3-ed34-49d2-8e09-5258d0dfc484"
             alt="Hallo Welt Cover"
             className="w-16 h-20 object-cover rounded-md shadow-sm shrink-0"
             loading="lazy"

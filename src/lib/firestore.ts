@@ -717,7 +717,7 @@ export async function getLegalPage(slug: string): Promise<LegalPage | null> {
             return fallback ? { id: slug, ...fallback } : null;
         }
     } catch (error) {
-        console.error(`Error fetching legal page for slug ${slug}:`, error);
+        console.error('Error fetching legal page for slug %s:', slug, error);
         const fallback = LEGAL_FALLBACKS[slug];
         return fallback ? { id: slug, ...fallback } : null;
     }

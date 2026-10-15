@@ -32,7 +32,7 @@ export default function LuinSchiffbauerPage() {
       <main className="flex-1 py-12 md:py-20">
         <div className="container mx-auto max-w-3xl px-4">
           <header className="text-center mb-12">
-            <Badge variant="secondary" className="text-lg">Illustrator & Künstler</Badge>
+            <Badge variant="secondary" className="text-lg">Illustrator &amp; Künstler</Badge>
             <h1 className="font-headline text-5xl md:text-7xl font-bold tracking-tighter mt-4">
               Luin Schiffbauer
             </h1>
@@ -40,7 +40,7 @@ export default function LuinSchiffbauerPage() {
           <div className="grid md:grid-cols-3 gap-8 md:gap-12 items-start">
             <div className="md:col-span-1 flex justify-center">
               <Image 
-                src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/luin-schiffbauer.png?alt=media&token=61abe644-7d94-4bfc-8164-37447ac9279b"
+                src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/luin-schiffbauer.png?alt=media&amp;token=61abe644-7d94-4bfc-8164-37447ac9279b"
                 alt="Porträt von Luin Schiffbauer, dem Illustrator der Hallo Welt Bücher" 
                 width={250} 
                 height={250} 
@@ -50,7 +50,7 @@ export default function LuinSchiffbauerPage() {
             <div className="md:col-span-2 space-y-4">
               <h2 className="font-headline text-3xl font-bold">Über Luin</h2>
               <article className="prose dark:prose-invert max-w-none">
-                <p>Luin Schiffbauer ist der visionäre Künstler, der den Worten von Paulik & Reisch ein unvergessliches Gesicht gibt. Als Illustrator der 'Hallo Welt'-Reihe ist er dafür verantwortlich, den satirischen Wahnsinn in Bilder zu übersetzen, die oft mehr sagen als tausend Worte. Sein einzigartiger Stil, eine Mischung aus minimalistischer Klarheit und maximalem Ausdruck, ist ein wesentlicher Bestandteil des Erfolgs.</p>
+                <p>Luin Schiffbauer ist der visionäre Künstler, der den Worten von Paulik &amp; Reisch ein unvergessliches Gesicht gibt. Als Illustrator der 'Hallo Welt'-Reihe ist er dafür verantwortlich, den satirischen Wahnsinn in Bilder zu übersetzen, die oft mehr sagen als tausend Worte. Sein einzigartiger Stil, eine Mischung aus minimalistischer Klarheit und maximalem Ausdruck, ist ein wesentlicher Bestandteil des Erfolgs.</p>
                 <p>Mit jedem Strich fängt Luin die Essenz der Charaktere und Situationen ein und schafft visuelle Gags, die perfekt mit dem Text harmonieren. Seine Illustrationen sind nicht nur Beiwerk, sondern ein integraler Bestandteil des Leseerlebnisses. Entdecken Sie mehr von seiner Arbeit und den Büchern, die er mitgestaltet hat, auf Amazon.</p>
               </article>
               <div className="pt-4 flex items-center gap-4">

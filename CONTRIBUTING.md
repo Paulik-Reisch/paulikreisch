@@ -11,3 +11,5 @@ Header-/Footer-Inhalte nur nach ausdrücklicher Freigabe ändern. Keine erfunden
 
 Keine Secrets, personenbezogenen Daten oder lokale `.env`-Dateien committen. Sicherheitsfunde nicht in öffentlichen Issues veröffentlichen.
 Kein automatisches Mergen oder Deployment: Änderungen werden zuerst überprüft.
+
+Technische Dateien nicht aus einem alten ZIP über den aktuellen Branch kopieren: `package.json`, `package-lock.json`, `next.config.ts`, `tsconfig.json` und `.github/workflows` nur gezielt ändern. Vor dem Merge den gesamten PR-Diff prüfen; PR #15 hatte bereits behobene Sicherheits- und Build-Korrekturen zurückgesetzt. Änderungen am Anwendungscode immer auf dem aktuellen `main` beginnen und mit ihm abgleichen.
