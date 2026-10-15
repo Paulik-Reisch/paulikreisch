@@ -108,7 +108,7 @@ export default function ShopPage() {
                 <section className="bg-gray">
                     <div className="container">
                         <div className="text-center mb-large">
-                            <h2 style={{ fontSize: '2.5rem' }}>Ein satirischer Blick auf Bildung & Bürokratie</h2>
+                            <h2 style={{ fontSize: '2.5rem' }}>Ein satirischer Blick auf Bildung &amp; Bürokratie</h2>
                             <p className="subtitle">Entdecke die Abenteuer in Band 1 und 2</p>
                         </div>
 
@@ -116,7 +116,7 @@ export default function ShopPage() {
                             {/* BAND 1 */}
                             <article className="book-card">
                                 <div className="book-cover-wrapper">
-                                    <Image src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-hw1_900px.png?alt=media&token=42ce90a3-ed34-49d2-8e09-5258d0dfc484" alt="Hallo Welt Cover" fill />
+                                    <Image src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-hw1_900px.png?alt=media&amp;token=42ce90a3-ed34-49d2-8e09-5258d0dfc484" alt="Hallo Welt Cover" fill />
                                 </div>
                                 
                                 <span className="series-tag">Band 1</span>
@@ -128,7 +128,7 @@ export default function ShopPage() {
                                         <AmazonIcon />
                                         Bei Amazon kaufen
                                     </a>
-                                    <a href="https://play.google.com/store/books/details?id=HZb3EAAAQBAJ&rdid=book-HZb3EAAAQBAJ&rdot=1&source=gbs_atb&pcampaignid=books_booksearch_atb" target="_blank" rel="noopener noreferrer" className="btn btn-google">
+                                    <a href="https://play.google.com/store/books/details?id=HZb3EAAAQBAJ&amp;rdid=book-HZb3EAAAQBAJ&amp;rdot=1&amp;source=gbs_atb&amp;pcampaignid=books_booksearch_atb" target="_blank" rel="noopener noreferrer" className="btn btn-google">
                                         <GooglePlayIcon />
                                         Google Play E-Book
                                     </a>
@@ -142,7 +142,7 @@ export default function ShopPage() {
                             {/* BAND 2 */}
                             <article className="book-card">
                                 <div className="book-cover-wrapper">
-                                    <Image src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw2%2Fcover-hw2-900px.png?alt=media&token=9479f94f-e21d-4fe8-82d5-b668781bd724" alt="Band 2 Cover" fill />
+                                    <Image src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw2%2Fcover-hw2-900px.png?alt=media&amp;token=9479f94f-e21d-4fe8-82d5-b668781bd724" alt="Band 2 Cover" fill />
                                 </div>
                                 
                                 <span className="series-tag">Band 2</span>
@@ -250,7 +250,7 @@ export default function ShopPage() {
                                     </div>
                                     <div className="spec-item">
                                         <span className="spec-label">Herausgeber</span>
-                                        <span className="spec-value">Paulik & Reisch</span>
+                                        <span className="spec-value">Paulik &amp; Reisch</span>
                                     </div>
                                     <div className="spec-item">
                                         <span className="spec-label">Seiten</span>

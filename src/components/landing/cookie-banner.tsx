@@ -113,7 +113,7 @@ export function CookieBanner() {
               <Separator />
               <div className="flex items-center justify-between p-4 rounded-lg">
                 <div>
-                  <Label htmlFor="analytics" className="font-bold">Analyse & Leistung</Label>
+                  <Label htmlFor="analytics" className="font-bold">Analyse &amp; Leistung</Label>
                    <p className="text-xs text-muted-foreground mt-1">Diese Cookies helfen uns, die Nutzung der Website zu verfolgen und die Benutzererfahrung zu verbessern.</p>
                 </div>
                 <Switch id="analytics" checked={consent.analytics} onCheckedChange={() => handleToggle('analytics')} />

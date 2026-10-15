@@ -102,7 +102,7 @@ export function AdminDashboard({ defaultTab = "übersicht",
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{legalPages.length}</div>
-                        <p className="text-xs text-muted-foreground">Verwaltete LPs & Seiten</p>
+                        <p className="text-xs text-muted-foreground">Verwaltete LPs &amp; Seiten</p>
                     </CardContent>
                 </Card>
                  <Card className="gcp-card">

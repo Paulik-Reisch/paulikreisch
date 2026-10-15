@@ -70,7 +70,7 @@ export default async function LandingPageManager() {
                 </Card>
                  <Card className="gcp-card">
                     <CardHeader>
-                        <CardTitle>Statische & Vorlagen-Seiten</CardTitle>
+                        <CardTitle>Statische &amp; Vorlagen-Seiten</CardTitle>
                         <CardDescription>Feste Seiten, die direkt im Code definiert sind.</CardDescription>
                     </CardHeader>
                     <CardContent>

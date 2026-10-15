@@ -86,7 +86,7 @@ function AgeVerification({ onConfirm }: { onConfirm: () => void }) {
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <Input type="date" name="birthdate" required className="text-center"/>
                     <Button type="submit" size="lg">
-                        Alter bestätigen & fortfahren
+                        Alter bestätigen &amp; fortfahren
                     </Button>
                     <Link href="/lp-palabrotas/mehr-erfahren">
                         <Button variant="link" size="sm">

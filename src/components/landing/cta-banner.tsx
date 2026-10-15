@@ -55,7 +55,7 @@ export function CtaBanner() {
             Ja, ich will den Rabatt!
           </Link>
           <p className="text-[0.84rem] leading-snug text-[#1d1a15]/60">
-            Sicher bei Amazon · 5,0★ · 106 Seiten · Taschenbuch, E-Book & Gratis-Hörbuch
+            Sicher bei Amazon · 5,0★ · 106 Seiten · Taschenbuch, E-Book &amp; Gratis-Hörbuch
           </p>
         </div>
       </div>

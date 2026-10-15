@@ -39,7 +39,7 @@ export function BookShopHeader() {
         <a className="flex items-center justify-center" href="/">
           <div className="flex items-center gap-2">
             <Logo className="h-8 w-auto" />
-            <span className="font-headline font-semibold text-lg ml-2 hidden sm:inline">Paulik & Reisch</span>
+            <span className="font-headline font-semibold text-lg ml-2 hidden sm:inline">Paulik &amp; Reisch</span>
           </div>
         </a>
         

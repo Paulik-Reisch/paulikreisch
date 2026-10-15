@@ -134,7 +134,7 @@ export function LeadWall({ onUnlock }: { onUnlock: () => void }) {
         {/* Book mini upsell */}
         <div className="mt-8 flex items-center gap-4 text-left bg-background border rounded-xl p-4">
           <img
-            src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-hw1_900px.png?alt=media&token=42ce90a3-ed34-49d2-8e09-5258d0dfc484"
+            src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-hw1_900px.png?alt=media&amp;token=42ce90a3-ed34-49d2-8e09-5258d0dfc484"
             alt="Hallo Welt Cover"
             className="w-16 h-20 object-cover rounded-md shadow-sm shrink-0"
             loading="lazy"

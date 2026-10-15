@@ -29,7 +29,7 @@ export default async function AnalyticsPage() {
   return (
     <div className="space-y-6">
       <header>
-          <h1 className="text-3xl font-bold font-headline">Analytics & Tracking</h1>
+          <h1 className="text-3xl font-bold font-headline">Analytics &amp; Tracking</h1>
           <p className="text-muted-foreground">Übersicht über die wichtigsten Kennzahlen und Tracking-Tools.</p>
       </header>
        <Suspense fallback={<div>Loading Analytics...</div>}>

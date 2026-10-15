@@ -52,7 +52,7 @@ export default function Page(){
 <nav className="text-xs text-muted-foreground mb-4 flex gap-1.5"><Link href="/" className="hover:underline">Home</Link><span>/</span><span className="text-foreground font-medium">Ratgeber</span></nav>
 <Badge variant="secondary" className="mb-3">Ratgeber · 10 Guides</Badge>
 <h1 className="font-headline text-3xl md:text-5xl font-bold tracking-tight text-balance">Ratgeber</h1>
-<p className="mt-3 text-lg text-muted-foreground max-w-3xl leading-relaxed">10 Guides von Satire-Autoren — Satire, Schule, Sprache & Alltag. Jeweils mit TL;DR, 2–5k Wörtern, FAQ (AEO), Tabellen & internen Links. Start mit <Link href="/ratgeber/satire-schreiben" className="underline">Satire schreiben</Link> oder <Link href="/ratgeber/zeugnissprache" className="underline">Zeugnissprache</Link>.</p>
+<p className="mt-3 text-lg text-muted-foreground max-w-3xl leading-relaxed">10 Guides von Satire-Autoren — Satire, Schule, Sprache &amp; Alltag. Jeweils mit TL;DR, 2–5k Wörtern, FAQ (AEO), Tabellen &amp; internen Links. Start mit <Link href="/ratgeber/satire-schreiben" className="underline">Satire schreiben</Link> oder <Link href="/ratgeber/zeugnissprache" className="underline">Zeugnissprache</Link>.</p>
 <div className="mt-6 flex gap-2 flex-wrap"><Link href="/shop"><Button>Buch — 10,99 € <ArrowRight className="ml-2 h-4 w-4"/></Button></Link><Link href="/worthaft"><Button variant="outline">Worthaft spielen</Button></Link></div>
 </div>
 

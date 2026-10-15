@@ -242,7 +242,7 @@ export function HeroAb({ product }: { product?: Product }) {
             </p>
             <div className="hero-cta flex flex-wrap gap-[14px] m-0 mb-[20px] opacity-0 translate-y-[18px] transition-[opacity,transform] duration-[600ms] delay-[240ms]">
               <Link
-                href="https://amzn.eu/d/02nS59t2?utm_source=paulikreisch-de&utm_medium=lp-buch&utm_campaign=hallo-welt&utm_content=hero-ab"
+                href="https://amzn.eu/d/02nS59t2?utm_source=paulikreisch-de&amp;utm_medium=lp-buch&amp;utm_campaign=hallo-welt&amp;utm_content=hero-ab"
                 target="_blank"
                 rel="nofollow noopener"
                 data-track={`cta-${renderHero.id}-amazon`}

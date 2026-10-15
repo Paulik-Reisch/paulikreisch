@@ -221,7 +221,7 @@ export default function SitemapPage() {
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               Visuelle Übersicht aller öffentlich zugänglichen Seiten.
               <br />
-              <span className="text-sm">Admin-Bereiche & interne Routen sind ausgeblendet.</span>
+              <span className="text-sm">Admin-Bereiche &amp; interne Routen sind ausgeblendet.</span>
             </p>
           </motion.div>
 
