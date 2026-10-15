@@ -39,7 +39,7 @@ function NewsletterFormContent() {
         >
           {pending ? (
             <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sende…
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sende …
             </>
           ) : (
             "Ja, ich will lachen →"
@@ -58,7 +58,7 @@ function NewsletterFormContent() {
           <Link href="/datenschutz" className="underline decoration-[#1d1a15]/30 underline-offset-4 hover:decoration-[#1d1a15] font-semibold text-[#1d1a15]" target="_blank" rel="noopener noreferrer">
             Datenschutzerklärung
           </Link>{" "}
-          gelesen und stimme dem Erhalt des Newsletters zu. 1×/Woche, jederzeit abbestellbar.
+          gelesen und stimme dem Erhalt des Newsletters zu. Einmal wöchentlich, jederzeit abbestellbar.
         </span>
       </label>
     </div>

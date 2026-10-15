@@ -6,22 +6,13 @@ import { CookieBanner } from '@/components/landing/cookie-banner';
 import { ThemeProvider } from '@/components/theme-provider';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 import { GlobalTracker } from '@/components/analytics/global-tracker';
-import localFont from 'next/font/local';
+import { Poppins, Inter, Patrick_Hand, Lora, Source_Serif_4 } from 'next/font/google';
 
-const poppins = localFont({ src: './fonts/poppins-latin-700-normal.woff2', weight: '700', display: 'swap', variable: '--font-poppins' });
-const inter = localFont({ src: [
-  { path: './fonts/inter-latin-400-normal.woff2', weight: '400' },
-  { path: './fonts/inter-latin-700-normal.woff2', weight: '700' },
-], display: 'swap', variable: '--font-inter' });
-const patrickHand = localFont({ src: './fonts/patrick-hand-latin-400-normal.woff2', weight: '400', display: 'swap', variable: '--font-patrick-hand' });
-const lora = localFont({ src: [
-  { path: './fonts/lora-latin-400-normal.woff2', weight: '400' },
-  { path: './fonts/lora-latin-700-normal.woff2', weight: '700' },
-], display: 'swap', variable: '--font-lora' });
-const sourceSerif = localFont({ src: [
-  { path: './fonts/source-serif-4-latin-400-normal.woff2', weight: '400' },
-  { path: './fonts/source-serif-4-latin-700-normal.woff2', weight: '700' },
-], display: 'swap', variable: '--font-source-serif' });
+const poppins = Poppins({ weight: ['700'], subsets: ['latin'], display: 'swap', variable: '--font-poppins' });
+const inter = Inter({ weight: ['400','700'], subsets: ['latin'], display: 'swap', variable: '--font-inter' });
+const patrickHand = Patrick_Hand({ weight: ['400'], subsets: ['latin'], display: 'swap', variable: '--font-patrick-hand' });
+const lora = Lora({ weight: ['400','700'], subsets: ['latin'], display: 'swap', variable: '--font-lora' });
+const sourceSerif = Source_Serif_4({ weight: ['400','700'], subsets: ['latin'], display: 'swap', variable: '--font-source-serif' });
 
 export const viewport: Viewport = {
   width: 'device-width',

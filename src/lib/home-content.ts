@@ -8,10 +8,10 @@ export const homeBook = {
 } as const;
 
 export const homeFaqs = [
-  { question: 'Was ist „Hallo Welt“?', answer: '„Hallo Welt“ ist das satirische Buch von Philipp Paulik und Maximilian Reisch. In 36 Kapiteln auf 106 Seiten nehmen sie den Schulalltag, Bürokratie und das Erwachsenwerden aufs Korn.' },
+  { question: 'Was ist „Hallo Welt“?', answer: '„Hallo Welt“ ist ein satirisches Buch von Philipp Paulik und Maximilian Reisch. In 36 Kapiteln auf 106 Seiten nehmen sie den Schulalltag, die Bürokratie und das Erwachsenwerden aufs Korn.' },
   { question: 'Für wen ist das Buch gedacht?', answer: 'Für alle, die den Schulwahnsinn kennen: Schüler, ehemalige Schüler und Lehrkräfte mit Humor. Das Buch erzählt mit Ironie und schwarzem Humor; es ist Satire, kein Schulratgeber.' },
   { question: 'Wo kann ich das Buch kaufen und reinlesen?', answer: 'Im Buchshop findest du die Leseprobe, Informationen zum Buch und die Links zu den verfügbaren Ausgaben. Der Kauf erfolgt bei den dort verlinkten Anbietern.' },
-  { question: 'Was ist Worthaft?', answer: 'Worthaft ist unser kostenloses deutsches Worträtsel: fünf Buchstaben, sechs Versuche und jeden Tag ein neues Wort. Dein Spielstand und deine Statistik bleiben lokal in deinem Browser.' },
+  { question: 'Was ist Worthaft?', answer: 'Worthaft ist unser deutsches Worträtsel: fünf Buchstaben, sechs Versuche und jeden Tag ein neues Wort. Dein Spielstand und deine Statistik bleiben lokal in deinem Browser.' },
   { question: 'Sind die Texte im Magazin echte Nachrichten?', answer: 'Nein. Das Magazin veröffentlicht Satire zur Unterhaltung. Die Texte über Schule, Sprache und Alltag sind keine Nachrichten und können bewusst von der Wirklichkeit abweichen.' },
 ] as const;
 

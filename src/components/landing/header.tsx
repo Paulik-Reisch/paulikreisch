@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import { useIsMobile } from '@/hooks/use-mobile';
 import Link from "next/link";
 import { Logo } from "../ui/logo";
 import { cn } from '@/lib/utils';
@@ -13,7 +12,6 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const isMobile = useIsMobile();
   const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -81,9 +79,8 @@ export function Header() {
     };
   }, [open]);
 
-  if (pathname === '/worthaft' && isMobile) return null;
-
-  const showWorthaftLink = pathname !== '/worthaft';
+  const isWorthaftPage = pathname === '/worthaft';
+  const showWorthaftLink = !isWorthaftPage;
 
   return (
     <>
@@ -92,19 +89,27 @@ export function Header() {
         scrolled ? "border-b border-[#e8ddd0] shadow-[0_2px_16px_rgba(0,0,0,0.06)]" : "border-b border-transparent"
       )}>
         <div className="container mx-auto flex items-center justify-between">
-          <a className="flex items-center justify-center" href="/">
-            <div className="flex items-center gap-2">
-              <Logo className="h-8 w-auto" />
-              <span className="font-headline font-semibold text-lg ml-2 hidden sm:inline text-[#1d1a15]">Paulik & Reisch</span>
-            </div>
-          </a>
+          <div className="flex items-center gap-3 sm:gap-4">
+            <a className="flex items-center justify-center" href="/">
+              <div className="flex items-center gap-2">
+                <Logo className="h-8 w-auto" />
+                <span className="font-headline font-semibold text-lg ml-2 hidden sm:inline text-[#1d1a15]">Paulik & Reisch</span>
+              </div>
+            </a>
+            {isWorthaftPage && (
+              <div className="flex items-center gap-2 border-l border-[#e8ddd0] pl-3 sm:pl-4">
+                <WorthaftIcon className="h-6 w-6 text-primary" />
+                <h1 className="font-headline text-lg font-bold text-[#1d1a15] sm:text-xl">Worthaft</h1>
+              </div>
+            )}
+          </div>
           <div className="flex items-center gap-3">
             {/* Desktop — Landing-Look */}
             <nav className="hidden md:flex items-center gap-3">
               {showWorthaftLink && (
                 <Link
                   href="/worthaft"
-                  className="inline-flex items-center gap-2 rounded-full border border-[#e8ddd0] bg-white px-4 py-2 text-[0.9rem] font-semibold text-[#1d1a15] shadow-sm hover:bg-[#f7f2e7] hover:border-[#d9c7a8] transition-colors"
+                  className="inline-flex items-center gap-2 rounded-[12px] border-2 border-[#1d1a15] bg-white px-4 py-2 text-[0.9rem] font-semibold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] hover:bg-[#f7f2e7] transition-[transform,box-shadow,background-color]"
                 >
                   <WorthaftIcon className="h-4 w-4" />
                   Worthaft
