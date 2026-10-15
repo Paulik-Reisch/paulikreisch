@@ -133,12 +133,13 @@ export default async function AuthorPage({ params }: Props) {
     ]
   };
 
+  // serializeJsonLd escapes every <; safe-rich-text.test.ts covers script-breakout payloads.
+  // nosemgrep: typescript.react.security.audit.react-dangerouslysetinnerhtml.react-dangerouslysetinnerhtml
+  const authorJsonLd = <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />;
+
   return (
     <div className="flex flex-col min-h-[100dvh] bg-muted/30 text-foreground">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-      />
+      {authorJsonLd}
       <Header />
       <main className="flex-1 py-12 md:py-20">
         <div className="container px-4 md:px-6">
