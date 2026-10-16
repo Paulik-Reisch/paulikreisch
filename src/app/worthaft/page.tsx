@@ -31,7 +31,7 @@ import { initializeFirebase } from '@/firebase';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import confetti from 'canvas-confetti';
 import { getWorthaftKeyDimensions, normalizeWorthaftSliderValue } from '@/lib/worthaft-settings';
-import { canInteractWithWorthaftGame } from '@/lib/worthaft-game-state';
+import { canInteractWithWorthaftGame, readWorthaftRowStart, writeWorthaftRowStart, clearWorthaftRowStart } from '@/lib/worthaft-game-state';
 import { isWorthaftAntiWord } from '@/lib/worthaft-anti-words';
 import {
   createInvalidWorthaftWord,
@@ -966,6 +966,7 @@ export default function WorthaftPage() {
         }
 
         const savedGame = localStorage.getItem('worthaft-daily-game');
+        let completedToday = false;
         if (savedGame) {
             try {
                 const dailyState: DailyGameState = JSON.parse(savedGame);
@@ -989,6 +990,7 @@ export default function WorthaftPage() {
 
 
                     if (dailyState.status === 'won' || dailyState.status === 'lost') {
+                        completedToday = true;
                         setIsCompletedToday(true);
                         setTimeout(() => {
                             if (localStorage.getItem(`worthaft-feedback-${getTodayString()}`) === 'true') {
@@ -1002,6 +1004,22 @@ export default function WorthaftPage() {
             } catch (e) {
                 console.error("Failed to parse saved game state:", e);
                 localStorage.removeItem('worthaft-daily-game');
+            }
+        }
+
+        // Row timer: resume the persisted row start so a reload keeps the clock
+        // running; otherwise the current row starts now. Thinking time counts.
+        if (completedToday) {
+            rowStartTimeRef.current = 0;
+            clearWorthaftRowStart(localStorage);
+        } else {
+            const persistedRowStart = readWorthaftRowStart(localStorage, todayStr);
+            if (persistedRowStart !== null) {
+                rowStartTimeRef.current = persistedRowStart;
+            } else {
+                const now = Date.now();
+                rowStartTimeRef.current = now;
+                writeWorthaftRowStart(localStorage, todayStr, now);
             }
         }
     }, []);
@@ -1077,9 +1095,13 @@ export default function WorthaftPage() {
         newGuess[activeIndex] = char;
         setCurrentGuess(newGuess);
 
-        // Start the per-row timer when the first letter of a fresh row is typed.
-        if (currentGuess.every((c) => c === '')) {
-            rowStartTimeRef.current = Date.now();
+        // Fallback only: the row timer normally starts when the row becomes
+        // active (see mount effect and handleEnter). If it is not running yet
+        // (e.g. cleared storage), start it on the first letter of a fresh row.
+        if (currentGuess.every((c) => c === '') && rowStartTimeRef.current === 0) {
+            const now = Date.now();
+            rowStartTimeRef.current = now;
+            writeWorthaftRowStart(localStorage, getTodayString(), now);
         }
 
         // Advance cursor, skipping joker if necessary
@@ -1142,6 +1164,8 @@ export default function WorthaftPage() {
             };
             setStats(newStats);
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
+            rowStartTimeRef.current = 0;
+            clearWorthaftRowStart(localStorage);
             saveState(newGuesses, 'won', newLetterStatuses, hotTipUsed, jokerPosition, newRowTimes);
             setIsCompletedToday(true);
             setTimeout(() => {
@@ -1214,6 +1238,8 @@ export default function WorthaftPage() {
             };
             setStats(newStats);
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
+            rowStartTimeRef.current = 0;
+            clearWorthaftRowStart(localStorage);
             saveState(newGuesses, 'lost', newLetterStatuses, hotTipUsed, jokerPosition, newRowTimes);
             setIsCompletedToday(true);
             setTimeout(() => {
@@ -1228,8 +1254,11 @@ export default function WorthaftPage() {
             setCurrentGuess(Array(WORD_LENGTH).fill(''));
             setActiveIndex(0);
             setRowTimes(newRowTimes);
-            // Start the timer for the next row now (first keystroke will also reset if needed).
-            rowStartTimeRef.current = Date.now();
+            // Start the timer for the next row now - thinking time counts.
+            // Persisted so a reload keeps the clock running.
+            const nextRowStart = Date.now();
+            rowStartTimeRef.current = nextRowStart;
+            writeWorthaftRowStart(localStorage, getTodayString(), nextRowStart);
             saveState(newGuesses, 'playing', newLetterStatuses, hotTipUsed, jokerPosition, newRowTimes);
         }
     }, [currentGuess, gameState, guesses, letterStatuses, solution, stats, toast, saveState, hotTipUsed, jokerPosition, rowTimes]);
