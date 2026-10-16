@@ -82,7 +82,7 @@ export function Authors({ variant = "classic" }: { variant?: "classic" | "editor
                 : "group relative flex flex-col bg-white border border-[#e8ddd0] rounded-[18px] shadow-[0_2px_16px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_28px_rgba(0,0,0,0.10)] hover:-translate-y-[1px] transition-[box-shadow,transform] duration-200 overflow-hidden"}
             >
               {!isEditorial && <div className="h-[3px] w-full bg-gradient-to-r from-[#ffe14d] via-[#ffcf4d] to-[#e8ddd0] opacity-90" aria-hidden="true" />}
-              <div className={isEditorial ? undefined : "flex flex-1 flex-col p-7 text-center"}>
+              <div className={isEditorial ? styles.editorialContent : "flex flex-1 flex-col p-7 text-center"}>
                 <div className={isEditorial ? styles.editorialPortrait : "mx-auto relative"}>
                   {!isEditorial && <div className="absolute -inset-1 rounded-full bg-[#ffe14d]/30 blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true" />}
                   <Image

@@ -193,3 +193,9 @@
     grid-template-columns: 100px minmax(0, 1fr);
   }
 }
+
+/* The editorial card is a CSS grid on mobile; the shared wrapper div must not
+   swallow the grid items, so let its children participate directly. */
+.editorialContent {
+  display: contents;
+}
