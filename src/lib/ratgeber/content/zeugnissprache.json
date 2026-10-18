@@ -1,0 +1,785 @@
+[
+  {
+    "slug": "zeugnis-formulierungen-liste",
+    "title": "Zeugnisformulierungen: Beispiele verstehen",
+    "description": "Schulische und berufliche Zeugnisformulierungen verständlich einordnen – mit Kontext, Grenzen und nächsten Schritten.",
+    "answer": "Eine einzelne Zeugnisformulierung beweist selten eine feste Note. Lies Schulzeugnisse und Arbeitszeugnisse getrennt und beziehe den jeweiligen Kontext ein.",
+    "sections": [
+      {
+        "id": "art",
+        "title": "Erst die Zeugnisart bestimmen",
+        "paragraphs": [
+          "Ein Schulzeugnis dokumentiert Leistungen und Verhalten nach den Regeln des jeweiligen Bundeslands und der Schule. Ein Arbeitszeugnis beschreibt Tätigkeit und – beim qualifizierten Zeugnis – Leistung und Verhalten im Arbeitsverhältnis. Es gelten unterschiedliche Maßstäbe. Eine satirische Übersetzung von Schulformulierungen ist keine verlässliche Bewertungshilfe für ein Arbeitszeugnis.",
+          "Halte fest, ob du eine Schulnote, einen Kommentar, ein einfaches Arbeitszeugnis oder ein qualifiziertes Arbeitszeugnis liest. Diese Unterscheidung bestimmt, welche Rückfrage sinnvoll ist."
+        ]
+      },
+      {
+        "id": "schule",
+        "title": "Schulische Formulierungen",
+        "paragraphs": [
+          "Sätze wie „beteiligt sich häufig“ oder „arbeitet zunehmend selbstständig“ können Hinweise geben, aber ihre Bedeutung hängt von Fach, Alter, Zeugnisform und Bewertungsmaßstab ab. Sie ersetzen keine Note und keine Rückfrage. Frage bei Unklarheit nach konkreten Situationen: In welcher Unterrichtsphase zeigt sich die genannte Stärke? Was wäre ein nächster beobachtbarer Schritt?",
+          "Schulzeugnisse folgen den Vorgaben des Landes und der Schule. Eine im Internet kursierende feste Übersetzung einzelner Wörter sollte deshalb nicht als amtlicher Code verstanden werden."
+        ]
+      },
+      {
+        "id": "arbeit",
+        "title": "Arbeitszeugnisse: klar und verständlich",
+        "paragraphs": [
+          "§ 109 GewO verlangt ein klares und verständliches Arbeitszeugnis und verbietet Formulierungen, die eine verdeckte Aussage bezwecken. Das Gesetz schreibt keine allgemeine geheime Notentabelle fest. Übliche Leistungsformeln werden in der Praxis oft abgestuft gelesen; ihre Aussage hängt dennoch vom Gesamtzeugnis und der Rechtsprechung ab.",
+          "Der Paragraph verlangt keine Pflicht zu Dank und guten Wünschen am Ende. Eine fehlende Schlussformel darf daher nicht automatisch als Kritik übersetzt werden."
+        ]
+      },
+      {
+        "id": "vorgehen",
+        "title": "Praktisches Vorgehen",
+        "paragraphs": [
+          "Markiere die Passage, beschreibe neutral, was unklar ist, und vergleiche sie mit Aufgabenbeschreibung und übrigen Bewertungen. Beim Schulzeugnis hilft ein Gespräch mit der Lehrkraft; beim Arbeitszeugnis kann ein präziser Berichtigungswunsch sinnvoll sein. Halte konkrete Änderungen fest und hole bei einem Streit um Rechte fachkundigen Rat ein.",
+          "Eine hilfreiche Frage ist: „Welche beobachtbare Leistung soll diese Formulierung beschreiben?“ Sie lenkt vom Rätselraten auf den Inhalt.",
+          "Beispiel: Ein Schulzeugnis nennt eine Schülerin „zuverlässig“, während die Note in Mathematik schwach ist. Das ist kein Widerspruch, denn Zuverlässigkeit kann Vorbereitung oder Abgabe beschreiben, die Note aber fachliche Leistungen. Bei einem Arbeitszeugnis wiederum sollte eine Gesamtaussage mit Tätigkeiten und Leistungsbeschreibung zusammenpassen. Schreibe auf, welche konkrete Frage du hast, statt beide Textsorten mit derselben Code-Tabelle zu lesen."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Sind positive Worte immer echtes Lob?",
+        "answer": "Nicht unbedingt, aber eine pauschale Übersetzung einzelner Wörter ist ebenfalls unzuverlässig. Entscheidend sind Kontext und Zeugnisart."
+      },
+      {
+        "question": "Gilt § 109 GewO für Schulzeugnisse?",
+        "answer": "Nein. § 109 GewO betrifft Arbeitszeugnisse. Schulzeugnisse richten sich nach den schulrechtlichen Vorgaben der Länder."
+      }
+    ],
+    "sources": [
+      {
+        "label": "§ 109 GewO – Zeugnis",
+        "url": "https://www.gesetze-im-internet.de/gewo/__109.html"
+      },
+      {
+        "label": "KMK – Übersicht Schulgesetze der Länder",
+        "url": "https://www.kmk.org/en/downloads-dokumente/rechtsvorschriften-/-lehrplaene/uebersicht-schulgesetze.html"
+      }
+    ],
+    "related": [
+      "arbeitszeugnis-geheimcode",
+      "zeugnis-recht-eltern"
+    ]
+  },
+  {
+    "slug": "arbeitszeugnis-geheimcode",
+    "title": "Arbeitszeugnis-Geheimcode: Formulierungen einordnen",
+    "description": "Arbeitszeugnis-Formeln richtig lesen: Was § 109 GewO tatsächlich verlangt und wie du unklare Stellen ansprichst.",
+    "answer": "Arbeitszeugnisse werden in der Praxis anhand wiederkehrender Leistungsformeln beurteilt. § 109 GewO verbietet versteckte Aussagen; eine starre gesetzliche Notentabelle enthält er nicht.",
+    "sections": [
+      {
+        "id": "gesetz",
+        "title": "Was das Gesetz tatsächlich sagt",
+        "paragraphs": [
+          "§ 109 GewO gewährt bei Beendigung des Arbeitsverhältnisses Anspruch auf ein schriftliches Zeugnis. Auf Wunsch umfasst es auch Leistung und Verhalten. Es muss klar und verständlich formuliert sein; verdeckte Merkmale mit einer anderen als der erkennbaren Aussage sind unzulässig. Eine gesetzliche Pflicht, Kritik in Codes zu verschlüsseln oder ein bestimmtes Notenwort zu verwenden, steht dort nicht.",
+          "Damit ist die verbreitete Vorstellung eines gesetzlich vorgeschriebenen Geheimcodes irreführend. In der Praxis haben sich Formulierungen etabliert, die häufig als abgestufte Gesamturteile gelesen werden."
+        ]
+      },
+      {
+        "id": "formeln",
+        "title": "Übliche Formeln im Kontext",
+        "paragraphs": [
+          "„Stets zu unserer vollsten Zufriedenheit“ wird häufig als sehr gute Gesamtbewertung verstanden; „stets zu unserer vollen Zufriedenheit“ meist als gute. Das sind verbreitete Konventionen, keine vollständige gesetzliche Tabelle. Aufgaben, Zeitraum, konkrete Erfolge und übrige Formulierungen können die Einordnung verändern. Lies daher nicht nur ein einzelnes Adjektiv.",
+          "Achte darauf, ob das Zeugnis konkrete Tätigkeiten und Leistung beschreibt. Eine Gesamtformel ohne Tätigkeitsbezug sagt wenig darüber, ob die zentralen Aufgaben angemessen dargestellt sind."
+        ]
+      },
+      {
+        "id": "schluss",
+        "title": "Auslassungen vorsichtig bewerten",
+        "paragraphs": [
+          "Ein fehlender Dank, ein fehlender Zukunftswunsch oder eine nicht erwähnte Kompetenz ist nicht automatisch ein Geheimcode. Das Bundesarbeitsgericht hat entschieden, dass ein Anspruch auf eine Dankes- und Wunschformel nicht aus § 109 GewO folgt. Was sinnvollerweise erwähnt werden sollte, hängt von der Tätigkeit und dem Gesamtbild ab.",
+          "Wenn eine wesentliche Aufgabe fehlt oder eine Aussage missverständlich ist, frage konkret nach einer Ergänzung. Behaupte nicht, eine ausgelassene Schlussformel beweise eine bestimmte Note."
+        ]
+      },
+      {
+        "id": "berichtigung",
+        "title": "Eine Berichtigung ansprechen",
+        "paragraphs": [
+          "Vergleiche das Zeugnis mit deiner tatsächlichen Tätigkeit. Formuliere sachlich, welche Passage unklar oder aus deiner Sicht unrichtig ist, und schlage eine konkrete Änderung vor. Belege gewünschte Aussagen mit Aufgaben, Ergebnissen oder bisherigen Beurteilungen.",
+          "Der Anspruch auf Berichtigung ist eine Rechtsfrage, die vom Einzelfall abhängt. Bei Fristen oder Streit können Gewerkschaft, Betriebsrat oder eine rechtskundige Beratung helfen. Bewahre deine Anfrage und die Zeugnisversionen auf.",
+          "Beispiel: Eine Person hat regelmäßig Kundentermine vorbereitet und ein Team eingearbeitet. Wenn das Zeugnis nur „war stets pünktlich“ hervorhebt, kann sie sachlich um Ergänzung der tatsächlichen Aufgaben bitten. Das beweist noch keine Absicht zur Abwertung. Eine präzise Anfrage könnte lauten: „Bitte nehmen Sie meine regelmäßige Kundenbetreuung und die Einarbeitung neuer Kolleginnen und Kollegen in die Tätigkeitsbeschreibung auf.“"
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Muss ein Arbeitszeugnis wohlwollend sein?",
+        "answer": "§ 109 GewO verlangt Klarheit und Verständlichkeit. Die Rechtsprechung berücksichtigt die Interessen beider Seiten; daraus folgt kein Freibrief für versteckte Codes."
+      },
+      {
+        "question": "Muss der Arbeitgeber Dank und gute Wünsche aufnehmen?",
+        "answer": "Das Bundesarbeitsgericht leitet eine solche Pflicht nicht aus § 109 GewO ab."
+      }
+    ],
+    "sources": [
+      {
+        "label": "§ 109 GewO – Zeugnis",
+        "url": "https://www.gesetze-im-internet.de/gewo/__109.html"
+      },
+      {
+        "label": "BAG 9 AZR 227/11 – Schlussformeln",
+        "url": "https://www.bundesarbeitsgericht.de/entscheidung/9-azr-227-11/"
+      }
+    ],
+    "related": [
+      "zeugnis-formulierungen-liste",
+      "auffaellige-formulierungen"
+    ]
+  },
+  {
+    "slug": "beteiligt-sich-lebhaft",
+    "title": "„Beteiligt sich lebhaft“ im Schulzeugnis",
+    "description": "Was „beteiligt sich lebhaft am Unterricht“ aussagen kann, wie der Kontext hilft und welche Rückfragen sinnvoll sind.",
+    "answer": "„Beteiligt sich lebhaft“ beschreibt zunächst eine rege Beteiligung. Ob das positiv gemeint ist, zeigt erst der Zusammenhang des Schulzeugnisses.",
+    "sections": [
+      {
+        "id": "wortlaut",
+        "title": "Wortlaut ohne Geheimcode lesen",
+        "paragraphs": [
+          "Die Formulierung kann auf häufige Wortmeldungen oder aktive Beiträge hindeuten. Sie sagt allein nicht, ob die Beiträge fachlich treffend, passend zum Gespräch oder gelegentlich störend waren. Eine scherzhafte Übersetzung in einen festen Code ist keine belastbare Diagnose. Schulische Bewertungsmaßstäbe unterscheiden sich nach Land, Schule, Fach und Jahrgang.",
+          "Der Satz beschreibt zunächst Aktivität, nicht automatisch Qualität. Achte darauf, welche weiteren Aussagen zu Zuhören, Gesprächsregeln und fachlichen Beiträgen im Zeugnis stehen."
+        ]
+      },
+      {
+        "id": "kontext",
+        "title": "Auf den Kontext achten",
+        "paragraphs": [
+          "Lies den Satz zusammen mit Aussagen über Zuhören, Gesprächsregeln, fachliche Qualität und Noten. „Bringt sich lebhaft und zielgerichtet ein“ klingt anders als ein Kommentar, der zugleich häufiges Unterbrechen erwähnt. Ein einzelnes Adverb sollte nicht die gesamte Beurteilung überdecken.",
+          "Notiere, welche konkrete Frage du zur Bedeutung hast. So kann das Gespräch auf beobachtbare Situationen eingehen, statt über vermeintliche Codes zu rätseln."
+        ]
+      },
+      {
+        "id": "rueckfrage",
+        "title": "Eine gute Rückfrage stellen",
+        "paragraphs": [
+          "Bitte die Lehrkraft um Beispiele: „In welchen Situationen zeigt sich die lebhafte Beteiligung besonders?“ und „Was hilft, die Beiträge noch stärker an der Aufgabe auszurichten?“ So erfährst du, was im Unterricht passiert und welcher nächste Schritt nützlich wäre.",
+          "Vermeide die Frage „Ist das gut oder schlecht?“, weil sie kaum erklärt, was das Kind tatsächlich tut. Bitte stattdessen um einen konkreten Moment oder eine beobachtbare Veränderung."
+        ]
+      },
+      {
+        "id": "formulieren",
+        "title": "Wenn du selbst den Text schreibst",
+        "paragraphs": [
+          "Bei einer eigenen Rückmeldung beschreibst du möglichst konkret, was beobachtet wurde: „meldet sich regelmäßig mit passenden Fragen“ oder „unterbricht gelegentlich andere Beiträge“. Pauschale Charakterurteile helfen wenig.",
+          "Eine gute Formulierung ermöglicht Entwicklung und macht aus einer einzelnen Unterrichtssituation keine feste Eigenschaft. Trenne Beobachtung und Bewertung, damit Eltern und Kind verstehen, worauf sich der Satz bezieht.",
+          "Ein Gespräch kann etwa ergeben, dass ein Kind viele gute Fragen stellt, aber Mitschüler gelegentlich unterbricht. Dann lässt sich die Formulierung genauer verstehen: Die Beteiligung ist rege, die Gesprächsregeln können noch wachsen. Ein nächstes Ziel könnte sein, vor dem eigenen Beitrag abzuwarten und an den vorherigen Gedanken anzuknüpfen. Diese Beschreibung ist hilfreicher als eine pauschale Deutung als „Stören“ oder als uneingeschränktes Lob.",
+          "Bitte bewerte die einzelne Formulierung nie losgelöst von der fachlichen Note und dem restlichen Kommentar."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Ist „beteiligt sich lebhaft“ immer positiv?",
+        "answer": "Nein. Der Satz beschreibt zunächst Aktivität; Kontext und weitere Aussagen zeigen, wie sie bewertet wird."
+      },
+      {
+        "question": "Kann ich die Lehrkraft nach Beispielen fragen?",
+        "answer": "Ja. Eine sachliche Frage nach konkreten Situationen macht die Aussage verständlicher und unterstützt ein konstruktives Gespräch."
+      }
+    ],
+    "sources": [
+      {
+        "label": "KMK – Übersicht Schulgesetze der Länder",
+        "url": "https://www.kmk.org/en/downloads-dokumente/rechtsvorschriften-/-lehrplaene/uebersicht-schulgesetze.html"
+      }
+    ],
+    "related": [
+      "zeugnis-formulierungen-liste",
+      "elterngespraech-fragen"
+    ]
+  },
+  {
+    "slug": "was-bedeutet-betont-seine-staerken",
+    "title": "„Betont seine Stärken“: Bedeutung im Zeugnis",
+    "description": "Die Wendung „betont seine Stärken“ verständlich einordnen: vollständigen Satz, Zeugnisart und mögliche Rückfragen prüfen.",
+    "answer": "„Betont seine Stärken“ ist ohne vollständigen Satz und Zeugnisart nicht eindeutig. Prüfe, wer welche Stärken hervorhebt und in welchem Zusammenhang.",
+    "sections": [
+      {
+        "id": "mehrdeutig",
+        "title": "Die Mehrdeutigkeit klären",
+        "paragraphs": [
+          "Die Wendung kann bedeuten, dass eine Person ihre Fähigkeiten selbstbewusst hervorhebt. Sie kann auch eine redaktionelle Beschreibung sein, dass bestimmte positive Seiten berücksichtigt werden. Ohne Subjekt und Satzumfeld lässt sich das nicht sicher bestimmen. Ein Wörterbuch vermeintlicher Geheimcodes hilft weniger als der vollständige Wortlaut.",
+          "Schau nach, wer im Satz handelt: die Person selbst, eine Lehrkraft oder die ausstellende Stelle? Ein kleines grammatisches Detail kann die Aussage verändern."
+        ]
+      },
+      {
+        "id": "kontext",
+        "title": "Schulischer oder beruflicher Kontext",
+        "paragraphs": [
+          "Im Schulzeugnis richtet sich die Bewertung nach dem Landesrecht und der Zeugnisform. In einem Kommentar kann die Wendung eine Beobachtung zu Lernverhalten oder Selbsteinschätzung sein. Im Arbeitszeugnis gelten die Anforderungen des § 109 GewO an Klarheit und Verständlichkeit; eine absichtlich verschlüsselte Zweitbotschaft ist unzulässig.",
+          "Die Regeln sind also nicht austauschbar. Kläre zuerst, welche Zeugnisart vorliegt, bevor du die Formulierung bewertest."
+        ]
+      },
+      {
+        "id": "nachfragen",
+        "title": "So lässt sich nachfragen",
+        "paragraphs": [
+          "Bei der Schule: „Welche Stärke wird hier konkret angesprochen, und an welchem Beispiel zeigt sie sich?“ Beim Arbeitgeber: „Können Sie erläutern, welche Aussage die Passage treffen soll?“ Wenn du eine Berichtigung anstrebst, benenne die unklare Stelle genau und schlage eine verständliche Formulierung vor.",
+          "Nicht jede unglückliche Wendung bedeutet eine negative Bewertung. Ein Gespräch kann klären, ob lediglich der Satzbau holprig ist oder ob eine wichtige Information fehlt."
+        ]
+      },
+      {
+        "id": "beispiel",
+        "title": "Beispiel für eine klarere Aussage",
+        "paragraphs": [
+          "Unklar: „Er betont seine Stärken im Projekt.“ Klarer – sofern es der Beobachtung entspricht – wäre: „Er brachte seine Kenntnisse in der Auswertung ein und erläuterte die Ergebnisse nachvollziehbar.“ Die Neufassung benennt Verhalten und Beitrag.",
+          "Erfinde bei einer Überarbeitung keine Erfolge. Gute Zeugnisarbeit beschreibt nachprüfbare Aufgaben und Leistungen. Wenn der Satz eine Selbsteinschätzung meint, sollte auch das ausdrücklich werden.",
+          "Vergleiche zwei mögliche Kontexte: „Die Schülerin betont ihre Stärken im Gespräch“ beschreibt möglicherweise, wie sie über sich spricht. „Die Lehrkraft betont im Bericht ihre Stärken“ bezeichnet dagegen eine Auswahl im Text. Beide Sätze enthalten dieselben Schlüsselwörter, aber unterschiedliche Handelnde und Bedeutungen. Deshalb lohnt es sich, den vollständigen Abschnitt vorzulegen, wenn eine Deutung oder Korrektur gewünscht ist.",
+          "Wenn der Satz aus einem Zeugnis stammt, ist ein Foto oder eine Abschrift des ganzen Absatzes oft hilfreicher als ein isoliertes Stichwort."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Ist die Formulierung automatisch negativ?",
+        "answer": "Nein. Ohne vollständigen Satz, Kontext und Zeugnisart ist keine verlässliche Wertung möglich."
+      },
+      {
+        "question": "Gilt das Verbot geheimer Codes auch für Arbeitszeugnisse?",
+        "answer": "§ 109 Abs. 2 GewO verbietet Merkmale oder Formulierungen, die eine andere als die erkennbare Aussage bezwecken."
+      }
+    ],
+    "sources": [
+      {
+        "label": "§ 109 GewO – Zeugnis",
+        "url": "https://www.gesetze-im-internet.de/gewo/__109.html"
+      },
+      {
+        "label": "KMK – Übersicht Schulgesetze der Länder",
+        "url": "https://www.kmk.org/en/downloads-dokumente/rechtsvorschriften-/-lehrplaene/uebersicht-schulgesetze.html"
+      }
+    ],
+    "related": [
+      "zeugnis-formulierungen-liste",
+      "arbeitszeugnis-geheimcode"
+    ]
+  },
+  {
+    "slug": "auffaellige-formulierungen",
+    "title": "Auffällige Formulierungen im Zeugnis prüfen",
+    "description": "Unklare oder widersprüchliche Zeugnisstellen erkennen und sachlich nachfragen, ohne einzelne Wörter als festen Code zu behandeln.",
+    "answer": "Auffällig ist eine Zeugnispassage, wenn sie unklar, widersprüchlich oder im Kontext nicht verständlich wird. Das ist Anlass zur Rückfrage, kein Beweis für einen Geheimcode.",
+    "sections": [
+      {
+        "id": "widerspruch",
+        "title": "Widersprüche und Unklarheit",
+        "paragraphs": [
+          "Prüfe, ob Leistungsbewertung, Aufgabenbeschreibung und konkrete Beispiele zusammenpassen. Ein Zeugnis kann etwa sorgfältiges Arbeiten loben und später eine gegenteilige Aussage enthalten. Markiere beide Stellen und frage, wie sie gemeint sind. Im Schulzeugnis können Note und Kommentar verschiedene Aspekte abbilden; im Arbeitszeugnis verlangt § 109 GewO klare und verständliche Formulierungen.",
+          "Unklarheit kann auch schlicht aus ungeschicktem Satzbau entstehen. Eine Rückfrage klärt, ob ein inhaltlicher Widerspruch oder nur eine missverständliche Formulierung vorliegt."
+        ]
+      },
+      {
+        "id": "auslassungen",
+        "title": "Übertreibung und Auslassung vorsichtig bewerten",
+        "paragraphs": [
+          "Ein auffällig langer Abschnitt über Nebentätigkeiten kann Fragen aufwerfen, beweist aber allein keine versteckte Abwertung. Auch fehlende Angaben sind je nach Tätigkeit und Zeugnisart unterschiedlich zu bewerten. Bei Arbeitszeugnissen besteht nicht automatisch ein Anspruch auf jede gewünschte Schlussformel.",
+          "Vermeide Listen, die einzelne Wörter unabhängig vom Gesamtzeugnis als feste Noten ausgeben. Formulierungen sind Teil eines Gesamttextes und sollten zusammen mit Tätigkeiten, Zeitraum und Leistungen gelesen werden."
+        ]
+      },
+      {
+        "id": "raster",
+        "title": "Prüfraster für eine Rückfrage",
+        "paragraphs": [
+          "Frage dich: Welche genaue Passage ist unklar? Was sagt der übrige Text? Welche konkrete Tätigkeit oder Beobachtung fehlt? Welche verständliche Formulierung würde den Sachverhalt korrekt darstellen? Mit diesem Raster lässt sich ein Gespräch auf den Inhalt statt auf Vermutungen lenken.",
+          "Zitiere die beanstandete Stelle knapp, erkläre die tatsächliche Aufgabe und bitte um Klärung oder schlage eine sachliche Änderung vor. Bewahre Versionen und deine Anfrage auf."
+        ],
+        "bullets": [
+          "Zitiere die Passage.",
+          "Beschreibe die Aufgabe oder Beobachtung.",
+          "Bitte um Klärung oder eine konkrete Korrektur."
+        ]
+      },
+      {
+        "id": "hilfe",
+        "title": "Wann Unterstützung sinnvoll ist",
+        "paragraphs": [
+          "Wenn eine Arbeitszeugnispassage berufliche Nachteile auslösen könnte oder eine Berichtigung abgelehnt wird, kann rechtlicher Rat sinnvoll sein. Bei Schulzeugnissen hängen Verfahren und Fristen vom Bundesland und der konkreten Entscheidung ab.",
+          "Die Kultusministerkonferenz verweist auf die Schulgesetze der Länder. Ein bundesweit einheitliches Anfechtungsverfahren lässt sich daraus nicht ableiten. Prüfe bei einer formalen Frage die zuständige Stelle und die Rechtsbehelfsbelehrung.",
+          "Beispiel für eine sachliche Bitte: „Im Zeugnis steht, dass ich Projekte eigenständig koordiniert habe. Im nächsten Satz heißt es, ich hätte Aufgaben nur nach enger Anleitung erledigt. Können Sie erläutern, ob sich das auf verschiedene Tätigkeiten bezieht? Falls nicht, bitte ich um eine einheitliche Formulierung.“ So benennst du den konkreten Widerspruch und bittest zuerst um Klärung, statt eine geheime Note zu unterstellen."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Sind fehlende Dankesworte im Arbeitszeugnis ein Warnsignal?",
+        "answer": "Nicht automatisch. Das Bundesarbeitsgericht leitet aus § 109 GewO keinen Anspruch auf eine Dankes- und Wunschformel ab."
+      },
+      {
+        "question": "Kann ich ein Schulzeugnis nach denselben Regeln prüfen wie ein Arbeitszeugnis?",
+        "answer": "Nein. Zeugnisarten folgen unterschiedlichen Rechtsgrundlagen und Bewertungszwecken."
+      }
+    ],
+    "sources": [
+      {
+        "label": "§ 109 GewO – Zeugnis",
+        "url": "https://www.gesetze-im-internet.de/gewo/__109.html"
+      },
+      {
+        "label": "BAG 9 AZR 227/11 – Schlussformeln",
+        "url": "https://www.bundesarbeitsgericht.de/entscheidung/9-azr-227-11/"
+      },
+      {
+        "label": "KMK – Übersicht Schulgesetze der Länder",
+        "url": "https://www.kmk.org/en/downloads-dokumente/rechtsvorschriften-/-lehrplaene/uebersicht-schulgesetze.html"
+      }
+    ],
+    "related": [
+      "arbeitszeugnis-geheimcode",
+      "zeugnis-recht-eltern"
+    ]
+  },
+  {
+    "slug": "notenschluessel-prozente",
+    "title": "Notenschlüssel: Prozente richtig einordnen",
+    "description": "Punkte in Prozent umrechnen und verstehen, warum daraus nicht automatisch eine bundesweit gültige Schulnote folgt.",
+    "answer": "Ein Prozentwert allein ergibt keine bundesweit gültige Schulnote. Maßgeblich sind Aufgaben, Bewertungsmaßstab, Schulform, Fach und geltende Vorgaben.",
+    "sections": [
+      {
+        "id": "einheit",
+        "title": "Warum es keinen Einheitsschlüssel gibt",
+        "paragraphs": [
+          "Notenbildung wird in Deutschland durch Landesrecht und schulische Vorgaben geprägt. Aufgaben unterscheiden sich zudem darin, wie viele Punkte erreichbar sind und welche Anforderungen gelten. Ein pauschaler Schlüssel wie „ab 90 Prozent Note 1“ kann daher für eine konkrete Arbeit falsch sein. Die KMK stellt eine Übersicht der Schulgesetze bereit, aber keinen einzigen Notenschlüssel für alle Prüfungen.",
+          "Auch innerhalb einer Schule können Bewertungsvorgaben je nach Fach, Jahrgang und Prüfungsart variieren. Frage nach dem Schlüssel, der für genau diese Arbeit angekündigt wurde."
+        ]
+      },
+      {
+        "id": "rechnung",
+        "title": "Den Prozentanteil ausrechnen",
+        "paragraphs": [
+          "Teile die erreichten Punkte durch die maximal erreichbaren Punkte und multipliziere mit 100. Beispiel: 27 von 36 Punkten ergeben 27 ÷ 36 × 100 = 75 Prozent. Das Ergebnis beschreibt den Anteil, nicht automatisch die Note. Prüfe anschließend die auf dem Aufgabenblatt oder von der Lehrkraft genannte Zuordnung.",
+          "Achte darauf, dass die erreichbare Gesamtpunktzahl korrekt ist. Bei Teilpunkten oder Bonusaufgaben kann sich die Berechnung ändern."
+        ]
+      },
+      {
+        "id": "nachfrage",
+        "title": "Bei unklarer Bewertung nachfragen",
+        "paragraphs": [
+          "Bitte um den Erwartungshorizont und die Zuordnung der Punkte. Frage, ob Teilpunkte möglich waren und wie offene Aufgaben bewertet wurden. So lässt sich ein Rechenfehler von einer fachlichen Bewertungsfrage unterscheiden.",
+          "Bei Prüfungsentscheidungen können besondere Verfahrensregeln und Fristen gelten. Informiere dich dafür bei der Schule oder der zuständigen Landesstelle, statt einen allgemeinen Prozentrechner als maßgeblich anzusehen."
+        ]
+      },
+      {
+        "id": "tabelle",
+        "title": "Rechenbeispiele ohne Notenzuordnung",
+        "paragraphs": [
+          "Für 30 erreichbare Punkte ergeben 15 Punkte genau 50 Prozent, 21 Punkte 70 Prozent und 27 Punkte 90 Prozent. Diese Rechenwerte sind keine Notenzuordnung. Sie zeigen nur, wie Punkte in Prozent umgerechnet werden. Schreibe den verwendeten Schlüssel neben das Ergebnis, damit Prozent und Note nicht verwechselt werden.",
+          "Beispiel: Bei einer Arbeit gibt es 40 Punkte; eine Schülerin erreicht 29. Die Rechnung lautet 29 ÷ 40 × 100 = 72,5 Prozent. Ob daraus Note 2, 3 oder eine andere Bewertung wird, entscheidet der angekündigte Maßstab. Prüfe außerdem, ob Bonuspunkte, Teilpunkte oder unterschiedliche Gewichtungen angesetzt wurden. Ein Prozentwert allein beantwortet diese Fragen nicht.",
+          "Bewahre auch die Aufgabenstellung auf, falls du später nachvollziehen möchtest, wie die Punkte zustande kamen.",
+          "Diese Unterlagen erleichtern eine sachliche Rückfrage im Gespräch.",
+          "Das macht die spätere Prüfung einfacher."
+        ],
+        "table": {
+          "headers": [
+            "Erreicht",
+            "Maximal",
+            "Anteil"
+          ],
+          "rows": [
+            [
+              "15",
+              "30",
+              "50 %"
+            ],
+            [
+              "21",
+              "30",
+              "70 %"
+            ],
+            [
+              "27",
+              "30",
+              "90 %"
+            ]
+          ]
+        }
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Gibt es einen Notenschlüssel, der in allen Bundesländern gilt?",
+        "answer": "Nein. Die Bewertung hängt von Landesvorgaben, Schulform, Fach und konkreter Prüfung ab."
+      },
+      {
+        "question": "Wie berechne ich den Prozentwert?",
+        "answer": "Erreichte Punkte durch maximal erreichbare Punkte teilen und mit 100 multiplizieren."
+      }
+    ],
+    "sources": [
+      {
+        "label": "KMK – Übersicht Schulgesetze der Länder",
+        "url": "https://www.kmk.org/en/downloads-dokumente/rechtsvorschriften-/-lehrplaene/uebersicht-schulgesetze.html"
+      }
+    ],
+    "related": [
+      "zeugnis-recht-eltern"
+    ]
+  },
+  {
+    "slug": "notendurchschnitt-berechnen",
+    "title": "Notendurchschnitt berechnen: einfach und gewichtet",
+    "description": "Notendurchschnitt mit Rechenbeispielen berechnen und einfache Mittelwerte von gewichteten Leistungen unterscheiden.",
+    "answer": "Ein einfacher Notendurchschnitt ist die Summe der Noten geteilt durch ihre Anzahl. Bei Gewichtungen müssen die jeweiligen Faktoren berücksichtigt werden.",
+    "sections": [
+      {
+        "id": "einfach",
+        "title": "Den einfachen Durchschnitt berechnen",
+        "paragraphs": [
+          "Addiere die Noten und teile die Summe durch die Zahl der Noten. Beispiel: 2, 3 und 4 ergeben (2 + 3 + 4) ÷ 3 = 3. Das ist der rechnerische Durchschnitt. Ob und wie er gerundet wird, richtet sich nach dem vorgesehenen Bewertungsverfahren.",
+          "Ein privater Durchschnitt kann zur Orientierung dienen, legt aber nicht automatisch eine offizielle Zeugnisnote fest. Informiere dich, wie die Schule die Leistungen berücksichtigt."
+        ]
+      },
+      {
+        "id": "gewicht",
+        "title": "Gewichtete Noten berechnen",
+        "paragraphs": [
+          "Wenn Leistungen unterschiedlich zählen, multipliziere jede Note mit ihrem Gewicht, addiere die Produkte und teile durch die Summe der Gewichte. Beispiel: Klassenarbeit Note 2 mit Gewicht 2 und Mitarbeit Note 3 mit Gewicht 1: (2×2 + 3×1) ÷ 3 = 2,33. Das erklärt die Rechnung, schreibt aber keiner Schule eine bestimmte Gewichtung vor.",
+          "Notiere die Gewichte in einer eigenen Spalte, damit du beim Rechnen keine Leistung doppelt zählst oder vergisst."
+        ]
+      },
+      {
+        "id": "fehler",
+        "title": "Typische Rechenfehler vermeiden",
+        "paragraphs": [
+          "Verwechsle Notenmittelwert und Prozentpunkte. Eine Note 2 ist keine feste Prozentzahl. Runde nicht vorzeitig, wenn weitere Werte folgen, und verwende bei gewichteten Rechnungen nicht bloß die Anzahl der Einträge als Teiler.",
+          "Frage nach, ob einzelne Leistungen doppelt zählen oder nur in bestimmten Zeiträumen berücksichtigt werden. Bei fehlenden Noten darfst du keine Null einsetzen: Sie verändert das Ergebnis, obwohl keine Bewertung vorliegt."
+        ]
+      },
+      {
+        "id": "vorlage",
+        "title": "Rechenvorlage",
+        "paragraphs": [
+          "Einfach: (Note 1 + Note 2 + …) ÷ Anzahl. Gewichtet: (Note 1 × Gewicht 1 + Note 2 × Gewicht 2 + …) ÷ Summe aller Gewichte. Setze deine Werte ein und notiere, ob das Ergebnis gerundet wurde.",
+          "Für offizielle Bewertungen ist die schulische Bewertungsregel maßgeblich, nicht ein privater Rechner. Bewahre die Rechenschritte auf, wenn du eine Einordnung mit der Lehrkraft besprechen möchtest.",
+          "Rechenbeispiel mit zwei Arbeiten und Mitarbeit: Arbeit A Note 2, Gewicht 2; Arbeit B Note 3, Gewicht 2; Mitarbeit Note 1, Gewicht 1. Rechnung: (2×2 + 3×2 + 1×1) ÷ (2+2+1) = 11 ÷ 5 = 2,2. Ohne die Gewichte wäre der einfache Durchschnitt 2. Die beiden Ergebnisse unterscheiden sich, weil die Arbeiten stärker zählen.",
+          "Runde erst am Ende der Rechnung, sonst können kleine Abweichungen das Ergebnis verändern."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Kann ich den Durchschnitt auf zwei Stellen runden?",
+        "answer": "Für private Orientierung ja. Bei offiziellen Bewertungen gilt die Rundungsregel der Schule oder des jeweiligen Verfahrens."
+      },
+      {
+        "question": "Zählt jede Note gleich viel?",
+        "answer": "Nicht zwingend. Erkundige dich, ob und wie Leistungsnachweise gewichtet werden."
+      }
+    ],
+    "sources": [
+      {
+        "label": "KMK – Übersicht Schulgesetze der Länder",
+        "url": "https://www.kmk.org/en/downloads-dokumente/rechtsvorschriften-/-lehrplaene/uebersicht-schulgesetze.html"
+      }
+    ],
+    "related": [
+      "notenschluessel-prozente"
+    ]
+  },
+  {
+    "slug": "zeugnis-sprueche-karten",
+    "title": "Zeugnissprüche und Glückwünsche für eine Karte",
+    "description": "Neue kurze, herzliche und humorvolle Glückwünsche zum Zeugnis – auch für ein schwieriges Halbjahr.",
+    "answer": "Ein guter Glückwunsch zum Zeugnis würdigt eine konkrete Anstrengung und lässt Raum für gemischte Gefühle. Die Vorschläge sind neu formuliert.",
+    "sections": [
+      {
+        "id": "herzlich",
+        "title": "Kurz und herzlich",
+        "paragraphs": [
+          "„Du hast dich durch ein intensives Halbjahr gearbeitet. Heute darfst du darauf stolz sein.“ „Ein Zeugnis zeigt einen Abschnitt, nicht alles, was du kannst.“ „Ich freue mich mit dir und auf alles, was du als Nächstes ausprobierst.“ Solche Sätze passen, wenn sie ehrlich gemeint sind und nicht mehr versprechen, als du weißt.",
+          "Noch persönlicher wird die Karte mit einer konkreten Erinnerung: einer Aufgabe, an der das Kind drangeblieben ist, oder einem Moment, in dem es jemandem geholfen hat."
+        ]
+      },
+      {
+        "id": "humor",
+        "title": "Mit Humor, ohne Druck",
+        "paragraphs": [
+          "„Das Zeugnis ist gelesen. Der Kühlschrank wurde zur Feier des Tages bereits informiert.“ „Heute gibt es keine Zusatzaufgabe: Du darfst den Nachmittag selbst gestalten.“ Humor kann die Situation erleichtern, sollte aber eine enttäuschende Note nicht kleinreden.",
+          "Vermeide Vergleiche mit Geschwistern oder Mitschülern. Mache Zuwendung nicht von einer bestimmten Note abhängig. Ein humorvoller Spruch funktioniert nur, wenn die angesprochene Person ihn ebenfalls als freundlich versteht."
+        ]
+      },
+      {
+        "id": "schwierig",
+        "title": "Für ein schwieriges Zeugnis",
+        "paragraphs": [
+          "„Ich sehe, dass dieses Halbjahr nicht leicht war. Wenn du magst, schauen wir gemeinsam, was dir jetzt hilft.“ „Du musst heute nichts erklären. Ich bin da, wenn du reden möchtest.“ Diese Sätze öffnen ein Gespräch, ohne sofort Ratschläge oder Trostformeln aufzudrängen.",
+          "Lass Raum für die eigene Reaktion. Ein Kind kann enttäuscht, erleichtert oder gleichgültig sein. Frage, was es braucht, statt die Gefühle vorzuschreiben."
+        ]
+      },
+      {
+        "id": "eigene",
+        "title": "Eine eigene Karte schreiben",
+        "paragraphs": [
+          "Baue drei Teile ein: eine konkrete Beobachtung, einen wertschätzenden Satz und ein offenes Angebot. Beispiel: „Ich habe gesehen, wie du für die Präsentation geübt hast. Das verdient Anerkennung. Wenn du möchtest, feiern wir heute zusammen.“ Passe die Formulierung an eure Beziehung an.",
+          "Ein allgemeiner Spruch wird oft stärker, wenn du eine eigene Erinnerung ergänzt. Halte die Karte kurz; sie soll Nähe ausdrücken, nicht eine Note kommentieren müssen.",
+          "Für eine Karte an einen Jugendlichen kann eine konkrete Erinnerung viel bedeuten: „Ich weiß, dass du vor dem Referat nervös warst und trotzdem vor der Klasse gesprochen hast. Darauf kannst du stolz sein. Wenn du möchtest, gehen wir heute Eis essen.“ Der Satz lobt eine beobachtbare Anstrengung und lässt die Note außen vor. Kürze ihn, wenn eine knappe Karte besser zu eurer Beziehung passt."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Was schreibe ich bei schlechten Noten?",
+        "answer": "Würdige die Person unabhängig vom Ergebnis und biete ein Gespräch oder konkrete Unterstützung an, ohne Druck aufzubauen."
+      },
+      {
+        "question": "Darf der Spruch lustig sein?",
+        "answer": "Ja, solange der Humor die Person nicht beschämt und zur Situation passt."
+      }
+    ],
+    "related": [
+      "schlechtes-zeugnis-was-tun"
+    ]
+  },
+  {
+    "slug": "schlechtes-zeugnis-was-tun",
+    "title": "Schlechtes Zeugnis: ruhig klären, was jetzt hilft",
+    "description": "Nach einem schwierigen Zeugnis Ursachen suchen, ein gutes Lehrkraftgespräch vorbereiten und ein erreichbares nächstes Ziel vereinbaren.",
+    "answer": "Ein schwieriges Zeugnis ist ein Anlass, Ursachen und nächste Schritte zu klären. Es ist keine vollständige Aussage über Fähigkeiten oder Zukunft.",
+    "sections": [
+      {
+        "id": "reaktion",
+        "title": "Erst die Reaktion sortieren",
+        "paragraphs": [
+          "Gib dem Kind Zeit, bevor ihr über Konsequenzen sprecht. Frage, was es selbst am Zeugnis überrascht oder beschäftigt. Vermeide Drohungen, Vergleiche und vorschnelle Etiketten wie „faul“. Ein Zeugnis bildet Leistungen in bestimmten Fächern und Zeiträumen ab; es erklärt nicht automatisch, warum Schwierigkeiten entstanden sind.",
+          "Lass Gefühle zu, auch wenn das Ergebnis für dich unerwartet kam. Ein ruhiger Beginn macht es leichter, gemeinsam nach einer Lösung zu suchen."
+        ]
+      },
+      {
+        "id": "muster",
+        "title": "Muster statt Einzelzahl suchen",
+        "paragraphs": [
+          "Prüft, ob sich Schwierigkeiten auf ein Fach, eine Aufgabenart oder mehrere Bereiche verteilen. Gibt es Probleme beim Verständnis, bei Organisation, Anwesenheit oder Prüfungsangst? Notiere konkrete Beispiele und frage die Lehrkraft, welche Beobachtungen sie gemacht hat.",
+          "So wird aus „alles läuft schlecht“ eine bearbeitbare Frage. Ein einzelnes Ergebnis sagt wenig darüber, welche Unterstützung hilfreich wäre."
+        ]
+      },
+      {
+        "id": "gespraech",
+        "title": "Das Gespräch vorbereiten",
+        "paragraphs": [
+          "Schreibe zwei bis drei Fragen auf: Welche Kompetenz sollte als Nächstes gestärkt werden? Woran erkennt man Fortschritt? Welche Unterstützung bietet die Schule? Bitte um konkrete Beispiele und höre dir die Sicht des Kindes sowie die der Lehrkraft an.",
+          "Bei schulrechtlichen Entscheidungen können Regeln je nach Bundesland variieren. Bei einer formalen Frage helfen die Schule oder die zuständige Landesbehörde weiter."
+        ]
+      },
+      {
+        "id": "plan",
+        "title": "Einen kleinen Plan festlegen",
+        "paragraphs": [
+          "Wählt ein erreichbares Ziel für die nächsten Wochen, etwa zweimal pro Woche 20 Minuten Übung oder eine Rückfrage im Unterricht. Vereinbart, wann ihr den Plan überprüft. Wenn Belastung, Angst oder Konzentrationsprobleme anhalten, kann eine Beratungslehrkraft oder schulpsychologische Beratungsstelle passende Unterstützung vermitteln.",
+          "Ein kleines Ziel ist besser überprüfbar als eine vage Forderung, „mehr zu lernen“. Passt den Plan an, wenn er im Alltag nicht funktioniert.",
+          "Ein mögliches Gespräch zu Hause könnte so beginnen: „Welche Stelle im Zeugnis beschäftigt dich am meisten?“ Das Kind nennt vielleicht eine Vier in Englisch. Statt sofort Lernstunden zu planen, fragt ihr, ob Vokabeln, Hörverstehen oder Prüfungsangst das größte Hindernis waren. Daraus kann ein gezielter nächster Schritt entstehen, zum Beispiel gemeinsam mit der Lehrkraft eine passende Übungsmethode zu suchen.",
+          "Lobe Fortschritt und Ausdauer, auch wenn sich die Note noch nicht verbessert hat.",
+          "Für das erste Gespräch reicht ein Blatt mit drei Spalten: Was fällt schwer? Was klappt bereits? Was probieren wir bis zum nächsten Termin? Füllt zunächst nur ein konkretes Fach aus. Ein überschaubarer nächster Schritt lässt sich besser überprüfen als die Forderung, ab sofort überall besser zu werden."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Sollte ich sofort Nachhilfe organisieren?",
+        "answer": "Erst die Ursache klären. Nachhilfe kann helfen, ist aber nicht für jedes Problem die passende Unterstützung."
+      },
+      {
+        "question": "Kann ein Zeugnis angefochten werden?",
+        "answer": "Möglichkeiten und Verfahren hängen von Bundesland, Zeugnisart und Entscheidung ab. Frage bei einer formalen Angelegenheit die zuständige Schule oder Landesstelle."
+      }
+    ],
+    "sources": [
+      {
+        "label": "KMK – Übersicht Schulgesetze der Länder",
+        "url": "https://www.kmk.org/en/downloads-dokumente/rechtsvorschriften-/-lehrplaene/uebersicht-schulgesetze.html"
+      }
+    ],
+    "related": [
+      "elterngespraech-fragen",
+      "zeugnis-recht-eltern"
+    ]
+  },
+  {
+    "slug": "elterngespraech-fragen",
+    "title": "Elterngespräch: Fragen, die weiterhelfen",
+    "description": "Ein Elterngespräch vorbereiten: Fragen zu Lernen, Mitarbeit und Unterstützung, die konkrete nächste Schritte sichtbar machen.",
+    "answer": "Ein gutes Elterngespräch fragt nach beobachtbarem Verhalten, Stärken und einem konkreten nächsten Schritt – nicht nur nach einer Gesamtnote.",
+    "sections": [
+      {
+        "id": "vorbereiten",
+        "title": "Vor dem Termin vorbereiten",
+        "paragraphs": [
+          "Lies Zeugnis und letzte Rückmeldungen. Notiere, was dein Kind selbst berichtet und welche konkrete Frage offen ist. Entscheide, was du aus dem Gespräch mitnehmen möchtest: ein Beispiel, eine Unterstützungsmöglichkeit oder einen Folgetermin.",
+          "Eine kurze Vorbereitung verhindert, dass das Gespräch in allgemeine Sorgen abgleitet. Wähle höchstens drei Themen, damit genug Zeit für konkrete Antworten bleibt."
+        ]
+      },
+      {
+        "id": "lernen",
+        "title": "Fragen zu Lernen und Mitarbeit",
+        "paragraphs": [
+          "Frage: „Bei welchen Aufgaben zeigt sich die Stärke besonders?“ „Was gelingt schon selbstständig?“ „Was passiert, wenn die Aufgabe schwierig wird?“ „Wie wirkt sich die Mitarbeit auf das fachliche Verständnis aus?“ Diese Fragen laden zu konkreten Beobachtungen ein.",
+          "So lässt sich auch eine Wendung wie „beteiligt sich lebhaft“ besser verstehen, ohne sie vorab als Lob oder Kritik festzulegen. Bitte um einen Moment aus dem Unterricht, der die Einschätzung veranschaulicht."
+        ]
+      },
+      {
+        "id": "unterstuetzung",
+        "title": "Fragen zu Unterstützung",
+        "paragraphs": [
+          "Frage: „Was könnte das Kind bis zum nächsten Gespräch ausprobieren?“ „Welche Hilfen gibt es im Unterricht?“ „Woran merken wir, dass sich die Situation verbessert?“ Bitte um eine überschaubare Maßnahme statt eines langen Wunschzettels.",
+          "Wenn du eine andere Wahrnehmung hast, beschreibe sie sachlich und frage, wie beide Sichtweisen zusammenpassen. Ziel ist eine gemeinsame Erklärung, keine Schuldzuweisung."
+        ]
+      },
+      {
+        "id": "abschluss",
+        "title": "Ergebnis festhalten",
+        "paragraphs": [
+          "Fasse am Ende zusammen: Was wurde beobachtet, wer übernimmt welchen Schritt und wann wird geprüft, ob er geholfen hat? Halte Vereinbarungen kurz schriftlich fest. So können alle später daran anknüpfen.",
+          "Wenn ein formales Zeugnisproblem oder eine Entscheidung im Raum steht, frage nach den zuständigen Regeln und Fristen des Bundeslands. Ein allgemeines Gespräch ersetzt keine formale Auskunft.",
+          "Nimm einen Zettel mit drei Spalten mit: Beobachtung, offene Frage, möglicher nächster Schritt. Beispiel: „Beobachtung: Das Kind berichtet von Schwierigkeiten bei Gruppenarbeiten. Frage: Wie beteiligt es sich im Unterricht? Schritt: Eine konkrete Rolle in der nächsten Gruppenaufgabe ausprobieren.“ So wird aus dem Gespräch ein gemeinsamer Arbeitsplan. Bitte am Ende um eine kurze Zusammenfassung, damit beide Seiten wissen, worauf sie sich geeinigt haben.",
+          "Schreibe nach dem Termin direkt auf, was vereinbart wurde, solange die Details noch präsent sind.",
+          "Ein vereinbarter Folgetermin kann helfen, den Fortschritt gemeinsam einzuschätzen.",
+          "Schreibe die wichtigste Vereinbarung am Ende in einem Satz auf und lies sie kurz vor: „Wir probieren bis zum nächsten Gespräch diese Übung und melden zurück, wie sie funktioniert.“ Kläre auch, wer bei Unklarheiten erreichbar ist. So bleiben Verantwortung und nächster Termin für alle nachvollziehbar."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Wie lange dauert ein Elterngespräch?",
+        "answer": "Das hängt von Schule und Anlass ab. Wenn mehrere Themen anstehen, vereinbare gegebenenfalls einen gesonderten Termin."
+      },
+      {
+        "question": "Soll mein Kind dabei sein?",
+        "answer": "Das hängt von Alter, Anlass und Wunsch des Kindes ab. Bei Lernzielen kann die Beteiligung helfen, sofern es sich damit wohlfühlt."
+      }
+    ],
+    "sources": [
+      {
+        "label": "KMK – Übersicht Schulgesetze der Länder",
+        "url": "https://www.kmk.org/en/downloads-dokumente/rechtsvorschriften-/-lehrplaene/uebersicht-schulgesetze.html"
+      }
+    ],
+    "related": [
+      "beteiligt-sich-lebhaft",
+      "schlechtes-zeugnis-was-tun"
+    ]
+  },
+  {
+    "slug": "zeugnis-recht-eltern",
+    "title": "Schulzeugnis prüfen: Rechte und nächste Schritte",
+    "description": "Wie Eltern ein Schulzeugnis sachlich prüfen und bei Fragen zu einer Entscheidung die zuständige Stelle finden.",
+    "answer": "Schulzeugnisse unterliegen den Regeln der Länder. Ob eine Note überprüft oder eine Entscheidung angefochten werden kann, hängt von Zeugnisart und Einzelfall ab.",
+    "sections": [
+      {
+        "id": "laender",
+        "title": "Schulrecht ist Ländersache",
+        "paragraphs": [
+          "Schulorganisation und viele Bewertungsfragen liegen in Deutschland bei den Ländern. Die KMK bietet eine Übersicht der Schulgesetze, ersetzt aber nicht die Prüfung des konkreten Landesrechts. Zeugnisse, Versetzungsentscheidungen und Abschlussprüfungen können unterschiedlichen Verfahren folgen. Kläre zuerst, welches Bundesland und welche konkrete Entscheidung betroffen sind.",
+          "Auch die zuständige Ansprechstelle kann sich unterscheiden. Beginne bei der Schule und frage bei Bedarf nach der Landesbehörde."
+        ]
+      },
+      {
+        "id": "pruefen",
+        "title": "Was du sachlich prüfen kannst",
+        "paragraphs": [
+          "Vergleiche die ausgewiesene Note mit Arbeiten, Bewertungsmaßstab und Rückmeldungen. Prüfe zunächst Rechenfehler, fehlende Einträge oder eine offensichtlich falsche Zuordnung. Eine abweichende Erwartung an die Note allein beweist noch keinen Fehler.",
+          "Bitte die Schule um Erläuterung der Kriterien und um Einsicht in einschlägige Unterlagen, soweit die geltenden Regeln das vorsehen. Beschreibe genau, welche Stelle du für unklar oder unrichtig hältst."
+        ]
+      },
+      {
+        "id": "fristen",
+        "title": "Kontakt und Fristen",
+        "paragraphs": [
+          "Beginne mit einem zeitnahen, sachlichen Gespräch mit Lehrkraft oder Schulleitung. Wenn es um eine formale Entscheidung geht, frage ausdrücklich, ob ein Rechtsbehelf möglich ist, welche Frist gilt und an welche Stelle er zu richten wäre. Fristen können kurz sein.",
+          "Verlasse dich bei einer konkreten Streitigkeit nicht auf allgemeine Ratgeberinformationen. Lies die Rechtsbehelfsbelehrung und hole bei Bedarf Beratung ein. Notiere Datum und Inhalt deiner Kontaktaufnahme."
+        ]
+      },
+      {
+        "id": "abgrenzung",
+        "title": "Arbeitszeugnisse getrennt behandeln",
+        "paragraphs": [
+          "§ 109 GewO betrifft Arbeitszeugnisse, nicht Schulzeugnisse. Dort gelten Ansprüche auf ein einfaches oder auf Wunsch qualifiziertes Zeugnis sowie Anforderungen an Klarheit und Verständlichkeit. Diese Regeln lassen sich nicht auf schulische Notenvergabe übertragen.",
+          "Wenn du die Zeugnisarten auseinanderhältst, stellst du die richtige Frage an die richtige Stelle. Bei schulischen Anliegen ist das einschlägige Landesrecht maßgeblich.",
+          "Beispiel: Im Zeugnis fehlen laut Eltern zwei Unterrichtsbeiträge. Sammle die betreffende Arbeit oder den dokumentierten Sachverhalt und frage zunächst, wie die Bewertung zustande kam. Wenn die Schule einen formalen Bescheid erlassen hat, lies die Rechtsbehelfsbelehrung und notiere das Zustellungsdatum. Bitte nicht erst nach Wochen um Auskunft: mögliche Fristen hängen vom Verfahren ab und können knapp bemessen sein.",
+          "Ein Gespräch kann Missverständnisse schnell klären, ersetzt aber nicht das Beachten einer formalen Frist.",
+          "So bleibt klar, welche Antwort noch aussteht und wann du nachfasst."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Kann ich jede Schulnote anfechten?",
+        "answer": "Das hängt von Zeugnisart, Entscheidung und Landesrecht ab. Eine bloße Unzufriedenheit mit der Note genügt nicht automatisch."
+      },
+      {
+        "question": "Wo finde ich die geltenden Regeln?",
+        "answer": "Bei der Schule und in den einschlägigen Vorschriften des Bundeslands. Die KMK verlinkt eine Übersicht der Landes-Schulgesetze."
+      }
+    ],
+    "sources": [
+      {
+        "label": "KMK – Übersicht Schulgesetze der Länder",
+        "url": "https://www.kmk.org/en/downloads-dokumente/rechtsvorschriften-/-lehrplaene/uebersicht-schulgesetze.html"
+      },
+      {
+        "label": "§ 109 GewO – Arbeitszeugnis",
+        "url": "https://www.gesetze-im-internet.de/gewo/__109.html"
+      }
+    ],
+    "related": [
+      "auffaellige-formulierungen",
+      "schlechtes-zeugnis-was-tun"
+    ]
+  },
+  {
+    "slug": "zeugnisse-aufbewahren",
+    "title": "Zeugnisse aufbewahren: was sinnvoll ist",
+    "description": "Wichtige Schul-, Abschluss- und Arbeitszeugnisse sicher ablegen und wissen, was bei einem Verlust zu tun ist.",
+    "answer": "Bewahre wichtige Abschluss- und Arbeitszeugnisse dauerhaft auf, möglichst als Original und sichere digitale Kopie. Für alle Unterlagen gibt es keine einheitliche Aufbewahrungsfrist.",
+    "sections": [
+      {
+        "id": "wichtig",
+        "title": "Welche Zeugnisse besonders wichtig sind",
+        "paragraphs": [
+          "Schulabschlusszeugnisse und Nachweise über Berufs- oder Hochschulabschlüsse können später für Bewerbungen oder Anerkennungsverfahren benötigt werden. Arbeitszeugnisse dokumentieren frühere Tätigkeiten und Bewertungen. Zwischenzeugnisse, Bescheinigungen und einzelne Halbjahreszeugnisse können je nach Lebenslauf ebenfalls nützlich sein.",
+          "Ein persönliches Archiv erspart die Suche nach alten Kontaktstellen. Eine allgemeine gesetzliche Pflicht, jedes Zeugnis lebenslang zu behalten, lässt sich daraus nicht ableiten; die vorsorgliche Aufbewahrung wichtiger Nachweise ist dennoch praktisch."
+        ]
+      },
+      {
+        "id": "papier-digital",
+        "title": "Papier und digitale Kopie",
+        "paragraphs": [
+          "Lege Originale trocken, flach und geschützt ab. Scanne oder fotografiere jede Seite in gut lesbarer Qualität und sichere Dateien zusätzlich an einem zweiten Ort. Bewahre sensible Dokumente geschützt auf und teile sie nur, wenn erforderlich.",
+          "Eine digitale Kopie erleichtert Bewerbungen, ersetzt aber nicht in jedem Verfahren ein verlangtes Original oder eine beglaubigte Kopie. Prüfe die Vorgaben der Stelle, bei der du das Dokument einreichst."
+        ]
+      },
+      {
+        "id": "verlust",
+        "title": "Wenn ein Zeugnis verloren geht",
+        "paragraphs": [
+          "Wende dich an die ausstellende Schule, Hochschule oder den früheren Arbeitgeber und frage nach einer Zweitschrift oder Bestätigung. Welche Unterlagen und Gebühren erforderlich sind, hängt von der Stelle und dem Alter des Dokuments ab.",
+          "Bei einer Schule, die nicht mehr existiert, kann die zuständige Schulbehörde Auskunft über die Aufbewahrung geben. Nenne möglichst Abschlussjahr, Bildungsgang und den früheren Namen der Schule."
+        ]
+      },
+      {
+        "id": "system",
+        "title": "Ein einfaches Ablagesystem",
+        "paragraphs": [
+          "Nutze Ordner nach Bereich – Schule, Ausbildung, Arbeit – und benenne Dateien mit Datum, Dokumentart und ausstellender Stelle. Lege keine unnötigen Kopien in allgemein geteilte Cloudordner.",
+          "Eine Liste mit Ablageort und Ausstellungsjahr hilft, ohne vertrauliche Inhalte zusätzlich zu dokumentieren. Prüfe regelmäßig, ob die Sicherung lesbar und der Zugriff noch geschützt ist.",
+          "Ein praktisches Beispiel: Lege im Papierordner Register für „Schule“, „Ausbildung“ und „Arbeit“ an. Speichere Dateien nach dem Muster „2024-07_Abschlusszeugnis_Schule.pdf“ und sichere den Ordner zusätzlich auf einem geschützten Datenträger oder in einem privaten Konto. Notiere nur, wo das Original liegt. So findest du benötigte Nachweise, ohne sensible Zeugnisinhalte in einer zusätzlichen Liste zu wiederholen.",
+          "Verwende ein Dateiformat, das sich ohne Spezialprogramm öffnen lässt, und kontrolliere die Lesbarkeit nach dem Scan.",
+          "So lässt sich das Archiv auch nach Jahren schnell durchsuchen."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Muss ich jedes Halbjahreszeugnis lebenslang behalten?",
+        "answer": "Dafür gibt es keine allgemeine Pflicht für alle. Bewahre Abschlussnachweise und wichtige Arbeitszeugnisse vorsorglich dauerhaft auf."
+      },
+      {
+        "question": "Reicht ein Scan bei einer Bewerbung?",
+        "answer": "Das richtet sich nach dem Verfahren. Viele Bewerbungen starten mit Kopien; manche Stellen verlangen später Originale oder beglaubigte Nachweise."
+      }
+    ],
+    "related": [
+      "zeugnis-recht-eltern"
+    ]
+  }
+]
