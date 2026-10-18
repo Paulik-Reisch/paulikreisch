@@ -24,14 +24,15 @@ import { useRouter } from 'next/navigation';
 import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
 import { Loader2 } from 'lucide-react';
 import FeedbackDrawer from './FeedbackDrawer';
+import WordDefinitionDialog from './WordDefinitionDialog';
 import { initializeFirebase } from '@/firebase';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import confetti from 'canvas-confetti';
-import { getWorthaftKeyDimensions, normalizeWorthaftSliderValue } from '@/lib/worthaft-settings';
+import { getWorthaftKeyDimensions, getWorthaftTileDimensions, getWorthaftStatusClass, normalizeWorthaftSettings, DEFAULT_WORTHAFT_SETTINGS as DEFAULT_SETTINGS, type WorthaftSettings } from '@/lib/worthaft-settings';
 import { canInteractWithWorthaftGame, readWorthaftRowStart, writeWorthaftRowStart, clearWorthaftRowStart } from '@/lib/worthaft-game-state';
+import { hasWorthaftFeedbackDecision } from '@/lib/worthaft-feedback';
 import { isWorthaftAntiWord } from '@/lib/worthaft-anti-words';
 import {
   createInvalidWorthaftWord,
@@ -55,39 +56,11 @@ const fireWorthaftFireworks = () => {
 };
 
 // ---- Persisted Worthaft settings ----
-type WorthaftSettings = {
-  keyWidth: number;
-  keyHeight: number;
-  keySize: number;
-  keyRadius: number;
-  hotTipEnabled: boolean;
-  musicEnabled: boolean;
-  animationsEnabled: boolean;
-};
-
-const DEFAULT_SETTINGS: WorthaftSettings = {
-  keyWidth: 2,
-  keyHeight: 2,
-  keySize: 2,
-  keyRadius: 2,
-  hotTipEnabled: true,
-  musicEnabled: false,
-  animationsEnabled: true,
-};
-
 const loadSettings = (): WorthaftSettings => {
   try {
     const raw = localStorage.getItem('worthaft-settings');
     if (!raw) return DEFAULT_SETTINGS;
-    const savedSettings = JSON.parse(raw);
-    return {
-      ...DEFAULT_SETTINGS,
-      ...savedSettings,
-      keyWidth: normalizeWorthaftSliderValue(savedSettings.keyWidth),
-      keyHeight: normalizeWorthaftSliderValue(savedSettings.keyHeight),
-      keySize: normalizeWorthaftSliderValue(savedSettings.keySize),
-      keyRadius: normalizeWorthaftSliderValue(savedSettings.keyRadius),
-    };
+    return normalizeWorthaftSettings(JSON.parse(raw));
   } catch {
     return DEFAULT_SETTINGS;
   }
@@ -102,7 +75,7 @@ const useSettings = () => {
 
   const setSettings = useCallback((patch: Partial<WorthaftSettings>) => {
     setSettingsState(prev => {
-      const next = { ...prev, ...patch };
+      const next = normalizeWorthaftSettings({ ...prev, ...patch });
       try { localStorage.setItem('worthaft-settings', JSON.stringify(next)); } catch {}
       return next;
     });
@@ -158,15 +131,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
     ['SEND', 'Ü', 'Ö', 'Ä', 'ẞ', 'DELETE'],
   ];
 
-  const getStatusClass = (key: string) => {
-    const status = letterStatuses[key];
-    switch (status) {
-      case 'correct': return 'bg-primary text-primary-foreground';
-      case 'present': return 'bg-secondary text-secondary-foreground';
-      case 'absent': return 'bg-neutral-600 text-neutral-100 border-neutral-600 opacity-80';
-      default: return 'bg-muted hover:bg-accent';
-    }
-  };
+  const getStatusClass = (key: string) => getWorthaftStatusClass(letterStatuses[key], settings.palette) || 'bg-muted hover:bg-accent';
 
   const handleKeyClick = (key: string) => {
     if (key === 'SEND') onEnter();
@@ -180,6 +145,8 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
 
   const keyStyle = (extra?: string): React.CSSProperties => ({
     width: `${widthPx}px`,
+    minWidth: 0,
+    flexShrink: 1,
     height: `${heightPx}px`,
     fontSize: `${fontPx}px`,
     borderRadius: `${radiusPx}px`,
@@ -191,7 +158,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
   const letterRows = rows.slice(0, 3);
 
   return (
-    <div className="w-full flex flex-col items-center gap-1.5 mt-8">
+    <div data-testid="worthaft-keyboard" className="w-full flex flex-col items-center gap-1.5 mt-8">
       {letterRows.map((row, i) => (
         <div key={i} className="flex flex-row justify-center gap-1.5 w-full">
           {row.map(key => {
@@ -283,22 +250,15 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
     settings: WorthaftSettings;
 }) => {
   const rows = Array.from({ length: MAX_GUESSES });
-  const getStatusClass = (status: LetterStatus) => {
-    switch (status) {
-      case 'correct': return 'bg-primary text-primary-foreground border-primary';
-      case 'present': return 'bg-secondary text-secondary-foreground border-secondary';
-      case 'absent': return 'bg-muted text-muted-foreground border-muted';
-      default: return 'border-border bg-background';
-    }
-  };
-
-  const radiusPx = (settings.keyRadius / 100) * 24;
+  const getStatusClass = (status: LetterStatus) => getWorthaftStatusClass(status, settings.palette) || 'border-border bg-background';
+  const radiusPx = settings.tileRadius * 6;
+  const tileDimensions = getWorthaftTileDimensions(settings.tileWidth, settings.tileHeight);
 
   // Die gewinnende Reihe ist die letzte eingereichte (bei 'won').
   const winningRowIndex = gameState === 'won' ? guesses.length - 1 : -1;
 
   return (
-    <div className="grid grid-rows-6 gap-1.5">
+    <div data-testid="worthaft-grid" className="grid grid-rows-6 gap-1.5 mx-auto" style={{ width: `min(100%, ${tileDimensions.width * 5 + 24}px)` }}>
       {rows.map((_, rowIndex) => {
         const guessInfo = guesses[rowIndex];
         const isWonRow = rowIndex === winningRowIndex;
@@ -358,7 +318,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
                         if (isCellEditable) onCellClick(colIndex);
                     }}
                     className={cn(
-                        'aspect-square border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold',
+                        'min-w-0 border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold',
                         getStatusClass(status),
                         isCellEditable && 'cursor-pointer',
                         isCurrentRow && hasLetter && !isJokerProtected && 'border-muted-foreground',
@@ -366,6 +326,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
                         anims && isSubmittedRow && 'flip-in'
                     )}
                     style={{
+                      aspectRatio: `${tileDimensions.width} / ${tileDimensions.height}`,
                       borderRadius: `${radiusPx}px`,
                       animationDelay: anims && isSubmittedRow ? flipDelay : undefined,
                       ...(cellAnimation ? { animation: cellAnimation } : {}),
@@ -450,12 +411,13 @@ const ResultsContent = ({ solution, guesses, gameState, stats, timeToNextGame, s
         </div>
 
 
-        <div className="sm:justify-center flex flex-col gap-2">
-                    <Button size="lg" onClick={shareResults} className="w-full">
-                        <Share2 className="mr-3 h-5 w-5"/>
-                        Teilen
-                    </Button>
-                </div>
+        <div className="flex items-center gap-2">
+            {gameState === 'won' && <WordDefinitionDialog word={solution} />}
+            <Button size="lg" onClick={shareResults} className="min-w-0 flex-1 gap-2 px-3">
+                <Share2 className="h-5 w-5 shrink-0" aria-hidden="true" />
+                Teilen
+            </Button>
+        </div>
     </>
     )
 };
@@ -583,7 +545,7 @@ const WorthaftSettingsDrawer = ({
   const isMobile = useIsMobile();
 
   const content = (
-    <div className="p-6 pt-4">
+    <div className="min-w-0 w-full p-6 pt-4">
       <SheetHeader className="text-left mb-5">
         <SheetTitle className="text-2xl font-bold font-headline flex items-center gap-2">
           <Gear className="h-6 w-6" /> Einstellungen
@@ -591,65 +553,70 @@ const WorthaftSettingsDrawer = ({
       </SheetHeader>
 
       <div className="space-y-6">
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <Label className="text-sm font-medium">Tastenbreite</Label>
-                  <span className="text-xs text-muted-foreground">{settings.keyWidth}</span>
+        <section className="space-y-4" aria-label="Aussehen">
+          <div>
+            <h3 className="font-semibold">Dein Worthaft, dein Stil</h3>
+            <p className="text-sm text-muted-foreground mt-1">Alles wird direkt übernommen und auf diesem Gerät gespeichert.</p>
+          </div>
+          <div className="grid grid-cols-2 gap-2" role="group" aria-label="Farbschema">
+            {(['original', 'classic'] as const).map(palette => (
+              <Button key={palette} variant="outline" aria-pressed={settings.palette === palette}
+                onClick={() => setSettings({ palette })}
+                className={cn('h-auto min-w-0 flex-col gap-2 py-3', settings.palette === palette && 'border-primary ring-1 ring-primary')}>
+                <span className="flex gap-1" aria-hidden="true">
+                  {['correct', 'present', 'absent'].map(status => <span key={status} className={cn('h-4 w-4 rounded-sm', getWorthaftStatusClass(status, palette))} />)}
+                </span>
+                <span>{palette === 'original' ? 'Worthaft' : 'Klassisch'}</span>
+                <span className="text-[11px] font-normal text-muted-foreground">{palette === 'original' ? 'Blau · Gelb · Grau' : 'Grün · Gelb · Grau'}</span>
+              </Button>
+            ))}
+          </div>
+          <div data-testid="appearance-preview" className="rounded-xl border bg-muted/30 p-4 space-y-3 overflow-hidden">
+            <p className="text-xs text-muted-foreground">Live-Vorschau · Richtig / enthalten / fehlt</p>
+            <div className="flex justify-center gap-1.5">
+              {['W', 'O', 'R', 'T', 'E'].map((letter, index) => {
+                const dimensions = getWorthaftTileDimensions(settings.tileWidth, settings.tileHeight);
+                return <span key={letter} className={cn('flex min-w-0 shrink items-center justify-center border-2 font-bold', getWorthaftStatusClass(['correct', 'present', 'absent'][index % 3], settings.palette))}
+                  style={{ width: dimensions.width, aspectRatio: dimensions.width / dimensions.height, borderRadius: settings.tileRadius * 6 }}>{letter}</span>;
+              })}
+            </div>
+            <div className="flex justify-center gap-1.5" aria-hidden="true">
+              {['A', 'B', 'C'].map((letter, index) => <span key={letter} className={cn('flex items-center justify-center font-bold', getWorthaftStatusClass(['correct', 'present', 'absent'][index], settings.palette))}
+                style={{ ...getWorthaftKeyDimensions(settings.keyWidth, settings.keyHeight), borderRadius: settings.keyRadius * 6, fontSize: 12 + settings.keySize * 2.5 }}>{letter}</span>)}
+            </div>
+          </div>
+          {([
+            ['Tastatur', [
+              ['keyWidth', 'Tastenbreite', 26 + settings.keyWidth * 6, 'Schmal', 'Breit'],
+              ['keyHeight', 'Tastenhöhe', 26 + settings.keyHeight * 6, 'Flach', 'Hoch'],
+              ['keySize', 'Schriftgröße', 12 + settings.keySize * 2.5, 'Klein', 'Groß'],
+              ['keyRadius', 'Tastenrundung', settings.keyRadius * 6, 'Eckig', 'Rund'],
+            ]],
+            ['Kacheln', [
+              ['tileWidth', 'Kachelbreite', 40 + settings.tileWidth * 8, 'Schmal', 'Breit'],
+              ['tileHeight', 'Kachelhöhe', 40 + settings.tileHeight * 8, 'Flach', 'Hoch'],
+              ['tileRadius', 'Kachelrundung', settings.tileRadius * 6, 'Eckig', 'Rund'],
+            ]],
+          ] as const).map(([title, controls]) => (
+            <fieldset key={title} className="min-w-0 space-y-4 rounded-xl border p-4">
+              <legend className="px-1 text-sm font-semibold">{title}</legend>
+              {controls.map(([key, label, pixels, low, high]) => (
+                <div key={key}>
+                  <div className="flex justify-between gap-2 mb-3 text-sm">
+                    <span id={`setting-${key}`}>{label}</span><span className="text-muted-foreground tabular-nums">{pixels} px</span>
+                  </div>
+                  <input type="range" aria-labelledby={`setting-${key}`} value={settings[key]} onChange={event => setSettings({ [key]: Number(event.target.value) })} min={0} max={4} step={1} className="h-6 w-full cursor-pointer accent-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" />
+                  <div className="flex justify-between mt-2 text-xs text-muted-foreground"><span>{low}</span><span>{high}</span></div>
                 </div>
-                <Slider
-                  value={[settings.keyWidth]}
-                  onValueChange={([v]) => setSettings({ keyWidth: v })}
-                  min={0}
-                  max={4}
-                  step={1}
-                  className="w-full"
-                />
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <Label className="text-sm font-medium">Tastenhöhe</Label>
-                  <span className="text-xs text-muted-foreground">{settings.keyHeight}</span>
-                </div>
-                <Slider
-                  value={[settings.keyHeight]}
-                  onValueChange={([v]) => setSettings({ keyHeight: v })}
-                  min={0}
-                  max={4}
-                  step={1}
-                  className="w-full"
-                />
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <Label className="text-sm font-medium">Schriftgröße</Label>
-                  <span className="text-xs text-muted-foreground">{settings.keySize}</span>
-                </div>
-                <Slider
-                  value={[settings.keySize]}
-                  onValueChange={([v]) => setSettings({ keySize: v })}
-                  min={0}
-                  max={4}
-                  step={1}
-                  className="w-full"
-                />
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <Label className="text-sm font-medium">Tastenrundung</Label>
-                  <span className="text-xs text-muted-foreground">{settings.keyRadius}</span>
-                </div>
-                <Slider
-                  value={[settings.keyRadius]}
-                  onValueChange={([v]) => setSettings({ keyRadius: v })}
-                  min={0}
-                  max={4}
-                  step={1}
-                  className="w-full"
-                />
-              </div>
+              ))}
+            </fieldset>
+          ))}
+          <p className="text-xs text-muted-foreground">Breite Tasten und Kacheln passen sich auf kleinen Bildschirmen automatisch an den verfügbaren Platz an.</p>
+          <Button variant="outline" className="w-full" onClick={() => setSettings({
+            keyWidth: 2, keyHeight: 2, keySize: 2, keyRadius: 2,
+            tileWidth: 2, tileHeight: 2, tileRadius: 0, palette: 'original',
+          })}>Aussehen zurücksetzen</Button>
+        </section>
 
         <div className="flex items-center justify-between rounded-md border p-3">
           <div className="flex items-center gap-2">
@@ -720,7 +687,7 @@ const WorthaftSettingsDrawer = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 max-w-sm rounded-t-lg overflow-hidden">
+      <DialogContent className="p-0 max-w-sm rounded-lg max-h-[90dvh] overflow-y-auto">
         {content}
       </DialogContent>
     </Dialog>
@@ -993,7 +960,7 @@ export default function WorthaftPage() {
                         completedToday = true;
                         setIsCompletedToday(true);
                         setTimeout(() => {
-                            if (localStorage.getItem(`worthaft-feedback-${getTodayString()}`) === 'true') {
+                            if (hasWorthaftFeedbackDecision(localStorage, getTodayString())) {
                                 setIsDialogOpen(true);
                             } else {
                                 setIsFeedbackOpen(true);
@@ -1169,7 +1136,7 @@ export default function WorthaftPage() {
             saveState(newGuesses, 'won', newLetterStatuses, hotTipUsed, jokerPosition, newRowTimes);
             setIsCompletedToday(true);
             setTimeout(() => {
-                if (localStorage.getItem(`worthaft-feedback-${getTodayString()}`) === 'true') {
+                if (hasWorthaftFeedbackDecision(localStorage, getTodayString())) {
                     setIsDialogOpen(true);
                 } else {
                     setIsFeedbackOpen(true);
@@ -1243,7 +1210,7 @@ export default function WorthaftPage() {
             saveState(newGuesses, 'lost', newLetterStatuses, hotTipUsed, jokerPosition, newRowTimes);
             setIsCompletedToday(true);
             setTimeout(() => {
-                if (localStorage.getItem(`worthaft-feedback-${getTodayString()}`) === 'true') {
+                if (hasWorthaftFeedbackDecision(localStorage, getTodayString())) {
                     setIsDialogOpen(true);
                 } else {
                     setIsFeedbackOpen(true);
@@ -1290,7 +1257,7 @@ export default function WorthaftPage() {
     
     
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
-        if (!canInteractWithWorthaftGame(gameState) || isDialogOpen || showHotTipDialog || isFeedbackOpen || invalidWord !== null) return;
+        if (!canInteractWithWorthaftGame(gameState) || isDialogOpen || isSettingsOpen || showHotTipDialog || isFeedbackOpen || invalidWord !== null) return;
 
         if (event.key === 'Enter') {
             event.preventDefault();
@@ -1312,7 +1279,7 @@ export default function WorthaftPage() {
         } else if (/^[a-zA-ZäöüÄÖÜß]$/.test(event.key)) {
             handleChar(event.key.toUpperCase());
         }
-    }, [gameState, isDialogOpen, showHotTipDialog, isFeedbackOpen, invalidWord, handleEnter, handleDelete, handleChar, activeIndex, jokerPosition, guesses.length]);
+    }, [gameState, isDialogOpen, isSettingsOpen, showHotTipDialog, isFeedbackOpen, invalidWord, handleEnter, handleDelete, handleChar, activeIndex, jokerPosition, guesses.length]);
     
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
@@ -1325,7 +1292,7 @@ export default function WorthaftPage() {
                 if (jokerPosition && jokerPosition.guessIndex === guessIndex && jokerPosition.letterIndex === letterIndex) {
                     return '🔥';
                 }
-                if (s === 'correct') return '🟦';
+                if (s === 'correct') return settings.palette === 'classic' ? '🟩' : '🟦';
                 if (s === 'present') return '🟨';
                 return '⬛';
             }).join('') +
@@ -1369,7 +1336,7 @@ Jetzt spielen:`;
                         if (jokerPosition && jokerPosition.guessIndex === guessIndex && jokerPosition.letterIndex === letterIndex) {
                             return '🔥';
                         }
-                        if (s === 'correct') return '🟦';
+                        if (s === 'correct') return settings.palette === 'classic' ? '🟩' : '🟦';
                         if (s === 'present') return '🟨';
                         return '⬛';
                     }).join('') +
