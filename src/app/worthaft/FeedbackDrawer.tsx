@@ -103,6 +103,16 @@ export default function FeedbackDrawer({
     }
   };
 
+  const handleSkip = () => {
+    if (isSending) return;
+    try {
+      localStorage.setItem(`worthaft-feedback-${getTodayString()}`, 'skipped');
+    } catch {
+      // Storage may be unavailable; the user can still continue without feedback.
+    }
+    onOpenChange(false);
+  };
+
   const content = (
     <>
       {step !== 'thanks' && (
@@ -258,6 +268,17 @@ export default function FeedbackDrawer({
           </motion.div>
         )}
       </AnimatePresence>
+      {step !== 'thanks' && (
+        <Button
+          type="button"
+          variant="ghost"
+          disabled={isSending}
+          onClick={handleSkip}
+          className="mt-4 min-h-11 w-full rounded-full text-muted-foreground"
+        >
+          Überspringen
+        </Button>
+      )}
     </>
   );
 
