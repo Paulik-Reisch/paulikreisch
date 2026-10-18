@@ -1,0 +1,702 @@
+[
+  {
+    "slug": "laengste-deutsche-woerter",
+    "title": "Längste deutsche Wörter: Warum es keinen ewigen Rekord gibt",
+    "description": "Deutsche Zusammensetzungen können sehr lang werden. Was als längstes Wort gilt, hängt aber von Wörterbuch, Gesetzestext, Korpus und Stichtag ab.",
+    "answer": "Deutsch bildet produktiv Zusammensetzungen, deshalb lässt sich theoretisch immer weiter spezifizieren. Ein einziges „längstes deutsches Wort aller Zeiten“ gibt es ohne klaren Maßstab nicht. Unterscheiden Sie belegte Wörterbucheinträge, historische Gesetzeswörter und spontan verständliche Bildungen.",
+    "sections": [
+      {
+        "id": "rekordfrage",
+        "title": "Warum die Frage nach dem Rekord keine einfache Antwort hat",
+        "paragraphs": [
+          "Ein Wort kann nach Buchstaben, Silben, Bindestrichen oder belegtem Gebrauch verglichen werden. Zählt ein Wörterbuch nur Stichwörter? Gelten historische Gesetze? Ist eine einmalige scherzhafte Bildung schon ein Wort? Ohne Antworten auf diese Fragen ist jede Rekordliste unscharf. Außerdem kann ein Kompositum prinzipiell durch weitere Bestimmungswörter verlängert werden.",
+          "Beispiele zeigen das Prinzip: „Haus“, „Dach“, „Dachrinne“, „Dachrinnenreinigung“. Wer daraus eine „Dachrinnenreinigungszuständigkeitsfrage“ macht, hat eine verständliche Bildung ausprobiert, aber keinen allgemein anerkannten Eintrag geschaffen. Länge ist kein amtliches Gütesiegel. Entscheidend sind Kontext, Verständlichkeit und tatsächlicher Gebrauch."
+        ]
+      },
+      {
+        "id": "gesetzeswoerter",
+        "title": "Gesetzeskomposita sind zeitgebundene Belege",
+        "paragraphs": [
+          "In Gesetzen tauchen lange Zusammensetzungen auf, weil präzise bezeichnet werden muss, worauf eine Regelung zielt. Solche Wörter können mit einer Gesetzesänderung verschwinden oder eine andere Form erhalten. Sie sind deshalb interessante historische Belege, aber keine automatisch gültigen Alltagsrekorde. Wer ein Beispiel nennt, sollte den Gesetzestitel und den Zeitraum angeben.",
+          "Auch die Schreibweise ist wichtig. Bindestriche können ein langes Gebilde lesbarer gliedern, und Abkürzungen verändern den Zählmaßstab. Eine Liste, die unterschiedliche Schreibweisen mischt, kann nicht sauber „die längsten“ küren. Wenn Sie für ein Quiz zählen, legen Sie fest, ob Bindestriche, Umlaute und Abkürzungen als Buchstaben zählen und ob nur Wörterbuchlemmata zugelassen sind."
+        ]
+      },
+      {
+        "id": "selbst-bilden",
+        "title": "Lange Wörter lesbar zerlegen",
+        "paragraphs": [
+          "Finden Sie das Grundwort am Ende. Bei „Dachrinnenreinigungszuständigkeit“ sagt „Zuständigkeit“, worum es als Ganzes geht; die vorderen Teile grenzen den Begriff ein. Zerlegen Sie von rechts nach links und bilden Sie eine kleine Begriffskette: Zuständigkeit – Reinigung – Dachrinne. Das hilft beim Verstehen unbekannter Komposita.",
+          "Beim Schreiben hilft ein Bindestrich, wenn ein Gebilde schwer lesbar wird oder ein Eigenname beziehungsweise eine Abkürzung enthalten ist. Ein ungewöhnlich langes Wort in mehrere Hauptwörter aufzuteilen, kann jedoch die Bedeutung ändern. Prüfen Sie im Zweifel die Rechtschreibung oder schreiben Sie einen erklärenden Nebensatz: „die Frage, welche Stelle für die Reinigung der Dachrinne zuständig ist“ ist länger, aber zugänglicher."
+        ]
+      },
+      {
+        "id": "eigenes-experiment",
+        "title": "Kleines Wortlabor: Länge mit Sinn verbinden",
+        "paragraphs": [
+          "Nehmen Sie drei Gegenstände aus einem Raum und kombinieren Sie sie mit einer Funktion: „Fenster + Dichtung + Kontrolle“. Bilden Sie „Fensterdichtungskontrolle“ und erklären Sie es in einem Satz. Fügen Sie nur dann ein weiteres Glied hinzu, wenn es den Begriff genauer macht. So wird aus dem bloßen Längenwettbewerb eine Übung in Wortbildung.",
+          "Prüfen Sie das Ergebnis mit drei Fragen: Kann eine fremde Person die Teile erkennen? Ist die Reihenfolge plausibel? Gibt es schon einen kürzeren gebräuchlichen Begriff? Erfinden ist erlaubt, aber nennen Sie eine Eigenbildung nicht als historischen Rekord. Für echte Belege suchen Sie nach datierten Wörterbuch- oder Gesetzestexten und verlinken die Fundstelle."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Was ist das längste deutsche Wort?",
+        "answer": "Das hängt vom Maßstab ab. Wörterbucheintrag, historisches Gesetzeswort und spontane Zusammensetzung sind verschiedene Kategorien; ohne Einschränkung gibt es keinen endgültigen Allzeitrekord."
+      },
+      {
+        "question": "Kann man deutsche Wörter beliebig verlängern?",
+        "answer": "Komposita sind sehr produktiv, aber nicht jede theoretisch mögliche Kombination ist gebräuchlich oder gut verständlich. Kontext und Lesbarkeit setzen praktische Grenzen."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Duden: Komposition und Zusammenschreibung",
+        "url": "https://www.duden.de/sprachwissen/sprachratgeber/Komposition"
+      },
+      {
+        "label": "Duden: Kompositum",
+        "url": "https://www.duden.de/rechtschreibung/Kompositum"
+      }
+    ]
+  },
+  {
+    "slug": "falsche-anglizismen",
+    "title": "Falsche Anglizismen: Englische Wörter mit deutscher Sonderbedeutung",
+    "description": "Einige englisch aussehende Wörter bedeuten im Deutschen etwas anderes oder werden anders gebraucht. Mit Kontext statt Alarmismus erkennen Sie die Stolperstellen.",
+    "answer": "Prüfen Sie bei einem vermeintlich englischen Wort zuerst den Kontext und die Bedeutung im deutschen Satz. „Handy“ bezeichnet im Deutschen üblicherweise ein Mobiltelefon; „public viewing“ meint hier häufig gemeinsames Anschauen, etwa einer Sportübertragung. Solche Gebrauchsweisen sind deutsche Entwicklungen, nicht automatisch Fehler.",
+    "sections": [
+      {
+        "id": "begriff",
+        "title": "Was mit Scheinanglizismus gemeint ist",
+        "paragraphs": [
+          "Ein Scheinanglizismus ist eine im Deutschen verwendete Form, die englisch aussieht, im Englischen aber eine andere oder keine entsprechende Bedeutung hat. Sprachwissenschaftlich gehören solche Fälle zur Kontakt- und Wortbildungsgeschichte. Das Etikett beschreibt den Vergleich, aber es sagt nicht allein, ob ein Ausdruck im Deutschen falsch oder unpassend ist.",
+          "Duden definiert Anglizismus als Übertragung einer für das Englische charakteristischen sprachlichen Erscheinung auf eine andere Sprache. Manche Formen werden in der deutschen Gemeinschaft eigenständig geprägt und sind für deutschsprachige Leser:innen eindeutig. Für internationale Verständigung kann dieselbe Form dagegen missverständlich sein. Zielgruppe und Situation entscheiden, ob eine Erklärung nötig ist."
+        ]
+      },
+      {
+        "id": "beispiele",
+        "title": "Drei Beispiele und ihre Kontexte",
+        "paragraphs": [
+          "„Handy“ ist im Deutschen das geläufige Wort für ein Mobiltelefon. Im Englischen sagt man gewöhnlich „mobile phone“ oder „cell phone“. „Public viewing“ wird im Deutschen oft für ein öffentliches gemeinsames Zuschauen benutzt; englischsprachige Menschen können darunter eine öffentliche Aufbahrung verstehen. Das Wort ist also nicht falsch, kann im Ausland aber die falsche Szene aufrufen.",
+          "„Oldtimer“ bezeichnet im deutschen Gebrauch häufig ein historisches Fahrzeug. Englisches „old-timer“ kann eine ältere Person oder scherzhaft einen Veteranen meinen. Bei „Beamer“ wiederum meint Deutsch oft einen Videoprojektor, während im englischen Alltag ein anderes Wort üblich ist. Diese Beispiele verändern sich nach Region, Branche und Zeit; prüfen Sie sie im aktuellen Wörterbuch und im passenden Kontext."
+        ]
+      },
+      {
+        "id": "vermeiden",
+        "title": "So vermeiden Sie Missverständnisse",
+        "paragraphs": [
+          "Wenn ein Text internationale Leser:innen erreichen soll, schreiben Sie beim ersten Auftreten die eindeutige Bedeutung aus: „Videoprojektor (Projektor)“, „Mobiltelefon“ oder „öffentliche Übertragung auf einer Leinwand“. In einem deutschen Freundeskreis ist „Handy“ meist klar. Für eine englische Website sollte die Übersetzung jedoch nicht mechanisch am deutschen Wort hängen.",
+          "Im Marketing hilft ein kurzer Test: Fragen Sie zwei Personen aus der Zielgruppe, was sie beim Ausdruck verstehen, und vergleichen Sie die Antworten. Bei Veranstaltungsnamen wie „Public Viewing“ kann eine Zusatzzeile den Zweck klären. Vermeiden Sie eine pauschale „Englisch ist besser“- oder „Anglizismen sind immer falsch“-Haltung; die konkrete Verständlichkeit zählt."
+        ]
+      },
+      {
+        "id": "eigene-sammlung",
+        "title": "Eine kleine Lernroutine für Wortdetektive",
+        "paragraphs": [
+          "Sammeln Sie im Alltag ein englisch aussehendes Wort und notieren Sie drei Dinge: deutsche Bedeutung, passende englische Formulierung und mögliche Fehlinterpretation. Beispiel: Handy – mobile phone – direkte Übertragung des deutschen Wortes kann unverständlich sein. Prüfen Sie die Bedeutung in einem Wörterbuch, nicht allein durch Ähnlichkeit der Buchstaben.",
+          "Nutzen Sie das Ergebnis als Anlass für präzisere Sprache, nicht als Anlass, Sprecher:innen abzuwerten. Sprachgebrauch entsteht durch Gemeinschaften und kann sich verändern. Wenn ein Ausdruck in einer bestimmten Branche etabliert ist, erklären Sie ihn für Außenstehende. Wenn ein Ersatzwort kürzer und klarer ist, verwenden Sie es. Gute Übersetzung ist eine Entscheidung für das Publikum."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Sind Scheinanglizismen falsches Deutsch?",
+        "answer": "Nicht automatisch. Viele sind etablierte deutsche Wörter mit eigener Bedeutung. Sie können in englischer oder internationaler Kommunikation missverständlich sein."
+      },
+      {
+        "question": "Wie prüfe ich, was ein englisch klingendes Wort bedeutet?",
+        "answer": "Schlagen Sie es in einem aktuellen deutschen und englischen Wörterbuch nach und prüfen Sie Beispiele im Kontext. Die bloße Ähnlichkeit reicht nicht."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Duden: Anglizismus",
+        "url": "https://www.duden.de/rechtschreibung/Anglizismus"
+      },
+      {
+        "label": "Duden: Beispiele für Anglizismen und Scheinanglizismen",
+        "url": "https://www.duden.de/sprachwissen/fuer-lernende/anglizismen-beispiele"
+      }
+    ]
+  },
+  {
+    "slug": "mark-twain-deutsche-sprache",
+    "title": "Mark Twain über Deutsch: Was sein berühmter Spott trifft – und übertreibt",
+    "description": "Twains Essay „The Awful German Language“ ist Sprachsatire aus dem Jahr 1880. Er karikiert echte Lernhürden, ist aber keine neutrale Grammatikbeschreibung.",
+    "answer": "Mark Twain veröffentlichte „The Awful German Language“ als Anhang zu „A Tramp Abroad“ im Jahr 1880. Seine Pointen über Artikel, Satzklammer und lange Komposita beruhen auf Lernfrust, nicht auf einer wissenschaftlichen Diagnose. Lesen Sie den Essay als historische Satire und vergleichen Sie die Witze mit heutigen Erklärungen.",
+    "sections": [
+      {
+        "id": "essay",
+        "title": "Ein Essay im Reisebuch",
+        "paragraphs": [
+          "Twains Text erschien 1880 als Appendix D in seinem Reisebuch „A Tramp Abroad“. Der Titel lautet „The Awful German Language“. Twain macht sich darin über Schwierigkeiten lustig, die ihm beim Deutschlernen begegneten: grammatisches Geschlecht, Fälle, trennbare Verben und lange Sätze. Der Essay ist bis heute bekannt, weil er Frust in einprägsame Bilder verwandelt.",
+          "Seine Übertreibung ist Teil des Witzes. Wenn Twain so tut, als sei Deutsch absichtlich zur Qual von Lernenden erfunden worden, liefert das keine Sprachgeschichte. Es zeigt vielmehr, wie ungewohnt ein System wirkt, wenn die eigene Muttersprache andere Muster hat. Die Pointe sollte nicht als Beweis dienen, Deutsch sei objektiv schwerer als andere Sprachen."
+        ]
+      },
+      {
+        "id": "was-trifft",
+        "title": "Welche Lernhürden er humorvoll trifft",
+        "paragraphs": [
+          "Deutsch markiert Genus und Kasus an Artikeln, Adjektiven und Pronomen. Ein Lernender muss etwa „der“, „die“ und „das“ zusammen mit einem Nomen einprägen und je nach Satzfunktion Formen anpassen. Auch die Satzklammer ist real: „Ich rufe dich heute Abend an“ trennt Verbteile. Im Nebensatz kann das finite Verb ans Ende rücken: „…, weil ich dich heute Abend anrufe.“",
+          "Diese Regeln sind lernbar, aber nicht immer aus dem Englischen ableitbar. Twain macht die Distanz sichtbar, indem er sie dramatisiert. Moderne Lernmaterialien können die Muster in kleinen Schritten üben: erst trennbare Verben in Hauptsätzen, dann Nebensätze, anschließend längere Einschübe. So wird aus der komischen Beschwerde ein konkreter Lernplan."
+        ]
+      },
+      {
+        "id": "was-uebertreibt",
+        "title": "Was man Twain nicht als Regelbuch entnehmen sollte",
+        "paragraphs": [
+          "Twain schrieb für ein Publikum und arbeitete mit Karikatur. Seine Beschreibungen können historische Sprachformen, persönliche Erfahrung und absichtliche Übertreibung mischen. Ein berühmtes Zitat über Satzlänge beweist nicht, dass deutschsprachige Menschen grundsätzlich lange oder unverständliche Sätze schreiben. Zeitungssprache, Alltagssprache und literarischer Stil unterscheiden sich.",
+          "Auch Artikelgeschlechter erscheinen im Essay als absurdes Rätsel, sind aber grammatische Kategorien und keine Behauptung über das biologische Geschlecht eines Gegenstands. Lernende müssen sie mit dem Nomen erwerben; einzelne Endungen geben Hinweise, aber keine ausnahmslose Vorhersage. Wer Twain zitiert, sollte den satirischen Kontext nennen und kurze Originalstellen nicht aus dem Zusammenhang als Sprachfakten ausgeben."
+        ]
+      },
+      {
+        "id": "selbst-test",
+        "title": "Eine Twain-Übung ohne Grammatikpanik",
+        "paragraphs": [
+          "Wählen Sie einen Satz aus einem aktuellen Text, der Ihnen verschachtelt vorkommt. Markieren Sie zuerst das finite Verb. Trennen Sie dann Hauptsatz und Nebensätze und schreiben Sie eine kurze Version mit denselben Informationen. Beispiel: „Ich rufe dich heute Abend, wenn der Zug angekommen ist, an“ wird zu „Ich rufe dich heute Abend an. Dann ist der Zug angekommen.“ Der Inhalt bleibt, die Satzstruktur wird sichtbar.",
+          "Lesen Sie danach Twain oder eine zweisprachige Ausgabe als Literatur. Notieren Sie zu jeder Pointe: Welches echte Phänomen steckt dahinter? Was wurde übertrieben? Diese Doppelfrage bewahrt den Humor und stärkt zugleich das Sprachgefühl. Sie können über die Satzklammer lachen und sie trotzdem korrekt verwenden – Grammatik hat Humor nie ausdrücklich verboten."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Wann erschien Twains Essay?",
+        "answer": "1880, als Anhang D seines Reisebuchs „A Tramp Abroad“. Die Originalausgabe und der Text sind in digitalisierten historischen Ausgaben zugänglich."
+      },
+      {
+        "question": "Ist Deutsch laut Twain die schwierigste Sprache?",
+        "answer": "Nein. Der Essay ist satirisch und beruht auf Twains Erfahrung als Lernender. Er ist keine vergleichende wissenschaftliche Rangliste von Sprachen."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Digitalisierte Ausgabe von A Tramp Abroad / The Awful German Language",
+        "url": "https://en.wikisource.org/wiki/Abroad_with_Mark_Twain_and_Eugene_Field/The_Awful_German_Language"
+      },
+      {
+        "label": "Goethe-Institut: grammatische Hürden und Twains Essay",
+        "url": "https://www.goethe.de/resources/files/pdf315/konzeption-fuer-die-zusatzqualifikation-von-lehrkraeften.pdf"
+      }
+    ]
+  },
+  {
+    "slug": "zungenbrecher-deutsch",
+    "title": "Deutsche Zungenbrecher: Übungen für klare Artikulation",
+    "description": "Zungenbrecher trainieren Lautfolgen und Aufmerksamkeit, nicht automatisch eine bessere Aussprache. Hier sind kurze Originalübungen mit Steigerung und Selbstkontrolle.",
+    "answer": "Beginnen Sie Zungenbrecher langsam und deutlich, steigern Sie erst danach das Tempo. Die Übungen schulen Artikulation und Hörgenauigkeit; bei einem Laut, der dauerhaft Schwierigkeiten macht, ersetzen sie keine logopädische Beratung. Die folgenden Sätze sind eigens für diese Seite formuliert.",
+    "sections": [
+      {
+        "id": "warum",
+        "title": "Was Zungenbrecher tatsächlich trainieren",
+        "paragraphs": [
+          "Ein Zungenbrecher bündelt ähnliche Laute, Konsonantenfolgen oder wechselnde Artikulationsorte. Wer „Fischers Fritz“ kennt, merkt schnell, dass Tempo allein den Satz nicht klarer macht. Langsames Sprechen zwingt Mund und Ohr, die Unterschiede genauer wahrzunehmen. Das ist eine kleine Sprechübung, kein medizinisches Verfahren und kein zuverlässiger Test für Sprachkompetenz.",
+          "Bei Deutschlernenden können besonders lange Konsonantenfolgen oder der Wechsel von „sch“, „ch“ und „s“ ungewohnt sein. Wählen Sie eine Übung, die herausfordert, aber nicht schmerzt. Wenn Sie für Beruf oder Alltag an Verständlichkeit arbeiten, hilft eine Aufnahme: Vergleichen Sie, ob einzelne Laute hörbar bleiben, statt nur die Geschwindigkeit zu messen."
+        ]
+      },
+      {
+        "id": "originale",
+        "title": "Drei neue Übungen in drei Schwierigkeitsstufen",
+        "paragraphs": [
+          "Leicht: „Mira mischt Minztee mit mildem Melissensirup.“ Sprechen Sie die m-Laute ruhig aus und halten Sie die Wortgrenzen hörbar. Mittelschwer: „Sieben schmale Schirme schaukeln schon schräg im Schaufenster.“ Achten Sie auf den Wechsel zwischen „s“ und „sch“, ohne die Endungen zu verschlucken.",
+          "Schwierig: „Zwischen zwanzig Zweigen zwitschern zwei zähe Zaunkönige.“ Setzen Sie eine natürliche Pause nach dem ersten Wort und bleiben Sie bei „zw“ und „z“ präzise. Diese Sätze sind neu formulierte Übungsbeispiele, keine historischen Volksreime. Erfinden Sie eigene Versionen, indem Sie zunächst zwei ähnliche Laute kombinieren und dann einen Sinnsatz daraus bauen."
+        ]
+      },
+      {
+        "id": "uebungsplan",
+        "title": "Fünf Minuten mit messbarem Fortschritt",
+        "paragraphs": [
+          "Nehmen Sie einen Satz, sprechen Sie ihn dreimal langsam und einmal in natürlichem Tempo. Markieren Sie die Stelle, an der Sie stolpern. Wiederholen Sie nur diese Wortgruppe und verbinden Sie sie anschließend wieder mit dem Satz. Ein Metronom ist optional; wichtiger ist, dass jeder Laut verständlich bleibt.",
+          "Nehmen Sie am Ende eine zweite Aufnahme auf. Vergleichen Sie nicht, ob Sie „perfekt“ klingen, sondern ob Sie die markierte Stelle klarer artikulieren. Wechseln Sie am nächsten Tag zu einem anderen Laut. Wenn Sie mit Kindern üben, lassen Sie sie eigene alberne Sätze erfinden; die Aufgabe soll spielerisch bleiben und keine Prüfungssituation werden."
+        ]
+      },
+      {
+        "id": "laute",
+        "title": "Häufige Stolperstellen bewusst hören",
+        "paragraphs": [
+          "Bei „sieben schmale Schirme“ beginnt ein Wort mit stimmhaftem s-Laut, das nächste mit sch. Bei „Zwischen zwanzig Zweigen“ wiederholt sich die Affrikate am Wortanfang. Sprechen Sie zunächst überdeutlich, dann natürlicher. Ein Spiegel kann zeigen, ob Lippen und Zunge eine Position wechseln; er ersetzt nicht das eigene Hören.",
+          "Dialekt und regionale Aussprache sind keine Fehler, nur weil sie vom Bühnenhochdeutsch abweichen. Zungenbrecher sollen Beweglichkeit und Aufmerksamkeit fördern, nicht alle Stimmen gleichmachen. Wenn eine bestimmte Aussprache im Alltag Verständigungsprobleme verursacht, kann eine Sprachtherapeutin oder ein Logopäde individuell helfen. Bei anhaltenden Schmerzen brechen Sie die Übung ab."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Machen Zungenbrecher die Aussprache automatisch besser?",
+        "answer": "Sie können Artikulation und Lautbewusstsein üben, garantieren aber keine allgemeine Verbesserung. Regelmäßiges, deutliches Üben ist sinnvoller als bloßes Schnellsprechen."
+      },
+      {
+        "question": "Sind die Beispiele alte deutsche Volksreime?",
+        "answer": "Nein. Die drei Übungssätze in diesem Artikel sind eigens formuliert. Bekannte traditionelle Zungenbrecher sollten mit ihrer jeweiligen Quelle belegt werden."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Goethe-Institut: Aussprache und Sprachlernen",
+        "url": "https://www.goethe.de/de/spr/ueb.html"
+      }
+    ]
+  },
+  {
+    "slug": "wortspiele-beispiele",
+    "title": "Wortspiele: 7 Bauarten und eigene Beispiele zum Nachmachen",
+    "description": "Ein Wortspiel kann mit Doppeldeutigkeit, Klang oder wörtlicher Lesart arbeiten. Diese Anleitung erklärt den Mechanismus und gibt neue Beispiele samt Bauplan.",
+    "answer": "Gute Wortspiele überraschen und bleiben verständlich. Starten Sie mit einem Wort, das zwei Bedeutungen oder eine bekannte Redewendung enthält, und bauen Sie eine knappe Pointe. Die Beispiele hier sind neu formuliert; beim Übernehmen fremder Wortspiele sollten Sie Quelle und Rechte beachten.",
+    "sections": [
+      {
+        "id": "mechanismen",
+        "title": "Fünf Mechanismen hinter der Pointe",
+        "paragraphs": [
+          "Doppeldeutigkeit nutzt ein Wort mit mehreren Lesarten: „Ich wollte einen ruhigen Beruf – jetzt arbeite ich in der Stille.“ Lautähnlichkeit stellt Wörter nebeneinander, die fast gleich klingen. Eine wörtliche Redensart nimmt ein Bild beim Wort. Kontrast stellt zwei Erwartungen gegenüber. Wortzerlegung erfindet aus Bestandteilen eine neue Lesart.",
+          "Ein Wortspiel braucht normalerweise einen klaren Umschaltpunkt. In „Der Kalender war beleidigt: Man hat seine Tage gezählt“ kippt die Wendung „Tage zählen“ in eine zweite Bedeutung. Der Satz darf albern sein, aber die Verbindung muss erkennbar bleiben. Wenn man erst drei Absätze erklären muss, trägt die Pointe vermutlich noch nicht."
+        ]
+      },
+      {
+        "id": "beispiele",
+        "title": "Sieben frische Beispiele mit kurzer Erklärung",
+        "paragraphs": [
+          "„Der Bibliothekar kündigte: Er wollte endlich aus dem Buchstabendienst aussteigen.“ – Hier verschmilzt Buchstabe mit „Dienst“. „Meine Pflanze hat einen Podcast gestartet: Sie sendet jetzt aus dem Blattstudio.“ – Das Blatt wird zugleich Teil der Pflanze und Sendeort. „Der Bäcker schreibt Tagebuch – jeden Morgen beginnt ein neues Kapitel.“ – Backtag und Kapitelanfang treffen aufeinander.",
+          "Weitere Ideen: „Der Uhrmacher nimmt sich Zeit, aber nur beruflich“ (Redewendung und Arbeitsgegenstand); „Die Geometrie-AG hat viele Ecken, an denen sie weiterdenkt“ (Ecken im Raum und Perspektiven); „Der Regenschirm ist Optimist: Er sieht immer Wolken mit Silberrand“ (Sprichwort-Bild); „Die Socke ging zur Beratung, weil sie sich ständig verstrickte“ (textile und soziale Bedeutung). Prüfen Sie jede Pointe auf Klang und Natürlichkeit."
+        ]
+      },
+      {
+        "id": "bauplan",
+        "title": "Der Drei-Schritt-Bauplan fürs eigene Wortspiel",
+        "paragraphs": [
+          "Schritt eins: Notieren Sie zehn konkrete Dinge aus Ihrer Umgebung, etwa Becher, Bahn, Wolke, Schlüssel. Schritt zwei: Sammeln Sie zu einem davon Redewendungen, Nebenbedeutungen oder gleichlautende Wörter. Schritt drei: Schreiben Sie fünf kurze Sätze, die zwischen den Bedeutungen wechseln. Streichen Sie Füllwörter und lassen Sie die Pointe am Ende stehen.",
+          "Beispiel mit „Schlüssel“: Türschlüssel, Lösungsschlüssel, Schlüsselrolle. Entwurf: „Der Schlüssel zur Prüfungsvorbereitung war ein Schlüsselbund.“ Das ist verständlich, aber nicht überraschend. Neue Fassung: „Der Lösungsschlüssel passte nicht ins Schloss – die Aufgabe wollte lieber geknackt werden.“ Das Spiel ist klarer, weil zwei Bedeutungen in einer kleinen Szene zusammenkommen."
+        ]
+      },
+      {
+        "id": "feinschliff",
+        "title": "Feinschliff: Laut vorlesen und Zielgruppe bedenken",
+        "paragraphs": [
+          "Lesen Sie den Satz laut und prüfen Sie, ob die doppelte Bedeutung ohne Zusatz sichtbar wird. Bitten Sie eine Person, die Pointe in eigenen Worten wiederzugeben. Wenn sie nur die erste Lesart erkennt, fehlt vielleicht ein Hinweis; wenn sie die Pointe sofort erkennt, aber nicht lustig findet, kann das einfach Geschmack sein. Humor lässt sich nicht mathematisch garantieren.",
+          "Vermeiden Sie Wortspiele auf Kosten von Namen, Akzenten oder Gruppen, die ohnehin oft abgewertet werden. Für Karten und Werbung zählt außerdem der Anlass: Ein Kalauer kann im Teamchat passen und in einer Trauerkarte danebenliegen. Prüfen Sie bei veröffentlichten Sprüchen, ob sie tatsächlich von Ihnen stammen. Originelle Formulierungen sind besser als ungekennzeichnete Kopien."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Wie schreibe ich selbst ein gutes Wortspiel?",
+        "answer": "Beginnen Sie mit Mehrdeutigkeit oder Klangähnlichkeit, formulieren Sie eine kurze Szene und setzen Sie den Umschaltpunkt ans Satzende. Lautes Vorlesen hilft beim Kürzen."
+      },
+      {
+        "question": "Darf ich ein Wortspiel aus dem Internet übernehmen?",
+        "answer": "Prüfen Sie Urheberschaft und Nutzungsrechte, besonders bei Veröffentlichung oder kommerzieller Nutzung. Eine eigene Variante ist oft die bessere Wahl."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Duden: Wortspiel",
+        "url": "https://www.duden.de/rechtschreibung/Wortspiel"
+      }
+    ]
+  },
+  {
+    "slug": "komposita-gefahren",
+    "title": "Komposita verstehen: So entschlüsseln Sie deutsche Wortketten",
+    "description": "Bei zusammengesetzten Wörtern erklärt das Grundwort am Ende meist die Hauptsache. Mit Zerlegung, Bindestrich und Gegenproben werden lange Wortketten lesbarer.",
+    "answer": "Suchen Sie beim Kompositum zuerst das Grundwort am Ende; die vorderen Bestandteile grenzen seine Bedeutung ein. „Fensterrahmenfarbe“ ist eine Farbe für den Fensterrahmen. Zerlegen Sie von rechts nach links, prüfen Sie mögliche Mehrdeutigkeit und setzen Sie bei Bedarf einen sinnvollen Bindestrich.",
+    "sections": [
+      {
+        "id": "aufbau",
+        "title": "Grundwort am Ende, Bestimmungswort davor",
+        "paragraphs": [
+          "Ein Kompositum besteht aus mehreren Bestandteilen. Beim typischen deutschen Nomen bestimmt das letzte Glied die grammatische Grundkategorie: „der Haustürschlüssel“ ist ein Schlüssel, „die Schlüsselkarte“ eine Karte. Die vorderen Glieder schränken ein, um welche Art es geht. Diese Struktur ist produktiv und erlaubt genaue Benennungen.",
+          "Lesen Sie deshalb von rechts nach links: Bei „Fensterrahmenfarbe“ suchen Sie zuerst nach „Farbe“, dann nach dem Gegenstand, zu dem sie gehört. Das ist oft hilfreicher, als ein langes Wort buchstabenweise von links zu übersetzen. Manche Kombinationen haben jedoch eine fest etablierte Bedeutung oder lassen sich nicht eindeutig aus Einzelteilen erraten."
+        ]
+      },
+      {
+        "id": "fugen",
+        "title": "Fugenlaute und Zusammenschreibung",
+        "paragraphs": [
+          "Zwischen Bestandteilen erscheint manchmal ein Fugen-s wie in „Arbeitszimmer“ oder eine andere Verbindung. Das ist nicht einfach ein Plural-s und folgt nicht immer einer Regel, die jede Bildung sicher vorhersagt. Die richtige Schreibung kann im Wörterbuch nachgeschlagen werden. Duden beschreibt Komposition als Wortbildung, bei der Bestandteile zu einem komplexeren Wort zusammenkommen.",
+          "Zusammensetzungen werden im Deutschen grundsätzlich zusammengeschrieben; ein Bindestrich kann die Lesbarkeit verbessern oder ist bei bestimmten Kombinationen mit Einzelbuchstaben, Ziffern und Abkürzungen vorgeschrieben. „Video-Installation“ lässt die Teile klarer erkennen. Setzen Sie nicht zufällig Leerzeichen: „Kürbissuppe“ ist ein Wort, „Kürbis Suppe“ verändert die Standardschreibung."
+        ]
+      },
+      {
+        "id": "mehrdeutigkeit",
+        "title": "Wenn eine Wortkette mehrere Lesarten zulässt",
+        "paragraphs": [
+          "„Urkundenarchivverwaltung“ kann je nach Kontext Verwaltung eines Urkundenarchivs oder Verwaltung einer Urkundenarchivstelle meinen. Lange Komposita bündeln Information, verstecken aber die Beziehungen zwischen den Teilen. Fragen Sie: Was ist die Hauptsache? Wer handelt? Worauf bezieht sich der erste Bestandteil? Wenn die Antwort nicht sofort klar ist, kann ein kurzer Relativsatz helfen.",
+          "Statt „Kundenserviceanfragebearbeitung“ schreiben Sie beispielsweise „Bearbeitung der Anfragen an den Kundenservice“. Die offene Wortgruppe kostet wenige Zeichen, zeigt aber die Beziehung transparenter. In Überschriften kann ein Bindestrich Orientierung geben; im Fließtext ist ein erklärender Satz oft die bessere Wahl. Verständlichkeit ist wichtiger als ein Wettbewerb um die kürzeste Schreibweise."
+        ]
+      },
+      {
+        "id": "uebung",
+        "title": "Übung: Wortkette in eine verständliche Aussage verwandeln",
+        "paragraphs": [
+          "Nehmen Sie „Schulwegplanänderungsmitteilung“. Markieren Sie das Grundwort „Mitteilung“, dann „Änderung“, dann „Plan“, dann „Schulweg“. Schreiben Sie die Bedeutung als Satz: „Die Schule informiert über eine Änderung am Plan für den Schulweg.“ Prüfen Sie anschließend, ob tatsächlich die Schule informiert oder ob die Stadt die Mitteilung verschickt; das Wort allein klärt den Absender nicht.",
+          "Bilden Sie nun ein eigenes Wort aus drei Dingen im Alltag und lassen Sie eine andere Person die Bedeutung erraten. Wenn mehrere Deutungen plausibel sind, formulieren Sie um oder erklären Sie die Beziehung. So bleiben Komposita nützlich: Sie sparen Wiederholung, solange die Leser:innen den Bauplan noch erkennen können."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Wie zerlege ich ein sehr langes deutsches Wort?",
+        "answer": "Beginnen Sie am Ende mit dem Grundwort und gehen Sie dann nach links. Ein Wörterbuch hilft bei festen Bedeutungen und bei der richtigen Zusammenschreibung."
+      },
+      {
+        "question": "Wann sollte ich einen Bindestrich verwenden?",
+        "answer": "Er kann lange oder unübersichtliche Zusammensetzungen lesbarer machen und ist in bestimmten Konstellationen vorgeschrieben. Prüfen Sie Duden-Regeln, wenn die Schreibung unsicher ist."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Duden: Komposition",
+        "url": "https://www.duden.de/sprachwissen/sprachratgeber/Komposition"
+      },
+      {
+        "label": "Duden: Bindestrich",
+        "url": "https://www.duden.de/sprachwissen/sprachratgeber/Wann-muss-der-Bindestrich-gebraucht-werden"
+      }
+    ]
+  },
+  {
+    "slug": "woerter-des-jahres",
+    "title": "Wörter des Jahres: Was die GfdS kürt und was die Liste aussagt",
+    "description": "Die Gesellschaft für deutsche Sprache wählt Wörter, die ein Jahr prägen. Die Auswahl misst weder die häufigsten Wörter noch eine amtliche Sprachregel.",
+    "answer": "Die GfdS kürt seit 1977 zehn Wörter und Wendungen, die das gesellschaftliche Leben eines Jahres besonders geprägt haben. Für 2025 steht „KI-Ära“ auf Platz eins. Die Liste ist eine sprachliche Zeitdiagnose, kein Häufigkeitsranking und keine Empfehlung, ein Wort künftig zu benutzen.",
+    "sections": [
+      {
+        "id": "auswahl",
+        "title": "Was die Aktion der GfdS auswählt",
+        "paragraphs": [
+          "Die Gesellschaft für deutsche Sprache sammelt Belege aus Medien und Einsendungen und wählt kurz vor Jahresende zehn Ausdrücke. Entscheidend ist laut GfdS nicht, welches Wort am häufigsten vorkommt, sondern welche Wörter und Wendungen das öffentliche Leben und die Diskussion eines Jahres besonders charakterisieren. Das macht die Liste zu einer Auswahl mit Begründung, nicht zu einem Wörterbuch der meistgesprochenen Begriffe.",
+          "Die Ausdrücke erhalten auch keine amtliche Wertung als gut, schlecht oder korrekt. Ein Wort kann auf die Liste kommen, weil es eine Debatte bündelt, eine neue Wortbildung zeigt oder eine politische Entwicklung markiert. Wer die Liste in einem Text nutzt, sollte die Begründung der Jury mitnennen, statt aus dem Platz eine allgemeine Sprachregel abzuleiten."
+        ]
+      },
+      {
+        "id": "aktuelles",
+        "title": "Die aktuelle Liste: Wort des Jahres 2025",
+        "paragraphs": [
+          "Die GfdS wählte „KI-Ära“ zum Wort des Jahres 2025. Auf den folgenden Plätzen standen „Deal“, „Land gegen Frieden“, „Sondervermögen“, „Wehrdienst-Lotto“, „Drohnisierung“, „Strafzölle“, „Wohlstandsverlust“, „klimamüde“ und „Vertiktokung“. Die Jury verknüpfte „KI-Ära“ mit dem Eintritt künstlicher Intelligenz in viele Alltagsbereiche und damit verbundenen Chancen und Risiken.",
+          "Die Liste zeigt auch, wie neue Komposita und humorvolle Bildungen öffentliche Themen verdichten. „Vertiktokung“ etwa bündelt eine Entwicklung im Mediengebrauch und demonstriert produktive Wortbildung. Daraus folgt nicht, dass jede Person das Wort verwendet oder dass es dauerhaft Teil des allgemeinen Wortschatzes wird. Die GfdS selbst weist darauf hin, dass sich das nicht vorhersagen lässt."
+        ]
+      },
+      {
+        "id": "vergleich",
+        "title": "Wort des Jahres und Unwort auseinanderhalten",
+        "paragraphs": [
+          "Das Wort des Jahres und das Unwort des Jahres sind zwei unterschiedliche sprachkritische Aktionen mit eigenen Jurys und Kriterien. Die GfdS-Aktion fragt nach Ausdrücken, die ein Jahr geprägt haben; das Unwort kann problematische oder irreführende Verwendung kritisieren. Ein Wort kann daher gesellschaftlich wichtig sein, ohne dass die Jury seine Nutzung empfiehlt. Prüfen Sie bei Zitaten immer die zuständige Institution und den jeweiligen Jahrgang.",
+          "Für eine Unterrichts- oder Redaktionsübung legen Sie drei Spalten an: Ausdruck, zugrunde liegendes Ereignis, Begründung der Jury. Ergänzen Sie eine vierte Spalte mit einem eigenen Gegenargument oder einer alternativen Deutung. So wird deutlich, dass die Auswahl eine begründete Perspektive darstellt, aber nicht die einzige mögliche Sicht auf das Jahr."
+        ]
+      },
+      {
+        "id": "nutzen",
+        "title": "Die Liste als kleine Sprachzeitreise nutzen",
+        "paragraphs": [
+          "Wählen Sie zwei Jahrgänge und vergleichen Sie die Wörter. Welche Themen bleiben, welche verschwinden? Welche Begriffe sind Komposita, Abkürzungen oder englische Wörter? Suchen Sie die Originalbegründungen, damit Sie nicht nur die Schlagzeile vergleichen. Vermerken Sie Jahr und Quelle; eine aktuelle Top-zehn-Liste verändert sich jedes Jahr.",
+          "Wer eine Kandidatin für das persönliche Wort des Jahres sucht, kann ein Wort aus dem eigenen Alltag wählen und in drei Sätzen begründen: Wo begegnete es mir? Welche Erfahrung fasst es zusammen? Welche Nebenwirkung hat seine Verwendung? Das persönliche Ergebnis muss nicht mit der Jury übereinstimmen. Gerade die Begründung macht aus einer Lieblingsvokabel eine nachvollziehbare Mini-Zeitdiagnose."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Was war das Wort des Jahres 2025?",
+        "answer": "Die GfdS wählte „KI-Ära“. Die weiteren neun Plätze und die Jurybegründungen stehen auf der offiziellen GfdS-Seite zum Jahrgang 2025."
+      },
+      {
+        "question": "Ist das Wort des Jahres das meistgesprochene deutsche Wort?",
+        "answer": "Nein. Die GfdS sagt ausdrücklich, dass nicht Häufigkeit, sondern die Bedeutung für das jeweilige Jahr entscheidend ist."
+      }
+    ],
+    "sources": [
+      {
+        "label": "GfdS: Wörter des Jahres 2025",
+        "url": "https://gfds.de/worter-des-jahres-2025/"
+      },
+      {
+        "label": "GfdS: Hintergrund zur Aktion Wort des Jahres",
+        "url": "https://gfds.de/aktionen/wort-des-jahres/"
+      }
+    ]
+  },
+  {
+    "slug": "deutsch-lernen-schwer",
+    "title": "Deutsch lernen: Welche Hürden oft auffallen und wie Sie sie üben",
+    "description": "Artikel, Fälle, Satzklammer und Wortstellung können Lernende fordern. Mit kleinen Routinen üben Sie diese Muster im Kontext statt mit einer pauschalen Schwierigkeitsrangliste.",
+    "answer": "Es gibt keine objektive Rangliste der schwierigsten Sprachen für alle Lernenden. Im Deutschen können Artikel, Kasus, trennbare Verben und Satzstellung ungewohnt sein. Lernen Sie Nomen mit Artikel, üben Sie jeweils ein Satzmuster und schreiben Sie eigene Beispiele, statt Regeln isoliert auswendig zu lernen.",
+    "sections": [
+      {
+        "id": "keine-rangliste",
+        "title": "Schwierigkeit hängt von Vorerfahrung und Ziel ab",
+        "paragraphs": [
+          "Eine Sprache fällt nicht jeder Person an denselben Stellen schwer. Wer bereits eine Sprache mit Fällen gelernt hat, erkennt manche Funktionen schneller; wer mit Artikeln vertraut ist, muss trotzdem neue deutsche Formen lernen. Aussprache, Lesen, Schreiben und freies Sprechen entwickeln sich außerdem unterschiedlich. Deshalb ist „Deutsch ist die schwerste Sprache“ keine hilfreiche, allgemeingültige Aussage.",
+          "Das Goethe-Institut behandelt in seinen Lernmaterialien unter anderem Artikel, Wortstellung, Satzklammer, trennbare Verben und Kasus. Diese Themen sind real, aber in überschaubare Muster zerlegbar. Notieren Sie, was Ihnen in einer konkreten Alltagssituation fehlt – etwa eine Wegbeschreibung verstehen – und wählen Sie dann genau dafür eine Übung."
+        ]
+      },
+      {
+        "id": "artikel-kasus",
+        "title": "Artikel und Kasus gemeinsam mit Nomen lernen",
+        "paragraphs": [
+          "Lernen Sie ein Nomen nicht allein als „Tisch“, sondern mit Artikel und einem Beispielsatz: „der Tisch – Ich stelle die Tasse auf den Tisch.“ Ein Karteikartensatz kann Singular, Plural und typische Präpositionen ergänzen. So wird sichtbar, dass Artikel nicht nur Etiketten tragen, sondern auch grammatische Beziehungen anzeigen.",
+          "Markieren Sie in einem Lesetext Nomen und die Wörter, die sich auf sie beziehen. Fragen Sie: Wer handelt? Wem wird etwas gegeben? Wen betrifft die Handlung? Schreiben Sie pro Tag drei eigene Sätze und wechseln Sie nur ein Element. Zum Beispiel: „Der Freund hilft der Nachbarin“ und „Die Nachbarin hilft dem Freund“. Der Bedeutungswechsel macht die Form funktional."
+        ]
+      },
+      {
+        "id": "satzbau",
+        "title": "Satzklammer und Nebensatz in kurzen Schritten üben",
+        "paragraphs": [
+          "Bei trennbaren Verben steht ein Teil im Hauptsatz oft am Satzende: „Ich rufe dich später an.“ Beginnen Sie mit kurzen Sätzen, markieren Sie beide Verbteile und setzen Sie dann ein Zeit- oder Ortsfeld dazwischen. Später können Sie Nebensätze hinzufügen: „Ich rufe dich später an, wenn ich zu Hause bin.“ So bleibt die Klammer sichtbar.",
+          "Für Nebensätze mit „weil“ oder „dass“ hilft ein einfacher Farbstift: Unterstreichen Sie das einleitende Wort und kreisen Sie das Verb am Ende ein. Vergleichen Sie „Ich bleibe, weil ich müde bin“ mit „Ich bin müde“. Sprechen Sie beide Sätze laut und erfinden Sie eigene Beispiele aus dem Alltag. Fehler sind Daten darüber, welches Muster noch Übung braucht."
+        ]
+      },
+      {
+        "id": "routine",
+        "title": "Eine realistische 15-Minuten-Routine",
+        "paragraphs": [
+          "Fünf Minuten lesen, fünf Minuten hören und fünf Minuten selbst sprechen oder schreiben reichen als regelmäßiger Start. Wählen Sie ein Thema, das Sie wirklich brauchen: Einkauf, Termin, Kollegengespräch. Sammeln Sie daraus fünf Wörter samt Artikel und zwei Satzmuster. Am nächsten Tag wiederholen Sie die Muster mit neuen Wörtern, statt von vorn eine lange Grammatikliste zu beginnen.",
+          "Suchen Sie Rückmeldung von einer Lehrkraft, einem Tandem oder einem geprüften Lernmaterial. Fragen Sie nicht nur „War das richtig?“, sondern „Welche Regel hilft mir bei meinem nächsten ähnlichen Satz?“ Ein Lernziel wie „Heute drei Nebensätze mit weil bilden“ ist überprüfbar. Ein Ziel wie „Deutsch endlich perfekt können“ ist so groß, dass man kaum erkennt, ob man vorankommt."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Welche deutsche Grammatik sollte ich zuerst lernen?",
+        "answer": "Das hängt von Ihrem Alltag und Niveau ab. Artikel mit Nomen, häufige Verben, Satzstellung und nützliche Redemittel sind oft ein guter Anfang; orientieren Sie sich an einem strukturierten Kurs."
+      },
+      {
+        "question": "Wie merke ich mir der, die und das?",
+        "answer": "Lernen Sie Nomen konsequent mit Artikel und Beispielsatz. Endungen geben teilweise Hinweise, aber es gibt Ausnahmen; regelmäßiges Wiederholen im Kontext hilft."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Goethe-Institut: Deutsch lernen und üben",
+        "url": "https://www.goethe.de/de/spr/ueb.html"
+      },
+      {
+        "label": "Goethe-Institut: grammatische Strukturen und Deutsch als Zweitsprache",
+        "url": "https://www.goethe.de/resources/files/pdf315/konzeption-fuer-die-zusatzqualifikation-von-lehrkraeften.pdf"
+      }
+    ]
+  },
+  {
+    "slug": "worthaft-tipps",
+    "title": "Worthaft-Tipps: Das Fünf-Buchstaben-Rätsel systematisch lösen",
+    "description": "Worthaft bietet sechs Versuche für ein geheimes Fünf-Buchstaben-Wort. Mit gezielten Startwörtern, sauberer Rückmeldung und einem Plan für Wiederholungen nutzt du jeden Tipp besser.",
+    "answer": "Worthaft ist ein tägliches Worträtsel mit fünf Buchstaben und höchstens sechs Versuchen. Nach jedem gültigen Wort zeigen die Farben, welche Buchstaben an der richtigen Stelle, an anderer Stelle oder nicht in der Lösung sind. Nutze die Rückmeldung als Information, nicht als Anlass für zufällige Wortwechsel.",
+    "sections": [
+      {
+        "id": "regeln",
+        "title": "Die Rückmeldung richtig lesen",
+        "paragraphs": [
+          "Ein grünes Feld (im Originaldesign blau) zeigt einen Buchstaben an der richtigen Position; gelb markiert einen Buchstaben, der vorkommt, aber anders steht; dunkel bedeutet, dass er in der Lösung fehlt. Buchstaben, die mehrfach vorkommen, machen die Auswertung kniffliger: Ein Wort kann denselben Buchstaben doppelt enthalten, obwohl die Rückmeldung nur eine Stelle bestätigt. Prüfe deshalb Positionen und Häufigkeiten getrennt.",
+          "Du hast sechs Versuche für ein Wort aus fünf Buchstaben. Nutze den ersten Tipp, um möglichst viele häufige, unterschiedliche Buchstaben zu testen, ohne früh bekannte Stellen zu ignorieren. Ein Wort mit fünf neuen Buchstaben kann Information liefern; ein späterer Versuch sollte dagegen die Hinweise zusammenführen und keine bereits ausgeschlossenen Buchstaben wieder einführen."
+        ]
+      },
+      {
+        "id": "strategie",
+        "title": "Eine kleine Strategie für die ersten Züge",
+        "paragraphs": [
+          "Wähle als Startwort ein gültiges Fünf-Buchstaben-Wort, das mehrere unterschiedliche Vokale und häufige Konsonanten prüft. Es gibt nicht für jedes Tageswort einen universell besten Start. Nach der Rückmeldung notiere: feste Stellen, enthaltene Buchstaben mit offenen Positionen und ausgeschlossene Zeichen. So bleibt die nächste Entscheidung nachvollziehbar.",
+          "Im zweiten Zug darfst du ein Testwort wählen, das offene Möglichkeiten trennt. Wenn etwa A an Position zwei feststeht und R gelb war, setze R an eine andere plausible Stelle und prüfe weitere noch unbekannte Buchstaben. Vermeide Wörter, die nur einen winzigen Teil der offenen Möglichkeiten unterscheiden. Schreibe Kandidaten auf Papier, falls du mehrere Varianten vergleichen willst."
+        ]
+      },
+      {
+        "id": "wortwahl",
+        "title": "Gültiges Wort und Lösungskandidat auseinanderhalten",
+        "paragraphs": [
+          "Ein Wort kann als Versuch akzeptiert werden, ohne die Lösung zu sein. Worthaft prüft Eingaben gegen eine Wortliste; Eigennamen, Abkürzungen, Beugungsformen und seltene Begriffe können je nach Wörterbuch fehlen. Wenn ein Wort abgelehnt wird, heißt das nicht automatisch, dass die Logik deiner Vermutung falsch war. Wähle einen gültigen Ersatz, der möglichst dieselben Buchstaben testet.",
+          "Der Joker „Heißer Tipp“ kann im Spiel einen Buchstaben aufdecken, kostet aber die eigene Entscheidung über den Einsatz. Setze ihn ein, wenn du festhängst oder heute lieber eine Hilfestellung möchtest. Die Schwierigkeit soll Spaß machen, kein Beweis für Sprachwissen sein. Nach der Auflösung kannst du das Lösungswort im Spiel antippen, um die angebotene Worterklärung zu lesen."
+        ]
+      },
+      {
+        "id": "lernloop",
+        "title": "Nach dem Rätsel: aus Fehlern ein Wortmuster machen",
+        "paragraphs": [
+          "Wenn du das Wort löst, teile dein Ergebnis über die Teilen-Funktion. Die Ergebnisansicht zeigt Versuche und Zeiten; je nach Einstellung erscheinen unterschiedliche Farben. Teile die Lösung nur, wenn du andere nicht spoilern willst. Ein kurzer Blick auf deine Reihe verrät, ob du Buchstaben wiederholt, Positionen ignoriert oder zu früh auf seltene Kandidaten gesetzt hast.",
+          "Sammle keine komplizierten Statistiken, wenn dir eine Notiz genügt. Markiere pro Spiel eine Entscheidung: „zu viele bekannte Buchstaben erneut geprüft“ oder „gelben Buchstaben nicht umgestellt“. Beim nächsten Rätsel änderst du genau eine Gewohnheit. Damit wird ein tägliches Wortspiel zu einer kleinen Strategieübung – fünf Buchstaben, sechs Chancen und kein Grund, die Tastatur persönlich zu nehmen."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Wie viele Buchstaben und Versuche hat Worthaft?",
+        "answer": "Das tägliche Wort hat fünf Buchstaben. Du kannst es in höchstens sechs Versuchen erraten."
+      },
+      {
+        "question": "Warum wird mein Wort nicht angenommen?",
+        "answer": "Es muss in der hinterlegten Wortliste stehen. Eine plausible Form, ein Eigenname oder eine seltene Variante kann fehlen; probiere ein anderes gültiges Wort."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Worthaft – Spiel und Regeln",
+        "url": "https://paulikreisch.de/worthaft"
+      }
+    ]
+  },
+  {
+    "slug": "sprichwoerter-wortlich-genommen",
+    "title": "Sprichwörter wörtlich genommen: 8 Bilder im Alltag nachspielen",
+    "description": "Was passiert, wenn Redensarten nicht mehr übertragen, sondern als echte Szene gelesen werden? Acht neue Mini-Szenen und ein Verfahren für eigene Sprachbilder.",
+    "answer": "Sprichwörter und Redensarten verdichten Erfahrungen in Bildern. Wörtlich gelesen werden diese Bilder zu kleinen absurden Szenen. Die folgenden Beispiele sind eigene Varianten; die übertragene Bedeutung sollten Sie jeweils vom wörtlichen Bild unterscheiden.",
+    "sections": [
+      {
+        "id": "bildsprache",
+        "title": "Vom Bild zur übertragenen Bedeutung",
+        "paragraphs": [
+          "Bei einer Redensart meint der Satz oft mehr als seine Einzelwörter. „Den Nagel auf den Kopf treffen“ beschreibt nicht zwingend eine handwerkliche Szene, sondern eine treffende Aussage. Wer das Bild wörtlich nimmt, stellt sich Hammer, Nagel und Kopf vor. Dieser Wechsel von übertragenem zu buchstäblichem Sinn erzeugt Komik.",
+          "Sprichwörter verallgemeinern Erfahrung, aber sie sind keine naturwissenschaftlichen Gesetze. „Morgenstund hat Gold im Mund“ passt nicht zu jeder Person und jedem Beruf. Beim Spielen mit dem Bild ist deshalb hilfreich, zuerst die übliche Bedeutung zu erklären und erst danach die absurde Szene zu bauen. So wird klar, worauf die Pointe reagiert."
+        ]
+      },
+      {
+        "id": "beispiele",
+        "title": "Acht Redensarten als kleine Alltagsszenen",
+        "paragraphs": [
+          "„Den Nagel auf den Kopf treffen“: Eine Heimwerkerin zielt so genau, dass der Nagel sich beschwert, sein Kopf sei kein Zielgebiet. „Tomaten auf den Augen haben“: Jemand sucht die Brille, während eine Schüssel Tomaten die Sicht versperrt. „Ins kalte Wasser springen“: Die Schwimmerin bittet erst um Temperaturmessung und Sprungbrett-Erlaubnis.",
+          "„Jemandem einen Bären aufbinden“: Der Förster versucht, einen Stoffbären an einen Gürtel zu knoten. „Die Katze aus dem Sack lassen“: Die Katze steigt selbst aus und verlangt einen Mietvertrag. „Auf dem Holzweg sein“: Eine Person steht mitten im Brennholzstapel und sucht ein Wegschild. „Den Faden verlieren“: Der Schneider sucht seine Rolle Garn. „Viele Köche verderben den Brei“: Die Köchinnen einigen sich erst auf einen Löffel und retten das Rezept."
+        ]
+      },
+      {
+        "id": "selbermachen",
+        "title": "So erfindest du eine eigene wörtliche Pointe",
+        "paragraphs": [
+          "Schreibe eine bekannte Redensart auf und kläre ihre übliche Bedeutung. Wähle dann das stärkste konkrete Ding im Bild: Nagel, Katze, Faden. Baue eine kurze Szene, in der dieses Ding wirklich vorkommt. Ergänze eine kleine Folge, die zur modernen Welt passt – etwa eine Katze, die beim Bürgeramt eine Wohnungsgeberbestätigung beantragt.",
+          "Kürze so lange, bis die Redensart und die Szene in einem Satz erkennbar sind. Frage eine andere Person, ob sie zuerst die übertragene Bedeutung kennt und ob die wörtliche Pointe verständlich ist. Achte darauf, dass die Redensart nicht nur als Vorwand für einen langen Absatz dient. Das Bild soll tragen, nicht erklärt werden müssen."
+        ]
+      },
+      {
+        "id": "kontext",
+        "title": "Humor, Kontext und respektvoller Umgang",
+        "paragraphs": [
+          "Wörtlichnehmen funktioniert besonders gut in Comics, Kindertexten und kurzen Social-Posts, weil das Bild sofort sichtbar wird. Für Deutschlernende kann die Methode zusätzlich helfen, die übertragene Bedeutung zu merken. Geben Sie dabei an, wenn ein Sprichwort historisch oder regional ist; nicht jede Redensart ist überall gleich gebräuchlich.",
+          "Vermeiden Sie Witze, die einzelne Gruppen oder Menschen wegen Herkunft, Behinderung oder Akzent abwerten. Die Pointe kann aus dem Sprachbild kommen, ohne dass eine Person zur Zielscheibe wird. Wenn Sie ein bekanntes fremdes Wortspiel veröffentlichen, prüfen Sie Urheberschaft. Für eigene Sprachspiele ist der einfachste Weg: ein eigenes Bild, eine klare Wendung, ein kurzer Satz."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Sind Redensarten und Sprichwörter dasselbe?",
+        "answer": "Sie überschneiden sich, aber Sprichwörter formulieren oft eine allgemeine Aussage, während Redensarten häufig als feste Wendungen in einen Satz eingebaut werden."
+      },
+      {
+        "question": "Wie merke ich mir die Bedeutung einer Redensart?",
+        "answer": "Notieren Sie die übertragene Bedeutung und zeichnen oder beschreiben Sie das wörtliche Bild. Der Kontrast zwischen beiden hilft beim Erinnern."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Duden: Redensart",
+        "url": "https://www.duden.de/rechtschreibung/Redensart"
+      }
+    ]
+  },
+  {
+    "slug": "denglisch-werbung",
+    "title": "Denglisch in der Werbung: Wann Englisch hilft und wann es stört",
+    "description": "Englische Wörter können kurz, international oder modisch wirken. Eine klare Werbebotschaft prüft trotzdem, ob Zielgruppe und Handlung den Ausdruck verstehen.",
+    "answer": "Englisch in der Werbung ist sinnvoll, wenn es die Zielgruppe versteht und die Botschaft dadurch präziser oder passender wird. Testen Sie zentrale Wörter mit echten Leser:innen, übersetzen Sie Handlungen eindeutig und erklären Sie Fachbegriffe. Ein englischer Slogan ersetzt keine klare Information zu Preis, Produkt oder Teilnahme.",
+    "sections": [
+      {
+        "id": "zielgruppe",
+        "title": "Zielgruppe vor Sprachstil festlegen",
+        "paragraphs": [
+          "Fragen Sie zuerst, wer die Anzeige sehen und was die Person anschließend tun soll. Ein englischer Ausdruck kann in einer internationalen Produktcommunity vertraut sein, aber bei einer lokalen Dienstleistung unnötig Hürden schaffen. „Jetzt shoppen“ klingt anders als „Jetzt einkaufen“; die Wahl vermittelt Ton, erklärt aber nicht automatisch den nächsten Schritt.",
+          "Achten Sie auf tatsächliche Sprachkenntnisse und nicht auf stereotype Annahmen über Alter oder Beruf. Ein kurzer Test mit Menschen aus der Zielgruppe ist oft aufschlussreicher: Was bedeutet der Button? Was kostet das Angebot? Was muss ich als Nächstes tun? Wenn die Antworten auseinandergehen, fehlt Klarheit – unabhängig davon, ob die Wörter deutsch oder englisch sind."
+        ]
+      },
+      {
+        "id": "verstaendlichkeit",
+        "title": "Slogan und Information auseinanderhalten",
+        "paragraphs": [
+          "Ein Slogan darf spielen; wichtige Nutzungsinformationen sollten eindeutig bleiben. Wörter wie „Sale“, „Deal“, „Feedback“ oder „Service“ sind vielen bekannt, können aber unterschiedliche Erwartungen wecken. Nennen Sie bei einem Angebot konkret, was enthalten ist, bis wann es gilt und welche Bedingungen gelten. Der kreative Teil darf die Details nicht verstecken.",
+          "Besondere Vorsicht gilt bei Scheinanglizismen und mehrdeutigen Begriffen. „Public Viewing“ kann für internationale Gäste etwas anderes nahelegen als die deutsche Veranstaltung meint. Ergänzen Sie dann „Live-Übertragung auf Großbildleinwand“. Ein erläuternder Halbsatz nimmt dem Slogan nicht zwingend die Wirkung; er verhindert, dass die Einladung versehentlich eine andere Veranstaltung verspricht."
+        ]
+      },
+      {
+        "id": "test",
+        "title": "Ein kurzer Denglisch-Test für Kampagnen",
+        "paragraphs": [
+          "Markieren Sie jedes englische Wort und fragen Sie: Verstehen es die Zielpersonen? Ist es kürzer oder präziser als eine deutsche Alternative? Passt es zum Ton? Ist eine Handlung damit eindeutig? Eine Tabelle mit „Ausdruck / mögliche Lesart / verständliche Alternative“ zeigt schnell, wo Erklärungsbedarf liegt.",
+          "Beispiel: „Get your free starter kit now“ kann zu „Hol dir jetzt dein kostenloses Starterpaket“ werden. Für eine internationale Marke kann Englisch passen, aber „free“ muss tatsächlich kostenlos bedeuten und Bedingungen müssen sichtbar bleiben. Lassen Sie mehrere Personen die Anzeige ohne Erklärung lesen und anschließend den nächsten Schritt in eigenen Worten wiedergeben."
+        ]
+      },
+      {
+        "id": "feinschliff",
+        "title": "Konsistent und fair kommunizieren",
+        "paragraphs": [
+          "Verwenden Sie in einer Kampagne wiederkehrende Begriffe konsistent. Wenn „Abo“ und „Subscription“ dasselbe meinen sollen, erklären Sie die Wahl beim ersten Auftreten. Vermeiden Sie unnötig englische Wörter, nur um modern zu wirken; vermeiden Sie zugleich eine künstliche Reinheit, die etablierte Fachbegriffe unverständlich ersetzt.",
+          "Prüfen Sie auch Barrierefreiheit: Buttons, Preisangaben und Bedingungen sollen direkt verständlich und nicht nur als Wortwitz erkennbar sein. Bei rechtlich relevanten Angaben sind klare Informationen wichtiger als ein cleverer Mischsatz. Die beste Denglisch-Entscheidung ist nicht immer eine Übersetzung, sondern eine bewusste Wahl für Menschen, die die Anzeige tatsächlich lesen."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Ist Denglisch in der Werbung grundsätzlich schlecht?",
+        "answer": "Nein. Entscheidend sind Publikum, Verständlichkeit, Ton und die Eindeutigkeit wichtiger Produktinformationen."
+      },
+      {
+        "question": "Wie teste ich, ob ein englischer Slogan ankommt?",
+        "answer": "Lassen Sie Personen aus der Zielgruppe die Anzeige ohne Erklärung lesen und den Inhalt sowie den nächsten Schritt wiedergeben. Achten Sie auf abweichende Deutungen."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Duden: Anglizismus",
+        "url": "https://www.duden.de/rechtschreibung/Anglizismus"
+      },
+      {
+        "label": "Duden: Beispiele für Anglizismen und Scheinanglizismen",
+        "url": "https://www.duden.de/sprachwissen/fuer-lernende/anglizismen-beispiele"
+      }
+    ]
+  },
+  {
+    "slug": "palindrome-worte",
+    "title": "Deutsche Palindrome: Wörter und Sätze vorwärts wie rückwärts lesen",
+    "description": "Ein Palindrom bleibt beim Rückwärtslesen gleich oder bildet in einer weiteren Definition eine sinnvolle umgekehrte Folge. Beispiele und Bauübungen zeigen die Unterschiede.",
+    "answer": "Ein strenges Palindrom ist vorwärts und rückwärts identisch, wenn man Buchstabenfolge und Schreibweise zugrunde legt: „Otto“, „Anna“ und „Rentner“ sind Beispiele. Duden verwendet den Begriff auch weiter für Wörter oder Wendungen, deren Rückwärtsfolge eine andere sinnvolle Folge ergibt. Legen Sie den Maßstab fest.",
+    "sections": [
+      {
+        "id": "definition",
+        "title": "Zwei Arten von Rückwärts-Spiel",
+        "paragraphs": [
+          "Im engeren Sinn ist ein Palindrom eine Folge, die rückwärts genau dieselbe Buchstabenfolge ergibt. Dazu zählen die Namen „Otto“ und „Anna“ sowie „Rentner“. Bei Sätzen lässt man gewöhnlich Leerzeichen und Satzzeichen außer Acht, muss aber angeben, ob Großschreibung und Umlaute normalisiert werden.",
+          "Duden beschreibt auch eine weitere Form, in der rückwärts gelesen ein anderes sinnvolles Wort oder eine sinnvolle Wendung entsteht, etwa „Nebel – Leben“. Deshalb unterscheiden manche Rätsel zwischen strengen Palindromen und Umkehrspielen. Es hilft, die Regel in der Aufgabenstellung zu nennen. So gibt es keinen Streit darüber, ob Leerzeichen oder verschiedene Wörter zählen."
+        ]
+      },
+      {
+        "id": "beispiele",
+        "title": "Beispiele kontrollieren, statt nur behaupten",
+        "paragraphs": [
+          "Kurze strenge Beispiele: „Otto“, „Anna“, „Rentner“. Prüfen Sie sie Buchstabe für Buchstabe von außen nach innen: erstes und letztes Zeichen müssen übereinstimmen, dann das zweite und vorletzte. Bei „Rentner“ ergibt sich R–e–n–t–n–e–R. Der mittlere Buchstabe bleibt beim Spiegeln an derselben Stelle.",
+          "Ein längeres neutrales Satzpalindrom aus dem Duden lautet „Eine treue Familie bei Lima feuerte nie“. Wie bei solchen Beispielen üblich, werden Leerzeichen ignoriert; kontrollieren Sie die Regel der Quelle, bevor Sie das Beispiel für ein Rätsel verwenden. Für eigene Übungen sind kurze Wörter leichter zu überprüfen."
+        ]
+      },
+      {
+        "id": "selberbauen",
+        "title": "So baust du ein Palindrom",
+        "paragraphs": [
+          "Beginnen Sie mit einem kurzen Wortmuster: A–B–B–A lässt sich zu „Anna“ füllen, A–B–C–B–A zu „Radar“. Wählen Sie zunächst bekannte Wörter und prüfen Sie die Symmetrie. Für einen Satz ist die Aufgabe schwerer, weil zusätzlich Grammatik und Bedeutung stimmen müssen. Erlauben Sie im Rätsel ausdrücklich, Leerzeichen und Satzzeichen zu ignorieren.",
+          "Ein einfacher Test: Kopieren Sie den Text, entfernen Sie Leerzeichen und Satzzeichen und kehren Sie die Zeichenfolge um. Vergleichen Sie das Ergebnis mit der Originalfassung. Für deutsche Umlaute können Sie festlegen, ob „ä“ als einzelner Buchstabe zählt oder zu „ae“ normalisiert wird. Schreiben Sie die Regel dazu, damit zwei Personen denselben Prüfschritt verwenden."
+        ]
+      },
+      {
+        "id": "spiele",
+        "title": "Kleine Palindrom-Challenge",
+        "paragraphs": [
+          "Runde 1: Finden Sie drei Namen oder Alltagswörter mit fünf oder weniger Buchstaben, deren Schreibweise symmetrisch ist. Runde 2: Erfinden Sie einen neutralen Satz mit maximal sieben Wörtern und prüfen Sie ihn ohne Leerzeichen. Runde 3: Lassen Sie eine andere Person die Regel erraten. Vergeben Sie einen Punkt für Symmetrie und einen für einen verständlichen Satz.",
+          "Wenn ein Satz nicht funktioniert, suchen Sie zuerst die Mitte und prüfen die Buchstabenpaare von außen nach innen. Verändern Sie dann jeweils nur ein Wort. Das ist meist effizienter, als den ganzen Satz immer neu zu schreiben. Ein Palindrom muss nicht lang sein: Ein sauberer kurzer Treffer ist bemerkenswerter als ein längeres Gebilde, dessen Bedeutung niemand versteht."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Ist „Nebel – Leben“ ein Palindrom?",
+        "answer": "In einer weiteren Definition ja: Rückwärts gelesen entsteht ein anderes sinnvolles Wort. Ein strenges Palindrom wäre identisch, etwa „Rentner“."
+      },
+      {
+        "question": "Zählen Leerzeichen beim Satzpalindrom mit?",
+        "answer": "Üblicherweise werden Leerzeichen und Satzzeichen ignoriert, aber geben Sie die Regel an. Bei Rätseln können auch Großschreibung und Umlaute festgelegt werden."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Duden: Palindrom",
+        "url": "https://www.duden.de/sprachwissen/sprachratgeber/Palindrom"
+      }
+    ]
+  }
+]
