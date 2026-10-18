@@ -1,4 +1,5 @@
 import { getLegalPages, getArticles } from '@/lib/firestore';
+import { guidePaths } from '@/lib/ratgeber/registry';
 
 export const dynamic = 'force-dynamic';
 
@@ -69,6 +70,8 @@ export async function GET() {
 
 
   const urls: Array<{ loc: string; lastmod?: string; changefreq: string; priority: number }> = [];
+
+  staticPages.push(...guidePaths().map(path => ({ path, priority: 0.7, changefreq: 'monthly' })));
 
   for (const p of staticPages) {
     urls.push({

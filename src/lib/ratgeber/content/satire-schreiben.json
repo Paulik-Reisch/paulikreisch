@@ -1,0 +1,715 @@
+[
+  {
+    "slug": "stilmittel-mit-beispielen",
+    "title": "Satire: Stilmittel mit Beispielen",
+    "description": "Satirische Stilmittel verständlich erklärt: Übertreibung, Ironie, Parodie und Verfremdung mit eigenen Beispielen und Übungen.",
+    "answer": "Satire nutzt sprachliche Mittel, um einen Widerspruch sichtbar zu machen. Übertreibung, Ironie, Kontrast, Parodie und Verfremdung wirken verschieden und sollten jeweils eine konkrete Beobachtung schärfen.",
+    "sections": [
+      {
+        "id": "werkzeuge",
+        "title": "Die Werkzeuge und ihre Wirkung",
+        "paragraphs": [
+          "Übertreibung vergrößert einen Widerspruch, bis er sichtbar wird. Ironie sagt scheinbar etwas anderes, als der Kontext nahelegt. Parodie imitiert eine Form, etwa eine Gebrauchsanweisung, und wendet sie auf einen unpassenden Gegenstand an. Verfremdung macht Gewohntes fremd: Ein Montag wird zum „wöchentlichen Belastungstest der Kaffeemaschine“. Diese Mittel sind keine austauschbare Dekoration. Jedes sollte eine Beobachtung präziser machen.",
+          "Beispiel Kontrast: Eine feierliche Ansprache würdigt die „historische Leistung“, dass im Büro ein Druckerpapierstau nach drei Anträgen behoben wurde. Die überhöhte Sprache entlarvt das Missverhältnis zwischen Aufwand und Ergebnis. Ein bloßer Gag über Drucker wäre weniger spezifisch."
+        ],
+        "bullets": [
+          "Übertreibung: Aus einer Verspätung wird ein eigener Verwaltungszweig.",
+          "Kontrast: Feierliche Sprache für eine belanglose Alltagspanne.",
+          "Parodie: Ein vertrautes Format erhält eine kritische Funktion."
+        ]
+      },
+      {
+        "id": "beispiel",
+        "title": "Ein Beispiel auseinandernehmen",
+        "paragraphs": [
+          "Erfundenes Beispiel: „Die Schule führte eine App ein, damit jede Frage schneller beantwortet wird. Seitdem braucht man nur noch drei Passwörter, zwei Updates und die Geduld eines historischen Archivs.“ Die Zuspitzung ist erkennbar; der Kern ist eine Digitalisierung, die zusätzliche Hürden erzeugt. Der Satz kritisiert einen Vorgang, nicht eine konkrete Person. Ohne den kritischen Kern wäre er nur ein beliebiger Witz über Technik.",
+          "Frage dich bei einem Entwurf: Was soll das Publikum nach dem Lachen bemerken? Wenn die Antwort nur „das ist absurd“ lautet, fehlt häufig die Beobachtung, die die Absurdität trägt."
+        ]
+      },
+      {
+        "id": "auswahl",
+        "title": "Das passende Mittel wählen",
+        "paragraphs": [
+          "Beginne nicht mit „Ich brauche Ironie“, sondern mit dem Missstand. Was genau ist widersprüchlich? Bei aufgeblasenen Versprechen hilft Kontrast; bei einer Regel, die sich selbst ad absurdum führt, trägt eine fingierte Gebrauchsanweisung. Prüfe, ob Lesende den Bezug ohne Insiderwissen erkennen und ob die Pointe nach der Kritik noch einen Gedanken übrig lässt.",
+          "Schreibe eine nüchterne Version neben die satirische. Wenn die nüchterne Version nicht erklärt, welcher Vorgang kritisiert wird, wird auch eine Übertreibung das Problem kaum lösen. Ein Stilmittel verstärkt eine Idee; es ersetzt sie nicht."
+        ]
+      },
+      {
+        "id": "uebung",
+        "title": "Übung in drei Schritten",
+        "paragraphs": [
+          "Nimm eine harmlose Alltagssituation, etwa eine Besprechung, die ohne Ergebnis endet. Schreibe zuerst eine nüchterne Beobachtung. Wähle dann genau ein Stilmittel und formuliere die Szene um. Markiere zuletzt den Satz, der den kritischen Kern am klarsten zeigt. Wenn nur die Übertreibung lustig ist, fehlt vermutlich noch die Beobachtung.",
+          "Erfinde nun eine zweite Fassung mit einem anderen Mittel. Vergleiche beide: Welche macht den Widerspruch verständlicher? Eine Übung ist gelungen, wenn sie dir zeigt, welche Form der Gedanke braucht – nicht wenn jeder Satz eine Pointe trägt."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Muss Satire immer lustig sein?",
+        "answer": "Nein. Sie kann bitter, irritierend oder trocken wirken. Humor ist ein mögliches Mittel, keine Pflicht."
+      },
+      {
+        "question": "Darf ich reale Personen überzeichnen?",
+        "answer": "Überzeichnung ist kein Freibrief. Kontext, Tatsachenkern und Persönlichkeitsrechte bleiben relevant; konkrete Veröffentlichungen können eine Einzelfallprüfung erfordern."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Art. 5 GG – Meinungs- und Kunstfreiheit",
+        "url": "https://www.gesetze-im-internet.de/gg/art_5.html"
+      },
+      {
+        "label": "BVerfG, Beschluss vom 25. März 1992",
+        "url": "https://www.bundesverfassungsgericht.de/SharedDocs/Entscheidungen/DE/1992/03/rs19920325_1bvr051490.html"
+      }
+    ],
+    "related": [
+      "satire-beispiele-analysiert",
+      "satire-ironie-parodie-unterschied"
+    ]
+  },
+  {
+    "slug": "satire-aufbau-in-7-schritten",
+    "title": "Satire schreiben: Aufbau in sieben Schritten",
+    "description": "Satire strukturieren: von einer konkreten Beobachtung zu einer nachvollziehbaren Zuspitzung und Pointe, mit Vorlage zum Schreiben.",
+    "answer": "Ein tragfähiger Satiretext führt von einer präzisen Beobachtung über eine erkennbare Zuspitzung zu einer Pointe, die den Widerspruch offenlegt.",
+    "sections": [
+      {
+        "id": "start",
+        "title": "Schritte 1 und 2: Beobachtung und Ziel",
+        "paragraphs": [
+          "Notiere einen konkreten Vorgang statt allgemeinen Ärger: „Das Formular verlangt die Mailadresse, um den Zugangscode zu schicken, der zum Formular führt.“ Benenne anschließend dein Ziel: die unnötige Schleife, nicht pauschal „die Verwaltung“. Ein enges Ziel macht die Satire verständlich und verhindert, dass sie bloß Menschen abwertet.",
+          "Schreibe den Kern als Gegensatz auf: „Das System soll X erleichtern, bewirkt aber Y.“ Wenn du diesen Satz nicht bilden kannst, beobachtest du vielleicht nur ein lästiges Symptom. Suche nach der Regel, dem Anreiz oder dem Versprechen, das den Widerspruch erzeugt."
+        ]
+      },
+      {
+        "id": "mittel",
+        "title": "Schritte 3 bis 5: Mechanik, Stimme und Eskalation",
+        "paragraphs": [
+          "Finde die Logik, die den Missstand antreibt. Gib ihr eine Stimme: etwa eine überoptimistische Behörde, die jede zusätzliche Hürde als Service bezeichnet. Steigere dann in nachvollziehbaren Stufen: erst der Code, dann die Bestätigung des Codes, schließlich eine Bescheinigung, dass der Code empfangen wurde. Jede Stufe muss aus der vorherigen folgen. Zufällige Absurditäten wirken beliebig.",
+          "Die Stimme sollte den Kern tragen, nicht bloß ein Kostüm sein. Ein Pressetext, eine Anleitung oder ein Dialog kann den Effekt verstärken, wenn die Form selbst zum kritisierten Vorgang passt."
+        ]
+      },
+      {
+        "id": "pointe",
+        "title": "Schritte 6 und 7: Pointe und Überarbeitung",
+        "paragraphs": [
+          "Die Pointe verdichtet die Beobachtung, statt nur einen Schlussgag anzuhängen. Erfundenes Beispiel: „Nach erfolgreicher Anmeldung erhalten Sie eine Anleitung zur Anmeldung.“ Danach streiche Erklärungen, die der Text bereits zeigt. Lies den Text laut: Ist die Zielscheibe klar? Versteht man die Situation ohne Vorwissen?",
+          "Prüfe auch die Tatsachen. Enthält eine scheinbar erfundene Szene konkrete Behauptungen über identifizierbare Personen? Ein satirischer Rahmen macht falsche Tatsachen nicht automatisch unproblematisch. Art. 5 GG schützt Meinungs- und Kunstfreiheit, nennt aber auch Schranken wie allgemeine Gesetze und persönliche Ehre."
+        ]
+      },
+      {
+        "id": "vorlage",
+        "title": "Schreibvorlage zum Mitnehmen",
+        "paragraphs": [
+          "Fülle diese Sätze aus: „Ich beobachte …“; „Der Widerspruch besteht darin, dass …“; „Die Figur glaubt ernsthaft …“; „Die Eskalation endet, wenn …“; „Die Pointe zeigt …“. Schreibe eine Version mit höchstens 150 Wörtern und danach eine als Dialog. Der Vergleich zeigt, ob die Idee von einer Form lebt oder ob die Pointe nur erklärt wird.",
+          "Lass eine Person den Text lesen und frage nur: „Was wird kritisiert?“ und „An welcher Stelle wird es klar?“ Wenn beide Antworten auseinandergehen, überarbeite zuerst die Beobachtung und den Kontext, nicht bloß das Schlusswort."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Wie lang sollte eine Satire sein?",
+        "answer": "So lang, wie Ziel und gedankliche Wendung brauchen. Für eine Übung reichen oft 100 bis 200 Wörter; eine feste Regel gibt es nicht."
+      },
+      {
+        "question": "Was, wenn die Pointe niemand versteht?",
+        "answer": "Prüfe Kontext und kritischen Kern. Ein zusätzlicher Hinweis kann helfen, aber eine Pointe sollte nicht durch einen Erklärungsabsatz ersetzt werden."
+      }
+    ],
+    "related": [
+      "satire-schreiben-uebungen",
+      "satire-themen-finden"
+    ]
+  },
+  {
+    "slug": "satire-analyse-anleitung",
+    "title": "Satire analysieren: Schritt für Schritt",
+    "description": "Anleitung zur Satireanalyse: Anlass, Ziel, sprachliche Mittel und Wirkung mit beleggestütztem Absatzmuster.",
+    "answer": "Eine Satireanalyse untersucht Anlass, Ziel, sprachliche Mittel und Wirkung. Sie trennt Textbeobachtung von Deutung.",
+    "sections": [
+      {
+        "id": "verstehen",
+        "title": "Erst verstehen, dann deuten",
+        "paragraphs": [
+          "Lies den Text zunächst vollständig und fasse in einem Satz zusammen, was wörtlich geschieht. Kläre danach Anlass und kritisierte Haltung. Eine Satire kann eine Institution, Gewohnheit oder öffentliche Debatte angreifen. Behaupte nicht vorschnell, die Autorin meine immer das Gegenteil des Gesagten: Ironie muss sich aus Textsignalen und Zusammenhang begründen lassen.",
+          "Notiere, was du über Entstehungszeit und Publikum weißt. Bei aktueller Satire kann der Bezug auf ein Ereignis wichtig sein. Wenn Kontext fehlt, kennzeichne deine Deutung als Möglichkeit, statt unbelegte Absichten zu behaupten."
+        ]
+      },
+      {
+        "id": "belege",
+        "title": "Belege statt Etiketten",
+        "paragraphs": [
+          "Markiere Wortwahl, Übertreibungen, Kontraste, Wiederholungen und Brüche im Ton. Benenne ein Textsignal und erkläre seine Funktion. „Der Text ist ironisch“ ist nur ein Etikett. Präziser: „Die überhöfliche Anrede steht neben einer absurden Forderung und lässt die Selbstzufriedenheit der Institution komisch erscheinen.“",
+          "Zitiere nur die Stelle, die du für den Gedankenschritt brauchst. Danach musst du erklären, was sie zeigt. Eine Liste rhetorischer Mittel ohne Deutung beantwortet die Frage nach der Wirkung nicht."
+        ]
+      },
+      {
+        "id": "wirkung",
+        "title": "Wirkung und Grenzen der Deutung",
+        "paragraphs": [
+          "Frage, welches Wissen die Pointe voraussetzt und welche Leserreaktion sie nahelegt. Komik kann Distanz schaffen, Empörung auslösen oder einen Widerspruch einprägsam machen. Wirkung ist nicht für alle gleich; formuliere deshalb „kann“ oder „legt nahe“, wenn der Text keine eindeutige Reaktion vorgibt. Trenne außerdem dargestellte Figuren von der Haltung des Textes.",
+          "Prüfe Gegenlesarten: Könnte die Szene auch eine andere Institution oder Gewohnheit kritisieren? Eine gute Analyse erklärt, warum ihre Deutung durch bestimmte Einzelheiten besser gestützt ist."
+        ]
+      },
+      {
+        "id": "muster",
+        "title": "Muster für einen Analyseabsatz",
+        "paragraphs": [
+          "Behauptung: „Die Szene kritisiert die Selbstinszenierung der Organisation.“ Beleg: „Dazu stellt der Text … neben …“. Erklärung: „Der Kontrast lässt … als … erscheinen.“ Wirkung: „So kann die Leserschaft … erkennen.“ Beende deinen Aufsatz mit einer Gesamtdeutung, die auf den Belegen beruht.",
+          "Erfundenes Mini-Beispiel: Ein „Effizienzbeauftragter“ hält eine einstündige Rede darüber, wie man Besprechungen verkürzt. Die Analyse sollte den Widerspruch zwischen Thema und Dauer benennen und erläutern, wie er die Kritik trägt.",
+          "Bei einem erfundenen Text über eine „Stille-Stunde“, die mit Durchsagen angekündigt wird, kannst du zunächst den Widerspruch benennen. Belege ihn mit dem Gegensatz aus Titel und Handlung. Erkläre dann, dass die Wiederholung der Durchsage die Kritik steigert. Eine Analyse muss nicht jedes Stilmittel aufführen; sie sollte die wenigen wichtigen Beobachtungen genau erklären."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Muss jede Satire Ironie enthalten?",
+        "answer": "Nein. Sie kann durch Übertreibung, Parodie oder eine absurde Handlung arbeiten."
+      },
+      {
+        "question": "Wie zitiere ich in der Analyse?",
+        "answer": "Belege wichtige Beobachtungen mit kurzen, korrekt abgeschriebenen Stellen und erkläre danach deren Funktion. Beachte die Zitierregeln der Aufgabe."
+      }
+    ],
+    "related": [
+      "stilmittel-mit-beispielen",
+      "satire-beispiele-analysiert"
+    ]
+  },
+  {
+    "slug": "satire-themen-finden",
+    "title": "Satire-Themen finden: vom Ärger zur Idee",
+    "description": "Satirethemen aus Alltag und Beobachtung entwickeln: Widerspruch erkennen, Blickwinkel wählen und eine Schreibidee testen.",
+    "answer": "Ein gutes Satirethema enthält einen sichtbaren Widerspruch, den sich konkret zeigen und fair kritisieren lässt.",
+    "sections": [
+      {
+        "id": "sammeln",
+        "title": "Beobachtungen sammeln",
+        "paragraphs": [
+          "Notiere eine Woche lang Momente, in denen Anspruch und Wirklichkeit auseinanderlaufen: Eine App verspricht Zeitersparnis und verlangt fünf Freigaben; ein Café wirbt mit Ruhe und beschallt die Schlange. Das sind Rohideen, noch keine fertigen Gags. Schreibe auf, wer handelt, welche Regel gilt und wer die Folgen trägt.",
+          "Halte Beobachtungen fest, bevor du die Pointe suchst. So vermeidest du, dass die Szene nur eine bereits fertige Meinung illustriert. Auch kleine Vorgänge können ein größeres Muster zeigen, wenn du die Verbindung erklären kannst."
+        ]
+      },
+      {
+        "id": "kern",
+        "title": "Den satirischen Kern freilegen",
+        "paragraphs": [
+          "Formuliere den Widerspruch: „Es heißt X, tatsächlich passiert Y.“ Frage anschließend, warum die Lücke existiert und wen sie betrifft. Daraus entsteht ein genaueres Ziel als „alles ist schlimm“. „Bürokratie“ ist zu groß; „Das Onlineformular verlangt einen Ausdruck und eine handschriftliche Unterschrift“ lässt sich als Szene erzählen.",
+          "Prüfe, ob du über eine Entscheidung, Struktur oder Person sprechen willst. Ein klar umrissener Gegenstand gibt Lesenden Orientierung und begrenzt pauschale Angriffe."
+        ]
+      },
+      {
+        "id": "blick",
+        "title": "Einen Blickwinkel wählen",
+        "paragraphs": [
+          "Wähle eine Stimme, die den Widerspruch sichtbar macht: eine übermotivierte Hotline, ein Formular mit Zukunftsangst oder einen feierlichen Pressetext. Erfinde keine falschen Tatsachen über reale Menschen. Wenn du eine Institution kritisierst, trenne belegbare Behauptungen und erfundene Szenen. Eine erkennbare Fiktion kann den Gedanken tragen, ohne falsche Details als Nachricht auszugeben.",
+          "Überlege, wer am meisten unter der Regel leidet und wer sie gestaltet. Die Perspektive entscheidet, ob der Witz nach oben auf ein Machtverhältnis zielt oder nach unten auf Betroffene."
+        ]
+      },
+      {
+        "id": "filter",
+        "title": "Ideenfilter und Schreibimpuls",
+        "paragraphs": [
+          "Bewerte die Idee: Ist der Missstand nachvollziehbar? Ist die Zuspitzung überraschend? Ist die Zielscheibe fair erkennbar? Schreib: „Die neue Regel soll …; sie bewirkt …; die zuständige Stelle erklärt …; am Ende muss …“. Wenn daraus eine kleine Handlung entsteht, hast du mehr als ein Thema – einen Textansatz.",
+          "Wähle lieber einen starken Widerspruch als fünf lose Ärgernisse. Eine Szene mit klarer Ursache und Folge lässt sich besser steigern und endet eher mit einer Pointe, die etwas bedeutet.",
+          "Beispiel: Eine Bibliothek führt ein neues Reservierungssystem ein, doch ein reserviertes Buch darf nur nach einem Termin zur Reservierung abgeholt werden. Schreibe nicht sofort die Pointe. Notiere erst, was versprochen wird, was tatsächlich geschieht und welche Person dadurch warten muss. Daraus ergeben sich verschiedene Perspektiven: ein Nutzungshinweis, ein Dialog am Schalter oder eine fingierte Erfolgsmeldung."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Sind persönliche Erlebnisse gute Satirethemen?",
+        "answer": "Ja, wenn daraus ein erkennbarer Widerspruch wird. Ändere private Details und vermeide öffentliche Abrechnungen mit identifizierbaren Einzelpersonen."
+      },
+      {
+        "question": "Welche Themen eignen sich für Anfänger?",
+        "answer": "Überschaubare Alltagssituationen mit klarer Regel und sichtbarer Folge. Kleine Szenen lassen sich leichter präzise zuspitzen."
+      }
+    ],
+    "related": [
+      "satire-schreiben-uebungen",
+      "satire-kurzgeschichte-beispiele"
+    ]
+  },
+  {
+    "slug": "satire-ironie-parodie-unterschied",
+    "title": "Satire, Ironie und Parodie: der Unterschied",
+    "description": "Satire, Ironie und Parodie einfach unterschieden: drei Begriffe, typische Merkmale und erfundene Beispiele.",
+    "answer": "Ironie ist ein sprachliches Verfahren, Parodie imitiert eine Form oder ein Werk, Satire ist eine kritische Darstellungsweise. Sie können zusammen auftreten.",
+    "sections": [
+      {
+        "id": "ironie",
+        "title": "Ironie: Aussage mit Abstand",
+        "paragraphs": [
+          "Bei Ironie stimmen Wortlaut und gemeinte Bewertung nicht einfach überein. Nach einem Systemausfall sagt jemand: „Das lief ja vorbildlich.“ Der Kontext macht die Umkehr erkennbar. Ohne Kontext kann Ironie missverstanden werden. Sie ist nicht immer bloß „das Gegenteil sagen“; die Haltung kann komplexer sein.",
+          "Ironie kann freundlich, bitter oder spielerisch wirken. Für die Analyse zählt das Signal im Text – etwa ein deutlicher Widerspruch zwischen Aussage und Situation – nicht allein die Absicht, die man der Autorin zuschreibt."
+        ]
+      },
+      {
+        "id": "parodie",
+        "title": "Parodie: eine Form wird zum Spiegel",
+        "paragraphs": [
+          "Eine Parodie greift typische Merkmale einer Vorlage oder Gattung auf und verändert sie. Eine erfundene „Gebrauchsanleitung für den Feierabend“ könnte Warnhinweise, Schritte und Fehlersuche nachahmen, um Arbeitskultur zu kommentieren. Sie muss keine geschützte Vorlage kopieren; oft genügt eine Anspielung auf ein allgemeines Format.",
+          "Der Wiedererkennungseffekt trägt den Witz. Ohne ein bekanntes Muster kann die Form wie eine beliebige Liste wirken. Beim Verfassen sollte die Vorlage erkennbar sein, während die eigene Aussage im Mittelpunkt bleibt."
+        ]
+      },
+      {
+        "id": "satire",
+        "title": "Satire: Kritik als Rahmen",
+        "paragraphs": [
+          "Satire zielt auf einen Missstand oder eine Haltung und verwendet dafür verschiedene Mittel. Eine Parodie kann ihr Format sein, muss aber nicht satirisch sein; sie kann einfach spielerisch imitieren. Ironie kann in Satire auftauchen, ist aber weder notwendige Bedingung noch allein ausreichend. Diese Unterscheidung verhindert, dass Form und Aussage verwechselt werden.",
+          "Ein satirischer Text kann auch direkt, grotesk oder erzählerisch arbeiten. Entscheidend ist, dass eine kritische Beobachtung in der Darstellung erkennbar bleibt."
+        ]
+      },
+      {
+        "id": "abschnitt-fragen",
+        "title": "Drei Fragen zur Einordnung",
+        "paragraphs": [
+          "1. Wird eine Aussage durch Kontext oder Ton gebrochen? Dann könnte Ironie vorliegen. 2. Wird ein erkennbares Format nachgeahmt? Dann könnte es eine Parodie sein. 3. Welcher Widerspruch wird kritisiert? Das weist auf Satire. Erfundenes Beispiel: Ein feierlicher Wetterbericht meldet „örtlich begrenzte Motivation“ am Montagmorgen. Das Format wird imitiert und kommentiert Arbeitsalltag.",
+          "Ein Werk kann mehrere Begriffe zugleich erfüllen. Benenne deshalb nicht nur die Kategorie, sondern erkläre, wie sie die Aussage stützt.",
+          "Mini-Vergleich: „Der Bus kam pünktlich“ ist wörtlich eine Tatsachenbehauptung. Nach einer Stunde Wartezeit kann derselbe Satz ironisch gemeint sein. Eine Parodie könnte den Stil eines Fahrplanhinweises nachahmen. Satirisch wird es, wenn der Text dabei einen Widerspruch im öffentlichen Nahverkehr kritisiert. Die Begriffe bezeichnen also unterschiedliche Merkmale und müssen nicht um dieselbe Kategorie konkurrieren."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Kann ein Text gleichzeitig Satire und Parodie sein?",
+        "answer": "Ja. Eine Parodie kann die Form liefern, mit der ein Text einen Missstand satirisch kritisiert."
+      },
+      {
+        "question": "Ist Sarkasmus dasselbe wie Ironie?",
+        "answer": "Nein. Sarkasmus bezeichnet meist einen beißenden Ton. Ironie beschreibt eine Spannung zwischen Wortlaut, Kontext und gemeinter Haltung."
+      }
+    ],
+    "related": [
+      "stilmittel-mit-beispielen",
+      "satire-beispiele-analysiert"
+    ]
+  },
+  {
+    "slug": "satire-beispiele-analysiert",
+    "title": "Satire-Beispiele analysieren: erfundene Miniaturen",
+    "description": "Fünf eigene Satirebeispiele zeigen, wie Widerspruch, Stilmittel und Pointe zusammenwirken.",
+    "answer": "Beim Analysieren eines satirischen Beispiels helfen drei Fragen: Was wird gezeigt, welcher Widerspruch steckt darin, und welches Mittel macht ihn sichtbar?",
+    "sections": [
+      {
+        "id": "beispiel1",
+        "title": "Beispiel 1: das zeitsparende Formular",
+        "paragraphs": [
+          "„Das neue Formular spart Zeit: Es lässt sich in nur sieben Portalen öffnen.“ Der Kontrast zwischen Werbeversprechen und Aufwand ist der Kern. Die Zahl gehört zur erfundenen Miniatur und ist keine Behauptung über ein reales Produkt. Die Pointe zielt auf ein System, das Zugangshürden als Fortschritt verkauft.",
+          "Bei der Analyse benenne zuerst Versprechen und Folge. Danach erkläre, wie der Kontrast die Kritik schärft."
+        ]
+      },
+      {
+        "id": "beispiel2",
+        "title": "Beispiel 2: der Pausenplan",
+        "paragraphs": [
+          "„Die Arbeitsgruppe zur Erholung tagt ab sofort auch während der Pause.“ Die Regel verdrängt genau das, was sie organisieren soll. Das Mittel ist logische Zuspitzung. Frage, ob der Text eine einzelne Sitzung verspottet oder eine größere Kultur permanenter Verfügbarkeit meint.",
+          "Der Widerspruch entsteht nicht nur aus dem Wort „Erholung“, sondern aus der Handlung: Die Gruppe beansprucht die Zeit, die sie schützen soll."
+        ]
+      },
+      {
+        "id": "beispiele",
+        "title": "Drei Perspektivwechsel",
+        "paragraphs": [
+          "„Der Drucker bittet um einen freien Nachmittag.“ Ein Gegenstand spricht und macht menschliche Überlastung sichtbar. „Die Nachhaltigkeitsfolie wurde auf 48 Seiten ausgedruckt.“ Botschaft und Handlung widersprechen einander. „Die Hotline ist leichter erreichbar, wenn man bereits mit ihr verbunden ist.“ Das Serviceversprechen kippt ins Paradox. Alle Miniaturen sind erfunden.",
+          "Eine Deutung sollte nicht mehr behaupten, als die Szene trägt. Der Drucker muss nicht für eine bestimmte Person stehen; er kann schlicht als Bild für Überlastung funktionieren."
+        ]
+      },
+      {
+        "id": "deutung",
+        "title": "Vom Beispiel zur eigenen Deutung",
+        "paragraphs": [
+          "Schreibe zu jeder Miniatur einen Satz über die kritisierte Haltung und einen über die Wirkung. Vermeide starre Übersetzungen wie „Drucker bedeutet immer Arbeitnehmer“. Ein Bild lässt mehrere Lesarten zu. Die plausibelste Analyse stützt sich auf konkrete Textdetails und kennzeichnet Unsicherheit.",
+          "Nimm danach denselben Kern und schreibe ihn als Dialog oder fingierte Nachricht. Vergleiche, ob die Kritik in der neuen Form verständlicher wird. So wird Analyse zum Werkzeug für eigene Texte.",
+          "Arbeitsblatt: Unterstreiche zunächst die Stelle, die eine Erwartung aufbaut. Markiere dann, wo die Szene diese Erwartung bricht. Formuliere den Widerspruch in einem neutralen Satz und benenne das Stilmittel. Beende die Analyse mit einer vorsichtigen Wirkungsannahme. So vermeidest du, einen Witz lediglich nachzuerzählen, und kannst zeigen, wie seine Form die Kritik transportiert."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Sind diese Beispiele Zitate aus veröffentlichten Texten?",
+        "answer": "Nein. Die Miniaturen sind eigens erfunden und illustrieren nur die Analyse."
+      },
+      {
+        "question": "Wie finde ich die Aussage hinter einem Witz?",
+        "answer": "Suche nach dem Widerspruch, der den Witz antreibt. Formuliere ihn neutral und prüfe, ob Textdetails deine Deutung stützen."
+      }
+    ],
+    "related": [
+      "satire-analyse-anleitung",
+      "stilmittel-mit-beispielen"
+    ]
+  },
+  {
+    "slug": "satire-recht-grenzen",
+    "title": "Satire und Recht: Freiheit, Kritik und Grenzen",
+    "description": "Was Meinungs- und Kunstfreiheit für Satire bedeuten und warum Tatsachenbehauptungen und Persönlichkeitsrechte mit zu prüfen sind.",
+    "answer": "Satire kann durch Meinungs- und Kunstfreiheit geschützt sein. Das ist kein pauschaler Freibrief: Kontext, Tatsachenbehauptungen und persönliche Ehre zählen.",
+    "sections": [
+      {
+        "id": "freiheit",
+        "title": "Was Art. 5 GG schützt",
+        "paragraphs": [
+          "Art. 5 Grundgesetz schützt Meinungsäußerungen und die Freiheit der Kunst. Absatz 2 nennt zugleich Schranken, darunter allgemeine Gesetze und das Recht der persönlichen Ehre. Ob eine konkrete Äußerung geschützt ist, hängt von Einordnung und Umständen ab. Nicht jede satirische Form ist automatisch Kunst; das Bundesverfassungsgericht betrachtet Aussagekern und Kontext.",
+          "Die Entscheidung des BVerfG von 1992 betont, dass satirische Verzeichnung eine Kritik tragen kann, aber nicht dazu dienen darf, eine Person durch falsche Tatsachenbehauptungen zu verunglimpfen. Der Titel „Satire“ allein entscheidet also nichts."
+        ]
+      },
+      {
+        "id": "tatsachen",
+        "title": "Tatsache, Werturteil und Verfremdung",
+        "paragraphs": [
+          "Eine erfundene Überzeichnung kann als solche erkennbar sein. Eine konkrete Behauptung über eine identifizierbare Person kann dagegen als Tatsachenbehauptung verstanden werden. Prüfe deshalb, ob Leserinnen und Leser die Szene eindeutig als Fiktion erkennen oder sie als Bericht über ein reales Ereignis auffassen könnten.",
+          "Satirische Verfremdung sollte einen erkennbaren realen Kern kommentieren, nicht eine falsche Anschuldigung als Pointe tarnen. §§ 185 bis 187 StGB behandeln Beleidigung, üble Nachrede und Verleumdung. Daneben können zivilrechtliche Persönlichkeitsrechte relevant sein."
+        ]
+      },
+      {
+        "id": "pruefen",
+        "title": "Prüffragen vor einer Veröffentlichung",
+        "paragraphs": [
+          "Wer ist erkennbar gemeint? Welche überprüfbare Tatsachenbehauptung enthält der Text? Trifft die Kritik eine öffentliche Handlung oder greift sie die Person als solche an? Werden private Daten oder Bilder verwendet? Eine Abwägung ist einzelfallabhängig; bei einem konkreten Streit oder wirtschaftlichen Folgen ist qualifizierte Rechtsberatung sinnvoll.",
+          "Kritisiere möglichst Verhalten, Entscheidung oder Institution. Belege Tatsachen und kennzeichne erfundene Szenen. Prüfe Namen, Bilder und den Kontext, in dem der Text verbreitet werden soll."
+        ]
+      },
+      {
+        "id": "grenzen",
+        "title": "Was diese Orientierung nicht verspricht",
+        "paragraphs": [
+          "Es gibt keine einfache Formel „Satire ist erlaubt, wenn sie lustig ist“. Kunst- und Meinungsfreiheit sind wichtig, aber nicht grenzenlos. Auch Öffentlichkeit, Anlass, Reichweite und Betroffenheit können für die Einordnung zählen. Allgemeine Informationen ersetzen keine Prüfung eines konkreten Textes.",
+          "Ein Beispiel mit erfundenen Figuren ist oft leichter einzuordnen als eine „fiktionale“ Darstellung, deren Details für alle auf eine reale Person weisen. Vor Veröffentlichung lohnt sich ein zweiter Blick durch jemanden, der den Insiderkontext nicht kennt.",
+          "Ein kurzer Selbsttest vor dem Teilen: Wird eine erfundene Szene als solche verstanden? Könnte ein Ausschnitt ohne Überschrift wie eine echte Meldung wirken? Enthält der Text private Informationen, die für den kritischen Punkt nicht erforderlich sind? Wenn du eine Frage mit Ja beantwortest, ergänze Kontext oder ändere Details. Bei konkreter rechtlicher Unsicherheit genügt ein Online-Ratgeber nicht als Einzelfallprüfung."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Ist Satire grundsätzlich von der Kunstfreiheit geschützt?",
+        "answer": "Satire kann Kunst sein, aber nicht jede Satire ist automatisch Kunst. Meinungs- und Kunstfreiheit werden anhand des konkreten Textes und Kontexts eingeordnet."
+      },
+      {
+        "question": "Darf Satire falsche Behauptungen über echte Personen erfinden?",
+        "answer": "Ein satirischer Stil macht unwahre Tatsachenbehauptungen nicht pauschal zulässig. Bei identifizierbaren Personen können Ehr- und Persönlichkeitsrechte betroffen sein."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Art. 5 GG",
+        "url": "https://www.gesetze-im-internet.de/gg/art_5.html"
+      },
+      {
+        "label": "BVerfG, Beschluss vom 25. März 1992",
+        "url": "https://www.bundesverfassungsgericht.de/SharedDocs/Entscheidungen/DE/1992/03/rs19920325_1bvr051490.html"
+      },
+      {
+        "label": "Strafgesetzbuch §§ 185–187",
+        "url": "https://www.gesetze-im-internet.de/stgb/"
+      }
+    ],
+    "related": [
+      "satire-ironie-parodie-unterschied"
+    ]
+  },
+  {
+    "slug": "satire-geschichte",
+    "title": "Satire: Geschichte und Entwicklung der Form",
+    "description": "Ein Überblick über Satire von antiken Textformen und Druckschriften bis zu Presse, Kabarett und digitalen Medien.",
+    "answer": "Satire hat sich über Jahrhunderte verändert: von antiken Versformen über Flugschriften und Presse bis zu Bühne, Rundfunk, Fernsehen und digitalen Plattformen.",
+    "sections": [
+      {
+        "id": "antike",
+        "title": "Antike Traditionen",
+        "paragraphs": [
+          "Der Begriff wird oft mit der römischen Satire verbunden, deren Autoren gesellschaftliche Sitten und Machtverhältnisse in Versen kommentierten. Die griechische Komödie brachte daneben politische und soziale Kritik auf die Bühne. Diese Traditionen sind nicht identisch, zeigen aber, dass Spott früh öffentliches Nachdenken anstoßen konnte.",
+          "Eine gerade Linie von der Antike zur heutigen Kabarettsendung wäre zu einfach. Jede Epoche hatte eigene Medien, Publika und Regeln dafür, wer Kritik äußern konnte."
+        ]
+      },
+      {
+        "id": "druck",
+        "title": "Druck und Öffentlichkeit",
+        "paragraphs": [
+          "Mit der Verbreitung gedruckter Texte konnten satirische Pamphlete und Karikaturen mehr Menschen erreichen. Zugleich hingen Autorinnen und Autoren von Zensur, Privilegien und der politischen Lage ab. Allegorie, fingierte Stimmen und Doppeldeutigkeiten machten Kritik manchmal indirekt. Die Form konnte sie verschleiern, verlangte den Lesenden aber auch Deutungsarbeit ab.",
+          "Satirische Bilder verdichteten komplexe Konflikte. Ihre Wirkung hing davon ab, ob das Publikum die Anspielung verstand und Zugang zum jeweiligen Medium hatte."
+        ]
+      },
+      {
+        "id": "buehne",
+        "title": "Presse, Bühne und Rundfunk",
+        "paragraphs": [
+          "Zeitschriften, Theater, Kabarett, Radio und Fernsehen machten Satire zu einem wiederkehrenden Teil öffentlicher Debatten. Karikaturen reagierten auf aktuelle Ereignisse; Kabarett verband politische Beobachtung mit Auftritt und Stimme. Unter Diktaturen wurde Satire zensiert, verboten oder verfolgt. Ihre Geschichte ist deshalb auch eine Geschichte der Grenzen öffentlicher Kritik.",
+          "Die Medien veränderten Tempo und Reichweite: Eine Bühnenpointe wirkt im gemeinsamen Raum, ein gedruckter Text erlaubt langsameres Lesen, eine Sendung erreicht viele gleichzeitig."
+        ]
+      },
+      {
+        "id": "digital",
+        "title": "Satire in digitalen Medien",
+        "paragraphs": [
+          "Heute verbreiten sich satirische Bilder und Kurztexte binnen Minuten. Das beschleunigt Reaktionen und vergrößert zugleich das Risiko, dass Kontext verloren geht oder Parodie als Tatsachenmeldung erscheint. Wer Inhalte teilt, sollte deshalb Originalquelle, Datum und ursprünglichen Rahmen prüfen.",
+          "Die Plattformen ändern sich, doch Grundfragen bleiben: Wer ist das Publikum? Was wird kritisiert? Wie viel Kontext braucht die Pointe? Eine historische Perspektive hilft, neue Medien einzuordnen, ohne die Unterschiede zwischen Epochen zu verwischen.",
+          "Für einen historischen Vergleich notiere bei jedem Medium drei Aspekte: Wer konnte veröffentlichen? Wie schnell erreichte der Text das Publikum? Welche Hinweise brauchte das Publikum zum Verstehen? Eine Karikatur in einer Zeitung, eine Bühnenrede und ein geteilter Bildwitz funktionieren jeweils anders. Der Vergleich macht Medienwandel greifbar, ohne alle Formen zu einer einzigen Traditionslinie zusammenzufassen."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Wann entstand Satire?",
+        "answer": "Es gibt keine einzelne Geburtsstunde. Antike Formen bilden wichtige frühe Traditionen; die Gattung entwickelte sich über viele Medien und Epochen."
+      },
+      {
+        "question": "Ist Satire immer politisch?",
+        "answer": "Nein. Sie kann auch Alltag, Sprache, Institutionen und gesellschaftliche Gewohnheiten behandeln."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Art. 5 GG – Meinungs- und Kunstfreiheit",
+        "url": "https://www.gesetze-im-internet.de/gg/art_5.html"
+      }
+    ],
+    "related": [
+      "satire-ironie-parodie-unterschied"
+    ]
+  },
+  {
+    "slug": "satire-kurzgeschichte-beispiele",
+    "title": "Satirische Kurzgeschichte: Aufbau und Beispiele",
+    "description": "Eine satirische Kurzgeschichte entwickeln: Handlung, Figuren, Zuspitzung und erfundene Miniatur zum Nachvollziehen.",
+    "answer": "Eine satirische Kurzgeschichte verbindet eine überschaubare Handlung mit einem klaren Widerspruch. Die Pointe entsteht aus Figuren, Regeln und Folgen, nicht aus lose angehängten Witzen.",
+    "sections": [
+      {
+        "id": "handlung",
+        "title": "Eine kleine Handlung planen",
+        "paragraphs": [
+          "Wähle eine Situation mit begrenztem Schauplatz und wenigen Figuren. Beispielidee: In einem Bürgerbüro soll ein neues System Wartezeiten abschaffen, indem es Wartende in eine Warteschlange für die Warteschlangen-App stellt. Die Geschichte braucht eine Figur, die etwas Konkretes will, ein Hindernis und eine Eskalation. „Digitalisierung“ allein ist noch keine Handlung.",
+          "Gib der Figur ein Ziel, das Lesende verstehen: einen Termin bekommen, eine Pause machen, eine Besprechung beenden. Dann zeige, wie ein Verfahren dieses Ziel erschwert. Die satirische Kritik entsteht aus dem Konflikt, nicht aus einer erklärenden Rede."
+        ]
+      },
+      {
+        "id": "figuren",
+        "title": "Figuren und Erzählstimme",
+        "paragraphs": [
+          "Eine Mitarbeiterin könnte die Anmeldung beschleunigen wollen, während das System jede Abkürzung als fehlende Berechtigung behandelt. Die satirische Stimme darf trocken oder übertrieben höflich sein, sollte aber nicht alles kommentieren. Lass Handlungen den Widerspruch zeigen. Eine Nebenfigur, die die offizielle Logik ernst nimmt, kann gerade dadurch die Absurdität sichtbar machen.",
+          "Entscheide, wer erzählt und was diese Stimme weiß. Ein allwissender Erzähler kann kommentieren, eine Figur kennt nur ihren Ausschnitt. Beide Perspektiven erzeugen unterschiedliche Komik."
+        ]
+      },
+      {
+        "id": "miniatur",
+        "title": "Erfundene Miniatur",
+        "paragraphs": [
+          "„Bitte ziehen Sie eine Nummer“, sagte der Bildschirm. Mara drückte auf Start. „Für die Nummer benötigen Sie einen Termin.“ Sie wählte Termin. „Termine werden nach erfolgreicher Anmeldung vergeben.“ Die Anmeldung bestätigte: „Ihr Termin zur Anmeldung ist in sechs Wochen.“ Als Mara fragte, ob sie nun angemeldet sei, druckte das Gerät eine Nummer aus. Sie war für die Auswertung der Wartezeit zuständig.",
+          "Die Miniatur ist erfunden. Der Witz liegt in der Schleife und in der Messung, die das Problem verwaltet. Die letzte Zeile verschiebt den Blick von Maras Ziel auf die Kennzahl der Behörde."
+        ]
+      },
+      {
+        "id": "ueberarbeitung",
+        "title": "Überarbeiten und zuspitzen",
+        "paragraphs": [
+          "Prüfe, ob jede Szene den Konflikt voranbringt. Entferne Nebenideen, die eine zweite Zielscheibe eröffnen. Die letzte Zeile kann die offizielle Logik kippen, muss aber keinen Zusatzwitz enthalten. Lies laut und frage: Versteht man, was die Figur möchte? Ist die Eskalation nachvollziehbar?",
+          "Prüfe außerdem, ob eine reale Person erkennbar ist, obwohl der Text angeblich erfunden wurde. Verändere private Details und vermeide Behauptungen, die Lesende als Tatsachenbericht auffassen könnten.",
+          "Zusätzliche Schreibprobe: Verfasse dieselbe Szene einmal aus Sicht eines verlorenen Formulars und einmal aus Sicht seines zuständigen Ablagefachs. Markiere anschließend, welche Perspektive den Widerspruch deutlicher macht. Behalte nur diese Fassung und kürze den erklärenden Schlusssatz."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Wie lang ist eine Kurzgeschichte?",
+        "answer": "Eine feste Wortzahl gibt es nicht. Für eine Schreibübung kann eine konzentrierte Szene von wenigen Absätzen genügen."
+      },
+      {
+        "question": "Muss eine satirische Geschichte eine Pointe haben?",
+        "answer": "Sie braucht eine erkennbare kritische Wendung, aber keinen abschließenden Kalauer."
+      }
+    ],
+    "related": [
+      "satire-themen-finden",
+      "satire-schreiben-uebungen"
+    ]
+  },
+  {
+    "slug": "satire-schreiben-uebungen",
+    "title": "Satire schreiben: Übungen für den Einstieg",
+    "description": "Vier Schreibübungen trainieren Beobachtung, Perspektivwechsel, Eskalation und Pointe – jeweils mit eigenständigem Schreibimpuls.",
+    "answer": "Kurze Übungen trainieren Beobachtung, Zuspitzung und Pointe. Beginne mit einer konkreten Szene und entwickle daraus deinen eigenen kritischen Kern.",
+    "sections": [
+      {
+        "id": "widerspruch",
+        "title": "Übung 1: Widerspruch in einem Satz",
+        "paragraphs": [
+          "Schreibe zehn Beobachtungen nach dem Muster „Angekündigt wird …; tatsächlich …“. Vermeide allgemeine Urteile wie „nervig“ und notiere, was genau passiert. Beispiel: „Das neue Meetingformat soll kürzer sein; die Einführung dauert länger als das alte Meeting.“ Wähle die Beobachtung, bei der Ursache und Folge am klarsten sind.",
+          "Formuliere danach, wen der Vorgang betrifft. So wird aus einer bloßen Beschwerde eine mögliche satirische Zielscheibe."
+        ]
+      },
+      {
+        "id": "perspektive",
+        "title": "Übung 2: Perspektive wechseln",
+        "paragraphs": [
+          "Beschreibe dieselbe Szene aus Sicht eines Gegenstands, einer Regel und einer übermotivierten Sprecherin. Eine Parkbank könnte melden, dass sie nun „sitzplatzoptimiert“ wurde, obwohl niemand mehr sitzen darf. Der Wechsel schafft Verfremdung. Achte darauf, dass er den Widerspruch schärft und nicht nur eine niedliche Stimme liefert.",
+          "Wähle die Fassung, in der Lesende den Missstand am schnellsten erkennen. Wenn die Perspektive den Kern verdeckt, vereinfache die Szene."
+        ]
+      },
+      {
+        "id": "eskalation",
+        "title": "Übung 3: Eskalationsleiter",
+        "paragraphs": [
+          "Schreibe drei Folgen auf, die logisch aus der ersten Regel entstehen. Wenn ein Dokument nur digital eingereicht werden darf, könnte ein Ausdruck als Beleg verlangt werden; dieser Beleg benötigt eine Freigabe; die Freigabe wird per Brief zugestellt. Übertreibe jede Stufe ein wenig, aber halte die innere Logik stabil.",
+          "Lege eine Grenze fest: Welche letzte Stufe macht den Widerspruch sichtbar? Mehr Übertreibung ist nicht automatisch besser."
+        ]
+      },
+      {
+        "id": "kuerzen",
+        "title": "Übung 4: Pointe kürzen",
+        "paragraphs": [
+          "Schreibe einen Absatz und streiche anschließend die Erklärung nach dem stärksten Bild. Wenn Lesende den Widerspruch bereits erkennen, schwächt ein Nachsatz die Wirkung. Tausche Entwürfe mit einer anderen Person und frage nur: „Was wird kritisiert?“ und „Wo wird es klar?“ Unterschiedliche Antworten zeigen, wo der Text präziser werden kann.",
+          "Beende die Übung damit, dass du eine Version laut vorliest. Markiere den Moment, an dem die Zuhörenden die Pointe verstehen. Wenn er zu spät kommt, kürze den Anlauf.",
+          "Zusatzrunde: Nimm eine Übungsidee und schreibe sie als amtliche Mitteilung, dann als Dialog zwischen zwei betroffenen Personen. Lies beide Fassungen einer Person vor, ohne den Hintergrund zu erklären. Frage danach, welchen Widerspruch sie erkannt hat. Wenn nur die Formulierung auffällt, ergänze eine konkrete Folge für die Figur, statt noch mehr Wortspiele einzubauen."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Brauche ich für Satire Vorkenntnisse?",
+        "answer": "Für den Einstieg nicht. Eine konkrete Alltagsszene liefert oft genug Material; Fachwissen ist wichtig, wenn du Tatsachen behauptest."
+      },
+      {
+        "question": "Wie überwinde ich die Angst vor einer schlechten Pointe?",
+        "answer": "Schreibe zunächst nüchtern auf, was dich stört. Die satirische Form entsteht beim Überarbeiten und muss nicht im ersten Satz fertig sein."
+      }
+    ],
+    "related": [
+      "satire-aufbau-in-7-schritten",
+      "satire-themen-finden"
+    ]
+  },
+  {
+    "slug": "satire-landschaft-2026",
+    "title": "Satire-Landschaft 2026: Magazine, Onlineseiten und Fernsehen",
+    "description": "Titanic, Der Postillon und extra 3: drei unterschiedliche Zugänge zur deutschsprachigen Satire, mit Formatvergleich und offiziellen Anlaufstellen.",
+    "answer": "Zur deutschsprachigen Satire-Landschaft gehören gedruckte Magazine, nachrichtenähnliche Onlineseiten und audiovisuelle Formate. Als überprüfbare Einstiegspunkte dienen 2026 zum Beispiel Titanic, Der Postillon und extra 3. Die Auswahl ist keine Rangliste: Die drei Angebote arbeiten mit unterschiedlichen Formen, Rhythmen und Erwartungen an ihr Publikum.",
+    "sections": [
+      {
+        "id": "titanic",
+        "title": "Titanic: Satire im Magazin und auf der Website",
+        "paragraphs": [
+          "Titanic verbindet das gedruckte Heft mit einem Onlineangebot. Auf der offiziellen Website sind ein aktuelles Heft, ein Archiv und unterschiedliche Rubriken verlinkt. Das ist ein guter Ausgangspunkt, wenn du verschiedene Textsorten nebeneinander betrachten möchtest: eine Kolumne liest sich anders als eine knappe Bildidee oder ein längerer satirischer Beitrag.",
+          "Für eine eigene Analyse suchst du dir nicht sofort das berühmteste Cover. Nimm stattdessen einen überschaubaren Text, beschreibe seine Ausgangslage und notiere, an welcher Stelle er von einer sachlichen Darstellung abweicht. Trenne dabei die Position einer dargestellten Figur von der Haltung, die der Text insgesamt erkennen lässt. Ein Magazin ist kein einheitlicher Erzähler; einzelne Beiträge können sehr unterschiedlich funktionieren."
+        ]
+      },
+      {
+        "id": "postillon",
+        "title": "Der Postillon: die Form der Nachricht als Werkzeug",
+        "paragraphs": [
+          "Der Postillon präsentiert satirische Meldungen in einer nachrichtenähnlichen Umgebung. Die offizielle Startseite gliedert Beiträge unter anderem nach Politik, Wirtschaft, Sport und Wissenschaft. Gerade die vertraute Nachrichtenform kann den komischen Widerspruch tragen: Eine nüchterne Darstellung behandelt eine erfundene oder zugespitzte Ausgangslage so, als sei sie selbstverständlich.",
+          "Wenn du einen solchen Beitrag weiterleitest, lass Quelle und Kontext erkennbar. Ein isolierter Screenshot kann die satirische Einordnung verlieren. Für eine Schreibübung kannst du selbst eine kurze Meldung über einen völlig erfundenen Verwaltungsbeschluss verfassen. Verwende dafür keinen realen Namen und kennzeichne die Übung als erfunden. So untersuchst du die Form, ohne einen vorhandenen Artikel zu kopieren."
+        ]
+      },
+      {
+        "id": "extra3",
+        "title": "extra 3: Satire mit Bild, Schnitt und Vortrag",
+        "paragraphs": [
+          "extra 3 ist über die offizielle NDR-Seite mit Sendungen, einzelnen Beiträgen und weiteren Formaten erreichbar. Hier lässt sich beobachten, was im Vergleich zum geschriebenen Text hinzukommt: Ein Bild kann eine Aussage konterkarieren, eine Pause kann die Pointe vorbereiten und ein Schnitt kann zwei widersprüchliche Situationen nebeneinanderstellen.",
+          "Für ein Referat ist deshalb ein kurzer, klar abgegrenzter Ausschnitt hilfreicher als eine ganze Sendung. Beschreibe zunächst, was tatsächlich zu sehen und zu hören ist. Erkläre dann, wie Sprache, Bild und zeitliche Anordnung zusammenwirken. Die bloße Feststellung „Das ist lustig“ ersetzt noch keine Analyse. Prüfe Verfügbarkeit und Nutzungsbedingungen unmittelbar bei der Quelle, wenn du einen Ausschnitt zeigen möchtest."
+        ]
+      },
+      {
+        "id": "vergleichen",
+        "title": "Die passende Quelle für deine Frage auswählen",
+        "paragraphs": [
+          "Du suchst Schreibhandwerk? Vergleiche einen kurzen Magazintext und eine satirische Nachricht. Du untersuchst Vortrag oder audiovisuelle Ironie? Dann nimm zusätzlich einen Fernsehbeitrag dazu. Halte das Thema möglichst ähnlich, damit du nicht versehentlich nur unterschiedliche Gegenstände statt unterschiedlicher Mittel vergleichst.",
+          "Die verlinkten Angebote wurden für diesen Überblick im Oktober 2026 auf ihren offiziellen Seiten geprüft. Das ist weder eine vollständige Marktübersicht noch eine Aussage über einzelne aktuelle Ausgaben. Eine sinnvolle Auswahl nennt ihren Zweck und ihre Grenzen. Für deine eigene Arbeit notierst du Titel, Quelle und Abrufdatum; konkrete Sendetermine oder Besetzungen solltest du erneut bei den Anbietern prüfen."
+        ],
+        "bullets": [
+          "Kritikziel und dargestellte Situation benennen.",
+          "Text, Nachrichtenform oder audiovisuelle Gestaltung unterscheiden.",
+          "Quelle und satirischen Zusammenhang beim Teilen erhalten.",
+          "Eigene Beispiele schreiben, statt fremde Pointen zu übernehmen."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Welche deutschsprachigen Satire-Angebote kann ich vergleichen?",
+        "answer": "Titanic, Der Postillon und extra 3 bieten drei unterschiedliche Einstiegspunkte: Magazin, nachrichtenähnliche Onlinetexte und audiovisuelle Satire. Wähle Beiträge nach deiner konkreten Fragestellung; die Auswahl ist keine Rangliste."
+      },
+      {
+        "question": "Kann ich eine satirische Meldung als Nachrichtenquelle verwenden?",
+        "answer": "Eine satirische Meldung ist zunächst ein Untersuchungsgegenstand für die satirische Darstellung. Tatsachenbehauptungen, die du daraus übernehmen möchtest, musst du unabhängig anhand sachlicher Originalquellen prüfen."
+      }
+    ],
+    "related": [
+      "satire-beispiele-analysiert",
+      "satire-geschichte"
+    ],
+    "sources": [
+      {
+        "label": "Titanic: offizielle Website, Rubriken und Heft",
+        "url": "https://www.titanic-magazin.de/"
+      },
+      {
+        "label": "Der Postillon: offizielle Website",
+        "url": "https://www.der-postillon.com/"
+      },
+      {
+        "label": "NDR: extra 3",
+        "url": "https://www.ndr.de/fernsehen/sendungen/extra_3/"
+      }
+    ]
+  },
+  {
+    "slug": "buch-selbst-veroeffentlichen-kdp",
+    "title": "Buch selbst veröffentlichen: Manuskript bis Start",
+    "description": "Selfpublishing vorbereiten: Manuskript prüfen, Rechte klären, Gestaltung erstellen, Metadaten pflegen und die Veröffentlichung kontrollieren.",
+    "answer": "Ein selbst veröffentlichtes Buch braucht ein fertiges Manuskript, passende Gestaltung, korrekte Metadaten und eine bewusste Entscheidung über Vertrieb und Rechte.",
+    "sections": [
+      {
+        "id": "manuskript",
+        "title": "Manuskript und Zielgruppe klären",
+        "paragraphs": [
+          "Schreibe zuerst auf, für wen das Buch gedacht ist und welches Leseerlebnis es bietet. Lass den Text in mehreren Durchgängen auf Inhalt, Sprache und Fehler prüfen. Ein satirisches Buch profitiert besonders von klaren Kontexten. Bei realen Personen oder überprüfbaren Behauptungen sind Faktenprüfung und gegebenenfalls rechtliche Prüfung sinnvoll. Sichere eine unveränderte Arbeitskopie.",
+          "Lege den Umfang und die geplante Ausgabeform fest. Ein Roman, ein Ratgeber und eine Sammlung kurzer Texte brauchen unterschiedliche Struktur und Gestaltung. Rückmeldungen von Testlesenden helfen, bevor Satz und Cover final werden."
+        ]
+      },
+      {
+        "id": "gestaltung",
+        "title": "Gestaltung und Metadaten",
+        "paragraphs": [
+          "Lege Format, Satz, Cover und digitale Ausgabe fest. Prüfe Lesbarkeit auf kleinen Bildschirmen und im Druck. Titel, Beschreibung, Kategorien und Schlagwörter sollten den Inhalt korrekt wiedergeben; erfinde keine Bewertungen oder Versprechen. Wenn du Bilder, Schriften oder längere Textauszüge verwendest, kläre die erforderlichen Nutzungsrechte vor dem Upload.",
+          "Achte darauf, dass Inhaltsverzeichnis, Kapitelanfänge und Seitenumbrüche funktionieren. Cover und Beschreibung sind Teil der Leseerwartung; sie sollten dasselbe Buch ankündigen, das im Manuskript steht."
+        ]
+      },
+      {
+        "id": "plattform",
+        "title": "Plattform und Vertrieb vergleichen",
+        "paragraphs": [
+          "Bei einer Plattform wie Kindle Direct Publishing gelten deren jeweils aktuelle Anforderungen, Formate und Vertragsbedingungen. Lies die Bedingungen unmittelbar vor dem Einstellen, denn Funktionen können sich ändern. Vergleiche Exklusivität, Vertriebskanäle, Druckkosten, Tantiemen und Steuerangaben anhand der offiziellen Informationen. Diese Anleitung nennt bewusst keine festen Gebühren oder Erlöse.",
+          "Überlege, ob du nur digital, gedruckt oder in mehreren Formen veröffentlichen möchtest. Prüfe, welche Rechte du für die gewählten Ausgaben einräumst und ob eine Bindung an einen Vertriebskanal zu deinem Plan passt."
+        ]
+      },
+      {
+        "id": "pruefung",
+        "title": "Vor dem Veröffentlichen prüfen",
+        "paragraphs": [
+          "Nutze eine Vorschau, kontrolliere Inhaltsverzeichnis, Seitenumbrüche, Cover und Metadaten. Prüfe die digitale Ausgabe auf unterschiedlichen Geräten; bei Print kann ein Probeexemplar nützlich sein. Erst wenn Inhalt, Rechte und Angaben stimmen, bestätige die Veröffentlichung. Nach dem Start sind Korrekturen häufig möglich, aber eine sorgfältige Kontrolle verhindert vermeidbare Fehler.",
+          "Lege nach der Veröffentlichung einen Termin fest, um die Produktseite und die Dateien erneut zu prüfen. Dokumentiere Änderungen und sichere die finale Manuskriptversion.",
+          "Plane einen kleinen Veröffentlichungsfahrplan: Manuskript fertigstellen, Testlesende einbeziehen, Korrektur abschließen, Cover und Satz prüfen, Rechte dokumentieren, Metadaten vorbereiten, Vorschau ansehen und erst dann starten. Lege für jede Phase eine verantwortliche Person und ein Datum fest. Wenn du allein arbeitest, setze zwischen Schlusskorrektur und Upload eine Pause ein; mit Abstand fallen typografische und inhaltliche Fehler leichter auf."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Muss ich eine ISBN kaufen?",
+        "answer": "Das hängt von Ausgabeform, Plattform und Vertriebsplan ab. Prüfe die aktuellen Anforderungen beim Anbieter und bei der zuständigen ISBN-Stelle."
+      },
+      {
+        "question": "Kann ich ohne Verlag veröffentlichen?",
+        "answer": "Ja. Beim Selfpublishing veröffentlichst du ohne klassischen Verlag; Produktion, Rechteprüfung, Metadaten und Vermarktung liegen stärker bei dir."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Kindle Direct Publishing – offizielle Hilfe",
+        "url": "https://kdp.amazon.com/help"
+      }
+    ],
+    "related": []
+  }
+]
