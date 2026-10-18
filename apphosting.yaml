@@ -18,3 +18,9 @@ env:
     secret: SESSION_SECRET@1
     availability:
       - RUNTIME
+  # OpenRouter key for Worthaft word definitions: value remains in Google
+  # Secret Manager. Merge only after the secret exists and is granted.
+  - variable: OPENROUTER_API_KEY
+    secret: OPENROUTER_API_KEY@1
+    availability:
+      - RUNTIME
