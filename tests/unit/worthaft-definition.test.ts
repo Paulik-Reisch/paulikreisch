@@ -119,3 +119,19 @@ test('caps concurrent distinct provider requests while reusing an existing in-fl
   for (const response of await Promise.all([...active, duplicate])) assert.equal(response.status, 200);
   assert.equal(calls, 3);
 });
+
+test('accepts same-host origins behind a TLS-terminating proxy', async () => {
+  const handler = createDefinitionHandler({ apiKey: () => 'secret', fetch: async () => completion() });
+  const proxied = new Request('http://localhost:8080/api/worthaft/definition', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Origin: 'https://paulikreisch.de', 'X-Forwarded-Host': 'paulikreisch.de' },
+    body: JSON.stringify({ word: 'birne' }),
+  });
+  assert.equal((await handler(proxied)).status, 200);
+  const foreign = new Request('http://localhost:8080/api/worthaft/definition', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Origin: 'https://evil.example', 'X-Forwarded-Host': 'paulikreisch.de' },
+    body: JSON.stringify({ word: 'birne' }),
+  });
+  assert.equal((await handler(foreign)).status, 403);
+});

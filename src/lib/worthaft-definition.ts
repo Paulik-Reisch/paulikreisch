@@ -108,8 +108,27 @@ export function createDefinitionHandler(dependencies: Dependencies) {
     const headers: Record<string, string> = { 'Cache-Control': 'no-store' };
     try {
       const origin = request.headers.get('origin');
-      if (origin && origin !== new URL(request.url).origin) {
-        throw new DefinitionError(403, 'Diese Anfrage ist nicht erlaubt.');
+      if (origin) {
+        // Behind a TLS-terminating proxy (Firebase App Hosting) request.url can
+        // carry an internal scheme or host, so compare the Origin host against
+        // the forwarded host headers instead of request.url.
+        let originHost = '';
+        try {
+          originHost = new URL(origin).host;
+        } catch {
+          throw new DefinitionError(403, 'Diese Anfrage ist nicht erlaubt.');
+        }
+        const candidates = [
+          request.headers.get('x-forwarded-host'),
+          request.headers.get('host'),
+          new URL(request.url).host,
+        ]
+          .filter((value): value is string => Boolean(value))
+          .flatMap((value) => value.split(',').map((entry) => entry.trim()))
+          .filter(Boolean);
+        if (!originHost || !candidates.includes(originHost)) {
+          throw new DefinitionError(403, 'Diese Anfrage ist nicht erlaubt.');
+        }
       }
       if (!request.headers.get('content-type')?.toLowerCase().startsWith('application/json')) {
         throw new DefinitionError(400, 'Bitte sende ein gültiges Wort.');
