@@ -26,7 +26,7 @@ test('robots sitemap is a valid standalone URL', () => {
 test('header and footer emit unchanged JavaScript after equivalent JSX escaping', () => {
   const baseline = JSON.parse(readFileSync('docs/archive/index-old/baseline.json', 'utf8'));
   for (const [file, expected] of Object.entries(baseline.compiledFiles)) {
-    const compiled = ts.transpileModule(readFileSync(file, 'utf8'), {
+    const compiled = ts.transpileModule(readFileSync(file, 'utf8').replace(/\r\n/g, '\n'), {
       fileName: file,
       compilerOptions: { jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
     }).outputText;
