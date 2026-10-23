@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
 import Link from 'next/link';
-import { ArrowUp, BookOpenText, Check, Clock3, Copy, Menu, MessageSquarePlus, PenLine, RotateCcw, Sparkles, Trash2, X } from 'lucide-react';
+import { ArrowUp, BookOpenText, Check, Copy, Menu, MessageSquarePlus, PenLine, RotateCcw, Sparkles, Trash2, X } from 'lucide-react';
 import { Logo } from '@/components/ui/logo';
+import { renderGptMarkdown } from '@/lib/gpt-markdown';
 import styles from './gpt-chat.module.css';
 
 type Message = { role: 'user' | 'assistant'; content: string };
@@ -256,7 +257,6 @@ export function GptChat() {
         </div>
 
         <div className={styles.sidebarBottom}>
-          <div className={styles.experimentBadge}><Sparkles size={13} aria-hidden="true" /> Experimentell</div>
           <p>Gespräche bleiben nur in diesem Browser gespeichert.</p>
           <Link href="/datenschutz">Datenschutz</Link>
         </div>
@@ -271,7 +271,7 @@ export function GptChat() {
             <div className={styles.mobileBrand}><Logo className={styles.mobileLogo} /><span>Schreibstube</span></div>
             <div className={styles.modelPicker}><span className={styles.statusDot} /> Schreib-KI</div>
           </div>
-          <div className={styles.topbarRight}><span><Clock3 size={14} /> OpenRouter · experimentell</span><Link href="/">Paulik &amp; Reisch ↗</Link></div>
+          <div className={styles.topbarRight}><Link href="/">Paulik &amp; Reisch ↗</Link></div>
         </header>
 
         <section className={styles.chatRegion} aria-label="Gespräch">
@@ -304,7 +304,11 @@ export function GptChat() {
                       <div className={styles.messageMark} aria-hidden="true">{isAssistant ? <Sparkles size={16} /> : 'Du'}</div>
                       <div className={styles.messageBody}>
                         <div className={styles.messageLabel}>{isAssistant ? 'Schreibstube' : 'Du'} <span>{isAssistant ? '· Entwurf' : ''}</span></div>
-                        <p>{message.content}</p>
+                        {isAssistant ? (
+                          <div className={styles.markdown} dangerouslySetInnerHTML={{ __html: renderGptMarkdown(message.content) }} />
+                        ) : (
+                          <p>{message.content}</p>
+                        )}
                         {isAssistant && <button type="button" className={styles.copyButton} onClick={() => void copyMessage(message, messageId)} aria-label="Antwort kopieren">
                           {copiedId === messageId ? <Check size={14} /> : <Copy size={14} />}
                           {copiedId === messageId ? 'Kopiert' : 'Kopieren'}
@@ -345,7 +349,7 @@ export function GptChat() {
                 </button>
               </div>
             </form>
-            <p className={styles.disclaimer}>Deine Eingabe wird zur Antworterstellung an OpenRouter übermittelt. KI kann sich irren — keine vertraulichen Daten eingeben.</p>
+            <p className={styles.disclaimer}>Deine Eingabe wird zur Antworterstellung an einen externen KI-Dienst übermittelt. KI kann sich irren — keine vertraulichen Daten eingeben.</p>
           </div>
         </section>
       </main>
