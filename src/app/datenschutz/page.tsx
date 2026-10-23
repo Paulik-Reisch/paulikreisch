@@ -59,6 +59,27 @@ export default function DatenschutzPage() {
               Eine serverseitige Auswertung dieser Daten findet nicht statt.
             </p>
 
+            <h3>2.5 Experimentelle Schreibstube (/gpt)</h3>
+            <p>
+              Wenn Sie die experimentelle Schreibstube nutzen, werden die von Ihnen eingegebenen Nachrichten
+              und für den Gesprächszusammenhang erforderliche vorherige Nachrichten an unseren Server und von
+              dort an OpenRouter übermittelt, damit eine Antwort erstellt werden kann. Über den für Worthaft
+              eingerichteten OpenRouter-Zugang wird ein bei OpenRouter verfügbares Sprachmodell angefragt.
+              Bitte geben Sie keine besonderen Kategorien personenbezogener Daten, Geheimnisse oder andere
+              vertrauliche Inhalte ein. Die Verarbeitung erfolgt zur Bereitstellung der von Ihnen angeforderten
+              Funktion auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO, soweit die Anfrage hierauf gerichtet ist,
+              andernfalls auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einem
+              freiwillig genutzten experimentellen Schreibangebot). Einzelheiten zu Verarbeitung und
+              möglichen Speicherfristen beim jeweiligen Modellanbieter richten sich zusätzlich nach den
+              Datenschutzinformationen und Nutzungsbedingungen von OpenRouter und dem verwendeten Anbieter.
+            </p>
+            <p>
+              Der Chatverlauf wird nur lokal in Ihrem Browser gespeichert, nicht in einem Nutzerkonto oder
+              einer Datenbank. Sie können einzelne Chats in der Seitenleiste löschen oder den Verlauf über
+              die Website-Daten Ihres Browsers entfernen. Ihre Eingaben und KI-Antworten werden nicht in
+              unserer Firestore-Datenbank gespeichert.
+            </p>
+
             <h2>3. Cookies und Einwilligung</h2>
             <p>
               Wir setzen Cookies und vergleichbare Technologien nur nach Ihrer Einwilligung ein
