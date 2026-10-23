@@ -1,0 +1,177 @@
+const MAX_REQUEST_BYTES = 80_000;
+const MAX_PROVIDER_BYTES = 65_536;
+const MAX_MESSAGES = 18;
+const MAX_MESSAGE_LENGTH = 6_000;
+const MAX_TOTAL_CHARACTERS = 18_000;
+const WINDOW_MS = 60_000;
+const MAX_REQUESTS_PER_WINDOW = 8;
+const MAX_CONCURRENT_REQUESTS = 2;
+
+class ChatError extends Error {
+  constructor(public status: number, message: string) {
+    super(message);
+  }
+}
+
+type ChatMessage = { role: 'user' | 'assistant'; content: string };
+type Dependencies = {
+  apiKey: () => string | undefined;
+  fetch?: typeof fetch;
+  now?: () => number;
+  timeoutMs?: number;
+};
+
+const SYSTEM_PROMPT = `Du bist die experimentelle Schreib-KI von Paulik & Reisch. Schreibe auf Deutsch mit pointierter, warmherziger Satire: genaue Alltagsbeobachtungen, trockenes Understatement, überraschende Vergleiche und gelegentliche bürokratische Übertreibung. Richte den Witz auf Situationen und Systeme, nicht auf schutzbedürftige Menschen. Passe dich dem Auftrag an, hilf auch beim Überarbeiten und Erklären. Erfinde keine Tatsachen über reale Personen. Übernimm keine längeren Passagen aus dem Buch und behaupte nicht, ein Originaltext zu sein. Wenn ein nüchterner Ton gewünscht wird, folge diesem Wunsch.`;
+
+async function readBoundedBody(body: ReadableStream<Uint8Array> | null, limit: number) {
+  if (!body) return '';
+  const reader = body.getReader();
+  const decoder = new TextDecoder();
+  let size = 0;
+  let text = '';
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      size += value.byteLength;
+      if (size > limit) {
+        await reader.cancel();
+        throw new ChatError(413, 'Die Anfrage ist zu groß.');
+      }
+      text += decoder.decode(value, { stream: true });
+    }
+    return text + decoder.decode();
+  } finally {
+    reader.releaseLock();
+  }
+}
+
+function parseMessages(value: unknown): ChatMessage[] {
+  if (!Array.isArray(value) || value.length === 0 || value.length > MAX_MESSAGES) {
+    throw new ChatError(400, 'Bitte prüfe deine Nachricht und versuche es erneut.');
+  }
+
+  let totalCharacters = 0;
+  const messages = value.map((message): ChatMessage => {
+    if (!message || typeof message !== 'object' || !('role' in message) || !('content' in message)) {
+      throw new ChatError(400, 'Bitte prüfe deine Nachricht und versuche es erneut.');
+    }
+    const { role, content } = message as { role: unknown; content: unknown };
+    if ((role !== 'user' && role !== 'assistant') || typeof content !== 'string' || !content.trim() || content.length > MAX_MESSAGE_LENGTH) {
+      throw new ChatError(400, 'Bitte prüfe deine Nachricht und versuche es erneut.');
+    }
+    totalCharacters += content.length;
+    if (totalCharacters > MAX_TOTAL_CHARACTERS) {
+      throw new ChatError(413, 'Der Chatverlauf ist zu lang. Beginne bitte einen neuen Chat.');
+    }
+    return { role, content: content.trim() };
+  });
+
+  if (messages[0].role !== 'user' || messages.at(-1)?.role !== 'user'
+    || messages.some((message, index) => index > 0 && message.role === messages[index - 1].role)) {
+    throw new ChatError(400, 'Bitte starte mit einer Nachricht und sende jeweils abwechselnd.');
+  }
+  return messages;
+}
+
+export function createChatHandler(dependencies: Dependencies) {
+  const fetchProvider = dependencies.fetch ?? fetch;
+  const now = dependencies.now ?? Date.now;
+  let windowStart = now();
+  let requests = 0;
+  let activeRequests = 0;
+
+  return async function handleChat(request: Request): Promise<Response> {
+    const headers: Record<string, string> = { 'Cache-Control': 'no-store' };
+    try {
+      const origin = request.headers.get('origin');
+      if (origin) {
+        let originHost = '';
+        try {
+          originHost = new URL(origin).host;
+        } catch {
+          throw new ChatError(403, 'Diese Anfrage ist nicht erlaubt.');
+        }
+        const candidates = [request.headers.get('x-forwarded-host'), request.headers.get('host'), new URL(request.url).host]
+          .filter((value): value is string => Boolean(value))
+          .flatMap(value => value.split(',').map(entry => entry.trim()))
+          .filter(Boolean);
+        if (!candidates.includes(originHost)) throw new ChatError(403, 'Diese Anfrage ist nicht erlaubt.');
+      }
+      if (!request.headers.get('content-type')?.toLowerCase().startsWith('application/json')) {
+        throw new ChatError(400, 'Bitte sende eine gültige Chatnachricht.');
+      }
+
+      let payload: unknown;
+      try {
+        payload = JSON.parse(await readBoundedBody(request.body, MAX_REQUEST_BYTES));
+      } catch (error) {
+        if (error instanceof ChatError) throw error;
+        throw new ChatError(400, 'Bitte sende eine gültige Chatnachricht.');
+      }
+      const messages = parseMessages((payload as { messages?: unknown } | null)?.messages);
+      const apiKey = dependencies.apiKey()?.trim();
+      if (!apiKey) throw new ChatError(503, 'Der Schreibassistent ist lokal noch nicht eingerichtet.');
+
+      if (now() - windowStart >= WINDOW_MS) {
+        windowStart = now();
+        requests = 0;
+      }
+      if (requests >= MAX_REQUESTS_PER_WINDOW || activeRequests >= MAX_CONCURRENT_REQUESTS) {
+        headers['Retry-After'] = '60';
+        throw new ChatError(429, 'Gerade schreiben viele gleichzeitig. Bitte versuche es in einer Minute erneut.');
+      }
+      requests += 1;
+      activeRequests += 1;
+
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), dependencies.timeoutMs ?? 30_000);
+      try {
+        const response = await fetchProvider('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+            'HTTP-Referer': 'https://paulikreisch.de',
+            'X-Title': 'Paulik & Reisch Schreibstube',
+            'X-OpenRouter-Data-Collection': 'deny',
+          },
+          body: JSON.stringify({
+            model: 'openrouter/free',
+            max_tokens: 900,
+            temperature: 0.82,
+            reasoning: { effort: 'low' },
+            messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
+          }),
+          signal: controller.signal,
+          cache: 'no-store',
+        });
+        if (!response.ok) {
+          await response.body?.cancel();
+          throw new ChatError(503, 'Die Schreibstube ist gerade nicht erreichbar. Bitte versuche es später erneut.');
+        }
+        let providerPayload: unknown;
+        try {
+          providerPayload = JSON.parse(await readBoundedBody(response.body, MAX_PROVIDER_BYTES));
+        } catch {
+          throw new ChatError(503, 'Die Schreibstube hat gerade keine lesbare Antwort geliefert.');
+        }
+        const content = (providerPayload as { choices?: { message?: { content?: unknown } }[] })?.choices?.[0]?.message?.content;
+        if (typeof content !== 'string' || !content.trim() || content.length > 12_000) {
+          throw new ChatError(503, 'Die Schreibstube hat gerade keine Antwort geliefert. Bitte versuche es erneut.');
+        }
+        return Response.json({ message: content.trim() }, { headers });
+      } catch (error) {
+        if (controller.signal.aborted) throw new ChatError(504, 'Die Antwort dauert gerade zu lange. Bitte versuche es erneut.');
+        if (error instanceof ChatError) throw error;
+        throw new ChatError(503, 'Die Schreibstube ist gerade nicht erreichbar. Bitte versuche es später erneut.');
+      } finally {
+        clearTimeout(timer);
+        activeRequests -= 1;
+      }
+    } catch (error) {
+      const knownError = error instanceof ChatError ? error : new ChatError(503, 'Die Schreibstube ist gerade nicht verfügbar.');
+      return Response.json({ error: knownError.message }, { status: knownError.status, headers });
+    }
+  };
+}
