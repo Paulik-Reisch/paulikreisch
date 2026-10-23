@@ -1,5 +1,4 @@
-import { Header } from "@/components/landing/header";
-import { Footer } from "@/components/landing/footer";
+import { LegalPage } from "@/components/landing/legal-page";
 
 export const metadata = {
   title: "Barrierefreiheit – Paulik & Reisch",
@@ -9,11 +8,7 @@ export const metadata = {
 export default function BarrierefreiheitPage() {
   return (
     <>
-      <Header />
-      <main className="container mx-auto max-w-3xl px-4 py-12">
-        <h1 className="font-headline text-4xl md:text-5xl mb-8">Erklärung zur Barrierefreiheit</h1>
-
-        <div className="prose prose-lg space-y-6 text-foreground/80">
+      <LegalPage title="Erklärung zur Barrierefreiheit" description="Informationen zur Zugänglichkeit dieser Website und zu Möglichkeiten der Rückmeldung.">
           <p>
             Die vorliegende Erklärung zur Barrierefreiheit verpflichtet sich der Erfüllung der Anforderungen,
             welche sich aus der Barrierefreie-Informationstechnik-Verordnung (BITV 2.0) in Verbindung mit der
@@ -81,9 +76,7 @@ export default function BarrierefreiheitPage() {
           <p className="text-sm text-muted-foreground mt-8">
             Verantwortlich für diese Erklärung: Philipp Paulik (siehe Impressum).
           </p>
-        </div>
-      </main>
-      <Footer />
+      </LegalPage>
     </>
   );
 }
