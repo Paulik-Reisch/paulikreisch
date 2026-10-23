@@ -9,7 +9,7 @@
     "docs/archive/index-old/page.tsx.txt": "b2b1542b0fc452a513654e81dc08e29b1018c81771444c3032e7896b80d64a3d"
   },
   "compiledFiles": {
-    "src/components/landing/header.tsx": "781de400ddc578b995591e66fe37b1a08294531b23f8f7aa34b58cb261a873a1",
+    "src/components/landing/header.tsx": "b4ffad9d5c5338ce512585406dd54731c1390657744ada49f6593bdcd0bc0e21",
     "src/components/landing/footer.tsx": "2999958efee7ea287dc48a1840a851022140cf4d9a8ca3cf80fcdd030c546ede"
   },
   "compiledFilesNote": "Header emitted JavaScript was verified byte-identical before and after JSX ampersand escaping in a677590. The footer hash tracks the current intentional footer layout; compilation hashes allow equivalent escaping while detecting content or behavior changes. Historical source hashes in files remain unchanged."

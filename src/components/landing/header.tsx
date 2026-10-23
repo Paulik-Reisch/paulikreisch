@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Logo } from "../ui/logo";
 import { cn } from '@/lib/utils';
 import { WorthaftIcon } from '../ui/icons/worthaft-icon';
+import { WritingRoomIcon } from '../ui/icons/writing-room-icon';
 import { Menu, X } from 'lucide-react';
 
 export function Header() {
@@ -106,6 +107,13 @@ export function Header() {
           <div className="flex items-center gap-3">
             {/* Desktop — Landing-Look */}
             <nav className="hidden md:flex items-center gap-3">
+              <Link
+                href="/gpt"
+                className="inline-flex items-center gap-2 rounded-[10px] border-2 border-[#174bc2] bg-[#2268ff] px-4 py-2 text-[0.9rem] font-bold text-white shadow-[0_3px_0_#174bc2] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#1d5ce5] hover:shadow-[0_4px_0_#174bc2] active:translate-y-px active:shadow-[0_1px_0_#174bc2]"
+              >
+                <WritingRoomIcon className="h-5 w-5 shrink-0" />
+                Schreibstube (KI)
+              </Link>
               {showWorthaftLink && (
                 <Link
                   href="/worthaft"
@@ -194,6 +202,14 @@ export function Header() {
                   Worthaft
                 </Link>
               )}
+              <Link
+                href="/gpt"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-3 border-b border-[#e8ddd0] py-4 text-[1.25rem] font-bold leading-tight tracking-[-0.015em] text-[#2268ff] transition-colors hover:text-[#174bc2]"
+              >
+                <WritingRoomIcon className="h-6 w-6 shrink-0" />
+                Schreibstube (KI)
+              </Link>
               <Link
                 href="/shop"
                 onClick={() => setOpen(false)}
