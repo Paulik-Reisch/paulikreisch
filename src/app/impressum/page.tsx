@@ -1,5 +1,4 @@
-import { Header } from "@/components/landing/header";
-import { Footer } from "@/components/landing/footer";
+import { LegalPage } from "@/components/landing/legal-page";
 
 export const metadata = {
   title: "Impressum – Paulik & Reisch",
@@ -8,14 +7,7 @@ export const metadata = {
 
 export default function ImpressumPage() {
   return (
-    <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
-      <Header />
-      <main className="flex-1 py-12 md:py-24">
-        <div className="container px-4 md:px-6">
-          <article className="prose prose-lg dark:prose-invert mx-auto max-w-2xl">
-            <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">Impressum</h1>
-            <p className="text-sm text-muted-foreground">Angaben gemäß §§ 5, 6 des Digitale-Dienste-Gesetzes (DDG)</p>
-
+    <LegalPage title="Impressum" description="Angaben gemäß §§ 5, 6 des Digitale-Dienste-Gesetzes (DDG).">
             <h2>Anbieter</h2>
             <p>
               Paulik &amp; Reisch<br />
@@ -62,10 +54,6 @@ export default function ImpressumPage() {
               Die durch die Betreiber dieser Seiten erstellten Inhalte und Werke auf diesen Seiten unterliegen
               dem deutschen Urheberrecht. Beiträge Dritter sind als solche gekennzeichnet.
             </p>
-          </article>
-        </div>
-      </main>
-      <Footer />
-    </div>
+    </LegalPage>
   );
 }
