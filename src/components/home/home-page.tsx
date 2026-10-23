@@ -73,7 +73,7 @@ export function HomePage() {
         <section id="worthaft" aria-labelledby="game-title" className={styles.game}>
           <div className={`${styles.wrap} ${styles.gameGrid}`}>
             <div><p className={styles.eyebrow}>Worthaft · Das tägliche Worträtsel</p><h2 id="game-title">Große Pause.<br />Fünf Buchstaben.</h2><p className={styles.body}>Sechs Versuche, ein Wort zu erraten.</p><Link href="/worthaft" className={styles.button}>Worthaft spielen <ArrowRight size={18} aria-hidden="true" /></Link><p className={styles.caption} style={{ color: 'inherit' }}>Kostenlos · auf Deutsch · Spielstand lokal im Browser</p></div>
-            <div><div className={styles.tiles} aria-hidden="true">{'PAUSEWORTESATZE'.split('').map((letter, i) => <span className={styles.tile} key={i}>{letter}</span>)}</div></div>
+            <div><div className={styles.tiles} aria-hidden="true">{'PAUSEHORDESAITE'.split('').map((letter, i) => <span className={styles.tile} key={i}>{letter}</span>)}</div></div>
           </div>
         </section>
         <section id="authors" aria-labelledby="people-title" className={`${styles.wrap} ${styles.section}`}>

@@ -113,7 +113,7 @@ const getWordOfTheDay = () => {
     return WORDS[diffDays % WORDS.length].toUpperCase();
 };
 
-const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenSettings, hotTipUsed, gameState, settings }: {
+const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenSettings, hotTipUsed, gameState, settings, boardWidth }: {
   onChar: (value: string) => void;
   onEnter: () => void;
   onDelete: () => void;
@@ -123,6 +123,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
   hotTipUsed: boolean;
   gameState: 'playing' | 'won' | 'lost';
   settings: WorthaftSettings;
+  boardWidth: number;
 }) => {
   const rows = [
     ['Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P'],
@@ -139,35 +140,38 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
     else onChar(key);
   };
 
-    const { width: widthPx, height: heightPx } = getWorthaftKeyDimensions(settings.keyWidth, settings.keyHeight);
-    const fontPx = 12 + (settings.keySize / 4) * 10;
-    const radiusPx = (settings.keyRadius / 4) * 24;
+  const { width: widthPx, height: heightPx } = getWorthaftKeyDimensions(settings.keyWidth, settings.keyHeight);
+  const fontPx = 12 + (settings.keySize / 4) * 10;
+  const radiusPx = (settings.keyRadius / 4) * 24;
+  const keyGap = 4;
 
-  const keyStyle = (extra?: string): React.CSSProperties => ({
-    width: `${widthPx}px`,
-    minWidth: 0,
-    flexShrink: 1,
-    height: `${heightPx}px`,
-    fontSize: `${fontPx}px`,
-    borderRadius: `${radiusPx}px`,
-    ...(extra ? {} : {}),
-  });
+  const keyStyle = (rowLength: number, widthMultiplier = 1): React.CSSProperties => {
+    const slotWidth = (boardWidth - (rowLength - 1) * keyGap) / rowLength;
+    return {
+      width: `${Math.min(widthPx * widthMultiplier, Math.max(slotWidth, 18))}px`,
+      minWidth: 0,
+      flexShrink: 1,
+      height: `${heightPx}px`,
+      fontSize: `${fontPx}px`,
+      borderRadius: `${radiusPx}px`,
+    };
+  };
 
   const isHotTipActive = !hotTipUsed && gameState === 'playing' && settings.hotTipEnabled;
-
   const letterRows = rows.slice(0, 3);
+  const lastRowLength = 7 + (settings.hotTipEnabled && !hotTipUsed ? 1 : 0);
 
   return (
-    <div data-testid="worthaft-keyboard" className="w-full flex flex-col items-center gap-1.5 mt-5">
+    <div data-testid="worthaft-keyboard" className="w-full flex flex-col items-center gap-1.5 mt-3" style={{ maxWidth: `${boardWidth}px` }}>
       {letterRows.map((row, i) => (
-        <div key={i} className="flex flex-row justify-center gap-1.5 w-full">
+        <div key={i} className="flex flex-row justify-between gap-1 w-full">
           {row.map(key => {
             return (
               <Button
                 key={key}
                 onClick={() => handleKeyClick(key)}
                 variant="outline"
-                style={keyStyle()}
+                style={keyStyle(row.length)}
                 className={cn(
                   'h-auto p-0 font-bold uppercase flex items-center justify-center transition-colors duration-300 rounded-[5px] md:rounded-[10px]',
                   getStatusClass(key)
@@ -181,20 +185,16 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
       ))}
 
       {/* Letzte Reihe: SEND + Sondertasten + die zwei Icon-Keys (🔥 Heißer Tipp, ⚙️ Einstellungen) */}
-      <div className="flex flex-row justify-center gap-1.5 w-full">
+      <div className="flex flex-row justify-between gap-1 w-full">
         {['SEND', 'Ü', 'Ö', 'Ä', 'ẞ', 'DELETE'].map(key => {
           const isSend = key === 'SEND';
-          const sendStyle: React.CSSProperties = {
-            ...keyStyle(),
-            width: `${widthPx * 1.55}px`,
-          };
           return (
             <Button
               key={key}
               onClick={() => handleKeyClick(key)}
               aria-label={isSend ? 'Wort prüfen' : key === 'DELETE' ? 'Rücktaste' : undefined}
               variant="outline"
-              style={isSend ? sendStyle : keyStyle()}
+              style={keyStyle(lastRowLength, isSend ? 1.35 : 1)}
               className={cn(
                 'h-auto p-0 font-bold uppercase flex items-center justify-center transition-colors duration-300 rounded-[5px] md:rounded-[10px]',
                 getStatusClass(key)
@@ -212,7 +212,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
             disabled={hotTipUsed || gameState !== 'playing'}
             variant="outline"
             aria-label="Heißer Tipp – einen Buchstaben aufdecken"
-            style={keyStyle()}
+            style={keyStyle(lastRowLength)}
             className={cn(
               "h-auto p-0 text-orange-500 border-orange-500/60 flex items-center justify-center transition-colors rounded-[5px] md:rounded-[10px] relative overflow-hidden",
               isHotTipActive && settings.animationsEnabled && "flame-inner-glow"
@@ -227,7 +227,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
           onClick={onOpenSettings}
           variant="outline"
           aria-label="Einstellungen öffnen"
-          style={keyStyle()}
+          style={keyStyle(lastRowLength)}
           className="h-auto p-0 flex items-center justify-center transition-colors rounded-[5px] md:rounded-[10px]"
         >
           <Gear className="h-5 w-5" />
@@ -1484,6 +1484,7 @@ Jetzt spielen:`;
                             hotTipUsed={hotTipUsed}
                             gameState={gameState}
                             settings={settings}
+                            boardWidth={Math.round((getWorthaftTileDimensions(settings.tileWidth, settings.tileHeight).width * 5) + 24)}
                         />
                     </div>
                     {/* Sonnenschein-Halbkreis-Glow hinter der Tastatur (laufende Motion) */}
