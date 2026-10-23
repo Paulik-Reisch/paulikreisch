@@ -140,6 +140,7 @@ export function createChatHandler(dependencies: Dependencies) {
             model: 'openrouter/free',
             max_tokens: 900,
             temperature: 0.82,
+            reasoning: { effort: 'low' },
             messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
           }),
           signal: controller.signal,

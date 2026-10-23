@@ -22,6 +22,7 @@ test('sends a bounded German satire chat completion to OpenRouter', async () => 
       const body = JSON.parse(init?.body as string);
       assert.equal(body.model, 'openrouter/free');
       assert.equal(body.max_tokens, 900);
+      assert.deepEqual(body.reasoning, { effort: 'low' });
       assert.equal(body.messages[0].role, 'system');
       assert.match(body.messages[0].content, /satire/i);
       assert.deepEqual(body.messages.at(-1), { role: 'user', content: 'Schreibe über Elternabend.' });
