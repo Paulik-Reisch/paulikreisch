@@ -1,5 +1,4 @@
-import { Header } from "@/components/landing/header";
-import { Footer } from "@/components/landing/footer";
+import { LegalPage } from "@/components/landing/legal-page";
 
 export const metadata = {
   title: "Widerrufsbelehrung – Paulik & Reisch",
@@ -9,11 +8,7 @@ export const metadata = {
 export default function WiderrufPage() {
   return (
     <>
-      <Header />
-      <main className="container mx-auto max-w-3xl px-4 py-12">
-        <h1 className="font-headline text-4xl md:text-5xl mb-8">Widerrufsbelehrung</h1>
-
-        <div className="prose prose-lg space-y-6 text-foreground/80">
+      <LegalPage title="Widerrufsbelehrung" description="Informationen zum Widerrufsrecht beim Erwerb unserer Bücher über Drittanbieter.">
           <p>
             Der Vertrieb der Buchprodukte &bdquo;Hallo Welt&rdquo; und verwandter Publikationen erfolgt
             ausschließlich über die Distributionsplattformen Amazon (Kindle Direct Publishing / Amazon Media
@@ -78,9 +73,7 @@ export default function WiderrufPage() {
           <p className="text-sm text-muted-foreground mt-8">
             Verantwortlich für diese Information: Philipp Paulik (siehe Impressum).
           </p>
-        </div>
-      </main>
-      <Footer />
+      </LegalPage>
     </>
   );
 }
