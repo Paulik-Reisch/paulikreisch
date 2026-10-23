@@ -10,7 +10,7 @@
   },
   "compiledFiles": {
     "src/components/landing/header.tsx": "4bd07f1a29aae4af747a6cfc0d39c3888905c810ae9472b0f0c7d352f44faacf",
-    "src/components/landing/footer.tsx": "8880e411106e34f892018fc737b1e6410f4e3d7c9d4c2aa0422aacc2558c71f8"
+    "src/components/landing/footer.tsx": "60402586066a1d0fdc743a86734fe692d79e354dce76a52fa2e5e704f937db8e"
   },
-  "compiledFilesNote": "Header/footer emitted JavaScript was verified byte-identical before and after JSX ampersand escaping in a677590. Compilation hashes allow equivalent escaping while detecting content or behavior changes. Historical source hashes in files remain unchanged."
+  "compiledFilesNote": "Header emitted JavaScript was verified byte-identical before and after JSX ampersand escaping in a677590. The footer hash tracks the current intentional footer layout; compilation hashes allow equivalent escaping while detecting content or behavior changes. Historical source hashes in files remain unchanged."
 }

@@ -16,10 +16,6 @@ export function HomePage() {
       <a className={styles.skip} href="#inhalt">Zum Inhalt springen</a>
       <Header />
       <main id="inhalt" tabIndex={-1}>
-        <div className={`${styles.wrap} ${styles.edition}`}>
-          <span>Paulik &amp; Reisch · Literatur mit Nebenwirkungen</span>
-          <span>Unabhängige Stimmen. Ziemlich deutsche Zustände.</span>
-        </div>
         <section className={styles.hero} aria-labelledby="home-title">
           <Image className={styles.heroImage} src="/hero-ab/hero-01-papier.jpg" alt="Das Buch Hallo Welt mit illustriertem Cover auf liniertem Papier" fill priority sizes="100vw" data-home-parallax />
           <div className={styles.wrap}>
@@ -35,15 +31,6 @@ export function HomePage() {
             </div>
           </div>
         </section>
-        <div className={`${styles.wrap} ${styles.directory}`}>
-          <p>Für alle, die nicht alles ernst nehmen.</p>
-          <nav aria-label="Auf dieser Seite">
-            <a href="#buch">Das Buch <ArrowDown size={13} aria-hidden="true" /></a>
-            <a href="#entdecken">Lesestoff <ArrowDown size={13} aria-hidden="true" /></a>
-            <a href="#worthaft">Worthaft <ArrowDown size={13} aria-hidden="true" /></a>
-            <a href="#authors">Die Köpfe <ArrowDown size={13} aria-hidden="true" /></a>
-          </nav>
-        </div>
         <section id="buch" aria-labelledby="book-title" className={`${styles.wrap} ${styles.section} ${styles.book}`}>
           <figure className={styles.bookVisual}>
             <Image src="/hero-ab/hero-03-tafel.jpg" alt="Hallo Welt vor einer Kreidetafel: ein Buch über den ganz normalen Schulwahnsinn" fill sizes="(max-width: 639px) 90vw, 45vw" />
