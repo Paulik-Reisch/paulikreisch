@@ -50,7 +50,7 @@ export function CtaBanner() {
 
           <Link
             href="/shop"
-            className="inline-flex items-center justify-center rounded-[12px] bg-[#1d1a15] px-8 py-4 text-[1.05rem] font-bold text-white shadow-[0_4px_0_rgba(0,0,0,0.22)] transition-[transform,box-shadow,background] hover:bg-black hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_1px_0_rgba(0,0,0,0.22)]"
+            className="inline-flex items-center justify-center rounded-[10px] bg-[#1d1a15] px-8 py-4 text-[1.05rem] font-bold text-white shadow-[0_4px_0_rgba(0,0,0,0.22)] transition-[transform,box-shadow,background] hover:bg-black hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_1px_0_rgba(0,0,0,0.22)]"
           >
             Ja, ich will den Rabatt!
           </Link>

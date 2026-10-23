@@ -2,8 +2,6 @@
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { createTrackedUrl } from "@/lib/utils";
 import type { Metadata } from 'next';
@@ -27,35 +25,52 @@ export default function PhilippPaulikPage() {
   );
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="min-h-screen bg-[#f7f2e7] text-[#1d1a15]">
       <Header />
-      <main className="flex-1 py-12 md:py-20">
-        <div className="container mx-auto max-w-3xl px-4">
-          <header className="text-center mb-12">
-            <Badge variant="secondary" className="text-lg">Autor &amp; Kreativkopf</Badge>
-            <h1 className="font-headline text-5xl md:text-7xl font-bold tracking-tighter mt-4">
+      <main className="relative flex-1 overflow-hidden py-12 md:py-20">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(#1d1a15 1.1px, transparent 1.1px)", backgroundSize: "22px 22px" }} />
+        <div className="relative container mx-auto max-w-5xl px-4">
+          <header className="mb-10 text-center md:mb-14">
+            <Badge className="inline-flex items-center rounded-[10px] border border-[#1d1a15]/15 bg-white px-3 py-1 text-[0.72rem] font-bold uppercase tracking-[0.12em] text-[#9c2d22] shadow-sm">Autor &amp; Kreativkopf</Badge>
+            <h1 className="mt-4 font-[Georgia,_Iowan_Old_Style,_Times_New_Roman,_serif] text-4xl font-bold tracking-[-0.03em] md:text-6xl">
               Philipp Paulik
             </h1>
           </header>
-          <div className="grid md:grid-cols-3 gap-8 md:gap-12 items-start">
-            <div className="md:col-span-1 flex justify-center">
-              <Image 
-                src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/ersteller%2Fphilipp-paulik.png?alt=media&amp;token=7e48b706-80fa-45cc-ae51-b6444bd7ccb3"
-                alt="Porträt von Philipp Paulik" 
-                width={250} 
-                height={250} 
-                className="rounded-full aspect-square object-cover shadow-lg"
-              />
+
+          <div className="grid items-start gap-8 md:grid-cols-[280px_minmax(0,1fr)] md:gap-12">
+            <div className="flex justify-center md:justify-start">
+              <div className="overflow-hidden rounded-[0px] border-0 bg-transparent p-0 shadow-none">
+                <Image
+                  src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/ersteller%2Fphilipp-paulik.png?alt=media&amp;token=7e48b706-80fa-45cc-ae51-b6444bd7ccb3"
+                  alt="Porträt von Philipp Paulik"
+                  width={260}
+                  height={260}
+                  className="aspect-square w-full rounded-none object-cover"
+                />
+              </div>
             </div>
-            <div className="md:col-span-2 space-y-4">
-              <h2 className="font-headline text-3xl font-bold">Über Philipp</h2>
-              <article className="prose dark:prose-invert max-w-none">
-                <p>Philipp Paulik ist der Funke, der das satirische Feuer der 'Hallo Welt'-Reihe entfacht. Als einer der beiden Autoren ist er der Meister des kreativen Chaos und der unkonventionellen Ideen. Seine Fähigkeit, die absurdesten Alltagsbeobachtungen in scharfzüngige Kritik zu verwandeln, bildet das Herzstück der Serie.</p>
-                <p>Getrieben von einer gesunden Portion Zynismus und zu viel Koffein, sorgt Philipp dafür, dass keine Pointe zu gewagt und kein Thema zu heilig ist. Sein Schreiben ist ein direkter Angriff auf die Monotonie des Alltags und eine Einladung, die Welt mit einem Lachen zu hinterfragen. Besuchen Sie sein persönliches Portfolio, um mehr über seine anderen Projekte und kreativen Eskapaden zu erfahren.</p>
+
+            <div className="space-y-5">
+              <h2 className="font-[Georgia,_Iowan_Old_Style,_Times_New_Roman,_serif] text-3xl font-bold tracking-[-0.02em] md:text-4xl">
+                Über Philipp
+              </h2>
+              <article className="space-y-4 text-[1.05rem] leading-relaxed text-[#4d463b]">
+                <p>
+                  Philipp Paulik ist der Funke, der das satirische Feuer der Hallo Welt-Reihe entfacht. Als einer der beiden Autoren ist er der Meister des kreativen Chaos und der unkonventionellen Ideen. Seine Fähigkeit, die absurdesten Alltagsbeobachtungen in scharfzüngige Kritik zu verwandeln, bildet das Herzstück der Serie.
+                </p>
+                <p>
+                  Getrieben von einer gesunden Portion Zynismus und zu viel Koffein, sorgt Philipp dafür, dass keine Pointe zu gewagt und kein Thema zu heilig ist. Sein Schreiben ist ein direkter Angriff auf die Monotonie des Alltags und eine Einladung, die Welt mit einem Lachen zu hinterfragen.
+                </p>
               </article>
-              <div className="pt-4">
-                <a href={portfolioUrl} target="_blank" rel="noopener noreferrer">
-                    <Button>Portfolio besuchen</Button>
+
+              <div className="pt-2">
+                <a
+                  href={portfolioUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-5 py-3 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] transition-[transform,box-shadow] hover:-translate-y-[1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15]"
+                >
+                  Portfolio besuchen
                 </a>
               </div>
             </div>
