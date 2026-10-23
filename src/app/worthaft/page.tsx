@@ -158,7 +158,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
   const letterRows = rows.slice(0, 3);
 
   return (
-    <div data-testid="worthaft-keyboard" className="w-full flex flex-col items-center gap-1.5 mt-8">
+    <div data-testid="worthaft-keyboard" className="w-full flex flex-col items-center gap-1.5 mt-5">
       {letterRows.map((row, i) => (
         <div key={i} className="flex flex-row justify-center gap-1.5 w-full">
           {row.map(key => {
@@ -1459,7 +1459,7 @@ Jetzt spielen:`;
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
             <Header />
-            <main className="flex-1 py-8 md:py-12">
+            <main className="flex-1 py-2 md:py-3">
                 <div className="w-full max-w-sm mx-auto px-4 sm:px-0 flex flex-col items-center justify-start">
                     <div className="w-full">
                         <Grid
@@ -1492,7 +1492,7 @@ Jetzt spielen:`;
                         className="pointer-events-none relative -mt-10 flex justify-center overflow-visible"
                     >
                         <div
-                            className="h-48 w-[140%] max-w-3xl animate-sun-glow rounded-[50%]"
+                            className="h-20 w-[140%] max-w-3xl animate-sun-glow rounded-[50%]"
                             style={{
                                 background: 'radial-gradient(ellipse at 50% 100%, rgba(255,210,61,0.85) 0%, rgba(255,236,138,0.6) 25%, rgba(255,140,25,0.35) 50%, rgba(58,96,255,0.18) 72%, transparent 100%)',
                                 filter: 'blur(45px)',

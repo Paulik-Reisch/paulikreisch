@@ -16,30 +16,42 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function MaxReischPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="min-h-screen bg-[#f7f2e7] text-[#1d1a15]">
       <Header />
-      <main className="flex-1 py-12 md:py-20">
-        <div className="container mx-auto max-w-3xl px-4">
-          <header className="text-center mb-12">
-            <Badge variant="secondary" className="text-lg">Autor &amp; Stratege</Badge>
-            <h1 className="font-headline text-5xl md:text-7xl font-bold tracking-tighter mt-4">
+      <main className="relative flex-1 overflow-hidden py-12 md:py-20">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(#1d1a15 1.1px, transparent 1.1px)", backgroundSize: "22px 22px" }} />
+        <div className="relative container mx-auto max-w-5xl px-4">
+          <header className="mb-10 text-center md:mb-14">
+            <Badge className="inline-flex items-center rounded-[10px] border border-[#1d1a15]/15 bg-white px-3 py-1 text-[0.72rem] font-bold uppercase tracking-[0.12em] text-[#9c2d22] shadow-sm">Autor &amp; Stratege</Badge>
+            <h1 className="mt-4 font-[Georgia,_Iowan_Old_Style,_Times_New_Roman,_serif] text-4xl font-bold tracking-[-0.03em] md:text-6xl">
               Maximilian Reisch
             </h1>
           </header>
-          <div className="grid md:grid-cols-3 gap-8 md:gap-12 items-start">
-            <div className="md:col-span-1 flex justify-center">
-              <Image 
-                src="/max-reisch.png"
-                alt="Porträt von Maximilian Reisch" 
-                width={250} 
-                height={250} 
-                className="rounded-full aspect-square object-cover shadow-lg"
-              />
+
+          <div className="grid items-start gap-8 md:grid-cols-[280px_minmax(0,1fr)] md:gap-12">
+            <div className="flex justify-center md:justify-start">
+              <div className="overflow-hidden rounded-[0px] border-0 bg-transparent p-0 shadow-none">
+                <Image
+                  src="/max-reisch.png"
+                  alt="Porträt von Maximilian Reisch"
+                  width={260}
+                  height={260}
+                  className="aspect-square w-full rounded-none object-cover"
+                />
+              </div>
             </div>
-            <div className="md:col-span-2 space-y-4">
-              <h2 className="font-headline text-3xl font-bold">Über Maximilian</h2>
-              <article className="prose dark:prose-invert max-w-none">
-                <p>Maximilian Reisch ist das strategische Gehirn und die strukturelle Kraft hinter dem satirischen Duo 'Paulik &amp; Reisch'. Während Philipp das Chaos entfesselt, ist es Max, der diesem Chaos eine Form gibt, es in lesbare Sätze fasst und sicherstellt, dass die Pointen nicht nur zünden, sondern auch nachhaltig im Gedächtnis bleiben. Mit einem scharfen Blick für Details und einer Vorliebe für syntaktische Präzision verwandelt er alltägliche Absurditäten in pointierte Gesellschaftskritik.</p>
+
+            <div className="space-y-5">
+              <h2 className="font-[Georgia,_Iowan_Old_Style,_Times_New_Roman,_serif] text-3xl font-bold tracking-[-0.02em] md:text-4xl">
+                Über Maximilian
+              </h2>
+              <article className="space-y-4 text-[1.05rem] leading-relaxed text-[#4d463b]">
+                <p>
+                  Maximilian Reisch ist das strategische Gehirn und die strukturelle Kraft hinter dem satirischen Duo Paulik &amp; Reisch. Während Philipp das Chaos entfesselt, ist es Max, der diesem Chaos eine Form gibt, es in lesbare Sätze fasst und sicherstellt, dass die Pointen nicht nur zünden, sondern auch nachhaltig im Gedächtnis bleiben.
+                </p>
+                <p>
+                  Mit einem scharfen Blick für Details und einer Vorliebe für syntaktische Präzision verwandelt er alltägliche Absurditäten in pointierte Gesellschaftskritik.
+                </p>
               </article>
             </div>
           </div>
