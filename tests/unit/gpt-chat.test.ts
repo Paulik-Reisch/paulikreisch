@@ -9,6 +9,25 @@ const request = () => new Request('https://paulikreisch.de/api/gpt/chat', {
   body: JSON.stringify({ messages: [{ role: 'user', content: 'Hallo!' }] }),
 });
 
+test('preserves every provider character across token and transport boundaries', async () => {
+  const chunks = ['**Ein', ' guter', ' Satz', '**', '\n', '\n', '- ', 'erster Punkt', '\n', '- zweiter', ' Punkt', '\n\n', '```js\n', '  const', ' answer = 42;', '\n```'];
+  const wire = chunks.map(content => `data: ${JSON.stringify({ choices: [{ delta: { content } }] })}\n\n`).join('') + 'data: [DONE]\n\n';
+  const bytes = new TextEncoder().encode(wire);
+  const handler = createChatHandler({
+    apiKey: () => 'test-secret',
+    fetch: async () => new Response(new ReadableStream({
+      start(controller) {
+        for (let offset = 0; offset < bytes.length; offset += 7) controller.enqueue(bytes.slice(offset, offset + 7));
+        controller.close();
+      },
+    })),
+  });
+  const response = await handler(request());
+  const events = (await response.text()).trim().split('\n\n');
+  const actual = events.map(event => JSON.parse(event.slice('data: '.length)).content).join('');
+  assert.equal(actual, chunks.join(''));
+});
+
 test('chat starts and streams without optional native PDF graphics bindings', () => {
   // A fresh process is essential: a previous PDF import could polyfill DOMMatrix.
   const result = spawnSync(process.execPath, ['--no-addons', '--import', 'tsx', '--input-type=module', '-e', `

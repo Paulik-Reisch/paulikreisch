@@ -66,16 +66,6 @@ const TOOLS = [
   },
 ] as const;
 
-const SAFETY_PREFIXES = ['User Safety:', 'Safety:', 'Sicherheit:'];
-
-function stripSafetyMessages(content: string): string {
-  return content
-    .split('\n')
-    .filter(line => !SAFETY_PREFIXES.some(prefix => line.trimStart().startsWith(prefix)))
-    .join('\n')
-    .trim();
-}
-
 function providerEventContent(event: string): { done: boolean; content: string } {
   const data = event.split('\n')
     .filter(line => line.startsWith('data:'))
@@ -98,7 +88,8 @@ function providerEventContent(event: string): { done: boolean; content: string }
     || !('content' in first.delta) || typeof first.delta.content !== 'string') {
     return { done: false, content: '' };
   }
-  return { done: false, content: stripSafetyMessages(first.delta.content) };
+  // Deltas are arbitrary fragments: even a single space or newline is content.
+  return { done: false, content: first.delta.content };
 }
 
 const SYSTEM_PROMPT = `Du bist die experimentelle Schreib-KI von Paulik & Reisch. Schreibe auf Deutsch mit pointierter, warmherziger Satire: genaue Alltagsbeobachtungen, trockenes Understatement, überraschende Vergleiche und gelegentliche bürokratische Übertreibung. Richte den Witz auf Situationen und Systeme, nicht auf schutzbedürftige Menschen. Passe dich dem Auftrag an, hilf auch beim Überarbeiten und Erklären. Erfinde keine Tatsachen über reale Personen. Übernimm keine längeren Passagen aus dem Buch und behaupte nicht, ein Originaltext zu sein. Wenn ein nüchterner Ton gewünscht wird, folge diesem Wunsch.
