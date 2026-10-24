@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { subscribeToNewsletterAction, logEventAction } from "@/app/actions";
-import { LibraryBig, Loader2 } from "lucide-react";
+import { LibraryBig, Loader2, Menu, X } from "lucide-react";
 import { Logo } from "../ui/logo";
 import { useUser } from "@/firebase/provider";
 import { usePathname } from "next/navigation";
@@ -39,6 +39,7 @@ export function Footer() {
   const { toast } = useToast();
   const { user } = useUser();
   const pathname = usePathname();
+  const [moreOpen, setMoreOpen] = useState(false);
 
   useEffect(() => {
     if (state.success) {
@@ -138,16 +139,85 @@ export function Footer() {
           <span className="text-center sm:text-left">
             © {new Date().getFullYear()} Paulik &amp; Reisch. Alle Rechte vorbehalten.
           </span>
-          <nav aria-label="Rechtliche Informationen" className="flex flex-wrap justify-center gap-x-4 gap-y-2 sm:justify-end">
-            <Link href="/impressum" className="hover:text-foreground hover:underline">Impressum</Link>
-            <Link href="/datenschutz" className="hover:text-foreground hover:underline">Datenschutz</Link>
-            <Link href="/cookie-richtlinie" className="hover:text-foreground hover:underline">Cookie-Richtlinie</Link>
-            <Link href="/transparenz" className="hover:text-foreground hover:underline">Transparenzhinweise</Link>
-            <Link href="/agb" className="hover:text-foreground hover:underline">AGB</Link>
-            <Link href="/widerruf" className="hover:text-foreground hover:underline">Widerruf</Link>
-            <Link href="/urheberrecht" className="hover:text-foreground hover:underline">Urheberrecht</Link>
-            <Link href="/barrierefreiheit" className="hover:text-foreground hover:underline">Barrierefreiheit</Link>
-          </nav>
+          <div className="relative flex items-center gap-2 sm:gap-4">
+            <nav aria-label="Rechtliche Informationen" className="hidden sm:flex flex-wrap justify-center gap-x-4 gap-y-2 sm:justify-end">
+              <Link href="/impressum" className="hover:text-foreground hover:underline">Impressum</Link>
+              <Link href="/datenschutz" className="hover:text-foreground hover:underline">Datenschutz</Link>
+              <Link href="/cookie-richtlinie" className="hover:text-foreground hover:underline">Cookie-Richtlinie</Link>
+            </nav>
+            <div className="flex items-center gap-2 sm:hidden">
+              <button
+                type="button"
+                className="inline-flex items-center justify-center w-8 h-8 rounded-full border border-[#e8ddd0] bg-white text-[#4d463b] hover:bg-[#f7f2e7] transition-colors"
+                aria-label="Mehr rechtliche Informationen"
+                onClick={() => setMoreOpen((open) => !open)}
+              >
+                <Menu size={16} aria-hidden="true" />
+              </button>
+              {moreOpen && (
+                <div className="absolute bottom-full left-0 mb-2 w-48 rounded-[10px] border border-[#e8ddd0] bg-white shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)] z-50">
+                  <div className="flex flex-col gap-1">
+                    <Link
+                      href="/impressum"
+                      className="px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                      onClick={() => setMoreOpen(false)}
+                    >
+                      Impressum
+                    </Link>
+                    <Link
+                      href="/datenschutz"
+                      className="px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                      onClick={() => setMoreOpen(false)}
+                    >
+                      Datenschutz
+                    </Link>
+                    <Link
+                      href="/cookie-richtlinie"
+                      className="px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                      onClick={() => setMoreOpen(false)}
+                    >
+                      Cookie-Richtlinie
+                    </Link>
+                    <Link
+                      href="/transparenz"
+                      className="px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                      onClick={() => setMoreOpen(false)}
+                    >
+                      Transparenzhinweise
+                    </Link>
+                    <Link
+                      href="/agb"
+                      className="px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                      onClick={() => setMoreOpen(false)}
+                    >
+                      AGB
+                    </Link>
+                    <Link
+                      href="/widerruf"
+                      className="px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                      onClick={() => setMoreOpen(false)}
+                    >
+                      Widerruf
+                    </Link>
+                    <Link
+                      href="/urheberrecht"
+                      className="px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                      onClick={() => setMoreOpen(false)}
+                    >
+                      Urheberrecht
+                    </Link>
+                    <Link
+                      href="/barrierefreiheit"
+                      className="px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                      onClick={() => setMoreOpen(false)}
+                    >
+                      Barrierefreiheit
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
