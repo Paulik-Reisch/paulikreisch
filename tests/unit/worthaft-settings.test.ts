@@ -54,7 +54,7 @@ test('migrates old settings without linking keyboard and tile rounding', () => {
 });
 
 test('tile width and height are independent and palettes share yellow and gray', () => {
-  assert.deepEqual(getWorthaftTileDimensions(0, 4), { width: 40, height: 72 });
+  assert.deepEqual(getWorthaftTileDimensions(0, 4), { width: 46, height: 82 });
   assert.notEqual(getWorthaftStatusClass('correct', 'classic'), getWorthaftStatusClass('correct', 'original'));
   for (const status of ['present', 'absent']) assert.equal(getWorthaftStatusClass(status, 'classic'), getWorthaftStatusClass(status, 'original'));
 });

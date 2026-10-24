@@ -25,10 +25,9 @@ export default function LuinSchiffbauerPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#f7f2e7] text-[#1d1a15]">
+    <div className="flex min-h-screen flex-col bg-[#f7f2e7] text-[#1d1a15]">
       <Header />
       <main className="relative flex-1 overflow-hidden py-12 md:py-20">
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(#1d1a15 1.1px, transparent 1.1px)", backgroundSize: "22px 22px" }} />
         <div className="relative container mx-auto max-w-5xl px-4">
           <header className="mb-10 text-center md:mb-14">
             <Badge className="inline-flex items-center rounded-[10px] border border-[#1d1a15]/15 bg-white px-3 py-1 text-[0.72rem] font-bold uppercase tracking-[0.12em] text-[#9c2d22] shadow-sm">Illustrator &amp; Künstler</Badge>
