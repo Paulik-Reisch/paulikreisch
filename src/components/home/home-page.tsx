@@ -17,7 +17,7 @@ export function HomePage() {
       <Header />
       <main id="inhalt" tabIndex={-1}>
         <section className={styles.hero} aria-labelledby="home-title">
-          <Image className={styles.heroImage} src="/hero-ab/hero-01-papier.jpg" alt="Das Buch Hallo Welt mit illustriertem Cover auf liniertem Papier" fill priority sizes="100vw" data-home-parallax />
+          <Image className={styles.heroImage} src="/hero-ab/hero-01-papier.jpg" alt="Hallo Welt Buchcover auf liniertem Papier - Satire über Schule und Bürokratie von Paulik & Reisch" fill priority sizes="100vw" data-home-parallax />
           <div className={styles.wrap}>
             <div className={styles.heroCopy}>
               <p className={styles.eyebrow}>Bücher, Satire &amp; ein bisschen Widerstand</p>
@@ -33,7 +33,7 @@ export function HomePage() {
         </section>
         <section id="buch" aria-labelledby="book-title" className={`${styles.wrap} ${styles.section} ${styles.book}`}>
           <figure className={styles.bookVisual}>
-            <Image src="/hero-ab/hero-03-tafel.jpg" alt="Hallo Welt vor einer Kreidetafel: ein Buch über den ganz normalen Schulwahnsinn" fill sizes="(max-width: 639px) 90vw, 45vw" />
+            <Image src="/hero-ab/hero-03-tafel.jpg" alt="Hallo Welt Buch vor Kreidetafel - Satire über den Schulwahnsinn von Paulik & Reisch" fill sizes="(max-width: 639px) 90vw, 45vw" />
             <figcaption className={styles.bookCaption}><span>Hallo Welt · Das Debüt</span><span>Satire statt Stundenplan</span></figcaption>
           </figure>
           <div className={styles.bookCopy}>

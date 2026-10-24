@@ -40,7 +40,7 @@ export default function PhilippPaulikPage() {
             <div className="flex justify-center md:justify-start">
               <div className="overflow-hidden rounded-[0px] border-0 bg-transparent p-0 shadow-none">
                 <Image
-                  src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/ersteller%2Fphilipp-paulik.png?alt=media&amp;token=7e48b706-80fa-45cc-ae51-b6444bd7ccb3"
+                  src="/philipp-paulik.png"
                   alt="Porträt von Philipp Paulik"
                   width={260}
                   height={260}

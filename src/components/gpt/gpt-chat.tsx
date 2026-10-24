@@ -450,6 +450,9 @@ export function GptChat() {
                     <button type="button" onClick={() => { startNewChat(); setError(''); }} aria-label="Neuen Chat starten">
                       Neuer Chat
                     </button>
+                    <button type="button" onClick={() => navigator.clipboard.writeText(error)} aria-label="Fehler in die Zwischenablage kopieren" title="Fehlermeldung kopieren">
+                      📋
+                    </button>
                   </div>
                 )}
               </div>

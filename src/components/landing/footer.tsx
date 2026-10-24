@@ -154,31 +154,31 @@ export function Footer() {
                 <PopoverContent className="w-48">
                   <Link
                     href="/transparenz"
-                    className="block px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                    className="block px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:underline transition-colors"
                   >
                     Transparenzhinweise
                   </Link>
                   <Link
                     href="/agb"
-                    className="block px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                    className="block px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:underline transition-colors"
                   >
                     AGB
                   </Link>
                   <Link
                     href="/widerruf"
-                    className="block px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                    className="block px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:underline transition-colors"
                   >
                     Widerruf
                   </Link>
                   <Link
                     href="/urheberrecht"
-                    className="block px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                    className="block px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:underline transition-colors"
                   >
                     Urheberrecht
                   </Link>
                   <Link
                     href="/barrierefreiheit"
-                    className="block px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                    className="block px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:underline transition-colors"
                   >
                     Barrierefreiheit
                   </Link>
