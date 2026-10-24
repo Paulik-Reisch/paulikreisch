@@ -1,3 +1,5 @@
+import { ragContext } from './rag';
+
 const MAX_REQUEST_BYTES = 120_000;
 const MAX_PROVIDER_BYTES = 262_144;
 const MAX_MESSAGES = 18;
@@ -212,6 +214,11 @@ export function createChatHandler(dependencies: Dependencies) {
       const timer = setTimeout(() => controller.abort(), dependencies.timeoutMs ?? 30_000);
       let streamStarted = false;
       try {
+        const lastUserMessage = messages.at(-1)?.content ?? '';
+        const ragCtx = ragContext(lastUserMessage, 3);
+        const systemContent = ragCtx
+          ? `${SYSTEM_PROMPT}\n\nStilistische Referenzen (nicht kopieren, nur adaptieren):\n${ragCtx}`
+          : SYSTEM_PROMPT;
         const response = await fetchProvider('https://openrouter.ai/api/v1/chat/completions', {
           method: 'POST',
           headers: {
@@ -230,7 +237,7 @@ export function createChatHandler(dependencies: Dependencies) {
             stream: true,
             tools: TOOLS,
             tool_choice: 'auto',
-            messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
+            messages: [{ role: 'system', content: systemContent }, ...messages],
           }),
           signal: controller.signal,
           cache: 'no-store',
@@ -346,3 +353,6 @@ export function createChatHandler(dependencies: Dependencies) {
     }
   };
 }
+
+
+
