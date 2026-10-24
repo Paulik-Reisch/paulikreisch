@@ -1,8 +1,6 @@
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import type { Metadata } from 'next';
 import { createTrackedUrl } from "@/lib/utils";
@@ -27,38 +25,59 @@ export default function LuinSchiffbauerPage() {
   );
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex min-h-screen flex-col bg-[#f7f2e7] text-[#1d1a15]">
       <Header />
-      <main className="flex-1 py-12 md:py-20">
-        <div className="container mx-auto max-w-3xl px-4">
-          <header className="text-center mb-12">
-            <Badge variant="secondary" className="text-lg">Illustrator &amp; Künstler</Badge>
-            <h1 className="font-headline text-5xl md:text-7xl font-bold tracking-tighter mt-4">
+      <main className="relative flex-1 overflow-hidden py-12 md:py-20">
+        <div className="relative container mx-auto max-w-5xl px-4">
+          <header className="mb-10 text-center md:mb-14">
+            <Badge className="inline-flex items-center rounded-[10px] border border-[#1d1a15]/15 bg-white px-3 py-1 text-[0.72rem] font-bold uppercase tracking-[0.12em] text-[#9c2d22] shadow-sm">Illustrator &amp; Künstler</Badge>
+            <h1 className="mt-4 font-[Georgia,_Iowan_Old_Style,_Times_New_Roman,_serif] text-4xl font-bold tracking-[-0.03em] md:text-6xl">
               Luin Schiffbauer
             </h1>
           </header>
-          <div className="grid md:grid-cols-3 gap-8 md:gap-12 items-start">
-            <div className="md:col-span-1 flex justify-center">
-              <Image 
-                src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/luin-schiffbauer.png?alt=media&amp;token=61abe644-7d94-4bfc-8164-37447ac9279b"
-                alt="Porträt von Luin Schiffbauer, dem Illustrator der Hallo Welt Bücher" 
-                width={250} 
-                height={250} 
-                className="rounded-full aspect-square object-cover shadow-lg"
-              />
+
+          <div className="grid items-start gap-8 md:grid-cols-[280px_minmax(0,1fr)] md:gap-12">
+            <div className="flex justify-center md:justify-start">
+              <div className="overflow-hidden rounded-[0px] border-0 bg-transparent p-0 shadow-none">
+                <Image
+                  src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/luin-schiffbauer.png?alt=media&amp;token=61abe644-7d94-4bfc-8164-37447ac9279b"
+                  alt="Porträt von Luin Schiffbauer, dem Illustrator der Hallo Welt Bücher"
+                  width={260}
+                  height={260}
+                  className="aspect-square w-full rounded-none object-cover"
+                />
+              </div>
             </div>
-            <div className="md:col-span-2 space-y-4">
-              <h2 className="font-headline text-3xl font-bold">Über Luin</h2>
-              <article className="prose dark:prose-invert max-w-none">
-                <p>Luin Schiffbauer ist der visionäre Künstler, der den Worten von Paulik &amp; Reisch ein unvergessliches Gesicht gibt. Als Illustrator der 'Hallo Welt'-Reihe ist er dafür verantwortlich, den satirischen Wahnsinn in Bilder zu übersetzen, die oft mehr sagen als tausend Worte. Sein einzigartiger Stil, eine Mischung aus minimalistischer Klarheit und maximalem Ausdruck, ist ein wesentlicher Bestandteil des Erfolgs.</p>
-                <p>Mit jedem Strich fängt Luin die Essenz der Charaktere und Situationen ein und schafft visuelle Gags, die perfekt mit dem Text harmonieren. Seine Illustrationen sind nicht nur Beiwerk, sondern ein integraler Bestandteil des Leseerlebnisses. Entdecken Sie mehr von seiner Arbeit und den Büchern, die er mitgestaltet hat, auf Amazon.</p>
+
+            <div className="space-y-5">
+              <h2 className="font-[Georgia,_Iowan_Old_Style,_Times_New_Roman,_serif] text-3xl font-bold tracking-[-0.02em] md:text-4xl">
+                Über Luin
+              </h2>
+              <article className="space-y-4 text-[1.05rem] leading-relaxed text-[#4d463b]">
+                <p>
+                  Luin Schiffbauer ist der visionäre Künstler, der den Worten von Paulik &amp; Reisch ein unvergessliches Gesicht gibt. Als Illustrator der Hallo Welt-Reihe ist er dafür verantwortlich, den satirischen Wahnsinn in Bilder zu übersetzen, die oft mehr sagen als tausend Worte. Sein einzigartiger Stil – eine Mischung aus minimalistischer Klarheit und maximalem Ausdruck – ist ein wesentlicher Bestandteil des Erfolgs.
+                </p>
+                <p>
+                  Mit jedem Strich fängt Luin die Essenz der Charaktere und Situationen ein und schafft visuelle Gags, die perfekt mit dem Text harmonieren. Seine Illustrationen sind nicht nur Beiwerk, sondern ein integraler Bestandteil des Leseerlebnisses.
+                </p>
               </article>
-              <div className="pt-4 flex items-center gap-4">
-                <a href={amazonUrl} target="_blank" rel="noopener noreferrer">
-                    <Button>Bücher auf Amazon</Button>
+
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <a
+                  href={amazonUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-5 py-3 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] transition-[transform,box-shadow] hover:-translate-y-[1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15]"
+                >
+                  Bücher auf Amazon
                 </a>
-                <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
-                    <Button variant="outline">Instagram</Button>
+                <a
+                  href={instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center rounded-[10px] border-2 border-[#1d1a15] bg-white px-5 py-3 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] transition-[transform,box-shadow] hover:-translate-y-[1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15]"
+                >
+                  Instagram
                 </a>
               </div>
             </div>

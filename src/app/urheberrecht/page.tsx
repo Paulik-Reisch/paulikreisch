@@ -1,5 +1,4 @@
-import { Header } from "@/components/landing/header";
-import { Footer } from "@/components/landing/footer";
+import { LegalPage } from "@/components/landing/legal-page";
 
 export const metadata = {
   title: "Urheberrecht – Paulik & Reisch",
@@ -9,11 +8,7 @@ export const metadata = {
 export default function UrheberrechtPage() {
   return (
     <>
-      <Header />
-      <main className="container mx-auto max-w-3xl px-4 py-12">
-        <h1 className="font-headline text-4xl md:text-5xl mb-8">Urheberrecht</h1>
-
-        <div className="prose prose-lg space-y-6 text-foreground/80">
+      <LegalPage title="Urheberrecht" description="Hinweise zum Schutz und zur Nutzung der Inhalte von Paulik &amp; Reisch.">
           <p>
             Sämtliche auf dieser Webpräsenz bereitgestellten Inhalte – darunter, jedoch nicht abschließend,
             textliche Darstellungen, satirische Artikel, Buchauszüge, das Spiel &bdquo;Worthaft&rdquo; samt
@@ -73,9 +68,7 @@ export default function UrheberrechtPage() {
           <p className="text-sm text-muted-foreground mt-8">
             Verantwortlich für diese Seite: Philipp Paulik (siehe Impressum).
           </p>
-        </div>
-      </main>
-      <Footer />
+      </LegalPage>
     </>
   );
 }

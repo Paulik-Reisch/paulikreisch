@@ -140,6 +140,39 @@
     50% { opacity: 0.2; }
   }
 
+  @keyframes worthaft-shimmer-sweep {
+    0% {
+      transform: translateX(-160%) skewX(-18deg);
+      opacity: 0;
+    }
+    12% {
+      opacity: 0.8;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(200%) skewX(-18deg);
+      opacity: 0;
+    }
+  }
+
+  .worthaft-icon-shimmer {
+    position: relative;
+    display: inline-flex;
+    overflow: hidden;
+  }
+
+  .worthaft-icon-shimmer::before {
+    content: "";
+    position: absolute;
+    inset: -18% -28%;
+    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.9) 50%, transparent 70%);
+    transform: translateX(-160%) skewX(-18deg);
+    animation: worthaft-shimmer-sweep 3s ease-in-out infinite;
+    pointer-events: none;
+  }
+
   .animate-flash {
     animation: flash 0.7s ease-in-out;
   }

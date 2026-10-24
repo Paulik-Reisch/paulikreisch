@@ -1201,6 +1201,7 @@ export const WORDS = [
     "banal",
     "kappe",
     "gemüt",
+    "trist",
     "perle",
     "steif",
     "wieso",

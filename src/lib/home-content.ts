@@ -17,6 +17,6 @@ export const homeFaqs = [
 
 export const homePeople = [
   { name: 'Philipp Paulik', role: 'Autor', bio: 'Sorgt für das Chaos. Und dafür, dass keine Handlung zu viel Sinn ergibt.', href: '/ueber/philipp-paulik', image: 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/ersteller%2Fphilipp-paulik.png?alt=media&token=7e48b706-80fa-45cc-ae51-b6444bd7ccb3' },
-  { name: 'Maximilian Reisch', role: 'Autor', bio: 'Meister der Syntax und Satire. Zuständig für Sätze mit gewissen Nebenwirkungen.', href: '/ueber/max-reisch', image: 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/ersteller%2Fmax-reisch.png?alt=media&token=b8ded8f8-a5da-412f-aa2f-eb5ebebbc61a' },
+  { name: 'Maximilian Reisch', role: 'Autor', bio: 'Meister der Syntax und Satire. Zuständig für Sätze mit gewissen Nebenwirkungen.', href: '/ueber/max-reisch', image: '/max-reisch.png' },
   { name: 'Luin Schiffbauer', role: 'Illustrator', bio: 'Gibt dem Wahnsinn ein Gesicht. Und unseren Geschichten ihren eigenen Strich.', href: '/ueber/luin-schiffbauer', image: 'https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/luin-schiffbauer.png?alt=media&token=61abe644-7d94-4bfc-8164-37447ac9279b' },
 ] as const;

@@ -6,6 +6,8 @@ export const WORTHAFT_ANTI_WORDS: readonly string[] = [
   'putor',
   'rinse',
   'pinse',
+  'risse',
+  'fiess',
 ];
 
 export const isWorthaftAntiWord = (
