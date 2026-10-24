@@ -46,23 +46,30 @@ for (const width of [320, 375, 768, 1440]) {
   });
 }
 
-test('shows the dissolve status text and disables its animation for reduced motion', async ({ page }) => {
+test('shows the loading status until a reply arrives with reduced motion', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.route(/identitytoolkit|firestore.googleapis.com|securetoken/, route => route.abort());
+  let releaseReply!: () => void;
+  const replyReady = new Promise<void>(resolve => { releaseReply = resolve; });
   await page.route('**/api/gpt/chat', async route => {
-    await new Promise(resolve => setTimeout(resolve, 250));
+    await replyReady;
     await route.fulfill(streamReply('Die Antwort erscheint live.'));
   });
   await page.goto('/gpt');
   await page.getByLabel('Nachricht an die Schreibstube').fill('Schreibe einen Satz.');
   await page.getByRole('button', { name: 'Nachricht senden' }).click();
 
-  const dissolveText = page.locator('.fx-fade');
-  await expect(dissolveText).toHaveAttribute('role', 'img');
-  await expect(dissolveText).toHaveAttribute('aria-label', 'FADE\u00a0AWAY');
-  await expect(dissolveText.locator('b')).toHaveCount(9);
-  await expect.poll(() => dissolveText.locator('b').first().evaluate(element => getComputedStyle(element).animationName)).toBe('none');
+  const loadingStatus = page.getByRole('status').filter({ hasText: 'Die Pointe wird gesucht' });
+  try {
+    await expect(loadingStatus).toBeVisible();
+    await expect(page.getByLabel('Nachricht an die Schreibstube')).toBeDisabled();
+    await expect(page.getByRole('button', { name: 'Nachricht senden' })).toBeDisabled();
+  } finally {
+    releaseReply();
+  }
   await expect(page.getByText('Die Antwort erscheint live.')).toBeVisible();
+  await expect(loadingStatus).toHaveCount(0);
+  await expect(page.getByLabel('Nachricht an die Schreibstube')).toBeEnabled();
 });
 
 test('shows a retry action when the OpenRouter request fails', async ({ page }) => {
