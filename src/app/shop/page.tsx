@@ -5,7 +5,6 @@ import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 import { AmazonIcon } from "@/components/ui/icons/amazon-icon";
 import { GooglePlayIcon } from "@/components/ui/icons/google-play-icon";
 import { ElevenReaderIcon } from "@/components/ui/icons/eleven-reader-icon";
-import { ShopNewsletterForm } from "./ShopNewsletterForm";
 import './shop.css';
 import { useEffect, useState } from "react";
 import '../../../tokens.css';
@@ -152,18 +151,7 @@ export default function ShopPage() {
                                 <p className="book-desc">Wie das Leben funktioniert (Platzhalter)</p>
 
                                 <div className="action-area">
-                                    <button onClick={() => setIsHw2AlertOpen(true)} className="btn btn-amazon">
-                                        <AmazonIcon />
-                                        Bei Amazon kaufen
-                                    </button>
-                                    <button onClick={() => setIsHw2AlertOpen(true)} className="btn btn-google">
-                                        <GooglePlayIcon />
-                                        Google Play E-Book
-                                    </button>
-                                    <button onClick={() => setIsHw2AlertOpen(true)} className="link-11reader">
-                                        <ElevenReaderIcon />
-                                        <span><small className="free-badge">Gratis hören auf</small> 11Reader</span>
-                                    </button>
+                                    <p className="book-unavailable">in Arbeit – bald verfügbar</p>
                                 </div>
                             </article>
                         </div>
@@ -283,16 +271,6 @@ export default function ShopPage() {
                     </div>
                 </section>
 
-                {/* === SEKTION 5: NEWSLETTER === */}
-                <section className="bg-gray shop-newsletter">
-                    <div className="container">
-                        <div className="newsletter-box">
-                            <h2>Neuigkeiten und Benachrichtigungen</h2>
-                            <p>Verpasse keinen neuen Band und keine Lesung. Kein Spam, nur Sarkasmus.</p>
-                            <ShopNewsletterForm />
-                        </div>
-                    </div>
-                </section>
             </main>
             <Footer />
             <AlertDialog open={isHw2AlertOpen} onOpenChange={setIsHw2AlertOpen}>
