@@ -89,8 +89,10 @@ export default function FeedbackDrawer({
       createdAt: serverTimestamp(),
     };
     try {
-      const { firestore } = initializeFirebase();
-      await addDoc(collection(firestore, 'worthaft-feedback'), payload);
+      if (payload.vote === 'down') {
+        const { firestore } = initializeFirebase();
+        await addDoc(collection(firestore, 'worthaft-feedback'), payload);
+      }
       localStorage.setItem(`worthaft-feedback-${payload.date}`, 'true');
     } catch (err) {
       // Still show the thanks screen even if the write fails — don't punish the user.

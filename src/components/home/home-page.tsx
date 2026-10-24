@@ -16,10 +16,6 @@ export function HomePage() {
       <a className={styles.skip} href="#inhalt">Zum Inhalt springen</a>
       <Header />
       <main id="inhalt" tabIndex={-1}>
-        <div className={`${styles.wrap} ${styles.edition}`}>
-          <span>Paulik &amp; Reisch · Literatur mit Nebenwirkungen</span>
-          <span>Unabhängige Stimmen. Ziemlich deutsche Zustände.</span>
-        </div>
         <section className={styles.hero} aria-labelledby="home-title">
           <Image className={styles.heroImage} src="/hero-ab/hero-01-papier.jpg" alt="Das Buch Hallo Welt mit illustriertem Cover auf liniertem Papier" fill priority sizes="100vw" data-home-parallax />
           <div className={styles.wrap}>
@@ -35,15 +31,6 @@ export function HomePage() {
             </div>
           </div>
         </section>
-        <div className={`${styles.wrap} ${styles.directory}`}>
-          <p>Für alle, die nicht alles ernst nehmen.</p>
-          <nav aria-label="Auf dieser Seite">
-            <a href="#buch">Das Buch <ArrowDown size={13} aria-hidden="true" /></a>
-            <a href="#entdecken">Lesestoff <ArrowDown size={13} aria-hidden="true" /></a>
-            <a href="#worthaft">Worthaft <ArrowDown size={13} aria-hidden="true" /></a>
-            <a href="#authors">Die Köpfe <ArrowDown size={13} aria-hidden="true" /></a>
-          </nav>
-        </div>
         <section id="buch" aria-labelledby="book-title" className={`${styles.wrap} ${styles.section} ${styles.book}`}>
           <figure className={styles.bookVisual}>
             <Image src="/hero-ab/hero-03-tafel.jpg" alt="Hallo Welt vor einer Kreidetafel: ein Buch über den ganz normalen Schulwahnsinn" fill sizes="(max-width: 639px) 90vw, 45vw" />
@@ -76,22 +63,17 @@ export function HomePage() {
           <div className={styles.stories}>
             <article>
               <div className={styles.storyImage}><Image src="/hero-mobile/32-tafel-kreide.jpg" alt="Beschriebene Schultafel als Sinnbild für den Schulalltag" fill sizes="(max-width: 639px) 90vw, 50vw" /></div>
-              <p className={styles.eyebrow}>Schule &amp; Gesellschaft</p>
-              <h3 className={styles.storyTitle}><Link href="/wiki/bildungskritik-satire">Wenn Lernen zur Verwaltungssache wird.</Link></h3>
-              <p className={styles.body}>Noten, Normen, nächste Reform: ein Blick auf das System, in dem wir groß werden.</p>
-              <Link className={styles.textLink} href="/wiki/bildungskritik-satire">Bildungskritik lesen {arrow}</Link>
             </article>
             <div className={styles.storyList}>
               <article><p className={styles.eyebrow}>Sprache &amp; Bürokratie</p><h3 className={styles.storyTitle}><Link href="/ratgeber/beamtendeutsch">Das ist kein Satz. Das ist ein Verwaltungsakt.</Link></h3><p className={styles.body}>Beamtendeutsch verstehen — sofern die zuständige Stelle nichts dagegen hat.</p><Link className={styles.textLink} href="/ratgeber/beamtendeutsch">Weiterlesen {arrow}</Link></article>
               <article><p className={styles.eyebrow}>Schreiben &amp; Satire</p><h3 className={styles.storyTitle}><Link href="/ratgeber/satire-schreiben">Aus einer Beobachtung wird eine Pointe.</Link></h3><p className={styles.body}>Wie Übertreibung, Ironie und der richtige Blickwinkel zusammenfinden.</p><Link className={styles.textLink} href="/ratgeber/satire-schreiben">Zum Schreibratgeber {arrow}</Link></article>
-              <article><p className={styles.eyebrow}>Für Menschen mit Humor</p><h3 className={styles.storyTitle}><Link href="/ratgeber/geschenk-lehrer">Ein Geschenk ohne Korrekturbedarf.</Link></h3><Link className={styles.textLink} href="/ratgeber/geschenk-lehrer">Geschenkideen entdecken {arrow}</Link></article>
             </div>
           </div>
         </section>
         <section id="worthaft" aria-labelledby="game-title" className={styles.game}>
           <div className={`${styles.wrap} ${styles.gameGrid}`}>
             <div><p className={styles.eyebrow}>Worthaft · Das tägliche Worträtsel</p><h2 id="game-title">Große Pause.<br />Fünf Buchstaben.</h2><p className={styles.body}>Sechs Versuche, ein Wort zu erraten.</p><Link href="/worthaft" className={styles.button}>Worthaft spielen <ArrowRight size={18} aria-hidden="true" /></Link><p className={styles.caption} style={{ color: 'inherit' }}>Kostenlos · auf Deutsch · Spielstand lokal im Browser</p></div>
-            <div><div className={styles.tiles} aria-hidden="true">{'PAUSEWORTESATZE'.split('').map((letter, i) => <span className={styles.tile} key={i}>{letter}</span>)}</div></div>
+            <div><div className={styles.tiles} aria-hidden="true">{'PAUSEHORDESAITE'.split('').map((letter, i) => <span className={styles.tile} key={i}>{letter}</span>)}</div></div>
           </div>
         </section>
         <section id="authors" aria-labelledby="people-title" className={`${styles.wrap} ${styles.section}`}>

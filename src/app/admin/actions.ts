@@ -31,7 +31,7 @@ export async function loginAction(
     const validatedFields = LoginSchema.safeParse(Object.fromEntries(formData.entries()));
 
     if (!validatedFields.success) {
-        const errorMessages = validatedFields.error.errors.map(e => e.message).join('. ');
+        const errorMessages = validatedFields.error.issues.map(e => e.message).join('. ');
         return { success: false, error: errorMessages };
     }
     

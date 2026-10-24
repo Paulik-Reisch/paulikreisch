@@ -53,6 +53,31 @@ test('feedback can also be skipped after selecting a negative vote without submi
   expect(await page.evaluate(() => Object.keys(localStorage).filter(key => key.startsWith('worthaft-feedback-')).map(key => localStorage.getItem(key)))).toEqual(['skipped']);
 });
 
+test('positive Worthaft feedback is remembered locally but not sent to Firestore', async ({ page }) => {
+  await page.route(/identitytoolkit|firestore.googleapis.com|securetoken/, route => route.abort());
+  let firestoreRequests = 0;
+  page.on('request', request => {
+    if (request.url().includes('firestore.googleapis.com')) firestoreRequests += 1;
+  });
+  await page.addInitScript(() => {
+    const now = new Date();
+    const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    localStorage.setItem('hallowelt_cookie_consent', JSON.stringify({ necessary: true, analytics: false, marketing: false }));
+    localStorage.setItem('worthaft-daily-game', JSON.stringify({ date, status: 'won', guesses: [{ guess: 'bruch', statuses: Array(5).fill('correct') }], letterStatuses: {}, rowTimes: [1000] }));
+  });
+  await page.goto('/worthaft');
+  const requestsBeforeSubmit = firestoreRequests;
+  await page.getByRole('button', { name: 'Ja, das Wort war gut' }).click();
+  await page.getByRole('button', { name: 'Feedback senden', exact: true }).click();
+  await expect(page.getByText('Danke für dein Feedback!', { exact: true })).toBeVisible();
+  expect(firestoreRequests).toBe(requestsBeforeSubmit);
+  expect(await page.evaluate(() => {
+    const now = new Date();
+    const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    return localStorage.getItem(`worthaft-feedback-${date}`);
+  })).toBe('true');
+});
+
 test('word explanation offers retry after a failed request and returns focus on close', async ({ page }) => {
   await page.route(/identitytoolkit|firestore.googleapis.com|securetoken/, route => route.abort());
   let attempts = 0;

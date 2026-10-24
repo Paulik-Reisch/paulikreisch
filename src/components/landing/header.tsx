@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Logo } from "../ui/logo";
 import { cn } from '@/lib/utils';
 import { WorthaftIcon } from '../ui/icons/worthaft-icon';
+import { WritingRoomIcon } from '../ui/icons/writing-room-icon';
 import { Menu, X } from 'lucide-react';
 
 export function Header() {
@@ -98,7 +99,9 @@ export function Header() {
             </a>
             {isWorthaftPage && (
               <div className="flex items-center gap-2 border-l border-[#e8ddd0] pl-3 sm:pl-4">
-                <WorthaftIcon className="h-6 w-6 text-primary" />
+                <span className="worthaft-icon-shimmer shrink-0">
+                  <WorthaftIcon className="h-6 w-6 text-primary" />
+                </span>
                 <h1 className="font-headline text-lg font-bold text-[#1d1a15] sm:text-xl">Worthaft</h1>
               </div>
             )}
@@ -106,20 +109,29 @@ export function Header() {
           <div className="flex items-center gap-3">
             {/* Desktop — Landing-Look */}
             <nav className="hidden md:flex items-center gap-3">
+              <Link
+                href="/gpt"
+                className="inline-flex items-center gap-2 rounded-[10px] border-2 border-[#174bc2] bg-[#2268ff] px-4 py-2 text-[0.9rem] font-bold text-white shadow-[0_3px_0_#174bc2] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#1d5ce5] hover:shadow-[0_4px_0_#174bc2] active:translate-y-px active:shadow-[0_1px_0_#174bc2]"
+              >
+                <WritingRoomIcon className="h-5 w-5 shrink-0" />
+                Schreibstube (KI)
+              </Link>
               {showWorthaftLink && (
                 <Link
                   href="/worthaft"
-                  className="inline-flex items-center gap-2 rounded-[12px] border-2 border-[#1d1a15] bg-white px-4 py-2 text-[0.9rem] font-semibold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] hover:bg-[#f7f2e7] transition-[transform,box-shadow,background-color]"
+                  className="inline-flex items-center gap-2 rounded-[10px] border-2 border-[#1d1a15] bg-white px-4 py-2 text-[0.9rem] font-semibold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] hover:bg-[#f7f2e7] transition-[transform,box-shadow,background-color]"
                 >
-                  <WorthaftIcon className="h-4 w-4" />
+                  <span className="worthaft-icon-shimmer">
+                    <WorthaftIcon className="h-4 w-4" />
+                  </span>
                   Worthaft
                 </Link>
               )}
               <Link
                 href="/shop"
-                className="inline-flex items-center justify-center rounded-[12px] border-2 border-[#1d1a15] bg-[#ffe14d] px-5 py-2 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] transition-[transform,box-shadow]"
+                className="inline-flex items-center justify-center rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-5 py-2 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] transition-[transform,box-shadow]"
               >
-                Buch kaufen · 10,99 €
+                Buch kaufen
               </Link>
             </nav>
 
@@ -193,9 +205,17 @@ export function Header() {
                 </Link>
               )}
               <Link
+                href="/gpt"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-3 border-b border-[#e8ddd0] py-4 text-[1.25rem] font-bold leading-tight tracking-[-0.015em] text-[#2268ff] transition-colors hover:text-[#174bc2]"
+              >
+                <WritingRoomIcon className="h-6 w-6 shrink-0" />
+                Schreibstube (KI)
+              </Link>
+              <Link
                 href="/shop"
                 onClick={() => setOpen(false)}
-                className="mt-6 inline-flex items-center justify-center rounded-[12px] border-2 border-[#1d1a15] bg-[#ffe14d] px-6 py-[14px] text-[1.05rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] transition-[transform,box-shadow] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15]"
+                className="mt-6 inline-flex items-center justify-center rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-6 py-[14px] text-[1.05rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] transition-[transform,box-shadow] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15]"
               >
                 Buch kaufen · 10,99 €
               </Link>

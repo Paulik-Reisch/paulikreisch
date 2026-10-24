@@ -1,6 +1,5 @@
 import Link from 'next/link';
-import { Header } from "@/components/landing/header";
-import { Footer } from "@/components/landing/footer";
+import { LegalPage } from "@/components/landing/legal-page";
 
 export const metadata = {
   title: "Cookie-Richtlinie – Paulik & Reisch",
@@ -9,12 +8,7 @@ export const metadata = {
 
 export default function CookieRichtliniePage() {
   return (
-    <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
-      <Header />
-      <main className="flex-1 py-12 md:py-24">
-        <div className="container px-4 md:px-6">
-          <article className="prose prose-lg dark:prose-invert mx-auto max-w-2xl">
-            <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">Cookie-Richtlinie</h1>
+    <LegalPage title="Cookie-Richtlinie" description="Welche Cookies und vergleichbaren Technologien auf dieser Website zum Einsatz kommen.">
             <p className="text-sm text-muted-foreground">Stand: {new Date().toLocaleDateString("de-DE", { year: "numeric", month: "long", day: "numeric" })}</p>
 
             <h2>1. Was sind Cookies?</h2>
@@ -59,10 +53,6 @@ export default function CookieRichtliniePage() {
               Ausführliche Hinweise zur Datenverarbeitung finden Sie in unserer
               <Link href="/datenschutz">Datenschutzerklärung</Link>.
             </p>
-          </article>
-        </div>
-      </main>
-      <Footer />
-    </div>
+    </LegalPage>
   );
 }

@@ -37,7 +37,7 @@ export async function loginAction(
     const validatedFields = LoginSchema.safeParse(Object.fromEntries(formData.entries()));
 
     if (!validatedFields.success) {
-        const errorMessages = validatedFields.error.errors.map(e => e.message).join('. ');
+        const errorMessages = validatedFields.error.issues.map(e => e.message).join('. ');
         return { success: false, error: errorMessages };
     }
     
@@ -101,7 +101,7 @@ export async function addNewsletterAction(
   const validatedFields = AddNewsletterSchema.safeParse(Object.fromEntries(formData.entries()));
 
   if (!validatedFields.success) {
-    const errorMessages = validatedFields.error.errors.map((e) => e.message).join(". ");
+    const errorMessages = validatedFields.error.issues.map((e) => e.message).join(". ");
     return { success: false, error: errorMessages };
   }
 
@@ -136,7 +136,7 @@ export async function updateNewsletterAction(
   const validatedFields = UpdateNewsletterSchema.safeParse(Object.fromEntries(formData.entries()));
 
   if (!validatedFields.success) {
-    const errorMessages = validatedFields.error.errors.map((e) => e.message).join(". ");
+    const errorMessages = validatedFields.error.issues.map((e) => e.message).join(". ");
     return { success: false, error: errorMessages };
   }
   
@@ -313,7 +313,7 @@ export async function updateLegalPageAction(
   });
 
   if (!validatedFields.success) {
-    const errorMessages = validatedFields.error.errors.map((e) => e.message).join(". ");
+    const errorMessages = validatedFields.error.issues.map((e) => e.message).join(". ");
     return { success: false, error: errorMessages };
   }
 
@@ -369,7 +369,7 @@ export async function updateExcerptAction(
   const validatedFields = UpdateExcerptSchema.safeParse(dataToValidate);
 
   if (!validatedFields.success) {
-    const errorMessages = validatedFields.error.errors.map((e) => e.message).join(". ");
+    const errorMessages = validatedFields.error.issues.map((e) => e.message).join(". ");
     return { success: false, error: errorMessages };
   }
 

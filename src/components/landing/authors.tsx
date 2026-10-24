@@ -26,7 +26,7 @@ const AUTHORS: Author[] = [
     claim: "Der mit der Brille.",
     bio: "Meister der Syntax und Satire. Sein Lebensziel: einen so verwirrenden Satz zu schreiben, dass er einen Nobelpreis gewinnt.",
     href: "/ueber/max-reisch",
-    src: "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/ersteller%2Fmax-reisch.png?alt=media&token=b8ded8f8-a5da-412f-aa2f-eb5ebebbc61a",
+    src: "/max-reisch.png",
   },
   {
     name: "Luin Schiffbauer",
