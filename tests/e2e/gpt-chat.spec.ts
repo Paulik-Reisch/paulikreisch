@@ -6,7 +6,56 @@ const streamReply = (message: string) => ({
   body: `data: ${JSON.stringify({ content: message })}\n\n`,
 });
 
-for (const width of [320, 375, 768, 1440]) {
+for (const reducedMotion of [false, true]) {
+  test(`preserves streamed Markdown with word reveal (reduced motion: ${reducedMotion})`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: reducedMotion ? 'reduce' : 'no-preference' });
+    await page.route(/identitytoolkit|firestore.googleapis.com|securetoken/, route => route.abort());
+    await page.addInitScript(() => {
+      localStorage.setItem('hallowelt_cookie_consent', JSON.stringify({ necessary: true, analytics: false, marketing: false }));
+      localStorage.removeItem('paulik-reisch-gpt-conversations');
+      const originalFetch = window.fetch.bind(window);
+      window.fetch = (input, init) => {
+        if (input !== '/api/gpt/chat') return originalFetch(input, init);
+        return Promise.resolve(new Response(new ReadableStream({
+          start(controller) {
+            const encoder = new TextEncoder();
+            window.addEventListener('test-chat-chunk', event => {
+              const chunk = (event as CustomEvent<string | null>).detail;
+              if (chunk === null) controller.close();
+              else controller.enqueue(encoder.encode(`data: ${JSON.stringify({ content: chunk })}\n\n`));
+            });
+          },
+        }), { headers: { 'Content-Type': 'text/event-stream' } }));
+      };
+    });
+    await page.goto('/gpt');
+    await page.getByLabel('Nachricht an die Schreibstube').fill('Schreibe formatiert.');
+    await page.getByRole('button', { name: 'Nachricht senden' }).click();
+    await expect(page.getByRole('status').filter({ hasText: 'Die Pointe wird gesucht' })).toBeVisible();
+    const sendChunk = (chunk: string | null) => page.evaluate(detail => {
+      window.dispatchEvent(new CustomEvent('test-chat-chunk', { detail }));
+    }, chunk);
+    await sendChunk('**Ein guter Satz**');
+    const assistant = page.locator('article').nth(1);
+    await expect(assistant.locator('strong')).toHaveText('Ein guter Satz');
+    const words = assistant.locator('strong span');
+    await expect(words).toHaveCount(reducedMotion ? 0 : 3);
+    if (!reducedMotion) {
+      await expect.poll(() => assistant.evaluate(element => element.getAnimations({ subtree: true }).length)).toBe(0);
+    }
+    for (const chunk of ['\n', '\n', '- erster', ' Punkt\n', '- zweiter Punkt\n\n', '```js\n', '  const answer = 42;\n', '```']) await sendChunk(chunk);
+    await expect(assistant.locator('li')).toHaveText(['erster Punkt', 'zweiter Punkt']);
+    await expect(assistant.locator('pre code')).toHaveText('  const answer = 42;\n');
+    await expect(assistant.locator('pre span')).toHaveCount(0);
+    // Previously revealed words stay settled as the later tokens arrive.
+    await expect(assistant.locator('strong span')).toHaveCount(0);
+    await sendChunk(null);
+    await expect(page.getByLabel('Nachricht an die Schreibstube')).toBeEnabled();
+    await expect.poll(() => page.evaluate(() => localStorage.getItem('paulik-reisch-gpt-conversations') ?? '')).toContain('Ein guter Satz');
+  });
+}
+
+for (const width of [320, 375, 414, 768, 1440]) {
   test(`the experimental writing room works at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.route(/identitytoolkit|firestore.googleapis.com|securetoken/, route => route.abort());
