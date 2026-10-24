@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { subscribeToNewsletterAction, logEventAction } from "@/app/actions";
 import { LibraryBig, Loader2, Menu, X } from "lucide-react";
 import { Logo } from "../ui/logo";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { useUser } from "@/firebase/provider";
 import { usePathname } from "next/navigation";
 import { AmazonIcon } from '@/components/ui/icons/amazon-icon';
@@ -144,6 +145,45 @@ export function Footer() {
               <Link href="/impressum" className="hover:text-foreground hover:underline">Impressum</Link>
               <Link href="/datenschutz" className="hover:text-foreground hover:underline">Datenschutz</Link>
               <Link href="/cookie-richtlinie" className="hover:text-foreground hover:underline">Cookie-Richtlinie</Link>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button type="button" className="hover:text-foreground hover:underline">
+                    Mehr
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-48">
+                  <Link
+                    href="/transparenz"
+                    className="block px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                  >
+                    Transparenzhinweise
+                  </Link>
+                  <Link
+                    href="/agb"
+                    className="block px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                  >
+                    AGB
+                  </Link>
+                  <Link
+                    href="/widerruf"
+                    className="block px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                  >
+                    Widerruf
+                  </Link>
+                  <Link
+                    href="/urheberrecht"
+                    className="block px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                  >
+                    Urheberrecht
+                  </Link>
+                  <Link
+                    href="/barrierefreiheit"
+                    className="block px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                  >
+                    Barrierefreiheit
+                  </Link>
+                </PopoverContent>
+              </Popover>
             </nav>
             <div className="flex items-center gap-2 sm:hidden">
               <button
