@@ -1,8 +1,8 @@
-const MAX_REQUEST_BYTES = 80_000;
-const MAX_PROVIDER_BYTES = 65_536;
+const MAX_REQUEST_BYTES = 120_000;
+const MAX_PROVIDER_BYTES = 262_144;
 const MAX_MESSAGES = 18;
 const MAX_MESSAGE_LENGTH = 6_000;
-const MAX_TOTAL_CHARACTERS = 18_000;
+const MAX_TOTAL_CHARACTERS = 50_000;
 const WINDOW_MS = 60_000;
 const MAX_REQUESTS_PER_WINDOW = 8;
 const MAX_CONCURRENT_REQUESTS = 2;
@@ -14,12 +14,65 @@ class ChatError extends Error {
 }
 
 type ChatMessage = { role: 'user' | 'assistant'; content: string };
+type ToolCall = { name: string; arguments: unknown };
 type Dependencies = {
   apiKey: () => string | undefined;
   fetch?: typeof fetch;
   now?: () => number;
   timeoutMs?: number;
 };
+
+const TOOLS = [
+  {
+    type: 'function' as const,
+    function: {
+      name: 'analyze_writing_style',
+      description: 'Analysiert den Schreibstil eines Textes und gibt Rückmeldung zu Ton, Satzbau und satirischen Elementen.',
+      parameters: {
+        type: 'object',
+        properties: {
+          tone: { type: 'string', description: 'Dominanter Ton des Textes (z. B. satirisch, trocken, warmherzig)' },
+          sentenceStructure: { type: 'string', description: 'Bemerkung zum Satzbau (kurz, lang, verschachtelt)' },
+          satireElements: { type: 'string', description: 'Gefundene satirische Elemente und Übertreibungen' },
+          suggestion: { type: 'string', description: 'Konkreter Vorschlag zur stilistischen Verbesserung' },
+        },
+        required: ['tone', 'sentenceStructure', 'satireElements', 'suggestion'],
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: 'function' as const,
+    function: {
+      name: 'suggest_headline',
+      description: 'Schlägt pointierte, satirische Überschriften für einen Text vor.',
+      parameters: {
+        type: 'object',
+        properties: {
+          headlines: {
+            type: 'array',
+            items: { type: 'string' },
+            minItems: 3,
+            maxItems: 5,
+            description: 'Drei bis fünf Überschriftenvorschläge',
+          },
+        },
+        required: ['headlines'],
+        additionalProperties: false,
+      },
+    },
+  },
+] as const;
+
+const SAFETY_PREFIXES = ['User Safety:', 'Safety:', 'Sicherheit:'];
+
+function stripSafetyMessages(content: string): string {
+  return content
+    .split('\n')
+    .filter(line => !SAFETY_PREFIXES.some(prefix => line.trimStart().startsWith(prefix)))
+    .join('\n')
+    .trim();
+}
 
 function providerEventContent(event: string): { done: boolean; content: string } {
   const data = event.split('\n')
@@ -43,10 +96,16 @@ function providerEventContent(event: string): { done: boolean; content: string }
     || !('content' in first.delta) || typeof first.delta.content !== 'string') {
     return { done: false, content: '' };
   }
-  return { done: false, content: first.delta.content };
+  return { done: false, content: stripSafetyMessages(first.delta.content) };
 }
 
-const SYSTEM_PROMPT = `Du bist die experimentelle Schreib-KI von Paulik & Reisch. Schreibe auf Deutsch mit pointierter, warmherziger Satire: genaue Alltagsbeobachtungen, trockenes Understatement, überraschende Vergleiche und gelegentliche bürokratische Übertreibung. Richte den Witz auf Situationen und Systeme, nicht auf schutzbedürftige Menschen. Passe dich dem Auftrag an, hilf auch beim Überarbeiten und Erklären. Erfinde keine Tatsachen über reale Personen. Übernimm keine längeren Passagen aus dem Buch und behaupte nicht, ein Originaltext zu sein. Wenn ein nüchterner Ton gewünscht wird, folge diesem Wunsch.`;
+const SYSTEM_PROMPT = `Du bist die experimentelle Schreib-KI von Paulik & Reisch. Schreibe auf Deutsch mit pointierter, warmherziger Satire: genaue Alltagsbeobachtungen, trockenes Understatement, überraschende Vergleiche und gelegentliche bürokratische Übertreibung. Richte den Witz auf Situationen und Systeme, nicht auf schutzbedürftige Menschen. Passe dich dem Auftrag an, hilf auch beim Überarbeiten und Erklären. Erfinde keine Tatsachen über reale Personen. Übernimm keine längeren Passagen aus dem Buch und behaupte nicht, ein Originaltext zu sein. Wenn ein nüchterner Ton gewünscht wird, folge diesem Wunsch.
+
+Du hast Zugriff auf folgende Werkzeuge, die du bei Bedarf einsetzen sollst:
+- analyze_writing_style: Analysiere den Schreibstil eines Textes (Ton, Satzbau, satirische Elemente) und gib eine stilistische Rückmeldung.
+- suggest_headline: Schlage pointierte, satirische Überschriften für einen Text vor.
+
+Nutze die Werkzeuge, wenn der Nutzer um eine Stilanalyse oder Überschriftenvorschläge bittet. Antworte ansonsten direkt im Chat.`;
 
 async function readBoundedBody(body: ReadableStream<Uint8Array> | null, limit: number) {
   if (!body) return '';
@@ -169,6 +228,8 @@ export function createChatHandler(dependencies: Dependencies) {
             temperature: 0.82,
             reasoning: { effort: 'low' },
             stream: true,
+            tools: TOOLS,
+            tool_choice: 'auto',
             messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
           }),
           signal: controller.signal,
@@ -206,7 +267,7 @@ export function createChatHandler(dependencies: Dependencies) {
                 const result = providerEventContent(event);
                 if (result.content) {
                   totalCharacters += result.content.length;
-                  if (totalCharacters > 12_000) throw new ChatError(503, 'Die Antwort der Schreibstube ist zu lang.');
+                  if (totalCharacters > 40_000) throw new ChatError(503, 'Die Antwort der Schreibstube ist zu lang.');
                   fullMessage += result.content;
                   sendEvent('', { content: result.content });
                 }

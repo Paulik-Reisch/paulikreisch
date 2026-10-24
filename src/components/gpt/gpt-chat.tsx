@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
 import Link from 'next/link';
 import { ArrowUp, BookOpenText, Check, Copy, Menu, MessageSquarePlus, PenLine, RotateCcw, Sparkles, Trash2, X } from 'lucide-react';
 import { Logo } from '@/components/ui/logo';
@@ -13,7 +13,6 @@ type Conversation = { id: string; title: string; messages: Message[]; updatedAt:
 const STORAGE_KEY = 'paulik-reisch-gpt-conversations';
 const MAX_STORED_CONVERSATIONS = 12;
 const MAX_STORED_MESSAGES = 40;
-const DISSOLVE_TEXT = 'FADE\u00a0AWAY';
 const starters = [
   { label: 'Schule & Alltag', prompt: 'Schreib eine kurze satirische Szene über einen Elternabend, der eigentlich eine Fortbildung für Stühle ist.' },
   { label: 'Text überarbeiten', prompt: 'Mach diesen Absatz pointierter und trockener, ohne dass er seine Herzlichkeit verliert: ' },
@@ -47,7 +46,9 @@ function shortDate(timestamp: number) {
   return new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: '2-digit' }).format(timestamp);
 }
 
-async function getAssistantReply(messages: Message[], signal: AbortSignal, onChunk: (chunk: string) => void) {
+type ToolCall = { name: string; arguments: unknown };
+
+async function getAssistantReply(messages: Message[], signal: AbortSignal, onChunk: (chunk: string) => void): Promise<string> {
   const recentMessages = messages.slice(-18);
   if (recentMessages[0]?.role === 'assistant') recentMessages.shift();
   const response = await fetch('/api/gpt/chat', {
@@ -82,6 +83,7 @@ async function getAssistantReply(messages: Message[], signal: AbortSignal, onChu
   const decoder = new TextDecoder();
   let buffer = '';
   let reply = '';
+  let pendingToolCalls: Record<number, { name: string; args: string }> = {};
   const processEvent = (event: string) => {
     const lines = event.split('\n');
     const eventName = lines.find(line => line.startsWith('event:'))?.slice(6).trim();
@@ -103,6 +105,15 @@ async function getAssistantReply(messages: Message[], signal: AbortSignal, onChu
       reply += payload.content;
       onChunk(payload.content);
     }
+    if (payload && typeof payload === 'object' && 'tool_calls' in payload && Array.isArray(payload.tool_calls)) {
+      for (const call of payload.tool_calls) {
+        if (!call || typeof call !== 'object') continue;
+        const index = typeof call.index === 'number' ? call.index : 0;
+        if (!pendingToolCalls[index]) pendingToolCalls[index] = { name: '', args: '' };
+        if (call.function?.name) pendingToolCalls[index].name = call.function.name;
+        if (call.function?.arguments) pendingToolCalls[index].args += call.function.arguments;
+      }
+    }
   };
 
   try {
@@ -122,18 +133,36 @@ async function getAssistantReply(messages: Message[], signal: AbortSignal, onChu
   } finally {
     reader.releaseLock();
   }
+
+  if (Object.keys(pendingToolCalls).length > 0) {
+    const toolResults: Message[] = [];
+    for (const [index, call] of Object.entries(pendingToolCalls)) {
+      try {
+        const toolResponse = await fetch('/api/gpt/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages: [...recentMessages, { role: 'assistant', content: '' }, { role: 'tool', content: JSON.stringify({ result: 'Tool ausgeführt' }), tool_call_id: index }],
+          }),
+          signal,
+        });
+        if (toolResponse.ok) {
+          const result = await toolResponse.json();
+          if (result && typeof result === 'object' && 'message' in result && typeof result.message === 'string') {
+            toolResults.push({ role: 'assistant', content: result.message });
+          }
+        }
+      } catch {
+        // Tool call failed, continue without it
+      }
+    }
+    if (toolResults.length > 0) {
+      return await getAssistantReply([...recentMessages, ...toolResults], signal, onChunk);
+    }
+  }
+
   if (!reply.trim()) throw new Error('Die Schreibstube hat keine Antwort geliefert. Bitte versuche es erneut.');
   return reply.trim();
-}
-
-function DissolveText({ text, label }: { text: string; label: string }) {
-  return (
-    <div className="fx-fade" role="img" aria-label={label}>
-      {Array.from(text).map((character, index) => (
-        <b aria-hidden="true" style={{ '--i': index } as CSSProperties} key={`${index}-${character}`}>{character}</b>
-      ))}
-    </div>
-  );
 }
 
 export function GptChat() {
@@ -362,7 +391,7 @@ export function GptChat() {
           <div className={styles.topbarLeft}>
             <button className={styles.mobileMenu} type="button" aria-label="Chatverlauf öffnen" onClick={() => setSidebarOpen(true)}><Menu size={19} /></button>
             <div className={styles.mobileBrand}><Logo className={styles.mobileLogo} /><span>Schreibstube</span></div>
-            <div className={styles.modelPicker}><span className={styles.statusDot} /> Schreib-KI</div>
+            <div className={styles.modelPicker}><span className={styles.statusDot} /></div>
           </div>
           <div className={styles.topbarRight}><Link href="/">Paulik &amp; Reisch ↗</Link></div>
         </header>
@@ -410,8 +439,19 @@ export function GptChat() {
                     </article>
                   );
                 })}
-                {loading && messages.at(-1)?.role !== 'assistant' && <div className={styles.loadingMessage} role="status"><span className={styles.messageMark}><Sparkles size={16} /></span><DissolveText text={DISSOLVE_TEXT} label={DISSOLVE_TEXT} /><span>Die Pointe wird gesucht …</span></div>}
-                {error && <div className={styles.errorMessage} role="alert"><span>{error}</span><button type="button" onClick={() => void retryResponse()} disabled={loading}><RotateCcw size={13} /> Erneut versuchen</button></div>}
+                {loading && messages.at(-1)?.role !== 'assistant' && <div className={styles.loadingMessage} role="status"><span className={styles.messageMark}><Sparkles size={16} /></span><span>Die Pointe wird gesucht …</span></div>}
+                {error && (
+                  <div className={styles.errorMessage} role="alert">
+                    <span>{error}</span>
+                    <button type="button" onClick={() => void retryResponse()} disabled={loading} aria-label="Antwort erneut versuchen">
+                      {loading ? <RotateCcw size={13} className={styles.sendSpinner} /> : <RotateCcw size={13} />}
+                      Erneut versuchen
+                    </button>
+                    <button type="button" onClick={() => { startNewChat(); setError(''); }} aria-label="Neuen Chat starten">
+                      Neuer Chat
+                    </button>
+                  </div>
+                )}
               </div>
             )}
             <div ref={bottomRef} />

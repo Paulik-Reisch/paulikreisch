@@ -1,3 +1,4 @@
+/* Hallmark · shop page adapted to index design system */
 .shop-page-shell {
   min-height: 100vh;
   background: var(--color-paper);
@@ -7,7 +8,7 @@
 
 .shop-page-shell :is(a, button):focus-visible {
   outline: 3px solid var(--color-focus);
-  outline-offset: 4px;
+  outline-offset: 5px;
 }
 
 .shop-page-main {
@@ -15,7 +16,7 @@
 }
 
 .shop-page-main section {
-  padding-block: clamp(4.5rem, 9vw, 8rem);
+  padding-block: var(--space-section);
 }
 
 .shop-page-main .container {
@@ -46,6 +47,9 @@
 
 .shop-page-main p {
   max-width: 65ch;
+  color: var(--color-muted);
+  font-family: var(--font-copy), Georgia, serif;
+  line-height: 1.65;
 }
 
 .shop-page-main .shop-hero {
@@ -82,10 +86,7 @@
 .shop-page-main .subtitle {
   max-width: 45ch;
   margin: 1.4rem 0 0;
-  color: var(--color-muted);
-  font-family: var(--font-copy), Georgia, serif;
   font-size: clamp(1.1rem, 1.7vw, 1.35rem);
-  line-height: 1.65;
 }
 
 .shop-page-main .book-grid {
