@@ -1,6 +1,5 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import * as pdfParse from 'pdf-parse';
 
 const PDF_PATHS = [
   path.resolve(process.cwd(), '..', '..', 'Documents', 'Redaktionelle Arbeiten', 'Bücher', 'Hallo Welt', 'Hallo Welt 1', 'Hallo Welt 1.pdf'),
@@ -29,10 +28,16 @@ function tokenize(text: string): string[] {
 }
 
 async function extractPdfText(filePath: string): Promise<string> {
-  const buffer = fs.readFileSync(filePath);
-  const parser = new pdfParse.PDFParse(buffer);
-  const text = await parser.getText();
-  return typeof text === 'string' ? text : String(text);
+  // PDF.js loads native graphics bindings at import time. Only load it when
+  // a local reference PDF exists, inside initializeRag's error boundary.
+  const { PDFParse } = await import('pdf-parse');
+  const parser = new PDFParse({ data: new Uint8Array(fs.readFileSync(filePath)) });
+  try {
+    const result = await parser.getText();
+    return result.text;
+  } finally {
+    await parser.destroy();
+  }
 }
 
 function chunkText(text: string, source: string, maxChars = 1_200): RagChunk[] {
