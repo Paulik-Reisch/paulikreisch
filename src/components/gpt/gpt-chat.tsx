@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type
 import Link from 'next/link';
 import { ArrowUp, BookOpenText, Check, Copy, Menu, MessageSquarePlus, PenLine, RotateCcw, Sparkles, Trash2, X } from 'lucide-react';
 import { Logo } from '@/components/ui/logo';
-import { renderGptMarkdown } from '@/lib/gpt-markdown';
+import { BlurMarkdown } from './blur-markdown';
 import styles from './gpt-chat.module.css';
 
 type Message = { role: 'user' | 'assistant'; content: string };
@@ -427,7 +427,7 @@ export function GptChat() {
                       <div className={styles.messageBody}>
                         <div className={styles.messageLabel}>{isAssistant ? 'Schreibstube' : 'Du'} <span>{isAssistant ? '· Entwurf' : ''}</span></div>
                         {isAssistant ? (
-                          <div className={styles.markdown} dangerouslySetInnerHTML={{ __html: renderGptMarkdown(message.content) }} />
+                          <BlurMarkdown content={message.content} streaming={loading && index === messages.length - 1} />
                         ) : (
                           <p>{message.content}</p>
                         )}
