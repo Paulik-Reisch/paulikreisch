@@ -4,9 +4,6 @@ import { z } from "zod";
 import {
   getAdminCredentials,
   addLog,
-  addArticle,
-  updateArticle,
-  deleteArticle,
 } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
@@ -56,8 +53,8 @@ export async function loginAction(
     (await cookies()).set("session", session, { expires, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', path: '/' });
 
     await addLog(username, 'Login erfolgreich', `Benutzer '${username}' hat sich angemeldet.`);
-    revalidatePath("/admin");
-    redirect('/admin');
+    revalidatePath("/admin/authors");
+    redirect('/admin/authors');
 }
 
 export async function logoutAction() {
@@ -66,113 +63,4 @@ export async function logoutAction() {
     (await cookies()).set("session", "", { expires: new Date(0), path: '/' });
     await addLog(user, 'Logout', `Benutzer '${user}' hat sich abgemeldet.`);
     redirect('/login');
-}
-
-// --- Article Actions ---
-
-export type ArticleActionState = {
-  success: boolean;
-  error?: string | null;
-  message?: string;
-  newSlug?: string;
-};
-
-const ArticleSchema = z.object({
-  title: z.string().min(1, "Titel ist erforderlich."),
-  slug: z.string().min(1, "Slug ist erforderlich."),
-  category: z.string().min(1, "Kategorie ist erforderlich."),
-  imageUrl: z.string().url("Gültige Bild-URL ist erforderlich."),
-  imageAlt: z.string().min(1, "Bild-Alt-Text ist erforderlich."),
-  teaser: z.string().min(1, "Teaser-Text ist erforderlich."),
-  content: z.string().min(1, "Inhalt ist erforderlich."),
-  readTime: z.coerce.number().min(1, "Lesezeit muss mindestens 1 sein."),
-  accessLevel: z.enum(['free', 'leadwall', 'sharewall']),
-  author: z.enum(['redaktion', 'gastbeitrag']).optional(),
-  authorSlug: z.string().optional(),
-  status: z.enum(['draft', 'published']).optional(),
-});
-
-export async function createArticleAction(prevState: ArticleActionState, formData: FormData): Promise<ArticleActionState> {
-    const session = await getSession();
-    if (!session) return { success: false, error: "Nicht authentifiziert" };
-
-    const validatedFields = ArticleSchema.safeParse({
-        ...Object.fromEntries(formData.entries()),
-    });
-
-    if (!validatedFields.success) {
-        return { success: false, error: validatedFields.error.flatten().fieldErrors.title?.join(', ') || "Validierungsfehler" };
-    }
-    
-    try {
-        const articleData = { ...validatedFields.data };
-        if (articleData.authorSlug === 'none') {
-            articleData.authorSlug = undefined;
-        }
-        const newSlug = await addArticle(articleData, session.user.id);
-        revalidatePath("/admin");
-        revalidatePath("/a", "layout");
-        return { success: true, message: "Artikel erfolgreich erstellt.", newSlug };
-    } catch(e: any) {
-        return { success: false, error: e.message };
-    }
-}
-
-export async function updateArticleAction(prevState: ArticleActionState, formData: FormData): Promise<ArticleActionState> {
-    const session = await getSession();
-    if (!session) return { success: false, error: "Nicht authentifiziert" };
-    
-    const originalSlug = formData.get('originalSlug') as string;
-    if (!originalSlug) return { success: false, error: "Original-Slug fehlt." };
-
-    const validatedFields = ArticleSchema.safeParse({
-        ...Object.fromEntries(formData.entries()),
-    });
-
-    if (!validatedFields.success) {
-        return { success: false, error: "Validierungsfehler" };
-    }
-    
-    try {
-        const dataToUpdate = { ...validatedFields.data };
-        if (!dataToUpdate.status) {
-            dataToUpdate.status = 'draft';
-        }
-        if (dataToUpdate.authorSlug === "" || dataToUpdate.authorSlug === "none") {
-            (dataToUpdate as any).authorSlug = null;
-        }
-
-
-        await updateArticle(originalSlug, dataToUpdate, session.user.id);
-        revalidatePath("/admin");
-        revalidatePath(`/a/${originalSlug}`);
-        if(originalSlug !== validatedFields.data.slug) {
-            revalidatePath(`/a/${validatedFields.data.slug}`);
-        }
-        revalidatePath('/a'); // Revalidate the overview page
-        revalidatePath('/autoren'); // Revalidate authors index
-        if (dataToUpdate.authorSlug) {
-            revalidatePath(`/autoren/${dataToUpdate.authorSlug}`);
-        }
-        return { success: true, message: "Artikel erfolgreich aktualisiert.", newSlug: validatedFields.data.slug };
-    } catch(e: any) {
-        return { success: false, error: e.message };
-    }
-}
-
-export async function deleteArticleAction(prevState: any, formData: FormData): Promise<{ success: boolean; error: string | null }> {
-    const session = await getSession();
-    if (!session) return { success: false, error: "Nicht authentifiziert" };
-
-    const slug = formData.get('slug') as string;
-    if (!slug) return { success: false, error: "Slug fehlt."};
-
-    try {
-        await deleteArticle(slug, session.user.id);
-        revalidatePath("/admin");
-        revalidatePath("/a", "layout");
-        return { success: true, error: null };
-    } catch (e: any) {
-        return { success: false, error: e.message };
-    }
 }

@@ -12,13 +12,38 @@ for (const width of [320, 375, 414, 768, 1440]) {
     await page.goto('/');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     await expect(page.getByRole('link', { name: '„Hallo Welt“ entdecken' })).toHaveAttribute('href', '/shop');
-    await expect(page.getByRole('link', { name: /Zum Satire-Magazin/ })).toHaveAttribute('href', '/a');
     await expect(page.getByRole('link', { name: 'Worthaft spielen' })).toHaveAttribute('href', '/worthaft');
+    await expect(page.locator('a[href="/a"], a[href^="/a/"], a[href="/artikel"], a[href^="/artikel/"]')).toHaveCount(0);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     await page.getByText('Was ist „Hallo Welt“?', { exact: true }).click();
     await expect(page.locator('details[open]')).toBeVisible();
   });
 }
+
+test('former satire magazine routes are no longer available', async ({ page }) => {
+  for (const path of ['/a', '/a/bis-dass-der-bagger-uns-scheidet', '/artikel', '/artikel/bis-dass-der-bagger-uns-scheidet']) {
+    const response = await page.goto(path);
+    expect(response?.status()).toBe(404);
+  }
+});
+
+test('404 page uses clear and neutral copy with landing page button styling', async ({ page }) => {
+  const response = await page.goto('/not-found-design-check');
+  expect(response?.status()).toBe(404);
+
+  await expect(page.getByText('Seite nicht gefunden', { exact: true })).toBeVisible();
+  await expect(page.getByText('ERROR', { exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Hoppla. Diese Seite existiert nicht.' })).toBeVisible();
+  await expect(page.getByText('Die Adresse ist möglicherweise falsch oder die Seite wurde verschoben. Über die Startseite findest du schnell zurück.')).toBeVisible();
+  await expect(page.getByText('Nicht verfügbar', { exact: true })).toBeVisible();
+  await expect(page.getByText('Hier endet die Spur')).toHaveCount(0);
+
+  const homeLink = page.getByRole('link', { name: 'Zur Startseite' });
+  await expect(homeLink).toHaveAttribute('href', '/');
+  expect(await homeLink.evaluate(element => getComputedStyle(element).borderRadius)).toBe('10px');
+  expect(await homeLink.evaluate(element => getComputedStyle(element).gap)).toBe('8px');
+  await expect(page.getByRole('button', { name: 'Zurück' })).toBeVisible();
+});
 
 test('mobile navigation opens and closes with Escape', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
@@ -27,6 +52,20 @@ test('mobile navigation opens and closes with Escape', async ({ page }) => {
   await expect(page.getByRole('dialog', { name: 'Navigation' })).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog', { name: 'Navigation' })).toBeHidden();
+});
+
+test('Worthaft and Schreibstube navigation links are swapped in desktop and mobile menus', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/');
+  await expect(page.locator('header nav a').nth(0)).toHaveAttribute('href', '/worthaft');
+  await expect(page.locator('header nav a').nth(1)).toHaveAttribute('href', '/shop');
+  await expect(page.locator('header nav a').nth(2)).toHaveAttribute('href', '/gpt');
+
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.getByRole('button', { name: 'Menü öffnen' }).click();
+  const mobileNav = page.getByRole('dialog', { name: 'Navigation' }).locator('nav a');
+  await expect(mobileNav.nth(0)).toHaveAttribute('href', '/gpt');
+  await expect(mobileNav.nth(1)).toHaveAttribute('href', '/worthaft');
 });
 
 test('footer exposes the guide, newsletter and legal links', async ({ page }) => {

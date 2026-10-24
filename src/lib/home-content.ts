@@ -12,7 +12,6 @@ export const homeFaqs = [
   { question: 'Für wen ist das Buch gedacht?', answer: 'Für alle, die den Schulwahnsinn kennen: Schüler, ehemalige Schüler und Lehrkräfte mit Humor. Das Buch erzählt mit Ironie und schwarzem Humor; es ist Satire, kein Schulratgeber.' },
   { question: 'Wo kann ich das Buch kaufen und reinlesen?', answer: 'Im Buchshop findest du die Leseprobe, Informationen zum Buch und die Links zu den verfügbaren Ausgaben. Der Kauf erfolgt bei den dort verlinkten Anbietern.' },
   { question: 'Was ist Worthaft?', answer: 'Worthaft ist unser deutsches Worträtsel: fünf Buchstaben, sechs Versuche und jeden Tag ein neues Wort. Dein Spielstand und deine Statistik bleiben lokal in deinem Browser.' },
-  { question: 'Sind die Texte im Magazin echte Nachrichten?', answer: 'Nein. Das Magazin veröffentlicht Satire zur Unterhaltung. Die Texte über Schule, Sprache und Alltag sind keine Nachrichten und können bewusst von der Wirklichkeit abweichen.' },
 ] as const;
 
 export const homePeople = [

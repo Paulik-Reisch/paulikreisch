@@ -14,18 +14,12 @@ export default async function SeoEditorPage({ params }: { params: Promise<{ slug
   // We fetch metadata. If it's null, the editor will show empty fields.
   const metadata = await getSeoMetadata(slug);
 
-  const getPagePath = () => {
-    if (slug.startsWith('a-')) return `/a/${slug.replace('a-', '')}`;
-    if (slug.startsWith('lp-')) return `/lp/${slug.replace('lp-', '')}`;
-    if (slug === 'home') return '/';
-    if (slug === 'artikel') return '/a';
-    return `/${slug}`;
-  }
+  const pagePath = slug.startsWith('lp-') ? `/lp/${slug.replace('lp-', '')}` : slug === 'home' ? '/' : `/${slug}`;
 
   return (
     <div>
         <h1 className="text-3xl font-bold font-headline mb-1">SEO-Editor</h1>
-        <p className="text-muted-foreground mb-6">Optimieren Sie die Metadaten für die Seite: <code className="bg-muted px-2 py-1 rounded-md text-sm">{getPagePath()}</code></p>
+        <p className="text-muted-foreground mb-6">Optimieren Sie die Metadaten für die Seite: <code className="bg-muted px-2 py-1 rounded-md text-sm">{pagePath}</code></p>
         <SeoEditorClient slug={slug} metadata={metadata} />
     </div>
   );

@@ -141,12 +141,14 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
   };
 
   const { width: widthPx, height: heightPx } = getWorthaftKeyDimensions(settings.keyWidth, settings.keyHeight);
+  const defaultKeyWidth = getWorthaftKeyDimensions(2, settings.keyHeight).width;
+  const keyboardWidth = Math.max(boardWidth, Math.round(boardWidth * widthPx / defaultKeyWidth));
   const fontPx = 12 + (settings.keySize / 4) * 10;
   const radiusPx = (settings.keyRadius / 4) * 24;
   const keyGap = 4;
 
   const keyStyle = (rowLength: number, widthMultiplier = 1): React.CSSProperties => {
-    const slotWidth = (boardWidth - (rowLength - 1) * keyGap) / rowLength;
+    const slotWidth = (keyboardWidth - (rowLength - 1) * keyGap) / rowLength;
     return {
       width: `${Math.min(widthPx * widthMultiplier, Math.max(slotWidth, 18))}px`,
       minWidth: 0,
@@ -162,7 +164,11 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
   const lastRowLength = 7 + (settings.hotTipEnabled && !hotTipUsed ? 1 : 0);
 
   return (
-    <div data-testid="worthaft-keyboard" className="w-full flex flex-col items-center gap-1.5 mt-3" style={{ maxWidth: `${boardWidth}px` }}>
+    <div
+      data-testid="worthaft-keyboard"
+      className="relative left-1/2 flex flex-col items-center gap-1.5 mt-3 -translate-x-1/2"
+      style={{ width: `min(calc(100vw - 2rem), ${keyboardWidth}px)` }}
+    >
       {letterRows.map((row, i) => (
         <div key={i} className="flex flex-row justify-between gap-1 w-full">
           {row.map(key => {
@@ -258,7 +264,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
   const winningRowIndex = gameState === 'won' ? guesses.length - 1 : -1;
 
   return (
-    <div data-testid="worthaft-grid" className="grid grid-rows-6 gap-1.5 mx-auto" style={{ width: `min(100%, ${tileDimensions.width * 5 + 24}px)` }}>
+    <div data-testid="worthaft-grid" className="grid grid-rows-6 gap-1.5 w-full">
       {rows.map((_, rowIndex) => {
         const guessInfo = guesses[rowIndex];
         const isWonRow = rowIndex === winningRowIndex;
@@ -1452,6 +1458,8 @@ Jetzt spielen:`;
         keywords: 'Wordle, Wortspiel, Rätsel, Deutsch, Worthaft'
     };
 
+    const boardWidth = Math.round(getWorthaftTileDimensions(settings.tileWidth, settings.tileHeight).width * 5 + 24);
+
     return (
         <div className="flex flex-col min-h-screen bg-background text-foreground">
              <script
@@ -1461,7 +1469,7 @@ Jetzt spielen:`;
             <Header />
             <main className="flex-1 py-2 md:py-3">
                 <div className="w-full max-w-sm mx-auto px-4 sm:px-0 flex flex-col items-center justify-start">
-                    <div className="w-full">
+                    <div className="w-full mx-auto" style={{ maxWidth: `${boardWidth}px` }}>
                         <Grid
                             guesses={guesses}
                             currentGuess={currentGuess}
@@ -1484,7 +1492,7 @@ Jetzt spielen:`;
                             hotTipUsed={hotTipUsed}
                             gameState={gameState}
                             settings={settings}
-                            boardWidth={Math.round((getWorthaftTileDimensions(settings.tileWidth, settings.tileHeight).width * 5) + 24)}
+                            boardWidth={boardWidth}
                         />
                     </div>
                     {/* Sonnenschein-Halbkreis-Glow hinter der Tastatur (laufende Motion) */}

@@ -4,14 +4,10 @@ export const FUNNEL = {
   storageKeys: {
     wallUnlocked: 'pr_funnel_unlocked',
     wallDismissed: 'pr_funnel_dismissed',
-    exitPopupDismissed: 'pr_exit_popup_dismissed',
     checklistDownloaded: 'pr_checklist_downloaded',
   },
   // 7 days snooze for dismissals
   snoozeDays: 7,
-  // LeadWall shows after 60% scroll OR 45s
-  scrollTriggerPercent: 60,
-  timeTriggerMs: 45000,
   // Analytics event names
   events: {
     wallView: 'funnel_wall_view',
@@ -19,9 +15,6 @@ export const FUNNEL = {
     wallDismiss: 'funnel_wall_dismiss',
     bookClick: 'funnel_book_click',
     checklistDownload: 'funnel_checklist_download',
-    exitPopupView: 'funnel_exit_popup_view',
-    exitPopupConvert: 'funnel_exit_popup_convert',
-    exitPopupDismiss: 'funnel_exit_popup_dismiss',
   },
 } as const;
 

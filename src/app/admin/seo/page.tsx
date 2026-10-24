@@ -1,4 +1,4 @@
-import { getArticles, getLandingPages, getLegalPages, type SeoMetadata, getAllSeoMetadata } from "@/lib/firestore";
+import { getLandingPages, getLegalPages, type SeoMetadata, getAllSeoMetadata } from "@/lib/firestore";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,8 +13,7 @@ const createMetadataMap = (metadata: SeoMetadata[]) => {
 };
 
 export default async function SeoAdminPage() {
-    const [articles, landingPages, legalPages, allSeoData] = await Promise.all([
-        getArticles(),
+    const [landingPages, legalPages, allSeoData] = await Promise.all([
         getLandingPages(),
         getLegalPages(),
         getAllSeoMetadata()
@@ -24,7 +23,6 @@ export default async function SeoAdminPage() {
 
     const staticPages = [
         { href: '/', title: 'Homepage', slug: 'home' },
-        { href: '/a', title: 'Artikel Übersicht', slug: 'artikel' },
         { href: '/shop', title: 'Shop', slug: 'shop' },
         { href: '/lp2', title: 'LP2 - Countdown', slug: 'lp2' },
         { href: '/lp3', title: 'LP3 - Buch Live', slug: 'lp3' },
@@ -40,8 +38,7 @@ export default async function SeoAdminPage() {
         const hasTitle = !!meta?.title;
         const hasDesc = !!meta?.metaDescription;
         const getPath = () => {
-            if (item.pathPrefix) return `${item.pathPrefix}${item.slug.replace(/^a-|^lp-/, '')}`;
-            if (item.slug === 'artikel') return '/a';
+            if (item.pathPrefix) return `${item.pathPrefix}${item.slug.replace(/^lp-/, '')}`;
             if (item.slug === 'home') return '/';
             return `/${item.slug}`;
         }
@@ -70,29 +67,6 @@ export default async function SeoAdminPage() {
             </header>
 
             <div className="grid grid-cols-1 gap-8">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Artikel</CardTitle>
-                        <CardDescription>SEO-Einstellungen für Ihre satirischen Meisterwerke.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Titel</TableHead>
-                                    <TableHead>Pfad</TableHead>
-                                    <TableHead>SEO-Titel</TableHead>
-                                    <TableHead>SEO-Beschreibung</TableHead>
-                                    <TableHead className="text-right">Aktion</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {articles.map(article => renderTableRow({slug: `a-${article.slug}`, title: article.title, pathPrefix: '/a/'}))}
-                            </TableBody>
-                        </Table>
-                    </CardContent>
-                </Card>
-
                 <Card>
                     <CardHeader>
                         <CardTitle>Landing Pages (LPM)</CardTitle>

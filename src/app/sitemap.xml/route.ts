@@ -1,4 +1,4 @@
-import { getLegalPages, getArticles } from '@/lib/firestore';
+import { getLegalPages } from '@/lib/firestore';
 import { guidePaths } from '@/lib/ratgeber/registry';
 
 export const dynamic = 'force-dynamic';
@@ -19,14 +19,10 @@ function toW3C(date: Date): string | undefined {
 export async function GET() {
   const baseUrl = 'https://paulikreisch.de';
 
-  const [legalPages, articles] = await Promise.all([
-    getLegalPages().catch(() => []),
-    getArticles().catch(() => []),
-  ]);
+  const legalPages = await getLegalPages().catch(() => []);
 
   const staticPages: Array<{ path: string; priority: number; changefreq: string; lastmod?: string }> = [
     { path: '/', priority: 1.0, changefreq: 'weekly' },
-    { path: '/a', priority: 0.9, changefreq: 'weekly' },
     { path: '/shop', priority: 0.9, changefreq: 'weekly' },
     { path: '/ueber/autoren', priority: 0.7, changefreq: 'monthly' },
     { path: '/ueber/philipp-paulik', priority: 0.6, changefreq: 'monthly' },
@@ -78,15 +74,6 @@ export async function GET() {
       lastmod: toW3C(new Date(page.lastUpdated)),
       changefreq: 'monthly',
       priority: 0.5,
-    });
-  }
-
-  for (const art of articles as Array<{ slug: string; publishedDate: string | Date }>) {
-    urls.push({
-      loc: `${baseUrl}/a/${escapeXml(art.slug)}`,
-      lastmod: toW3C(new Date(art.publishedDate)),
-      changefreq: 'weekly',
-      priority: 0.8,
     });
   }
 

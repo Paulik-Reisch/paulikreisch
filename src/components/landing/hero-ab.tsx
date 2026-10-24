@@ -270,9 +270,6 @@ export function HeroAb({ product }: { product?: Product }) {
               </span>
             </p>
             <p className="hero-deeplink mt-[14px] text-[0.95rem] opacity-0 translate-y-[18px] transition-[opacity,transform] duration-[600ms] delay-[360ms]">
-              <Link href="/a" className="textlink font-semibold underline decoration-1 underline-offset-[3px]" style={{ color: isDark ? "#f3e2c8" : "#9c2d22" }}>
-                → Satire-Magazin entdecken
-              </Link>
               <span className="mx-2 opacity-40">·</span>
               <Link href="/shop" className="textlink font-semibold underline decoration-1 underline-offset-[3px]" style={{ color: isDark ? "#f3e2c8" : "#9c2d22" }}>
                 Zum Shop

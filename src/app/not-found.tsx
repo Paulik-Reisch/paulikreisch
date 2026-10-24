@@ -3,36 +3,82 @@
 import Link from 'next/link';
 import { Header } from '@/components/landing/header';
 import { Footer } from '@/components/landing/footer';
-import { Button } from '@/components/ui/button';
 import { ArrowLeft, Home } from 'lucide-react';
 
 export default function NotFound() {
   return (
-    <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
+    <div className="flex min-h-[100dvh] flex-col bg-[#fffaf0] text-[#1d1a15]">
       <Header />
-      <main className="flex-1 flex items-center justify-center px-4 py-16">
-        <div className="w-full max-w-md text-center">
-          <p className="font-headline text-7xl font-bold tracking-tighter text-primary">404</p>
-          <h1 className="mt-4 text-2xl font-bold font-headline tracking-tight">
-            Seite nicht gefunden
-          </h1>
-          <p className="mt-3 text-muted-foreground">
-            Die angeforderte Seite existiert nicht oder wurde verschoben.
-            Vielleicht findest du, was du suchst, auf der Startseite.
-          </p>
-          <div className="mt-8 flex items-center justify-center gap-3">
-            <Button asChild variant="default">
-              <Link href="/">
-                <Home className="h-4 w-4" />
+      <main className="flex flex-1 items-center justify-center px-4 py-16">
+        <div className="grid w-full max-w-5xl items-center gap-10 rounded-[24px] border-2 border-[#e8ddd0] bg-white p-6 shadow-[0_6px_0_#e8ddd0] sm:p-10 md:grid-cols-[1fr_0.9fr] md:gap-10 lg:gap-14 lg:p-14">
+          <div className="text-center md:text-left">
+            <p className="inline-flex items-center gap-2 rounded-full border border-[#d8e4ff] bg-[#f1f5ff] px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-[#174bc2]">
+              <span aria-hidden="true" className="h-2 w-2 rounded-full bg-[#2268ff]" />
+              Seite nicht gefunden
+            </p>
+            <h1 className="mt-5 font-headline text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
+              Hoppla. Diese Seite existiert nicht.
+            </h1>
+            <p className="mx-auto mt-4 max-w-md text-[#6d6459] md:mx-0">
+              Die Adresse ist möglicherweise falsch oder die Seite wurde
+              verschoben. Über die Startseite findest du schnell zurück.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3 md:justify-start">
+              <Link
+                href="/"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-5 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#ffeb7a] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-px active:shadow-[0_1px_0_#1d1a15] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2268ff] focus-visible:ring-offset-2"
+              >
+                <Home aria-hidden="true" className="h-4 w-4 shrink-0" />
                 Zur Startseite
               </Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="javascript:history.back()">
-                <ArrowLeft className="h-4 w-4" />
+              <button
+                type="button"
+                onClick={() => window.history.back()}
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-[10px] border-2 border-[#1d1a15] bg-white px-5 text-[0.9rem] font-semibold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#f7f2e7] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-px active:shadow-[0_1px_0_#1d1a15] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2268ff] focus-visible:ring-offset-2"
+              >
+                <ArrowLeft aria-hidden="true" className="h-4 w-4 shrink-0" />
                 Zurück
-              </Link>
-            </Button>
+              </button>
+            </div>
+          </div>
+
+          <div
+            aria-hidden="true"
+            className="relative mx-auto aspect-[4/3] w-full max-w-[440px] overflow-hidden rounded-[20px] border-2 border-dashed border-[#d9cdbb] bg-[#f7f2e7]"
+          >
+            <div className="absolute inset-5 rounded-[14px] border border-[#e8ddd0] bg-[linear-gradient(to_bottom,transparent_31px,#e8ddd0_32px)] bg-[length:100%_32px]" />
+            <svg
+              viewBox="0 0 440 330"
+              fill="none"
+              className="absolute inset-0 h-full w-full"
+            >
+              <path
+                d="M28 261C79 260 66 188 124 207S168 275 221 238 265 116 315 143 357 207 405 70"
+                stroke="#2268ff"
+                strokeDasharray="7 9"
+                strokeLinecap="round"
+                strokeWidth="4"
+              />
+              <path
+                d="m394 78 13-12 3 18"
+                stroke="#2268ff"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="4"
+              />
+              <circle cx="28" cy="261" r="8" fill="#ffe14d" stroke="#1d1a15" strokeWidth="3" />
+            </svg>
+            <div className="absolute left-1/2 top-[46%] flex h-[112px] w-[220px] -translate-x-1/2 -translate-y-1/2 rotate-[-7deg] items-center justify-center rounded-[18px] border-[3px] border-[#1d1a15] bg-[#ffe14d] shadow-[0_7px_0_#1d1a15] sm:h-[132px] sm:w-[260px]">
+              <span className="font-headline text-[5.5rem] font-black leading-none tracking-[-0.08em] text-[#1d1a15] sm:text-[6.5rem]">
+                404
+              </span>
+            </div>
+            <div className="absolute bottom-5 right-4 rotate-[5deg] rounded-[8px] border-2 border-[#174bc2] bg-[#2268ff] px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-white shadow-[0_3px_0_#174bc2] sm:bottom-7 sm:right-7">
+              Nicht verfügbar
+            </div>
+            <div className="absolute left-4 top-4 rounded-full border border-[#e8ddd0] bg-white/90 px-3 py-1 text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[#6d6459] sm:left-6 sm:top-6">
+              ERROR
+            </div>
           </div>
         </div>
       </main>

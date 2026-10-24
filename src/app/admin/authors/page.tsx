@@ -22,7 +22,7 @@ export default async function AuthorsAdminPage() {
             <header className="flex justify-between items-center">
                 <div>
                     <h1 className="text-3xl font-bold font-headline">Autorenverwaltung</h1>
-                    <p className="text-muted-foreground">Verwalten Sie hier die Autorenprofile Ihres Magazins.</p>
+                    <p className="text-muted-foreground">Verwalten Sie hier die Autorenprofile.</p>
                 </div>
                 <Link href="/admin/authors/editor/new">
                     <Button>

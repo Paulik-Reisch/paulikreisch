@@ -58,7 +58,6 @@ export function HomePage() {
         <section id="entdecken" aria-labelledby="discover-title" className={`${styles.wrap} ${styles.section}`}>
           <div className={styles.sectionHead}>
             <div><p className={styles.eyebrow}>Zum Weiterlesen</p><h2 id="discover-title">Der Wahnsinn hat Methode.</h2></div>
-            <Link className={styles.textLink} href="/a">Zum Satire-Magazin {arrow}</Link>
           </div>
           <div className={styles.stories}>
             <article>

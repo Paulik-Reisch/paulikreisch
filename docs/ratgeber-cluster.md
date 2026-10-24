@@ -15,7 +15,7 @@ Die Übersicht, alle zehn Pillars und alle Unterseiten verwenden die Papierfarbe
 
 Neue Artikel zuerst inhaltlich verfassen und prüfen, dann im Plan ergänzen. Jede Seite soll eine eigene Frage beantworten; keine austauschbaren Füllabsätze. Geänderte Sachangaben anhand einschlägiger Originalquellen prüfen. Beispiele und humorvolle Übersetzungen von belegten Aussagen unterscheiden. Bei rechtlichen Fragen keine bundesweit gültigen Schwellenwerte, Fristen oder Übermittlungswege behaupten, wenn sie vom Einzelfall abhängen.
 
-Die ursprünglich geplante Schreibweise `regeln-ampe-inacht` bleibt als URL erhalten. Der sichtbare Titel ist verständlich formuliert. Vorhandene Wiki- und Magazin-URLs wurden nicht umgeleitet oder gelöscht. Für nicht existierende Cluster gibt es eine echte 404-Antwort.
+Die ursprünglich geplante Schreibweise `regeln-ampe-inacht` bleibt als URL erhalten. Der sichtbare Titel ist verständlich formuliert. Vorhandene Wiki-URLs wurden nicht umgeleitet oder gelöscht. Das Satire-Magazin und seine `/a`-Routen sind entfernt. Für nicht existierende Cluster gibt es eine echte 404-Antwort.
 
 ## SEO, AEO und Semantik
 

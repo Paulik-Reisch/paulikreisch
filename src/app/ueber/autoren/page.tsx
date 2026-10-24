@@ -19,7 +19,7 @@ export default function UeberAutorenPage() {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "NewsMediaOrganization",
+        "@type": "Organization",
         "@id": "https://www.paulikreisch.de/#organization",
         "name": "Paulik & Reisch",
         "url": "https://www.paulikreisch.de",
@@ -33,70 +33,12 @@ export default function UeberAutorenPage() {
         "hasPart": [
             {
               "@type": "WebPage",
-              "@id": "https://www.paulikreisch.de/a",
-              "name": "Paulik & Reisch Satire-Magazin",
-              "url": "https://www.paulikreisch.de/a",
-              "description": "Eine kuratierte Sammlung satirischer Meisterwerke, die den alltäglichen Wahnsinn auf die Schippe nehmen."
-            },
-            {
-              "@type": "WebPage",
               "@id": "https://www.paulikreisch.de/autoren",
               "name": "Unsere Autoren",
               "url": "https://www.paulikreisch.de/autoren",
-              "description": "Lernen Sie die kreativen Köpfe hinter den satirischen Artikeln und Büchern von Paulik & Reisch kennen."
+              "description": "Lernen Sie die kreativen Köpfe hinter den Büchern und Projekten von Paulik & Reisch kennen."
             }
           ]
-      },
-      {
-        "@type": "Article",
-        "@id": "https://www.paulikreisch.de/ratgeber/satire-schreiben/#article",
-        "headline": "Die deutsche Satire-Landschaft: Von Postillon bis Paulik & Reisch",
-        "description": "Eine Analyse der wichtigsten Satire-Magazine wie Der Postillon, TITANIC, heute-show und warum Paulik & Reisch die nächste Evolution ist.",
-        "author": {
-          "@id": "https://www.paulikreisch.de/#organization"
-        },
-        "publisher": {
-          "@id": "https://www.paulikreisch.de/#organization"
-        },
-        "about": [
-          {
-            "@type": "Thing",
-            "name": "Satire",
-            "sameAs": "https://de.wikipedia.org/wiki/Satire"
-          }
-        ],
-        "mentions": [
-          {
-            "@type": "NewsMediaOrganization",
-            "name": "Der Postillon",
-            "sameAs": "https://www.wikidata.org/wiki/Q1196263"
-          },
-          {
-            "@type": "NewsMediaOrganization",
-            "name": "Titanic",
-            "sameAs": "https://www.wikidata.org/wiki/Q314545"
-          },
-          {
-            "@type": "TVSeries",
-            "name": "heute-show",
-            "sameAs": "https://www.wikidata.org/wiki/Q1616442"
-          },
-          {
-            "@type": "NewsMediaOrganization",
-            "name": "Die Tagespresse",
-            "sameAs": "https://www.wikidata.org/wiki/Q15805565"
-          },
-          {
-            "@type": "NewsMediaOrganization",
-            "name": "The Onion",
-            "sameAs": "https://www.wikidata.org/wiki/Q1185031"
-          },
-          {
-            "@type": "NewsMediaOrganization",
-            "name": "ZDF Magazin Royale",
-            "sameAs": "https://www.wikidata.org/wiki/Q98748118"
-          }
-        ]
       }
     ]
   };
