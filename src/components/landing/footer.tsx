@@ -59,8 +59,6 @@ export function Footer() {
     <div className="text-[#4d463b] leading-relaxed">
       {/* Top */}
       <footer className="bg-white border-t border-[#e8ddd0] py-12 md:py-14 px-5 relative overflow-hidden">
-        {/* subtle dots like landing */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(#1d1a15 1.1px, transparent 1.1px)", backgroundSize: "22px 22px" }} />
         <div className="relative container mx-auto max-w-7xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10">
           <div className="text-left">
             <Link href="/" aria-label="Paulik &amp; Reisch – Startseite" className="inline-flex text-[#1d1a15] transition-colors hover:text-[#9c2d22]">

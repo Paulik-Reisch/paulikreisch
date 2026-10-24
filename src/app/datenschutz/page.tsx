@@ -1,6 +1,5 @@
 import Link from 'next/link';
-import { Header } from "@/components/landing/header";
-import { Footer } from "@/components/landing/footer";
+import { LegalPage } from "@/components/landing/legal-page";
 
 export const metadata = {
   title: "Datenschutz – Paulik & Reisch",
@@ -9,12 +8,7 @@ export const metadata = {
 
 export default function DatenschutzPage() {
   return (
-    <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
-      <Header />
-      <main className="flex-1 py-12 md:py-24">
-        <div className="container px-4 md:px-6">
-          <article className="prose prose-lg dark:prose-invert mx-auto max-w-2xl">
-            <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">Datenschutzerklärung</h1>
+    <LegalPage title="Datenschutzerklärung" description="Wie wir personenbezogene Daten verarbeiten und Ihre Privatsphäre schützen.">
             <p className="text-sm text-muted-foreground">Stand: {new Date().toLocaleDateString("de-DE", { year: "numeric", month: "long", day: "numeric" })}</p>
 
             <h2>1. Verantwortlicher</h2>
@@ -59,6 +53,27 @@ export default function DatenschutzPage() {
               Eine serverseitige Auswertung dieser Daten findet nicht statt.
             </p>
 
+            <h3>2.5 Experimentelle Schreibstube (/gpt)</h3>
+            <p>
+              Wenn Sie die experimentelle Schreibstube nutzen, werden die von Ihnen eingegebenen Nachrichten
+              und für den Gesprächszusammenhang erforderliche vorherige Nachrichten an unseren Server und von
+              dort an OpenRouter übermittelt, damit eine Antwort erstellt werden kann. Über den für Worthaft
+              eingerichteten OpenRouter-Zugang wird ein bei OpenRouter verfügbares Sprachmodell angefragt.
+              Bitte geben Sie keine besonderen Kategorien personenbezogener Daten, Geheimnisse oder andere
+              vertrauliche Inhalte ein. Die Verarbeitung erfolgt zur Bereitstellung der von Ihnen angeforderten
+              Funktion auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO, soweit die Anfrage hierauf gerichtet ist,
+              andernfalls auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einem
+              freiwillig genutzten experimentellen Schreibangebot). Einzelheiten zu Verarbeitung und
+              möglichen Speicherfristen beim jeweiligen Modellanbieter richten sich zusätzlich nach den
+              Datenschutzinformationen und Nutzungsbedingungen von OpenRouter und dem verwendeten Anbieter.
+            </p>
+            <p>
+              Der Chatverlauf wird nur lokal in Ihrem Browser gespeichert, nicht in einem Nutzerkonto oder
+              einer Datenbank. Sie können einzelne Chats in der Seitenleiste löschen oder den Verlauf über
+              die Website-Daten Ihres Browsers entfernen. Ihre Eingaben und KI-Antworten werden nicht in
+              unserer Firestore-Datenbank gespeichert.
+            </p>
+
             <h2>3. Cookies und Einwilligung</h2>
             <p>
               Wir setzen Cookies und vergleichbare Technologien nur nach Ihrer Einwilligung ein
@@ -81,10 +96,6 @@ export default function DatenschutzPage() {
               worden sein. Eine Kennzeichnung erfolgt gemäß Art. 50 der Verordnung (EU) 2024/1689 (EU AI Act)
               in den <Link href="/transparenz">Transparenzhinweisen</Link>.
             </p>
-          </article>
-        </div>
-      </main>
-      <Footer />
-    </div>
+    </LegalPage>
   );
 }

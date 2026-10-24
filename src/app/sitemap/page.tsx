@@ -31,8 +31,6 @@ const sitemapData: SitemapNode[] = [
     children: [
       { label: 'Artikel lesen', href: '/a/[slug]', description: 'Einzelartikel mit Lead-/Share-Wall' },
       { label: 'Autoren', href: '/autoren', icon: Users, description: 'Autoren-Portraits & Archive' },
-      { label: 'Wiki: Satire', href: '/wiki/satire', icon: BookOpen, description: 'Satire-Definition & Geschichte' },
-      { label: 'Wiki: Satire-Landschaft', href: '/wiki/satire-landschaft', icon: BookOpen, description: 'Deutsche Satire-Szene Überblick' },
     ],
   },
   {

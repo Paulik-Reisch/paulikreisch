@@ -187,7 +187,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       { '@type': 'ListItem', position: 2, name: 'Satire-Magazin', item: 'https://paulikreisch.de/a' },
       { '@type': 'ListItem', position: 3, name: article.category, item: `https://paulikreisch.de/a?cat=${encodeURIComponent(article.category)}` },
       { '@type': 'ListItem', position: 4, name: article.title, item: `https://paulikreisch.de/a/${slug}` },
-      { '@type': 'ListItem', position: 5, name: 'Satire-Landschaft', item: 'https://paulikreisch.de/wiki/satire-landschaft' },
+      { '@type': 'ListItem', position: 5, name: 'Satire schreiben', item: 'https://paulikreisch.de/ratgeber/satire-schreiben' },
     ],
   };
   const jsonLd = {
@@ -265,7 +265,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               <BreadcrumbSeparator />
               <BreadcrumbItem><BreadcrumbPage className="max-w-[20ch] truncate">{article.title}</BreadcrumbPage></BreadcrumbItem>
               <BreadcrumbSeparator />
-              <BreadcrumbItem><BreadcrumbLink href="/wiki/satire-landschaft" className="text-primary">Pillar</BreadcrumbLink></BreadcrumbItem>
+              <BreadcrumbItem><BreadcrumbLink href="/ratgeber/satire-schreiben" className="text-primary">Ratgeber: Satire schreiben</BreadcrumbLink></BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
         </div>

@@ -39,7 +39,7 @@ export const normalizeWorthaftSettings = (value: unknown): WorthaftSettings => {
 };
 
 export const getWorthaftTileDimensions = (width: number, height: number) => ({
-  width: 40 + width * 8, height: 40 + height * 8,
+  width: 46 + width * 9, height: 46 + height * 9,
 });
 
 export const getWorthaftStatusClass = (status: string, palette: WorthaftSettings['palette']) => {
