@@ -13,7 +13,6 @@ import { useUser } from '@/firebase/provider';
 import { logEventAction } from '@/app/actions';
 import { usePathname } from 'next/navigation';
 import { FUNNEL, isSnoozed, isUnlocked as checkFunnelUnlocked, setUnlocked } from '@/lib/funnel';
-import { BookOpen } from 'lucide-react';
 
 function injectContextualShop(html: string): string {
   // Insert after 2nd </p> — contextual, not banner-blind
@@ -185,11 +184,7 @@ export function ArticleRenderer({ article }: { article: Article }) {
         )}
       </AnimatePresence>
       {isUnlocked && <SocialShare article={article} />}
-      {/* Hub-and-Spoke: Rückverlinkung zum Pillar */}
       <div className="not-prose mt-10 flex flex-wrap gap-2 text-xs">
-        <Link href="/wiki/satire-landschaft" className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 hover:bg-muted transition-colors">
-          <BookOpen className="h-3.5 w-3.5" /> Zur Satire-Landschaft (Pillar)
-        </Link>
         <Link href="/a" className="inline-flex items-center rounded-full border px-3 py-1.5 hover:bg-muted transition-colors">
           Alle Artikel
         </Link>

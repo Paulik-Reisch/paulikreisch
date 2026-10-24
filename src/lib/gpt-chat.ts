@@ -21,6 +21,31 @@ type Dependencies = {
   timeoutMs?: number;
 };
 
+function providerEventContent(event: string): { done: boolean; content: string } {
+  const data = event.split('\n')
+    .filter(line => line.startsWith('data:'))
+    .map(line => line.slice(5).trimStart())
+    .join('\n');
+  if (!data) return { done: false, content: '' };
+  if (data === '[DONE]') return { done: true, content: '' };
+
+  let payload: unknown;
+  try {
+    payload = JSON.parse(data);
+  } catch {
+    throw new ChatError(503, 'Die Schreibstube hat gerade keine lesbare Antwort geliefert.');
+  }
+  if (!payload || typeof payload !== 'object' || !('choices' in payload) || !Array.isArray(payload.choices)) {
+    return { done: false, content: '' };
+  }
+  const first = payload.choices[0];
+  if (!first || typeof first !== 'object' || !('delta' in first) || !first.delta || typeof first.delta !== 'object'
+    || !('content' in first.delta) || typeof first.delta.content !== 'string') {
+    return { done: false, content: '' };
+  }
+  return { done: false, content: first.delta.content };
+}
+
 const SYSTEM_PROMPT = `Du bist die experimentelle Schreib-KI von Paulik & Reisch. Schreibe auf Deutsch mit pointierter, warmherziger Satire: genaue Alltagsbeobachtungen, trockenes Understatement, überraschende Vergleiche und gelegentliche bürokratische Übertreibung. Richte den Witz auf Situationen und Systeme, nicht auf schutzbedürftige Menschen. Passe dich dem Auftrag an, hilf auch beim Überarbeiten und Erklären. Erfinde keine Tatsachen über reale Personen. Übernimm keine längeren Passagen aus dem Buch und behaupte nicht, ein Originaltext zu sein. Wenn ein nüchterner Ton gewünscht wird, folge diesem Wunsch.`;
 
 async function readBoundedBody(body: ReadableStream<Uint8Array> | null, limit: number) {
@@ -126,12 +151,14 @@ export function createChatHandler(dependencies: Dependencies) {
 
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), dependencies.timeoutMs ?? 30_000);
+      let streamStarted = false;
       try {
         const response = await fetchProvider('https://openrouter.ai/api/v1/chat/completions', {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${apiKey}`,
             'Content-Type': 'application/json',
+            Accept: 'text/event-stream',
             'HTTP-Referer': 'https://paulikreisch.de',
             'X-Title': 'Paulik & Reisch Schreibstube',
             'X-OpenRouter-Data-Collection': 'deny',
@@ -141,6 +168,7 @@ export function createChatHandler(dependencies: Dependencies) {
             max_tokens: 900,
             temperature: 0.82,
             reasoning: { effort: 'low' },
+            stream: true,
             messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
           }),
           signal: controller.signal,
@@ -150,24 +178,106 @@ export function createChatHandler(dependencies: Dependencies) {
           await response.body?.cancel();
           throw new ChatError(503, 'Die Schreibstube ist gerade nicht erreichbar. Bitte versuche es später erneut.');
         }
-        let providerPayload: unknown;
-        try {
-          providerPayload = JSON.parse(await readBoundedBody(response.body, MAX_PROVIDER_BYTES));
-        } catch {
-          throw new ChatError(503, 'Die Schreibstube hat gerade keine lesbare Antwort geliefert.');
-        }
-        const content = (providerPayload as { choices?: { message?: { content?: unknown } }[] })?.choices?.[0]?.message?.content;
-        if (typeof content !== 'string' || !content.trim() || content.length > 12_000) {
-          throw new ChatError(503, 'Die Schreibstube hat gerade keine Antwort geliefert. Bitte versuche es erneut.');
-        }
-        return Response.json({ message: content.trim() }, { headers });
+        if (!response.body) throw new ChatError(503, 'Die Schreibstube hat gerade keine Antwort geliefert. Bitte versuche es erneut.');
+
+        let finished = false;
+        let cancelled = false;
+        const finish = () => {
+          if (finished) return;
+          finished = true;
+          clearTimeout(timer);
+          activeRequests -= 1;
+        };
+        const encoder = new TextEncoder();
+        const body = new ReadableStream<Uint8Array>({
+          start(stream) {
+            const pump = async () => {
+              const reader = response.body!.getReader();
+              const decoder = new TextDecoder();
+              let buffer = '';
+              let totalBytes = 0;
+              let totalCharacters = 0;
+              let fullMessage = '';
+              let done = false;
+              const sendEvent = (event: string, data: unknown) => {
+                stream.enqueue(encoder.encode(`${event ? `event: ${event}\n` : ''}data: ${JSON.stringify(data)}\n\n`));
+              };
+              const processEvent = (event: string) => {
+                const result = providerEventContent(event);
+                if (result.content) {
+                  totalCharacters += result.content.length;
+                  if (totalCharacters > 12_000) throw new ChatError(503, 'Die Antwort der Schreibstube ist zu lang.');
+                  fullMessage += result.content;
+                  sendEvent('', { content: result.content });
+                }
+                return result.done;
+              };
+              try {
+                while (!done) {
+                  const { done: ended, value } = await reader.read();
+                  if (ended) break;
+                  totalBytes += value.byteLength;
+                  if (totalBytes > MAX_PROVIDER_BYTES) throw new ChatError(413, 'Die Antwort der Schreibstube ist zu groß.');
+                  buffer = (buffer + decoder.decode(value, { stream: true })).replace(/\r\n/g, '\n');
+                  let boundary = buffer.indexOf('\n\n');
+                  while (boundary !== -1) {
+                    const event = buffer.slice(0, boundary);
+                    buffer = buffer.slice(boundary + 2);
+                    if (processEvent(event)) {
+                      done = true;
+                      break;
+                    }
+                    boundary = buffer.indexOf('\n\n');
+                  }
+                }
+                buffer += decoder.decode();
+                if (!done && buffer.trim()) done = processEvent(buffer);
+                if (!done || !fullMessage.trim()) {
+                  throw new ChatError(503, 'Die Schreibstube hat gerade keine vollständige Antwort geliefert.');
+                }
+              } catch (error) {
+                if (!cancelled) {
+                  const timedOut = controller.signal.aborted;
+                  if (!timedOut) controller.abort();
+                  const knownError = error instanceof ChatError
+                    ? error
+                    : timedOut
+                      ? new ChatError(504, 'Die Antwort dauert gerade zu lange. Bitte versuche es erneut.')
+                      : new ChatError(503, 'Die Schreibstube ist gerade nicht erreichbar. Bitte versuche es später erneut.');
+                  sendEvent('error', { error: knownError.message });
+                }
+              } finally {
+                reader.releaseLock();
+                if (!cancelled) stream.close();
+                finish();
+              }
+            };
+            void pump();
+          },
+          cancel() {
+            cancelled = true;
+            controller.abort();
+            finish();
+          },
+        });
+        streamStarted = true;
+        return new Response(body, {
+          headers: {
+            ...headers,
+            'Content-Type': 'text/event-stream; charset=utf-8',
+            Connection: 'keep-alive',
+            'X-Accel-Buffering': 'no',
+          },
+        });
       } catch (error) {
         if (controller.signal.aborted) throw new ChatError(504, 'Die Antwort dauert gerade zu lange. Bitte versuche es erneut.');
         if (error instanceof ChatError) throw error;
         throw new ChatError(503, 'Die Schreibstube ist gerade nicht erreichbar. Bitte versuche es später erneut.');
       } finally {
-        clearTimeout(timer);
-        activeRequests -= 1;
+        if (!streamStarted) {
+          clearTimeout(timer);
+          activeRequests -= 1;
+        }
       }
     } catch (error) {
       const knownError = error instanceof ChatError ? error : new ChatError(503, 'Die Schreibstube ist gerade nicht verfügbar.');

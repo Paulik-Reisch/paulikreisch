@@ -8,7 +8,10 @@ const request = (messages: unknown) => new Request('https://paulikreisch.example
   body: JSON.stringify({ messages }),
 });
 
-const completion = (content = 'Ein satirischer Satz.') => Response.json({ choices: [{ message: { content } }] });
+const completion = (content = 'Ein satirischer Satz.') => new Response([
+  `data: ${JSON.stringify({ choices: [{ delta: { content } }] })}\n\n`,
+  'data: [DONE]\n\n',
+].join(''), { headers: { 'Content-Type': 'text/event-stream' } });
 
 test('sends a bounded German satire chat completion to OpenRouter', async () => {
   let calls = 0;
@@ -22,6 +25,7 @@ test('sends a bounded German satire chat completion to OpenRouter', async () => 
       const body = JSON.parse(init?.body as string);
       assert.equal(body.model, 'openrouter/free');
       assert.equal(body.max_tokens, 900);
+      assert.equal(body.stream, true);
       assert.deepEqual(body.reasoning, { effort: 'low' });
       assert.equal(body.messages[0].role, 'system');
       assert.match(body.messages[0].content, /satire/i);
@@ -33,8 +37,42 @@ test('sends a bounded German satire chat completion to OpenRouter', async () => 
   const response = await handler(request([{ role: 'user', content: 'Schreibe über Elternabend.' }]));
   assert.equal(response.status, 200);
   assert.equal(response.headers.get('cache-control'), 'no-store');
-  assert.deepEqual(await response.json(), { message: 'Ein satirischer Satz.' });
+  assert.equal(response.headers.get('content-type'), 'text/event-stream; charset=utf-8');
+  assert.match(await response.text(), /"content":"Ein satirischer Satz\."/);
   assert.equal(calls, 1);
+});
+
+test('forwards provider text while the upstream stream is still open', async () => {
+  const encoder = new TextEncoder();
+  let upstreamFinished = false;
+  const handler = createChatHandler({
+    apiKey: () => 'test-secret',
+    fetch: async () => new Response(new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ choices: [{ delta: { content: 'Der erste Satz. ' } }] })}\n\n`));
+        setTimeout(() => {
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ choices: [{ delta: { content: 'Der zweite Satz.' } }] })}\n\ndata: [DONE]\n\n`));
+          controller.close();
+          upstreamFinished = true;
+        }, 50);
+      },
+    }), { headers: { 'Content-Type': 'text/event-stream' } }),
+  });
+
+  const response = await handler(request([{ role: 'user', content: 'Schreibe zwei Sätze.' }]));
+  const reader = response.body?.getReader();
+  assert.ok(reader);
+  const firstChunk = await reader.read();
+  assert.match(new TextDecoder().decode(firstChunk.value), /Der erste Satz\./);
+  assert.equal(upstreamFinished, false);
+  const remaining: Uint8Array[] = [];
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    remaining.push(value);
+  }
+  reader.releaseLock();
+  assert.match(remaining.map(chunk => new TextDecoder().decode(chunk)).join(''), /Der zweite Satz\./);
 });
 
 test('rejects malformed histories, oversized payloads and foreign origins before calling OpenRouter', async () => {
