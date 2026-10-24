@@ -28,7 +28,7 @@ export async function subscribeToNewsletterAction(
     });
     // enforce consent for non-funnel
     if (!parsed.success) {
-      const msg = parsed.error.errors.map((e) => e.message).join(". ");
+      const msg = parsed.error.issues.map((e) => e.message).join(". ");
       return { error: msg };
     }
     if (parsed.data.consent !== "true") {

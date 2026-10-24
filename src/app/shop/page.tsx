@@ -8,6 +8,7 @@ import { ElevenReaderIcon } from "@/components/ui/icons/eleven-reader-icon";
 import { ShopNewsletterForm } from "./ShopNewsletterForm";
 import './shop.css';
 import { useEffect, useState } from "react";
+import '../../../tokens.css';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -93,7 +94,7 @@ export default function ShopPage() {
 
 
     return (
-        <>
+        <div className="pr-home shop-page-shell">
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBook1) }}
@@ -103,13 +104,14 @@ export default function ShopPage() {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBook2) }}
             />
             <Header />
-            <main>
+            <main className="shop-page-main">
                 {/* === SEKTION 1: SHOP (HERO) === */}
-                <section className="bg-gray">
+                <section className="bg-gray shop-hero">
                     <div className="container">
-                        <div className="text-center mb-large">
-                            <h2 style={{ fontSize: '2.5rem' }}>Ein satirischer Blick auf Bildung &amp; Bürokratie</h2>
-                            <p className="subtitle">Entdecke die Abenteuer in Band 1 und 2</p>
+                        <div className="shop-intro">
+                            <p className="shop-eyebrow">Paulik &amp; Reisch · Bücher</p>
+                            <h1>Schule aus.<br /><em>Satire an.</em></h1>
+                            <p className="subtitle">Bücher über den ganz normalen Schulwahnsinn — mit Haltung, Humor und einem Blick für den absurden Rest.</p>
                         </div>
 
                         <div className="book-grid">
@@ -119,7 +121,7 @@ export default function ShopPage() {
                                     <Image src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-hw1_900px.png?alt=media&amp;token=42ce90a3-ed34-49d2-8e09-5258d0dfc484" alt="Hallo Welt Cover" fill />
                                 </div>
                                 
-                                <span className="series-tag">Band 1</span>
+                                <span className="series-tag">01 · Der Anfang</span>
                                 <h2 className="book-title">Hallo Welt</h2>
                                 <p className="book-desc">Erhebliche Kritik am unerhörten Bildungsgang der Lernvollzugsanstalt SK-S</p>
 
@@ -145,7 +147,7 @@ export default function ShopPage() {
                                     <Image src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw2%2Fcover-hw2-900px.png?alt=media&amp;token=9479f94f-e21d-4fe8-82d5-b668781bd724" alt="Band 2 Cover" fill />
                                 </div>
                                 
-                                <span className="series-tag">Band 2</span>
+                                <span className="series-tag">02 · In Arbeit</span>
                                 <h2 className="book-title">Hallo Welt 2</h2>
                                 <p className="book-desc">Wie das Leben funktioniert (Platzhalter)</p>
 
@@ -169,9 +171,10 @@ export default function ShopPage() {
                 </section>
 
                 {/* === SEKTION 2: TESTIMONIALS (SOCIAL PROOF) === */}
-                <section className="bg-white">
+                <section className="bg-white shop-quotes">
                     <div className="container">
-                        <h2 className="text-center mb-large">Stimmen aus dem Chaos</h2>
+                        <p className="shop-eyebrow">Lesestoff mit Nebenwirkungen</p>
+                        <h2 className="shop-section-title">Der Alltag liefert den Stoff.</h2>
                         <div className="quote-grid">
                             <div className="quote-card">
                                 <p className="quote-text">»Ich habe das Buch im Zug gelesen und war so gefesselt, dass ich meinen Halt verpasste. Musste 30 km zurücklaufen. Aber es hat sich gelohnt!«</p>
@@ -190,9 +193,10 @@ export default function ShopPage() {
                 </section>
 
                 {/* === SEKTION 3: WARUM BEIDE BÜCHER? === */}
-                <section className="bg-gray">
+                <section className="bg-gray shop-features">
                     <div className="container">
-                        <h2 className="text-center mb-large">Warum Sie beide Bücher brauchen</h2>
+                        <p className="shop-eyebrow">Was dich erwartet</p>
+                        <h2 className="shop-section-title">Nicht für die Schule.<br />Fürs Überleben.</h2>
                         <div className="features-grid">
                             <div className="feature">
                                 <span className="feature-icon">🌌</span>
@@ -214,12 +218,12 @@ export default function ShopPage() {
                 </section>
 
                 {/* === SEKTION 4: PRODUKTDETAILS === */}
-                <section className="bg-white">
+                <section className="bg-white shop-details" id="buchdetails">
                     <div className="container">
                         <div className="details-layout">
                             
                             {/* Beschreibung & Argumente */}
-                            <div>
+                            <div className="shop-description">
                                 <h2>Hallo Welt – Stimmen einer Generation</h2>
                                 <h3 style={{color:'var(--text-light)', fontWeight:400, fontSize:'1.2rem', marginBottom:'20px'}}>Zwischen Euphorie und Überforderung: Fragmente des Schülerdaseins</h3>
                                 
@@ -237,7 +241,7 @@ export default function ShopPage() {
                             </div>
 
                             {/* Technische Daten */}
-                            <div>
+                            <div className="shop-specs">
                                 <h3 style={{marginBottom:'20px'}}>Produktinformationen</h3>
                                 <p style={{fontSize:'0.8rem', color:'#888'}}>Stand: 08. Februar 2026</p>
                                 
@@ -280,7 +284,7 @@ export default function ShopPage() {
                 </section>
 
                 {/* === SEKTION 5: NEWSLETTER === */}
-                <section className="bg-gray">
+                <section className="bg-gray shop-newsletter">
                     <div className="container">
                         <div className="newsletter-box">
                             <h2>Neuigkeiten und Benachrichtigungen</h2>
@@ -304,6 +308,6 @@ export default function ShopPage() {
                 </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-        </>
+        </div>
     );
 }

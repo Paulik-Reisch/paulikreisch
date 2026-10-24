@@ -79,6 +79,11 @@ const nextConfig: NextConfig = {
         destination: '/autoren/:slug*',
         permanent: true,
       },
+      {
+        source: '/wiki/:path*',
+        destination: '/ratgeber',
+        permanent: true,
+      },
     ]
   },
 };

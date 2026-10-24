@@ -63,22 +63,17 @@ export function HomePage() {
           <div className={styles.stories}>
             <article>
               <div className={styles.storyImage}><Image src="/hero-mobile/32-tafel-kreide.jpg" alt="Beschriebene Schultafel als Sinnbild für den Schulalltag" fill sizes="(max-width: 639px) 90vw, 50vw" /></div>
-              <p className={styles.eyebrow}>Schule &amp; Gesellschaft</p>
-              <h3 className={styles.storyTitle}><Link href="/wiki/bildungskritik-satire">Wenn Lernen zur Verwaltungssache wird.</Link></h3>
-              <p className={styles.body}>Noten, Normen, nächste Reform: ein Blick auf das System, in dem wir groß werden.</p>
-              <Link className={styles.textLink} href="/wiki/bildungskritik-satire">Bildungskritik lesen {arrow}</Link>
             </article>
             <div className={styles.storyList}>
               <article><p className={styles.eyebrow}>Sprache &amp; Bürokratie</p><h3 className={styles.storyTitle}><Link href="/ratgeber/beamtendeutsch">Das ist kein Satz. Das ist ein Verwaltungsakt.</Link></h3><p className={styles.body}>Beamtendeutsch verstehen — sofern die zuständige Stelle nichts dagegen hat.</p><Link className={styles.textLink} href="/ratgeber/beamtendeutsch">Weiterlesen {arrow}</Link></article>
               <article><p className={styles.eyebrow}>Schreiben &amp; Satire</p><h3 className={styles.storyTitle}><Link href="/ratgeber/satire-schreiben">Aus einer Beobachtung wird eine Pointe.</Link></h3><p className={styles.body}>Wie Übertreibung, Ironie und der richtige Blickwinkel zusammenfinden.</p><Link className={styles.textLink} href="/ratgeber/satire-schreiben">Zum Schreibratgeber {arrow}</Link></article>
-              <article><p className={styles.eyebrow}>Für Menschen mit Humor</p><h3 className={styles.storyTitle}><Link href="/ratgeber/geschenk-lehrer">Ein Geschenk ohne Korrekturbedarf.</Link></h3><Link className={styles.textLink} href="/ratgeber/geschenk-lehrer">Geschenkideen entdecken {arrow}</Link></article>
             </div>
           </div>
         </section>
         <section id="worthaft" aria-labelledby="game-title" className={styles.game}>
           <div className={`${styles.wrap} ${styles.gameGrid}`}>
             <div><p className={styles.eyebrow}>Worthaft · Das tägliche Worträtsel</p><h2 id="game-title">Große Pause.<br />Fünf Buchstaben.</h2><p className={styles.body}>Sechs Versuche, ein Wort zu erraten.</p><Link href="/worthaft" className={styles.button}>Worthaft spielen <ArrowRight size={18} aria-hidden="true" /></Link><p className={styles.caption} style={{ color: 'inherit' }}>Kostenlos · auf Deutsch · Spielstand lokal im Browser</p></div>
-            <div><div className={styles.tiles} aria-hidden="true">{'PAUSEWORTESATZE'.split('').map((letter, i) => <span className={styles.tile} key={i}>{letter}</span>)}</div></div>
+            <div><div className={styles.tiles} aria-hidden="true">{'PAUSEHORDESAITE'.split('').map((letter, i) => <span className={styles.tile} key={i}>{letter}</span>)}</div></div>
           </div>
         </section>
         <section id="authors" aria-labelledby="people-title" className={`${styles.wrap} ${styles.section}`}>

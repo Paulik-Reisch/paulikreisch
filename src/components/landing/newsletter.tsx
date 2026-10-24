@@ -25,7 +25,7 @@ function NewsletterFormContent() {
           <Input
             name="email"
             aria-label="E-Mail-Adresse"
-            className="h-[52px] pl-10 pr-4 rounded-[12px] bg-white border-2 border-[#e8ddd0] text-[#1d1a15] placeholder:text-[#9a9184] focus-visible:border-[#1d1a15] focus-visible:ring-0 shadow-sm"
+            className="h-[52px] pl-10 pr-4 rounded-[10px] bg-white border-2 border-[#e8ddd0] text-[#1d1a15] placeholder:text-[#9a9184] focus-visible:border-[#1d1a15] focus-visible:ring-0 shadow-sm"
             placeholder="deine@email.de"
             type="email"
             required
@@ -35,7 +35,7 @@ function NewsletterFormContent() {
         <Button
           type="submit"
           disabled={pending || !isConsentGiven}
-          className="h-[52px] px-7 rounded-[12px] bg-[#ffe14d] text-[#1d1a15] border-2 border-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:bg-[#ffeb7a] hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] font-bold text-[1.02rem] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 shrink-0"
+          className="h-[52px] px-7 rounded-[10px] bg-[#ffe14d] text-[#1d1a15] border-2 border-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:bg-[#ffeb7a] hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] font-bold text-[1.02rem] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 shrink-0"
         >
           {pending ? (
             <>

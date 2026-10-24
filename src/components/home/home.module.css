@@ -13,7 +13,7 @@
 .hero h1 span { color: var(--color-rust); }
 .intro { font-family: var(--font-copy); font-size: clamp(1.12rem, 1.6vw, 1.4rem); line-height: 1.65; max-width: 37ch; }
 .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 28px; margin-top: 30px; }
-.button { display: inline-flex; gap: 20px; align-items: center; justify-content: space-between; min-height: 48px; padding: 14px 22px; background: var(--color-ink); color: var(--color-paper); border: 1px solid var(--color-ink); border-radius: var(--radius-button); font-size: 13px; font-weight: 700; white-space: nowrap; transition: transform var(--dur-short) var(--ease-out); }
+.button { display: inline-flex; gap: 20px; align-items: center; justify-content: space-between; min-height: 48px; padding: 14px 22px; background: var(--color-ink); color: var(--color-paper); border: 1px solid var(--color-ink); border-radius: 10px; font-size: 13px; font-weight: 700; white-space: nowrap; transition: transform var(--dur-short) var(--ease-out); }
 .button:hover { transform: translateY(-3px); }
 .button:active { transform: translateY(1px); }
 .textLink { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; border-bottom: 1px solid currentColor; font-size: 13px; font-weight: 700; white-space: nowrap; }
@@ -24,7 +24,7 @@
 .book { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1fr); gap: clamp(36px, 7vw, 112px); align-items: center; }
 .bookVisual { position: relative; aspect-ratio: 4/4.5; background: var(--color-paper-deep); overflow: clip; }
 .bookVisual img { object-fit: cover; object-position: 77% center; }
-.bookCaption { position: absolute; inset: auto 20px 20px; background: var(--color-paper); padding: 16px; display: flex; gap: 12px; justify-content: space-between; font-size: 11px; }
+.bookCaption { position: absolute; inset: auto 20px 20px; background: transparent; padding: 0; display: flex; gap: 12px; justify-content: space-between; font-size: 11px; color: var(--color-ink); }
 .body { color: var(--color-muted); font-family: var(--font-copy); font-size: 20px; line-height: 1.7; margin-top: 24px; }
 .facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding-block: 28px; margin-top: 24px; border-block: 1px solid var(--color-rule); }
 .facts dt { font-size: 11px; color: var(--color-muted); }

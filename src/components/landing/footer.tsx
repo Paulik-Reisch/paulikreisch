@@ -18,7 +18,7 @@ const initialNewsletterState = { success: undefined, error: undefined, message: 
 const amazonLink = "https://amzn.eu/d/0CdFeZ3";
 const googlePlayLink = "https://play.google.com/store/books/details?id=HZb3EAAAQBAJ&rdid=book-HZb3EAAAQBAJ&rdot=1&source=gbs_atb&pcampaignid=books_booksearch_atb";
 const elevenReaderLink = "https://elevenreader.io/audiobooks/hallo-welt/PNgTk712as4goF7HwxJJ";
-const footerActionClass = "inline-flex h-12 items-center justify-start gap-2 rounded-[12px] border-2 border-[#1d1a15] px-4 text-[0.9rem] font-semibold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] transition-[transform,box-shadow,background-color]";
+const footerActionClass = "inline-flex h-12 items-center justify-start gap-2 rounded-[10px] border-2 border-[#1d1a15] px-4 text-[0.9rem] font-semibold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] transition-[transform,box-shadow,background-color]";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -59,8 +59,6 @@ export function Footer() {
     <div className="text-[#4d463b] leading-relaxed">
       {/* Top */}
       <footer className="bg-white border-t border-[#e8ddd0] py-12 md:py-14 px-5 relative overflow-hidden">
-        {/* subtle dots like landing */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(#1d1a15 1.1px, transparent 1.1px)", backgroundSize: "22px 22px" }} />
         <div className="relative container mx-auto max-w-7xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10">
           <div className="text-left">
             <Link href="/" aria-label="Paulik &amp; Reisch – Startseite" className="inline-flex text-[#1d1a15] transition-colors hover:text-[#9c2d22]">
@@ -74,19 +72,21 @@ export function Footer() {
             <h3 className="text-[0.72rem] font-bold uppercase tracking-[0.12em] text-[#9c2d22]">Entdecken</h3>
             <ul className="flex w-full flex-col gap-3">
               <li className="flex">
-                <Link href="/worthaft" className={`${footerActionClass} bg-white hover:bg-[#f7f2e7]`}>
-                  <WorthaftIcon className="h-4 w-4 shrink-0" />
+                <Link href="/worthaft" className={`${footerActionClass} w-[125px] self-start bg-white hover:bg-[#f7f2e7]`}>
+                  <span className="worthaft-icon-shimmer shrink-0">
+                    <WorthaftIcon className="h-4 w-4" />
+                  </span>
                   Worthaft
                 </Link>
               </li>
               <li className="flex">
-                <a href={amazonLink} target="_blank" rel="noopener noreferrer" className={`${footerActionClass} bg-[#ffe14d]`}>
+                <a href={amazonLink} target="_blank" rel="noopener noreferrer" className={`${footerActionClass} w-[125px] self-start bg-[#ffe14d]`}>
                   <AmazonIcon className="h-4 w-4 shrink-0" />
                   <span>Amazon</span>
                 </a>
               </li>
               <li className="flex">
-                <Link href="/ratgeber" className={`${footerActionClass} bg-[#2275d3] text-white`}>
+                <Link href="/ratgeber" className={`${footerActionClass} w-[125px] self-start bg-[#2275d3] text-white`}>
                   <LibraryBig className="h-4 w-4 shrink-0" aria-hidden="true" />
                   Ratgeber
                 </Link>
@@ -95,13 +95,13 @@ export function Footer() {
           </div>
 
           {/* Kontakt */}
-          <div className="flex flex-col gap-4 text-left">
+          <div className="flex flex-col gap-3 text-left">
             <h3 className="text-[0.72rem] font-bold uppercase tracking-[0.12em] text-[#9c2d22]">Kontakt</h3>
-            <div className="text-[15px] text-[#4d463b] space-y-3">
-              <p>
-                <a href="mailto:philipp.l.paulik@gmail.com" className="font-semibold text-[#1d1a15] hover:text-[#9c2d22] hover:underline underline-offset-4">Philipp</a><br/>
+            <div className="flex flex-col gap-2.5 text-[15px] text-[#4d463b]">
+              <div className="flex flex-col gap-2">
+                <a href="mailto:philipp.l.paulik@gmail.com" className="font-semibold text-[#1d1a15] hover:text-[#9c2d22] hover:underline underline-offset-4">Philipp</a>
                 <a href="mailto:maximilian.reisch@t-online.de" className="font-semibold text-[#1d1a15] hover:text-[#9c2d22] hover:underline underline-offset-4">Max</a>
-              </p>
+              </div>
               <Link href="/ueber/autoren" className="text-[#6b6256] hover:text-[#9c2d22] hover:underline underline-offset-4">
                 Über die Autoren
               </Link>
@@ -112,7 +112,7 @@ export function Footer() {
           <div className="flex min-w-0 flex-col gap-4 text-left">
             <h3 className="text-[0.72rem] font-bold uppercase tracking-[0.12em] text-[#9c2d22]">Newsletter</h3>
             <form ref={formRef} action={formAction} className="flex w-full flex-col gap-3">
-              <div className="grid w-full grid-cols-[22px_minmax(0,1fr)] gap-x-0">
+              <div className="grid w-full grid-cols-[0px_minmax(0,1fr)]">
                 <Input type="email" name="email" placeholder="E-Mail-Adresse eingeben" className="col-start-2 w-full bg-white border-2 border-[#e8ddd0] rounded-[10px] focus-visible:border-[#1d1a15] focus-visible:ring-0 h-11" required />
               </div>
               <input type="hidden" name="source" value="main-footer" />
