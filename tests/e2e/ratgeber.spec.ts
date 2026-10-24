@@ -72,6 +72,12 @@ test('Ratgeber works without JavaScript, invalid topics return 404, and XML incl
   for(const pillar of guidePillars) for(const article of getGuideArticles(pillar.slug)) expect(xml).toContain(`https://paulikreisch.de/ratgeber/${pillar.slug}/${article.slug}`);
 });
 
+test('legacy wiki pages redirect to the Ratgeber',async({page})=>{
+  await page.goto('/wiki/satire-landschaft');
+  await expect(page).toHaveURL(/\/ratgeber$/);
+  await expect(page.getByRole('heading',{name:/Ratgeber fürs/})).toBeVisible();
+});
+
 test('Ratgeber index and representative article have no automated accessibility violations',async({page})=>{
   for(const path of ['/ratgeber','/ratgeber/geschenk-lehrer/duerfen-lehrer-geschenke-annehmen']){
     await page.goto(path);

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent } from 'react';
 import Link from 'next/link';
 import { ArrowUp, BookOpenText, Check, Copy, Menu, MessageSquarePlus, PenLine, RotateCcw, Sparkles, Trash2, X } from 'lucide-react';
 import { Logo } from '@/components/ui/logo';
@@ -13,6 +13,7 @@ type Conversation = { id: string; title: string; messages: Message[]; updatedAt:
 const STORAGE_KEY = 'paulik-reisch-gpt-conversations';
 const MAX_STORED_CONVERSATIONS = 12;
 const MAX_STORED_MESSAGES = 40;
+const DISSOLVE_TEXT = 'FADE\u00a0AWAY';
 const starters = [
   { label: 'Schule & Alltag', prompt: 'Schreib eine kurze satirische Szene über einen Elternabend, der eigentlich eine Fortbildung für Stühle ist.' },
   { label: 'Text überarbeiten', prompt: 'Mach diesen Absatz pointierter und trockener, ohne dass er seine Herzlichkeit verliert: ' },
@@ -46,7 +47,7 @@ function shortDate(timestamp: number) {
   return new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: '2-digit' }).format(timestamp);
 }
 
-async function getAssistantReply(messages: Message[], signal: AbortSignal) {
+async function getAssistantReply(messages: Message[], signal: AbortSignal, onChunk: (chunk: string) => void) {
   const recentMessages = messages.slice(-18);
   if (recentMessages[0]?.role === 'assistant') recentMessages.shift();
   const response = await fetch('/api/gpt/chat', {
@@ -55,15 +56,84 @@ async function getAssistantReply(messages: Message[], signal: AbortSignal) {
     body: JSON.stringify({ messages: recentMessages }),
     signal,
   });
-  const result: unknown = await response.json();
-  if (!response.ok || !result || typeof result !== 'object' || !('message' in result)
-    || typeof result.message !== 'string' || !result.message.trim()) {
-    const message = result && typeof result === 'object' && 'error' in result && typeof result.error === 'string'
-      ? result.error
-      : 'Die Antwort konnte gerade nicht geladen werden.';
+  if (!response.ok) {
+    let message = 'Die Antwort konnte gerade nicht geladen werden.';
+    try {
+      const result: unknown = await response.json();
+      if (result && typeof result === 'object' && 'error' in result && typeof result.error === 'string') message = result.error;
+    } catch {
+      throw new Error(message);
+    }
     throw new Error(message);
   }
-  return result.message.trim();
+  if (!response.body) throw new Error('Die Schreibstube hat keine lesbare Antwort geliefert.');
+
+  if (!(response.headers.get('content-type') ?? '').includes('text/event-stream')) {
+    const result: unknown = await response.json();
+    if (!result || typeof result !== 'object' || !('message' in result)
+      || typeof result.message !== 'string' || !result.message.trim()) {
+      throw new Error('Die Schreibstube hat keine lesbare Antwort geliefert.');
+    }
+    onChunk(result.message);
+    return result.message.trim();
+  }
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+  let reply = '';
+  const processEvent = (event: string) => {
+    const lines = event.split('\n');
+    const eventName = lines.find(line => line.startsWith('event:'))?.slice(6).trim();
+    const data = lines.filter(line => line.startsWith('data:')).map(line => line.slice(5).trimStart()).join('\n');
+    if (!data) return;
+    let payload: unknown;
+    try {
+      payload = JSON.parse(data);
+    } catch {
+      throw new Error('Die Antwort der Schreibstube ist fehlerhaft übertragen worden.');
+    }
+    if (eventName === 'error') {
+      const message = payload && typeof payload === 'object' && 'error' in payload && typeof payload.error === 'string'
+        ? payload.error
+        : 'Die Schreibstube ist gerade nicht erreichbar.';
+      throw new Error(message);
+    }
+    if (payload && typeof payload === 'object' && 'content' in payload && typeof payload.content === 'string') {
+      reply += payload.content;
+      onChunk(payload.content);
+    }
+  };
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer = (buffer + decoder.decode(value, { stream: true })).replace(/\r\n/g, '\n');
+      let boundary = buffer.indexOf('\n\n');
+      while (boundary !== -1) {
+        processEvent(buffer.slice(0, boundary));
+        buffer = buffer.slice(boundary + 2);
+        boundary = buffer.indexOf('\n\n');
+      }
+    }
+    buffer += decoder.decode();
+    if (buffer.trim()) processEvent(buffer);
+  } finally {
+    reader.releaseLock();
+  }
+  if (!reply.trim()) throw new Error('Die Schreibstube hat keine Antwort geliefert. Bitte versuche es erneut.');
+  return reply.trim();
+}
+
+function DissolveText({ text, label }: { text: string; label: string }) {
+  return (
+    <div className="fx-fade" role="img" aria-label={label}>
+      {Array.from(text).map((character, index) => (
+        <b aria-hidden="true" style={{ '--i': index } as CSSProperties} key={`${index}-${character}`}>{character}</b>
+      ))}
+    </div>
+  );
 }
 
 export function GptChat() {
@@ -142,6 +212,33 @@ export function GptChat() {
     setConversations(current => current.map(conversation => conversation.id === id ? update(conversation) : conversation));
   }, []);
 
+  const appendAssistantChunk = useCallback((id: string, chunk: string) => {
+    updateConversation(id, current => {
+      const lastMessage = current.messages.at(-1);
+      const messages = lastMessage?.role === 'assistant'
+        ? [...current.messages.slice(0, -1), { ...lastMessage, content: lastMessage.content + chunk }]
+        : [...current.messages, { role: 'assistant' as const, content: chunk }];
+      return { ...current, messages: messages.slice(-MAX_STORED_MESSAGES) };
+    });
+  }, [updateConversation]);
+
+  const removePartialAssistant = useCallback((id: string) => {
+    updateConversation(id, current => current.messages.at(-1)?.role === 'assistant'
+      ? { ...current, messages: current.messages.slice(0, -1) }
+      : current);
+  }, [updateConversation]);
+
+  const finalizeAssistantReply = useCallback((id: string, content: string) => {
+    updateConversation(id, current => {
+      const lastMessage = current.messages.at(-1);
+      if (lastMessage?.role !== 'assistant') return current;
+      return {
+        ...current,
+        messages: [...current.messages.slice(0, -1), { ...lastMessage, content }],
+      };
+    });
+  }, [updateConversation]);
+
   const sendMessage = useCallback(async (content: string) => {
     const text = content.trim();
     const conversation = activeConversation;
@@ -162,21 +259,18 @@ export function GptChat() {
     const controller = new AbortController();
     abortRef.current = controller;
     try {
-      const reply = await getAssistantReply(nextMessages, controller.signal);
-      updateConversation(conversation.id, current => ({
-        ...current,
-        messages: [...current.messages, { role: 'assistant' as const, content: reply }].slice(-MAX_STORED_MESSAGES),
-        updatedAt: Date.now(),
-      }));
+      const reply = await getAssistantReply(nextMessages, controller.signal, chunk => appendAssistantChunk(conversation.id, chunk));
+      finalizeAssistantReply(conversation.id, reply);
     } catch (caught) {
       if (!controller.signal.aborted) {
+        removePartialAssistant(conversation.id);
         setError(caught instanceof Error ? caught.message : 'Die Schreibstube ist gerade nicht erreichbar.');
       }
     } finally {
       if (abortRef.current === controller) abortRef.current = null;
       setLoading(false);
     }
-  }, [activeConversation, loading, updateConversation]);
+  }, [activeConversation, appendAssistantChunk, finalizeAssistantReply, loading, removePartialAssistant, updateConversation]);
 
   const retryResponse = useCallback(async () => {
     const conversation = activeConversation;
@@ -186,19 +280,18 @@ export function GptChat() {
     const controller = new AbortController();
     abortRef.current = controller;
     try {
-      const reply = await getAssistantReply(conversation.messages, controller.signal);
-      updateConversation(conversation.id, current => ({
-        ...current,
-        messages: [...current.messages, { role: 'assistant' as const, content: reply }].slice(-MAX_STORED_MESSAGES),
-        updatedAt: Date.now(),
-      }));
+      const reply = await getAssistantReply(conversation.messages, controller.signal, chunk => appendAssistantChunk(conversation.id, chunk));
+      finalizeAssistantReply(conversation.id, reply);
     } catch (caught) {
-      if (!controller.signal.aborted) setError(caught instanceof Error ? caught.message : 'Die Schreibstube ist gerade nicht erreichbar.');
+      if (!controller.signal.aborted) {
+        removePartialAssistant(conversation.id);
+        setError(caught instanceof Error ? caught.message : 'Die Schreibstube ist gerade nicht erreichbar.');
+      }
     } finally {
       if (abortRef.current === controller) abortRef.current = null;
       setLoading(false);
     }
-  }, [activeConversation, loading, updateConversation]);
+  }, [activeConversation, appendAssistantChunk, finalizeAssistantReply, loading, removePartialAssistant]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -317,7 +410,7 @@ export function GptChat() {
                     </article>
                   );
                 })}
-                {loading && <div className={styles.loadingMessage} role="status"><span className={styles.messageMark}><Sparkles size={16} /></span><span className={styles.typing}><i /><i /><i /></span><span>Die Pointe wird gesucht …</span></div>}
+                {loading && messages.at(-1)?.role !== 'assistant' && <div className={styles.loadingMessage} role="status"><span className={styles.messageMark}><Sparkles size={16} /></span><DissolveText text={DISSOLVE_TEXT} label={DISSOLVE_TEXT} /><span>Die Pointe wird gesucht …</span></div>}
                 {error && <div className={styles.errorMessage} role="alert"><span>{error}</span><button type="button" onClick={() => void retryResponse()} disabled={loading}><RotateCcw size={13} /> Erneut versuchen</button></div>}
               </div>
             )}

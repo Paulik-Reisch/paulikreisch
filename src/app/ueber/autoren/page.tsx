@@ -49,7 +49,7 @@ export default function UeberAutorenPage() {
       },
       {
         "@type": "Article",
-        "@id": "https://www.paulikreisch.de/wiki/satire-landschaft/#article",
+        "@id": "https://www.paulikreisch.de/ratgeber/satire-schreiben/#article",
         "headline": "Die deutsche Satire-Landschaft: Von Postillon bis Paulik & Reisch",
         "description": "Eine Analyse der wichtigsten Satire-Magazine wie Der Postillon, TITANIC, heute-show und warum Paulik & Reisch die nächste Evolution ist.",
         "author": {
