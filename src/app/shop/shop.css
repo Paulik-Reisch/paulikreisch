@@ -16,7 +16,7 @@
 }
 
 .shop-page-main section {
-  padding-block: var(--space-section);
+  padding-block: calc(var(--space-section) - 10px);
 }
 
 .shop-page-main .container {

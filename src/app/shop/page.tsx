@@ -199,19 +199,16 @@ export default function ShopPage() {
                         <h2 className="shop-section-title">Nicht für die Schule.<br />Fürs Überleben.</h2>
                         <div className="features-grid">
                             <div className="feature">
-                                <span className="feature-icon">🌌</span>
                                 <h3>Zwei Bücher, ein Universum</h3>
-                                <p>Erleben Sie das ganze Ausmaß des literarischen Unsinns, von der Schule bis zur Bürokratie. Nur ein Buch zu lesen ist, als würde man nur einen Schuh anziehen.</p>
+                                <p>Lesen Sie beide Bände. Nur eines ist wie nur einen Schuh anzuziehen – geht, aber sieht dämlich aus.</p>
                             </div>
                             <div className="feature">
-                                <span className="feature-icon">💊</span>
                                 <h3>Doppelte Dosis Sarkasmus</h3>
-                                <p>Verdoppeln Sie die Anzahl der chaotischen Beschreibungen und sarkastischen Bemerkungen für maximale Unterhaltung.</p>
+                                <p>Doppelt Sarkasmus, doppelt Wahrheit. Oder so ähnlich.</p>
                             </div>
                             <div className="feature">
-                                <span className="feature-icon">☕</span>
                                 <h3>Unterstützen Sie die Autoren</h3>
-                                <p>Helfen Sie Philipp und Max, ihre Sucht nach überteuertem Kaffee zu finanzieren – so können sie noch mehr Unsinn schreiben!</p>
+                                <p>Philipp und Max brauchen Kaffee. Überteuerten. Damit sie noch mehr Unsinn schreiben können.</p>
                             </div>
                         </div>
                     </div>
