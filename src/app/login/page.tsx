@@ -14,7 +14,7 @@ function AdminIcon() {
 export default async function AdminLoginPage() {
   const session = await getSession();
   if (session) {
-    redirect("/admin");
+    redirect("/admin/authors");
   }
 
   return (

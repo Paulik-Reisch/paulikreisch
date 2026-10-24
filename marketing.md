@@ -5,6 +5,8 @@
 **Quelle:** 6 MarketingSkills (site-architecture, paywalls, lead-magnets, marketing-psychology, popups, product-marketing) + Live-Code-Audit (`/a`, `/shop`, `/worthaft`, `LeadWall`, `ShareWall`, `ExcerptGate`, `Hero`, `Newsletter`)  
 **Dev:** `npm run dev` auf `http://localhost:9002` · Live: `paulikreisch.de`
 
+> **Historischer Stand:** Das Satire-Magazin und der Artikelbereich wurden inzwischen entfernt. Verweise auf `/a`, Artikel, Walls und Magazin-Funnels in diesem Audit beschreiben den früheren Stand und sind keine aktuelle Produktempfehlung.
+
 ---
 
 ## Executive Summary

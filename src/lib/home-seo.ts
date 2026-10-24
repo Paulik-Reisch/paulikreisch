@@ -4,7 +4,7 @@ import { homeBook, homeFaqs } from './home-content';
 
 const site = 'https://paulikreisch.de';
 const title = 'Paulik & Reisch — Hallo Welt, Schulsatire & Worthaft';
-const description = 'Satire über Schule, Bürokratie und Alltag: Entdecke „Hallo Welt“ von Philipp Paulik und Maximilian Reisch, das Satire-Magazin und das tägliche Worträtsel Worthaft.';
+const description = 'Satire über Schule, Bürokratie und Alltag: Entdecke „Hallo Welt“ von Philipp Paulik und Maximilian Reisch sowie das tägliche Worträtsel Worthaft.';
 const image = { url: `${site}/hero-ab/hero-01-papier.jpg`, width: 2100, height: 900, alt: 'Hallo Welt — das satirische Buch von Paulik & Reisch' };
 
 /** Keep the editorial CMS usable, with a bounded fallback when Firestore is unavailable. */

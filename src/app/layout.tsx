@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     default: 'Hallo Welt — Das satirische Buch über Schule | Paulik & Reisch',
     template: '%s | Paulik & Reisch',
   },
-  description: 'Satire die weh tut und heilt: Paulik & Reisch sezieren Schulsystem, Bürokratie und Alltag. Buch „Hallo Welt" (106 S., 10,99€) + tägliches Worthaft + Magazin.',
+  description: 'Satire die weh tut und heilt: Paulik & Reisch sezieren Schulsystem, Bürokratie und Alltag. Buch „Hallo Welt" (106 S., 10,99€) + tägliches Worthaft.',
   applicationName: 'Paulik & Reisch',
   appleWebApp: { title: 'Paulik & Reisch' },
   authors: [{ name: 'Philipp Paulik' }, { name: 'Maximilian Reisch' }],
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Paulik & Reisch | Satirische Literatur & humorvolle Bücher',
-    description: '106 Seiten Schulsatire die sitzen. „Hallo Welt\" für 10,99€ + Worthaft + Magazin — täglich neuer Wahnsinn.',
+    description: '106 Seiten Schulsatire die sitzen. „Hallo Welt\" für 10,99€ + Worthaft — täglich neuer Wahnsinn.',
     creator: '@paulikreisch',
     images: ['https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/Frame-social.png?alt=media&token=0bd72452-4230-4a07-8bec-0f557f2aa3c7'],
   },
@@ -102,11 +102,6 @@ const globalJsonLd = {
       name: 'Paulik & Reisch',
       publisher: { '@id': 'https://paulikreisch.de/#organization' },
       inLanguage: 'de-DE',
-      potentialAction: {
-        '@type': 'SearchAction',
-        target: 'https://paulikreisch.de/a?q={search_term_string}',
-        'query-input': 'required name=search_term_string',
-      },
     },
   ],
 };

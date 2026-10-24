@@ -43,17 +43,10 @@ export default async function Home() {
     hasPart: [
         {
           "@type": "WebPage",
-          "@id": "https://paulikreisch.de/a",
-          name: "Paulik & Reisch Satire-Magazin",
-          url: "https://paulikreisch.de/a",
-          description: "Eine kuratierte Sammlung satirischer Meisterwerke, die den alltäglichen Wahnsinn auf die Schippe nehmen."
-        },
-        {
-          "@type": "WebPage",
           "@id": "https://paulikreisch.de/autoren",
           name: "Unsere Autoren",
           url: "https://paulikreisch.de/autoren",
-          description: "Lernen Sie die kreativen Köpfe hinter den satirischen Artikeln und Büchern von Paulik & Reisch kennen."
+          description: "Lernen Sie die kreativen Köpfe hinter den Büchern von Paulik & Reisch kennen."
         }
       ]
   };

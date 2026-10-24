@@ -62,8 +62,8 @@ export async function loginAction(
     (await cookies()).set("session", session, { expires, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', path: '/' });
 
     await addLog(username, 'Login erfolgreich', `Benutzer '${username}' hat sich angemeldet.`);
-    revalidatePath("/admin");
-    redirect('/admin');
+    revalidatePath("/admin/authors");
+    redirect('/admin/authors');
 }
 
 export async function logoutAction() {

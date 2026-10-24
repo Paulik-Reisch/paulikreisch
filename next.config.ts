@@ -59,16 +59,6 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      {
-        source: '/artikel',
-        destination: '/a',
-        permanent: true,
-      },
-      {
-        source: '/artikel/:slug*',
-        destination: '/a/:slug*',
-        permanent: true,
-      },
        {
         source: '/autor',
         destination: '/autoren',

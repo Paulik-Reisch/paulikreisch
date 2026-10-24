@@ -24,14 +24,10 @@ const sitemapData: SitemapNode[] = [
     description: 'Landingpage — Paulik & Reisch Overview',
   },
   {
-    label: 'Satire-Magazin',
-    href: '/a',
-    icon: FileText,
-    description: 'Artikel-Übersicht & Kategorien',
-    children: [
-      { label: 'Artikel lesen', href: '/a/[slug]', description: 'Einzelartikel mit Lead-/Share-Wall' },
-      { label: 'Autoren', href: '/autoren', icon: Users, description: 'Autoren-Portraits & Archive' },
-    ],
+    label: 'Autoren',
+    href: '/autoren',
+    icon: Users,
+    description: 'Autoren-Portraits',
   },
   {
     label: 'Shop & Bücher',

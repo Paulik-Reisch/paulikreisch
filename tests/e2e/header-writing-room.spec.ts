@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 for (const width of [375, 1440]) {
-  test(`header links to the writing room next to Worthaft at ${width}px`, async ({ page }) => {
+  test(`header navigation keeps its intended order at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.route(/identitytoolkit|firestore.googleapis.com|securetoken/, route => route.abort());
     await page.addInitScript(() => {
@@ -17,12 +17,20 @@ for (const width of [375, 1440]) {
     await expect(writingRoomLink).toBeVisible();
 
     if (width >= 768) {
-      const worthaftLink = page.getByRole('banner').getByRole('link', { name: 'Worthaft' });
+      const desktopNav = page.locator('header nav');
+      const worthaftLink = desktopNav.locator('a[href="/worthaft"]');
+      const shopLink = desktopNav.locator('a[href="/shop"]');
+      const writingRoomNavLink = desktopNav.locator('a[href="/gpt"]');
       const writingRoomBox = await writingRoomLink.boundingBox();
       const worthaftBox = await worthaftLink.boundingBox();
+      const shopBox = await shopLink.boundingBox();
+      const writingRoomNavBox = await writingRoomNavLink.boundingBox();
       expect(writingRoomBox).not.toBeNull();
       expect(worthaftBox).not.toBeNull();
-      expect(writingRoomBox!.x).toBeLessThan(worthaftBox!.x);
+      expect(shopBox).not.toBeNull();
+      expect(writingRoomNavBox).not.toBeNull();
+      expect(worthaftBox!.x).toBeLessThan(shopBox!.x);
+      expect(shopBox!.x).toBeLessThan(writingRoomNavBox!.x);
     }
 
     await writingRoomLink.click();

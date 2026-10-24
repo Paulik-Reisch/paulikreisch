@@ -51,7 +51,7 @@ Descriptions:
 3. Aktion bis Monatsende: 10,99€ statt 20,99€. Danach wieder voll.
 4. "Witzig, scharf, ehrlich" — Leserstimmen. Cover + Leseprobe auf paulikreisch.de/shop.
 
-Sitelinks: /a (Magazin) | /worthaft (Spiel) | /checkliste (Gratis-PDF) | /worthaft/ueber
+Sitelinks: /shop (Buch) | /worthaft (Spiel) | /checkliste (Gratis-PDF) | /worthaft/ueber
 Callouts: 106 Seiten · 4.8★ · Amazon Prime · Aktion 10,99€ · Satire pur
 
 ## Retargeting — 4-Komponenten (Skill)

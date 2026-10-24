@@ -109,13 +109,6 @@ export function Header() {
           <div className="flex items-center gap-3">
             {/* Desktop — Landing-Look */}
             <nav className="hidden md:flex items-center gap-3">
-              <Link
-                href="/gpt"
-                className="inline-flex items-center gap-2 rounded-[10px] border-2 border-[#174bc2] bg-[#2268ff] px-4 py-2 text-[0.9rem] font-bold text-white shadow-[0_3px_0_#174bc2] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#1d5ce5] hover:shadow-[0_4px_0_#174bc2] active:translate-y-px active:shadow-[0_1px_0_#174bc2]"
-              >
-                <WritingRoomIcon className="h-5 w-5 shrink-0" />
-                Schreibstube (KI)
-              </Link>
               {showWorthaftLink && (
                 <Link
                   href="/worthaft"
@@ -132,6 +125,13 @@ export function Header() {
                 className="inline-flex items-center justify-center rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-5 py-2 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] transition-[transform,box-shadow]"
               >
                 Buch kaufen
+              </Link>
+              <Link
+                href="/gpt"
+                className="inline-flex items-center gap-2 rounded-[10px] border-2 border-[#174bc2] bg-[#2268ff] px-4 py-2 text-[0.9rem] font-bold text-white shadow-[0_3px_0_#174bc2] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#1d5ce5] hover:shadow-[0_4px_0_#174bc2] active:translate-y-px active:shadow-[0_1px_0_#174bc2]"
+              >
+                <WritingRoomIcon className="h-5 w-5 shrink-0" />
+                Schreibstube (KI)
               </Link>
             </nav>
 
@@ -194,6 +194,14 @@ export function Header() {
 
           <nav className="flex-1 overflow-y-auto px-6 py-8">
             <div className="flex flex-col">
+              <Link
+                href="/gpt"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-3 border-b border-[#e8ddd0] py-4 text-[1.25rem] font-bold leading-tight tracking-[-0.015em] text-[#2268ff] transition-colors hover:text-[#174bc2]"
+              >
+                <WritingRoomIcon className="h-6 w-6 shrink-0" />
+                Schreibstube (KI)
+              </Link>
               {showWorthaftLink && (
                 <Link
                   href="/worthaft"
@@ -204,14 +212,6 @@ export function Header() {
                   Worthaft
                 </Link>
               )}
-              <Link
-                href="/gpt"
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-3 border-b border-[#e8ddd0] py-4 text-[1.25rem] font-bold leading-tight tracking-[-0.015em] text-[#2268ff] transition-colors hover:text-[#174bc2]"
-              >
-                <WritingRoomIcon className="h-6 w-6 shrink-0" />
-                Schreibstube (KI)
-              </Link>
               <Link
                 href="/shop"
                 onClick={() => setOpen(false)}

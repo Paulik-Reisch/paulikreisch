@@ -2,7 +2,7 @@
 
 ## Gestaltung
 
-Newsprint-inspirierte Literaturseite: Papier, dunkle Druckfarbe, vorhandenes Gelb und warme Akzente. Bestehende Buchbilder und vorhandene Autorenillustrationen. Buch, Magazin, Worthaft, Autoren und lesbare Antworten bilden eigenständige Bereiche. Desktop-Parallax ist eine optionale Verbesserung; Inhalte bleiben ohne JavaScript vollständig sichtbar. Bei reduzierter Bewegung entfällt Parallax.
+Newsprint-inspirierte Literaturseite: Papier, dunkle Druckfarbe, vorhandenes Gelb und warme Akzente. Bestehende Buchbilder und vorhandene Autorenillustrationen. Buch, Worthaft, Autoren und lesbare Antworten bilden eigenständige Bereiche. Desktop-Parallax ist eine optionale Verbesserung; Inhalte bleiben ohne JavaScript vollständig sichtbar. Bei reduzierter Bewegung entfällt Parallax.
 
 Die Inhalte von Header und Footer bleiben unverändert. Die Startseite nutzt dieselben Komponenten. Schrift- und Farbvariablen in `tokens.css` sind auf `.pr-home` begrenzt.
 

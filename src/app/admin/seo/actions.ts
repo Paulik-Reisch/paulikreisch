@@ -2,7 +2,7 @@
 "use server";
 
 import { z } from "zod";
-import { updateSeoMetadata, getArticleBySlug } from "@/lib/firestore";
+import { updateSeoMetadata } from "@/lib/firestore";
 import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/session";
 
@@ -50,23 +50,9 @@ export async function updateSeoMetadataAction(prevState: SeoActionState, formDat
     try {
         const { slug, ...dataToUpdate } = validatedFields.data;
 
-        // If the slug is for an article, fetch the article to use its title and teaser as a fallback
-        if (slug.startsWith('a-')) {
-            const article = await getArticleBySlug(slug.replace('a-', ''));
-            if (article) {
-                if (!dataToUpdate.title) dataToUpdate.title = article.title;
-                if (!dataToUpdate.ogTitle) dataToUpdate.ogTitle = article.title;
-                if (!dataToUpdate.twitterTitle) dataToUpdate.twitterTitle = article.title;
-
-                if (!dataToUpdate.metaDescription) dataToUpdate.metaDescription = article.teaser;
-                if (!dataToUpdate.ogDescription) dataToUpdate.ogDescription = article.teaser;
-                if (!dataToUpdate.twitterDescription) dataToUpdate.twitterDescription = article.teaser;
-            }
-        }
-        
         await updateSeoMetadata(slug, dataToUpdate, session.user.id);
         
-        const path = slug.startsWith('a-') ? `/a/${slug.replace('a-', '')}` : `/${slug}`;
+        const path = `/${slug}`;
         if (path !== '/home' && path !== '/') {
             revalidatePath(path);
         } else {

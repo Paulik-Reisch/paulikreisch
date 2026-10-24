@@ -1,6 +1,6 @@
 # Paulik & Reisch
 
-Deutsche Website für satirische Literatur, das Magazin und das tägliche Worträtsel **Worthaft**.
+Deutsche Website für satirische Literatur und das tägliche Worträtsel **Worthaft**.
 Next.js 15 · React · TypeScript · Tailwind CSS · Firebase · Firebase App Hosting.
 
 ## Lokal starten
@@ -37,7 +37,7 @@ Browserprüfungen verwenden 320, 375, 414, 768 und 1440 Pixel. Berichte liegen l
 | Lokale Startseiten-Designtokens | `tokens.css` |
 | Bisherige Startseite | `/index-old`, Originaldatei unter `docs/archive/index-old/` |
 | Gemeinsamer Header und Footer | `src/components/landing/` |
-| Buchshop / Magazin / Wortspiel | `src/app/shop`, `src/app/a`, `src/app/worthaft` |
+| Buchshop / Wortspiel | `src/app/shop`, `src/app/worthaft` |
 | Redaktion und Administration | `src/app/admin`, `src/components/admin` |
 | Datenzugriff | `src/lib/firestore.ts`, `src/firebase/` |
 | Tests | `tests/unit`, `tests/e2e` |
