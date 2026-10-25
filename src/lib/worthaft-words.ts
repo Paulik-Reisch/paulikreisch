@@ -1369,6 +1369,7 @@ export const WORDS = [
     "autor",
     "älter",
     "küche",
+    "wespe",
     "suche",
     "immun",
     "sucht",
