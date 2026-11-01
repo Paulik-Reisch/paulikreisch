@@ -31,6 +31,15 @@ export default function CookieRichtliniePage() {
               Diese Cookies sind für den Betrieb der Seite erforderlich (z. B. Speicherung Ihrer
               Consent-Entscheidung). Sie können nicht deaktiviert werden.
             </p>
+            <h3>Bits: Spielstand auf Ihrem Gerät</h3>
+            <p>
+              Das Spiel Bits speichert auf Wunsch beim Spielen den aktuellen Spielstand, die Rastergröße,
+              Spielzeit, Hinweise und bis zu 20 Rückgängig-Schritte im eigenen Cookie „pr_bits_v1“.
+              Es gilt nur für /game-labs/bits und läuft spätestens ein Jahr nach der letzten Speicherung ab.
+              Bits benötigt kein Konto und verwendet keine Analyse- oder Marketingdienste.
+              Über „Spielstand löschen“ im Spiel oder Ihre Browser-Einstellungen können Sie den Cookie entfernen.
+              Bei blockierten Cookies bleibt das Spiel für die aktuelle Sitzung spielbar.
+            </p>
             <h3>Analyse &amp; Leistung</h3>
             <p>
               Ermöglichen eine anonymisierte Reichweitenmessung (z. B. Firebase Analytics). Gesetzt nur nach
