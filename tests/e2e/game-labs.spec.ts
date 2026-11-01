@@ -30,3 +30,15 @@ test('Wikiland logo loads and its shimmer respects reduced motion', async ({ pag
   await page.emulateMedia({ reducedMotion: 'reduce' });
   expect(await logo.evaluate(image => getComputedStyle(image.parentElement!, '::after').animationName)).toBe('none');
 });
+
+test('retired game routes return 404 and are absent from the catalog', async ({ page, request }) => {
+  for (const route of ['/game-labs/hangman', '/game-labs/worthaft-classic']) {
+    const response = await request.get(route);
+    expect(response.status()).toBe(404);
+  }
+  await page.addInitScript(() => localStorage.setItem('hallowelt_cookie_consent', '{}'));
+  await page.goto('/game-labs');
+  await expect(page.getByRole('article')).toHaveCount(3);
+  await expect(page.getByRole('heading', { name: 'Hangman', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Worthaft Classic', exact: true })).toHaveCount(0);
+});
