@@ -1,11 +1,6 @@
 import type { Metadata, Viewport } from 'next';
-import { Suspense } from 'react';
-import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
-import { CookieBanner } from '@/components/landing/cookie-banner';
-import { ThemeProvider } from '@/components/theme-provider';
-import { FirebaseClientProvider } from '@/firebase/client-provider';
-import { GlobalTracker } from '@/components/analytics/global-tracker';
+import { SiteProviders } from '@/components/site-providers';
 import localFont from 'next/font/local';
 
 const poppins = localFont({ src: './fonts/poppins-latin-700-normal.woff2', weight: '700', display: 'swap', variable: '--font-poppins' });
@@ -118,16 +113,7 @@ export default function RootLayout({
       </head>
       <body className={`${poppins.variable} ${inter.variable} ${patrickHand.variable} ${lora.variable} ${sourceSerif.variable} font-body antialiased`}>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(globalJsonLd) }} />
-        <ThemeProvider attribute="class" defaultTheme="light">
-          <FirebaseClientProvider>
-            {children}
-            <Toaster />
-            <CookieBanner />
-            <Suspense>
-              <GlobalTracker />
-            </Suspense>
-          </FirebaseClientProvider>
-        </ThemeProvider>
+        <SiteProviders>{children}</SiteProviders>
       </body>
     </html>
   );

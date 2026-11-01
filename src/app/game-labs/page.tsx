@@ -16,6 +16,14 @@ type Game = {
 
 const games: Game[] = [
   {
+    id: 'bits',
+    title: 'Bits',
+    description: 'Zwei Zeichen. Drei Regeln. Fülle das Raster mit Nullen und Einsen – ganz ohne Raten.',
+    status: 'live',
+    href: '/game-labs/bits',
+    icon: '01',
+  },
+  {
     id: 'worthaft',
     title: 'Worthaft',
     description: 'Das tägliche Worträtsel: Errate das Wort in sechs Versuchen.',
@@ -64,7 +72,7 @@ export default function GameLabsPage() {
                 <p className={styles.eyebrow}>Zum Ausprobieren</p>
                 <h2 id="games-title">Was spielen wir heute?</h2>
               </div>
-              <p className={styles.sectionNote}>Drei Versuche. Ein tägliches Ritual. Und ein paar Dinge, die noch wachsen.</p>
+              <p className={styles.sectionNote}>Kleine Denkpausen, tägliche Rituale und ein paar Dinge, die noch wachsen.</p>
             </div>
 
             <div className={styles.grid}>
