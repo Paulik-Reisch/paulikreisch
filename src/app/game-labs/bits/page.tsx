@@ -2,15 +2,16 @@
 
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ArrowUpRight, Check, Lightbulb, LockKeyhole, RotateCcw, Undo2 } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, Check, CircleHelp, Lightbulb, LockKeyhole, RotateCcw, Undo2 } from 'lucide-react';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { generatePuzzle, getConflicts, getHint, isSolved, type Cell, type Size } from '@/lib/bits-engine';
-import { clearBitsState, loadBitsState, saveBitsState, type SavedBits } from '@/lib/bits-storage';
+import { loadBitsState, saveBitsState, type SavedBits } from '@/lib/bits-storage';
 import styles from './bits.module.css';
-import '../../../../tokens.css';
+import { Logo } from '@/components/ui/logo';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
 function freshGame(size: Size): SavedBits {
   const seed = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`;
@@ -26,13 +27,14 @@ export default function BitsPage() {
   const [game, setGame] = useState<SavedBits | null>(null);
   const [message, setMessage] = useState('Ein kleiner Moment. Dein Rätsel wird vorbereitet.');
   const [storageFailed, setStorageFailed] = useState(false);
-  const [remember, setRemember] = useState(true);
+  const [rulesOpen, setRulesOpen] = useState(false);
   const [visible, setVisible] = useState(true);
   const [conflicts, setConflicts] = useState<number[]>([]);
   const [hintCell, setHintCell] = useState<number | null>(null);
   const [focused, setFocused] = useState(0);
-  const [pending, setPending] = useState<{ kind: 'new' | 'reset' | 'delete'; size: Size } | null>(null);
+  const [pending, setPending] = useState<{ kind: 'new' | 'reset'; size: Size } | null>(null);
   const cells = useRef<(HTMLButtonElement | null)[]>([]);
+  const helpButton = useRef<HTMLButtonElement>(null);
   const puzzleId = game?.puzzle.id;
   const completed = game?.completed;
 
@@ -47,14 +49,14 @@ export default function BitsPage() {
   }, []);
 
   useEffect(() => {
-    if (!puzzleId || completed || !visible || pending) return;
+    if (!puzzleId || completed || !visible || pending || rulesOpen) return;
     const timer = window.setInterval(() => setGame(current => current && !current.completed ? { ...current, elapsed: current.elapsed + 1 } : current), 1000);
     return () => window.clearInterval(timer);
-  }, [puzzleId, completed, visible, pending]);
+  }, [puzzleId, completed, visible, pending, rulesOpen]);
 
   useEffect(() => {
-    if (game && remember) setStorageFailed(!saveBitsState(game));
-  }, [game, remember]);
+    if (game) setStorageFailed(!saveBitsState(game));
+  }, [game]);
 
   function start(size: Size) {
     setGame(freshGame(size));
@@ -131,21 +133,18 @@ export default function BitsPage() {
   const total = game?.board.length ?? 36;
 
   return (
-    <div className={`pr-home ${styles.page}`}>
+    <div className={styles.page}>
       <header className={styles.nav}>
-        <Link href="/game-labs" className={styles.back}><ArrowLeft size={16} aria-hidden="true" /> Game Labs</Link>
-        <Link href="/" className={styles.brand} aria-label="Paulik und Reisch Startseite">PAULIK &amp; REISCH <span>SPIELWIESE</span></Link>
+        <div className={styles.navInner}>
+          <Link href="/" className={styles.brand} aria-label="Paulik und Reisch Startseite"><Logo className="h-8 w-auto" /><span>Paulik &amp; Reisch</span></Link>
+          <div className={styles.heading}><span className={styles.titleMark} aria-hidden="true"><i>0</i><i>1</i></span><h1 id="bits-title">Bits</h1></div>
+          <button ref={helpButton} className={styles.help} type="button" onClick={() => setRulesOpen(true)} aria-label="Spielregeln öffnen"><CircleHelp size={22} aria-hidden="true" /><span>Spielregeln</span></button>
+        </div>
       </header>
 
-      <main className={styles.main}>
-        <section className={styles.intro} aria-labelledby="bits-title">
-          <div>
-            <p className={styles.eyebrow}>Zwei Zeichen. Ein klarer Kopf.</p>
-            <h1 id="bits-title">Bits<span className={styles.titleMark} aria-hidden="true"><i>0</i><i>1</i></span></h1>
-          </div>
-          <p className={styles.lead}>Weniger ist manchmal kniffliger.<br />Bring Nullen und Einsen ins Gleichgewicht.</p>
-        </section>
-
+      <main className={styles.main} aria-labelledby="bits-title">
+        <div className={styles.topline}><Link href="/game-labs" className={styles.back}><ArrowLeft size={15} aria-hidden="true" /> Game Labs</Link><span>Alles in Balance.</span></div>
+        <p id="bits-controls" className="sr-only">Felder antippen: leer, 0, 1, leer. Pfeiltasten zum Navigieren, 0 und 1 zum Setzen, Entf zum Leeren. Felder mit Schloss sind vorgegeben.</p>
         <div className={styles.layout}>
           <section className={styles.play} aria-label="Bits spielen">
             <div className={styles.gameHead}>
@@ -189,42 +188,34 @@ export default function BitsPage() {
             <button type="button" className={styles.newGame} disabled={!game} onClick={() => game && requestNew(game.puzzle.size)}>{game?.completed ? 'Noch eine Runde' : 'Neues Rätsel'}<ArrowUpRight size={18} aria-hidden="true" /></button>
           </section>
 
-          <aside className={styles.aside}>
-            <p className={styles.eyebrow}>Die kleine Denksportpause</p>
-            <h2>Drei Regeln.<br /><em>Viele Aha-Momente.</em></h2>
+        </div>
+        {storageFailed && <p className={styles.storageNotice} role="status">Speichern ist in diesem Browser nicht möglich. Du kannst spielen; beim Schließen geht der Fortschritt verloren.</p>}
+        <footer className={styles.footer}><Link href="/cookie-richtlinie">Cookies</Link><Link href="/impressum">Impressum</Link></footer>
+      </main>
+
+      <Dialog open={rulesOpen} onOpenChange={setRulesOpen}>
+        <DialogContent className={styles.rulesDialog} onCloseAutoFocus={event => { event.preventDefault(); helpButton.current?.focus(); }}>
+          <DialogHeader><DialogTitle className={styles.rulesTitle}>So spielst du Bits</DialogTitle><DialogDescription>Zwei Zeichen, drei Regeln. Bring Nullen und Einsen ins Gleichgewicht.</DialogDescription></DialogHeader>
             <ol className={styles.rules}>
               <li><span className={styles.ruleNumber}>01</span><div><h3>Halbe, halbe.</h3><p>Jede Zeile und jede Spalte enthält gleich viele Nullen und Einsen.</p><div className={styles.example} aria-hidden="true"><i>0</i><b>1</b><b>1</b><i>0</i></div></div></li>
               <li><span className={styles.ruleNumber}>02</span><div><h3>Aller guten Dinge sind zwei.</h3><p>Drei gleiche Zeichen direkt nebeneinander oder untereinander sind tabu.</p><div className={`${styles.example} ${styles.badExample}`} aria-hidden="true"><i>0</i><i>0</i><i>0</i><span>×</span></div></div></li>
               <li><span className={styles.ruleNumber}>03</span><div><h3>Jede Reihe ein Original.</h3><p>Keine zwei Zeilen und keine zwei Spalten dürfen identisch sein.</p></div></li>
             </ol>
-            <div className={styles.instructions} id="bits-controls"><h3>Einfach antippen.</h3><p>Leer → <strong>0</strong> → <strong>1</strong> → leer. Felder mit Schloss sind vorgegeben.</p><p>Mit Tastatur: Pfeiltasten zum Navigieren, <kbd>0</kbd> / <kbd>1</kbd> zum Setzen, <kbd>Entf</kbd> zum Leeren.</p></div>
-          </aside>
-        </div>
-
-        <footer className={styles.footer}>
-          <p>{!remember ? 'Speichern ist für diese Sitzung ausgeschaltet. Dein Spielstand-Cookie wurde gelöscht.' : storageFailed ? 'Speichern ist in diesem Browser nicht möglich. Du kannst spielen; beim Schließen geht der Fortschritt verloren.' : 'Dein Spiel bleibt bei dir. Ein Cookie merkt sich deinen Fortschritt – ohne Account.'}</p>
-          <button className={styles.privacyAction} type="button" disabled={!game} onClick={() => {
-            if (!remember) { setRemember(true); setMessage('Speichern ist wieder aktiv. Dein Fortschritt bleibt auf diesem Gerät.'); }
-            else if (game) setPending({ kind: 'delete', size: game.puzzle.size });
-          }}>{remember ? 'Spielstand löschen' : 'Speichern aktivieren'}</button>
-          <div><span>Bits · Ein Takuzu-Spiel von P&amp;R</span><Link href="/cookie-richtlinie">Cookies</Link><Link href="/impressum">Impressum</Link></div>
-          <p className={styles.credit}>Inspiriert von <a href="https://0hh1.com/" target="_blank" rel="noreferrer">0h h1 von Q42</a>. Eigenständig entwickelt für Game Labs.</p>
-        </footer>
-      </main>
+            <div className={styles.instructions}><h3>Einfach antippen.</h3><p>Leer → <strong>0</strong> → <strong>1</strong> → leer. Felder mit Schloss sind vorgegeben.</p><p>Mit Tastatur: Pfeiltasten zum Navigieren, <kbd>0</kbd> / <kbd>1</kbd> zum Setzen, <kbd>Entf</kbd> zum Leeren.</p></div>
+        </DialogContent>
+      </Dialog>
 
       <AlertDialog open={pending !== null} onOpenChange={open => { if (!open) setPending(null); }}>
-        <AlertDialogContent>
-          <AlertDialogHeader><AlertDialogTitle>{pending?.kind === 'delete' ? 'Gespeicherten Spielstand löschen?' : pending?.kind === 'reset' ? 'Dieses Rätsel zurücksetzen?' : 'Ein neues Rätsel starten?'}</AlertDialogTitle><AlertDialogDescription>{pending?.kind === 'delete' ? 'Das Bits-Cookie wird gelöscht und Speichern für diese Sitzung ausgeschaltet. Du kannst dein laufendes Rätsel weiterspielen.' : pending?.kind === 'reset' ? 'Alle eigenen Einträge, Hinweise und die Spielzeit werden zurückgesetzt. Die Vorgaben bleiben gleich.' : 'Dein aktueller Spielstand wird ersetzt. Dieser Schritt lässt sich nicht rückgängig machen.'}</AlertDialogDescription></AlertDialogHeader>
+        <AlertDialogContent className={styles.confirmDialog}>
+          <AlertDialogHeader><AlertDialogTitle>{pending?.kind === 'reset' ? 'Dieses Rätsel zurücksetzen?' : 'Ein neues Rätsel starten?'}</AlertDialogTitle><AlertDialogDescription>{pending?.kind === 'reset' ? 'Alle eigenen Einträge, Hinweise und die Spielzeit werden zurückgesetzt. Die Vorgaben bleiben gleich.' : 'Dein aktueller Spielstand wird ersetzt. Dieser Schritt lässt sich nicht rückgängig machen.'}</AlertDialogDescription></AlertDialogHeader>
           <AlertDialogFooter><AlertDialogCancel>Weiterspielen</AlertDialogCancel><AlertDialogAction onClick={() => {
             if (!pending || !game) return;
-            if (pending.kind === 'delete') {
-              clearBitsState(); setRemember(false); setMessage('Gespeicherter Spielstand gelöscht. Du spielst jetzt ohne Speicherung weiter.');
-            } else if (pending.kind === 'reset') {
+            if (pending.kind === 'reset') {
               setGame({ ...game, board: [...game.puzzle.givens], history: [], elapsed: 0, hints: 0, completed: false });
               setConflicts([]); setHintCell(null); setMessage('Alles auf Anfang. Dasselbe Rätsel, ein neuer Blick.');
             } else start(pending.size);
             setPending(null);
-          }}>{pending?.kind === 'delete' ? 'Spielstand löschen' : pending?.kind === 'reset' ? 'Zurücksetzen' : 'Neues Rätsel starten'}</AlertDialogAction></AlertDialogFooter>
+          }}>{pending?.kind === 'reset' ? 'Zurücksetzen' : 'Neues Rätsel starten'}</AlertDialogAction></AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </div>

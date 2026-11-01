@@ -71,7 +71,7 @@ for (const width of [320, 390, 1440]) {
   });
 }
 
-test('confirmation protects progress; hints, reset, win and cookie deletion work', async ({ page, context }) => {
+test('confirmation protects progress; hints, reset and win work', async ({ page, context }) => {
   await page.goto('/game-labs/bits');
   await page.getByRole('button', { name: 'Hinweis', exact: true }).click();
   await expect(page.getByText('1 Hinweis', { exact: true })).toBeVisible();
@@ -90,14 +90,7 @@ test('confirmation protects progress; hints, reset, win and cookie deletion work
   await expect(page.getByText('Bit für Bit. Geschafft!', { exact: true })).toBeVisible();
   await page.reload();
   await expect(page.getByText('Bit für Bit. Geschafft!', { exact: true })).toBeVisible();
-  await page.getByRole('button', { name: 'Spielstand löschen', exact: true }).click();
-  await page.getByRole('alertdialog').getByRole('button', { name: 'Spielstand löschen', exact: true }).click();
-  await expect(page.getByRole('button', { name: 'Speichern aktivieren' })).toBeVisible();
-  await page.getByRole('button', { name: 'Noch eine Runde' }).click();
-  await page.waitForTimeout(1200);
-  expect((await context.cookies()).find(cookie => cookie.name === BITS_COOKIE)).toBeUndefined();
-  await page.getByRole('button', { name: 'Speichern aktivieren' }).click();
-  await expect.poll(async () => (await context.cookies()).some(cookie => cookie.name === BITS_COOKIE)).toBe(true);
+
 });
 
 test('corrupt cookies recover and blocked cookies still permit playing', async ({ page, context }) => {
@@ -126,4 +119,22 @@ test('rule check marks conflicting entries and a reload preserves timer and undo
   await expect(board.locator('[data-invalid="true"]').first()).toBeVisible();
   await page.reload();
   await expect(page.getByRole('button', { name: 'Zurück', exact: true })).toBeEnabled();
+});
+
+
+test('rules open in a popup, close with Escape and retain keyboard focus', async ({ page }) => {
+  await page.goto('/game-labs/bits');
+  const help = page.getByRole('button', { name: 'Spielregeln öffnen' });
+  await expect(page.getByText('Halbe, halbe.', { exact: true })).toHaveCount(0);
+  await help.click();
+  const popup = page.getByRole('dialog', { name: 'So spielst du Bits' });
+  await expect(popup).toBeVisible();
+  await expect(popup.getByText('Halbe, halbe.', { exact: true })).toBeVisible();
+  const accessibility = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
+  expect(accessibility.violations).toEqual([]);
+  await page.keyboard.press('Escape');
+  await expect(popup).toHaveCount(0);
+  await expect(help).toBeFocused();
+  await expect(page.getByRole('button', { name: 'Spielstand löschen', exact: true })).toHaveCount(0);
+  await expect(page.getByText(/Ein Takuzu-Spiel von/)).toHaveCount(0);
 });
