@@ -40,22 +40,7 @@ const games: Game[] = [
     href: '/worthaft',
     icon: 'W',
   },
-  {
-    id: 'hangman',
-    title: 'Hangman',
-    description: 'Das klassische Galgenmännchen, nur mit deutschen Wörtern.',
-    status: 'alpha',
-    href: '/game-labs/hangman',
-    icon: 'H',
-  },
-  {
-    id: 'worthaft-classic',
-    title: 'Worthaft Classic',
-    description: 'Die ursprüngliche Version — ohne Joker, Animationen und Einstellungen.',
-    status: 'alpha',
-    href: '/game-labs/worthaft-classic',
-    icon: '01',
-  },
+
 ];
 
 function GamePreview({ game }: { game: Game }) {

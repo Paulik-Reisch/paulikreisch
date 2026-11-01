@@ -71,8 +71,6 @@ const sitemapData: SitemapNode[] = [
     icon: Gamepad2,
     description: 'Experimentelle Mini-Games',
     children: [
-      { label: 'Hangman', href: '/game-labs/hangman', description: 'Galgenmännchen mit deutschen Wörtern' },
-      { label: 'Worthaft Classic', href: '/game-labs/worthaft-classic', description: 'Original-Version ohne Joker/Animationen' },
     ],
   },
   {
