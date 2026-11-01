@@ -12,7 +12,10 @@ test('Game Labs links to Bits and client navigation restores the site providers'
   await page.goto('/game-labs');
   await page.getByRole('article').filter({ has: page.getByRole('heading', { name: 'Bits', exact: true }) }).getByRole('link').click();
   await expect(page.getByRole('group', { name: '6 mal 6 Spielfeld' })).toBeVisible();
-  await page.getByRole('link', { name: 'Game Labs', exact: true }).click();
+  await expect(page.getByText('Alles in Balance.', { exact: true })).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'Game Labs', exact: true })).toHaveCount(0);
+  await page.getByRole('link', { name: 'Paulik und Reisch Startseite' }).click();
+  await page.goto('/game-labs');
   await expect(page.getByRole('heading', { name: 'Was spielen wir heute?' })).toBeVisible();
   expect(errors).toEqual([]);
 });

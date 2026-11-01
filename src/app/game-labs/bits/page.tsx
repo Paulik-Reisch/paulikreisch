@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ArrowUpRight, Check, CircleHelp, Lightbulb, LockKeyhole, RotateCcw, Undo2 } from 'lucide-react';
+import { ArrowUpRight, Check, CircleHelp, Lightbulb, LockKeyhole, RotateCcw, Undo2 } from 'lucide-react';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -143,7 +143,6 @@ export default function BitsPage() {
       </header>
 
       <main className={styles.main} aria-labelledby="bits-title">
-        <div className={styles.topline}><Link href="/game-labs" className={styles.back}><ArrowLeft size={15} aria-hidden="true" /> Game Labs</Link><span>Alles in Balance.</span></div>
         <p id="bits-controls" className="sr-only">Felder antippen: leer, 0, 1, leer. Pfeiltasten zum Navigieren, 0 und 1 zum Setzen, Entf zum Leeren. Felder mit Schloss sind vorgegeben.</p>
         <div className={styles.layout}>
           <section className={styles.play} aria-label="Bits spielen">
