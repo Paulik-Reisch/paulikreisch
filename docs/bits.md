@@ -31,3 +31,5 @@ No dependencies were added or upgraded. The 2026-11-01 audit reports 18 existing
 ## Visual alignment with Worthaft
 
 Bits uses Worthaft’s original palette (`#0067d9` blue and `#e8be3c` yellow), Inter/Poppins typography, a compact centered board, 10px tile/control rounding, and its sunshine asset. Rules and keyboard instructions live in an accessible dialog. Public provenance, storage boilerplate and in-game cookie deletion controls have been removed from the game screen; this technical document retains implementation provenance.
+
+Follow-up: the lockfile now resolves re2js 2.9.1 and qs 6.17.1 within existing dependency ranges. The production-only npm audit is clean; 16 moderate development-tool findings remain. No direct dependency ranges changed.
