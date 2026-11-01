@@ -40,6 +40,15 @@ export default function CookieRichtliniePage() {
               Über Ihre Browser-Einstellungen können Sie den Cookie entfernen.
               Bei blockierten Cookies bleibt das Spiel für die aktuelle Sitzung spielbar.
             </p>
+            <h3>Wikiland: Spielstand auf Ihrem Gerät</h3>
+            <p>
+              Wikiland speichert die aktuelle Runde, Rateversuche, aufgedeckte Hinweise und die Spielzeit
+              in bis zu vier eigenen Cookies „pr_wikiland_v1_0“ bis „pr_wikiland_v1_3“.
+              Sie gelten nur für /game-labs/wikiland und laufen spätestens ein Jahr nach der letzten Speicherung ab.
+              Das Spiel benötigt kein Konto und verwendet keine Analyse- oder Marketingdienste.
+              Sie können die Cookies über Ihre Browser-Einstellungen entfernen. Bei blockierten Cookies
+              bleibt die Runde spielbar; der Fortschritt kann dann beim Schließen verloren gehen.
+            </p>
             <h3>Analyse &amp; Leistung</h3>
             <p>
               Ermöglichen eine anonymisierte Reichweitenmessung (z. B. Firebase Analytics). Gesetzt nur nach

@@ -8,10 +8,11 @@ import { CookieBanner } from '@/components/landing/cookie-banner';
 import { GlobalTracker } from '@/components/analytics/global-tracker';
 import { Toaster } from '@/components/ui/toaster';
 
-/** Bits runs independently of authentication, tracking and browser theme storage. */
+/** Cookie-only games run independently of authentication, tracking and theme storage. */
 export function SiteProviders({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  if (pathname === '/game-labs/bits' || pathname.startsWith('/game-labs/bits/')) return <>{children}</>;
+  const cookieOnlyGame = ['/game-labs/bits', '/game-labs/wikiland'].some(path => pathname === path || pathname.startsWith(`${path}/`));
+  if (cookieOnlyGame) return <>{children}</>;
   return (
     <ThemeProvider attribute="class" defaultTheme="light">
       <FirebaseClientProvider>

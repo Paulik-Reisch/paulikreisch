@@ -88,7 +88,7 @@ test('shop and game labs expose their content and play destinations', async ({ p
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Was spielen wir heute?' })).toBeVisible();
   await expect(page.getByRole('article').filter({ has: page.getByRole('heading', { name: 'Worthaft', exact: true }) }).getByRole('link', { name: /Jetzt spielen/ })).toHaveAttribute('href', '/worthaft');
-  await expect(page.getByRole('link', { name: /Experiment öffnen/ })).toHaveCount(2);
+  await expect(page.getByRole('link', { name: /Experiment öffnen/ })).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 
