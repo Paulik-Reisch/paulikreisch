@@ -16,6 +16,14 @@ type Game = {
 
 const games: Game[] = [
   {
+    id: 'wikiland',
+    title: 'Wikiland',
+    description: 'Ein verborgener Wikipedia-Artikel. Deine Wörter bringen ihn ans Licht. Findest du den Titel?',
+    status: 'live',
+    href: '/game-labs/wikiland',
+    icon: 'Wi',
+  },
+  {
     id: 'bits',
     title: 'Bits',
     description: 'Zwei Zeichen. Drei Regeln. Fülle das Raster mit Nullen und Einsen – ganz ohne Raten.',
