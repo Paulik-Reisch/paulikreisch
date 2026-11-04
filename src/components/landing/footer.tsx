@@ -6,7 +6,7 @@ import { useFormStatus } from "react-dom";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { subscribeToNewsletterAction, logEventAction } from "@/app/actions";
-import { LibraryBig, Loader2, Menu, X } from "lucide-react";
+import { LibraryBig, Loader2 } from "lucide-react";
 import { Logo } from "../ui/logo";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { useUser } from "@/firebase/provider";
@@ -20,6 +20,7 @@ const amazonLink = "https://amzn.eu/d/0CdFeZ3";
 const googlePlayLink = "https://play.google.com/store/books/details?id=HZb3EAAAQBAJ&rdid=book-HZb3EAAAQBAJ&rdot=1&source=gbs_atb&pcampaignid=books_booksearch_atb";
 const elevenReaderLink = "https://elevenreader.io/audiobooks/hallo-welt/PNgTk712as4goF7HwxJJ";
 const footerActionClass = "inline-flex h-12 items-center justify-start gap-2 rounded-[10px] border-2 border-[#1d1a15] px-4 text-[0.9rem] font-semibold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] transition-[transform,box-shadow,background-color]";
+const moreButtonClass = "cursor-pointer text-xs text-inherit hover:text-foreground hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2268ff] focus-visible:ring-offset-2";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -41,6 +42,8 @@ export function Footer() {
   const { user } = useUser();
   const pathname = usePathname();
   const [moreOpen, setMoreOpen] = useState(false);
+  const [desktopMoreOpen, setDesktopMoreOpen] = useState(false);
+  const [moreMenuHovered, setMoreMenuHovered] = useState(false);
 
   useEffect(() => {
     if (state.success) {
@@ -56,6 +59,15 @@ export function Footer() {
       toast({ variant: "destructive", title: "Fehler", description: state.error });
     }
   }, [state, toast, user, pathname]);
+
+  useEffect(() => {
+    if ((!moreOpen && !desktopMoreOpen) || moreMenuHovered) return;
+    const timeoutId = window.setTimeout(() => {
+      setMoreOpen(false);
+      setDesktopMoreOpen(false);
+    }, 5000);
+    return () => window.clearTimeout(timeoutId);
+  }, [moreOpen, desktopMoreOpen, moreMenuHovered]);
   
   return (
     <div className="text-[#4d463b] leading-relaxed">
@@ -145,117 +157,137 @@ export function Footer() {
               <Link href="/impressum" className="hover:text-foreground hover:underline">Impressum</Link>
               <Link href="/datenschutz" className="hover:text-foreground hover:underline">Datenschutz</Link>
               <Link href="/cookie-richtlinie" className="hover:text-foreground hover:underline">Cookie-Richtlinie</Link>
-              <Popover>
+              <Popover open={desktopMoreOpen} onOpenChange={setDesktopMoreOpen}>
                 <PopoverTrigger asChild>
-                  <button type="button" className="hover:text-foreground hover:underline">
+                  <button type="button" className={moreButtonClass}>
                     Mehr
                   </button>
                 </PopoverTrigger>
-                <PopoverContent className="w-48">
+                <PopoverContent
+                  side="top"
+                  align="end"
+                  role="region"
+                  aria-label="Weitere rechtliche Informationen"
+                  className="w-48 origin-[var(--radix-popover-content-transform-origin)] rounded-[10px] border-[#e8ddd0] bg-white p-1 text-xs text-[#1d1a15] shadow-[0_10px_24px_rgba(29,26,21,0.16)] motion-reduce:animate-none"
+                  onMouseEnter={() => setMoreMenuHovered(true)}
+                  onMouseLeave={() => setMoreMenuHovered(false)}
+                >
                   <Link
                     href="/transparenz"
-                    className="block px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:underline transition-colors"
+                    className="block px-3 py-1.5 text-left text-xs text-[#1d1a15] hover:underline transition-colors"
                   >
                     Transparenzhinweise
                   </Link>
                   <Link
                     href="/agb"
-                    className="block px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:underline transition-colors"
+                    className="block px-3 py-1.5 text-left text-xs text-[#1d1a15] hover:underline transition-colors"
                   >
                     AGB
                   </Link>
                   <Link
                     href="/widerruf"
-                    className="block px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:underline transition-colors"
+                    className="block px-3 py-1.5 text-left text-xs text-[#1d1a15] hover:underline transition-colors"
                   >
                     Widerruf
                   </Link>
                   <Link
                     href="/urheberrecht"
-                    className="block px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:underline transition-colors"
+                    className="block px-3 py-1.5 text-left text-xs text-[#1d1a15] hover:underline transition-colors"
                   >
                     Urheberrecht
                   </Link>
                   <Link
                     href="/barrierefreiheit"
-                    className="block px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:underline transition-colors"
+                    className="block px-3 py-1.5 text-left text-xs text-[#1d1a15] hover:underline transition-colors"
                   >
                     Barrierefreiheit
                   </Link>
                 </PopoverContent>
               </Popover>
             </nav>
-            <div className="flex items-center gap-2 sm:hidden">
+            <div className="flex items-center gap-2 self-end sm:hidden">
               <button
                 type="button"
-                className="inline-flex items-center justify-center w-8 h-8 rounded-full border border-[#e8ddd0] bg-white text-[#4d463b] hover:bg-[#f7f2e7] transition-colors"
-                aria-label="Mehr rechtliche Informationen"
+                className={moreButtonClass}
+                aria-expanded={moreOpen}
+                aria-controls="footer-more-menu"
                 onClick={() => setMoreOpen((open) => !open)}
               >
-                <Menu size={16} aria-hidden="true" />
+                Mehr
               </button>
-              {moreOpen && (
-                <div className="absolute bottom-full left-0 mb-2 w-48 rounded-[10px] border border-[#e8ddd0] bg-white shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)] z-50">
+              <div
+                id="footer-more-menu"
+                role="region"
+                aria-label="Weitere rechtliche Informationen"
+                aria-hidden={!moreOpen}
+                data-state={moreOpen ? "open" : "closed"}
+                onMouseEnter={() => setMoreMenuHovered(true)}
+                onMouseLeave={() => setMoreMenuHovered(false)}
+                className={`absolute bottom-full right-0 z-50 mb-2 w-48 origin-bottom-right rounded-[10px] border border-[#e8ddd0] bg-white p-1 text-xs text-[#1d1a15] shadow-[0_10px_24px_rgba(29,26,21,0.16)] transition-[opacity,transform,visibility] duration-200 ease-out motion-reduce:transition-none ${
+                  moreOpen
+                    ? "visible translate-y-0 scale-100 opacity-100"
+                    : "pointer-events-none invisible translate-y-2 scale-95 opacity-0"
+                }`}
+              >
                   <div className="flex flex-col gap-1">
                     <Link
                       href="/impressum"
-                      className="px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                      className="block px-3 py-1.5 text-left text-xs text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
                       onClick={() => setMoreOpen(false)}
                     >
                       Impressum
                     </Link>
                     <Link
                       href="/datenschutz"
-                      className="px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                      className="block px-3 py-1.5 text-left text-xs text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
                       onClick={() => setMoreOpen(false)}
                     >
                       Datenschutz
                     </Link>
                     <Link
                       href="/cookie-richtlinie"
-                      className="px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                      className="block px-3 py-1.5 text-left text-xs text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
                       onClick={() => setMoreOpen(false)}
                     >
                       Cookie-Richtlinie
                     </Link>
                     <Link
                       href="/transparenz"
-                      className="px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                      className="block px-3 py-1.5 text-left text-xs text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
                       onClick={() => setMoreOpen(false)}
                     >
                       Transparenzhinweise
                     </Link>
                     <Link
                       href="/agb"
-                      className="px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                      className="block px-3 py-1.5 text-left text-xs text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
                       onClick={() => setMoreOpen(false)}
                     >
                       AGB
                     </Link>
                     <Link
                       href="/widerruf"
-                      className="px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                      className="block px-3 py-1.5 text-left text-xs text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
                       onClick={() => setMoreOpen(false)}
                     >
                       Widerruf
                     </Link>
                     <Link
                       href="/urheberrecht"
-                      className="px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                      className="block px-3 py-1.5 text-left text-xs text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
                       onClick={() => setMoreOpen(false)}
                     >
                       Urheberrecht
                     </Link>
                     <Link
                       href="/barrierefreiheit"
-                      className="px-4 py-2.5 text-left text-sm text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
+                      className="block px-3 py-1.5 text-left text-xs text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors"
                       onClick={() => setMoreOpen(false)}
                     >
                       Barrierefreiheit
                     </Link>
                   </div>
-                </div>
-              )}
+              </div>
             </div>
           </div>
         </div>

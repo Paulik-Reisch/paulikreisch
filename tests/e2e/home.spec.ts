@@ -76,6 +76,97 @@ test('footer exposes the guide, newsletter and legal links', async ({ page }) =>
   await expect(footer.getByRole('link', { name: 'Datenschutzerklärung' })).toHaveAttribute('href', '/datenschutz');
 });
 
+for (const width of [375, 1280]) {
+  test(`footer “Mehr” menu animates from its trigger and closes after five seconds at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/');
+    await page.clock.install();
+
+    const moreButton = page.getByRole('button', { name: 'Mehr' });
+    await expect(moreButton).toBeVisible();
+    await expect(moreButton).toHaveText('Mehr');
+    await expect(moreButton.locator('svg')).toHaveCount(0);
+    await expect(moreButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+    await expect(moreButton).toHaveCSS('border-width', '0px');
+    await expect(moreButton).toHaveCSS('box-shadow', 'none');
+    await moreButton.hover();
+    await expect(moreButton).toHaveCSS('text-decoration-line', 'underline');
+    await moreButton.click();
+
+    const legalMenu = width < 640
+      ? page.locator('#footer-more-menu')
+      : page.getByRole('region', { name: 'Weitere rechtliche Informationen' });
+    await expect(legalMenu).toBeVisible();
+    const firstLegalLink = legalMenu.getByRole('link', { name: width < 640 ? 'Impressum' : 'Transparenzhinweise' });
+    await expect(firstLegalLink).toHaveCSS('font-size', '12px');
+    await expect(legalMenu).toHaveCSS('width', '192px');
+    if (width < 640) {
+      await expect.poll(async () => {
+        const triggerBounds = await moreButton.boundingBox();
+        const menuBounds = await legalMenu.boundingBox();
+        return triggerBounds && menuBounds
+          ? Math.abs(menuBounds.x + menuBounds.width - (triggerBounds.x + triggerBounds.width))
+          : Number.POSITIVE_INFINITY;
+      }).toBeLessThan(1);
+    }
+    await expect(moreButton).toHaveAttribute('aria-expanded', 'true');
+    await expect(firstLegalLink).toBeVisible();
+
+    await page.clock.fastForward(5000);
+    await expect(legalMenu).toBeHidden();
+    await expect(moreButton).toHaveAttribute('aria-expanded', 'false');
+  });
+}
+
+for (const width of [375, 1280]) {
+  test(`footer “Mehr” menu opens with the keyboard at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/');
+
+    const moreButton = page.getByRole('button', { name: 'Mehr' });
+    await moreButton.focus();
+    await page.keyboard.press('Enter');
+
+    const legalMenu = width < 640
+      ? page.locator('#footer-more-menu')
+      : page.getByRole('region', { name: 'Weitere rechtliche Informationen' });
+    await expect(legalMenu).toBeVisible();
+    await expect(moreButton).toHaveAttribute('aria-expanded', 'true');
+  });
+}
+
+test('desktop footer “Mehr” menu stays open while hovered and closes five seconds after leaving', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/');
+  await page.clock.install();
+
+  const moreButton = page.getByRole('button', { name: 'Mehr' });
+  await moreButton.click();
+  const legalMenu = page.getByRole('region', { name: 'Weitere rechtliche Informationen' });
+  await expect(legalMenu).toBeVisible();
+  await legalMenu.hover();
+
+  await page.clock.fastForward(5000);
+  await expect(legalMenu).toBeVisible();
+
+  await page.mouse.move(0, 0);
+  await page.clock.fastForward(4999);
+  await expect(legalMenu).toBeVisible();
+  await page.clock.fastForward(1);
+  await expect(legalMenu).toBeHidden();
+});
+
+test('mobile footer “Mehr” menu disables its animation for reduced motion', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 900 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Mehr' }).click();
+
+  const legalMenu = page.locator('#footer-more-menu');
+  await expect(legalMenu).toBeVisible();
+  await expect.poll(() => legalMenu.evaluate(element => getComputedStyle(element).transitionDuration)).toBe('0s');
+});
+
 test('shop and game labs expose their content and play destinations', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 900 });
   await page.goto('/shop');
