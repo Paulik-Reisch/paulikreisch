@@ -38,14 +38,16 @@ async function readBoundedBody(body: ReadableStream<Uint8Array> | null, limit: n
   }
 }
 
-export function normalizeDefinitionWord(value: unknown): string | null {
+export function normalizeDefinitionWord(value: unknown, words: readonly string[] = WORDS): string | null {
   if (typeof value !== 'string' || value.length > 20) return null;
   const word = value.trim().normalize('NFC').toLocaleLowerCase('de');
-  return /^[a-zäöüß]{5}$/.test(word) && allowedWords.has(word) ? word : null;
+  const isAllowed = words === WORDS ? allowedWords.has(word) : words.includes(word);
+  return /^[a-zäöüß]{5}$/.test(word) && isAllowed ? word : null;
 }
 
 type Dependencies = {
   apiKey: () => string | undefined;
+  loadAllowedWords?: () => Promise<readonly string[]>;
   fetch?: typeof fetch;
   now?: () => number;
   timeoutMs?: number;
@@ -140,7 +142,10 @@ export function createDefinitionHandler(dependencies: Dependencies) {
         if (error instanceof DefinitionError) throw error;
         throw new DefinitionError(400, 'Bitte sende ein gültiges Wort.');
       }
-      const word = normalizeDefinitionWord((payload as { word?: unknown } | null)?.word);
+      const allowedWords = dependencies.loadAllowedWords
+        ? await dependencies.loadAllowedWords()
+        : WORDS;
+      const word = normalizeDefinitionWord((payload as { word?: unknown } | null)?.word, allowedWords);
       if (!word) throw new DefinitionError(400, 'Dieses Wort ist nicht in Worthaft enthalten.');
       const cached = cache.get(word);
       if (cached && cached.expires > now()) return Response.json({ word, definition: cached.definition }, { headers });

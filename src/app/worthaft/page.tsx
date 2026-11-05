@@ -28,12 +28,13 @@ import { Loader2 } from 'lucide-react';
 import FeedbackDrawer from './FeedbackDrawer';
 import WordDefinitionDialog from './WordDefinitionDialog';
 import { initializeFirebase } from '@/firebase';
+import { loadWorthaftWordLists } from '@/lib/worthaft-word-lists';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import confetti from 'canvas-confetti';
 import { getWorthaftKeyDimensions, getWorthaftTileDimensions, getWorthaftStatusClass, normalizeWorthaftSettings, DEFAULT_WORTHAFT_SETTINGS as DEFAULT_SETTINGS, type WorthaftSettings } from '@/lib/worthaft-settings';
 import { canInteractWithWorthaftGame, readWorthaftRowStart, writeWorthaftRowStart, clearWorthaftRowStart } from '@/lib/worthaft-game-state';
 import { hasWorthaftFeedbackDecision } from '@/lib/worthaft-feedback';
-import { isWorthaftAntiWord } from '@/lib/worthaft-anti-words';
+import { isWorthaftAntiWord, WORTHAFT_ANTI_WORDS } from '@/lib/worthaft-anti-words';
 import {
   createInvalidWorthaftWord,
   getInvalidWordVoteAction,
@@ -101,7 +102,7 @@ type DailyGameState = {
 
 
 // Select a word for the day
-const getWordOfTheDay = () => {
+const getWordOfTheDay = (words: readonly string[] = WORDS) => {
     const today = new Date();
     // Use local date parts to create a date string, avoiding timezone conversions.
     const todayString = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
@@ -110,7 +111,7 @@ const getWordOfTheDay = () => {
 
     const diffTime = Math.abs(localToday.getTime() - startDate.getTime());
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    return WORDS[diffDays % WORDS.length].toUpperCase();
+    return words[diffDays % words.length].toUpperCase();
 };
 
 const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenSettings, hotTipUsed, gameState, settings, boardWidth }: {
@@ -835,6 +836,9 @@ export default function WorthaftPage() {
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const { toast } = useToast();
     const [solution, setSolution] = useState('');
+    const [words, setWords] = useState<readonly string[]>(WORDS);
+    const [antiWords, setAntiWords] = useState<readonly string[]>(WORTHAFT_ANTI_WORDS);
+    const [isWordListReady, setIsWordListReady] = useState(false);
     const [guesses, setGuesses] = useState<{ guess: string; statuses: LetterStatus[] }[]>([]);
     const [currentGuess, setCurrentGuess] = useState<string[]>(Array(WORD_LENGTH).fill(''));
     const [activeIndex, setActiveIndex] = useState(0);
@@ -925,77 +929,108 @@ export default function WorthaftPage() {
     }, [settings.musicEnabled, isMuted]);
 
     useEffect(() => {
-        const disabled = localStorage.getItem('worthaft-hottip-disabled') === 'true';
-        setIsHotTipPopupDisabled(disabled);
+        let cancelled = false;
 
-        const todayStr = getTodayString();
-        setSolution(getWordOfTheDay());
-        setGameStartTime(Date.now());
+        const initializeGame = async () => {
+            let activeWords: readonly string[] = WORDS;
+            let activeAntiWords: readonly string[] = WORTHAFT_ANTI_WORDS;
 
-        const savedStats = localStorage.getItem('worthaft-stats');
-        if (savedStats) {
-            const parsedStats = JSON.parse(savedStats);
-            setStats({ games: 0, wins: 0, streak: 0, maxStreak: 0, ...parsedStats });
-        }
-
-        const savedGame = localStorage.getItem('worthaft-daily-game');
-        let completedToday = false;
-        if (savedGame) {
             try {
-                const dailyState: DailyGameState = JSON.parse(savedGame);
-                if (dailyState.date === todayStr) {
-                    setGuesses(dailyState.guesses);
-                    setGameState(dailyState.status);
-                    setLetterStatuses(dailyState.letterStatuses || {});
-                    setHotTipUsed(dailyState.hotTipUsed || false);
-                    setRowTimes(dailyState.rowTimes || []);
-                    if (dailyState.jokerPosition) {
-                        setJokerPosition(dailyState.jokerPosition);
-                        const newCurrentGuess = Array(WORD_LENGTH).fill('');
-                        if (dailyState.guesses.length === dailyState.jokerPosition.guessIndex) {
-                            newCurrentGuess[dailyState.jokerPosition.letterIndex] = getWordOfTheDay()[dailyState.jokerPosition.letterIndex];
-                        }
-                        setCurrentGuess(newCurrentGuess);
+                const { firestore } = initializeFirebase();
+                const lists = await loadWorthaftWordLists(firestore);
+                activeWords = lists.words;
+                activeAntiWords = lists.antiWords;
+            } catch (error) {
+                console.error('Failed to load Worthaft word lists from Firestore; using bundled lists.', error);
+                toast({
+                    variant: 'destructive',
+                    title: 'Wortliste konnte nicht geladen werden',
+                    description: 'Worthaft verwendet vorübergehend die gespeicherten Listen.',
+                    duration: 5000,
+                });
+            }
 
-                        const firstEmptyIndex = newCurrentGuess.findIndex(l => l === '');
-                        setActiveIndex(firstEmptyIndex !== -1 ? firstEmptyIndex : 0);
-                    }
+            if (cancelled) return;
 
+            setWords(activeWords);
+            setAntiWords(activeAntiWords);
+            setIsWordListReady(true);
 
-                    if (dailyState.status === 'won' || dailyState.status === 'lost') {
-                        completedToday = true;
-                        setIsCompletedToday(true);
-                        setTimeout(() => {
-                            if (hasWorthaftFeedbackDecision(localStorage, getTodayString())) {
-                                setIsDialogOpen(true);
-                            } else {
-                                setIsFeedbackOpen(true);
+            const disabled = localStorage.getItem('worthaft-hottip-disabled') === 'true';
+            setIsHotTipPopupDisabled(disabled);
+
+            const todayStr = getTodayString();
+            const wordOfTheDay = getWordOfTheDay(activeWords);
+            setSolution(wordOfTheDay);
+            setGameStartTime(Date.now());
+
+            const savedStats = localStorage.getItem('worthaft-stats');
+            if (savedStats) {
+                const parsedStats = JSON.parse(savedStats);
+                setStats({ games: 0, wins: 0, streak: 0, maxStreak: 0, ...parsedStats });
+            }
+
+            const savedGame = localStorage.getItem('worthaft-daily-game');
+            let completedToday = false;
+            if (savedGame) {
+                try {
+                    const dailyState: DailyGameState = JSON.parse(savedGame);
+                    if (dailyState.date === todayStr) {
+                        setGuesses(dailyState.guesses);
+                        setGameState(dailyState.status);
+                        setLetterStatuses(dailyState.letterStatuses || {});
+                        setHotTipUsed(dailyState.hotTipUsed || false);
+                        setRowTimes(dailyState.rowTimes || []);
+                        if (dailyState.jokerPosition) {
+                            setJokerPosition(dailyState.jokerPosition);
+                            const newCurrentGuess = Array(WORD_LENGTH).fill('');
+                            if (dailyState.guesses.length === dailyState.jokerPosition.guessIndex) {
+                                newCurrentGuess[dailyState.jokerPosition.letterIndex] = wordOfTheDay[dailyState.jokerPosition.letterIndex];
                             }
-                        }, 2000);
-                    }
-                }
-            } catch (e) {
-                console.error("Failed to parse saved game state:", e);
-                localStorage.removeItem('worthaft-daily-game');
-            }
-        }
+                            setCurrentGuess(newCurrentGuess);
 
-        // Row timer: resume the persisted row start so a reload keeps the clock
-        // running; otherwise the current row starts now. Thinking time counts.
-        if (completedToday) {
-            rowStartTimeRef.current = 0;
-            clearWorthaftRowStart(localStorage);
-        } else {
-            const persistedRowStart = readWorthaftRowStart(localStorage, todayStr);
-            if (persistedRowStart !== null) {
-                rowStartTimeRef.current = persistedRowStart;
-            } else {
-                const now = Date.now();
-                rowStartTimeRef.current = now;
-                writeWorthaftRowStart(localStorage, todayStr, now);
+                            const firstEmptyIndex = newCurrentGuess.findIndex(l => l === '');
+                            setActiveIndex(firstEmptyIndex !== -1 ? firstEmptyIndex : 0);
+                        }
+
+                        if (dailyState.status === 'won' || dailyState.status === 'lost') {
+                            completedToday = true;
+                            setIsCompletedToday(true);
+                            setTimeout(() => {
+                                if (hasWorthaftFeedbackDecision(localStorage, getTodayString())) {
+                                    setIsDialogOpen(true);
+                                } else {
+                                    setIsFeedbackOpen(true);
+                                }
+                            }, 2000);
+                        }
+                    }
+                } catch (e) {
+                    console.error('Failed to parse saved game state:', e);
+                    localStorage.removeItem('worthaft-daily-game');
+                }
             }
-        }
-    }, []);
+
+            if (completedToday) {
+                rowStartTimeRef.current = 0;
+                clearWorthaftRowStart(localStorage);
+            } else {
+                const persistedRowStart = readWorthaftRowStart(localStorage, todayStr);
+                if (persistedRowStart !== null) {
+                    rowStartTimeRef.current = persistedRowStart;
+                } else {
+                    const now = Date.now();
+                    rowStartTimeRef.current = now;
+                    writeWorthaftRowStart(localStorage, todayStr, now);
+                }
+            }
+        };
+
+        void initializeGame();
+        return () => {
+            cancelled = true;
+        };
+    }, [toast]);
     
      useEffect(() => {
         if (!isCompletedToday) return;
@@ -1056,7 +1091,7 @@ export default function WorthaftPage() {
     
 
     const handleChar = (char: string) => {
-        if (gameState !== 'playing') return;
+        if (!isWordListReady || gameState !== 'playing') return;
         const newGuess = [...currentGuess];
         const isJokerHere = jokerPosition && jokerPosition.guessIndex === guesses.length;
 
@@ -1090,7 +1125,7 @@ export default function WorthaftPage() {
     };
 
     const handleEnter = useCallback(() => {
-        if (gameState !== 'playing') return;
+        if (!isWordListReady || gameState !== 'playing') return;
 
         const guessWord = currentGuess.join('');
 
@@ -1152,8 +1187,8 @@ export default function WorthaftPage() {
         }
 
 
-        const isKnownAntiWord = isWorthaftAntiWord(guessWord);
-        if (isKnownAntiWord || !WORDS.includes(guessWord.toLowerCase())) {
+        const isKnownAntiWord = isWorthaftAntiWord(guessWord, antiWords);
+        if (isKnownAntiWord || !words.includes(guessWord.toLowerCase())) {
             setInvalidWord(createInvalidWorthaftWord(guessWord, isKnownAntiWord));
             setIsShaking(true);
             setTimeout(() => setIsShaking(false), 600);
@@ -1234,7 +1269,7 @@ export default function WorthaftPage() {
             writeWorthaftRowStart(localStorage, getTodayString(), nextRowStart);
             saveState(newGuesses, 'playing', newLetterStatuses, hotTipUsed, jokerPosition, newRowTimes);
         }
-    }, [currentGuess, gameState, guesses, letterStatuses, solution, stats, toast, saveState, hotTipUsed, jokerPosition, rowTimes]);
+    }, [currentGuess, gameState, guesses, letterStatuses, solution, stats, toast, saveState, hotTipUsed, jokerPosition, rowTimes, isWordListReady, antiWords, words]);
 
     const handleDelete = () => {
         if (gameState !== 'playing') return;
@@ -1263,7 +1298,7 @@ export default function WorthaftPage() {
     
     
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
-        if (!canInteractWithWorthaftGame(gameState) || isDialogOpen || isSettingsOpen || showHotTipDialog || isFeedbackOpen || invalidWord !== null) return;
+        if (!isWordListReady || !canInteractWithWorthaftGame(gameState) || isDialogOpen || isSettingsOpen || showHotTipDialog || isFeedbackOpen || invalidWord !== null) return;
 
         if (event.key === 'Enter') {
             event.preventDefault();
@@ -1285,7 +1320,7 @@ export default function WorthaftPage() {
         } else if (/^[a-zA-ZäöüÄÖÜß]$/.test(event.key)) {
             handleChar(event.key.toUpperCase());
         }
-    }, [gameState, isDialogOpen, isSettingsOpen, showHotTipDialog, isFeedbackOpen, invalidWord, handleEnter, handleDelete, handleChar, activeIndex, jokerPosition, guesses.length]);
+    }, [isWordListReady, gameState, isDialogOpen, isSettingsOpen, showHotTipDialog, isFeedbackOpen, invalidWord, handleEnter, handleDelete, handleChar, activeIndex, jokerPosition, guesses.length]);
     
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
@@ -1470,30 +1505,38 @@ Jetzt spielen:`;
             <main className="flex-1 py-2 md:py-3">
                 <div className="w-full max-w-sm mx-auto px-4 sm:px-0 flex flex-col items-center justify-start">
                     <div className="w-full mx-auto" style={{ maxWidth: `${boardWidth}px` }}>
-                        <Grid
-                            guesses={guesses}
-                            currentGuess={currentGuess}
-                            isShaking={isShaking}
-                            currentRowIndex={guesses.length}
-                            activeIndex={activeIndex}
-                            onCellClick={setActiveIndex}
-                            jokerReveal={jokerReveal}
-                            jokerPosition={jokerPosition}
-                            gameState={gameState}
-                            settings={settings}
-                        />
-                        <Keyboard
-                            onChar={handleChar}
-                            onEnter={handleEnter}
-                            onDelete={handleDelete}
-                            letterStatuses={letterStatuses}
-                            onHotTip={() => setShowHotTipDialog(true)}
-                            onOpenSettings={() => setIsSettingsOpen(true)}
-                            hotTipUsed={hotTipUsed}
-                            gameState={gameState}
-                            settings={settings}
-                            boardWidth={boardWidth}
-                        />
+                        {isWordListReady ? (
+                            <>
+                                <Grid
+                                    guesses={guesses}
+                                    currentGuess={currentGuess}
+                                    isShaking={isShaking}
+                                    currentRowIndex={guesses.length}
+                                    activeIndex={activeIndex}
+                                    onCellClick={setActiveIndex}
+                                    jokerReveal={jokerReveal}
+                                    jokerPosition={jokerPosition}
+                                    gameState={gameState}
+                                    settings={settings}
+                                />
+                                <Keyboard
+                                    onChar={handleChar}
+                                    onEnter={handleEnter}
+                                    onDelete={handleDelete}
+                                    letterStatuses={letterStatuses}
+                                    onHotTip={() => setShowHotTipDialog(true)}
+                                    onOpenSettings={() => setIsSettingsOpen(true)}
+                                    hotTipUsed={hotTipUsed}
+                                    gameState={gameState}
+                                    settings={settings}
+                                    boardWidth={boardWidth}
+                                />
+                            </>
+                        ) : (
+                            <p role="status" className="py-12 text-center text-muted-foreground">
+                                Wortliste wird geladen …
+                            </p>
+                        )}
                     </div>
                     {/* Sonnenschein-Halbkreis-Glow hinter der Tastatur (laufende Motion) */}
                     <div

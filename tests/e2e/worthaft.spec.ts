@@ -53,11 +53,11 @@ test('feedback can also be skipped after selecting a negative vote without submi
   expect(await page.evaluate(() => Object.keys(localStorage).filter(key => key.startsWith('worthaft-feedback-')).map(key => localStorage.getItem(key)))).toEqual(['skipped']);
 });
 
-test('positive Worthaft feedback is remembered locally but not sent to Firestore', async ({ page }) => {
+test('positive Worthaft feedback is remembered locally without Firestore writes', async ({ page }) => {
   await page.route(/identitytoolkit|firestore.googleapis.com|securetoken/, route => route.abort());
-  let firestoreRequests = 0;
+  let firestoreWrites = 0;
   page.on('request', request => {
-    if (request.url().includes('firestore.googleapis.com')) firestoreRequests += 1;
+    if (request.url().includes('firestore.googleapis.com') && /\/documents:(commit|write)(?:\?|$)/.test(request.url())) firestoreWrites += 1;
   });
   await page.addInitScript(() => {
     const now = new Date();
@@ -66,11 +66,11 @@ test('positive Worthaft feedback is remembered locally but not sent to Firestore
     localStorage.setItem('worthaft-daily-game', JSON.stringify({ date, status: 'won', guesses: [{ guess: 'bruch', statuses: Array(5).fill('correct') }], letterStatuses: {}, rowTimes: [1000] }));
   });
   await page.goto('/worthaft');
-  const requestsBeforeSubmit = firestoreRequests;
+  const writesBeforeSubmit = firestoreWrites;
   await page.getByRole('button', { name: 'Ja, das Wort war gut' }).click();
   await page.getByRole('button', { name: 'Feedback senden', exact: true }).click();
   await expect(page.getByText('Danke für dein Feedback!', { exact: true })).toBeVisible();
-  expect(firestoreRequests).toBe(requestsBeforeSubmit);
+  expect(firestoreWrites).toBe(writesBeforeSubmit);
   expect(await page.evaluate(() => {
     const now = new Date();
     const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;

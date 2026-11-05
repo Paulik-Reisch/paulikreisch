@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/unit/*.test.ts",
     "test:e2e": "playwright test",
+    "seed:worthaft-lists": "tsx scripts/seed-worthaft-word-lists.ts",
     "check": "npm run lint && npm run typecheck && npm test",
     "dev:preview": "node scripts/preview.mjs"
   },

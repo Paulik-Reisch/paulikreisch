@@ -15,6 +15,17 @@ test('only accepts normalized words from the game dictionary', () => {
   }
 });
 
+test('uses the current Firestore dictionary when one is provided', async () => {
+  const handler = createDefinitionHandler({
+    apiKey: () => 'secret',
+    loadAllowedWords: async () => ['neuwt'],
+    fetch: async () => completion(),
+  });
+
+  assert.equal((await handler(request('NEUWT'))).status, 200);
+  assert.equal((await handler(request('birne'))).status, 400);
+});
+
 test('validates bodies and never calls the provider for invalid input', async () => {
   let calls = 0;
   const handler = createDefinitionHandler({ apiKey: () => 'secret', fetch: async () => { calls++; return completion(); } });
