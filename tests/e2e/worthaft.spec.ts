@@ -1,5 +1,13 @@
 import { test, expect } from '@playwright/test';
 
+test('Worthaft renders the board without a client-side word-list loading screen', async ({ page }) => {
+  await page.route(/identitytoolkit|firestore.googleapis.com|securetoken/, route => route.abort());
+  await page.goto('/worthaft');
+
+  await expect(page.getByTestId('worthaft-grid')).toBeVisible();
+  await expect(page.getByText('Wortliste wird geladen …')).toHaveCount(0);
+});
+
 for (const width of [320, 375, 414, 768, 1440]) {
   test(`Worthaft feedback can be skipped and definitions load on demand at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });

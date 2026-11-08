@@ -79,6 +79,7 @@ test('JSON-LD escapes script termination and round-trips Unicode safely',()=>{
 test('XML sitemap includes registry paths and old editorial scaffolding is removed',()=>{
   const sitemap=readFileSync('src/app/sitemap.xml/route.ts','utf8');
   assert.match(sitemap,/guidePaths\(\)/);
+  assert.match(sitemap,/path: '\/leseprobe'/);
   for(const pillar of guidePillars){
     const page=readFileSync(`src/app/ratgeber/${pillar.slug}/page.tsx`,'utf8');
     assert.doesNotMatch(page,/CLUSTER-PLAN|PROMO-HOOKS|VERLINKUNGS-PFLICHTEN/);

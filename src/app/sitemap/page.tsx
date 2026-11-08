@@ -35,6 +35,7 @@ const sitemapData: SitemapNode[] = [
     icon: ShoppingCart,
     description: 'Buch-Store & Merchandise',
     children: [
+      { label: 'Leseprobe „Hallo Welt“', href: '/leseprobe', icon: BookOpen, description: 'Ausgewählte veröffentlichte Kapitel lesen' },
       { label: 'Buchhandlung', href: '/buchhandlung-paulik-reisch', icon: BookOpen, description: 'Unsere Bücher & Publikationen' },
     ],
   },
