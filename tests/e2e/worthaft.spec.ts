@@ -61,12 +61,10 @@ test('feedback can also be skipped after selecting a negative vote without submi
   expect(await page.evaluate(() => Object.keys(localStorage).filter(key => key.startsWith('worthaft-feedback-')).map(key => localStorage.getItem(key)))).toEqual(['skipped']);
 });
 
-test('positive Worthaft feedback is remembered locally without Firestore writes', async ({ page }) => {
+test('positive Worthaft feedback attempts a Firestore write before marking the vote submitted', async ({ page }) => {
   await page.route(/identitytoolkit|firestore.googleapis.com|securetoken/, route => route.abort());
-  let firestoreWrites = 0;
-  page.on('request', request => {
-    if (request.url().includes('firestore.googleapis.com') && /\/documents:(commit|write)(?:\?|$)/.test(request.url())) firestoreWrites += 1;
-  });
+  let firestoreRequests = 0;
+  page.on('request', request => { if (request.url().includes('firestore.googleapis.com')) firestoreRequests += 1; });
   await page.addInitScript(() => {
     const now = new Date();
     const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
@@ -74,16 +72,47 @@ test('positive Worthaft feedback is remembered locally without Firestore writes'
     localStorage.setItem('worthaft-daily-game', JSON.stringify({ date, status: 'won', guesses: [{ guess: 'bruch', statuses: Array(5).fill('correct') }], letterStatuses: {}, rowTimes: [1000] }));
   });
   await page.goto('/worthaft');
-  const writesBeforeSubmit = firestoreWrites;
   await page.getByRole('button', { name: 'Ja, das Wort war gut' }).click();
   await page.getByRole('button', { name: 'Feedback senden', exact: true }).click();
-  await expect(page.getByText('Danke für dein Feedback!', { exact: true })).toBeVisible();
-  expect(firestoreWrites).toBe(writesBeforeSubmit);
+  await expect.poll(() => firestoreRequests).toBeGreaterThan(0);
   expect(await page.evaluate(() => {
     const now = new Date();
     const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     return localStorage.getItem(`worthaft-feedback-${date}`);
-  })).toBe('true');
+  })).toBeNull();
+});
+
+test('negative Worthaft feedback attempts a Firestore write', async ({ page }) => {
+  await page.route(/identitytoolkit|firestore.googleapis.com|securetoken/, route => route.abort());
+  let firestoreRequests = 0;
+  page.on('request', request => { if (request.url().includes('firestore.googleapis.com')) firestoreRequests += 1; });
+  await page.addInitScript(() => {
+    const now = new Date();
+    const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    localStorage.setItem('hallowelt_cookie_consent', JSON.stringify({ necessary: true, analytics: false, marketing: false }));
+    localStorage.setItem('worthaft-daily-game', JSON.stringify({ date, status: 'won', guesses: [{ guess: 'bruch', statuses: Array(5).fill('correct') }], letterStatuses: {}, rowTimes: [1000] }));
+  });
+  await page.goto('/worthaft');
+  await page.getByRole('button', { name: 'Nein, das Wort war nicht gut' }).click();
+  await page.getByRole('button', { name: 'ist kein (deutsches) Wort.' }).click();
+  await page.getByRole('button', { name: 'Feedback senden', exact: true }).click();
+  await expect.poll(() => firestoreRequests).toBeGreaterThan(0);
+});
+
+test('invalid-word suggestions attempt a Firestore write', async ({ page }) => {
+  await page.route(/identitytoolkit|firestore.googleapis.com|securetoken/, route => route.abort());
+  let firestoreRequests = 0;
+  page.on('request', request => { if (request.url().includes('firestore.googleapis.com')) firestoreRequests += 1; });
+  await page.addInitScript(() => {
+    localStorage.setItem('hallowelt_cookie_consent', JSON.stringify({ necessary: true, analytics: false, marketing: false }));
+  });
+  await page.goto('/worthaft');
+  await page.keyboard.type('zzzzz');
+  await page.keyboard.press('Enter');
+  await expect(page.getByText('„zzzzz“ ist ein ungültiges Wort')).toBeVisible();
+  await page.getByRole('button', { name: 'Ja', exact: true }).click();
+  await expect.poll(() => firestoreRequests).toBeGreaterThan(0);
+  await expect(page.getByText('„zzzzz“ ist ein ungültiges Wort')).toBeVisible();
 });
 
 test('word explanation offers retry after a failed request and returns focus on close', async ({ page }) => {

@@ -27,6 +27,7 @@ import FeedbackDrawer from './FeedbackDrawer';
 import WordDefinitionDialog from './WordDefinitionDialog';
 import { initializeFirebase } from '@/firebase';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import type { Firestore } from 'firebase/firestore';
 import confetti from 'canvas-confetti';
 import { getWorthaftKeyDimensions, getWorthaftTileDimensions, getWorthaftStatusClass, normalizeWorthaftSettings, DEFAULT_WORTHAFT_SETTINGS as DEFAULT_SETTINGS, type WorthaftSettings } from '@/lib/worthaft-settings';
 import { canInteractWithWorthaftGame, readWorthaftRowStart, writeWorthaftRowStart, clearWorthaftRowStart } from '@/lib/worthaft-game-state';
@@ -693,8 +694,9 @@ const InvalidWordModal = ({
   const { word, isKnownInvalid } = submission;
   const isMobile = useIsMobile();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [fb, setFb] = useState<{ firestore: any } | null>(null);
+  const [fb, setFb] = useState<{ firestore: Firestore } | null>(null);
   const [showReviewedMessage, setShowReviewedMessage] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isKnownInvalid) return;
@@ -705,6 +707,7 @@ const InvalidWordModal = ({
   const handleSubmit = async (shouldExist: boolean) => {
     if (!fb || isKnownInvalid) return;
     setIsSubmitting(true);
+    setSubmitError(null);
     try {
       await addDoc(collection(fb.firestore, 'worthaft-word-suggestions'), {
         word,
@@ -712,11 +715,12 @@ const InvalidWordModal = ({
         date: new Date().toISOString().split('T')[0],
         createdAt: serverTimestamp(),
       });
+      onOpenChange(false);
     } catch (err) {
       console.error('Failed to save word suggestion:', err);
+      setSubmitError('Dein Vorschlag konnte nicht gespeichert werden. Bitte versuche es erneut.');
     } finally {
       setIsSubmitting(false);
-      onOpenChange(false);
     }
   };
 
@@ -758,6 +762,8 @@ const InvalidWordModal = ({
           <p className="mb-5 text-sm text-muted-foreground">
             Sollte dieses Wort existieren?
           </p>
+
+          {submitError && <p role="alert" className="mb-3 text-sm text-destructive">{submitError}</p>}
 
           <div className="flex flex-col gap-2">
             <Button
