@@ -21,6 +21,7 @@ export function ExcerptSlideshow({ slides }: { slides: Slide[] }) {
   const [zoomScale, setZoomScale] = useState(MIN_ZOOM);
   const [zoomOffset, setZoomOffset] = useState({ x: 0, y: 0 });
   const pointerStartX = useRef<number | null>(null);
+  const zoomInButtonRef = useRef<HTMLButtonElement>(null);
   const zoomPointers = useRef(new Map<number, { x: number; y: number }>());
   const zoomGesture = useRef<{
     startDistance: number;
@@ -48,6 +49,12 @@ export function ExcerptSlideshow({ slides }: { slides: Slide[] }) {
   const resetZoom = () => {
     setZoomScale(MIN_ZOOM);
     setZoomOffset({ x: 0, y: 0 });
+  };
+
+  // Navigation inside the zoom dialog always starts from a clean, unzoomed page.
+  const navigateSlide = (delta: number) => {
+    showSlide(activeIndex + delta);
+    resetZoom();
   };
 
   const getPointerDistance = () => {
@@ -118,6 +125,17 @@ export function ExcerptSlideshow({ slides }: { slides: Slide[] }) {
     } else if (event.key === 'ArrowRight') {
       event.preventDefault();
       showSlide(activeIndex + 1);
+    }
+  };
+
+  // Arrow keys must also work while the modal zoom dialog has focus.
+  const handleDialogKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      navigateSlide(-1);
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      navigateSlide(1);
     }
   };
 
@@ -213,7 +231,16 @@ export function ExcerptSlideshow({ slides }: { slides: Slide[] }) {
           if (!open) resetZoom();
         }}
       >
-        <DialogContent className={styles.zoomDialog}>
+        <DialogContent
+          className={styles.zoomDialog}
+          onKeyDown={handleDialogKeyDown}
+          onOpenAutoFocus={(event) => {
+            // Keep the established entry focus on the zoom-in control even though
+            // the previous-page button sits earlier in the tab order.
+            event.preventDefault();
+            zoomInButtonRef.current?.focus();
+          }}
+        >
           <DialogTitle className={styles.visuallyHidden}>Vergrößerte Buchseite</DialogTitle>
           <div
             className={styles.zoomImageFrame}
@@ -235,11 +262,19 @@ export function ExcerptSlideshow({ slides }: { slides: Slide[] }) {
               draggable={false}
               unoptimized={activeSlide.type === 'pdf'}
             />
-            <div className={styles.zoomControls} role="group" aria-label="Bildzoom">
+          </div>
+          <div className={styles.zoomControls} role="group" aria-label="Seitennavigation und Bildzoom">
+            <button
+              type="button"
+              aria-label="Vorherige Seite"
+              onClick={() => navigateSlide(-1)}
+            >
+              <ArrowLeft aria-hidden="true" />
+            </button>
+            <div className={styles.zoomCluster}>
               <button
                 type="button"
                 aria-label="Verkleinern"
-                onPointerDown={(event) => event.stopPropagation()}
                 onClick={() => updateZoom(zoomScale / 1.5)}
                 disabled={zoomScale === MIN_ZOOM}
               >
@@ -248,8 +283,8 @@ export function ExcerptSlideshow({ slides }: { slides: Slide[] }) {
               <output aria-live="polite">{Math.round(zoomScale * 100)}%</output>
               <button
                 type="button"
+                ref={zoomInButtonRef}
                 aria-label="Vergrößern"
-                onPointerDown={(event) => event.stopPropagation()}
                 onClick={() => updateZoom(zoomScale * 1.5)}
                 disabled={zoomScale === MAX_ZOOM}
               >
@@ -258,12 +293,18 @@ export function ExcerptSlideshow({ slides }: { slides: Slide[] }) {
               <button
                 type="button"
                 aria-label="Zoom zurücksetzen"
-                onPointerDown={(event) => event.stopPropagation()}
                 onClick={resetZoom}
               >
                 <RotateCcw aria-hidden="true" />
               </button>
             </div>
+            <button
+              type="button"
+              aria-label="Nächste Seite"
+              onClick={() => navigateSlide(1)}
+            >
+              <ArrowRight aria-hidden="true" />
+            </button>
           </div>
         </DialogContent>
       </Dialog>
