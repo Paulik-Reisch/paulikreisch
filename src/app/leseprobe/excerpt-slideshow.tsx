@@ -21,6 +21,7 @@ export function ExcerptSlideshow({ slides }: { slides: Slide[] }) {
   const [zoomScale, setZoomScale] = useState(MIN_ZOOM);
   const [zoomOffset, setZoomOffset] = useState({ x: 0, y: 0 });
   const pointerStartX = useRef<number | null>(null);
+  const zoomInButtonRef = useRef<HTMLButtonElement>(null);
   const zoomPointers = useRef(new Map<number, { x: number; y: number }>());
   const zoomGesture = useRef<{
     startDistance: number;
@@ -230,7 +231,16 @@ export function ExcerptSlideshow({ slides }: { slides: Slide[] }) {
           if (!open) resetZoom();
         }}
       >
-        <DialogContent className={styles.zoomDialog} onKeyDown={handleDialogKeyDown}>
+        <DialogContent
+          className={styles.zoomDialog}
+          onKeyDown={handleDialogKeyDown}
+          onOpenAutoFocus={(event) => {
+            // Keep the established entry focus on the zoom-in control even though
+            // the previous-page button sits earlier in the tab order.
+            event.preventDefault();
+            zoomInButtonRef.current?.focus();
+          }}
+        >
           <DialogTitle className={styles.visuallyHidden}>Vergrößerte Buchseite</DialogTitle>
           <div
             className={styles.zoomImageFrame}
@@ -273,6 +283,7 @@ export function ExcerptSlideshow({ slides }: { slides: Slide[] }) {
               <output aria-live="polite">{Math.round(zoomScale * 100)}%</output>
               <button
                 type="button"
+                ref={zoomInButtonRef}
                 aria-label="Vergrößern"
                 onClick={() => updateZoom(zoomScale * 1.5)}
                 disabled={zoomScale === MAX_ZOOM}

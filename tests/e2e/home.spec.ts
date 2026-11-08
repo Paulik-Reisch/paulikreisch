@@ -148,6 +148,24 @@ test('reading sample stays simple and the selected-page slideshow supports contr
   await expect.poll(() => zoomFrame.getAttribute('data-zoom-scale')).toMatch(/1\.(7|8)/);
   await zoomDialog.getByRole('button', { name: 'Zoom zurücksetzen' }).click();
   await expect(zoomFrame).toHaveAttribute('data-zoom-scale', '1.00');
+
+  // Page navigation inside the zoom dialog: buttons and arrow keys, always with a clean zoom.
+  await zoomDialog.getByRole('button', { name: 'Vergrößern' }).click();
+  await expect(zoomFrame).toHaveAttribute('data-zoom-scale', '1.50');
+  await zoomDialog.getByRole('button', { name: 'Nächste Seite' }).click();
+  await expect(slideshow.getByText('Seite 3 von 4')).toBeVisible();
+  await expect(zoomDialog.locator('img')).toHaveAttribute('src', '/leseprobe/seite-91.png');
+  await expect(zoomFrame).toHaveAttribute('data-zoom-scale', '1.00');
+  await page.keyboard.press('ArrowLeft');
+  await expect(slideshow.getByText('Seite 2 von 4')).toBeVisible();
+  await expect(zoomDialog.locator('img')).toHaveAttribute('src', '/leseprobe/seite-72.png');
+  // The controls bar sits below the page image instead of covering it.
+  const controlsBar = zoomDialog.getByRole('group', { name: 'Seitennavigation und Bildzoom' });
+  const barBounds = await controlsBar.boundingBox();
+  const frameBoundsForBar = await zoomFrame.boundingBox();
+  if (!barBounds || !frameBoundsForBar) throw new Error('The zoom dialog layout is not visible.');
+  expect(barBounds.y).toBeGreaterThanOrEqual(frameBoundsForBar.y + frameBoundsForBar.height);
+
   await page.keyboard.press('Escape');
   await expect(zoomDialog).toBeHidden();
 
