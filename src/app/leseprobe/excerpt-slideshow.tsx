@@ -50,6 +50,12 @@ export function ExcerptSlideshow({ slides }: { slides: Slide[] }) {
     setZoomOffset({ x: 0, y: 0 });
   };
 
+  // Navigation inside the zoom dialog always starts from a clean, unzoomed page.
+  const navigateSlide = (delta: number) => {
+    showSlide(activeIndex + delta);
+    resetZoom();
+  };
+
   const getPointerDistance = () => {
     const [first, second] = [...zoomPointers.current.values()];
     if (!first || !second) return 0;
@@ -118,6 +124,17 @@ export function ExcerptSlideshow({ slides }: { slides: Slide[] }) {
     } else if (event.key === 'ArrowRight') {
       event.preventDefault();
       showSlide(activeIndex + 1);
+    }
+  };
+
+  // Arrow keys must also work while the modal zoom dialog has focus.
+  const handleDialogKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      navigateSlide(-1);
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      navigateSlide(1);
     }
   };
 
@@ -213,7 +230,7 @@ export function ExcerptSlideshow({ slides }: { slides: Slide[] }) {
           if (!open) resetZoom();
         }}
       >
-        <DialogContent className={styles.zoomDialog}>
+        <DialogContent className={styles.zoomDialog} onKeyDown={handleDialogKeyDown}>
           <DialogTitle className={styles.visuallyHidden}>Vergrößerte Buchseite</DialogTitle>
           <div
             className={styles.zoomImageFrame}
@@ -235,11 +252,19 @@ export function ExcerptSlideshow({ slides }: { slides: Slide[] }) {
               draggable={false}
               unoptimized={activeSlide.type === 'pdf'}
             />
-            <div className={styles.zoomControls} role="group" aria-label="Bildzoom">
+          </div>
+          <div className={styles.zoomControls} role="group" aria-label="Seitennavigation und Bildzoom">
+            <button
+              type="button"
+              aria-label="Vorherige Seite"
+              onClick={() => navigateSlide(-1)}
+            >
+              <ArrowLeft aria-hidden="true" />
+            </button>
+            <div className={styles.zoomCluster}>
               <button
                 type="button"
                 aria-label="Verkleinern"
-                onPointerDown={(event) => event.stopPropagation()}
                 onClick={() => updateZoom(zoomScale / 1.5)}
                 disabled={zoomScale === MIN_ZOOM}
               >
@@ -249,7 +274,6 @@ export function ExcerptSlideshow({ slides }: { slides: Slide[] }) {
               <button
                 type="button"
                 aria-label="Vergrößern"
-                onPointerDown={(event) => event.stopPropagation()}
                 onClick={() => updateZoom(zoomScale * 1.5)}
                 disabled={zoomScale === MAX_ZOOM}
               >
@@ -258,12 +282,18 @@ export function ExcerptSlideshow({ slides }: { slides: Slide[] }) {
               <button
                 type="button"
                 aria-label="Zoom zurücksetzen"
-                onPointerDown={(event) => event.stopPropagation()}
                 onClick={resetZoom}
               >
                 <RotateCcw aria-hidden="true" />
               </button>
             </div>
+            <button
+              type="button"
+              aria-label="Nächste Seite"
+              onClick={() => navigateSlide(1)}
+            >
+              <ArrowRight aria-hidden="true" />
+            </button>
           </div>
         </DialogContent>
       </Dialog>
