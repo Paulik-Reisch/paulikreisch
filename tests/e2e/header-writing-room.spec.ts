@@ -13,7 +13,7 @@ for (const width of [375, 1440]) {
       await page.getByRole('button', { name: 'Menü öffnen' }).click();
     }
 
-    const writingRoomLink = page.getByRole('link', { name: 'Schreibstube (KI)' });
+    const writingRoomLink = page.getByRole('link', { name: 'Schreibstube', exact: true });
     await expect(writingRoomLink).toBeVisible();
 
     if (width >= 768) {

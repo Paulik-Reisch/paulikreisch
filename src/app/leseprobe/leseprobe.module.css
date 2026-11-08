@@ -117,6 +117,24 @@
 .control:hover { background: var(--color-ink); color: var(--color-paper); }
 .previous { left: 12px; }
 .next { right: 12px; }
+.zoomButton {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 4;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+.zoomButton svg { width: 20px; height: 20px; }
+.zoomButton:hover { background: var(--color-ink); color: var(--color-paper); }
 .slideFooter {
   display: flex;
   min-height: 46px;
@@ -136,6 +154,101 @@
   cursor: pointer;
 }
 .indicators .activeIndicator { background: var(--color-rust); }
+.zoomDialog {
+  --color-paper: oklch(97% 0.015 85);
+  --color-paper-deep: oklch(93% 0.023 85);
+  --color-ink: oklch(24% 0.015 70);
+  --color-accent: oklch(91% 0.16 95);
+  position: fixed !important;
+  inset: 50% auto auto 50% !important;
+  width: min(96vw, 64dvh) !important;
+  height: auto !important;
+  aspect-ratio: 2 / 3;
+  max-width: none !important;
+  max-height: 96dvh !important;
+  display: block !important;
+  transform: translate(-50%, -50%) !important;
+  border: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+.zoomDialog > button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  box-shadow: none !important;
+  opacity: 1;
+}
+.zoomDialog > button:hover { background: var(--color-paper-deep); opacity: 1; }
+.zoomDialog > button:focus { outline: none; }
+.zoomDialog > button:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+}
+.zoomImageFrame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  touch-action: none;
+  cursor: grab;
+}
+.zoomImageFrame:active { cursor: grabbing; }
+.zoomImage { object-fit: contain; user-select: none; }
+.zoomControls {
+  position: absolute;
+  z-index: 3;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  pointer-events: none;
+}
+.zoomControls button,
+.zoomControls output {
+  display: grid;
+  min-width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  box-shadow: 0 2px 10px rgb(0 0 0 / 18%);
+  pointer-events: auto;
+}
+.zoomControls button { cursor: pointer; }
+.zoomControls button:disabled { cursor: default; opacity: .5; }
+.zoomControls button:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.zoomControls button svg { width: 18px; height: 18px; }
+.zoomControls output {
+  min-width: 52px;
+  padding-inline: 8px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
 
 @media (max-width: 760px) {
   .readingSample {
@@ -148,13 +261,21 @@
   .copy { max-width: 520px; }
   .copy h1 { font-size: clamp(2.5rem, 9vw, 3.5rem); }
   .description { max-width: 50ch; font-size: 18px; }
+  .control { width: 34px; height: 34px; }
+  .control svg { width: 16px; height: 16px; }
+  .previous { left: 8px; }
+  .next { right: 8px; }
 }
 
 @media (max-width: 420px) {
   .readingSample { width: calc(100% - 36px); gap: 26px; }
-  .control { width: 38px; height: 38px; }
+  .control { width: 32px; height: 32px; }
+  .zoomButton { width: 38px; height: 38px; }
+  .previous { left: 6px; }
+  .next { right: 6px; }
+  .zoomButton { right: 10px; bottom: 10px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slideTrack, .control { transition: none; }
+  .slideTrack, .control, .zoomButton { transition: none; }
 }

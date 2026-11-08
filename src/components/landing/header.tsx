@@ -131,7 +131,7 @@ export function Header() {
                 className="inline-flex items-center gap-2 rounded-[10px] border-2 border-[#174bc2] bg-[#2268ff] px-4 py-2 text-[0.9rem] font-bold text-white shadow-[0_3px_0_#174bc2] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#1d5ce5] hover:shadow-[0_4px_0_#174bc2] active:translate-y-px active:shadow-[0_1px_0_#174bc2]"
               >
                 <WritingRoomIcon className="h-5 w-5 shrink-0" />
-                Schreibstube (KI)
+                Schreibstube
               </Link>
             </nav>
 
@@ -172,10 +172,13 @@ export function Header() {
           aria-modal="true"
           aria-label="Navigation"
           className={cn(
-            "absolute right-0 top-0 h-[100dvh] w-[88vw] max-w-[380px] bg-[#fdf8ee] shadow-[-20px_0_60px_rgba(0,0,0,0.18)] flex flex-col transition-transform duration-[320ms] ease-[cubic-bezier(0.32,0.72,0,1)] will-change-transform",
+            "absolute right-3 top-3 h-auto max-h-[calc(100dvh-1.5rem)] w-[82vw] max-w-[340px] rounded-[24px] border border-[#e8ddd0] bg-[#fdf8ee]/95 shadow-[-12px_12px_40px_rgba(0,0,0,0.18)] backdrop-blur-xl flex flex-col transition-transform duration-[320ms] ease-[cubic-bezier(0.32,0.72,0,1)] will-change-transform",
             open ? "translate-x-0" : "translate-x-full"
           )}
-          style={{ WebkitOverflowScrolling: 'touch' }}
+          style={{
+            WebkitOverflowScrolling: 'touch',
+            minHeight: 'min(360px, calc(100dvh - 1.5rem))',
+          }}
         >
           <div className="absolute left-0 top-0 h-full w-[18px] -translate-x-full touch-manipulation" aria-hidden="true" />
           <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-[#e8ddd0]/80">
@@ -192,47 +195,37 @@ export function Header() {
             </button>
           </div>
 
-          <nav className="flex-1 overflow-y-auto px-6 py-8">
-            <div className="flex flex-col">
-              <Link
-                href="/gpt"
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-3 border-b border-[#e8ddd0] py-4 text-[1.25rem] font-bold leading-tight tracking-[-0.015em] text-[#2268ff] transition-colors hover:text-[#174bc2]"
-              >
-                <WritingRoomIcon className="h-6 w-6 shrink-0" />
-                Schreibstube (KI)
-              </Link>
+          <nav aria-label="Hauptnavigation" className="flex max-h-[calc(100dvh-7rem)] justify-center overflow-y-auto px-6 py-6">
+            <div className="mx-auto flex w-fit flex-col items-stretch gap-4">
               {showWorthaftLink && (
                 <Link
                   href="/worthaft"
                   onClick={() => setOpen(false)}
-                  className="flex items-center gap-2 py-4 text-[1.55rem] font-bold leading-tight tracking-[-0.015em] text-[#1d1a15] border-b border-[#e8ddd0] hover:text-[#9c2d22] transition-colors"
+                  className="inline-flex min-h-12 w-full items-center justify-start gap-2 self-start rounded-[10px] border-2 border-[#1d1a15] bg-white px-4 py-2 text-[0.9rem] font-semibold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#f7f2e7] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-px active:shadow-[0_1px_0_#1d1a15]"
                 >
-                  <WorthaftIcon className="h-5 w-5" />
+                  <span className="worthaft-icon-shimmer shrink-0">
+                    <WorthaftIcon className="h-4 w-4" />
+                  </span>
                   Worthaft
                 </Link>
               )}
               <Link
                 href="/shop"
                 onClick={() => setOpen(false)}
-                className="mt-6 inline-flex items-center justify-center rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-6 py-[14px] text-[1.05rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] transition-[transform,box-shadow] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15]"
+                className="inline-flex min-h-12 w-full items-center justify-center self-start rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-5 py-2 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] transition-[transform,box-shadow] hover:-translate-y-px hover:shadow-[0_4px_0_#1d1a15] active:translate-y-px active:shadow-[0_1px_0_#1d1a15]"
               >
-                Buch kaufen · 10,99 €
+                Buch kaufen
               </Link>
-              <p className="mt-3 text-center text-[0.9rem] leading-snug text-[#6b6256]">
-                5,0★ bei Amazon · 106 Seiten
-              </p>
-
-              <div className="mt-8 flex flex-col gap-2 text-[0.95rem]">
-                <Link href="/impressum" onClick={() => setOpen(false)} className="text-[#6b6256] hover:text-[#1d1a15] hover:underline underline-offset-4">Impressum</Link>
-                <Link href="/datenschutz" onClick={() => setOpen(false)} className="text-[#6b6256] hover:text-[#1d1a15] hover:underline underline-offset-4">Datenschutz</Link>
-              </div>
+              <Link
+                href="/gpt"
+                onClick={() => setOpen(false)}
+                className="inline-flex min-h-12 w-full items-center justify-start gap-2 self-start rounded-[10px] border-2 border-[#174bc2] bg-[#2268ff] px-4 py-2 text-[0.9rem] font-bold text-white shadow-[0_3px_0_#174bc2] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#1d5ce5] hover:shadow-[0_4px_0_#174bc2] active:translate-y-px active:shadow-[0_1px_0_#174bc2]"
+              >
+                <WritingRoomIcon className="h-5 w-5 shrink-0" />
+                Schreibstube
+              </Link>
             </div>
           </nav>
-
-          <div className="px-6 pb-6 pt-4 text-[0.82rem] leading-relaxed text-[#9a9184] border-t border-[#e8ddd0]/60">
-            Paulik &amp; Reisch · Satire, die den Schulwahnsinn ernst nimmt.
-          </div>
         </div>
       </div>
     </>
