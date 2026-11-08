@@ -14,9 +14,9 @@ export const metadata: Metadata = {
 };
 
 const slides = [
+  { src: '/leseprobe/seite-58.png', type: 'pdf' as const, alt: 'Seite 58 aus Hallo Welt, hochwertig aus dem PDF gerendert' },
   { src: '/leseprobe/seite-72.png', type: 'pdf' as const, alt: 'Seite 72 aus Hallo Welt, hochwertig aus dem PDF gerendert' },
   { src: '/leseprobe/seite-91.png', type: 'pdf' as const, alt: 'Seite 91 aus Hallo Welt, hochwertig aus dem PDF gerendert' },
-  { src: '/leseprobe/seite-58.png', type: 'pdf' as const, alt: 'Seite 58 aus Hallo Welt, hochwertig aus dem PDF gerendert' },
   { src: '/leseprobe/seite-96.png', type: 'pdf' as const, alt: 'Seite 96 aus Hallo Welt, hochwertig aus dem PDF gerendert' },
 ];
 

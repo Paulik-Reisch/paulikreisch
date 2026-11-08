@@ -33,16 +33,16 @@ test('reading sample stays simple and the selected-page slideshow supports contr
   const pdfSlide = page.locator('figure[data-slide-type="pdf"]').nth(0);
   await expect(pdfSlide).toBeVisible();
   const pdfImage = pdfSlide.locator('img');
-  await expect(pdfImage).toHaveAttribute('src', '/leseprobe/seite-72.png');
+  await expect(pdfImage).toHaveAttribute('src', '/leseprobe/seite-58.png');
   await expect(pdfSlide.locator('figcaption')).toHaveCount(0);
   await expect(pdfSlide.locator('iframe')).toHaveCount(0);
   await expect(pdfSlide.getByRole('link')).toHaveCount(0);
   await expect.poll(() => pdfImage.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThanOrEqual(1800);
   await expect(page.locator('img[alt^="Platzhalterfoto:"]')).toHaveCount(0);
-  const pdfResponse = await page.request.get('/leseprobe/seite-72.pdf');
+  const pdfResponse = await page.request.get('/leseprobe/seite-58.pdf');
   expect(pdfResponse.ok()).toBe(true);
   expect(pdfResponse.headers()['content-type']).toContain('application/pdf');
-  const previewResponse = await page.request.get('/leseprobe/seite-72.png');
+  const previewResponse = await page.request.get('/leseprobe/seite-58.png');
   expect(previewResponse.ok()).toBe(true);
   expect(previewResponse.headers()['content-type']).toContain('image/png');
   const description = page.locator('main > section > div').first().locator('p').nth(1);
@@ -73,19 +73,19 @@ test('reading sample stays simple and the selected-page slideshow supports contr
 
   const secondPdfSlide = slideshow.locator('figure').nth(1);
   await expect(secondPdfSlide).toHaveAttribute('data-slide-type', 'pdf');
-  await expect(secondPdfSlide.locator('img')).toHaveAttribute('src', '/leseprobe/seite-91.png');
+  await expect(secondPdfSlide.locator('img')).toHaveAttribute('src', '/leseprobe/seite-72.png');
   await expect.poll(() => secondPdfSlide.locator('img').evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThanOrEqual(1800);
-  const secondPdfResponse = await page.request.get('/leseprobe/seite-91.pdf');
+  const secondPdfResponse = await page.request.get('/leseprobe/seite-72.pdf');
   expect(secondPdfResponse.ok()).toBe(true);
   expect(secondPdfResponse.headers()['content-type']).toContain('application/pdf');
 
   const thirdPdfSlide = slideshow.locator('figure').nth(2);
   await expect(thirdPdfSlide).toHaveAttribute('data-slide-type', 'pdf');
-  await expect(thirdPdfSlide.locator('img')).toHaveAttribute('src', '/leseprobe/seite-58.png');
-  const thirdPdfResponse = await page.request.get('/leseprobe/seite-58.pdf');
+  await expect(thirdPdfSlide.locator('img')).toHaveAttribute('src', '/leseprobe/seite-91.png');
+  const thirdPdfResponse = await page.request.get('/leseprobe/seite-91.pdf');
   expect(thirdPdfResponse.ok()).toBe(true);
   expect(thirdPdfResponse.headers()['content-type']).toContain('application/pdf');
-  const thirdPreviewResponse = await page.request.get('/leseprobe/seite-58.png');
+  const thirdPreviewResponse = await page.request.get('/leseprobe/seite-91.png');
   expect(thirdPreviewResponse.ok()).toBe(true);
   expect(thirdPreviewResponse.headers()['content-type']).toContain('image/png');
 
@@ -112,8 +112,64 @@ test('reading sample stays simple and the selected-page slideshow supports contr
   await page.keyboard.press('ArrowLeft');
   await expect(slideshow.getByText('Seite 2 von 4')).toBeVisible();
 
+  await slideshow.getByRole('button', { name: 'Aktuelle Seite vergrößern' }).click();
+  const zoomDialog = page.getByRole('dialog', { name: 'Vergrößerte Buchseite' });
+  await expect(zoomDialog).toBeVisible();
+  await expect(zoomDialog.locator('img')).toHaveAttribute('src', '/leseprobe/seite-72.png');
+  await expect.poll(() => zoomDialog.locator('img').evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThanOrEqual(1800);
+  const closeButton = zoomDialog.getByRole('button', { name: 'Close' });
+  await expect(zoomDialog.getByRole('button', { name: 'Vergrößern' })).toBeFocused();
+  const closeButtonColors = await closeButton.evaluate((button) => {
+    const styles = getComputedStyle(button);
+    return {
+      background: styles.backgroundColor,
+      boxShadow: styles.boxShadow,
+      focusVisible: button.matches(':focus-visible'),
+    };
+  });
+  expect(closeButtonColors.background).not.toBe('rgba(0, 0, 0, 0)');
+  expect(closeButtonColors.boxShadow).toBe('none');
+  expect(closeButtonColors.focusVisible).toBe(false);
+  const zoomFrame = zoomDialog.locator('[data-zoom-scale]');
+  await expect(zoomFrame).toHaveAttribute('data-zoom-scale', '1.00');
+  await zoomDialog.getByRole('button', { name: 'Vergrößern' }).click();
+  await expect(zoomFrame).toHaveAttribute('data-zoom-scale', '1.50');
+  const zoomImage = zoomFrame.locator('img');
+  const zoomFrameBounds = await zoomFrame.boundingBox();
+  if (!zoomFrameBounds) throw new Error('The zoom image frame is not visible.');
+  await page.mouse.move(zoomFrameBounds.x + zoomFrameBounds.width / 2, zoomFrameBounds.y + zoomFrameBounds.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(zoomFrameBounds.x + zoomFrameBounds.width / 2 + 80, zoomFrameBounds.y + zoomFrameBounds.height / 2 + 40, { steps: 4 });
+  await page.mouse.up();
+  await expect(zoomImage).toHaveAttribute('style', /translate\(80px, 40px\)/);
+  await expect(slideshow.getByText('Seite 2 von 4')).toBeVisible();
+  await zoomFrame.hover();
+  await page.mouse.wheel(0, -100);
+  await expect.poll(() => zoomFrame.getAttribute('data-zoom-scale')).toMatch(/1\.(7|8)/);
+  await zoomDialog.getByRole('button', { name: 'Zoom zurücksetzen' }).click();
+  await expect(zoomFrame).toHaveAttribute('data-zoom-scale', '1.00');
+  await page.keyboard.press('Escape');
+  await expect(zoomDialog).toBeHidden();
+
+  await slideshow.getByRole('button', { name: 'Aktuelle Seite vergrößern' }).click();
+  await expect(zoomDialog).toBeVisible();
+  const zoomBounds = await zoomDialog.boundingBox();
+  if (!zoomBounds) throw new Error('The zoom dialog is not visible.');
+  await page.mouse.click(zoomBounds.x - 8, zoomBounds.y + zoomBounds.height / 2);
+  await expect(zoomDialog).toBeHidden();
+
   await page.setViewportSize({ width: 375, height: 812 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  const mobilePrevious = slideshow.getByRole('button', { name: 'Vorherige Seite' });
+  const mobileFrame = await slideshow.locator('figure').first().evaluate((figure) => {
+    const { x, y, width, height } = figure.parentElement!.parentElement!.getBoundingClientRect();
+    return { x, y, width, height };
+  });
+  const mobilePreviousBounds = await mobilePrevious.boundingBox();
+  if (!mobileFrame || !mobilePreviousBounds) throw new Error('The mobile slideshow controls are not visible.');
+  expect(mobilePreviousBounds.width).toBe(32);
+  expect(mobilePreviousBounds.x - mobileFrame.x).toBe(6);
+  await expect(mobilePrevious.locator('svg')).toHaveCSS('width', '16px');
 });
 
 test('former satire magazine routes are no longer available', async ({ page }) => {
@@ -150,7 +206,7 @@ test('mobile navigation opens and closes with Escape', async ({ page }) => {
   await expect(page.getByRole('dialog', { name: 'Navigation' })).toBeHidden();
 });
 
-test('Worthaft and Schreibstube navigation links are swapped in desktop and mobile menus', async ({ page }) => {
+test('mobile navigation keeps the same three actions and order as desktop', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('/');
   await expect(page.locator('header nav a').nth(0)).toHaveAttribute('href', '/worthaft');
@@ -159,9 +215,38 @@ test('Worthaft and Schreibstube navigation links are swapped in desktop and mobi
 
   await page.setViewportSize({ width: 375, height: 812 });
   await page.getByRole('button', { name: 'Menü öffnen' }).click();
-  const mobileNav = page.getByRole('dialog', { name: 'Navigation' }).locator('nav a');
-  await expect(mobileNav.nth(0)).toHaveAttribute('href', '/gpt');
-  await expect(mobileNav.nth(1)).toHaveAttribute('href', '/worthaft');
+  const mobileDialog = page.getByRole('dialog', { name: 'Navigation' });
+  const mobileNav = mobileDialog.getByRole('navigation', { name: 'Hauptnavigation' }).locator('a');
+  await expect(mobileNav).toHaveCount(3);
+  await expect(mobileNav.nth(0)).toHaveAttribute('href', '/worthaft');
+  await expect(mobileNav.nth(1)).toHaveAttribute('href', '/shop');
+  await expect(mobileNav.nth(2)).toHaveAttribute('href', '/gpt');
+  await expect(mobileNav.nth(0).locator('.worthaft-icon-shimmer')).toBeVisible();
+  await expect(mobileDialog).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
+  const actionWidths = await mobileNav.evaluateAll((links) => links.map((link) => link.getBoundingClientRect().width));
+  expect(new Set(actionWidths).size).toBe(1);
+  const drawerBounds = await mobileDialog.boundingBox();
+  if (!drawerBounds) throw new Error('The mobile navigation drawer is not visible.');
+  expect(drawerBounds.width).toBeLessThan(330);
+  expect(drawerBounds.x).toBeGreaterThan(0);
+  expect(drawerBounds.y).toBe(12);
+  expect(drawerBounds.height).toBeGreaterThanOrEqual(360);
+  expect(drawerBounds.height).toBeLessThan(370);
+  await expect(mobileDialog).toHaveCSS('border-radius', '24px');
+  const drawerCenter = drawerBounds.x + drawerBounds.width / 2;
+  for (const action of await mobileNav.all()) {
+    const actionBounds = await action.boundingBox();
+    if (!actionBounds) throw new Error('A mobile navigation action is not visible.');
+    expect(Math.abs(actionBounds.x + actionBounds.width / 2 - drawerCenter)).toBeLessThan(1);
+  }
+  await expect(mobileDialog.getByText('5,0★ bei Amazon · 106 Seiten')).toHaveCount(0);
+  await expect(mobileDialog.getByRole('link', { name: 'Impressum' })).toHaveCount(0);
+  await expect(mobileDialog.getByRole('link', { name: 'Datenschutz' })).toHaveCount(0);
+
+  await page.setViewportSize({ width: 375, height: 320 });
+  const shortViewportBounds = await mobileDialog.boundingBox();
+  if (!shortViewportBounds) throw new Error('The mobile navigation drawer is not visible on a short viewport.');
+  expect(shortViewportBounds.height).toBeLessThanOrEqual(296);
 });
 
 test('footer exposes the guide, newsletter and legal links', async ({ page }) => {
@@ -193,15 +278,20 @@ for (const width of [375, 1280]) {
       ? page.locator('#footer-more-menu')
       : page.getByRole('region', { name: 'Weitere rechtliche Informationen' });
     await expect(legalMenu).toBeVisible();
-    const firstLegalLink = legalMenu.getByRole('link', { name: width < 640 ? 'Impressum' : 'Transparenzhinweise' });
+    const firstLegalLink = legalMenu.getByRole('link', { name: 'Impressum' });
     await expect(firstLegalLink).toHaveCSS('font-size', '12px');
     await expect(legalMenu).toHaveCSS('width', '192px');
+    await expect(legalMenu.getByRole('link', { name: 'Datenschutz' })).toHaveAttribute('href', '/datenschutz');
+    if (width >= 640) {
+      await expect(page.locator('nav[aria-label="Rechtliche Informationen"] > a[href="/impressum"]')).toHaveCount(0);
+      await expect(page.locator('nav[aria-label="Rechtliche Informationen"] > a[href="/datenschutz"]')).toHaveCount(0);
+    }
     if (width < 640) {
       await expect.poll(async () => {
         const triggerBounds = await moreButton.boundingBox();
         const menuBounds = await legalMenu.boundingBox();
         return triggerBounds && menuBounds
-          ? Math.abs(menuBounds.x + menuBounds.width - (triggerBounds.x + triggerBounds.width))
+          ? Math.abs(menuBounds.x + menuBounds.width / 2 - (triggerBounds.x + triggerBounds.width / 2))
           : Number.POSITIVE_INFINITY;
       }).toBeLessThan(1);
     }

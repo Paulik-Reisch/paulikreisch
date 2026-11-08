@@ -154,8 +154,6 @@ export function Footer() {
           </span>
           <div className="relative flex items-center gap-2 sm:gap-4">
             <nav aria-label="Rechtliche Informationen" className="hidden sm:flex flex-wrap justify-center gap-x-4 gap-y-2 sm:justify-end">
-              <Link href="/impressum" className="hover:text-foreground hover:underline">Impressum</Link>
-              <Link href="/datenschutz" className="hover:text-foreground hover:underline">Datenschutz</Link>
               <Link href="/cookie-richtlinie" className="hover:text-foreground hover:underline">Cookie-Richtlinie</Link>
               <Popover open={desktopMoreOpen} onOpenChange={setDesktopMoreOpen}>
                 <PopoverTrigger asChild>
@@ -172,6 +170,18 @@ export function Footer() {
                   onMouseEnter={() => setMoreMenuHovered(true)}
                   onMouseLeave={() => setMoreMenuHovered(false)}
                 >
+                  <Link
+                    href="/impressum"
+                    className="block px-3 py-1.5 text-left text-xs text-[#1d1a15] hover:underline transition-colors"
+                  >
+                    Impressum
+                  </Link>
+                  <Link
+                    href="/datenschutz"
+                    className="block px-3 py-1.5 text-left text-xs text-[#1d1a15] hover:underline transition-colors"
+                  >
+                    Datenschutz
+                  </Link>
                   <Link
                     href="/transparenz"
                     className="block px-3 py-1.5 text-left text-xs text-[#1d1a15] hover:underline transition-colors"
@@ -223,7 +233,7 @@ export function Footer() {
                 data-state={moreOpen ? "open" : "closed"}
                 onMouseEnter={() => setMoreMenuHovered(true)}
                 onMouseLeave={() => setMoreMenuHovered(false)}
-                className={`absolute bottom-full right-0 z-50 mb-2 w-48 origin-bottom-right rounded-[10px] border border-[#e8ddd0] bg-white p-1 text-xs text-[#1d1a15] shadow-[0_10px_24px_rgba(29,26,21,0.16)] transition-[opacity,transform,visibility] duration-200 ease-out motion-reduce:transition-none ${
+                className={`absolute bottom-full left-1/2 z-50 mb-2 w-48 -translate-x-1/2 origin-bottom rounded-[10px] border border-[#e8ddd0] bg-white p-1 text-xs text-[#1d1a15] shadow-[0_10px_24px_rgba(29,26,21,0.16)] transition-[opacity,transform,visibility] duration-200 ease-out motion-reduce:transition-none ${
                   moreOpen
                     ? "visible translate-y-0 scale-100 opacity-100"
                     : "pointer-events-none invisible translate-y-2 scale-95 opacity-0"
