@@ -11,6 +11,11 @@ for (const width of [320, 375, 414, 768, 1440]) {
     await page.setViewportSize({ width, height: 1000 });
     await page.goto('/');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    await expect(page.locator('#buch figure figcaption')).toHaveCount(0);
+    await expect(page.getByRole('link', { name: /Seiten lesen/ })).toHaveAttribute('href', '/leseprobe');
+    await expect(page.locator('section[aria-labelledby="preview-title"] img[alt="Eine lesende Maus mit Brille sitzt in einem Sessel und liest ein Buch"]')).toHaveAttribute('src', /lesende-maus\.jpg/);
+    await expect(page.locator('#entdecken img')).toHaveAttribute('src', /32-tafel-kreide/);
+    await expect(page.locator('section[aria-labelledby="preview-title"] p').nth(1)).toHaveCSS('font-weight', '400');
     await expect(page.getByRole('link', { name: '„Hallo Welt“ entdecken' })).toHaveAttribute('href', '/shop');
     await expect(page.getByRole('link', { name: 'Worthaft spielen' })).toHaveAttribute('href', '/worthaft');
     await expect(page.locator('a[href="/a"], a[href^="/a/"], a[href="/artikel"], a[href^="/artikel/"]')).toHaveCount(0);
@@ -19,6 +24,97 @@ for (const width of [320, 375, 414, 768, 1440]) {
     await expect(page.locator('details[open]')).toBeVisible();
   });
 }
+
+test('reading sample stays simple and the selected-page slideshow supports controls and swiping', async ({ page }) => {
+  await page.goto('/leseprobe');
+
+  await expect(page.getByRole('heading', { level: 1, name: 'Ein Blick ins Buch.' })).toBeVisible();
+  await expect(page.getByText(/Hier kannst du durch ausgewählte Seiten/)).toBeVisible();
+  const pdfSlide = page.locator('figure[data-slide-type="pdf"]').nth(0);
+  await expect(pdfSlide).toBeVisible();
+  const pdfImage = pdfSlide.locator('img');
+  await expect(pdfImage).toHaveAttribute('src', '/leseprobe/seite-72.png');
+  await expect(pdfSlide.locator('figcaption')).toHaveCount(0);
+  await expect(pdfSlide.locator('iframe')).toHaveCount(0);
+  await expect(pdfSlide.getByRole('link')).toHaveCount(0);
+  await expect.poll(() => pdfImage.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThanOrEqual(1800);
+  await expect(page.locator('img[alt^="Platzhalterfoto:"]')).toHaveCount(0);
+  const pdfResponse = await page.request.get('/leseprobe/seite-72.pdf');
+  expect(pdfResponse.ok()).toBe(true);
+  expect(pdfResponse.headers()['content-type']).toContain('application/pdf');
+  const previewResponse = await page.request.get('/leseprobe/seite-72.png');
+  expect(previewResponse.ok()).toBe(true);
+  expect(previewResponse.headers()['content-type']).toContain('image/png');
+  const description = page.locator('main > section > div').first().locator('p').nth(1);
+  const heading = page.getByRole('heading', { level: 1, name: 'Ein Blick ins Buch.' });
+  const copy = page.locator('main > section > div').first();
+  await expect(copy).toHaveCSS('align-self', 'start');
+  await expect(heading).toHaveCSS('font-weight', '700');
+  await expect(heading).toHaveCSS('font-family', /lora/i);
+  await expect(description).toHaveCSS('font-weight', '400');
+  await expect(description).toHaveCSS('font-family', /sourceSerif/i);
+  const bookLink = page.getByRole('link', { name: 'Zum Buch' });
+  await expect(bookLink).toHaveAttribute('href', '/shop');
+  await expect(bookLink.locator('svg')).toHaveAttribute('class', /lucide-arrow-up-right/);
+  const slideshow = page.getByRole('region', { name: 'Ausgewählte Seiten aus dem Buch' });
+  const status = slideshow.getByText('Seite 1 von 4');
+  await expect(status).toBeVisible();
+  await expect(slideshow.locator('figure')).toHaveCount(4);
+  await expect(slideshow.getByRole('button', { name: 'Seite 5 anzeigen' })).toHaveCount(0);
+  expect(await slideshow.locator('figure').first().evaluate((figure) => getComputedStyle(figure).aspectRatio)).toBe('2 / 3');
+
+  const frame = await slideshow.locator('figure').first().boundingBox();
+  if (!frame) throw new Error('The slideshow frame is not visible.');
+  await page.mouse.move(frame.x + frame.width * 0.8, frame.y + frame.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(frame.x + frame.width * 0.2, frame.y + frame.height / 2, { steps: 5 });
+  await page.mouse.up();
+  await expect(slideshow.getByText('Seite 2 von 4')).toBeVisible();
+
+  const secondPdfSlide = slideshow.locator('figure').nth(1);
+  await expect(secondPdfSlide).toHaveAttribute('data-slide-type', 'pdf');
+  await expect(secondPdfSlide.locator('img')).toHaveAttribute('src', '/leseprobe/seite-91.png');
+  await expect.poll(() => secondPdfSlide.locator('img').evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThanOrEqual(1800);
+  const secondPdfResponse = await page.request.get('/leseprobe/seite-91.pdf');
+  expect(secondPdfResponse.ok()).toBe(true);
+  expect(secondPdfResponse.headers()['content-type']).toContain('application/pdf');
+
+  const thirdPdfSlide = slideshow.locator('figure').nth(2);
+  await expect(thirdPdfSlide).toHaveAttribute('data-slide-type', 'pdf');
+  await expect(thirdPdfSlide.locator('img')).toHaveAttribute('src', '/leseprobe/seite-58.png');
+  const thirdPdfResponse = await page.request.get('/leseprobe/seite-58.pdf');
+  expect(thirdPdfResponse.ok()).toBe(true);
+  expect(thirdPdfResponse.headers()['content-type']).toContain('application/pdf');
+  const thirdPreviewResponse = await page.request.get('/leseprobe/seite-58.png');
+  expect(thirdPreviewResponse.ok()).toBe(true);
+  expect(thirdPreviewResponse.headers()['content-type']).toContain('image/png');
+
+  const fourthPdfSlide = slideshow.locator('figure').nth(3);
+  await expect(fourthPdfSlide).toHaveAttribute('data-slide-type', 'pdf');
+  await expect(fourthPdfSlide.locator('img')).toHaveAttribute('src', '/leseprobe/seite-96.png');
+  const fourthPdfResponse = await page.request.get('/leseprobe/seite-96.pdf');
+  expect(fourthPdfResponse.ok()).toBe(true);
+  expect(fourthPdfResponse.headers()['content-type']).toContain('application/pdf');
+  const fourthPreviewResponse = await page.request.get('/leseprobe/seite-96.png');
+  expect(fourthPreviewResponse.ok()).toBe(true);
+  expect(fourthPreviewResponse.headers()['content-type']).toContain('image/png');
+
+  await slideshow.getByRole('button', { name: 'Nächste Seite' }).click();
+  await expect(slideshow.getByText('Seite 3 von 4')).toBeVisible();
+  await expect.poll(() => thirdPdfSlide.locator('img').evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThanOrEqual(1800);
+  await slideshow.getByRole('button', { name: 'Nächste Seite' }).click();
+  await expect(slideshow.getByText('Seite 4 von 4')).toBeVisible();
+  await expect.poll(() => fourthPdfSlide.locator('img').evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThanOrEqual(1800);
+  await slideshow.getByRole('button', { name: 'Vorherige Seite' }).click();
+  await expect(slideshow.getByText('Seite 3 von 4')).toBeVisible();
+
+  await slideshow.focus();
+  await page.keyboard.press('ArrowLeft');
+  await expect(slideshow.getByText('Seite 2 von 4')).toBeVisible();
+
+  await page.setViewportSize({ width: 375, height: 812 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
 
 test('former satire magazine routes are no longer available', async ({ page }) => {
   for (const path of ['/a', '/a/bis-dass-der-bagger-uns-scheidet', '/artikel', '/artikel/bis-dass-der-bagger-uns-scheidet']) {

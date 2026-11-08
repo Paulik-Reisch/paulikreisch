@@ -24,6 +24,7 @@ export async function GET() {
   const staticPages: Array<{ path: string; priority: number; changefreq: string; lastmod?: string }> = [
     { path: '/', priority: 1.0, changefreq: 'weekly' },
     { path: '/shop', priority: 0.9, changefreq: 'weekly' },
+    { path: '/leseprobe', priority: 0.8, changefreq: 'monthly' },
     { path: '/ueber/autoren', priority: 0.7, changefreq: 'monthly' },
     { path: '/ueber/philipp-paulik', priority: 0.6, changefreq: 'monthly' },
     { path: '/ueber/max-reisch', priority: 0.6, changefreq: 'monthly' },

@@ -24,15 +24,19 @@
 .book { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1fr); gap: clamp(36px, 7vw, 112px); align-items: center; }
 .bookVisual { position: relative; aspect-ratio: 4/4.5; background: var(--color-paper-deep); overflow: clip; }
 .bookVisual img { object-fit: cover; object-position: 77% center; }
-.bookCaption { position: absolute; inset: auto 20px 20px; background: transparent; padding: 0; display: flex; gap: 12px; justify-content: space-between; font-size: 11px; color: var(--color-ink); }
 .body { color: var(--color-muted); font-family: var(--font-copy); font-size: 20px; line-height: 1.7; margin-top: 24px; }
 .facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding-block: 28px; margin-top: 24px; border-block: 1px solid var(--color-rule); }
 .facts dt { font-size: 11px; color: var(--color-muted); }
 .facts dd { margin-top: 8px; font-family: var(--font-display); font-size: 23px; }
-.manifesto { background: var(--color-ink); color: var(--color-paper); padding-block: calc(var(--space-section) - 11.5px); }
-.manifesto p { max-width: 1020px; font-family: var(--font-display); font-size: clamp(2rem, 4.7vw, 4.7rem); line-height: 1.25; letter-spacing: -.04em; }
-.manifesto mark { background: none; color: var(--color-accent); }
-.manifesto small { display: block; margin-top: 32px; color: var(--color-paper-deep); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
+.preview { padding-block: clamp(64px, 9vw, 120px); background: oklch(31% 0.02 70); color: var(--color-paper); }
+.previewGrid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1fr); align-items: center; gap: clamp(36px, 7vw, 96px); }
+.previewImage { position: relative; min-height: 360px; aspect-ratio: 4/3; overflow: clip; background: var(--color-paper-deep); }
+.previewImage img { object-fit: cover; object-position: center; }
+.previewImage span { position: absolute; inset: auto 16px 16px; width: fit-content; padding: 9px 12px; background: var(--color-paper); color: var(--color-ink); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.previewCopy .eyebrow { color: var(--color-accent); }
+.previewCopy h2 { max-width: 12ch; font-family: var(--font-display); font-size: clamp(2.4rem, 5vw, 4.5rem); letter-spacing: -.05em; line-height: 1.08; }
+.previewCopy .body { max-width: 42ch; color: var(--color-paper-deep); font-weight: 400; }
+.previewCopy .button { margin-top: 30px; background: var(--color-paper); color: var(--color-ink); border-color: var(--color-paper); }
 .sectionHead { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 40px; }
 .sectionHead .eyebrow { margin-bottom: 16px; }
 .stories { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 56px; }
@@ -70,7 +74,7 @@
 .faq summary { cursor: pointer; font-family: var(--font-copy); font-size: 22px; line-height: 1.4; padding-right: 12px; }
 .faq details p { font-family: var(--font-copy); color: var(--color-muted); font-size: 18px; line-height: 1.7; margin: 16px 0 0 20px; }
 @media (min-width: 960px) { .bookCopy { position: sticky; top: 110px; } }
-@media (max-width: 959px) { .hero { min-height: 520px; } .heroCopy { width: 62%; } .hero h1 { font-size: clamp(3rem, 7vw, 5rem); } .book, .stories { gap: 32px; } .people { gap: 20px; } .gameGrid, .faq { gap: 36px; } }
+@media (max-width: 959px) { .hero { min-height: 520px; } .heroCopy { width: 62%; } .hero h1 { font-size: clamp(3rem, 7vw, 5rem); } .book, .stories { gap: 32px; } .previewImage { min-height: 300px; } .people { gap: 20px; } .gameGrid, .faq { gap: 36px; } }
 @media (max-width: 639px) {
   .wrap { width: calc(100% - 48px); }
   .hero { display: block; padding-bottom: 280px; min-height: auto; }
@@ -83,7 +87,8 @@
   .button { font-size: 12px; padding-inline: 16px; gap: 16px; }
   .book, .stories, .gameGrid, .faq { grid-template-columns: minmax(0, 1fr); }
   .bookVisual { aspect-ratio: 4/3.6; }
-  .bookCaption { font-size: 10px; inset-inline: 12px; }
+  .previewGrid { grid-template-columns: minmax(0, 1fr); }
+  .previewImage { min-height: 0; aspect-ratio: 4/3; }
   .sectionHead { display: block; }
   .sectionHead > .textLink { margin-top: 20px; }
   .people { grid-template-columns: minmax(0, 1fr); gap: 44px; }

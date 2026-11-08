@@ -1,0 +1,160 @@
+.page {
+  --color-paper: oklch(97% 0.015 85);
+  --color-paper-deep: oklch(93% 0.023 85);
+  --color-ink: oklch(24% 0.015 70);
+  --color-muted: oklch(46% 0.02 70);
+  --color-rule: oklch(81% 0.025 80);
+  --color-accent: oklch(91% 0.16 95);
+  --color-rust: oklch(43% 0.13 32);
+  --color-focus: oklch(47% 0.15 250);
+  --font-display: var(--font-lora), Georgia, serif;
+  --font-copy: var(--font-source-serif), Georgia, serif;
+  --font-label: var(--font-inter), sans-serif;
+  min-height: 100dvh;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-label);
+}
+
+.page :is(h1, p, figure) { margin: 0; }
+.page :is(a, button, [tabindex="0"]):focus-visible { outline: 3px solid var(--color-focus); outline-offset: 4px; }
+.readingSample {
+  display: grid;
+  width: min(100% - 48px, 1120px);
+  min-height: min(680px, calc(100dvh - 100px));
+  align-items: center;
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  gap: clamp(40px, 8vw, 112px);
+  margin-inline: auto;
+  padding-block: clamp(52px, 8vw, 96px);
+}
+.copy { max-width: 430px; align-self: start; }
+.eyebrow {
+  margin-bottom: 18px !important;
+  color: var(--color-rust);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+.copy h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.5rem, 4vw, 3.8rem);
+  letter-spacing: -.05em;
+  line-height: 1.08;
+}
+.description {
+  margin-top: 20px !important;
+  color: var(--color-muted);
+  font-family: var(--font-copy);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+.bookLink {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 10px;
+  margin-top: 24px;
+  border-bottom: 1px solid currentColor;
+  font-size: 13px;
+  font-weight: 700;
+}
+.bookLink:hover { color: var(--color-rust); }
+
+.slideshow { min-width: 0; }
+.slideFrame {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-paper-deep);
+}
+.slideTrack {
+  display: flex;
+  transition: transform 360ms cubic-bezier(.2, .75, .25, 1);
+  touch-action: pan-y;
+  user-select: none;
+}
+.slide {
+  position: relative;
+  min-width: 100%;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background: #fff;
+}
+.slide img { object-fit: cover; }
+.slide figcaption {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 8px 11px;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  z-index: 2;
+}
+.control {
+  position: absolute;
+  top: 50%;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: background-color 160ms ease, color 160ms ease;
+  z-index: 3;
+}
+.control:hover { background: var(--color-ink); color: var(--color-paper); }
+.previous { left: 12px; }
+.next { right: 12px; }
+.slideFooter {
+  display: flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.slideFooter > p { color: var(--color-muted); font-size: 11px; }
+.indicators { display: flex; align-items: center; gap: 8px; }
+.indicators button {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-rule);
+  cursor: pointer;
+}
+.indicators .activeIndicator { background: var(--color-rust); }
+
+@media (max-width: 760px) {
+  .readingSample {
+    width: min(100% - 40px, 560px);
+    min-height: 0;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+    padding-block: 48px 56px;
+  }
+  .copy { max-width: 520px; }
+  .copy h1 { font-size: clamp(2.5rem, 9vw, 3.5rem); }
+  .description { max-width: 50ch; font-size: 18px; }
+}
+
+@media (max-width: 420px) {
+  .readingSample { width: calc(100% - 36px); gap: 26px; }
+  .control { width: 38px; height: 38px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slideTrack, .control { transition: none; }
+}

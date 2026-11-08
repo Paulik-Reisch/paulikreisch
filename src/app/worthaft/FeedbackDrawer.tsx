@@ -52,6 +52,7 @@ export default function FeedbackDrawer({
   const [vote, setVote] = useState<Vote>(null);
   const [reasons, setReasons] = useState<Set<string>>(new Set());
   const [isSending, setIsSending] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -59,12 +60,14 @@ export default function FeedbackDrawer({
       setVote(null);
       setReasons(new Set());
       setIsSending(false);
+      setSubmitError(null);
     }
   }, [isOpen]);
 
   const handleVote = (v: Vote) => {
     setVote(v);
     setStep('details');
+    setSubmitError(null);
   };
 
   const toggleReason = (reason: string) => {
@@ -81,6 +84,7 @@ export default function FeedbackDrawer({
   const handleSubmit = async () => {
     if (!canSubmit) return;
     setIsSending(true);
+    setSubmitError(null);
     const payload = {
       word: solution,
       vote,
@@ -89,19 +93,20 @@ export default function FeedbackDrawer({
       createdAt: serverTimestamp(),
     };
     try {
-      if (payload.vote === 'down') {
-        const { firestore } = initializeFirebase();
-        await addDoc(collection(firestore, 'worthaft-feedback'), payload);
+      const { firestore } = initializeFirebase();
+      await addDoc(collection(firestore, 'worthaft-feedback'), payload);
+      try {
+        localStorage.setItem(`worthaft-feedback-${payload.date}`, 'true');
+      } catch (storageError) {
+        console.error('Feedback was saved, but the local decision could not be stored:', storageError);
       }
-      localStorage.setItem(`worthaft-feedback-${payload.date}`, 'true');
-    } catch (err) {
-      // Still show the thanks screen even if the write fails — don't punish the user.
-      console.error('Feedback could not be saved:', err);
-      localStorage.setItem(`worthaft-feedback-${payload.date}`, 'true');
-    } finally {
-      setIsSending(false);
       setStep('thanks');
       onSubmitted?.();
+    } catch (err) {
+      console.error('Feedback could not be saved:', err);
+      setSubmitError('Feedback konnte nicht gespeichert werden. Bitte versuche es erneut.');
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -249,6 +254,7 @@ export default function FeedbackDrawer({
             >
               {isSending ? 'Wird gesendet ...' : 'Feedback senden'}
             </Button>
+            {submitError && <p role="alert" className="mt-3 text-sm text-destructive">{submitError}</p>}
           </motion.div>
         )}
 

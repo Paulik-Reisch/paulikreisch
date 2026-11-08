@@ -34,10 +34,8 @@ export function HomePage() {
         <section id="buch" aria-labelledby="book-title" className={`${styles.wrap} ${styles.section} ${styles.book}`}>
           <figure className={styles.bookVisual}>
             <Image src="/hero-ab/hero-03-tafel.jpg" alt="Hallo Welt Buch vor Kreidetafel - Satire über den Schulwahnsinn von Paulik & Reisch" fill sizes="(max-width: 639px) 90vw, 45vw" />
-            <figcaption className={styles.bookCaption}><span>Hallo Welt · Das Debüt</span><span>Satire statt Stundenplan</span></figcaption>
           </figure>
           <div className={styles.bookCopy}>
-            <p className={styles.eyebrow}>Hallo Welt · Schulsatire</p>
             <h2 id="book-title">Nicht für die Schule.<br />Fürs Überleben.</h2>
             <p className={styles.body}>Vertretungsstunden, marode Klassenzimmer und die hohe Kunst der Schulbürokratie. „Hallo Welt“ nimmt den ganz normalen Wahnsinn auseinander — böse, herzlich und erschreckend vertraut.</p>
             <p className={styles.body}>Eine satirische Abrechnung und Liebeserklärung an die Geschichten, die nach dem letzten Klingeln bleiben.</p>
@@ -49,12 +47,19 @@ export function HomePage() {
             <div className={styles.actions}><Link className={styles.button} href="/shop">Zum Buch &amp; zur Leseprobe {arrow}</Link></div>
           </div>
         </section>
-        <aside className={styles.manifesto} aria-label="Unsere Haltung">
-          <div className={styles.wrap}>
-            <p>Die Wirklichkeit liefert den Stoff.<br />Wir setzen nur noch <mark>einen drauf.</mark></p>
-            <small>Paulik &amp; Reisch · Satire über Schule, Bürokratie und Alltag</small>
+        <section className={styles.preview} aria-labelledby="preview-title">
+          <div className={`${styles.wrap} ${styles.previewGrid}`}>
+            <div className={styles.previewImage}>
+              <Image src="/leseprobe/lesende-maus.jpg" alt="Eine lesende Maus mit Brille sitzt in einem Sessel und liest ein Buch" fill sizes="(max-width: 639px) 90vw, 40vw" />
+            </div>
+            <div className={styles.previewCopy}>
+              <p className={styles.eyebrow}>Leseprobe</p>
+              <h2 id="preview-title">Erst mal reinlesen?</h2>
+              <p className={styles.body}>Lies ausgewählte Kapitel und wirf einen Blick auf den ganz normalen Schulwahnsinn, bevor du dich für das ganze Buch entscheidest.</p>
+              <Link className={styles.button} href="/leseprobe">Seiten lesen {arrow}</Link>
+            </div>
           </div>
-        </aside>
+        </section>
         <section id="entdecken" aria-labelledby="discover-title" className={`${styles.wrap} ${styles.section}`}>
           <div className={styles.sectionHead}>
             <div><p className={styles.eyebrow}>Zum Weiterlesen</p><h2 id="discover-title">Der Wahnsinn hat Methode.</h2></div>
