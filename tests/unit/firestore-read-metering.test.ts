@@ -3,14 +3,14 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   FIRESTORE_READS_LOG_MESSAGE,
-  billedReadCount,
+  countedReads,
   recordFirestoreReads,
 } from '../../src/lib/firestore-read-metering';
 
-test('an empty result is billed as one read, other results by document count', () => {
-  assert.equal(billedReadCount(0), 1);
-  assert.equal(billedReadCount(1), 1);
-  assert.equal(billedReadCount(250), 250);
+test('an empty result counts as one document, other results by size', () => {
+  assert.equal(countedReads(0), 1);
+  assert.equal(countedReads(1), 1);
+  assert.equal(countedReads(250), 250);
 });
 
 test('a metered read writes one JSON line with only the label and the count', () => {
