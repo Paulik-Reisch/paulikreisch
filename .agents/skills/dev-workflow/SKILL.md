@@ -27,7 +27,7 @@ This is how we work in this repository. Every change follows it, no matter how s
 
 ## Code
 
-- TypeScript and ESLint stay clean: `npm run check` (ESLint, TypeScript, unit and architecture tests) passes before every push, and new code adds no new lint warnings.
+- TypeScript and ESLint stay clean: `npm run check` (ESLint, TypeScript, unit tests) passes before every push, and new code adds no new lint warnings.
 - Follow the existing structure (see README: `src/app`, `src/components`, `src/lib`). Reuse existing components, tokens, and helpers instead of duplicating them.
 - Leave code you touch cleaner than you found it: refactor where it improves clarity, in separate commits from behavior changes.
 - No dead code, no commented-out blocks, no leftover debug output, no secrets. Credentials never go into Git, issues, or PRs.
