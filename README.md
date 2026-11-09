@@ -19,7 +19,7 @@ Für eine vollständige lokale Umgebung `.env.example` nach `.env.local` kopiere
 ## Qualität
 
 ```sh
-npm run check        # ESLint, TypeScript, Unit- und Architekturtests
+npm run check        # ESLint, TypeScript und Unit-Tests
 npm run build        # vollständiger Produktionsbuild mit Typprüfung
 npx playwright install chromium
 npm run test:e2e     # responsive Darstellung, Tastatur, SEO, A11y, Archiv
