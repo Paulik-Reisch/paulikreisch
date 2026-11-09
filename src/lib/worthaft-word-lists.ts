@@ -1,4 +1,5 @@
-import { doc, getDoc, type Firestore } from 'firebase/firestore';
+import { doc, type Firestore } from 'firebase/firestore';
+import { getDocMetered } from './firestore-read-metering';
 import {
   WORTHAFT_ANTI_WORDS_COLLECTION,
   WORTHAFT_WORD_LIST_DOCUMENT,
@@ -17,8 +18,8 @@ export {
 
 export async function loadWorthaftWordLists(firestore: Firestore): Promise<WorthaftWordLists> {
   const [wordsDocument, antiWordsDocument] = await Promise.all([
-    getDoc(doc(firestore, WORTHAFT_WORDS_COLLECTION, WORTHAFT_WORD_LIST_DOCUMENT)),
-    getDoc(doc(firestore, WORTHAFT_ANTI_WORDS_COLLECTION, WORTHAFT_WORD_LIST_DOCUMENT)),
+    getDocMetered('loadWorthaftWordLists', doc(firestore, WORTHAFT_WORDS_COLLECTION, WORTHAFT_WORD_LIST_DOCUMENT)),
+    getDocMetered('loadWorthaftWordLists', doc(firestore, WORTHAFT_ANTI_WORDS_COLLECTION, WORTHAFT_WORD_LIST_DOCUMENT)),
   ]);
 
   if (!wordsDocument.exists() || !antiWordsDocument.exists()) {

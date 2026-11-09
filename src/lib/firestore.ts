@@ -2,14 +2,12 @@ import { app } from "@/app/firebase";
 import { 
     getFirestore, 
     collection, 
-    getDocs, 
     doc, 
     updateDoc,
     addDoc,
     Timestamp,
     orderBy,
     query,
-    getDoc,
     setDoc,
     deleteDoc,
     writeBatch,
@@ -22,6 +20,7 @@ import {
     listAll,
     getMetadata,
 } from "firebase/storage";
+import { getDocMetered, getDocsMetered } from "@/lib/firestore-read-metering";
 import { startOfMonth, subMonths, endOfMonth, format } from "date-fns";
 import { de } from "date-fns/locale";
 
@@ -217,7 +216,7 @@ const db = getFirestore(app);
 export async function getAuthors(): Promise<Author[]> {
     const authorsCol = collection(db, 'authors');
     const q = query(authorsCol, orderBy("lastName", "asc"));
-    const snapshot = await getDocs(q);
+    const snapshot = await getDocsMetered("getAuthors", q);
     if (snapshot.empty) {
         // A read may return a local fallback, but must never seed production data.
         const defaultAuthor: Omit<Author, 'id'> = {
@@ -238,7 +237,7 @@ export async function getAuthors(): Promise<Author[]> {
 
 export async function getAuthorBySlug(slug: string): Promise<Author | null> {
     const docRef = doc(db, 'authors', slug);
-    const docSnap = await getDoc(docRef);
+    const docSnap = await getDocMetered("getAuthorBySlug", docRef);
     if (docSnap.exists()) {
         return {
             id: docSnap.id,
@@ -252,7 +251,7 @@ export async function addAuthor(authorData: Omit<Author, 'id'>, user: string): P
     const slug = authorData.slug || `${authorData.firstName}-${authorData.lastName}`.toLowerCase().replace(/\s+/g, '-');
     const docRef = doc(db, 'authors', slug);
     
-    const docSnap = await getDoc(docRef);
+    const docSnap = await getDocMetered("addAuthor", docRef);
     if (docSnap.exists()) {
         throw new Error(`Autor-Slug "${slug}" existiert bereits.`);
     }
@@ -273,12 +272,12 @@ export async function updateAuthor(originalSlug: string, dataToUpdate: Partial<O
         const oldDocRef = doc(db, 'authors', originalSlug);
         const newDocRef = doc(db, 'authors', newSlug);
 
-        const newDocSnap = await getDoc(newDocRef);
+        const newDocSnap = await getDocMetered("updateAuthor", newDocRef);
         if (newDocSnap.exists()) {
             throw new Error(`Autor-Slug "${newSlug}" existiert bereits.`);
         }
 
-        const oldDocSnap = await getDoc(oldDocRef);
+        const oldDocSnap = await getDocMetered("updateAuthor", oldDocRef);
         if (!oldDocSnap.exists()) {
              throw new Error(`Originalautor mit Slug "${originalSlug}" nicht gefunden.`);
         }
@@ -308,7 +307,7 @@ export async function deleteAuthor(slug: string, user: string) {
 // --- COUNTDOWN ---
 export async function getCountdownTarget(): Promise<Date> {
     const docRef = doc(db, 'settings', 'countdown');
-    const docSnap = await getDoc(docRef);
+    const docSnap = await getDocMetered("getCountdownTarget", docRef);
 
     if (docSnap.exists()) {
         return (docSnap.data().hw2LaunchDate as Timestamp).toDate();
@@ -343,7 +342,7 @@ export async function addLog(user: string, action: string, details: string) {
 export async function getLogs(): Promise<Log[]> {
     const logsCol = collection(db, 'logs');
     const q = query(logsCol, orderBy("timestamp", "desc"));
-    const snapshot = await getDocs(q);
+    const snapshot = await getDocsMetered("getLogs", q);
     return snapshot.docs.map(doc => {
         const data = doc.data();
         return {
@@ -357,7 +356,7 @@ export async function getLogs(): Promise<Log[]> {
 // --- ADMIN ---
 export async function getAdminCredentials(): Promise<Record<string, string> | null> {
     const docRef = doc(db, 'settings', 'admin');
-    const docSnap = await getDoc(docRef);
+    const docSnap = await getDocMetered("getAdminCredentials", docRef);
 
     if (docSnap.exists()) {
         return docSnap.data() as Record<string, string>;
@@ -371,7 +370,7 @@ export async function getAdminCredentials(): Promise<Record<string, string> | nu
 export async function getOrders(): Promise<Order[]> {
     const ordersCol = collection(db, 'orders');
     const q = query(ordersCol, orderBy("timestamp", "desc"));
-    const orderSnapshot = await getDocs(q);
+    const orderSnapshot = await getDocsMetered("getOrders", q);
     const orderList = orderSnapshot.docs.map(doc => {
         const data = doc.data();
         const timestamp = data.timestamp;
@@ -407,7 +406,7 @@ const defaultLegalPages: LegalPage[] = [
 export async function getLegalPages(): Promise<LegalPage[]> {
     try {
         const legalCol = collection(db, 'legal');
-        const legalSnapshot = await getDocs(legalCol);
+        const legalSnapshot = await getDocsMetered("getLegalPages", legalCol);
         if (legalSnapshot.empty) {
             // Return local defaults without writing during page rendering.
             return defaultLegalPages;
@@ -478,7 +477,7 @@ const LEGAL_FALLBACKS: Record<string, Omit<LegalPage, 'id'>> = {
 export async function getLegalPage(slug: string): Promise<LegalPage | null> {
     try {
         const docRef = doc(db, 'legal', slug);
-        const docSnap = await getDoc(docRef);
+        const docSnap = await getDocMetered("getLegalPage", docRef);
 
         if (docSnap.exists()) {
             const data = docSnap.data();
@@ -516,7 +515,7 @@ export async function updateLegalPage(pageId: string, data: Partial<Omit<LegalPa
 
 async function initializeLandingPages() {
     const lpCol = collection(db, 'landing_pages');
-    const snapshot = await getDocs(query(lpCol));
+    const snapshot = await getDocsMetered("initializeLandingPages", query(lpCol));
     if (snapshot.empty) {
         const batch = writeBatch(db);
         console.log("Initializing default landing pages...");
@@ -529,7 +528,7 @@ async function initializeLandingPages() {
 export async function getLandingPages(): Promise<LandingPage[]> {
     const lpCol = collection(db, 'landing_pages');
     const q = query(lpCol, orderBy("title", "asc"));
-    const snapshot = await getDocs(q);
+    const snapshot = await getDocsMetered("getLandingPages", q);
     return snapshot.docs.map(doc => {
         const data = doc.data();
         return {
@@ -543,7 +542,7 @@ export async function getLandingPages(): Promise<LandingPage[]> {
 
 export async function getLandingPageBySlug(slug: string): Promise<LandingPage | null> {
     const docRef = doc(db, 'landing_pages', slug);
-    const docSnap = await getDoc(docRef);
+    const docSnap = await getDocMetered("getLandingPageBySlug", docRef);
     if (docSnap.exists()) {
         const data = docSnap.data();
         return {
@@ -560,7 +559,7 @@ export async function addLandingPage(pageData: Omit<LandingPage, 'id' | 'lastUpd
     const slug = pageData.slug || pageData.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     const docRef = doc(db, 'landing_pages', slug);
     
-    const docSnap = await getDoc(docRef);
+    const docSnap = await getDocMetered("addLandingPage", docRef);
     if (docSnap.exists()) {
         throw new Error(`Landing Page mit Slug "${slug}" existiert bereits.`);
     }
@@ -581,7 +580,7 @@ export async function updateLandingPage(slug: string, dataToUpdate: Partial<Omit
     // If slug is being changed, we need to move the document
     if (dataToUpdate.slug && dataToUpdate.slug !== slug) {
         const newDocRef = doc(db, 'landing_pages', dataToUpdate.slug);
-        const oldDocSnap = await getDoc(docRef);
+        const oldDocSnap = await getDocMetered("updateLandingPage", docRef);
         if (oldDocSnap.exists()) {
             const batch = writeBatch(db);
             const newData = {
@@ -614,7 +613,7 @@ export async function deleteLandingPage(slug: string, user: string) {
 export async function getNewsletters(): Promise<Newsletter[]> {
     const newslettersCol = collection(db, 'newsletters');
     const q = query(newslettersCol, orderBy("lastUpdated", "desc"));
-    const newsletterSnapshot = await getDocs(q);
+    const newsletterSnapshot = await getDocsMetered("getNewsletters", q);
     return newsletterSnapshot.docs.map(doc => {
         const data = doc.data();
         return {
@@ -632,7 +631,7 @@ export async function getNewsletters(): Promise<Newsletter[]> {
 
 export async function getNewsletter(id: string): Promise<Newsletter | null> {
     const docRef = doc(db, "newsletters", id);
-    const docSnap = await getDoc(docRef);
+    const docSnap = await getDocMetered("getNewsletter", docRef);
 
     if (docSnap.exists()) {
         const data = docSnap.data();
@@ -719,7 +718,7 @@ export async function addCampaign(data: any, user: string) {
 
 async function initializeExcerpts() {
     const excerptsCol = collection(db, 'excerpts');
-    const snapshot = await getDocs(query(excerptsCol));
+    const snapshot = await getDocsMetered("initializeExcerpts", query(excerptsCol));
 
     if (snapshot.empty) {
         const batch = writeBatch(db);
@@ -745,7 +744,7 @@ async function initializeExcerpts() {
 export async function getExcerpts(): Promise<Excerpt[]> {
     const excerptsCol = collection(db, 'excerpts');
     const q = query(excerptsCol, orderBy("chapterNumber", "asc"));
-    const excerptSnapshot = await getDocs(q);
+    const excerptSnapshot = await getDocsMetered("getExcerpts", q);
     return excerptSnapshot.docs.map(doc => {
         const data = doc.data();
         return {
@@ -764,7 +763,7 @@ export async function getPublishedExcerpts(): Promise<Excerpt[]> {
 
 export async function getExcerpt(slug: string): Promise<Excerpt | null> {
     const docRef = doc(db, 'excerpts', slug);
-    const docSnap = await getDoc(docRef);
+    const docSnap = await getDocMetered("getExcerpt", docRef);
 
     if (docSnap.exists()) {
         const data = docSnap.data();
@@ -790,7 +789,7 @@ export async function updateExcerpt(slug: string, data: Partial<Omit<Excerpt, 'i
 export async function getPalabrotas(): Promise<Palabrota[]> {
     const palabrotasCol = collection(db, 'palabrotas');
     const q = query(palabrotasCol, orderBy("de", "asc"));
-    const snapshot = await getDocs(q);
+    const snapshot = await getDocsMetered("getPalabrotas", q);
     if (snapshot.empty) {
         return [];
     }
@@ -821,7 +820,7 @@ export async function deletePalabrota(id: string, user: string) {
 export async function getChistes(): Promise<Chiste[]> {
     const chistesCol = collection(db, 'chistes');
     const q = query(chistesCol, orderBy("witz", "asc"));
-    const snapshot = await getDocs(q);
+    const snapshot = await getDocsMetered("getChistes", q);
     if (snapshot.empty) {
         return [];
     }
@@ -836,7 +835,7 @@ export async function getCollectionData(collectionId: string): Promise<any[]> {
     const colRef = collection(db, collectionId);
     // Simple query, can be expanded later
     const q = query(colRef, orderBy(documentId()));
-    const snapshot = await getDocs(q);
+    const snapshot = await getDocsMetered("getCollectionData", q);
     return snapshot.docs.map(doc => {
         const data = doc.data();
         // Convert Timestamps to ISO strings for serialization
@@ -891,7 +890,7 @@ export async function listFiles(path: string = '/'): Promise<StorageFile[]> {
 // --- SEO ---
 export async function getSeoMetadata(slug: string): Promise<SeoMetadata | null> {
     const docRef = doc(db, 'seo_metadata', slug);
-    const docSnap = await getDoc(docRef);
+    const docSnap = await getDocMetered("getSeoMetadata", docRef);
     if (docSnap.exists()) {
         return { id: docSnap.id, ...docSnap.data() } as SeoMetadata;
     }
@@ -900,7 +899,7 @@ export async function getSeoMetadata(slug: string): Promise<SeoMetadata | null> 
 
 export async function getAllSeoMetadata(): Promise<SeoMetadata[]> {
     const collectionRef = collection(db, 'seo_metadata');
-    const snapshot = await getDocs(collectionRef);
+    const snapshot = await getDocsMetered("getAllSeoMetadata", collectionRef);
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as SeoMetadata));
 }
 
@@ -935,7 +934,7 @@ type AnalyticsSummary = {
 async function getSummaryForPeriod(startDate: Date, endDate: Date): Promise<AnalyticsSummary> {
     const eventsCol = collection(db, 'analytics_events');
     const q = query(eventsCol, where('timestamp', '>=', startDate), where('timestamp', '<=', endDate));
-    const snapshot = await getDocs(q);
+    const snapshot = await getDocsMetered("getSummaryForPeriod", q);
 
     const events = snapshot.docs.map(doc => doc.data());
 
@@ -998,7 +997,7 @@ export async function getMonthlyPageViewsChartData(): Promise<{ month: string; p
             where('timestamp', '>=', startDate),
             where('timestamp', '<=', endDate)
         );
-        const snapshot = await getDocs(q);
+        const snapshot = await getDocsMetered("getMonthlyPageViewsChartData", q);
         
         chartData.push({ month: monthName, pageViews: snapshot.size });
     }
@@ -1009,7 +1008,7 @@ export async function getMonthlyPageViewsChartData(): Promise<{ month: string; p
 export async function getTopPages(limit = 10): Promise<{ path: string; views: number }[]> {
     const eventsCol = collection(db, 'analytics_events');
     const q = query(eventsCol, where('type', '==', 'page_view'));
-    const snapshot = await getDocs(q);
+    const snapshot = await getDocsMetered("getTopPages", q);
 
     const pageCounts: { [path: string]: number } = {};
     snapshot.docs.forEach(doc => {
@@ -1027,7 +1026,7 @@ export async function getTopPages(limit = 10): Promise<{ path: string; views: nu
 export async function getTopSources(limit = 10): Promise<{ source: string; visitors: number }[]> {
     const eventsCol = collection(db, 'analytics_events');
     const q = query(eventsCol, where('type', '==', 'page_view'));
-    const snapshot = await getDocs(q);
+    const snapshot = await getDocsMetered("getTopSources", q);
 
     const sourceCounts: { [source: string]: Set<string> } = {};
     snapshot.docs.forEach(doc => {
@@ -1048,7 +1047,7 @@ export async function getTopSources(limit = 10): Promise<{ source: string; visit
 export async function getDeviceBreakdown(): Promise<{ type: string; count: number }[]> {
     const eventsCol = collection(db, 'analytics_events');
     const q = query(eventsCol, where('type', '==', 'page_view'));
-    const snapshot = await getDocs(q);
+    const snapshot = await getDocsMetered("getDeviceBreakdown", q);
 
     const breakdown = { Desktop: 0, Mobile: 0, Unknown: 0 };
     const seenUsers = new Set<string>();
@@ -1081,7 +1080,7 @@ export type SerializedAnalyticsEvent = Omit<AnalyticsEvent, 'timestamp'> & { tim
 export async function getRecentEvents(limit = 20): Promise<SerializedAnalyticsEvent[]> {
     const eventsCol = collection(db, 'analytics_events');
     const q = query(eventsCol, orderBy('timestamp', 'desc'), where('type', '==', 'page_view'));
-    const snapshot = await getDocs(q);
+    const snapshot = await getDocsMetered("getRecentEvents", q);
 
     return snapshot.docs.slice(0, limit).map(doc => {
         const data = doc.data();
@@ -1097,7 +1096,7 @@ export async function addSubscriber(data: { email: string; source: string; }) {
     const subscribersCol = collection(db, 'subscribers');
     // Check if email already exists to avoid duplicates
     const q = query(subscribersCol, where("email", "==", data.email));
-    const snapshot = await getDocs(q);
+    const snapshot = await getDocsMetered("addSubscriber", q);
     if (!snapshot.empty) {
         console.log(`Subscriber with email ${data.email} already exists in Firestore.`);
         return; // Don't add duplicate
