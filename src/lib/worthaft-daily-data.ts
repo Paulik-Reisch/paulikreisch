@@ -4,6 +4,7 @@ import { unstable_cache } from 'next/cache';
 import { firebaseConfig } from '@/firebase/config';
 import { WORTHAFT_ANTI_WORDS } from './worthaft-anti-words';
 import { getWorthaftWordOfTheDay } from './worthaft-daily-word';
+import { recordFirestoreReads } from './firestore-read-metering';
 import { WORDS } from './worthaft-words';
 import {
   WORTHAFT_ANTI_WORDS_COLLECTION,
@@ -35,6 +36,7 @@ async function fetchWorthaftWordList(collectionName: string, listName: string): 
   documentUrl.searchParams.set('key', firebaseConfig.apiKey);
 
   const response = await fetch(documentUrl);
+  recordFirestoreReads('fetchWorthaftWordList', 1);
   if (!response.ok) {
     throw new Error(`Firestore returned HTTP ${response.status} for the Worthaft ${listName} list.`);
   }
