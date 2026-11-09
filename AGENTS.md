@@ -7,3 +7,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+## Development workflow
+
+All code changes in this repository - by humans and AI agents alike - follow the `dev-workflow` workflow in `.agents/workflows/dev-workflow.md`: a branch per change, stringent commits, clean code with `npm run check` and `npm run build` passing, tests with every behavior change, and a PR with green CI. Read it before making any change.
