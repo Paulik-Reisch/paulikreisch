@@ -577,25 +577,25 @@ const WorthaftSettingsDrawer = ({
           </div>
           {([
             ['Tastatur', [
-              ['keyWidth', 'Tastenbreite', 26 + settings.keyWidth * 6, 'Schmal', 'Breit'],
-              ['keyHeight', 'Tastenhöhe', 26 + settings.keyHeight * 6, 'Flach', 'Hoch'],
-              ['keySize', 'Schriftgröße', 12 + settings.keySize * 2.5, 'Klein', 'Groß'],
-              ['keyRadius', 'Tastenrundung', settings.keyRadius * 6, 'Eckig', 'Rund'],
+              ['keyWidth', 'Tastenbreite', 'Schmal', 'Breit'],
+              ['keyHeight', 'Tastenhöhe', 'Flach', 'Hoch'],
+              ['keySize', 'Schriftgröße', 'Klein', 'Groß'],
+              ['keyRadius', 'Tastenrundung', 'Eckig', 'Rund'],
             ]],
             ['Kacheln', [
-              ['tileWidth', 'Kachelbreite', 40 + settings.tileWidth * 8, 'Schmal', 'Breit'],
-              ['tileHeight', 'Kachelhöhe', 40 + settings.tileHeight * 8, 'Flach', 'Hoch'],
-              ['tileRadius', 'Kachelrundung', settings.tileRadius * 6, 'Eckig', 'Rund'],
+              ['tileWidth', 'Kachelbreite', 'Schmal', 'Breit'],
+              ['tileHeight', 'Kachelhöhe', 'Flach', 'Hoch'],
+              ['tileRadius', 'Kachelrundung', 'Eckig', 'Rund'],
             ]],
           ] as const).map(([title, controls]) => (
             <fieldset key={title} className="min-w-0 space-y-4 rounded-xl border p-4">
               <legend className="px-1 text-sm font-semibold">{title}</legend>
-              {controls.map(([key, label, pixels, low, high]) => (
+              {controls.map(([key, label, low, high]) => (
                 <div key={key}>
                   <div className="flex justify-between gap-2 mb-3 text-sm">
-                    <span id={`setting-${key}`}>{label}</span><span className="text-muted-foreground tabular-nums">{pixels} px</span>
+                    <span id={`setting-${key}`}>{label}</span><span className="text-muted-foreground tabular-nums">{settings[key]}</span>
                   </div>
-                  <input type="range" aria-labelledby={`setting-${key}`} value={settings[key]} onChange={event => setSettings({ [key]: Number(event.target.value) })} min={0} max={4} step={1} className="h-6 w-full cursor-pointer accent-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" />
+                  <input type="range" aria-labelledby={`setting-${key}`} aria-valuetext={`Stufe ${settings[key]}`} value={settings[key]} onChange={event => setSettings({ [key]: Number(event.target.value) })} min={0} max={4} step={1} className="h-6 w-full cursor-pointer accent-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" />
                   <div className="flex justify-between mt-2 text-xs text-muted-foreground"><span>{low}</span><span>{high}</span></div>
                 </div>
               ))}
@@ -603,8 +603,10 @@ const WorthaftSettingsDrawer = ({
           ))}
           <p className="text-xs text-muted-foreground">Breite Tasten und Kacheln passen sich auf kleinen Bildschirmen automatisch an den verfügbaren Platz an.</p>
           <Button variant="outline" className="w-full" onClick={() => setSettings({
-            keyWidth: 2, keyHeight: 2, keySize: 2, keyRadius: 2,
-            tileWidth: 2, tileHeight: 2, tileRadius: 0, palette: 'original',
+            keyWidth: DEFAULT_SETTINGS.keyWidth, keyHeight: DEFAULT_SETTINGS.keyHeight,
+            keySize: DEFAULT_SETTINGS.keySize, keyRadius: DEFAULT_SETTINGS.keyRadius,
+            tileWidth: DEFAULT_SETTINGS.tileWidth, tileHeight: DEFAULT_SETTINGS.tileHeight,
+            tileRadius: DEFAULT_SETTINGS.tileRadius, palette: DEFAULT_SETTINGS.palette,
           })}>Aussehen zurücksetzen</Button>
         </section>
 
