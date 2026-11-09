@@ -161,6 +161,7 @@ test('reading sample stays simple and the selected-page slideshow supports contr
   await expect(zoomDialog.locator('img')).toHaveAttribute('src', '/leseprobe/seite-72.png');
   // The controls bar sits below the page image instead of covering it.
   const controlsBar = zoomDialog.getByRole('group', { name: 'Seitennavigation und Bildzoom' });
+  await expect(controlsBar).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
   const barBounds = await controlsBar.boundingBox();
   const frameBoundsForBar = await zoomFrame.boundingBox();
   if (!barBounds || !frameBoundsForBar) throw new Error('The zoom dialog layout is not visible.');

@@ -213,7 +213,7 @@
   justify-content: space-between;
   gap: 8px;
   padding: 12px;
-  background: var(--color-paper);
+  background: transparent;
 }
 .zoomCluster {
   display: flex;
