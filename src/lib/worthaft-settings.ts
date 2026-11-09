@@ -19,8 +19,8 @@ export type WorthaftSettings = {
 };
 
 export const DEFAULT_WORTHAFT_SETTINGS: WorthaftSettings = {
-  keyWidth: 2, keyHeight: 2, keySize: 2, keyRadius: 2,
-  tileWidth: 2, tileHeight: 2, tileRadius: 0, palette: 'original',
+  keyWidth: 4, keyHeight: 2, keySize: 2, keyRadius: 1,
+  tileWidth: 1, tileHeight: 1, tileRadius: 1, palette: 'original',
   hotTipEnabled: true, musicEnabled: false, animationsEnabled: true,
 };
 
