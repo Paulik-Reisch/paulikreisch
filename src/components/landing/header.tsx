@@ -82,6 +82,8 @@ export function Header() {
 
   const isWorthaftPage = pathname === '/worthaft';
   const showWorthaftLink = !isWorthaftPage;
+  const showShopLink = pathname !== '/shop';
+  const showWritingRoomLink = pathname !== '/gpt';
 
   return (
     <>
@@ -120,19 +122,23 @@ export function Header() {
                   Worthaft
                 </Link>
               )}
-              <Link
-                href="/shop"
-                className="inline-flex items-center justify-center rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-5 py-2 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] transition-[transform,box-shadow]"
-              >
-                Buch kaufen
-              </Link>
-              <Link
-                href="/gpt"
-                className="inline-flex items-center gap-2 rounded-[10px] border-2 border-[#174bc2] bg-[#2268ff] px-4 py-2 text-[0.9rem] font-bold text-white shadow-[0_3px_0_#174bc2] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#1d5ce5] hover:shadow-[0_4px_0_#174bc2] active:translate-y-px active:shadow-[0_1px_0_#174bc2]"
-              >
-                <WritingRoomIcon className="h-5 w-5 shrink-0" />
-                Schreibstube
-              </Link>
+              {showShopLink && (
+                <Link
+                  href="/shop"
+                  className="inline-flex items-center justify-center rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-5 py-2 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] transition-[transform,box-shadow]"
+                >
+                  Buch kaufen
+                </Link>
+              )}
+              {showWritingRoomLink && (
+                <Link
+                  href="/gpt"
+                  className="inline-flex items-center gap-2 rounded-[10px] border-2 border-[#174bc2] bg-[#2268ff] px-4 py-2 text-[0.9rem] font-bold text-white shadow-[0_3px_0_#174bc2] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#1d5ce5] hover:shadow-[0_4px_0_#174bc2] active:translate-y-px active:shadow-[0_1px_0_#174bc2]"
+                >
+                  <WritingRoomIcon className="h-5 w-5 shrink-0" />
+                  Schreibstube
+                </Link>
+              )}
             </nav>
 
             {/* Mobile burger */}
@@ -175,10 +181,7 @@ export function Header() {
             "absolute right-3 top-3 h-auto max-h-[calc(100dvh-1.5rem)] w-[82vw] max-w-[340px] rounded-[24px] border border-[#e8ddd0] bg-[#fdf8ee]/95 shadow-[-12px_12px_40px_rgba(0,0,0,0.18)] backdrop-blur-xl flex flex-col transition-transform duration-[320ms] ease-[cubic-bezier(0.32,0.72,0,1)] will-change-transform",
             open ? "translate-x-0" : "translate-x-full"
           )}
-          style={{
-            WebkitOverflowScrolling: 'touch',
-            minHeight: 'min(360px, calc(100dvh - 1.5rem))',
-          }}
+          style={{ WebkitOverflowScrolling: 'touch' }}
         >
           <div className="absolute left-0 top-0 h-full w-[18px] -translate-x-full touch-manipulation" aria-hidden="true" />
           <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-[#e8ddd0]/80">
@@ -196,12 +199,12 @@ export function Header() {
           </div>
 
           <nav aria-label="Hauptnavigation" className="flex max-h-[calc(100dvh-7rem)] justify-center overflow-y-auto px-6 py-6">
-            <div className="mx-auto flex w-fit flex-col items-stretch gap-4">
+            <div className="mx-auto flex w-full flex-col items-stretch gap-4">
               {showWorthaftLink && (
                 <Link
                   href="/worthaft"
                   onClick={() => setOpen(false)}
-                  className="inline-flex min-h-12 w-full items-center justify-start gap-2 self-start rounded-[10px] border-2 border-[#1d1a15] bg-white px-4 py-2 text-[0.9rem] font-semibold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#f7f2e7] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-px active:shadow-[0_1px_0_#1d1a15]"
+                  className="inline-flex min-h-12 w-full items-center justify-center gap-2 self-start rounded-[10px] border-2 border-[#1d1a15] bg-white px-4 py-2 text-[0.9rem] font-semibold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#f7f2e7] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-px active:shadow-[0_1px_0_#1d1a15]"
                 >
                   <span className="worthaft-icon-shimmer shrink-0">
                     <WorthaftIcon className="h-4 w-4" />
@@ -209,21 +212,25 @@ export function Header() {
                   Worthaft
                 </Link>
               )}
-              <Link
-                href="/shop"
-                onClick={() => setOpen(false)}
-                className="inline-flex min-h-12 w-full items-center justify-center self-start rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-5 py-2 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] transition-[transform,box-shadow] hover:-translate-y-px hover:shadow-[0_4px_0_#1d1a15] active:translate-y-px active:shadow-[0_1px_0_#1d1a15]"
-              >
-                Buch kaufen
-              </Link>
-              <Link
-                href="/gpt"
-                onClick={() => setOpen(false)}
-                className="inline-flex min-h-12 w-full items-center justify-start gap-2 self-start rounded-[10px] border-2 border-[#174bc2] bg-[#2268ff] px-4 py-2 text-[0.9rem] font-bold text-white shadow-[0_3px_0_#174bc2] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#1d5ce5] hover:shadow-[0_4px_0_#174bc2] active:translate-y-px active:shadow-[0_1px_0_#174bc2]"
-              >
-                <WritingRoomIcon className="h-5 w-5 shrink-0" />
-                Schreibstube
-              </Link>
+              {showShopLink && (
+                <Link
+                  href="/shop"
+                  onClick={() => setOpen(false)}
+                  className="inline-flex min-h-12 w-full items-center justify-center self-start rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-5 py-2 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] transition-[transform,box-shadow] hover:-translate-y-px hover:shadow-[0_4px_0_#1d1a15] active:translate-y-px active:shadow-[0_1px_0_#1d1a15]"
+                >
+                  Buch kaufen
+                </Link>
+              )}
+              {showWritingRoomLink && (
+                <Link
+                  href="/gpt"
+                  onClick={() => setOpen(false)}
+                  className="inline-flex min-h-12 w-full items-center justify-center self-start rounded-[10px] border-2 border-[#174bc2] bg-[#2268ff] px-4 py-2 text-[0.9rem] font-bold text-white shadow-[0_3px_0_#174bc2] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#1d5ce5] hover:shadow-[0_4px_0_#174bc2] active:translate-y-px active:shadow-[0_1px_0_#174bc2]"
+                >
+                  <WritingRoomIcon className="h-5 w-5 shrink-0" />
+                  Schreibstube
+                </Link>
+              )}
             </div>
           </nav>
         </div>

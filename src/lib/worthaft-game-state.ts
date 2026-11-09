@@ -3,37 +3,72 @@ export type WorthaftGameStatus = 'playing' | 'won' | 'lost';
 export const canInteractWithWorthaftGame = (gameState: WorthaftGameStatus): boolean =>
   gameState === 'playing';
 
-// Per-row timer persistence.
-//
-// The timer for a row starts when the row becomes active (game loaded for the
-// first row, previous guess submitted for later rows) - not on the first
-// keystroke. Thinking time is part of the measured time. The row start is
-// persisted per day so a page reload keeps the clock running instead of
-// silently resetting the current row to zero.
+// Active per-row timer. Thinking time counts while the page is visible, but
+// time with the page hidden or closed does not.
+export type WorthaftRowTimer = {
+  elapsedMs: number;
+  startedAt: number | null;
+};
+
 export const WORTHAFT_ROW_START_KEY = 'worthaft-row-start';
+const WORTHAFT_ROW_TIMER_VERSION = 1;
 
 type StorageLike = Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
 
-// Returns the persisted row-start timestamp (ms) for `today`, or null when
-// nothing valid is stored (missing, other day, malformed).
-export const readWorthaftRowStart = (storage: Pick<StorageLike, 'getItem'>, today: string): number | null => {
+export const createWorthaftRowTimer = (now: number, elapsedMs = 0): WorthaftRowTimer => ({
+  elapsedMs,
+  startedAt: now,
+});
+
+export const getWorthaftRowElapsed = (timer: WorthaftRowTimer, now: number): number =>
+  timer.elapsedMs + (timer.startedAt === null ? 0 : Math.max(0, now - timer.startedAt));
+
+export const pauseWorthaftRowTimer = (timer: WorthaftRowTimer, now: number): WorthaftRowTimer => ({
+  elapsedMs: getWorthaftRowElapsed(timer, now),
+  startedAt: null,
+});
+
+export const resumeWorthaftRowTimer = (timer: WorthaftRowTimer, now: number): WorthaftRowTimer =>
+  timer.startedAt === null ? { ...timer, startedAt: now } : timer;
+
+// Only accumulated active time is persisted. A reload resumes from this value
+// with a fresh start timestamp, so the gap between page visits is excluded.
+export const readWorthaftRowTimer = (
+  storage: Pick<StorageLike, 'getItem'>,
+  today: string,
+): number | null => {
   try {
     const raw = storage.getItem(WORTHAFT_ROW_START_KEY);
     if (!raw) return null;
-    const separator = raw.indexOf(':');
-    if (separator <= 0) return null;
-    const date = raw.slice(0, separator);
-    const timestamp = Number(raw.slice(separator + 1));
-    if (date !== today || !Number.isFinite(timestamp) || timestamp <= 0) return null;
-    return timestamp;
+    const parsed = JSON.parse(raw) as { version?: unknown; date?: unknown; elapsedMs?: unknown };
+    if (
+      parsed.version !== WORTHAFT_ROW_TIMER_VERSION ||
+      parsed.date !== today ||
+      typeof parsed.elapsedMs !== 'number' ||
+      !Number.isFinite(parsed.elapsedMs) ||
+      parsed.elapsedMs < 0
+    ) {
+      return null;
+    }
+    return parsed.elapsedMs;
   } catch {
+    // This also rejects the legacy `date:wall-clock-start` format, whose
+    // hidden/closed time cannot be separated from actual play time.
     return null;
   }
 };
 
-export const writeWorthaftRowStart = (storage: Pick<StorageLike, 'setItem'>, today: string, now: number): void => {
+export const writeWorthaftRowTimer = (
+  storage: Pick<StorageLike, 'setItem'>,
+  today: string,
+  elapsedMs: number,
+): void => {
   try {
-    storage.setItem(WORTHAFT_ROW_START_KEY, `${today}:${now}`);
+    storage.setItem(WORTHAFT_ROW_START_KEY, JSON.stringify({
+      version: WORTHAFT_ROW_TIMER_VERSION,
+      date: today,
+      elapsedMs,
+    }));
   } catch {
     // Storage may be unavailable (private mode); the in-memory ref still works.
   }

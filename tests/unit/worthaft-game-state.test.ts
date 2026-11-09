@@ -1,6 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { canInteractWithWorthaftGame } from '../../src/lib/worthaft-game-state';
+import {
+  canInteractWithWorthaftGame,
+  clearWorthaftRowStart,
+  createWorthaftRowTimer,
+  getWorthaftRowElapsed,
+  pauseWorthaftRowTimer,
+  readWorthaftRowTimer,
+  resumeWorthaftRowTimer,
+  WORTHAFT_ROW_START_KEY,
+  writeWorthaftRowTimer,
+} from '../../src/lib/worthaft-game-state';
 
 test('allows interaction while a Worthaft game is in progress', () => {
   assert.equal(canInteractWithWorthaftGame('playing'), true);
@@ -11,8 +21,6 @@ test('disables interaction after a Worthaft game is won or lost', () => {
   assert.equal(canInteractWithWorthaftGame('lost'), false);
 });
 
-import { readWorthaftRowStart, writeWorthaftRowStart, clearWorthaftRowStart, WORTHAFT_ROW_START_KEY } from '../../src/lib/worthaft-game-state';
-
 const createFakeStorage = () => {
   const map = new Map<string, string>();
   return {
@@ -22,32 +30,52 @@ const createFakeStorage = () => {
   };
 };
 
-test('row start roundtrips through storage', () => {
-  const storage = createFakeStorage();
-  writeWorthaftRowStart(storage, '2026-10-16', 1729080000000);
-  assert.equal(readWorthaftRowStart(storage, '2026-10-16'), 1729080000000);
+test('active row time includes visible thinking time', () => {
+  const timer = createWorthaftRowTimer(1_000);
+  assert.equal(getWorthaftRowElapsed(timer, 6_000), 5_000);
 });
 
-test('row start from another day is ignored', () => {
-  const storage = createFakeStorage();
-  writeWorthaftRowStart(storage, '2026-10-15', 1729080000000);
-  assert.equal(readWorthaftRowStart(storage, '2026-10-16'), null);
+test('hidden time is excluded and resuming does not double count', () => {
+  const running = createWorthaftRowTimer(1_000);
+  const paused = pauseWorthaftRowTimer(running, 6_000);
+  assert.deepEqual(paused, { elapsedMs: 5_000, startedAt: null });
+  assert.deepEqual(pauseWorthaftRowTimer(paused, 20_000), paused);
+  assert.equal(getWorthaftRowElapsed(paused, 7_205_000), 5_000);
+
+  const resumed = resumeWorthaftRowTimer(paused, 7_205_000);
+  assert.deepEqual(resumeWorthaftRowTimer(resumed, 7_210_000), resumed);
+  assert.equal(getWorthaftRowElapsed(resumed, 7_210_000), 10_000);
 });
 
-test('missing or malformed row start returns null', () => {
+test('only active elapsed time roundtrips through storage', () => {
   const storage = createFakeStorage();
-  assert.equal(readWorthaftRowStart(storage, '2026-10-16'), null);
+  writeWorthaftRowTimer(storage, '2026-10-16', 5_000);
+  assert.equal(readWorthaftRowTimer(storage, '2026-10-16'), 5_000);
+
+  const afterReload = createWorthaftRowTimer(7_205_000, readWorthaftRowTimer(storage, '2026-10-16')!);
+  assert.equal(getWorthaftRowElapsed(afterReload, 7_210_000), 10_000);
+});
+
+test('row timer from another day is ignored', () => {
+  const storage = createFakeStorage();
+  writeWorthaftRowTimer(storage, '2026-10-15', 5_000);
+  assert.equal(readWorthaftRowTimer(storage, '2026-10-16'), null);
+});
+
+test('missing, malformed and legacy wall-clock starts return null', () => {
+  const storage = createFakeStorage();
+  assert.equal(readWorthaftRowTimer(storage, '2026-10-16'), null);
   storage.setItem(WORTHAFT_ROW_START_KEY, 'not-a-timestamp');
-  assert.equal(readWorthaftRowStart(storage, '2026-10-16'), null);
-  storage.setItem(WORTHAFT_ROW_START_KEY, '2026-10-16:abc');
-  assert.equal(readWorthaftRowStart(storage, '2026-10-16'), null);
-  storage.setItem(WORTHAFT_ROW_START_KEY, '2026-10-16:0');
-  assert.equal(readWorthaftRowStart(storage, '2026-10-16'), null);
+  assert.equal(readWorthaftRowTimer(storage, '2026-10-16'), null);
+  storage.setItem(WORTHAFT_ROW_START_KEY, '2026-10-16:1729080000000');
+  assert.equal(readWorthaftRowTimer(storage, '2026-10-16'), null);
+  storage.setItem(WORTHAFT_ROW_START_KEY, JSON.stringify({ version: 1, date: '2026-10-16', elapsedMs: -1 }));
+  assert.equal(readWorthaftRowTimer(storage, '2026-10-16'), null);
 });
 
-test('clearing removes the persisted row start', () => {
+test('clearing removes the persisted row timer', () => {
   const storage = createFakeStorage();
-  writeWorthaftRowStart(storage, '2026-10-16', 1729080000000);
+  writeWorthaftRowTimer(storage, '2026-10-16', 5_000);
   clearWorthaftRowStart(storage);
-  assert.equal(readWorthaftRowStart(storage, '2026-10-16'), null);
+  assert.equal(readWorthaftRowTimer(storage, '2026-10-16'), null);
 });

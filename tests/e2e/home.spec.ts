@@ -249,8 +249,8 @@ test('mobile navigation keeps the same three actions and order as desktop', asyn
   expect(drawerBounds.width).toBeLessThan(330);
   expect(drawerBounds.x).toBeGreaterThan(0);
   expect(drawerBounds.y).toBe(12);
-  expect(drawerBounds.height).toBeGreaterThanOrEqual(360);
-  expect(drawerBounds.height).toBeLessThan(370);
+  expect(drawerBounds.height).toBeGreaterThanOrEqual(300);
+  expect(drawerBounds.height).toBeLessThan(310);
   await expect(mobileDialog).toHaveCSS('border-radius', '24px');
   const drawerCenter = drawerBounds.x + drawerBounds.width / 2;
   for (const action of await mobileNav.all()) {
