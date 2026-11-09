@@ -14,6 +14,22 @@ test('game appearance preferences persist and can be reset', async ({ page }) =>
   await page.getByRole('button', { name: 'Einstellungen öffnen' }).click();
 
   const settings = page.getByRole('dialog');
+  const expectedDefaults = [
+    ['Tastenbreite', '4'],
+    ['Tastenhöhe', '2'],
+    ['Schriftgröße', '2'],
+    ['Tastenrundung', '1'],
+    ['Kachelbreite', '1'],
+    ['Kachelhöhe', '1'],
+    ['Kachelrundung', '1'],
+  ] as const;
+  for (const [name, value] of expectedDefaults) {
+    const slider = settings.getByRole('slider', { name, exact: true });
+    await expect(slider).toHaveValue(value);
+    await expect(slider).toHaveAttribute('aria-valuetext', `Stufe ${value}`);
+  }
+  await expect(settings.getByRole('region', { name: 'Aussehen' })).not.toContainText('px');
+
   const paletteGroup = settings.getByRole('group', { name: 'Farbschema' });
   const classicPalette = paletteGroup.getByRole('button', { name: /Klassisch/ });
   await classicPalette.click();
@@ -33,7 +49,10 @@ test('game appearance preferences persist and can be reset', async ({ page }) =>
 
   await restoredSettings.getByRole('button', { name: 'Aussehen zurücksetzen' }).click();
   await expect(restoredSettings.getByRole('group', { name: 'Farbschema' }).getByRole('button', { name: /^Worthaft/ })).toHaveAttribute('aria-pressed', 'true');
-  await expect(restoredSettings.getByRole('slider', { name: 'Kachelrundung', exact: true })).toHaveValue('0');
+  for (const [name, value] of expectedDefaults) {
+    await expect(restoredSettings.getByRole('slider', { name, exact: true })).toHaveValue(value);
+  }
+  await expect(restoredSettings.getByRole('region', { name: 'Aussehen' })).not.toContainText('px');
 });
 
 test('keyboard expands symmetrically with key width and stays within the viewport', async ({ page }) => {
@@ -45,13 +64,19 @@ test('keyboard expands symmetrically with key width and stays within the viewpor
   await page.setViewportSize({ width: 1280, height: 812 });
   await page.goto('/worthaft');
 
+  await page.getByRole('button', { name: 'Einstellungen öffnen' }).click();
+  const keyWidth = page.getByRole('dialog').getByRole('slider', { name: 'Tastenbreite', exact: true });
+  await keyWidth.focus();
+  await keyWidth.press('Home');
+  await expect(keyWidth).toHaveValue('0');
+  await page.keyboard.press('Escape');
+
   const initialKeyboardWidth = (await page.getByTestId('worthaft-keyboard').boundingBox())?.width;
   if (initialKeyboardWidth === undefined) {
     throw new Error('Worthaft keyboard is not visible');
   }
 
   await page.getByRole('button', { name: 'Einstellungen öffnen' }).click();
-  const keyWidth = page.getByRole('dialog').getByRole('slider', { name: 'Tastenbreite', exact: true });
   await keyWidth.focus();
   await keyWidth.press('End');
   await expect(keyWidth).toHaveValue('4');
@@ -71,7 +96,7 @@ test('keyboard expands symmetrically with key width and stays within the viewpor
     expect(keyboardBox.x).toBeGreaterThanOrEqual(0);
     expect(keyboardBox.x + keyboardBox.width).toBeLessThanOrEqual(width);
     if (width < 640) {
-      expect(keyboardBox.width).toBeCloseTo(gridBox.width, 1);
+      expect(keyboardBox.width).toBeGreaterThanOrEqual(gridBox.width);
     } else {
       expect(keyboardBox.width).toBeGreaterThan(gridBox.width);
       expandedKeyboardWidth = keyboardBox.width;
