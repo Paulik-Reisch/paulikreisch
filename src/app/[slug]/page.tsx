@@ -1,5 +1,5 @@
 
-import { getLegalPage, type LegalPage as LegalPageType } from "@/lib/firestore";
+import { getLegalPageCached } from "@/lib/legal-pages-cache";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
@@ -8,7 +8,7 @@ import { de } from "date-fns/locale";
 
 // This is now a Server Component
 export default async function LegalPage({ params }: { params: Promise<{ slug: string }> }) {
-  const page = await getLegalPage((await params).slug);
+  const page = await getLegalPageCached((await params).slug);
 
   if (!page) {
     notFound();
