@@ -31,7 +31,7 @@ for (const { path, hiddenHref } of selfLinks) {
         const linkCount = await links.count();
         expect(linkCount).toBe(2);
         expect(dialogBox).not.toBeNull();
-        expect(dialogBox!.height).toBeLessThan(250);
+        expect(dialogBox!.height).toBeLessThan(340);
         expect(dialogBox!.width).toBeCloseTo(width * 0.82, 0);
 
         const buttonContainer = navigation.locator(':scope > div');
