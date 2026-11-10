@@ -102,3 +102,17 @@
 
 /* Preserve footer copy while correcting its inherited low-contrast legal text. */
 .home :global(footer + div) { color: var(--color-muted); background: var(--color-paper-deep); }
+
+/* Dark mode (Test): Sektionen mit festen Farben an die invertierten Tokens anpassen. */
+:global(.dark) .skip { color: oklch(24% 0.015 70); }
+:global(.dark) .heroImage { filter: brightness(0.45) saturate(0.85); }
+:global(.dark) .preview { background: oklch(15% 0.018 70); color: var(--color-ink); }
+:global(.dark) .previewCopy .body { color: var(--color-muted); }
+:global(.dark) .previewCopy .button { background: var(--color-accent); color: oklch(24% 0.015 70); border-color: var(--color-accent); }
+:global(.dark) .previewImage span { background: var(--color-accent); color: oklch(24% 0.015 70); }
+:global(.dark) .game { color: var(--color-ink); }
+:global(.dark) .game .body { color: oklch(86% 0.02 120); }
+:global(.dark) .game .button { background: var(--color-accent); color: oklch(24% 0.015 70); border-color: var(--color-accent); }
+:global(.dark) .tile { border-color: oklch(48% 0.05 155); }
+:global(.dark) .tile:nth-child(3n) { background: oklch(88% 0.02 95); color: oklch(30% 0.05 155); }
+:global(.dark) .tile:nth-child(7), :global(.dark) .tile:nth-child(9) { background: var(--color-accent); color: oklch(24% 0.015 70); }

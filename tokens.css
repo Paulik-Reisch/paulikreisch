@@ -9,6 +9,7 @@
   --color-muted: oklch(46% 0.02 70);
   --color-rule: oklch(81% 0.025 80);
   --color-accent: oklch(91% 0.16 95);
+  --color-on-accent: oklch(24% 0.015 70);
   --color-rust: oklch(43% 0.13 32);
   --color-focus: oklch(47% 0.15 250);
   --color-game: oklch(39% 0.06 155);
@@ -29,4 +30,19 @@
   --ease-in-out: cubic-bezier(.65, 0, .35, 1);
   --dur-short: 200ms;
   --radius-button: 3px;
+}
+
+/* Dark mode (Test): dunkle Papier-Palette. .dark setzt next-themes auf <html>. */
+.dark .pr-home {
+  --color-paper: oklch(21% 0.012 85);
+  --color-paper-deep: oklch(17% 0.012 85);
+  --color-ink: oklch(93% 0.01 85);
+  --color-muted: oklch(78% 0.014 78);
+  --color-rule: oklch(38% 0.02 80);
+  --color-accent: oklch(90% 0.15 95);
+  --color-on-accent: oklch(24% 0.015 70); /* Text auf Akzent-Gelb bleibt dunkel (Kontrast) */
+  --color-rust: oklch(68% 0.12 40);
+  --color-focus: oklch(72% 0.13 250);
+  --color-game: oklch(30% 0.05 155);
+  --color-game-tile: oklch(38% 0.05 155);
 }

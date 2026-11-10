@@ -13,6 +13,7 @@
 
 .shop-page-main {
   --shop-wrap: min(100% - 48px, 1280px);
+  --radius-button: 12px;
 }
 
 .shop-page-main section {
@@ -105,6 +106,7 @@
   min-width: 0;
   padding: clamp(1.2rem, 3vw, 2.5rem);
   border: 1px solid var(--color-rule);
+  border-radius: 18px;
   background: var(--color-paper);
   transition: border-color 200ms ease, transform 200ms var(--ease-out);
 }
@@ -121,6 +123,7 @@
   max-width: 260px;
   aspect-ratio: 2 / 3;
   overflow: hidden;
+  border-radius: 10px;
   background: var(--color-paper-deep);
   box-shadow: 12px 16px 26px rgb(44 37 26 / 16%);
 }
@@ -202,7 +205,7 @@
 }
 
 .shop-page-main .btn-amazon {
-  color: var(--color-ink);
+  color: var(--color-on-accent, var(--color-ink));
   background: var(--color-accent);
 }
 
@@ -247,8 +250,9 @@
 }
 
 .shop-page-main .quote-card {
-  padding: 1.5rem 0;
-  border-top: 1px solid var(--color-rule);
+  padding: 1.5rem;
+  border: 1px solid var(--color-rule);
+  border-radius: 14px;
 }
 
 .shop-page-main .quote-text {
@@ -278,8 +282,9 @@
 }
 
 .shop-page-main .feature {
-  padding-top: 1.2rem;
-  border-top: 1px solid var(--color-rule);
+  padding: 1.4rem;
+  border: 1px solid var(--color-rule);
+  border-radius: 14px;
 }
 
 .shop-page-main .feature-icon {
@@ -363,7 +368,8 @@
 .shop-page-main .spec-item {
   min-width: 0;
   padding: .9rem;
-  border-top: 1px solid var(--color-rule);
+  border: 1px solid var(--color-rule);
+  border-radius: 12px;
   background: transparent;
   font-size: .85rem;
   overflow-wrap: anywhere;
@@ -389,6 +395,7 @@
 
 .shop-page-main .newsletter-box {
   padding: clamp(2rem, 6vw, 5rem);
+  border-radius: 22px;
   color: var(--color-paper);
   background: var(--color-game);
 }
@@ -431,7 +438,7 @@
   padding: .8rem 1.1rem;
   border: 1px solid var(--color-accent);
   border-radius: var(--radius-button);
-  color: var(--color-ink);
+  color: var(--color-on-accent, var(--color-ink));
   background: var(--color-accent);
   cursor: pointer;
   font: 700 .82rem var(--font-label), sans-serif;
@@ -474,9 +481,24 @@
   }
 
   .shop-page-main .book-card {
-    grid-template-columns: minmax(100px, .45fr) minmax(0, 1fr);
-    gap: .4rem 1rem;
-    padding: 1rem;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: .9rem;
+    padding: 1.5rem 1.25rem;
+  }
+
+  .shop-page-main .book-cover-wrapper {
+    grid-row: auto;
+    max-width: 200px;
+  }
+
+  .shop-page-main .book-title,
+  .shop-page-main .book-desc {
+    text-align: center;
+  }
+
+  .shop-page-main .action-area {
+    width: 100%;
   }
 
   .shop-page-main .book-title {
@@ -489,8 +511,9 @@
 
   .shop-page-main .btn,
   .shop-page-main .link-11reader {
-    padding-inline: .6rem;
-    font-size: .72rem;
+    width: 100%;
+    padding: .9rem 1rem;
+    font-size: .85rem;
   }
 
   .shop-page-main .quote-grid,
