@@ -204,3 +204,37 @@
   .shell *, .shell *::before, .shell *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   :global(.fx-fade b) { animation: none !important; opacity: 1; transform: none; filter: none; }
 }
+
+/* Dark mode (Test): warme Dunkel-Palette wie Startseite. .dark setzt next-themes auf <html>. */
+:global(.dark) .shell {
+  --paper: #2f2b24;
+  --paper-deep: #27231d;
+  --paper-white: #38332b;
+  --ink: #ece7dc;
+  --muted: #c8c1b2;
+  --rule: #4f493d;
+  --rust: #d08a6f;
+  --yellow: #f4d959;
+}
+:global(.dark) .shell .newChat { border-color: var(--rule); }
+:global(.dark) .shell .historyActive { background: #3d372d; }
+:global(.dark) .shell .sidebarBottom { border-top-color: var(--rule); }
+:global(.dark) .shell .sidebarBottom a { text-decoration-color: #6b6355; }
+:global(.dark) .shell .welcomeMark,
+:global(.dark) .shell .messageMark { border-color: var(--rule); background: #38332b; }
+:global(.dark) .shell .userMessage .messageMark { border-color: var(--rule); color: #2f2b24; background: var(--ink); }
+:global(.dark) .shell .welcomeCopy { color: var(--muted); }
+:global(.dark) .shell .starters button:hover { border-color: #7a6f5c; }
+:global(.dark) .shell .messageBody p,
+:global(.dark) .shell .markdown { color: #d6cfc2; }
+:global(.dark) .shell .markdown blockquote { border-left-color: #6b6355; color: var(--muted); }
+:global(.dark) .shell .markdown :not(pre) > code,
+:global(.dark) .shell .markdown pre,
+:global(.dark) .shell .markdown th { background: #27231d; }
+:global(.dark) .shell .errorMessage { color: #e8b3a5; background: #3a2a24; }
+:global(.dark) .shell .composer { border-color: var(--rule); }
+:global(.dark) .shell .composer:focus-within { border-color: #7a6f5c; }
+:global(.dark) .shell .composer textarea::placeholder { color: #9a907f; }
+:global(.dark) .shell .composerBottom > span { color: var(--muted); }
+:global(.dark) .shell .sendButton:disabled { color: #6f6759; background: #2a2620; }
+:global(.dark) .shell .disclaimer { color: #9a907f; }
