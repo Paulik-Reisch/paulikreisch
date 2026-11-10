@@ -23,7 +23,7 @@ A line records a read call made through the helper and the document count the SD
 - `getDocs`: `documents` is the result size (minimum 1). Failed calls throw before the line is written and are not counted, although Firestore may have billed them.
 - Queries that use index entries or aggregations can be billed differently from the returned count; this is not modeled.
 - The client SDK can answer from a local cache. Whether that happens in the server runtime has not been verified, so a line may count a read that Firestore never billed. Browser calls are not metered at all.
-- `fetchWorthaftWordList` is written only when the 48 h `unstable_cache` entry is rebuilt, so it follows actual REST requests (2 per rebuild).
+- `fetchWorthaftWordList` is written only when the seven-day `unstable_cache` entry for the word lists is rebuilt, so it follows actual REST requests (2 per rebuild).
 
 Use the sums to compare code paths with each other and with the Firestore usage graph for the same window, not to predict the invoice.
 
