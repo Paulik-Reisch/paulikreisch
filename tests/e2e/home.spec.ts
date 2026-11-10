@@ -146,8 +146,13 @@ test('reading sample stays simple and the selected-page slideshow supports contr
   await zoomFrame.hover();
   await page.mouse.wheel(0, -100);
   await expect.poll(() => zoomFrame.getAttribute('data-zoom-scale')).toMatch(/1\.(7|8)/);
-  await zoomDialog.getByRole('button', { name: 'Zoom zurücksetzen' }).click();
+  // The dedicated reset button was removed: closing the dialog resets zoom and pan.
+  await page.keyboard.press('Escape');
+  await expect(zoomDialog).toBeHidden();
+  await slideshow.getByRole('button', { name: 'Aktuelle Seite vergrößern' }).click();
+  await expect(zoomDialog).toBeVisible();
   await expect(zoomFrame).toHaveAttribute('data-zoom-scale', '1.00');
+  await expect(zoomImage).toHaveAttribute('style', /translate\(0px, 0px\)/);
 
   // Page navigation inside the zoom dialog: buttons and arrow keys, always with a clean zoom.
   await zoomDialog.getByRole('button', { name: 'Vergrößern' }).click();

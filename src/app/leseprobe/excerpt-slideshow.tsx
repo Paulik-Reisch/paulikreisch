@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useRef, useState } from 'react';
-import { ArrowLeft, ArrowRight, RotateCcw, ZoomIn, ZoomOut } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ZoomIn, ZoomOut } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import styles from './leseprobe.module.css';
 
@@ -28,6 +28,7 @@ export function ExcerptSlideshow({ slides }: { slides: Slide[] }) {
     startScale: number;
     startX: number;
     startY: number;
+    startMid: { x: number; y: number };
     startOffset: { x: number; y: number };
   } | null>(null);
 
@@ -63,14 +64,29 @@ export function ExcerptSlideshow({ slides }: { slides: Slide[] }) {
     return Math.hypot(second.x - first.x, second.y - first.y);
   };
 
-  const startZoomGesture = (pointerId: number) => {
+  // Pointer positions are tracked relative to the image frame's transform origin
+  // (its center), so pinch zoom can stay anchored under the fingers' midpoint.
+  const getFrameCenter = (frame: HTMLDivElement) => {
+    const rect = frame.getBoundingClientRect();
+    return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+  };
+
+  const getPointerMidpoint = (center: { x: number; y: number }) => {
+    const [first, second] = [...zoomPointers.current.values()];
+    if (!second) return { x: (first?.x ?? 0) - center.x, y: (first?.y ?? 0) - center.y };
+    return { x: (first.x + second.x) / 2 - center.x, y: (first.y + second.y) / 2 - center.y };
+  };
+
+  const startZoomGesture = (pointerId: number, frame: HTMLDivElement) => {
     const pointer = zoomPointers.current.get(pointerId);
     if (!pointer) return;
+    const center = getFrameCenter(frame);
     zoomGesture.current = {
       startDistance: zoomPointers.current.size > 1 ? getPointerDistance() : 0,
       startScale: zoomScale,
       startX: pointer.x,
       startY: pointer.y,
+      startMid: getPointerMidpoint(center),
       startOffset: zoomOffset,
     };
   };
@@ -81,7 +97,7 @@ export function ExcerptSlideshow({ slides }: { slides: Slide[] }) {
     event.preventDefault();
     event.currentTarget.setPointerCapture(event.pointerId);
     zoomPointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
-    startZoomGesture(event.pointerId);
+    startZoomGesture(event.pointerId, event.currentTarget);
   };
 
   const handleZoomPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -90,8 +106,23 @@ export function ExcerptSlideshow({ slides }: { slides: Slide[] }) {
 
     if (zoomPointers.current.size > 1) {
       const gesture = zoomGesture.current;
-      if (gesture && gesture.startDistance > 0) {
-        updateZoom(gesture.startScale * getPointerDistance() / gesture.startDistance);
+      if (gesture && gesture.startDistance > 0 && gesture.startScale > 0) {
+        const center = getFrameCenter(event.currentTarget);
+        const mid = getPointerMidpoint(center);
+        const nextScale = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, gesture.startScale * getPointerDistance() / gesture.startDistance));
+        if (nextScale === MIN_ZOOM) {
+          setZoomScale(MIN_ZOOM);
+          setZoomOffset({ x: 0, y: 0 });
+          return;
+        }
+        // Keep the content point under the fingers' start midpoint under the
+        // current midpoint: zooming and panning happen in the same gesture.
+        const ratio = nextScale / gesture.startScale;
+        setZoomScale(nextScale);
+        setZoomOffset({
+          x: mid.x - ratio * (gesture.startMid.x - gesture.startOffset.x),
+          y: mid.y - ratio * (gesture.startMid.y - gesture.startOffset.y),
+        });
       }
       return;
     }
@@ -110,7 +141,7 @@ export function ExcerptSlideshow({ slides }: { slides: Slide[] }) {
     zoomPointers.current.delete(event.pointerId);
     const remainingPointerId = zoomPointers.current.keys().next().value;
     zoomGesture.current = null;
-    if (remainingPointerId !== undefined) startZoomGesture(remainingPointerId);
+    if (remainingPointerId !== undefined) startZoomGesture(remainingPointerId, event.currentTarget);
   };
 
   const handleZoomWheel = (event: React.WheelEvent<HTMLDivElement>) => {
@@ -289,13 +320,6 @@ export function ExcerptSlideshow({ slides }: { slides: Slide[] }) {
                 disabled={zoomScale === MAX_ZOOM}
               >
                 <ZoomIn aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                aria-label="Zoom zurücksetzen"
-                onClick={resetZoom}
-              >
-                <RotateCcw aria-hidden="true" />
               </button>
             </div>
             <button
