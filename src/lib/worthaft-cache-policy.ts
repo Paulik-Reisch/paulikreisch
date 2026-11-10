@@ -14,15 +14,39 @@ export type WorthaftDailyData = WorthaftWordLists & {
   usedBundledFallback: boolean;
 };
 
+export type WordSelector = (words: readonly string[], date: string) => string;
+
 export function buildWorthaftDailyData(
   lists: WorthaftWordLists,
   date: string,
   usedBundledFallback = false,
+  selectWord: WordSelector = getWorthaftWordOfTheDay,
 ): WorthaftDailyData {
   return {
     words: lists.words,
     antiWords: lists.antiWords,
-    word: getWorthaftWordOfTheDay(lists.words, date),
+    word: selectWord(lists.words, date),
     usedBundledFallback,
+  };
+}
+
+/**
+ * Keeps the word of the current Berlin date fixed in memory once it was chosen,
+ * so a refresh of the lists during the day does not change today's word. A new
+ * date picks again from the current lists. The pin lives in the running server
+ * process only: after a restart or deployment the word is derived again from
+ * the lists that are loaded then.
+ */
+export function createDailyWordPin(select: WordSelector = getWorthaftWordOfTheDay): WordSelector {
+  let pinned: { date: string; word: string } | null = null;
+
+  return (words, date) => {
+    if (pinned && pinned.date === date) {
+      return pinned.word;
+    }
+
+    const word = select(words, date);
+    pinned = { date, word };
+    return word;
   };
 }
