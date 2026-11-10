@@ -44,7 +44,7 @@ export function HomePage() {
               <div><dt>Lesestoff</dt><dd>{homeBook.chapters} Kapitel</dd></div>
               <div><dt>Haltung</dt><dd>Ungeschönt</dd></div>
             </dl>
-            <div className={styles.actions}><Link className={styles.button} href="/shop">Zum Buch &amp; zur Leseprobe {arrow}</Link></div>
+            <div className={styles.actions}><Link className={styles.button} href="/shop">Zum Buch {arrow}</Link></div>
           </div>
         </section>
         <section className={styles.preview} aria-labelledby="preview-title">
@@ -82,7 +82,7 @@ export function HomePage() {
         </section>
         <section id="authors" aria-labelledby="people-title" className={`${styles.wrap} ${styles.section}`}>
           <div className={styles.sectionHead}><div><p className={styles.eyebrow}>Die Köpfe dahinter</p><h2 id="people-title">Nicht ganz unbeteiligt.</h2></div><Link className={styles.textLink} href="/ueber/autoren">Über uns {arrow}</Link></div>
-          <div className={styles.people}>{homePeople.map(person => <article key={person.name}><div className={styles.portrait}><Image src={person.image} alt={`Porträt von ${person.name}`} fill sizes="(max-width: 639px) 90vw, 30vw" /></div><p className={styles.eyebrow}>{person.role}</p><h3>{person.name}</h3><p className={styles.body}>{person.bio}</p><Link className={styles.textLink} href={person.href} aria-label={`Mehr über ${person.name}`}>Kennenlernen {arrow}</Link></article>)}</div>
+          <div className={styles.people}>{homePeople.map(person => <article key={person.name}><Link className={styles.portrait} href={person.href} aria-label={`Mehr über ${person.name}`}><Image src={person.image} alt={`Porträt von ${person.name}`} fill sizes="(max-width: 639px) 90vw, 30vw" /></Link><p className={styles.eyebrow}>{person.role}</p><h3>{person.name}</h3><p className={styles.body}>{person.bio}</p><Link className={styles.textLink} href={person.href} aria-label={`Mehr über ${person.name}`}>Kennenlernen {arrow}</Link></article>)}</div>
         </section>
         <section aria-labelledby="faq-title" className={`${styles.wrap} ${styles.section} ${styles.faq}`}>
           <div><p className={styles.eyebrow}>Kurz erklärt</p><h2 id="faq-title">Noch eine<br />Wortmeldung?</h2><p className={styles.body}>Die häufigsten Fragen. Diesmal mit ernst gemeinten Antworten.</p></div>
