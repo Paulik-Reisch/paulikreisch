@@ -12,7 +12,8 @@ import {
     deleteDoc,
     writeBatch,
     documentId,
-    where
+    where,
+    type DocumentData
 } from "firebase/firestore";
 import { 
     getStorage,
@@ -403,6 +404,25 @@ const defaultLegalPages: LegalPage[] = [
 ];
 
 
+function toLegalPage(doc: { id: string; data: () => DocumentData }): LegalPage {
+    const data = doc.data();
+    return {
+        id: doc.id,
+        title: data.title,
+        content: data.content,
+        components: data.components || [],
+        lastUpdated: (data.lastUpdated as Timestamp).toDate().toISOString(),
+        showTitle: data.showTitle,
+        showDate: data.showDate,
+    } as LegalPage;
+}
+
+/** Reads the whole `legal` collection once. Throws on errors so callers never cache a failure. */
+export async function fetchLegalPagesStrict(): Promise<LegalPage[]> {
+    const legalSnapshot = await getDocsMetered("fetchLegalPagesStrict", collection(db, 'legal'));
+    return legalSnapshot.docs.map(toLegalPage);
+}
+
 export async function getLegalPages(): Promise<LegalPage[]> {
     try {
         const legalCol = collection(db, 'legal');
@@ -411,18 +431,7 @@ export async function getLegalPages(): Promise<LegalPage[]> {
             // Return local defaults without writing during page rendering.
             return defaultLegalPages;
         }
-        return legalSnapshot.docs.map(doc => {
-            const data = doc.data();
-            return {
-                id: doc.id,
-                title: data.title,
-                content: data.content,
-                components: data.components || [],
-                lastUpdated: (data.lastUpdated as Timestamp).toDate().toISOString(),
-                showTitle: data.showTitle,
-                showDate: data.showDate,
-            } as LegalPage;
-        });
+        return legalSnapshot.docs.map(toLegalPage);
     } catch (error) {
         console.error("Error fetching legal pages, returning defaults:", error);
         return defaultLegalPages;
@@ -473,6 +482,11 @@ const LEGAL_FALLBACKS: Record<string, Omit<LegalPage, 'id'>> = {
     showDate: true,
   },
 };
+
+export function getLegalFallback(slug: string): LegalPage | null {
+    const fallback = LEGAL_FALLBACKS[slug];
+    return fallback ? { id: slug, ...fallback } : null;
+}
 
 export async function getLegalPage(slug: string): Promise<LegalPage | null> {
     try {
