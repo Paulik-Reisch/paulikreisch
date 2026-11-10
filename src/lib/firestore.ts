@@ -13,6 +13,7 @@ import {
     writeBatch,
     documentId,
     where,
+    limit as limitTo,
     type DocumentData
 } from "firebase/firestore";
 import { 
@@ -22,8 +23,6 @@ import {
     getMetadata,
 } from "firebase/storage";
 import { getDocMetered, getDocsMetered } from "@/lib/firestore-read-metering";
-import { startOfMonth, subMonths, endOfMonth, format } from "date-fns";
-import { de } from "date-fns/locale";
 
 export interface Order {
     id: string;
@@ -939,164 +938,51 @@ export async function logAnalyticsEvent(type: string, path: string, userId: stri
     }
 }
 
-type AnalyticsSummary = {
-    visitors: number;
-    pageViews: number;
-    newsletterSubscriptions: number;
-};
-
-async function getSummaryForPeriod(startDate: Date, endDate: Date): Promise<AnalyticsSummary> {
-    const eventsCol = collection(db, 'analytics_events');
-    const q = query(eventsCol, where('timestamp', '>=', startDate), where('timestamp', '<=', endDate));
-    const snapshot = await getDocsMetered("getSummaryForPeriod", q);
-
-    const events = snapshot.docs.map(doc => doc.data());
-
-    const pageViews = events.filter(e => e.type === 'page_view').length;
-    const visitors = new Set(events.filter(e => e.type === 'page_view').map(e => e.userId)).size;
-    const newsletterSubscriptions = events.filter(e => e.type === 'newsletter_subscription').length;
-
-    return { visitors, pageViews, newsletterSubscriptions };
+export interface AnalyticsEventRecord {
+    type: string;
+    timestamp: Date;
+    path?: string;
+    userId?: string;
+    params?: { [key: string]: any };
 }
 
-export async function getAnalyticsSummary() {
-    const now = new Date();
-    const startOfCurrentMonth = startOfMonth(now);
-    const startOfPreviousMonth = startOfMonth(subMonths(now, 1));
-    const endOfPreviousMonth = endOfMonth(subMonths(now, 1));
-    
-    const currentPeriod = await getSummaryForPeriod(startOfCurrentMonth, now);
-    const previousPeriod = await getSummaryForPeriod(startOfPreviousMonth, endOfPreviousMonth);
-
-    const calculateChange = (current: number, previous: number) => {
-        if (previous === 0) return current > 0 ? 100 : 0;
-        return ((current - previous) / previous) * 100;
-    };
-
-    return {
-        visitors: {
-            value: currentPeriod.visitors,
-            change: calculateChange(currentPeriod.visitors, previousPeriod.visitors)
-        },
-        pageViews: {
-            value: currentPeriod.pageViews,
-            change: calculateChange(currentPeriod.pageViews, previousPeriod.pageViews)
-        },
-        newsletterSubscriptions: {
-            value: currentPeriod.newsletterSubscriptions,
-            change: calculateChange(currentPeriod.newsletterSubscriptions, previousPeriod.newsletterSubscriptions)
-        },
-        // Conversion rate is still a placeholder
-        conversionRate: {
-            value: 5.4, // dummy
-            change: 0 // dummy
-        }
-    };
-}
-
-export async function getMonthlyPageViewsChartData(): Promise<{ month: string; pageViews: number }[]> {
-    const now = new Date();
-    const chartData = [];
+/**
+ * Reads, once, the events the admin analytics page needs: every page view and
+ * the newsletter subscriptions since `since`. Every statistic on that page is
+ * computed from this list (see analytics-aggregation.ts), instead of one
+ * query per statistic.
+ */
+export async function loadAnalyticsEvents(since: Date): Promise<AnalyticsEventRecord[]> {
     const eventsCol = collection(db, 'analytics_events');
+    const [pageViews, newsletters] = await Promise.all([
+        getDocsMetered("loadAnalyticsPageViews", query(eventsCol, where('type', '==', 'page_view'))),
+        getDocsMetered("loadAnalyticsNewsletterEvents", query(
+            eventsCol,
+            where('type', '==', 'newsletter_subscription'),
+            where('timestamp', '>=', since)
+        )),
+    ]);
 
-    for (let i = 5; i >= 0; i--) {
-        const date = subMonths(now, i);
-        const monthName = format(date, "MMMM", { locale: de });
-        
-        const startDate = startOfMonth(date);
-        const endDate = endOfMonth(date);
-
-        const q = query(eventsCol, 
-            where('type', '==', 'page_view'),
-            where('timestamp', '>=', startDate),
-            where('timestamp', '<=', endDate)
-        );
-        const snapshot = await getDocsMetered("getMonthlyPageViewsChartData", q);
-        
-        chartData.push({ month: monthName, pageViews: snapshot.size });
-    }
-
-    return chartData;
-}
-    
-export async function getTopPages(limit = 10): Promise<{ path: string; views: number }[]> {
-    const eventsCol = collection(db, 'analytics_events');
-    const q = query(eventsCol, where('type', '==', 'page_view'));
-    const snapshot = await getDocsMetered("getTopPages", q);
-
-    const pageCounts: { [path: string]: number } = {};
-    snapshot.docs.forEach(doc => {
-        const event = doc.data();
-        const basePath = event.path.split('?')[0];
-        pageCounts[basePath] = (pageCounts[basePath] || 0) + 1;
+    return [...pageViews.docs, ...newsletters.docs].map(snapshot => {
+        const data = snapshot.data();
+        return {
+            type: data.type as string,
+            timestamp: (data.timestamp as Timestamp).toDate(),
+            path: data.path,
+            userId: data.userId,
+            params: data.params,
+        };
     });
-
-    return Object.entries(pageCounts)
-        .sort(([, a], [, b]) => b - a)
-        .slice(0, limit)
-        .map(([path, views]) => ({ path, views }));
-}
-
-export async function getTopSources(limit = 10): Promise<{ source: string; visitors: number }[]> {
-    const eventsCol = collection(db, 'analytics_events');
-    const q = query(eventsCol, where('type', '==', 'page_view'));
-    const snapshot = await getDocsMetered("getTopSources", q);
-
-    const sourceCounts: { [source: string]: Set<string> } = {};
-    snapshot.docs.forEach(doc => {
-        const event = doc.data() as AnalyticsEvent;
-        const source = event.params?.utm_source || event.params?.source || '(direct)';
-        if (!sourceCounts[source]) {
-            sourceCounts[source] = new Set();
-        }
-        sourceCounts[source].add(event.userId);
-    });
-
-    return Object.entries(sourceCounts)
-        .sort(([, a], [, b]) => b.size - a.size)
-        .slice(0, limit)
-        .map(([source, userIds]) => ({ source, visitors: userIds.size }));
-}
-
-export async function getDeviceBreakdown(): Promise<{ type: string; count: number }[]> {
-    const eventsCol = collection(db, 'analytics_events');
-    const q = query(eventsCol, where('type', '==', 'page_view'));
-    const snapshot = await getDocsMetered("getDeviceBreakdown", q);
-
-    const breakdown = { Desktop: 0, Mobile: 0, Unknown: 0 };
-    const seenUsers = new Set<string>();
-
-    snapshot.docs.forEach(doc => {
-        const event = doc.data() as AnalyticsEvent;
-        // Simple daily unique visitor count
-        const dailyUserIdentifier = `${event.userId}-${(event.timestamp.toDate() as Date).toDateString()}`;
-        if (seenUsers.has(dailyUserIdentifier)) return;
-        seenUsers.add(dailyUserIdentifier);
-
-        const userAgent = event.params?.userAgent || '';
-        if (userAgent.toLowerCase().includes('mobi')) {
-            breakdown.Mobile++;
-        } else if (userAgent) {
-            breakdown.Desktop++;
-        } else {
-            breakdown.Unknown++;
-        }
-    });
-
-    return [
-        { type: 'Desktop', count: breakdown.Desktop },
-        { type: 'Mobile', count: breakdown.Mobile },
-    ];
 }
 
 export type SerializedAnalyticsEvent = Omit<AnalyticsEvent, 'timestamp'> & { timestamp: string };
 
 export async function getRecentEvents(limit = 20): Promise<SerializedAnalyticsEvent[]> {
     const eventsCol = collection(db, 'analytics_events');
-    const q = query(eventsCol, orderBy('timestamp', 'desc'), where('type', '==', 'page_view'));
+    const q = query(eventsCol, orderBy('timestamp', 'desc'), where('type', '==', 'page_view'), limitTo(limit));
     const snapshot = await getDocsMetered("getRecentEvents", q);
 
-    return snapshot.docs.slice(0, limit).map(doc => {
+    return snapshot.docs.map(doc => {
         const data = doc.data();
         return {
             id: doc.id,
@@ -1121,3 +1007,4 @@ export async function addSubscriber(data: { email: string; source: string; }) {
         subscribedAt: Timestamp.now()
     });
 }
+

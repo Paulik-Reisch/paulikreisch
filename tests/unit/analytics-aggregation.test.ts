@@ -1,0 +1,70 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { aggregateAnalytics, type AnalyticsEventInput } from '../../src/lib/analytics-aggregation';
+
+const now = new Date(2026, 10, 10, 12, 0, 0); // 10 Nov 2026, local time
+
+const view = (day: Date, userId: string, path: string, params: AnalyticsEventInput['params'] = {}): AnalyticsEventInput => ({
+  type: 'page_view', timestamp: day, userId, path, params,
+});
+
+const events: AnalyticsEventInput[] = [
+  view(new Date(2026, 10, 2, 9), 'u1', '/impressum?x=1', { userAgent: 'Mozilla Mobile Safari', utm_source: 'news' }),
+  view(new Date(2026, 10, 2, 15), 'u1', '/shop', { userAgent: 'Mozilla Mobile Safari' }),
+  view(new Date(2026, 10, 3, 9), 'u1', '/shop', { userAgent: 'Mozilla Mobile Safari' }),
+  view(new Date(2026, 10, 5, 9), 'u2', '/shop', { userAgent: 'Mozilla Windows', source: 'mail' }),
+  view(new Date(2026, 9, 31, 23, 59, 59, 999), 'u3', '/shop', {}),
+  view(new Date(2026, 9, 1, 0, 0, 0, 0), 'u3', '/ueber', {}),
+  view(new Date(2026, 8, 30, 23, 59), 'u4', '/ueber', { userAgent: 'Mozilla Windows' }),
+  { type: 'newsletter_subscription', timestamp: new Date(2026, 10, 4), userId: 'u2' },
+  { type: 'newsletter_subscription', timestamp: new Date(2026, 9, 20), userId: 'u3' },
+  { type: 'newsletter_subscription', timestamp: new Date(2026, 9, 21), userId: 'u4' },
+  { type: 'something_else', timestamp: new Date(2026, 10, 4), userId: 'u9' },
+];
+
+const result = aggregateAnalytics(events, now);
+
+test('summary compares the current month with the previous month', () => {
+  assert.deepEqual(result.summary.pageViews, { value: 4, change: 100 });
+  assert.deepEqual(result.summary.visitors, { value: 2, change: 100 });
+  assert.deepEqual(result.summary.newsletterSubscriptions, { value: 1, change: -50 });
+  assert.equal(result.summary.conversionRate.value, 5.4);
+});
+
+test('month boundaries are inclusive and the chart covers six months', () => {
+  assert.equal(result.chart.length, 6);
+  assert.deepEqual(result.chart.map(m => m.pageViews), [0, 0, 0, 1, 2, 4]);
+  assert.equal(new Date(result.chart[5].monthStart).getMonth(), 10);
+  assert.equal(new Date(result.chart[0].monthStart).getMonth(), 5);
+});
+
+test('top pages ignore the query string and sort by views', () => {
+  assert.deepEqual(result.topPages, [
+    { path: '/shop', views: 4 },
+    { path: '/ueber', views: 2 },
+    { path: '/impressum', views: 1 },
+  ]);
+  assert.equal(aggregateAnalytics(events, now, 1).topPages.length, 1);
+});
+
+test('top sources count distinct visitors per source', () => {
+  assert.deepEqual(result.topSources, [
+    { source: '(direct)', visitors: 3 },
+    { source: 'news', visitors: 1 },
+    { source: 'mail', visitors: 1 },
+  ]);
+});
+
+test('device breakdown counts one visitor per day and ignores unknown agents', () => {
+  assert.deepEqual(result.deviceBreakdown, [
+    { type: 'Desktop', count: 2 },
+    { type: 'Mobile', count: 2 },
+  ]);
+});
+
+test('an empty history gives zero values without errors', () => {
+  const empty = aggregateAnalytics([], now);
+  assert.equal(empty.summary.pageViews.value, 0);
+  assert.equal(empty.summary.pageViews.change, 0);
+  assert.deepEqual(empty.topPages, []);
+});

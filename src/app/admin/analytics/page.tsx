@@ -1,28 +1,14 @@
 import { Suspense } from "react";
 import { AnalyticsClient } from "./analytics-client";
-import { 
-    getAnalyticsSummary, 
-    getMonthlyPageViewsChartData,
-    getTopPages,
-    getTopSources,
-    getDeviceBreakdown,
-    getRecentEvents
-} from "@/lib/firestore";
+import { getAnalyticsDashboard } from "@/lib/analytics-dashboard";
+import { getRecentEvents } from "@/lib/firestore";
 
 export default async function AnalyticsPage() {
   const [
-    summary, 
-    chartData, 
-    topPages, 
-    topSources, 
-    deviceBreakdown, 
+    { summary, chartData, topPages, topSources, deviceBreakdown },
     recentEvents
   ] = await Promise.all([
-    getAnalyticsSummary(),
-    getMonthlyPageViewsChartData(),
-    getTopPages(7),
-    getTopSources(7),
-    getDeviceBreakdown(),
+    getAnalyticsDashboard(),
     getRecentEvents(5)
   ]);
 
