@@ -7,6 +7,7 @@ import {
   WORTHAFT_WORD_LISTS_CACHE_TAG,
   WORTHAFT_WORD_LISTS_REVALIDATE_SECONDS,
   buildWorthaftDailyData,
+  createDailyWordPin,
   type WorthaftDailyData,
 } from './worthaft-cache-policy';
 import { recordFirestoreReads } from './firestore-read-metering';
@@ -63,11 +64,14 @@ const getCachedWordLists = unstable_cache(
   { revalidate: WORTHAFT_WORD_LISTS_REVALIDATE_SECONDS, tags: [WORTHAFT_WORD_LISTS_CACHE_TAG] },
 );
 
+// Today's word stays fixed in this process even if the lists are refreshed during the day.
+const pinDailyWord = createDailyWordPin();
+
 export async function getWorthaftDailyData(date: string): Promise<WorthaftDailyData> {
   try {
-    return buildWorthaftDailyData(await getCachedWordLists(), date);
+    return buildWorthaftDailyData(await getCachedWordLists(), date, false, pinDailyWord);
   } catch (error) {
     console.error('Failed to load the cached Worthaft word lists from Firestore; using bundled lists.', error);
-    return buildWorthaftDailyData({ words: [...WORDS], antiWords: [...WORTHAFT_ANTI_WORDS] }, date, true);
+    return buildWorthaftDailyData({ words: [...WORDS], antiWords: [...WORTHAFT_ANTI_WORDS] }, date, true, pinDailyWord);
   }
 }
