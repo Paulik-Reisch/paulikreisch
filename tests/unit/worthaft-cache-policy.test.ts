@@ -3,6 +3,7 @@ import test from 'node:test';
 import {
   WORTHAFT_WORD_LISTS_REVALIDATE_SECONDS,
   buildWorthaftDailyData,
+  createDailyWordPin,
 } from '../../src/lib/worthaft-cache-policy';
 
 const lists = { words: ['alpha', 'bravo', 'delta'], antiWords: ['zzzzz'] };
@@ -30,4 +31,23 @@ test('the fallback flag is passed through', () => {
 
 test('an empty word list is rejected', () => {
   assert.throws(() => buildWorthaftDailyData({ words: [], antiWords: [] }, '2024-01-01'));
+});
+
+test('the pinned word of a date does not change when the lists change', () => {
+  const pin = createDailyWordPin();
+  const before = buildWorthaftDailyData(lists, '2024-01-02', false, pin);
+  const changed = { words: ['omega', 'sigma', 'theta', 'kappa'], antiWords: [] };
+  const after = buildWorthaftDailyData(changed, '2024-01-02', false, pin);
+
+  assert.equal(before.word, 'BRAVO');
+  assert.equal(after.word, 'BRAVO');
+  assert.deepEqual(after.words, changed.words);
+});
+
+test('a new date picks again from the current lists', () => {
+  const pin = createDailyWordPin();
+  buildWorthaftDailyData(lists, '2024-01-02', false, pin);
+  const next = buildWorthaftDailyData({ words: ['omega', 'sigma', 'theta'], antiWords: [] }, '2024-01-03', false, pin);
+
+  assert.equal(next.word, 'THETA');
 });
