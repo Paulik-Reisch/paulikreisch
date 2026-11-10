@@ -1506,9 +1506,10 @@ Jetzt spielen:`;
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
             <Header />
-            <main className="flex-1 py-2 md:py-3">
-                <div className="w-full max-w-sm mx-auto px-4 sm:px-0 flex flex-col items-center justify-start">
-                    <div className="w-full mx-auto" style={{ maxWidth: `${boardWidth}px` }}>
+            <main className="flex-1 py-2 md:py-3 flex flex-col">
+                <div className="w-full max-w-sm mx-auto px-4 sm:px-0 flex flex-1 flex-col items-center justify-start">
+                    <div className="w-full mx-auto flex flex-1 flex-col" style={{ maxWidth: `${boardWidth}px` }}>
+                        <div className="flex flex-1 items-center justify-center">
                         <Grid
                             guesses={guesses}
                             currentGuess={currentGuess}
@@ -1521,6 +1522,7 @@ Jetzt spielen:`;
                             gameState={gameState}
                             settings={settings}
                         />
+                        </div>
                         <Keyboard
                             onChar={handleChar}
                             onEnter={handleEnter}
