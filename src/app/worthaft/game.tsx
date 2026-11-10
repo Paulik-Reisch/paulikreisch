@@ -1500,7 +1500,7 @@ Jetzt spielen:`;
     const boardWidth = Math.round(getWorthaftTileDimensions(settings.tileWidth, settings.tileHeight).width * 5 + 24);
 
     return (
-        <div className="flex flex-col min-h-screen bg-background text-foreground">
+        <div className="flex flex-col min-h-screen bg-background text-foreground touch-manipulation">
              <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

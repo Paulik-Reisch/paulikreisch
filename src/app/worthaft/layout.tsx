@@ -3,19 +3,17 @@ import type { Metadata, Viewport } from 'next';
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   themeColor: '#686868',
 };
 
 export const metadata: Metadata = {
-  title: 'Worthaft | Paulik & Reisch',
+  title: 'Worthaft',
   description: 'Worthaft: Das tägliche deutsche Worträtsel',
   applicationName: 'Worthaft | Paulik & Reisch',
   alternates: { canonical: '/worthaft' },
   openGraph: {
     title: 'Worthaft',
-    description: '',
+    description: 'Worthaft: Das tägliche Worträtsel',
     url: 'https://paulikreisch.de/worthaft',
     images: [
       {
@@ -28,7 +26,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     title: 'Worthaft',
-    description: '',
+    description: 'Worthaft: Das tägliche Worträtsel',
   },
   icons: {
     icon: '/worthaft_favicon.ico',
