@@ -214,7 +214,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
             aria-label="Heißer Tipp – einen Buchstaben aufdecken"
             style={keyStyle(lastRowLength)}
             className={cn(
-              "h-auto p-0 text-orange-500 border-orange-500/60 flex items-center justify-center transition-colors rounded-[5px] md:rounded-[10px] relative overflow-hidden",
+              "h-auto p-0 text-orange-500 border-orange-500/60 dark:text-orange-200/70 dark:border-orange-200/25 flex items-center justify-center transition-colors rounded-[5px] md:rounded-[10px] relative overflow-hidden",
               isHotTipActive && settings.animationsEnabled && "flame-inner-glow"
             )}
           >
