@@ -30,3 +30,17 @@
   --dur-short: 200ms;
   --radius-button: 3px;
 }
+
+/* Dark mode (Test): dunkle Papier-Palette. .dark setzt next-themes auf <html>. */
+.dark .pr-home {
+  --color-paper: oklch(21% 0.012 85);
+  --color-paper-deep: oklch(17% 0.012 85);
+  --color-ink: oklch(93% 0.01 85);
+  --color-muted: oklch(78% 0.014 78);
+  --color-rule: oklch(38% 0.02 80);
+  --color-accent: oklch(90% 0.15 95);
+  --color-rust: oklch(68% 0.12 40);
+  --color-focus: oklch(72% 0.13 250);
+  --color-game: oklch(30% 0.05 155);
+  --color-game-tile: oklch(38% 0.05 155);
+}
