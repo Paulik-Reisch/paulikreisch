@@ -1,5 +1,5 @@
 
-import { getLegalPage } from "@/lib/firestore";
+import { getLegalPageCached } from "@/lib/legal-pages-cache";
 import { notFound } from "next/navigation";
 import { LegalPage } from "@/components/landing/legal-page";
 import { format } from "date-fns";
@@ -7,7 +7,7 @@ import { de } from "date-fns/locale";
 
 // This is now a Server Component
 export default async function AGBPage() {
-  const page = await getLegalPage('agb');
+  const page = await getLegalPageCached('agb');
 
   if (!page) {
     notFound();

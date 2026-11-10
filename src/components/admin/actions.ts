@@ -13,7 +13,8 @@ import {
   updateExcerpt,
   addLog,
 } from "@/lib/firestore";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
+import { LEGAL_PAGES_CACHE_TAG } from "@/lib/legal-pages-cache";
 import { cookies } from "next/headers";
 import { encrypt, getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
@@ -326,6 +327,7 @@ export async function updateLegalPageAction(
     await updateLegalPage(pageId, finalData, session.user.id);
     revalidatePath("/admin");
     revalidatePath(`/${pageId}`);
+    updateTag(LEGAL_PAGES_CACHE_TAG);
     return { success: true, error: null, message: "Seite erfolgreich aktualisiert." };
   } catch (e) {
     const error = e as Error;
