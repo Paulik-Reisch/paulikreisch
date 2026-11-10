@@ -3,7 +3,12 @@ import 'server-only';
 import { unstable_cache } from 'next/cache';
 import { firebaseConfig } from '@/firebase/config';
 import { WORTHAFT_ANTI_WORDS } from './worthaft-anti-words';
-import { getWorthaftWordOfTheDay } from './worthaft-daily-word';
+import {
+  WORTHAFT_WORD_LISTS_CACHE_TAG,
+  WORTHAFT_WORD_LISTS_REVALIDATE_SECONDS,
+  buildWorthaftDailyData,
+  type WorthaftDailyData,
+} from './worthaft-cache-policy';
 import { recordFirestoreReads } from './firestore-read-metering';
 import { WORDS } from './worthaft-words';
 import {
@@ -24,10 +29,7 @@ type FirestoreDocument = {
   };
 };
 
-export type WorthaftDailyData = WorthaftWordLists & {
-  word: string;
-  usedBundledFallback: boolean;
-};
+export type { WorthaftDailyData };
 
 async function fetchWorthaftWordList(collectionName: string, listName: string): Promise<string[]> {
   const documentUrl = new URL(
@@ -46,34 +48,26 @@ async function fetchWorthaftWordList(collectionName: string, listName: string): 
   return parseWorthaftWordList(values, listName);
 }
 
-const getCachedDailyData = unstable_cache(
-  async (date: string): Promise<WorthaftDailyData> => {
+// The lists are cached for seven days, independent of the date. The word of the
+// day is derived from them on each request, so the date is not part of the cache key.
+const getCachedWordLists = unstable_cache(
+  async (): Promise<WorthaftWordLists> => {
     const [words, antiWords] = await Promise.all([
       fetchWorthaftWordList(WORTHAFT_WORDS_COLLECTION, 'words'),
       fetchWorthaftWordList(WORTHAFT_ANTI_WORDS_COLLECTION, 'anti-words'),
     ]);
 
-    return {
-      words,
-      antiWords,
-      word: getWorthaftWordOfTheDay(words, date),
-      usedBundledFallback: false,
-    };
+    return { words, antiWords };
   },
-  ['worthaft-daily-data-v1'],
-  { revalidate: 48 * 60 * 60 },
+  ['worthaft-word-lists-v2'],
+  { revalidate: WORTHAFT_WORD_LISTS_REVALIDATE_SECONDS, tags: [WORTHAFT_WORD_LISTS_CACHE_TAG] },
 );
 
 export async function getWorthaftDailyData(date: string): Promise<WorthaftDailyData> {
   try {
-    return await getCachedDailyData(date);
+    return buildWorthaftDailyData(await getCachedWordLists(), date);
   } catch (error) {
     console.error('Failed to load the cached Worthaft word lists from Firestore; using bundled lists.', error);
-    return {
-      words: [...WORDS],
-      antiWords: [...WORTHAFT_ANTI_WORDS],
-      word: getWorthaftWordOfTheDay(WORDS, date),
-      usedBundledFallback: true,
-    };
+    return buildWorthaftDailyData({ words: [...WORDS], antiWords: [...WORTHAFT_ANTI_WORDS] }, date, true);
   }
 }
