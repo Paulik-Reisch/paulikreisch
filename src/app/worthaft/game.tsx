@@ -1506,10 +1506,9 @@ Jetzt spielen:`;
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
             <Header />
-            <main className="flex-1 py-2 md:py-3 flex flex-col min-h-[calc(100dvh-64px)]">
-                <div className="relative w-full max-w-sm mx-auto px-4 sm:px-0 flex flex-1 flex-col items-center justify-start">
-                    <div className="w-full mx-auto flex flex-1 flex-col" style={{ maxWidth: `${boardWidth}px` }}>
-                        <div className="flex flex-1 items-center justify-center">
+            <main className="flex-1 py-2 md:py-3">
+                <div className="w-full max-w-sm mx-auto px-4 sm:px-0 flex flex-col items-center justify-start">
+                    <div className="w-full mx-auto" style={{ maxWidth: `${boardWidth}px` }}>
                         <Grid
                             guesses={guesses}
                             currentGuess={currentGuess}
@@ -1522,7 +1521,6 @@ Jetzt spielen:`;
                             gameState={gameState}
                             settings={settings}
                         />
-                        </div>
                         <Keyboard
                             onChar={handleChar}
                             onEnter={handleEnter}
@@ -1539,7 +1537,7 @@ Jetzt spielen:`;
                     {/* Sonnenschein-Halbkreis-Glow hinter der Tastatur (laufende Motion) */}
                     <div
                         aria-hidden
-                        className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 flex justify-center overflow-visible"
+                        className="pointer-events-none relative -mt-10 flex justify-center overflow-visible"
                     >
                         <div
                             className="h-20 w-[140%] max-w-3xl animate-sun-glow rounded-[50%]"
