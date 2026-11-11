@@ -54,3 +54,30 @@
 @media (max-width: 700px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .game { grid-column: span 1; } .game:first-child { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; } .game:first-child .preview { height: 100%; border: 0; border-right: 1px solid #e4e4e7; } .experiment { grid-column: span 2; grid-template-columns: 90px minmax(0, 1fr); } .sectionHead > span { display: none; } }
 @media (max-width: 420px) { .wrap { width: calc(100% - 32px); } .grid { grid-template-columns: minmax(0, 1fr); gap: 16px; } .game, .game:first-child, .experiment { grid-column: auto; } .game:first-child { display: flex; } .game:first-child .preview { height: 164px; border-right: 0; border-bottom: 1px solid #e4e4e7; } .preview { height: 164px; } .gameBody { padding: 20px; } .game h3 { font-size: 21px; } .experiment { grid-template-columns: 64px minmax(0, 1fr); } .experiment .preview { height: 100%; } .experiment h3 { font-size: 17px; } .hero { padding-bottom: 32px; } }
 @media (prefers-reduced-motion: reduce) { .page *, .page *::before, .page *::after { animation: none !important; transition: none !important; } }
+
+/* Dark Mode: warme Papier-Palette wie der Rest der Site (Header/Footer-Hexwerte). */
+:global(.dark) .page { color: #f2ede3; background: #211d17; }
+:global(.dark) .page :is(a, button, summary):focus-visible { outline-color: #7aa8ff; }
+:global(.dark) .eyebrow { background: #1b2a40; color: #7aa8ff; }
+:global(.dark) .hero h1 span { color: #7aa8ff; }
+:global(.dark) .lead { color: #b6ad9c; }
+:global(.dark) .sectionHead > span { color: #a89f8f; }
+:global(.dark) .game { border-color: #3a352d; background: #2a251e; }
+:global(.dark) .game:hover { box-shadow: 0 8px 28px rgba(0, 0, 0, .35); }
+:global(.dark) .preview { background: #211d17; border-bottom-color: #3a352d; }
+:global(.dark) .game p { color: #b6ad9c; }
+:global(.dark) .live { background: #1b2a40; color: #7aa8ff; }
+:global(.dark) .alpha { background: #3a3113; color: #f0cf6e; }
+:global(.dark) .empty { background: #2a251e; border-color: #4f493d !important; }
+:global(.dark) .redactions i { background: #d9d3c6; }
+:global(.dark) .redactions i:nth-child(2), :global(.dark) .redactions i:nth-child(4) { background: #7aa8ff; }
+:global(.dark) .absent { background: #4a453f; }
+:global(.dark) .experiment .preview { border-right-color: #3a352d; background: #211d17; }
+:global(.dark) .experiment .playLink { background: #211d17; border-color: #4f493d; color: #f2ede3; }
+:global(.dark) .experiment .playLink:hover { background: #332d24; }
+:global(.dark) .alphaMark { color: #a89f8f; }
+:global(.dark) .alphaNote { color: #a89f8f; }
+:global(.dark) .credit { color: #a89f8f; }
+:global(.dark) .credit p { color: #b6ad9c; }
+@media (max-width: 700px) { :global(.dark) .game:first-child .preview { border-right-color: #3a352d; } }
+@media (max-width: 420px) { :global(.dark) .game:first-child .preview { border-bottom-color: #3a352d; } }
