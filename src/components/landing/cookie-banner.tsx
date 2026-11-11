@@ -102,7 +102,7 @@ export function CookieBanner() {
     return null;
   }
 
-  const legal = <div className="legal"><Link href="/datenschutz">Datenschutz</Link>{' · '}<Link href="/cookie-richtlinie">Cookie-Richtlinie</Link><p>Du kannst deine Auswahl jederzeit über „Cookie-Einstellungen“ im Footer ändern.</p></div>;
+  const legal = <div className="legal"><Link href="/datenschutz">Datenschutz</Link>{' · '}<Link href="/cookie-richtlinie">Cookie-Richtlinie</Link><p>Du kannst deine Auswahl jederzeit im Footer unter „Mehr“ → „Cookie-Einstellungen“ ändern.</p></div>;
   return (
     <section id="pr-cookie-consent">
       <article ref={dialogRef} tabIndex={-1} className="panel" role="dialog" aria-modal="true" aria-labelledby="consent-title">
