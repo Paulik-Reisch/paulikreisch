@@ -84,3 +84,49 @@
 @media (max-width: 540px) { .navInner { gap: 10px; } .heading { padding-left: 12px; gap: 7px; } .heading h1 { font-size: 18px; } .heading svg { display: none; } .help { width: 40px; padding: 8px; } .help span { display: none; } .iconButton { width: 36px; } .headerActions { gap: 5px; } .gameBar { gap: 8px; } .modes { gap: 5px; } .modes button { padding: 9px 11px; font-size: 11px; } .date { font-size: 10px; } .article p { font-size: 15px; line-height: 1.9; } .articleTitle { font-size: 25px; } .footer { gap: 16px; font-size: 10px; } }
 @media (max-width: 360px) { .main { width: calc(100% - 24px); } .controls { padding: 12px; } .navInner { width: calc(100% - 24px); } .inputRow input::placeholder { font-size: 11px; } .inputRow button { padding-inline: 12px; } .stats div { gap: 4px; } .modes button { padding-inline: 9px; } }
 @media (prefers-reduced-motion: reduce) { .page *, .page *::before, .page *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; } }
+
+/* Dark Mode: warme Papier-Palette wie der Rest der Site (Header/Footer-Hexwerte). */
+:global(.dark) .page { color: #f2ede3; background: #211d17; }
+:global(.dark) .page :is(button, a, input, select, summary):focus-visible { outline-color: #7aa8ff; }
+:global(.dark) .nav { border-bottom-color: #3a352d; background: #2a251e; }
+:global(.dark) .heading { border-left-color: #3a352d; }
+:global(.dark) .heading svg { color: #7aa8ff; }
+:global(.dark) .help, :global(.dark) .iconButton { border-color: #4f493d; color: #f2ede3; background: #2a251e; }
+:global(.dark) .help:hover, :global(.dark) .iconButton:hover { background: #332d24; }
+:global(.dark) .modes button { border-color: #4f493d; background: #2a251e; color: #b6ad9c; }
+:global(.dark) .modes button[aria-pressed="true"] { border-color: #0067d9; color: #fff; background: #0067d9; }
+:global(.dark) .modes button:hover:not([aria-pressed="true"]) { background: #332d24; }
+:global(.dark) .date { color: #b6ad9c; }
+:global(.dark) .controls { border-color: #3a352d; background: #2a251e; }
+:global(.dark) .stats span { color: #b6ad9c; }
+:global(.dark) .inputRow input { border-color: #4f493d; background: #211d17; color: #f2ede3; }
+:global(.dark) .inputRow input::placeholder { color: #a89f8f; }
+:global(.dark) .tools button { border-color: #4f493d; background: #2a251e; color: #f2ede3; }
+:global(.dark) .tools button:first-child { background: #3a3113; border-color: #e8be3c; }
+:global(.dark) .message { color: #b6ad9c; }
+:global(.dark) .storageNotice { color: #e8956a; }
+:global(.dark) .history { border-top-color: #3a352d; }
+:global(.dark) .history summary span { color: #b6ad9c; }
+:global(.dark) .sort { color: #b6ad9c; }
+:global(.dark) .sort select { border-color: #4f493d; color: #f2ede3; background: #2a251e; }
+:global(.dark) .guessList li { border-top-color: #3a352d; }
+:global(.dark) .guessNumber { color: #a89f8f; }
+:global(.dark) .hitWord { color: #7aa8ff; }
+:global(.dark) .missWord { color: #b6ad9c; }
+:global(.dark) .hitCount { background: #3a352d; color: #b6ad9c; }
+:global(.dark) .hasHits { color: #18181b; background: #f9e7a9; }
+:global(.dark) .emptyHistory { color: #a89f8f; }
+:global(.dark) .articleTitle { border-bottom-color: #3a352d; }
+:global(.dark) .redacted { background: #d9d3c6; }
+:global(.dark) .articleTitle .redacted { background: #7aa8ff; }
+:global(.dark) .loading { color: #b6ad9c; }
+:global(.dark) .original { color: #7aa8ff; }
+:global(.dark) .result h2 { color: #7aa8ff; }
+:global(.dark) .result p { color: #b6ad9c; }
+:global(.dark) .secondary { border-color: #4f493d; background: #211d17; color: #f2ede3; }
+:global(.dark) .footer { border-top-color: #3a352d; color: #b6ad9c; }
+:global(html.dark) .dialog { color: #f2ede3; background: #2a251e; }
+:global(.dark) .rules p, :global(.dark) .ruleNote { color: #b6ad9c; }
+:global(.dark) .ruleNote { border-top-color: #3a352d; }
+:global(.dark) .sourceLinks a { color: #7aa8ff; }
+@media (max-width: 780px) { :global(.dark) .controls { box-shadow: 0 3px 16px rgba(0, 0, 0, .4); } }
