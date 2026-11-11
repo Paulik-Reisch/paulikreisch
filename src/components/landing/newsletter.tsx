@@ -35,7 +35,7 @@ function NewsletterFormContent() {
         <Button
           type="submit"
           disabled={pending || !isConsentGiven}
-          className="h-[52px] px-7 rounded-[10px] bg-[#ffe14d] text-[#1d1a15] border-2 border-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:bg-[#ffeb7a] hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] font-bold text-[1.02rem] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 shrink-0"
+          className="h-[52px] px-7 rounded-[10px] bg-[#ffe14d] text-[#1d1a15] border-2 border-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:bg-[#ffeb7a] hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] dark:border-[#bfa100] dark:shadow-[0_3px_0_#6b5700] dark:hover:shadow-[0_4px_0_#6b5700] dark:active:shadow-[0_1px_0_#6b5700] font-bold text-[1.02rem] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 shrink-0"
         >
           {pending ? (
             <>
