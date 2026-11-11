@@ -8,11 +8,13 @@ import { CookieBanner } from '@/components/landing/cookie-banner';
 import { GlobalTracker } from '@/components/analytics/global-tracker';
 import { Toaster } from '@/components/ui/toaster';
 
-/** Cookie-only games run independently of authentication, tracking and theme storage. */
+/** Cookie-only games run without authentication, tracking and cookie banner, but follow the site theme. */
 export function SiteProviders({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const cookieOnlyGame = ['/game-labs/bits', '/game-labs/wikiland'].some(path => pathname === path || pathname.startsWith(`${path}/`));
-  if (cookieOnlyGame) return <>{children}</>;
+  if (cookieOnlyGame) {
+    return <ThemeProvider attribute="class" defaultTheme="light">{children}</ThemeProvider>;
+  }
   return (
     <ThemeProvider attribute="class" defaultTheme="light">
       <FirebaseClientProvider>
