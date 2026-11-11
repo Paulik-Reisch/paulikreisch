@@ -4,6 +4,13 @@ import { notFound } from "next/navigation";
 import { LegalPage } from "@/components/landing/legal-page";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Allgemeine Geschäftsbedingungen',
+  description: 'Bedingungen für die Nutzung unserer Angebote und den Erwerb unserer Publikationen.',
+  alternates: { canonical: '/agb' },
+};
 
 // This is now a Server Component
 export default async function AGBPage() {
