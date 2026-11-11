@@ -30,7 +30,7 @@ export default function LeseprobePage() {
             <p className={styles.eyebrow}>Hallo Welt · Leseprobe</p>
             <h1 id="leseprobe-title">Ein Blick ins Buch.</h1>
             <p className={styles.description}>
-              Hier kannst du durch ausgewählte Seiten blättern und dir einen Eindruck verschaffen, was dir in „Hallo Welt“ alles geboten wird.
+              Hier kannst Du durch ausgewählte Seiten blättern und Dir einen Eindruck verschaffen, was Dir in „Hallo Welt“ alles geboten wird.
             </p>
             <Link href="/shop" className={styles.bookLink}>
               Zum Buch <ArrowUpRight size={17} aria-hidden="true" />
