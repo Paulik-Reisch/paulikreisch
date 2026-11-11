@@ -82,12 +82,12 @@ export function Header() {
   }, [open]);
 
   const isWorthaftPage = pathname === '/worthaft';
-  const tBar90 = isWorthaftPage ? 'dark:bg-[hsl(240_4%_12%)]/90' : 'dark:bg-[#211d17]/90';
-  const tDrawer95 = isWorthaftPage ? 'dark:bg-[hsl(240_4%_12%)]/95' : 'dark:bg-[#211d17]/95';
+  const tBar90 = isWorthaftPage ? 'dark:bg-[hsl(240_4%_12%_/_0.9)]' : 'dark:bg-[#211d17]/90';
+  const tDrawer95 = isWorthaftPage ? 'dark:bg-[hsl(240_4%_12%_/_0.95)]' : 'dark:bg-[#211d17]/95';
   const tPanel = isWorthaftPage ? 'dark:bg-[hsl(240_4%_18%)]' : 'dark:bg-[#2a251e]';
   const tPanelHover = isWorthaftPage ? 'dark:hover:bg-[hsl(240_4%_25%)]' : 'dark:hover:bg-[#332d24]';
   const tLine = isWorthaftPage ? 'dark:border-[hsl(240_4%_25%)]' : 'dark:border-[#3a352d]';
-  const tLine80 = isWorthaftPage ? 'dark:border-[hsl(240_4%_25%)]/80' : 'dark:border-[#3a352d]/80';
+  const tLine80 = isWorthaftPage ? 'dark:border-[hsl(240_4%_25%_/_0.8)]' : 'dark:border-[#3a352d]/80';
   const tEdge = isWorthaftPage ? 'dark:border-[hsl(240_5%_88%)]' : 'dark:border-[#e8e2d4]';
   const tInk = isWorthaftPage ? 'dark:text-[hsl(0_0%_98%)]' : 'dark:text-[#f2ede3]';
   const showWorthaftLink = !isWorthaftPage;
