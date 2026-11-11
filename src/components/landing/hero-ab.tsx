@@ -120,14 +120,6 @@ export function HeroAb({ product }: { product?: Product }) {
     const h = HEROS[idx];
     // reveal
     const t = setTimeout(() => setIsIn(true), 40);
-    // hero_view once
-    try {
-      (window as unknown as { dataLayer?: unknown[] }).dataLayer = (window as unknown as { dataLayer?: unknown[] }).dataLayer || [];
-      ((window as unknown as { dataLayer: unknown[] }).dataLayer as unknown[]).push({ event: "hero_view", hero: h.id, headline: h.head });
-      // also gtag if present
-      const w = window as unknown as { gtag?: (...a: unknown[]) => void };
-      w.gtag?.("event", "hero_view", { hero_variant: h.id });
-    } catch {}
     return () => clearTimeout(t);
   }, [idx]);
 
