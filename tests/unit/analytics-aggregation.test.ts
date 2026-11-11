@@ -68,3 +68,13 @@ test('an empty history gives zero values without errors', () => {
   assert.equal(empty.summary.pageViews.change, 0);
   assert.deepEqual(empty.topPages, []);
 });
+
+test('local visitor identifiers count distinct browsers, not Firebase accounts', () => {
+ const local = aggregateAnalytics([
+  view(new Date(2026,10,2), 'visitor:11111111-1111-1111-1111-111111111111', '/'),
+  view(new Date(2026,10,3), 'visitor:11111111-1111-1111-1111-111111111111', '/shop'),
+  view(new Date(2026,10,3), 'visitor:22222222-2222-2222-2222-222222222222', '/'),
+ ], now);
+ assert.equal(local.summary.visitors.value, 2);
+ assert.equal(local.summary.pageViews.value, 3);
+});

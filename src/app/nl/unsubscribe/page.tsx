@@ -11,6 +11,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { MailX, Pause, Heart, ArrowRight, CheckCircle2, Gift, Settings2, Laugh } from "lucide-react";
 import Link from "next/link";
+import { getBrowserAnalyticsId } from '@/lib/analytics-consent';
 import { logEventAction } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 
@@ -41,7 +42,7 @@ function UnsubscribeInner() {
   const selected = REASONS.find((r) => r.value === reason);
 
   async function track(type: string, extra: Record<string, unknown> = {}) {
-    try { await logEventAction(type, email || "anon", "/nl/unsubscribe", { reason, freeText: freeText.slice(0, 200), email: email || undefined, ...extra }); } catch {}
+    try { const id = getBrowserAnalyticsId(); if (id) await logEventAction(type, id, "/nl/unsubscribe", { reason, ...extra }); } catch {}
   }
 
   async function handlePause(days: number) {

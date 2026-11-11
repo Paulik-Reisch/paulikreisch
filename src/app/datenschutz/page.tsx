@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function DatenschutzPage() {
   return (
-    <LegalPage title="Datenschutzerklärung" description="Wie wir personenbezogene Daten verarbeiten und Ihre Privatsphäre schützen.">
+    <LegalPage title="Datenschutzerklärung" description="Wie wir personenbezogene Daten verarbeiten und deine Privatsphäre schützen.">
             <p className="text-sm text-muted-foreground">Stand: {new Date().toLocaleDateString("de-DE", { year: "numeric", month: "long", day: "numeric" })}</p>
 
             <h2>1. Verantwortlicher</h2>
@@ -40,11 +40,18 @@ export default function DatenschutzPage() {
 
             <h3>2.3 Firebase / Firestore</h3>
             <p>
-              Für Reichweitenmessung und zur Speicherung von Spieldständen (Worthaft) setzen wir Dienste der
-              Google Ireland Limited („Firebase", „Firestore") ein. Soweit hierbei personenbezogene Daten
-              verarbeitet werden, beruht dies auf Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an
-              Produktverbesserung) oder Ihrer Einwilligung. Einzelheiten entnehmen Sie der
-              Datenschutzerklärung von Google.
+              Wir verwenden unsere bestehende Firebase-/Firestore-Datenbank für freiwillig übermittelte
+              Worthaft-Rückmeldungen und Wortvorschläge. Worthaft-Spielstände liegen dagegen lokal in deinem
+              Browser. Für die Reichweitenmessung speichern wir nur nach deiner Zustimmung eine zufällige,
+              pseudonyme Browser-ID für höchstens 90 Tage lokal. Mit Nutzungsereignissen übermitteln wir
+              diese Kennung, aufgerufene Seiten, Zeitpunkt sowie Browser-, Sprach- und Bildschirmangaben
+              an unsere Firebase-/Firestore-Datenbank. Es wird dafür kein Anmeldekonto erstellt und
+              die Analytics-ID wird nicht mit einer Firebase-Anmelde-UID verknüpft.
+              Rechtsgrundlagen für diese Analytics-Speicherung und Verarbeitung sind deine Einwilligung
+              nach § 25 Abs. 1 TDDDG und Art. 6 Abs. 1 lit. a DSGVO. Du kannst sie jederzeit über
+              „Cookie-Einstellungen“ widerrufen. Dabei wird die lokale ID entfernt und die weitere Erfassung
+              beendet. Bereits übermittelte Ereignisse werden nicht allein durch das Entfernen der lokalen
+              ID gelöscht. Einzelheiten zur lokalen Speicherung stehen in der Cookie-Richtlinie.
             </p>
 
             <h3>2.4 Lokale Speicherung (Worthaft)</h3>
@@ -76,9 +83,9 @@ export default function DatenschutzPage() {
 
             <h2>3. Cookies und Einwilligung</h2>
             <p>
-              Wir setzen Cookies und vergleichbare Technologien nur nach Ihrer Einwilligung ein
+              Wir setzen Cookies und vergleichbare Technologien nur nach deiner Einwilligung ein
               (Art. 6 Abs. 1 lit. a DSGVO i. V. m. § 25 TDDDG). Notwendige Cookies, die für den Betrieb der
-              Seite erforderlich sind, werden ohne Einwilligung gesetzt. Ihre Auswahl können Sie jederzeit über
+              Seite erforderlich sind, werden ohne Einwilligung gesetzt. Deine Auswahl kannst du jederzeit über
               den Consent-Dialog anpassen. Details entnehmen Sie der <Link href="/cookie-richtlinie">Cookie-Richtlinie</Link>.
             </p>
 

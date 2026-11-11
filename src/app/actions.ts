@@ -100,6 +100,6 @@ export async function subscribeToNewsletterAction(
 }
 
 export async function logEventAction(type: 'page_view' | 'newsletter_subscription' | string, userId: string, path: string, params: object = {}) {
-  const { logAnalyticsEvent } = await import("@/lib/firestore");
-  await logAnalyticsEvent(type, path, userId, params);
+  const { writeAnalyticsEvent } = await import("@/lib/analytics-server");
+  await writeAnalyticsEvent(type, userId, path, params);
 }

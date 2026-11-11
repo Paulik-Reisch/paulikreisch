@@ -1,0 +1,9 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';
+import {getAnalyticsId,CONSENT_KEY,ANALYTICS_ID_KEY} from '../../src/lib/analytics-consent';
+const uuid='12345678-1234-1234-1234-123456789abc';
+function store(){const m=new Map<string,string>();return {getItem:(k:string)=>m.get(k)??null,setItem:(k:string,v:string)=>{m.set(k,v)},removeItem:(k:string)=>{m.delete(k)}};}
+test('analytics is off before opt-in and for refusal; never mints ID',()=>{const s=store();let calls=0;assert.equal(getAnalyticsId(s,()=>{calls++;return uuid}),null);s.setItem(CONSENT_KEY,JSON.stringify({analytics:false}));assert.equal(getAnalyticsId(s,()=>{calls++;return uuid}),null);assert.equal(calls,0)});
+test('opt-in persists a stable browser ID, expires in 90 days and rotates after expiry',()=>{const s=store();s.setItem(CONSENT_KEY,JSON.stringify({analytics:true,version:2}));const first=getAnalyticsId(s,()=>uuid,1000);assert.equal(first,'visitor:'+uuid);assert.equal(getAnalyticsId(s,()=>{throw Error('should reuse')},1001),first);const saved=JSON.parse(s.getItem(ANALYTICS_ID_KEY)!);assert.equal(saved.expiresAt,1000+90*86400000);getAnalyticsId(s,()=>uuid, saved.expiresAt+1);assert.equal(JSON.parse(s.getItem(ANALYTICS_ID_KEY)!).expiresAt,saved.expiresAt+1+90*86400000)});
+test('withdrawal removes stored analytics ID and blocked storage disables analytics',()=>{const s=store();s.setItem(CONSENT_KEY,JSON.stringify({analytics:true,version:2}));getAnalyticsId(s,()=>uuid);s.setItem(CONSENT_KEY,JSON.stringify({analytics:false}));assert.equal(getAnalyticsId(s,()=>uuid),null);assert.equal(s.getItem(ANALYTICS_ID_KEY),null);assert.equal(getAnalyticsId({getItem:()=>{throw Error('blocked')},setItem:()=>{},removeItem:()=>{}},()=>uuid),null)});
+
+test("legacy broad consent does not authorize the new browser ID",()=>{const s=store();s.setItem(CONSENT_KEY,JSON.stringify({analytics:true}));assert.equal(getAnalyticsId(s,()=>uuid),null)});
