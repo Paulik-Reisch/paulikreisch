@@ -7,8 +7,8 @@ import { createTrackedUrl } from "@/lib/utils";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Luin Schiffbauer | Illustrator | Paulik & Reisch",
-    description: 'Entdecken Sie die Arbeit von Luin Schiffbauer, dem brillanten Illustrator, der dem satirischen Universum von "Hallo Welt" sein unverwechselbares Gesicht verleiht.',
+    title: "Luin Schiffbauer | Illustrator",
+    description: 'Entdecke die Arbeit von Luin Schiffbauer, dem brillanten Illustrator, der dem satirischen Universum von „Hallo Welt“ sein unverwechselbares Gesicht verleiht.',
     alternates: {
       canonical: '/ueber/luin-schiffbauer',
     },
