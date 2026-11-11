@@ -29,7 +29,7 @@ test('reading sample stays simple and the selected-page slideshow supports contr
   await page.goto('/leseprobe');
 
   await expect(page.getByRole('heading', { level: 1, name: 'Ein Blick ins Buch.' })).toBeVisible();
-  await expect(page.getByText(/Hier kannst du durch ausgewählte Seiten/)).toBeVisible();
+  await expect(page.getByText(/Hier kannst Du durch ausgewählte Seiten/)).toBeVisible();
   const pdfSlide = page.locator('figure[data-slide-type="pdf"]').nth(0);
   await expect(pdfSlide).toBeVisible();
   const pdfImage = pdfSlide.locator('img');
