@@ -238,3 +238,7 @@
 :global(.dark) .shell .composerBottom > span { color: var(--muted); }
 :global(.dark) .shell .sendButton:disabled { color: #6f6759; background: #2a2620; }
 :global(.dark) .shell .disclaimer { color: #9a907f; }
+
+:global(.dark) .shell .topbar { background: rgb(39 35 29 / 94%); border-bottom-color: rgb(79 73 61 / 75%); }
+:global(.dark) .shell .starters button { background: rgb(56 51 43 / 65%); }
+:global(.dark) .shell .starters button:hover { background: var(--paper-white); }
