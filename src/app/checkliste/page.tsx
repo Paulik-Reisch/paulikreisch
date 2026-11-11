@@ -3,21 +3,21 @@ import { Button } from '@/components/ui/button';
 import { Check, Download, BookOpen, Shield, ArrowRight, Sparkles } from 'lucide-react';
 
 const items = [
-  { title: 'Morgens um 7:45 Anwesenheitspflicht', desc: 'Der Wecker klingelt, du bist schon im Minus. Wer zu spät kommt, schreibt Entschuldigungen wie Liebesbriefe.' },
+  { title: 'Morgens um 7:45 Anwesenheitspflicht', desc: 'Der Wecker klingelt, Du bist schon im Minus. Wer zu spät kommt, schreibt Entschuldigungen wie Liebesbriefe.' },
   { title: 'Hausaufgaben > Freizeit', desc: 'Wenn "kurz was für morgen" 3 Stunden frisst, ist das kein Lernen — das ist Vollzug.' },
   { title: 'Lehrer-Roboter Modus', desc: 'Noten statt Neugier, Vorschriften statt Verstehen. Der Unterricht läuft auf Autopilot.' },
-  { title: 'Bürokratie-Bingo', desc: 'Anträge, Formulare, Stempel — du brauchst einen Antrag, um einen Antrag zu stellen.' },
-  { title: 'Noten = Selbstwert', desc: 'Eine Zahl entscheidet, ob du "gut genug" bist. Spoiler: Du bist mehr als eine 3,2.' },
+  { title: 'Bürokratie-Bingo', desc: 'Anträge, Formulare, Stempel — Du brauchst einen Antrag, um einen Antrag zu stellen.' },
+  { title: 'Noten = Selbstwert', desc: 'Eine Zahl entscheidet, ob Du "gut genug" bist. Spoiler: Du bist mehr als eine 3,2.' },
   { title: 'Flur = Gefängnishof', desc: 'Pausenaufsicht, Durchsagen, Türen die nur in eine Richtung aufgehen.' },
   { title: 'Pfeffer-Moment', desc: 'Jemand zitiert Regeln, die niemand versteht — und alle nicken. Willkommen im Theater.' },
   { title: 'To-Do ohne Ende', desc: 'Kaum fertig, kommt das nächste Arbeitsblatt. Erholung ist als Fehlzeit markiert.' },
   { title: 'Eigene Meinung = Risiko', desc: 'Wer kritisch fragt, bekommt Zusatzaufgaben. Satire ist hier Notwehr.' },
-  { title: 'Du zählst die Tage', desc: 'Ferien als Lichtblick, nicht als Pause. Wenn du nur auf den Gong wartest…' },
+  { title: 'Du zählst die Tage', desc: 'Ferien als Lichtblick, nicht als Pause. Wenn Du nur auf den Gong wartest…' },
 ];
 
 export const metadata = {
-  title: 'Checkliste: 10 Anzeichen Lernvollzugsanstalt — Paulik & Reisch',
-  description: 'Der humorvolle Selbsttest: Erkenne, ob deine Schule eine Lernvollzugsanstalt ist. Gratis-PDF + Bonus-Kapitel aus Hallo Welt.',
+  title: 'Checkliste: 10 Anzeichen Lernvollzugsanstalt',
+  description: 'Der humorvolle Selbsttest: Erkenne, ob Deine Schule eine Lernvollzugsanstalt ist. Gratis-PDF + Bonus-Kapitel aus Hallo Welt.',
 };
 
 export default function ChecklistePage() {
@@ -34,7 +34,7 @@ export default function ChecklistePage() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-10">
             <p className="text-xs font-bold tracking-widest text-primary uppercase">Gratis Checkliste · PDF</p>
-            <h1 className="font-headline text-3xl md:text-5xl font-extrabold mt-2 text-balance">10 Anzeichen, dass deine Schule eine <span className="text-primary">Lernvollzugsanstalt</span> ist</h1>
+            <h1 className="font-headline text-3xl md:text-5xl font-extrabold mt-2 text-balance">10 Anzeichen, dass Deine Schule eine <span className="text-primary">Lernvollzugsanstalt</span> ist</h1>
             <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">Der humorvolle Selbsttest aus Hallo Welt — ankreuzen, schmunzeln, weitergeben. Inkl. Bonus-Kapitel aus dem Buch.</p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <a href="/checkliste-lernvollzugsanstalt.pdf" download>
