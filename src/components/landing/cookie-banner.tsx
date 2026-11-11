@@ -102,7 +102,7 @@ export function CookieBanner() {
     return null;
   }
 
-  const legal = <div className="legal"><Link href="/datenschutz">Datenschutz</Link>{' · '}<Link href="/cookie-richtlinie">Cookie-Richtlinie</Link><p>Du kannst deine Auswahl jederzeit im Footer unter „Mehr“ → „Cookie-Einstellungen“ ändern.</p></div>;
+  const legal = <div className="legal"><Link href="/datenschutz">Datenschutz</Link>{' · '}<Link href="/cookie-richtlinie">Cookie-Richtlinie</Link><p>Du kannst Deine Auswahl jederzeit im Footer unter „Mehr“ → „Cookie-Einstellungen“ ändern.</p></div>;
   return (
     <section id="pr-cookie-consent">
       <article ref={dialogRef} tabIndex={-1} className="panel" role="dialog" aria-modal="true" aria-labelledby="consent-title">
@@ -110,7 +110,7 @@ export function CookieBanner() {
         {view === 'main' ? <>
           <div className="eyebrow">Cookies &amp; Statistik</div>
           <h2 id="consent-title">Deine Daten.<br />Deine Wahl.</h2>
-          <p>Mit deinem Okay zählen wir Seitenaufrufe und wiederkehrende Besuche. Dafür speichern wir eine zufällige ID für höchstens 90 Tage in deinem Browser und senden sie mit Nutzungsereignissen an unsere Firebase-Datenbank.</p>
+          <p>Mit Deinem Okay zählen wir Seitenaufrufe und wiederkehrende Besuche. Dafür speichern wir eine zufällige ID für höchstens 90 Tage in Deinem Browser und senden sie mit Nutzungsereignissen an unsere Firebase-Datenbank.</p>
           <p>Ohne Zustimmung bleibt die Analyse aus. Die Seite funktioniert trotzdem.</p>
           <div className="actions"><button className="accept" onClick={() => handleConsent('all')}>Zustimmen</button><button onClick={() => handleConsent('necessary')}>Ablehnen</button><button onClick={() => setView('settings')}>Einstellungen</button></div>
           {legal}
@@ -118,8 +118,8 @@ export function CookieBanner() {
           <button className="back" onClick={() => setView('main')}>← &nbsp; Zurück</button>
           <div className="eyebrow">Du entscheidest</div>
           <h2 id="consent-title">Deine Einstellungen.</h2>
-          <p>Nur das, was du erlaubst. Die Analyse ist standardmäßig aus.</p>
-          <div className="row"><div><h3>Notwendig</h3><p>Speichert deine Auswahl und ermöglicht Grundfunktionen. Keine Reichweitenmessung.</p></div><span className="badge">Immer aktiv</span></div>
+          <p>Nur das, was Du erlaubst. Die Analyse ist standardmäßig aus.</p>
+          <div className="row"><div><h3>Notwendig</h3><p>Speichert Deine Auswahl und ermöglicht Grundfunktionen. Keine Reichweitenmessung.</p></div><span className="badge">Immer aktiv</span></div>
           <div className="row"><div><h3><label htmlFor="analytics">Analyse &amp; Leistung</label></h3><p>Zählt Seitenaufrufe und wiederkehrende Besuche mit einer zufälligen Browser-ID. Die ID gilt höchstens 90 Tage. Nutzungsereignisse gehen an unsere Firebase-Datenbank. Kein Konto, keine Anmelde-ID.</p></div><button id="analytics" role="switch" aria-checked={consent.analytics} aria-label="Analyse & Leistung" className="toggle" onClick={() => handleToggle('analytics')} /></div>
           <div className="actions two"><button onClick={() => handleConsent('necessary')}>Alles ablehnen</button><button onClick={() => handleConsent(consent)}>Auswahl speichern</button></div>
           {legal}
