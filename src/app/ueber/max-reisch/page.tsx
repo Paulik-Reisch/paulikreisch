@@ -6,8 +6,8 @@ import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Maximilian Reisch | Autor & Stratege | Paulik & Reisch",
-    description: 'Lernen Sie Maximilian Reisch kennen, einen der strategischen Köpfe hinter der satirischen Buchreihe "Hallo Welt". Entdecken Sie seine Rolle als Autor und Strukturschaffender des Duos.',
+    title: "Maximilian Reisch | Autor & Stratege",
+    description: 'Lerne Maximilian Reisch kennen, einen der strategischen Köpfe hinter der satirischen Buchreihe „Hallo Welt“. Entdecke seine Rolle als Autor und Strukturschaffender des Duos.',
     alternates: {
       canonical: '/ueber/max-reisch',
     },
