@@ -11,6 +11,7 @@ import { ensureWorthaftAuth } from '@/firebase/on-demand-auth';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { ThumbsUp, ThumbsDown, Check, MessageSquare, ShieldCheck } from 'lucide-react';
 import { getWorthaftVoteDescription, type WorthaftVote } from '@/lib/worthaft-feedback';
+import { getWorthaftDateString } from '@/lib/worthaft-daily-word';
 
 type Vote = WorthaftVote | null;
 type Step = 'ask' | 'details' | 'thanks';
@@ -28,11 +29,10 @@ const REASONS = [
 ];
 
 function getTodayString() {
-  const today = new Date();
-  const y = today.getFullYear();
-  const m = (today.getMonth() + 1).toString().padStart(2, '0');
-  const d = today.getDate().toString().padStart(2, '0');
-  return `${y}-${m}-${d}`;
+  // The game day rolls over at midnight Europe/Berlin (see worthaft-daily-word),
+  // so the feedback decision must be keyed by the same date. Using the device
+  // timezone here split the keys for users outside Europe/Berlin.
+  return getWorthaftDateString();
 }
 
 export default function FeedbackDrawer({
