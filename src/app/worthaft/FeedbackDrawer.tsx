@@ -283,7 +283,7 @@ export default function FeedbackDrawer({
             <span className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground animate-in zoom-in-95 duration-300">
               <Check className="h-8 w-8" />
             </span>
-            <h2 className="font-headline mb-1.5 text-xl font-extrabold">Danke für dein Feedback!</h2>
+            <h2 className="font-headline mb-1.5 text-xl font-extrabold">Danke für Dein Feedback!</h2>
             <Button variant="outline" onClick={() => (onClose ? onClose() : onOpenChange(false))} className="rounded-full px-6">
               Schließen
             </Button>
