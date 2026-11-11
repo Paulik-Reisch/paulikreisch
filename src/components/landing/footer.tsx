@@ -29,7 +29,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="inline-flex items-center justify-center rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-5 py-2.5 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_2px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_3px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] transition-[transform,box-shadow] disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none self-start"
+      className="inline-flex items-center justify-center rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-5 py-2.5 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_2px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_3px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] transition-[transform,box-shadow] disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none self-start dark:border-[#bfa100] dark:shadow-[0_2px_0_#6b5700] dark:hover:shadow-[0_3px_0_#6b5700] dark:active:shadow-[0_1px_0_#6b5700]"
     >
       {pending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Senden…</> : "Anmelden"}
     </button>
@@ -47,7 +47,10 @@ export function Footer() {
   const tPanel = cool ? 'dark:bg-[hsl(240_4%_18%)]' : 'dark:bg-[#2a251e]';
   const tPanelHover = cool ? 'dark:hover:bg-[hsl(240_4%_25%)]' : 'dark:hover:bg-[#332d24]';
   const tLine = cool ? 'dark:border-[hsl(240_4%_25%)]' : 'dark:border-[#3a352d]';
-  const tEdge = cool ? 'dark:border-[hsl(240_5%_88%)]' : 'dark:border-[#e8e2d4]';
+  const tEdgeWorthaft = cool ? 'dark:border-[hsl(240_5%_45%)]' : 'dark:border-[#6b6353]';
+  const darkShadowBlack = 'dark:shadow-[0_3px_0_#000000] dark:hover:shadow-[0_4px_0_#000000] dark:active:shadow-[0_1px_0_#000000]';
+  const darkTonalYellow = 'dark:border-[#bfa100] dark:shadow-[0_3px_0_#6b5700] dark:hover:shadow-[0_4px_0_#6b5700] dark:active:shadow-[0_1px_0_#6b5700]';
+  const darkTonalBlue = 'dark:border-[#1a5aa8] dark:shadow-[0_3px_0_#0e3563] dark:hover:shadow-[0_4px_0_#0e3563] dark:active:shadow-[0_1px_0_#0e3563]';
   const tInk = cool ? 'dark:text-[hsl(0_0%_98%)]' : 'dark:text-[#f2ede3]';
   const tMuted = cool ? 'dark:text-[hsl(240_5%_65%)]' : 'dark:text-[#b6ad9c]';
   const tMuted2 = cool ? 'dark:text-[hsl(240_5%_65%)]' : 'dark:text-[#a89f8f]';
@@ -55,7 +58,7 @@ export function Footer() {
   const tAccentHover = cool ? 'dark:hover:text-[hsl(220_85%_68%)]' : 'dark:hover:text-[#e8836f]';
   const tDeco = cool ? 'dark:decoration-[hsl(240_4%_25%)]' : 'dark:decoration-[#3a352d]';
   const tFocusEdge = cool ? 'dark:focus-visible:border-[hsl(240_5%_88%)]' : 'dark:focus-visible:border-[#e8e2d4]';
-  const actionClass = `inline-flex h-12 items-center justify-start gap-2 rounded-[10px] border-2 border-[#1d1a15] px-4 text-[0.9rem] font-semibold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] transition-[transform,box-shadow,background-color] ${tEdge} dark:shadow-[0_3px_0_#0a0a0a] dark:hover:shadow-[0_4px_0_#0a0a0a] dark:active:shadow-[0_1px_0_#0a0a0a]`;
+  const actionClass = `inline-flex h-12 items-center justify-start gap-2 rounded-[10px] border-2 border-[#1d1a15] px-4 text-[0.9rem] font-semibold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] transition-[transform,box-shadow,background-color]`;
   const moreTriggerRef = useRef<HTMLButtonElement>(null);
   const desktopMoreTriggerRef = useRef<HTMLButtonElement>(null);
   const [moreOpen, setMoreOpen] = useState(false);
@@ -116,7 +119,7 @@ export function Footer() {
             <h3 className={`text-[0.72rem] font-bold uppercase tracking-[0.12em] text-[#9c2d22] ${tAccent}`}>Entdecken</h3>
             <ul className="flex w-full flex-col gap-3">
               <li className="flex">
-                <Link href="/worthaft" className={`${actionClass} w-[125px] self-start bg-white hover:bg-[#f7f2e7] ${tPanel} ${tInk} ${tPanelHover}`}>
+                <Link href="/worthaft" className={`${actionClass} w-[125px] self-start bg-white hover:bg-[#f7f2e7] ${tPanel} ${tInk} ${tPanelHover} ${tEdgeWorthaft} ${darkShadowBlack}`}>
                   <span className="worthaft-icon-shimmer shrink-0">
                     <WorthaftIcon className="h-4 w-4" />
                   </span>
@@ -124,13 +127,13 @@ export function Footer() {
                 </Link>
               </li>
               <li className="flex">
-                <a href={amazonLink} target="_blank" rel="noopener noreferrer" className={`${actionClass} w-[125px] self-start bg-[#ffe14d]`}>
+                <a href={amazonLink} target="_blank" rel="noopener noreferrer" className={`${actionClass} w-[125px] self-start bg-[#ffe14d] ${darkTonalYellow}`}>
                   <AmazonIcon className="h-4 w-4 shrink-0" />
                   <span>Amazon</span>
                 </a>
               </li>
               <li className="flex">
-                <Link href="/ratgeber" className={`${actionClass} w-[125px] self-start bg-[#2275d3] text-white`}>
+                <Link href="/ratgeber" className={`${actionClass} w-[125px] self-start bg-[#2275d3] text-white ${darkTonalBlue}`}>
                   <LibraryBig className="h-4 w-4 shrink-0" aria-hidden="true" />
                   Ratgeber
                 </Link>

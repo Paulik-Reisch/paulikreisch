@@ -88,7 +88,9 @@ export function Header() {
   const tPanelHover = isWorthaftPage ? 'dark:hover:bg-[hsl(240_4%_25%)]' : 'dark:hover:bg-[#332d24]';
   const tLine = isWorthaftPage ? 'dark:border-[hsl(240_4%_25%)]' : 'dark:border-[#3a352d]';
   const tLine80 = isWorthaftPage ? 'dark:border-[hsl(240_4%_25%_/_0.8)]' : 'dark:border-[#3a352d]/80';
-  const tEdge = isWorthaftPage ? 'dark:border-[hsl(240_5%_88%)]' : 'dark:border-[#e8e2d4]';
+  const tEdgeWorthaft = isWorthaftPage ? 'dark:border-[hsl(240_5%_45%)]' : 'dark:border-[#6b6353]';
+  const darkTonalYellow = 'dark:border-[#bfa100] dark:shadow-[0_3px_0_#6b5700] dark:hover:shadow-[0_4px_0_#6b5700] dark:active:shadow-[0_1px_0_#6b5700]';
+  const darkTonalBlue = 'dark:border-[#174bc2] dark:shadow-[0_3px_0_#0e3563] dark:hover:shadow-[0_4px_0_#0e3563] dark:active:shadow-[0_1px_0_#0e3563]';
   const tInk = isWorthaftPage ? 'dark:text-[hsl(0_0%_98%)]' : 'dark:text-[#f2ede3]';
   const showWorthaftLink = !isWorthaftPage;
   const showShopLink = pathname !== '/shop';
@@ -123,7 +125,7 @@ export function Header() {
               {showWorthaftLink && (
                 <Link
                   href="/worthaft"
-                  className={`inline-flex items-center gap-2 rounded-[10px] border-2 border-[#1d1a15] bg-white px-4 py-2 text-[0.9rem] font-semibold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] hover:bg-[#f7f2e7] transition-[transform,box-shadow,background-color] ${tEdge} ${tPanel} ${tInk} dark:shadow-[0_3px_0_#0a0a0a] dark:hover:shadow-[0_4px_0_#0a0a0a] ${tPanelHover} dark:active:shadow-[0_1px_0_#0a0a0a]`}
+                  className={`inline-flex items-center gap-2 rounded-[10px] border-2 border-[#1d1a15] bg-white px-4 py-2 text-[0.9rem] font-semibold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] hover:bg-[#f7f2e7] transition-[transform,box-shadow,background-color] ${tEdgeWorthaft} ${tPanel} ${tInk} dark:shadow-[0_3px_0_#000000] dark:hover:shadow-[0_4px_0_#000000] ${tPanelHover} dark:active:shadow-[0_1px_0_#000000]`}
                 >
                   <span className="worthaft-icon-shimmer">
                     <WorthaftIcon className="h-4 w-4" />
@@ -134,7 +136,7 @@ export function Header() {
               {showShopLink && (
                 <Link
                   href="/shop"
-                  className={`inline-flex items-center justify-center rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-5 py-2 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] transition-[transform,box-shadow] ${tEdge} dark:shadow-[0_3px_0_#0a0a0a] dark:hover:shadow-[0_4px_0_#0a0a0a]`}
+                  className={`inline-flex items-center justify-center rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-5 py-2 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] transition-[transform,box-shadow] ${darkTonalYellow}`}
                 >
                   Buch kaufen
                 </Link>
@@ -142,7 +144,7 @@ export function Header() {
               {showWritingRoomLink && (
                 <Link
                   href="/gpt"
-                  className={`inline-flex items-center gap-2 rounded-[10px] border-2 border-[#174bc2] bg-[#2268ff] px-4 py-2 text-[0.9rem] font-bold text-white shadow-[0_3px_0_#174bc2] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#1d5ce5] hover:shadow-[0_4px_0_#174bc2] active:translate-y-px active:shadow-[0_1px_0_#174bc2] ${tEdge} dark:shadow-[0_3px_0_#0a0a0a] dark:hover:shadow-[0_4px_0_#0a0a0a] dark:active:shadow-[0_1px_0_#0a0a0a]`}
+                  className={`inline-flex items-center gap-2 rounded-[10px] border-2 border-[#174bc2] bg-[#2268ff] px-4 py-2 text-[0.9rem] font-bold text-white shadow-[0_3px_0_#174bc2] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#1d5ce5] hover:shadow-[0_4px_0_#174bc2] active:translate-y-px active:shadow-[0_1px_0_#174bc2] ${darkTonalBlue}`}
                 >
                   <WritingRoomIcon className="h-5 w-5 shrink-0" />
                   Schreibstube
@@ -213,7 +215,7 @@ export function Header() {
                 <Link
                   href="/worthaft"
                   onClick={() => setOpen(false)}
-                  className={`inline-flex min-h-12 w-full items-center justify-center gap-2 self-start rounded-[10px] border-2 border-[#1d1a15] bg-white px-4 py-2 text-[0.9rem] font-semibold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#f7f2e7] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-px active:shadow-[0_1px_0_#1d1a15] ${tEdge} ${tPanel} ${tInk} dark:shadow-[0_3px_0_#0a0a0a] ${tPanelHover} dark:hover:shadow-[0_4px_0_#0a0a0a] dark:active:shadow-[0_1px_0_#0a0a0a]`}
+                  className={`inline-flex min-h-12 w-full items-center justify-center gap-2 self-start rounded-[10px] border-2 border-[#1d1a15] bg-white px-4 py-2 text-[0.9rem] font-semibold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#f7f2e7] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-px active:shadow-[0_1px_0_#1d1a15] ${tEdgeWorthaft} ${tPanel} ${tInk} dark:shadow-[0_3px_0_#000000] ${tPanelHover} dark:hover:shadow-[0_4px_0_#000000] dark:active:shadow-[0_1px_0_#000000]`}
                 >
                   <span className="worthaft-icon-shimmer shrink-0">
                     <WorthaftIcon className="h-4 w-4" />
@@ -225,7 +227,7 @@ export function Header() {
                 <Link
                   href="/shop"
                   onClick={() => setOpen(false)}
-                  className={`inline-flex min-h-12 w-full items-center justify-center self-start rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-5 py-2 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] transition-[transform,box-shadow] hover:-translate-y-px hover:shadow-[0_4px_0_#1d1a15] active:translate-y-px active:shadow-[0_1px_0_#1d1a15] ${tEdge} dark:shadow-[0_3px_0_#0a0a0a] dark:hover:shadow-[0_4px_0_#0a0a0a]`}
+                  className={`inline-flex min-h-12 w-full items-center justify-center self-start rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-5 py-2 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] transition-[transform,box-shadow] hover:-translate-y-px hover:shadow-[0_4px_0_#1d1a15] active:translate-y-px active:shadow-[0_1px_0_#1d1a15] ${darkTonalYellow}`}
                 >
                   Buch kaufen
                 </Link>
@@ -234,7 +236,7 @@ export function Header() {
                 <Link
                   href="/gpt"
                   onClick={() => setOpen(false)}
-                  className={`inline-flex min-h-12 w-full items-center justify-center self-start rounded-[10px] border-2 border-[#174bc2] bg-[#2268ff] px-4 py-2 text-[0.9rem] font-bold text-white shadow-[0_3px_0_#174bc2] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#1d5ce5] hover:shadow-[0_4px_0_#174bc2] active:translate-y-px active:shadow-[0_1px_0_#174bc2] ${tEdge} dark:shadow-[0_3px_0_#0a0a0a] dark:hover:shadow-[0_4px_0_#0a0a0a] dark:active:shadow-[0_1px_0_#0a0a0a]`}
+                  className={`inline-flex min-h-12 w-full items-center justify-center self-start rounded-[10px] border-2 border-[#174bc2] bg-[#2268ff] px-4 py-2 text-[0.9rem] font-bold text-white shadow-[0_3px_0_#174bc2] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#1d5ce5] hover:shadow-[0_4px_0_#174bc2] active:translate-y-px active:shadow-[0_1px_0_#174bc2] ${darkTonalBlue}`}
                 >
                   <WritingRoomIcon className="h-5 w-5 shrink-0" />
                   Schreibstube
