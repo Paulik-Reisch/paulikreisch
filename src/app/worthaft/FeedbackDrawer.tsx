@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { initializeFirebase } from '@/firebase';
+import { ensureWorthaftAuth } from '@/firebase/on-demand-auth';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { ThumbsUp, ThumbsDown, Check, MessageSquare, ShieldCheck } from 'lucide-react';
 import { getWorthaftVoteDescription, type WorthaftVote } from '@/lib/worthaft-feedback';
@@ -82,7 +83,19 @@ export default function FeedbackDrawer({
   const canSubmit = vote === 'up' || (vote === 'down' && reasons.size > 0);
 
   const handleSubmit = async () => {
-    if (!canSubmit) return;
+    if (!canSubmit || isSending) return;
+    // Positive feedback is a local acknowledgement only. It must never
+    // create an Auth account or write to Firestore.
+    if (vote === 'up') {
+      try {
+        localStorage.setItem(`worthaft-feedback-${getTodayString()}`, 'true');
+      } catch {
+        // Continue even if this browser cannot persist the local decision.
+      }
+      setStep('thanks');
+      onSubmitted?.();
+      return;
+    }
     setIsSending(true);
     setSubmitError(null);
     const payload = {
@@ -93,7 +106,8 @@ export default function FeedbackDrawer({
       createdAt: serverTimestamp(),
     };
     try {
-      const { firestore } = initializeFirebase();
+      const { auth, firestore } = initializeFirebase();
+      await ensureWorthaftAuth(auth);
       await addDoc(collection(firestore, 'worthaft-feedback'), payload);
       try {
         localStorage.setItem(`worthaft-feedback-${payload.date}`, 'true');
