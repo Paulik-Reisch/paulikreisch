@@ -26,8 +26,8 @@ import { Label } from '@/components/ui/label';
 import FeedbackDrawer from './FeedbackDrawer';
 import WordDefinitionDialog from './WordDefinitionDialog';
 import { initializeFirebase } from '@/firebase';
+import { ensureWorthaftAuth } from '@/firebase/on-demand-auth';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import type { Firestore } from 'firebase/firestore';
 import confetti from 'canvas-confetti';
 import { getWorthaftKeyDimensions, getWorthaftTileDimensions, getWorthaftStatusClass, normalizeWorthaftSettings, DEFAULT_WORTHAFT_SETTINGS as DEFAULT_SETTINGS, type WorthaftSettings } from '@/lib/worthaft-settings';
 import {
@@ -715,22 +715,17 @@ const InvalidWordModal = ({
   const { word, isKnownInvalid } = submission;
   const isMobile = useIsMobile();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [fb, setFb] = useState<{ firestore: Firestore } | null>(null);
   const [showReviewedMessage, setShowReviewedMessage] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (isKnownInvalid) return;
-    const app = initializeFirebase();
-    setFb(app);
-  }, [isKnownInvalid]);
-
   const handleSubmit = async (shouldExist: boolean) => {
-    if (!fb || isKnownInvalid) return;
+    if (isKnownInvalid || isSubmitting) return;
     setIsSubmitting(true);
     setSubmitError(null);
     try {
-      await addDoc(collection(fb.firestore, 'worthaft-word-suggestions'), {
+      const { auth, firestore } = initializeFirebase();
+      await ensureWorthaftAuth(auth);
+      await addDoc(collection(firestore, 'worthaft-word-suggestions'), {
         word,
         shouldExist,
         date: new Date().toISOString().split('T')[0],
@@ -1624,4 +1619,4 @@ Jetzt spielen:`;
             )}
         </div>
     );
-            }
+                 }

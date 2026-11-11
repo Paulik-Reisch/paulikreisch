@@ -28,13 +28,13 @@ export function ExcerptGate({ onUnlock }: { onUnlock: () => void }) {
   const [state, formAction] = useActionState(subscribeToNewsletterAction, initialNewsletterState);
   const { user } = useUser();
   const pathname = usePathname();
+  const handledNewsletterState = useRef<typeof state | null>(null);
 
   useEffect(() => {
-    if (state.success) {
+    if (state.success && handledNewsletterState.current !== state) {
+      handledNewsletterState.current = state;
       toast({ title: "Erfolgreich eingetragen!", description: state.message });
-      if (user) {
-        logEventAction('newsletter_subscription', user.uid, pathname, { source: 'excerpt-gate' });
-      }
+      if (user) logEventAction('newsletter_subscription', user.uid, pathname, { source: 'excerpt-gate' });
       onUnlock();
     }
     if (state.error) {

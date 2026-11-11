@@ -5,7 +5,6 @@ import { FirebaseApp } from 'firebase/app';
 import { Firestore } from 'firebase/firestore';
 import { Auth, User, onAuthStateChanged } from 'firebase/auth';
 import { FirebaseErrorListener } from '@/components/FirebaseErrorListener'
-import { initiateAnonymousSignIn } from './non-blocking-login';
 
 interface FirebaseProviderProps {
   children: ReactNode;
@@ -82,13 +81,9 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({
           // User is signed in (either normally or anonymously)
           setUserAuthState({ user: firebaseUser, isUserLoading: false, userError: null });
         } else {
-          // No user found, initiate anonymous sign in
-          // This will trigger onAuthStateChanged again once signed in.
-          if (process.env.NEXT_PUBLIC_LOCAL_PREVIEW === 'true') {
-            setUserAuthState({ user: null, isUserLoading: false, userError: null });
-          } else {
-            initiateAnonymousSignIn(auth);
-          }
+          // Public visits do not need an Auth account. Worthaft submissions
+          // request anonymous authentication explicitly when sending data.
+          setUserAuthState({ user: null, isUserLoading: false, userError: null });
         }
       },
       (error) => {
