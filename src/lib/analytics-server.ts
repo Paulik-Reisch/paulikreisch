@@ -6,6 +6,9 @@ import { firebaseConfig } from '@/firebase/config';
 export async function writeAnalyticsEvent(type: string, userId: string, path: string, params: object = {}): Promise<void> {
   const event = analyticsInput(type, userId, path, params);
   if (!event) throw new Error('Invalid analytics event');
+  // Cloud Run's local metadata endpoint uses HTTP by design, not a public network request.
+  // https://docs.cloud.google.com/run/docs/authenticating/service-to-service#use_the_metadata_server
+  // nosemgrep: typescript.react.security.react-insecure-request.react-insecure-request
   const credential = await fetch('http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token', {
     headers: { 'Metadata-Flavor': 'Google' }, cache: 'no-store', signal: AbortSignal.timeout(5000),
   });
