@@ -8,8 +8,8 @@ import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Philipp Paulik | Autor & Kreativkopf | Paulik & Reisch",
-    description: 'Lernen Sie Philipp Paulik kennen, einen der kreativen Köpfe hinter der satirischen Buchreihe "Hallo Welt". Entdecken Sie seine Arbeit, seinen Werdegang und sein Portfolio.',
+    title: "Philipp Paulik | Autor & Kreativkopf",
+    description: 'Lerne Philipp Paulik kennen, einen der kreativen Köpfe hinter der satirischen Buchreihe „Hallo Welt“. Entdecke seine Arbeit, seinen Werdegang und sein Portfolio.',
     alternates: {
       canonical: '/ueber/philipp-paulik',
     },
