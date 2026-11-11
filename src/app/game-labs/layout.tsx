@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Game Labs – Paulik & Reisch',
+  title: 'Game Labs',
   description: 'Experimentelle Mini-Games und Rätsel von Paulik & Reisch. Alpha-Stage — nicht für Produktion.',
   robots: {
     index: false,

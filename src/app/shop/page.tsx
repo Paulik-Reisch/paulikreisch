@@ -178,20 +178,20 @@ export default function ShopPage() {
                 {/* === SEKTION 3: WARUM BEIDE BÜCHER? === */}
                 <section className="bg-gray shop-features">
                     <div className="container">
-                        <p className="shop-eyebrow">Was dich erwartet</p>
+                        <p className="shop-eyebrow">Was Dich erwartet</p>
                         <h2 className="shop-section-title">Nicht für die Schule.<br />Fürs Überleben.</h2>
                         <div className="features-grid">
                             <div className="feature">
                                 <h3>Zwei Bücher, ein Universum</h3>
-                                <p>Lesen Sie beide Bände. Nur eines ist wie nur einen Schuh anzuziehen – geht, aber sieht dämlich aus.</p>
+                                <p>Lies beide Bände. Nur eines ist wie nur einen Schuh anzuziehen – geht, aber sieht dämlich aus.</p>
                             </div>
                             <div className="feature">
                                 <h3>Doppelte Dosis Sarkasmus</h3>
                                 <p>Doppelt Sarkasmus, doppelt Wahrheit. Oder so ähnlich.</p>
                             </div>
                             <div className="feature">
-                                <h3>Unterstützen Sie die Autoren</h3>
-                                <p>Philipp und Max brauchen Kaffee. Überteuerten. Damit sie noch mehr Unsinn schreiben können.</p>
+                                <h3>Unterstütze die Autoren</h3>
+                                <p>Mit jedem Kauf finanzierst Du den nächsten Band. Philipp und Max haben noch viel zu viele Ideen.</p>
                             </div>
                         </div>
                     </div>
@@ -207,9 +207,9 @@ export default function ShopPage() {
                                 <h2>Hallo Welt – Stimmen einer Generation</h2>
                                 <h3 style={{color:'var(--text-light)', fontWeight:400, fontSize:'1.2rem', marginBottom:'20px'}}>Zwischen Euphorie und Überforderung: Fragmente des Schülerdaseins</h3>
                                 
-                                <p>"Hallo Welt" ist ein Buch, das die Perspektiven und Lebensumstände junger Menschen in einem besonderen Ort einfängt – der Schule. Es ist keine lineare Erzählung, kein Roman mit fester Handlung, sondern eine Sammlung von einzelnen Episoden, die stets mit neuem Stoff aufwarten. Dadurch entsteht ein vielseitiges Panorama, in dem das Alltägliche und das Außergewöhnliche nebeneinanderstehen.</p>
+                                <p>„Hallo Welt“ ist ein Buch, das die Perspektiven und Lebensumstände junger Menschen in einem besonderen Ort einfängt – der Schule. Es ist keine lineare Erzählung, kein Roman mit fester Handlung, sondern eine Sammlung von einzelnen Episoden, die stets mit neuem Stoff aufwarten. Dadurch entsteht ein vielseitiges Panorama, in dem das Alltägliche und das Außergewöhnliche nebeneinanderstehen.</p>
                                 
-                                <h3>Darum solltest du Hallo Welt lesen:</h3>
+                                <h3>Darum solltest Du Hallo Welt lesen:</h3>
                                 <ul className="check-list">
                                     <li>Einzelne Episoden statt einer in sich geschlossenen Handlung – wie das echte Leben</li>
                                     <li>Satire, Kritik und Selbstironie im Stil einer rebellischen Generation</li>
@@ -223,7 +223,7 @@ export default function ShopPage() {
                             {/* Technische Daten */}
                             <div className="shop-specs">
                                 <h3 style={{marginBottom:'20px'}}>Produktinformationen</h3>
-                                <p style={{fontSize:'0.8rem', color:'#888'}}>Stand: 08. Februar 2026</p>
+                                <p style={{fontSize:'0.8rem', color:'#888'}}>Stand: 11. November 2026</p>
                                 
                                 <div className="specs-grid">
                                     <div className="spec-item">
@@ -254,7 +254,7 @@ export default function ShopPage() {
                                     </div>
                                     <div className="spec-item" style={{gridColumn: 'span 2'}}>
                                         <span className="spec-label">Bestseller-Rang</span>
-                                        <span className="spec-value">Nr. 1.267 in Schreibkunst</span>
+                                        <span className="spec-value">Nr. 5.995 in Satire</span>
                                     </div>
                                 </div>
                             </div>

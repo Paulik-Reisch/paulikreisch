@@ -6,7 +6,7 @@ import { addContact, sendTransactionalEmail } from "@/lib/resend";
 import { funnelEmails } from "@/lib/funnel-emails";
 
 const SubscriberSchema = z.object({
-  email: z.string().email("Bitte geben Sie eine gültige E-Mail-Adresse ein."),
+  email: z.string().email("Bitte gib eine gültige E-Mail-Adresse ein."),
   source: z.string().optional(),
   consent: z.string().optional(),
 });
@@ -32,19 +32,19 @@ export async function subscribeToNewsletterAction(
       return { error: msg };
     }
     if (parsed.data.consent !== "true") {
-      return { error: "Sie müssen Datenschutz & AGB akzeptieren." };
+      return { error: "Du musst Datenschutz & AGB akzeptieren." };
     }
   }
 
   const email = String(formData.get("email") || "").trim();
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return { error: "Bitte geben Sie eine gültige E-Mail-Adresse ein." };
+    return { error: "Bitte gib eine gültige E-Mail-Adresse ein." };
   }
   if (isFunnel && rawConsent !== "true" && rawConsent !== true) {
     // funnel hidden consent must be "true"
     // allow if source is funnel but consent missing -> still require
     const c = String(rawConsent || "");
-    if (c !== "true") return { error: "Bitte stimmen Sie der Datenschutzerklärung zu." };
+    if (c !== "true") return { error: "Bitte stimme der Datenschutzerklärung zu." };
   }
 
   try {

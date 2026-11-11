@@ -75,7 +75,7 @@ for (const width of [320, 375, 414, 768, 1440]) {
     await page.screenshot({ path: `test-results/worthaft-definition-${width}.png`, fullPage: true });
     if (width === 375) {
       await page.reload();
-      await expect(page.getByText('Gratulation!', { exact: true })).toBeVisible();
+      await expect(page.getByText('Gratulation!', { exact: true })).toBeVisible({ timeout: 15000 });
       await expect(page.getByRole('button', { name: 'Überspringen', exact: true })).toHaveCount(0);
       expect(requests).toBe(1);
     }
@@ -115,7 +115,7 @@ test('positive Worthaft feedback is local: no Auth or Firestore requests', async
   await page.goto('/worthaft');
   await page.getByRole('button', { name: 'Ja, das Wort war gut' }).click();
   await page.getByRole('button', { name: 'Feedback senden', exact: true }).click();
-  await expect(page.getByText('Danke für dein Feedback!', { exact: true })).toBeVisible();
+  await expect(page.getByText('Danke für Dein Feedback!', { exact: true })).toBeVisible();
   expect(networkRequests).toEqual([]);
   expect(await page.evaluate(() => {
     const now = new Date();

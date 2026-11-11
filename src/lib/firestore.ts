@@ -442,7 +442,7 @@ export async function getLegalPages(): Promise<LegalPage[]> {
 const LEGAL_FALLBACKS: Record<string, Omit<LegalPage, 'id'>> = {
   impressum: {
     title: 'Impressum',
-    content: '<p>Die rechtlichen Angaben gemäß §§ 5, 6 DDG werden derzeit finalisiert und an dieser Stelle hinterlegt. Bitte beachten Sie die aktuellsten Informationen unter <a href="/datenschutz">Datenschutz</a>.</p>',
+    content: '<p>Die rechtlichen Angaben gemäß §§ 5, 6 DDG werden derzeit finalisiert und an dieser Stelle hinterlegt. Bitte beachte die aktuellsten Informationen unter <a href="/datenschutz">Datenschutz</a>.</p>',
     components: [],
     lastUpdated: new Date().toISOString(),
     showTitle: true,
@@ -450,7 +450,7 @@ const LEGAL_FALLBACKS: Record<string, Omit<LegalPage, 'id'>> = {
   },
   'cookie-richtlinie': {
     title: 'Cookie-Richtlinie',
-    content: '<p>Unsere Cookie-Richtlinie wird derzeit aktualisiert. Wesentliche Hinweise zur Verarbeitung finden Sie in unserer <a href="/datenschutz">Datenschutzerklärung</a>.</p>',
+    content: '<p>Unsere Cookie-Richtlinie wird derzeit aktualisiert. Wesentliche Hinweise zur Verarbeitung findest Du in unserer <a href="/datenschutz">Datenschutzerklärung</a>.</p>',
     components: [],
     lastUpdated: new Date().toISOString(),
     showTitle: true,
@@ -466,7 +466,7 @@ const LEGAL_FALLBACKS: Record<string, Omit<LegalPage, 'id'>> = {
   },
   datenschutz: {
     title: 'Datenschutzerklärung',
-    content: '<p>Unsere Datenschutzerklärung wird derzeit finalisiert. Bitte beachten Sie die aktuellen Hinweise im Impressum.</p>',
+    content: '<p>Unsere Datenschutzerklärung wird derzeit finalisiert. Bitte beachte die aktuellen Hinweise im Impressum.</p>',
     components: [],
     lastUpdated: new Date().toISOString(),
     showTitle: true,
@@ -1007,4 +1007,3 @@ export async function addSubscriber(data: { email: string; source: string; }) {
         subscribedAt: Timestamp.now()
     });
 }
-

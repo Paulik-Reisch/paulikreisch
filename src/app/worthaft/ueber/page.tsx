@@ -13,19 +13,19 @@ export default function AboutWorthaftPage() {
       {
         '@type': 'HowToStep',
         name: 'Raten',
-        text: 'Sie haben sechs Versuche, das geheime deutsche Wort mit fünf Buchstaben zu erraten.',
+        text: 'Du hast sechs Versuche, das geheime deutsche Wort mit fünf Buchstaben zu erraten.',
         url: 'https://paulik-reisch.de/worthaft/ueber#regeln',
       },
       {
         '@type': 'HowToStep',
         name: 'Hinweise erhalten',
-        text: 'Nach jedem Versuch geben Ihnen die Farben einen Hinweis: Blau für korrekte Position, Gelb für korrekten Buchstaben an falscher Position, und Grau, wenn der Buchstabe nicht im Wort enthalten ist.',
+        text: 'Nach jedem Versuch geben Dir die Farben einen Hinweis: Blau für korrekte Position, Gelb für korrekten Buchstaben an falscher Position, und Grau, wenn der Buchstabe nicht im Wort enthalten ist.',
         url: 'https://paulik-reisch.de/worthaft/ueber#regeln',
       },
       {
         '@type': 'HowToStep',
         name: 'Gewinnen',
-        text: 'Lösen Sie das Rätsel innerhalb von sechs Versuchen, um zu gewinnen.',
+        text: 'Löse das Rätsel innerhalb von sechs Versuchen, um zu gewinnen.',
         url: 'https://paulik-reisch.de/worthaft/ueber#regeln',
       },
     ],
@@ -46,8 +46,8 @@ export default function AboutWorthaftPage() {
             </header>
             <article className="prose dark:prose-invert" id="regeln">
               <p>
-                Sie haben sechs Versuche, das Wort mit fünf
-                Buchstaben zu erraten. Nach jedem Versuch geben Ihnen die Farben
+                Du hast sechs Versuche, das Wort mit fünf
+                Buchstaben zu erraten. Nach jedem Versuch geben Dir die Farben
                 einen Hinweis:
               </p>
               <ul>

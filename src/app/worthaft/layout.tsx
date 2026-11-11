@@ -8,7 +8,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: 'Worthaft',
-  description: 'Worthaft: Das tägliche deutsche Worträtsel',
+  description: 'Worthaft: Das tägliche Worträtsel',
   applicationName: 'Worthaft | Paulik & Reisch',
   alternates: { canonical: '/worthaft' },
   openGraph: {

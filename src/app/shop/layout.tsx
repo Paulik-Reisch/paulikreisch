@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Buch „Hallo Welt" — 106 Seiten Schulsatire für 10,99 € | Paulik & Reisch',
-  description: '„Hallo Welt" — erhebliche Kritik am Bildungsgang der Lernvollzugsanstalt SK-S. 106 Seiten, 10,99 € statt 20,99 € auf Amazon. Leseprobe + 5★ Rezensionen. Jetzt sichern.',
+  title: 'Buch „Hallo Welt“ — 106 Seiten Schulsatire für 10,99 €',
+  description: '„Hallo Welt“ — erhebliche Kritik am Bildungsgang der Lernvollzugsanstalt SK-S. 106 Seiten, 10,99 € statt 20,99 € auf Amazon. Leseprobe + 5★ Rezensionen. Jetzt sichern.',
   alternates: { canonical: 'https://paulikreisch.de/shop' },
   openGraph: {
-    title: 'Buch „Hallo Welt" — Schulsatire, die sitzt',
+    title: 'Buch „Hallo Welt“ — Schulsatire, die sitzt',
     description: '106 Seiten Premium-Zynismus über die Lernvollzugsanstalt. 10,99 € auf Amazon — Aktion bis Monatsende.',
     url: 'https://paulikreisch.de/shop',
     type: 'website',

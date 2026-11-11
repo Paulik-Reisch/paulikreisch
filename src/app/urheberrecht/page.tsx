@@ -1,7 +1,7 @@
 import { LegalPage } from "@/components/landing/legal-page";
 
 export const metadata = {
-  title: "Urheberrecht – Paulik & Reisch",
+  title: "Urheberrecht",
   description: "Urheberrechtliche Hinweise zu sämtlichen Inhalten von Paulik & Reisch.",
 };
 
@@ -11,7 +11,7 @@ export default function UrheberrechtPage() {
       <LegalPage title="Urheberrecht" description="Hinweise zum Schutz und zur Nutzung der Inhalte von Paulik &amp; Reisch.">
           <p>
             Sämtliche auf dieser Webpräsenz bereitgestellten Inhalte – darunter, jedoch nicht abschließend,
-            textliche Darstellungen, satirische Artikel, Buchauszüge, das Spiel &bdquo;Worthaft&rdquo; samt
+            textliche Darstellungen, satirische Artikel, Buchauszüge, das Spiel &bdquo;Worthaft&ldquo; samt
             zugrundeliegender Programmierroutine, klangliche und bildliche Erzeugnisse sowie die getroffene
             gestalterische Anordnung – unterliegen dem Schutz des Urheberrechtsgesetzes (UrhG) sowie
             ergänzenden leistungsschutzrechtlichen Bestimmungen. Die ausschließlichen Nutzungsrechte an den

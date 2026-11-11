@@ -1,7 +1,7 @@
 import { LegalPage } from "@/components/landing/legal-page";
 
 export const metadata = {
-  title: "Impressum – Paulik & Reisch",
+  title: "Impressum",
   description: "Anbieterkennzeichnung von Paulik & Reisch gemäß §§ 5, 6 DDG.",
 };
 
