@@ -105,15 +105,15 @@ export function Header() {
             <a className="flex items-center justify-center" href="/">
               <div className="flex items-center gap-2">
                 <Logo className="h-8 w-auto" />
-                <span className=`font-headline font-semibold text-lg ml-2 hidden sm:inline text-[#1d1a15] ${tInk}`>Paulik &amp; Reisch</span>
+                <span className={`font-headline font-semibold text-lg ml-2 hidden sm:inline text-[#1d1a15] ${tInk}`}>Paulik &amp; Reisch</span>
               </div>
             </a>
             {isWorthaftPage && (
-              <div className=`flex items-center gap-2 border-l border-[#e8ddd0] pl-3 sm:pl-4 ${tLine}`>
+              <div className={`flex items-center gap-2 border-l border-[#e8ddd0] pl-3 sm:pl-4 ${tLine}`}>
                 <span className="worthaft-icon-shimmer shrink-0">
                   <WorthaftIcon className="h-6 w-6 text-primary" />
                 </span>
-                <h1 className=`font-headline text-lg font-bold text-[#1d1a15] sm:text-xl ${tInk}`>Worthaft</h1>
+                <h1 className={`font-headline text-lg font-bold text-[#1d1a15] sm:text-xl ${tInk}`}>Worthaft</h1>
               </div>
             )}
           </div>
@@ -123,7 +123,7 @@ export function Header() {
               {showWorthaftLink && (
                 <Link
                   href="/worthaft"
-                  className=`inline-flex items-center gap-2 rounded-[10px] border-2 border-[#1d1a15] bg-white px-4 py-2 text-[0.9rem] font-semibold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] hover:bg-[#f7f2e7] transition-[transform,box-shadow,background-color] ${tEdge} ${tPanel} ${tInk} dark:shadow-[0_3px_0_#0a0a0a] dark:hover:shadow-[0_4px_0_#0a0a0a] ${tPanelHover} dark:active:shadow-[0_1px_0_#0a0a0a]`
+                  className={`inline-flex items-center gap-2 rounded-[10px] border-2 border-[#1d1a15] bg-white px-4 py-2 text-[0.9rem] font-semibold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] hover:bg-[#f7f2e7] transition-[transform,box-shadow,background-color] ${tEdge} ${tPanel} ${tInk} dark:shadow-[0_3px_0_#0a0a0a] dark:hover:shadow-[0_4px_0_#0a0a0a] ${tPanelHover} dark:active:shadow-[0_1px_0_#0a0a0a]`}
                 >
                   <span className="worthaft-icon-shimmer">
                     <WorthaftIcon className="h-4 w-4" />
@@ -134,7 +134,7 @@ export function Header() {
               {showShopLink && (
                 <Link
                   href="/shop"
-                  className=`inline-flex items-center justify-center rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-5 py-2 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] transition-[transform,box-shadow] ${tEdge} dark:shadow-[0_3px_0_#0a0a0a] dark:hover:shadow-[0_4px_0_#0a0a0a]`
+                  className={`inline-flex items-center justify-center rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-5 py-2 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] transition-[transform,box-shadow] ${tEdge} dark:shadow-[0_3px_0_#0a0a0a] dark:hover:shadow-[0_4px_0_#0a0a0a]`}
                 >
                   Buch kaufen
                 </Link>
@@ -142,7 +142,7 @@ export function Header() {
               {showWritingRoomLink && (
                 <Link
                   href="/gpt"
-                  className=`inline-flex items-center gap-2 rounded-[10px] border-2 border-[#174bc2] bg-[#2268ff] px-4 py-2 text-[0.9rem] font-bold text-white shadow-[0_3px_0_#174bc2] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#1d5ce5] hover:shadow-[0_4px_0_#174bc2] active:translate-y-px active:shadow-[0_1px_0_#174bc2] ${tEdge} dark:shadow-[0_3px_0_#0a0a0a] dark:hover:shadow-[0_4px_0_#0a0a0a] dark:active:shadow-[0_1px_0_#0a0a0a]`
+                  className={`inline-flex items-center gap-2 rounded-[10px] border-2 border-[#174bc2] bg-[#2268ff] px-4 py-2 text-[0.9rem] font-bold text-white shadow-[0_3px_0_#174bc2] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#1d5ce5] hover:shadow-[0_4px_0_#174bc2] active:translate-y-px active:shadow-[0_1px_0_#174bc2] ${tEdge} dark:shadow-[0_3px_0_#0a0a0a] dark:hover:shadow-[0_4px_0_#0a0a0a] dark:active:shadow-[0_1px_0_#0a0a0a]`}
                 >
                   <WritingRoomIcon className="h-5 w-5 shrink-0" />
                   Schreibstube
@@ -156,9 +156,9 @@ export function Header() {
                 aria-label={open ? "Menü schließen" : "Menü öffnen"}
                 aria-expanded={open}
                 onClick={() => setOpen(v => !v)}
-                className=`inline-flex h-10 w-10 items-center justify-center rounded-[10px] border border-[#e8ddd0] bg-white shadow-sm transition-colors hover:bg-[#f7f2e7] ${tLine} ${tPanel} ${tPanelHover}`
+                className={`inline-flex h-10 w-10 items-center justify-center rounded-[10px] border border-[#e8ddd0] bg-white shadow-sm transition-colors hover:bg-[#f7f2e7] ${tLine} ${tPanel} ${tPanelHover}`}
               >
-                {open ? <X className=`h-5 w-5 text-[#1d1a15] ${tInk}` /> : <Menu className=`h-5 w-5 text-[#1d1a15] ${tInk}` />}
+                {open ? <X className={`h-5 w-5 text-[#1d1a15] ${tInk}`} /> : <Menu className={`h-5 w-5 text-[#1d1a15] ${tInk}`} />}
               </button>
             </div>
           </div>
@@ -193,17 +193,17 @@ export function Header() {
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
           <div className="absolute left-0 top-0 h-full w-[18px] -translate-x-full touch-manipulation" aria-hidden="true" />
-          <div className=`flex items-center justify-between px-6 pt-6 pb-4 border-b border-[#e8ddd0]/80 ${tLine80}`>
+          <div className={`flex items-center justify-between px-6 pt-6 pb-4 border-b border-[#e8ddd0]/80 ${tLine80}`}>
             <Link href="/" onClick={() => setOpen(false)} className="flex items-center gap-2">
               <Logo className="h-7 w-auto" />
-              <span className=`font-headline font-semibold text-[1.05rem] text-[#1d1a15] ${tInk}`>Paulik &amp; Reisch</span>
+              <span className={`font-headline font-semibold text-[1.05rem] text-[#1d1a15] ${tInk}`}>Paulik &amp; Reisch</span>
             </Link>
             <button
               aria-label="Menü schließen"
               onClick={() => setOpen(false)}
-              className=`inline-flex h-9 w-9 items-center justify-center rounded-full bg-white border border-[#e8ddd0] shadow-sm ${tPanel} ${tLine}`
+              className={`inline-flex h-9 w-9 items-center justify-center rounded-full bg-white border border-[#e8ddd0] shadow-sm ${tPanel} ${tLine}`}
             >
-              <X className=`h-4 w-4 text-[#1d1a15] ${tInk}` />
+              <X className={`h-4 w-4 text-[#1d1a15] ${tInk}`} />
             </button>
           </div>
 
@@ -213,7 +213,7 @@ export function Header() {
                 <Link
                   href="/worthaft"
                   onClick={() => setOpen(false)}
-                  className=`inline-flex min-h-12 w-full items-center justify-center gap-2 self-start rounded-[10px] border-2 border-[#1d1a15] bg-white px-4 py-2 text-[0.9rem] font-semibold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#f7f2e7] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-px active:shadow-[0_1px_0_#1d1a15] ${tEdge} ${tPanel} ${tInk} dark:shadow-[0_3px_0_#0a0a0a] ${tPanelHover} dark:hover:shadow-[0_4px_0_#0a0a0a] dark:active:shadow-[0_1px_0_#0a0a0a]`
+                  className={`inline-flex min-h-12 w-full items-center justify-center gap-2 self-start rounded-[10px] border-2 border-[#1d1a15] bg-white px-4 py-2 text-[0.9rem] font-semibold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#f7f2e7] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-px active:shadow-[0_1px_0_#1d1a15] ${tEdge} ${tPanel} ${tInk} dark:shadow-[0_3px_0_#0a0a0a] ${tPanelHover} dark:hover:shadow-[0_4px_0_#0a0a0a] dark:active:shadow-[0_1px_0_#0a0a0a]`}
                 >
                   <span className="worthaft-icon-shimmer shrink-0">
                     <WorthaftIcon className="h-4 w-4" />
@@ -225,7 +225,7 @@ export function Header() {
                 <Link
                   href="/shop"
                   onClick={() => setOpen(false)}
-                  className=`inline-flex min-h-12 w-full items-center justify-center self-start rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-5 py-2 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] transition-[transform,box-shadow] hover:-translate-y-px hover:shadow-[0_4px_0_#1d1a15] active:translate-y-px active:shadow-[0_1px_0_#1d1a15] ${tEdge} dark:shadow-[0_3px_0_#0a0a0a] dark:hover:shadow-[0_4px_0_#0a0a0a]`
+                  className={`inline-flex min-h-12 w-full items-center justify-center self-start rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-5 py-2 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] transition-[transform,box-shadow] hover:-translate-y-px hover:shadow-[0_4px_0_#1d1a15] active:translate-y-px active:shadow-[0_1px_0_#1d1a15] ${tEdge} dark:shadow-[0_3px_0_#0a0a0a] dark:hover:shadow-[0_4px_0_#0a0a0a]`}
                 >
                   Buch kaufen
                 </Link>
@@ -234,7 +234,7 @@ export function Header() {
                 <Link
                   href="/gpt"
                   onClick={() => setOpen(false)}
-                  className=`inline-flex min-h-12 w-full items-center justify-center self-start rounded-[10px] border-2 border-[#174bc2] bg-[#2268ff] px-4 py-2 text-[0.9rem] font-bold text-white shadow-[0_3px_0_#174bc2] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#1d5ce5] hover:shadow-[0_4px_0_#174bc2] active:translate-y-px active:shadow-[0_1px_0_#174bc2] ${tEdge} dark:shadow-[0_3px_0_#0a0a0a] dark:hover:shadow-[0_4px_0_#0a0a0a] dark:active:shadow-[0_1px_0_#0a0a0a]`
+                  className={`inline-flex min-h-12 w-full items-center justify-center self-start rounded-[10px] border-2 border-[#174bc2] bg-[#2268ff] px-4 py-2 text-[0.9rem] font-bold text-white shadow-[0_3px_0_#174bc2] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#1d5ce5] hover:shadow-[0_4px_0_#174bc2] active:translate-y-px active:shadow-[0_1px_0_#174bc2] ${tEdge} dark:shadow-[0_3px_0_#0a0a0a] dark:hover:shadow-[0_4px_0_#0a0a0a] dark:active:shadow-[0_1px_0_#0a0a0a]`}
                 >
                   <WritingRoomIcon className="h-5 w-5 shrink-0" />
                   Schreibstube
@@ -243,8 +243,8 @@ export function Header() {
             </div>
           </nav>
 
-          <div className=`flex items-center justify-between gap-3 border-t border-[#e8ddd0]/80 px-6 py-4 ${tLine80}`>
-            <span className=`text-[0.9rem] font-semibold text-[#1d1a15] ${tInk}`>Dunkelmodus</span>
+          <div className={`flex items-center justify-between gap-3 border-t border-[#e8ddd0]/80 px-6 py-4 ${tLine80}`}>
+            <span className={`text-[0.9rem] font-semibold text-[#1d1a15] ${tInk}`}>Dunkelmodus</span>
             <ThemeToggle />
           </div>
         </div>
