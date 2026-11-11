@@ -9,7 +9,7 @@ import { subscribeToNewsletterAction, logEventAction } from "@/app/actions";
 import { LibraryBig, Loader2 } from "lucide-react";
 import { Logo } from "../ui/logo";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-import { useUser } from "@/firebase/provider";
+import { getBrowserAnalyticsId, OPEN_CONSENT } from '@/lib/analytics-consent';
 import { usePathname } from "next/navigation";
 import { AmazonIcon } from '@/components/ui/icons/amazon-icon';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -40,7 +40,6 @@ export function Footer() {
   const formRef = useRef<HTMLFormElement>(null);
   const [state, formAction] = useActionState(subscribeToNewsletterAction, initialNewsletterState);
   const { toast } = useToast();
-  const { user } = useUser();
   const pathname = usePathname();
   const handledNewsletterState = useRef<typeof state | null>(null);
   const cool = pathname === '/worthaft';
@@ -65,17 +64,18 @@ export function Footer() {
     if (state.success && handledNewsletterState.current !== state) {
       handledNewsletterState.current = state;
       toast({ title: "Fast geschafft!", description: state.message });
-      if (user && formRef.current) {
+      const analyticsId = getBrowserAnalyticsId();
+      if (analyticsId && formRef.current) {
         const formData = new FormData(formRef.current);
         const source = formData.get('source') as string;
-        logEventAction('newsletter_subscription', user.uid, pathname, { source });
+        void logEventAction('newsletter_subscription', analyticsId, pathname, { source }).catch(() => {});
       }
       formRef.current?.reset();
     }
     if (state.error) {
       toast({ variant: "destructive", title: "Fehler", description: state.error });
     }
-  }, [state, toast, user, pathname]);
+  }, [state, toast, pathname]);
 
   useEffect(() => {
     if ((!moreOpen && !desktopMoreOpen) || moreMenuHovered) return;
@@ -88,6 +88,7 @@ export function Footer() {
   
   return (
     <div className={`text-[#4d463b] leading-relaxed ${tMuted}`}>
+      <button type="button" onClick={() => window.dispatchEvent(new Event(OPEN_CONSENT))} className="block mx-auto px-4 py-3 underline text-sm">Cookie-Einstellungen</button>
       {/* Top */}
       <footer className={`bg-white border-t border-[#e8ddd0] py-12 md:py-14 px-5 relative overflow-hidden ${tBar} ${tLine}`}>
         <div className="relative container mx-auto max-w-7xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10">
