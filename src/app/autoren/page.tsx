@@ -10,8 +10,8 @@ import { Button } from "@/components/ui/button";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Unsere Autoren | Paulik & Reisch",
-  description: "Lernen Sie die kreativen Köpfe hinter den satirischen Artikeln und Büchern von Paulik & Reisch kennen.",
+  title: "Unsere Autoren",
+  description: "Lerne die kreativen Köpfe hinter den satirischen Artikeln und Büchern von Paulik & Reisch kennen.",
   alternates: {
       canonical: '/autoren',
   },
