@@ -1,3 +1,4 @@
+
 #pr-cookie-consent{position:fixed;inset:0;z-index:10000;background:rgba(9,8,7,.65);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:20px;color:#f2ede3;font-family:var(--font-inter),sans-serif}
 #pr-cookie-consent *{box-sizing:border-box}#pr-cookie-consent .concept-label{position:fixed;left:24px;top:22px;font-size:10px;letter-spacing:.14em;color:#c9c0b1;font-weight:600}
 #pr-cookie-consent .panel{width:100%;max-width:660px;max-height:calc(100dvh - 40px);overflow:auto;background:#211d17;border:1px solid #4a4033;border-radius:20px;padding:36px;box-shadow:0 24px 80px #0008}
@@ -17,3 +18,23 @@
 #pr-cookie-consent .toggle[aria-checked="true"]:before { left: 20px; }
 
 #pr-cookie-consent button.accept { background: #382a22; border-color: #ad7560; }
+
+/* Match the site's default light theme, keeping the approved dark palette. */
+html:not(.dark) #pr-cookie-consent { color: #1d1a15; background: rgba(29,26,21,.38); }
+html:not(.dark) #pr-cookie-consent .panel { background: #fffdf9; border-color: #dfd5c6; box-shadow: 0 24px 80px #1d1a1530; }
+html:not(.dark) #pr-cookie-consent .brand { color: #4d463b; }
+html:not(.dark) #pr-cookie-consent .brand svg,
+html:not(.dark) #pr-cookie-consent .eyebrow { color: #a64f3e; }
+html:not(.dark) #pr-cookie-consent h2 { color: #1d1a15; }
+html:not(.dark) #pr-cookie-consent p { color: #5c5143; }
+html:not(.dark) #pr-cookie-consent button { background: #f5efe5; color: #1d1a15; border-color: #b6a68f; box-shadow: 0 3px 0 #dfd5c6; }
+html:not(.dark) #pr-cookie-consent button.accept { background: #f8e1d5; border-color: #bc8067; }
+html:not(.dark) #pr-cookie-consent .row { border-color: #dfd5c6; }
+html:not(.dark) #pr-cookie-consent .badge { color: #6b5e4c; border-color: #dfd5c6; }
+html:not(.dark) #pr-cookie-consent .legal,
+html:not(.dark) #pr-cookie-consent .legal p { color: #706352; }
+html:not(.dark) #pr-cookie-consent .legal a { color: #5c5143; }
+html:not(.dark) #pr-cookie-consent .back { color: #706352; background: none; box-shadow: none; border: 0; }
+html:not(.dark) #pr-cookie-consent .toggle { background: #d0c6b7; border-color: #b6a68f; box-shadow: none; }
+html:not(.dark) #pr-cookie-consent .toggle[aria-checked="true"] { background: #c56e58; border-color: #c56e58; }
+html:not(.dark) #pr-cookie-consent .toggle:before { background: #fffdf9; }
