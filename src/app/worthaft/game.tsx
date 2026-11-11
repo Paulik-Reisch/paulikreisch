@@ -452,7 +452,7 @@ const GameEndDisplay = (props: {
                     <div className="p-6">
                         <SheetHeader className="text-center">
                             <SheetTitle className="text-2xl font-bold font-headline">
-                                {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
+                                {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Du hast bereits gespielt!'}
                             </SheetTitle>
                             <SheetDescription className="text-muted-foreground pt-1">
                                 Das heutige Wort: <span className="font-bold text-primary">{rest.solution}</span>
@@ -471,7 +471,7 @@ const GameEndDisplay = (props: {
                 <div className="p-6">
                     <DialogHeader>
                         <DialogTitle className="text-2xl font-bold font-headline text-center">
-                            {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
+                            {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Du hast bereits gespielt!'}
                         </DialogTitle>
                         <DialogDescription className="text-muted-foreground pt-1 text-center">
                             Das heutige Wort: <span className="font-bold text-primary">{rest.solution}</span>
@@ -555,7 +555,7 @@ const WorthaftSettingsDrawer = ({
       <div className="space-y-6">
         <section className="space-y-4" aria-label="Aussehen">
           <div>
-            <h3 className="font-semibold">Dein Worthaft, dein Stil</h3>
+            <h3 className="font-semibold">Dein Worthaft, Dein Stil</h3>
             <p className="text-sm text-muted-foreground mt-1">Alles wird direkt übernommen und auf diesem Gerät gespeichert.</p>
           </div>
           <div className="grid grid-cols-2 gap-2" role="group" aria-label="Farbschema">
@@ -1466,7 +1466,7 @@ Jetzt spielen:`;
             saveState(guesses, 'playing', letterStatuses, true, newJokerPosition, rowTimes);
             toast({
                 title: 'Heißer Tipp!',
-                description: `Ein Buchstabe wurde für dich aufgedeckt.`,
+                description: `Ein Buchstabe wurde für Dich aufgedeckt.`,
                 duration: 3000
             });
         } else {
@@ -1619,4 +1619,4 @@ Jetzt spielen:`;
             )}
         </div>
     );
-                 }
+                    }
