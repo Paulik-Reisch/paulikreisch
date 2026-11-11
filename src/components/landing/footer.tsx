@@ -42,6 +42,7 @@ export function Footer() {
   const { toast } = useToast();
   const { user } = useUser();
   const pathname = usePathname();
+  const handledNewsletterState = useRef<typeof state | null>(null);
   const cool = pathname === '/worthaft';
   const tBar = cool ? 'dark:bg-[hsl(240_4%_12%)]' : 'dark:bg-[#211d17]';
   const tPanel = cool ? 'dark:bg-[hsl(240_4%_18%)]' : 'dark:bg-[#2a251e]';
@@ -61,7 +62,8 @@ export function Footer() {
   const [moreMenuHovered, setMoreMenuHovered] = useState(false);
 
   useEffect(() => {
-    if (state.success) {
+    if (state.success && handledNewsletterState.current !== state) {
+      handledNewsletterState.current = state;
       toast({ title: "Fast geschafft!", description: state.message });
       if (user && formRef.current) {
         const formData = new FormData(formRef.current);
@@ -169,7 +171,6 @@ export function Footer() {
           </span>
           <div className="relative flex items-center gap-2 sm:gap-4">
             <nav aria-label="Rechtliche Informationen" className="hidden sm:flex flex-wrap justify-center gap-x-4 gap-y-2 sm:justify-end">
-              <Link href="/cookie-richtlinie" className="hover:text-foreground hover:underline">Cookie-Richtlinie</Link>
               <Popover open={desktopMoreOpen} onOpenChange={setDesktopMoreOpen}>
                 <PopoverTrigger asChild>
                   <button type="button" className={moreButtonClass}>
@@ -196,6 +197,12 @@ export function Footer() {
                     className={`block px-3 py-1.5 text-left text-xs text-[#1d1a15] hover:underline transition-colors ${tInk}`}
                   >
                     Datenschutz
+                  </Link>
+                  <Link
+                    href="/cookie-richtlinie"
+                    className={`block px-3 py-1.5 text-left text-xs text-[#1d1a15] hover:underline transition-colors ${tInk}`}
+                  >
+                    Cookie-Richtlinie
                   </Link>
                   <Link
                     href="/transparenz"
