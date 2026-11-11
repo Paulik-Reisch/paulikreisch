@@ -56,9 +56,22 @@ export function Footer() {
   const tDeco = cool ? 'dark:decoration-[hsl(240_4%_25%)]' : 'dark:decoration-[#3a352d]';
   const tFocusEdge = cool ? 'dark:focus-visible:border-[hsl(240_5%_88%)]' : 'dark:focus-visible:border-[#e8e2d4]';
   const actionClass = `inline-flex h-12 items-center justify-start gap-2 rounded-[10px] border-2 border-[#1d1a15] px-4 text-[0.9rem] font-semibold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] transition-[transform,box-shadow,background-color] ${tEdge} dark:shadow-[0_3px_0_#0a0a0a] dark:hover:shadow-[0_4px_0_#0a0a0a] dark:active:shadow-[0_1px_0_#0a0a0a]`;
+  const moreTriggerRef = useRef<HTMLButtonElement>(null);
+  const desktopMoreTriggerRef = useRef<HTMLButtonElement>(null);
   const [moreOpen, setMoreOpen] = useState(false);
   const [desktopMoreOpen, setDesktopMoreOpen] = useState(false);
   const [moreMenuHovered, setMoreMenuHovered] = useState(false);
+
+  const openCookieSettings = () => {
+    const trigger = desktopMoreOpen ? desktopMoreTriggerRef.current : moreTriggerRef.current;
+    setMoreOpen(false);
+    setDesktopMoreOpen(false);
+    // Let the menu close and restore trigger focus before opening the dialog.
+    requestAnimationFrame(() => {
+      trigger?.focus({ preventScroll: true });
+      window.dispatchEvent(new Event(OPEN_CONSENT));
+    });
+  };
 
   useEffect(() => {
     if (state.success && handledNewsletterState.current !== state) {
@@ -88,7 +101,6 @@ export function Footer() {
   
   return (
     <div className={`text-[#4d463b] leading-relaxed ${tMuted}`}>
-      <button type="button" onClick={() => window.dispatchEvent(new Event(OPEN_CONSENT))} className="block mx-auto px-4 py-3 underline text-sm">Cookie-Einstellungen</button>
       {/* Top */}
       <footer className={`bg-white border-t border-[#e8ddd0] py-12 md:py-14 px-5 relative overflow-hidden ${tBar} ${tLine}`}>
         <div className="relative container mx-auto max-w-7xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10">
@@ -174,7 +186,7 @@ export function Footer() {
             <nav aria-label="Rechtliche Informationen" className="hidden sm:flex flex-wrap justify-center gap-x-4 gap-y-2 sm:justify-end">
               <Popover open={desktopMoreOpen} onOpenChange={setDesktopMoreOpen}>
                 <PopoverTrigger asChild>
-                  <button type="button" className={moreButtonClass}>
+                  <button ref={desktopMoreTriggerRef} type="button" className={moreButtonClass}>
                     Mehr
                   </button>
                 </PopoverTrigger>
@@ -205,6 +217,13 @@ export function Footer() {
                   >
                     Cookie-Richtlinie
                   </Link>
+                  <button
+                    type="button"
+                    onClick={openCookieSettings}
+                    className={`block w-full px-3 py-1.5 text-left text-xs text-[#1d1a15] hover:underline transition-colors ${tInk}`}
+                  >
+                    Cookie-Einstellungen
+                  </button>
                   <Link
                     href="/transparenz"
                     className={`block px-3 py-1.5 text-left text-xs text-[#1d1a15] hover:underline transition-colors ${tInk}`}
@@ -243,6 +262,7 @@ export function Footer() {
                 type="button"
                 className={moreButtonClass}
                 aria-expanded={moreOpen}
+                ref={moreTriggerRef}
                 aria-controls="footer-more-menu"
                 onClick={() => setMoreOpen((open) => !open)}
               >
@@ -284,6 +304,13 @@ export function Footer() {
                     >
                       Cookie-Richtlinie
                     </Link>
+                    <button
+                      type="button"
+                      onClick={openCookieSettings}
+                      className={`block w-full px-3 py-1.5 text-left text-xs text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors ${tInk} ${tPanelHover} ${tAccentHover}`}
+                    >
+                      Cookie-Einstellungen
+                    </button>
                     <Link
                       href="/transparenz"
                       className={`block px-3 py-1.5 text-left text-xs text-[#1d1a15] hover:bg-[#f7f2e7] hover:text-[#9c2d22] transition-colors ${tInk} ${tPanelHover} ${tAccentHover}`}
