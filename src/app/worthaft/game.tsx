@@ -576,13 +576,22 @@ const WorthaftSettingsDrawer = ({
             <div className="flex justify-center gap-1.5">
               {['W', 'O', 'R', 'T', 'E'].map((letter, index) => {
                 const dimensions = getWorthaftTileDimensions(settings.tileWidth, settings.tileHeight);
-                return <span key={letter} className={cn('flex min-w-0 shrink items-center justify-center border-2 font-bold', getWorthaftStatusClass(['correct', 'present', 'absent'][index % 3], settings.palette))}
+                return <span key={letter} className={cn('flex min-w-0 shrink items-center justify-center border-2 text-3xl sm:text-4xl font-bold', getWorthaftStatusClass(['correct', 'present', 'absent'][index % 3], settings.palette))}
                   style={{ width: dimensions.width, aspectRatio: dimensions.width / dimensions.height, borderRadius: settings.tileRadius * 6 }}>{letter}</span>;
               })}
             </div>
             <div className="flex justify-center gap-1.5" aria-hidden="true">
-              {['A', 'B', 'C'].map((letter, index) => <span key={letter} className={cn('flex items-center justify-center font-bold', getWorthaftStatusClass(['correct', 'present', 'absent'][index], settings.palette))}
-                style={{ ...getWorthaftKeyDimensions(settings.keyWidth, settings.keyHeight), borderRadius: settings.keyRadius * 6, fontSize: 12 + settings.keySize * 2.5 }}>{letter}</span>)}
+              {['A', 'B', 'C'].map((letter, index) => {
+                const keyDimensions = getWorthaftKeyDimensions(settings.keyWidth, settings.keyHeight);
+                const defaultKeyWidth = getWorthaftKeyDimensions(2, settings.keyHeight).width;
+                const tileWidth = getWorthaftTileDimensions(settings.tileWidth, settings.tileHeight).width;
+                const boardWidth = 5 * tileWidth + 4 * 6;
+                const keyboardWidth = Math.max(boardWidth, Math.round(boardWidth * keyDimensions.width / defaultKeyWidth));
+                const slotWidth = (keyboardWidth - 9 * 4) / 10;
+                const keyWidthPx = Math.min(keyDimensions.width, Math.max(slotWidth, 18));
+                return <span key={letter} className={cn('flex items-center justify-center font-bold', getWorthaftStatusClass(['correct', 'present', 'absent'][index], settings.palette))}
+                  style={{ width: keyWidthPx, height: keyDimensions.height, borderRadius: settings.keyRadius * 6, fontSize: 12 + settings.keySize * 2.5 }}>{letter}</span>;
+              })}
             </div>
           </div>
           {([

@@ -142,3 +142,17 @@
 @media (prefers-reduced-motion: reduce) {
   .page *, .page *::before, .page *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
 }
+
+/* Dark Mode: gleiche Papier-Palette wie tokens.css (.dark .pr-home). */
+:global(.dark) .page {
+  --color-paper: oklch(21% 0.012 85);
+  --color-paper-deep: oklch(17% 0.012 85);
+  --color-ink: oklch(93% 0.01 85);
+  --color-muted: oklch(78% 0.014 78);
+  --color-rule: oklch(38% 0.02 80);
+  --color-rust: oklch(68% 0.12 40);
+}
+
+:global(.dark) .page :is(a, button, summary):focus-visible {
+  outline-color: oklch(72% 0.13 250);
+}

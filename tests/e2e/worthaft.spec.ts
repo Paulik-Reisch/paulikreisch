@@ -19,7 +19,7 @@ for (const width of [320, 375, 414, 768, 1440]) {
     });
     await page.addInitScript(() => {
       const now = new Date();
-      const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      const date = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
       localStorage.setItem('hallowelt_cookie_consent', JSON.stringify({ necessary: true, analytics: false, marketing: false }));
       localStorage.setItem('worthaft-daily-game', JSON.stringify({ date, status: 'won', guesses: [{ guess: 'bruch', statuses: Array(5).fill('correct') }], letterStatuses: {}, rowTimes: [1000] }));
     });
@@ -48,7 +48,7 @@ test('feedback can also be skipped after selecting a negative vote without submi
   await page.route(/identitytoolkit|firestore.googleapis.com|securetoken/, route => route.abort());
   await page.addInitScript(() => {
     const now = new Date();
-    const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const date = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
     localStorage.setItem('hallowelt_cookie_consent', JSON.stringify({ necessary: true, analytics: false, marketing: false }));
     localStorage.setItem('worthaft-daily-game', JSON.stringify({ date, status: 'lost', guesses: [{ guess: 'bruch', statuses: Array(5).fill('absent') }], letterStatuses: {}, rowTimes: [1000] }));
   });
@@ -67,7 +67,7 @@ test('positive Worthaft feedback attempts a Firestore write before marking the v
   page.on('request', request => { if (request.url().includes('firestore.googleapis.com')) firestoreRequests += 1; });
   await page.addInitScript(() => {
     const now = new Date();
-    const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const date = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
     localStorage.setItem('hallowelt_cookie_consent', JSON.stringify({ necessary: true, analytics: false, marketing: false }));
     localStorage.setItem('worthaft-daily-game', JSON.stringify({ date, status: 'won', guesses: [{ guess: 'bruch', statuses: Array(5).fill('correct') }], letterStatuses: {}, rowTimes: [1000] }));
   });
@@ -77,7 +77,7 @@ test('positive Worthaft feedback attempts a Firestore write before marking the v
   await expect.poll(() => firestoreRequests).toBeGreaterThan(0);
   expect(await page.evaluate(() => {
     const now = new Date();
-    const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const date = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
     return localStorage.getItem(`worthaft-feedback-${date}`);
   })).toBeNull();
 });
@@ -88,7 +88,7 @@ test('negative Worthaft feedback attempts a Firestore write', async ({ page }) =
   page.on('request', request => { if (request.url().includes('firestore.googleapis.com')) firestoreRequests += 1; });
   await page.addInitScript(() => {
     const now = new Date();
-    const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const date = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
     localStorage.setItem('hallowelt_cookie_consent', JSON.stringify({ necessary: true, analytics: false, marketing: false }));
     localStorage.setItem('worthaft-daily-game', JSON.stringify({ date, status: 'won', guesses: [{ guess: 'bruch', statuses: Array(5).fill('correct') }], letterStatuses: {}, rowTimes: [1000] }));
   });
@@ -126,7 +126,7 @@ test('word explanation offers retry after a failed request and returns focus on 
   });
   await page.addInitScript(() => {
     const now = new Date();
-    const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const date = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
     localStorage.setItem('hallowelt_cookie_consent', JSON.stringify({ necessary: true, analytics: false, marketing: false }));
     localStorage.setItem(`worthaft-feedback-${date}`, 'true');
     localStorage.setItem('worthaft-daily-game', JSON.stringify({ date, status: 'won', guesses: [{ guess: 'birne', statuses: Array(5).fill('correct') }], letterStatuses: {}, rowTimes: [1000] }));
