@@ -342,6 +342,7 @@
   position: relative;
   padding-left: 1.8rem;
   color: var(--color-ink);
+  font-family: var(--font-copy), Georgia, serif;
   line-height: 1.55;
 }
 
@@ -372,7 +373,6 @@
   border-radius: 12px;
   background: transparent;
   font-size: .85rem;
-  overflow-wrap: anywhere;
 }
 
 .shop-page-main .spec-label {
@@ -382,11 +382,14 @@
   font-size: .65rem;
   letter-spacing: .08em;
   text-transform: uppercase;
+  hyphens: auto;
+  overflow-wrap: normal;
 }
 
 .shop-page-main .spec-value {
   color: var(--color-ink);
   font-weight: 600;
+  overflow-wrap: anywhere;
 }
 
 .shop-page-main .rating-stars {
