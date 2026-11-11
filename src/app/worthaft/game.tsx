@@ -1619,4 +1619,4 @@ Jetzt spielen:`;
             )}
         </div>
     );
-                    }
+}
