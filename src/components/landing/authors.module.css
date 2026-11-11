@@ -199,3 +199,32 @@
 .editorialContent {
   display: contents;
 }
+
+/* Dark Mode: gleiche Papier-Palette wie tokens.css (.dark .pr-home). */
+:global(.dark) .editorial {
+  background: oklch(21% 0.012 85);
+  color: oklch(93% 0.01 85);
+}
+
+:global(.dark) .editorialEyebrow,
+:global(.dark) .editorialClaim,
+:global(.dark) .editorialLink:hover {
+  color: oklch(68% 0.12 40);
+}
+
+:global(.dark) .editorialIntro,
+:global(.dark) .editorialBio {
+  color: oklch(78% 0.014 78);
+}
+
+:global(.dark) .editorialCard {
+  border-top-color: oklch(38% 0.02 80);
+}
+
+:global(.dark) .editorialPortrait {
+  background: oklch(17% 0.012 85);
+}
+
+:global(.dark) .editorial :is(a, button):focus-visible {
+  outline-color: oklch(72% 0.13 250);
+}
