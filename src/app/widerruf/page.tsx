@@ -1,9 +1,12 @@
+import type { Metadata } from 'next';
 import { LegalPage } from "@/components/landing/legal-page";
+import { pageMetadata } from '@/lib/page-metadata';
 
-export const metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Widerrufsbelehrung",
   description: "Informationen zum Widerrufsrecht beim Erwerb unserer Bücher über Drittanbieter.",
-};
+  path: '/widerruf',
+});
 
 export default function WiderrufPage() {
   return (
