@@ -71,8 +71,11 @@
 .faq { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 64px; border-top: 1px solid var(--color-rule); }
 .faq details { border-bottom: 1px solid var(--color-rule); padding-block: 24px; }
 .faq details:first-child { padding-top: 0; }
-.faq summary { cursor: pointer; font-family: var(--font-copy); font-size: 22px; line-height: 1.4; padding-right: 12px; }
-.faq details p { font-family: var(--font-copy); color: var(--color-muted); font-size: 18px; line-height: 1.7; margin: 16px 0 0 20px; }
+.faq summary { cursor: pointer; font-family: var(--font-copy); font-size: 22px; line-height: 1.4; padding-right: 12px; list-style: none; padding-left: 28px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::before { content: '\25B8'; display: inline-block; width: 28px; margin-left: -28px; }
+.faq details[open] summary::before { content: '\25BE'; }
+.faq details p { font-family: var(--font-copy); color: var(--color-muted); font-size: 18px; line-height: 1.7; margin: 16px 0 0 28px; }
 @media (min-width: 960px) { .bookCopy { position: sticky; top: 110px; } }
 @media (max-width: 959px) { .hero { min-height: 520px; } .heroCopy { width: 62%; } .hero h1 { font-size: clamp(3rem, 7vw, 5rem); } .book, .stories { gap: 32px; } .previewGrid { grid-template-columns: minmax(0, 1fr); } .previewImage { min-height: 0; } .people { gap: 20px; } .gameGrid, .faq { gap: 36px; } }
 @media (max-width: 639px) {
