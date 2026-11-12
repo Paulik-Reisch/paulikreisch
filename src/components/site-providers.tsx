@@ -1,6 +1,7 @@
 'use client';
 
 import { Suspense, type ReactNode } from 'react';
+import { isPrivilegedPath } from '@/lib/admin-host-policy';
 import { usePathname } from 'next/navigation';
 import { ThemeProvider } from '@/components/theme-provider';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
@@ -11,6 +12,7 @@ import { Toaster } from '@/components/ui/toaster';
 /** Cookie-only games run without authentication, tracking and cookie banner, but follow the site theme. */
 export function SiteProviders({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const administration = isPrivilegedPath(pathname);
   const cookieOnlyGame = ['/game-labs/bits', '/game-labs/wikiland'].some(path => pathname === path || pathname.startsWith(`${path}/`));
   if (cookieOnlyGame) {
     return <ThemeProvider attribute="class" defaultTheme="light">{children}</ThemeProvider>;
@@ -20,8 +22,10 @@ export function SiteProviders({ children }: { children: ReactNode }) {
       <FirebaseClientProvider>
         {children}
         <Toaster />
-        <CookieBanner />
-        <Suspense><GlobalTracker /></Suspense>
+        {!administration && <>
+          <CookieBanner />
+          <Suspense><GlobalTracker /></Suspense>
+        </>}
       </FirebaseClientProvider>
     </ThemeProvider>
   );

@@ -1,6 +1,10 @@
 import 'server-only';
-import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
-import { cookies } from 'next/headers';
+import type { JWTPayload } from 'jose';
+import { encodeAdminSession, decodeAdminSession } from './admin-session-token';
+import { cookies, headers } from 'next/headers';
+import { ADMIN_HOST, isLocalHost, requestHost } from './admin-host-policy';
+
+export const ADMIN_SESSION_COOKIE = process.env.NODE_ENV === 'production' ? '__Host-admin-session' : 'admin-session';
 
 function sessionKey() {
   const secret = process.env.SESSION_SECRET;
@@ -11,19 +15,17 @@ function sessionKey() {
 }
 
 export async function encrypt(payload: JWTPayload) {
-  return new SignJWT(payload).setProtectedHeader({ alg: 'HS256' })
-    .setIssuedAt().setExpirationTime('24h').sign(sessionKey());
+  return encodeAdminSession(payload, sessionKey());
 }
 
 export async function decrypt(input: string): Promise<JWTPayload | null> {
-  try {
-    const { payload } = await jwtVerify(input, sessionKey(), { algorithms: ['HS256'] });
-    return payload;
-  } catch { return null; }
+  return decodeAdminSession(input, sessionKey());
 }
 
 export async function getSession() {
-  const sessionCookie = (await cookies()).get('session');
+  const host = requestHost(await headers());
+  if (host !== ADMIN_HOST && !(process.env.NODE_ENV !== 'production' && isLocalHost(host))) return null;
+  const sessionCookie = (await cookies()).get(ADMIN_SESSION_COOKIE);
   if (!sessionCookie?.value) return null;
   const payload = await decrypt(sessionCookie.value);
   if (!payload || typeof payload.expires !== 'string' || !payload.user || typeof payload.user !== 'object') return null;
