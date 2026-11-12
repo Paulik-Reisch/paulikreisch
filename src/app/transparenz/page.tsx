@@ -1,9 +1,12 @@
+import type { Metadata } from 'next';
 import { LegalPage } from "@/components/landing/legal-page";
+import { pageMetadata } from '@/lib/page-metadata';
 
-export const metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Transparenzhinweise",
   description: "Kennzeichnung KI-generierter Inhalte gemäß Art. 50 EU AI Act.",
-};
+  path: '/transparenz',
+});
 
 export default function TransparenzPage() {
   return (
