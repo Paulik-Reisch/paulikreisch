@@ -230,7 +230,7 @@ test('mobile navigation opens and closes with Escape', async ({ page }) => {
   await expect(page.getByRole('dialog', { name: 'Navigation' })).toBeHidden();
 });
 
-test('mobile navigation keeps the same three actions and order as desktop', async ({ page }) => {
+test('mobile navigation keeps the same three actions as desktop, ordered Buch kaufen, Worthaft, Schreibstube', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('/');
   await expect(page.locator('header nav a').nth(0)).toHaveAttribute('href', '/worthaft');
@@ -242,10 +242,10 @@ test('mobile navigation keeps the same three actions and order as desktop', asyn
   const mobileDialog = page.getByRole('dialog', { name: 'Navigation' });
   const mobileNav = mobileDialog.getByRole('navigation', { name: 'Hauptnavigation' }).locator('a');
   await expect(mobileNav).toHaveCount(3);
-  await expect(mobileNav.nth(0)).toHaveAttribute('href', '/worthaft');
-  await expect(mobileNav.nth(1)).toHaveAttribute('href', '/shop');
+  await expect(mobileNav.nth(0)).toHaveAttribute('href', '/shop');
+  await expect(mobileNav.nth(1)).toHaveAttribute('href', '/worthaft');
   await expect(mobileNav.nth(2)).toHaveAttribute('href', '/gpt');
-  await expect(mobileNav.nth(0).locator('.worthaft-icon-shimmer')).toBeVisible();
+  await expect(mobileNav.nth(1).locator('.worthaft-icon-shimmer')).toBeVisible();
   await expect(mobileDialog).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
   const actionWidths = await mobileNav.evaluateAll((links) => links.map((link) => link.getBoundingClientRect().width));
   expect(new Set(actionWidths).size).toBe(1);
