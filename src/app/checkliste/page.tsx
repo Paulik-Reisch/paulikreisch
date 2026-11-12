@@ -1,6 +1,8 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Check, Download, BookOpen, Shield, ArrowRight, Sparkles } from 'lucide-react';
+import { pageMetadata } from '@/lib/page-metadata';
 
 const items = [
   { title: 'Morgens um 7:45 Anwesenheitspflicht', desc: 'Der Wecker klingelt, Du bist schon im Minus. Wer zu spät kommt, schreibt Entschuldigungen wie Liebesbriefe.' },
@@ -15,10 +17,11 @@ const items = [
   { title: 'Du zählst die Tage', desc: 'Ferien als Lichtblick, nicht als Pause. Wenn Du nur auf den Gong wartest…' },
 ];
 
-export const metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Checkliste: 10 Anzeichen Lernvollzugsanstalt',
   description: 'Der humorvolle Selbsttest: Erkenne, ob Deine Schule eine Lernvollzugsanstalt ist. Gratis-PDF + Bonus-Kapitel aus Hallo Welt.',
-};
+  path: '/checkliste',
+});
 
 export default function ChecklistePage() {
   return (
