@@ -353,20 +353,6 @@ export async function getLogs(): Promise<Log[]> {
     });
 }
 
-// --- ADMIN ---
-export async function getAdminCredentials(): Promise<Record<string, string> | null> {
-    const docRef = doc(db, 'settings', 'admin');
-    const docSnap = await getDocMetered("getAdminCredentials", docRef);
-
-    if (docSnap.exists()) {
-        return docSnap.data() as Record<string, string>;
-    } else {
-        console.warn("Admin credentials document not found in 'settings' collection.");
-        return null;
-    }
-}
-
-
 export async function getOrders(): Promise<Order[]> {
     const ordersCol = collection(db, 'orders');
     const q = query(ordersCol, orderBy("timestamp", "desc"));

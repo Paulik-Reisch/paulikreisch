@@ -1,8 +1,9 @@
-
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { app } from "@/app/firebase";
 import { loginAction } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,6 +33,7 @@ function SubmitButton() {
 export function LoginForm() {
   const [state, formAction] = useActionState(loginAction, initialState);
   const { toast } = useToast();
+  const [clientError, setClientError] = useState<string | null>(null);
 
   useEffect(() => {
     if (state.error) {
@@ -43,26 +45,48 @@ export function LoginForm() {
     }
   }, [state, toast]);
 
+  // Meldet zuerst per Firebase Auth an und reicht dann das ID-Token an die
+  // Server Action weiter, die es verifiziert und die Session setzt.
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setClientError(null);
+
+    const data = new FormData(event.currentTarget);
+    const email = String(data.get("email") ?? "");
+    const password = String(data.get("password") ?? "");
+
+    try {
+      const credential = await signInWithEmailAndPassword(getAuth(app), email, password);
+      const idToken = await credential.user.getIdToken();
+      const tokenData = new FormData();
+      tokenData.set("idToken", idToken);
+      formAction(tokenData);
+    } catch {
+      setClientError("Falsche E-Mail-Adresse oder falsches Passwort.");
+    }
+  }
+
+  const error = clientError ?? state.error;
 
   return (
-    <form action={formAction} className="w-full max-w-sm space-y-8">
+    <form action={formAction} onSubmit={handleSubmit} className="w-full max-w-sm space-y-8">
         <div className="relative group">
             <Input 
-              id="username" 
-              name="username" 
-              type="text" 
+              id="email" 
+              name="email" 
+              type="email" 
               required 
               autoComplete="username" 
               className="peer rounded-sm bg-gray-100 h-12 pt-4"
               placeholder=" "
             />
             <Label 
-                htmlFor="username" 
+                htmlFor="email" 
                 className="absolute left-3 top-3.5 text-gray-500 transition-all duration-300 transform 
                            peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base 
                            peer-focus:top-1.5 peer-focus:text-xs peer-focus:text-gray-600
                            peer-[:not(:placeholder-shown)]:top-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-600">
-                Benutzername
+                E-Mail
             </Label>
         </div>
         <div className="relative group">
@@ -85,10 +109,10 @@ export function LoginForm() {
             </Label>
         </div>
         
-        {state.error && (
+        {error && (
             <Alert variant="destructive" className="mt-4 rounded-sm">
                 <AlertTitle>Fehler</AlertTitle>
-                <AlertDescription>{state.error}</AlertDescription>
+                <AlertDescription>{error}</AlertDescription>
             </Alert>
         )}
         <div className="flex justify-center pt-4">

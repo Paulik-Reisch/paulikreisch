@@ -73,7 +73,7 @@ export async function subscribeToNewsletterAction(
     }
     // also queue future mails as Firestore docs for cron/manual send
     try {
-      const { addDocument } = await import("@/lib/firestore");
+      const { addDocument } = await import("@/lib/admin-writes");
       const now = Date.now();
       const schedule = [
         { day: "day1", delayMs: 1 * 24 * 60 * 60 * 1000 },

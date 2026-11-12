@@ -5,7 +5,7 @@ import {
   addAuthor,
   updateAuthor,
   deleteAuthor,
-} from "@/lib/firestore";
+} from "@/lib/admin-writes";
 import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/session";
 

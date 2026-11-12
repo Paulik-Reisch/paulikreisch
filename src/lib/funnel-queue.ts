@@ -1,6 +1,6 @@
 import { funnelEmails, type FunnelDay } from '@/lib/funnel-emails';
 import { sendTransactionalEmail } from '@/lib/resend';
-import { getCollectionData, updateDocument } from '@/lib/firestore';
+import { getCollectionData, updateDocument } from '@/lib/admin-writes';
 
 export async function processFunnelQueue(limit = 20) {
   const queue = await getCollectionData('funnel_queue');

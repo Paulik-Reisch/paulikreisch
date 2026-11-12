@@ -2,7 +2,7 @@
 "use server";
 
 import { z } from "zod";
-import { updateSeoMetadata } from "@/lib/firestore";
+import { updateSeoMetadata } from "@/lib/admin-writes";
 import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/session";
 

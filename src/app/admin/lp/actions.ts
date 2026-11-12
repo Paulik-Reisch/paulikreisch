@@ -6,7 +6,7 @@ import {
   addLandingPage,
   updateLandingPage,
   deleteLandingPage,
-} from "@/lib/firestore";
+} from "@/lib/admin-writes";
 import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/session";
 

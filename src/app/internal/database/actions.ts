@@ -9,7 +9,7 @@ import {
     updateDocument,
     addDocument,
     deleteDocument,
-} from "@/lib/firestore";
+} from "@/lib/admin-writes";
 
 export type ActionResponse = {
     success: boolean;
