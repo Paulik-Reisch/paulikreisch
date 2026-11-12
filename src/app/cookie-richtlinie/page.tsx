@@ -1,10 +1,13 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { LegalPage } from "@/components/landing/legal-page";
+import { pageMetadata } from '@/lib/page-metadata';
 
-export const metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Cookie-Richtlinie",
   description: "Übersicht über eingesetzte Cookies und Consent-Verwaltung bei Paulik & Reisch.",
-};
+  path: '/cookie-richtlinie',
+});
 
 export default function CookieRichtliniePage() {
   return (
