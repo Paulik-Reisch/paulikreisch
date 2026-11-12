@@ -1,4 +1,5 @@
 'use client';
+import { isIsolatedManagementHost } from '@/lib/management-hosts';
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { logEventAction } from '@/app/actions';
@@ -15,7 +16,7 @@ export function GlobalTracker() {
     return () => { window.removeEventListener(CONSENT_CHANGED, changed); window.removeEventListener('storage', changed); };
   }, []);
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_LOCAL_PREVIEW === 'true') return;
+    if (process.env.NEXT_PUBLIC_LOCAL_PREVIEW === 'true' || isIsolatedManagementHost(window.location.hostname)) return;
     const id = getBrowserAnalyticsId();
     if (!id) { lastTracked.current = null; return; }
     const url = pathname; // Never include email, tokens or other query-string contents.
