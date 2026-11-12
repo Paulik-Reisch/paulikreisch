@@ -1,4 +1,8 @@
 import 'server-only';
+import {createHash} from 'node:crypto';
+import {getAdminDb} from './firebase-admin';
+import {createPersistentDailyResolver,preserveDailyAnswer,persistentDailyEnabled} from './worthaft-persistent-daily';
+import {persistentDailyWordStore} from './worthaft-persistent-daily-store';
 
 import { unstable_cache } from 'next/cache';
 import { firebaseConfig } from '@/firebase/config';
@@ -67,7 +71,16 @@ const getCachedWordLists = unstable_cache(
 // Today's word stays fixed in this process even if the lists are refreshed during the day.
 const pinDailyWord = createDailyWordPin();
 
+let persistentResolver:ReturnType<typeof createPersistentDailyResolver>|undefined;
 export async function getWorthaftDailyData(date: string): Promise<WorthaftDailyData> {
+  if(persistentDailyEnabled()){
+    // Never silently select a different bundled answer while durable state is required.
+    const lists=await getCachedWordLists();
+    persistentResolver??=createPersistentDailyResolver(persistentDailyWordStore(getAdminDb()));
+    const sourceRevision=createHash('sha256').update(JSON.stringify(lists.words)).digest('hex');
+    const word=await persistentResolver(date,lists.words,sourceRevision);
+    return {...preserveDailyAnswer(lists,word),usedBundledFallback:false};
+  }
   try {
     return buildWorthaftDailyData(await getCachedWordLists(), date, false, pinDailyWord);
   } catch (error) {
