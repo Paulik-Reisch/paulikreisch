@@ -77,3 +77,8 @@ test('internal action accepts only exact admin Origin', () => {
 test('internal-like public path remains public', () => {
   assert.equal(middleware(request('/internal-help', 'paulikreisch.de')).headers.get('location'), null);
 });
+
+// Firebase Auth uses an HTTP-referrer-restricted public browser key.
+test('admin pages preserve origin-only referrers for cross-origin Firebase Auth', () => {
+  assert.equal(middleware(request('/login')).headers.get('referrer-policy'), 'strict-origin-when-cross-origin');
+});
