@@ -6,12 +6,13 @@ import { Footer } from '@/components/landing/footer';
 import '../../../tokens.css';
 import { ExcerptSlideshow } from './excerpt-slideshow';
 import styles from './leseprobe.module.css';
+import { pageMetadata } from '@/lib/page-metadata';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Leseprobe „Hallo Welt“ — Ausgewählte Seiten',
   description: 'Blättere durch ausgewählte Seiten aus „Hallo Welt“ und wirf einen ersten Blick ins Buch.',
-  alternates: { canonical: 'https://paulikreisch.de/leseprobe' },
-};
+  path: '/leseprobe',
+});
 
 const slides = [
   { src: '/leseprobe/seite-58.png', type: 'pdf' as const, alt: 'Seite 58 aus Hallo Welt, hochwertig aus dem PDF gerendert' },

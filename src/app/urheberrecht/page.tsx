@@ -1,9 +1,12 @@
+import type { Metadata } from 'next';
 import { LegalPage } from "@/components/landing/legal-page";
+import { pageMetadata } from '@/lib/page-metadata';
 
-export const metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Urheberrecht",
   description: "Urheberrechtliche Hinweise zu sämtlichen Inhalten von Paulik & Reisch.",
-};
+  path: '/urheberrecht',
+});
 
 export default function UrheberrechtPage() {
   return (

@@ -1,9 +1,12 @@
+import type { Metadata } from 'next';
 import { LegalPage } from "@/components/landing/legal-page";
+import { pageMetadata } from '@/lib/page-metadata';
 
-export const metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Impressum",
   description: "Anbieterkennzeichnung von Paulik & Reisch gemäß §§ 5, 6 DDG.",
-};
+  path: '/impressum',
+});
 
 export default function ImpressumPage() {
   return (

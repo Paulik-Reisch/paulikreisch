@@ -1,10 +1,13 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { LegalPage } from "@/components/landing/legal-page";
+import { pageMetadata } from '@/lib/page-metadata';
 
-export const metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Datenschutz",
   description: "Datenschutzerklärung von Paulik & Reisch nach DSGVO, BDSG und TDDDG.",
-};
+  path: '/datenschutz',
+});
 
 export default function DatenschutzPage() {
   return (
