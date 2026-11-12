@@ -8,14 +8,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
 import { Button } from "@/components/ui/button";
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/page-metadata';
 
-export const metadata: Metadata = {
-  title: "Unsere Autoren | Paulik & Reisch",
-  description: "Lernen Sie die kreativen Köpfe hinter den satirischen Artikeln und Büchern von Paulik & Reisch kennen.",
-  alternates: {
-      canonical: '/autoren',
-  },
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Unsere Autoren",
+  description: "Lerne die kreativen Köpfe hinter den satirischen Artikeln und Büchern von Paulik & Reisch kennen.",
+  path: '/autoren',
+});
 
 function AuthorCard({ author }: { author: Author }) {
   return (

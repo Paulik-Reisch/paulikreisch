@@ -1,9 +1,12 @@
+import type { Metadata } from 'next';
 import { LegalPage } from "@/components/landing/legal-page";
+import { pageMetadata } from '@/lib/page-metadata';
 
-export const metadata = {
-  title: "Transparenzhinweise – Paulik & Reisch",
+export const metadata: Metadata = pageMetadata({
+  title: "Transparenzhinweise",
   description: "Kennzeichnung KI-generierter Inhalte gemäß Art. 50 EU AI Act.",
-};
+  path: '/transparenz',
+});
 
 export default function TransparenzPage() {
   return (
@@ -15,7 +18,7 @@ export default function TransparenzPage() {
             <h2>1. Geltungsbereich und Rechtsnatur</h2>
             <p>
               Die nachfolgenden Hinweise erfolgen im Bewusstsein der Transparenzpflichten gemäß Art. 50 der
-              Verordnung (EU) 2024/1689 („KI-Verordnung") sowie des hierzu ergangenen Verhaltenskodex zur
+              Verordnung (EU) 2024/1689 („KI-Verordnung“) sowie des hierzu ergangenen Verhaltenskodex zur
               Kennzeichnung KI-generierter Inhalte. Sie dienen dem Zweck, natürlichen Personen die Einordnung
               und Herkunft der auf diesem Angebot bereitgestellten Inhalte zu ermöglichen.
             </p>
@@ -54,7 +57,7 @@ export default function TransparenzPage() {
 
             <h2>6. Weitere Hinweise</h2>
             <p>
-              Die satirische &quot;Hallo Welt&quot;-Bücherserie ist eine Idee und Kreation von Philipp Paulik
+              Die satirische &bdquo;Hallo Welt&ldquo;-Bücherserie ist eine Idee und Kreation von Philipp Paulik
               (Autor), Maximilian Reisch (Autor), Luin Schiffbauer (Illustrator) und weiteren Mitwirkenden.
               Veröffentlicht und produziert durch Kindle Direct Publishing (KDP) der Amazon Distribution GmbH,
               Leipzig sowie ggf. weiteren Verlags- und Produktionspartnern.

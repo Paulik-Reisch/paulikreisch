@@ -1,14 +1,17 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { LegalPage } from "@/components/landing/legal-page";
+import { pageMetadata } from '@/lib/page-metadata';
 
-export const metadata = {
-  title: "Datenschutz – Paulik & Reisch",
+export const metadata: Metadata = pageMetadata({
+  title: "Datenschutz",
   description: "Datenschutzerklärung von Paulik & Reisch nach DSGVO, BDSG und TDDDG.",
-};
+  path: '/datenschutz',
+});
 
 export default function DatenschutzPage() {
   return (
-    <LegalPage title="Datenschutzerklärung" description="Wie wir personenbezogene Daten verarbeiten und Ihre Privatsphäre schützen.">
+    <LegalPage title={"Datenschutz\u00ADerklärung"} description="Wie wir personenbezogene Daten verarbeiten und Deine Privatsphäre schützen.">
             <p className="text-sm text-muted-foreground">Stand: {new Date().toLocaleDateString("de-DE", { year: "numeric", month: "long", day: "numeric" })}</p>
 
             <h2>1. Verantwortlicher</h2>
@@ -18,13 +21,13 @@ export default function DatenschutzPage() {
               Mozartstraße 1<br />
               53819 Neunkirchen-Seelscheid<br />
               E-Mail: philipp.l.paulik@gmail.com<br />
-              Bei Fragen zum Datenschutz erreichen Sie uns unter der genannten E-Mail-Adresse.
+              Bei Fragen zum Datenschutz erreichst Du uns unter der genannten E-Mail-Adresse.
             </p>
 
             <h2>2. Erhebung und Verarbeitung personenbezogener Daten</h2>
             <h3>2.1 Server-Logfiles</h3>
             <p>
-              Beim Aufruf unserer Seiten erheben wir automatisch Informationen, die Ihr Browser übermittelt
+              Beim Aufruf unserer Seiten erheben wir automatisch Informationen, die Dein Browser übermittelt
               (IP-Adresse, Datum und Uhrzeit, abgerufene Seite, Referrer-URL, Browsertyp). Die Verarbeitung
               erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einem
               störungsfreien Betrieb). Eine Zusammenführung mit anderen Datenquellen findet nicht statt.
@@ -32,35 +35,42 @@ export default function DatenschutzPage() {
 
             <h3>2.2 Newsletter</h3>
             <p>
-              Wenn Sie unseren Newsletter abonnieren, verarbeiten wir Ihre E-Mail-Adresse sowie die freiwillig
-              angegebenen Daten auf Grundlage Ihrer Einwilligung gemäß Art. 6 Abs. 1 lit. a DSGVO. Eine
-              Übertragung an Dritte erfolgt nicht. Sie können den Newsletter jederzeit über den Abmeldelink
+              Wenn Du unseren Newsletter abonnierst, verarbeiten wir Deine E-Mail-Adresse sowie die freiwillig
+              angegebenen Daten auf Grundlage Deiner Einwilligung gemäß Art. 6 Abs. 1 lit. a DSGVO. Eine
+              Übertragung an Dritte erfolgt nicht. Du kannst den Newsletter jederzeit über den Abmeldelink
               in jeder E-Mail widerrufen.
             </p>
 
             <h3>2.3 Firebase / Firestore</h3>
             <p>
-              Für Reichweitenmessung und zur Speicherung von Spieldständen (Worthaft) setzen wir Dienste der
-              Google Ireland Limited („Firebase", „Firestore") ein. Soweit hierbei personenbezogene Daten
-              verarbeitet werden, beruht dies auf Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an
-              Produktverbesserung) oder Ihrer Einwilligung. Einzelheiten entnehmen Sie der
-              Datenschutzerklärung von Google.
+              Wir verwenden unsere bestehende Firebase-/Firestore-Datenbank für freiwillig übermittelte
+              Worthaft-Rückmeldungen und Wortvorschläge. Worthaft-Spielstände liegen dagegen lokal in Deinem
+              Browser. Für die Reichweitenmessung speichern wir nur nach Deiner Zustimmung eine zufällige,
+              pseudonyme Browser-ID für höchstens 90 Tage lokal. Mit Nutzungsereignissen übermitteln wir
+              diese Kennung, aufgerufene Seiten, Zeitpunkt sowie Browser-, Sprach- und Bildschirmangaben
+              an unsere Firebase-/Firestore-Datenbank. Es wird dafür kein Anmeldekonto erstellt und
+              die Analytics-ID wird nicht mit einer Firebase-Anmelde-UID verknüpft.
+              Rechtsgrundlagen für diese Analytics-Speicherung und Verarbeitung sind Deine Einwilligung
+              nach § 25 Abs. 1 TDDDG und Art. 6 Abs. 1 lit. a DSGVO. Du kannst sie jederzeit über
+              „Cookie-Einstellungen“ widerrufen. Dabei wird die lokale ID entfernt und die weitere Erfassung
+              beendet. Bereits übermittelte Ereignisse werden nicht allein durch das Entfernen der lokalen
+              ID gelöscht. Einzelheiten zur lokalen Speicherung stehen in der Cookie-Richtlinie.
             </p>
 
             <h3>2.4 Lokale Speicherung (Worthaft)</h3>
             <p>
-              Ihre Worthaft-Spielstände werden ausschließlich lokal im Browser (localStorage) gespeichert.
+              Deine Worthaft-Spielstände werden ausschließlich lokal im Browser (localStorage) gespeichert.
               Eine serverseitige Auswertung dieser Daten findet nicht statt.
             </p>
 
             <h3>2.5 Experimentelle Schreibstube (/gpt)</h3>
             <p>
-              Wenn Sie die experimentelle Schreibstube nutzen, werden die von Ihnen eingegebenen Nachrichten
+              Wenn Du die experimentelle Schreibstube nutzt, werden die von Dir eingegebenen Nachrichten
               und für den Gesprächszusammenhang erforderliche vorherige Nachrichten an unseren Server und von
               dort an OpenRouter übermittelt, damit eine Antwort erstellt werden kann. Über den für Worthaft
               eingerichteten OpenRouter-Zugang wird ein bei OpenRouter verfügbares Sprachmodell angefragt.
-              Bitte geben Sie keine besonderen Kategorien personenbezogener Daten, Geheimnisse oder andere
-              vertrauliche Inhalte ein. Die Verarbeitung erfolgt zur Bereitstellung der von Ihnen angeforderten
+              Bitte gib keine besonderen Kategorien personenbezogener Daten, Geheimnisse oder andere
+              vertrauliche Inhalte ein. Die Verarbeitung erfolgt zur Bereitstellung der von Dir angeforderten
               Funktion auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO, soweit die Anfrage hierauf gerichtet ist,
               andernfalls auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einem
               freiwillig genutzten experimentellen Schreibangebot). Einzelheiten zu Verarbeitung und
@@ -68,25 +78,25 @@ export default function DatenschutzPage() {
               Datenschutzinformationen und Nutzungsbedingungen von OpenRouter und dem verwendeten Anbieter.
             </p>
             <p>
-              Der Chatverlauf wird nur lokal in Ihrem Browser gespeichert, nicht in einem Nutzerkonto oder
-              einer Datenbank. Sie können einzelne Chats in der Seitenleiste löschen oder den Verlauf über
-              die Website-Daten Ihres Browsers entfernen. Ihre Eingaben und KI-Antworten werden nicht in
+              Der Chatverlauf wird nur lokal in Deinem Browser gespeichert, nicht in einem Nutzerkonto oder
+              einer Datenbank. Du kannst einzelne Chats in der Seitenleiste löschen oder den Verlauf über
+              die Website-Daten Deines Browsers entfernen. Deine Eingaben und KI-Antworten werden nicht in
               unserer Firestore-Datenbank gespeichert.
             </p>
 
             <h2>3. Cookies und Einwilligung</h2>
             <p>
-              Wir setzen Cookies und vergleichbare Technologien nur nach Ihrer Einwilligung ein
+              Wir setzen Cookies und vergleichbare Technologien nur nach Deiner Einwilligung ein
               (Art. 6 Abs. 1 lit. a DSGVO i. V. m. § 25 TDDDG). Notwendige Cookies, die für den Betrieb der
-              Seite erforderlich sind, werden ohne Einwilligung gesetzt. Ihre Auswahl können Sie jederzeit über
-              den Consent-Dialog anpassen. Details entnehmen Sie der <Link href="/cookie-richtlinie">Cookie-Richtlinie</Link>.
+              Seite erforderlich sind, werden ohne Einwilligung gesetzt. Deine Auswahl kannst Du jederzeit über
+              den Consent-Dialog anpassen. Details entnimmst Du der <Link href="/cookie-richtlinie">Cookie-Richtlinie</Link>.
             </p>
 
             <h2>4. Betroffenenrechte</h2>
             <p>
-              Sie haben das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16 DSGVO), Löschung
+              Du hast das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16 DSGVO), Löschung
               (Art. 17 DSGVO), Einschränkung der Verarbeitung (Art. 18 DSGVO), Datenübertragbarkeit
-              (Art. 20 DSGVO) sowie Widerspruch gegen die Verarbeitung (Art. 21 DSGVO). Zudem steht Ihnen ein
+              (Art. 20 DSGVO) sowie Widerspruch gegen die Verarbeitung (Art. 21 DSGVO). Zudem steht Dir ein
               Beschwerderecht bei einer Aufsichtsbehörde (Art. 77 DSGVO) zu.
             </p>
 

@@ -7,9 +7,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { initializeFirebase } from '@/firebase';
+import { ensureWorthaftAuth } from '@/firebase/on-demand-auth';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { ThumbsUp, ThumbsDown, Check, MessageSquare, ShieldCheck } from 'lucide-react';
 import { getWorthaftVoteDescription, type WorthaftVote } from '@/lib/worthaft-feedback';
+import { getWorthaftDateString } from '@/lib/worthaft-daily-word';
 
 type Vote = WorthaftVote | null;
 type Step = 'ask' | 'details' | 'thanks';
@@ -27,11 +29,10 @@ const REASONS = [
 ];
 
 function getTodayString() {
-  const today = new Date();
-  const y = today.getFullYear();
-  const m = (today.getMonth() + 1).toString().padStart(2, '0');
-  const d = today.getDate().toString().padStart(2, '0');
-  return `${y}-${m}-${d}`;
+  // The game day rolls over at midnight Europe/Berlin (see worthaft-daily-word),
+  // so the feedback decision must be keyed by the same date. Using the device
+  // timezone here split the keys for users outside Europe/Berlin.
+  return getWorthaftDateString();
 }
 
 export default function FeedbackDrawer({
@@ -82,7 +83,19 @@ export default function FeedbackDrawer({
   const canSubmit = vote === 'up' || (vote === 'down' && reasons.size > 0);
 
   const handleSubmit = async () => {
-    if (!canSubmit) return;
+    if (!canSubmit || isSending) return;
+    // Positive feedback is a local acknowledgement only. It must never
+    // create an Auth account or write to Firestore.
+    if (vote === 'up') {
+      try {
+        localStorage.setItem(`worthaft-feedback-${getTodayString()}`, 'true');
+      } catch {
+        // Continue even if this browser cannot persist the local decision.
+      }
+      setStep('thanks');
+      onSubmitted?.();
+      return;
+    }
     setIsSending(true);
     setSubmitError(null);
     const payload = {
@@ -93,7 +106,8 @@ export default function FeedbackDrawer({
       createdAt: serverTimestamp(),
     };
     try {
-      const { firestore } = initializeFirebase();
+      const { auth, firestore } = initializeFirebase();
+      await ensureWorthaftAuth(auth);
       await addDoc(collection(firestore, 'worthaft-feedback'), payload);
       try {
         localStorage.setItem(`worthaft-feedback-${payload.date}`, 'true');
@@ -269,7 +283,7 @@ export default function FeedbackDrawer({
             <span className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground animate-in zoom-in-95 duration-300">
               <Check className="h-8 w-8" />
             </span>
-            <h2 className="font-headline mb-1.5 text-xl font-extrabold">Danke für dein Feedback!</h2>
+            <h2 className="font-headline mb-1.5 text-xl font-extrabold">Danke für Dein Feedback!</h2>
             <Button variant="outline" onClick={() => (onClose ? onClose() : onOpenChange(false))} className="rounded-full px-6">
               Schließen
             </Button>

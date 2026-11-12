@@ -65,7 +65,7 @@ export function Authors({ variant = "classic" }: { variant?: "classic" | "editor
             id="authors-heading"
             className={isEditorial ? styles.editorialTitle : "font-[Georgia,_Iowan_Old_Style,_Times_New_Roman,_serif] text-[clamp(1.9rem,4vw,2.7rem)] font-bold leading-[1.08] tracking-[-0.015em] text-balance text-white"}
           >
-            {isEditorial ? "Die Menschen hinter dem Wahnsinn." : "Treffen Sie die verdrehten Köpfe"}
+            {isEditorial ? "Die Menschen hinter dem Wahnsinn." : "Triff die verdrehten Köpfe"}
           </h2>
           <p className={isEditorial ? styles.editorialIntro : "mx-auto mt-3 max-w-[600px] text-[clamp(1rem,1.6vw,1.12rem)] leading-relaxed text-[#dbe7ff]/85 text-balance"}>
             Drei Individuen, eine Mission: den alltäglichen Wahnsinn dokumentieren.
@@ -114,7 +114,7 @@ export function Authors({ variant = "classic" }: { variant?: "classic" | "editor
                   aria-label={`Mehr über ${a.name}`}
                   className={isEditorial
                     ? styles.editorialLink
-                    : "mt-6 inline-flex items-center justify-center rounded-full border-2 border-[#1d1a15] bg-white px-5 py-2 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_2px_0_#1d1a15] transition-[transform,box-shadow,background] hover:bg-[#1d1a15] hover:text-white hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15]"}
+                    : "mt-6 inline-flex items-center justify-center rounded-full border-2 border-[#1d1a15] bg-white px-5 py-2 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_2px_0_#1d1a15] transition-[transform,box-shadow,background] hover:bg-[#1d1a15] hover:text-white hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] dark:border-[#6b6353] dark:bg-[#2a251e] dark:text-[#f2ede3] dark:hover:bg-[#332d24] dark:hover:text-white dark:shadow-[0_2px_0_#000000] dark:active:shadow-[0_1px_0_#000000]"}
                 >
                   Mehr erfahren {isEditorial && <ArrowUpRight size={16} aria-hidden="true" />}
                 </Link>

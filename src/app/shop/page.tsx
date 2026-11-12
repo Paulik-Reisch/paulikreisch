@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
@@ -7,6 +8,7 @@ import { GooglePlayIcon } from "@/components/ui/icons/google-play-icon";
 import { ElevenReaderIcon } from "@/components/ui/icons/eleven-reader-icon";
 import './shop.css';
 import { useEffect, useState } from "react";
+import { getBrowserAnalyticsId } from '@/lib/analytics-consent';
 import '../../../tokens.css';
 import {
   AlertDialog,
@@ -23,14 +25,8 @@ export default function ShopPage() {
 
     useEffect(() => {
         document.body.classList.add('shop-page');
-        // Ads retargeting: view_shop for PMax/Meta audiences
-        try {
-          // @ts-ignore
-          if (typeof window !== 'undefined' && (window as any).gtag) (window as any).gtag('event', 'view_shop', { page_path: '/shop' });
-          // @ts-ignore
-          if (typeof window !== 'undefined' && (window as any).fbq) (window as any).fbq('track', 'ViewContent', { content_name: 'shop' });
-        } catch {}
-        import('@/app/actions').then(m => m.logEventAction('view_shop', 'anon', '/shop', { source: 'shop-page' }).catch(()=>{}));
+        const analyticsId = getBrowserAnalyticsId();
+        if (analyticsId) void import('@/app/actions').then(m => m.logEventAction('view_shop', analyticsId, '/shop', { source: 'shop-page' })).catch(() => {});
         return () => {
             document.body.classList.remove('shop-page');
         }
@@ -125,7 +121,7 @@ export default function ShopPage() {
                                 <p className="book-desc">Erhebliche Kritik am unerhörten Bildungsgang der Lernvollzugsanstalt SK-S</p>
 
                                 <div className="action-area">
-                                    <a href="https://amzn.eu/d/02nS59t2" target="_blank" rel="noopener noreferrer" className="btn btn-amazon" onClick={() => { try { (window as any).gtag?.('event','click_amazon',{page_path:'/shop'}); (window as any).fbq?.('track','InitiateCheckout'); } catch {}; import('@/app/actions').then(m=>m.logEventAction('funnel_book_click','anon','/shop',{from:'shop-hero'}).catch(()=>{})); }}>
+                                    <a href="https://amzn.eu/d/02nS59t2" target="_blank" rel="noopener noreferrer" className="btn btn-amazon" onClick={() => { const analyticsId = getBrowserAnalyticsId(); if (analyticsId) void import('@/app/actions').then(m => m.logEventAction('funnel_book_click', analyticsId, '/shop', { from: 'shop-hero' })).catch(() => {}); }}>
                                         <AmazonIcon />
                                         Bei Amazon kaufen
                                     </a>
@@ -137,6 +133,9 @@ export default function ShopPage() {
                                         <ElevenReaderIcon />
                                         <span><small className="free-badge">Gratis hören auf</small> 11Reader</span>
                                     </a>
+                                    <Link href="/leseprobe" className="link-leseprobe">
+                                        Erst mal reinlesen? 4 Seiten Leseprobe <span aria-hidden="true">→</span>
+                                    </Link>
                                 </div>
                             </article>
 
@@ -183,20 +182,20 @@ export default function ShopPage() {
                 {/* === SEKTION 3: WARUM BEIDE BÜCHER? === */}
                 <section className="bg-gray shop-features">
                     <div className="container">
-                        <p className="shop-eyebrow">Was dich erwartet</p>
+                        <p className="shop-eyebrow">Was Dich erwartet</p>
                         <h2 className="shop-section-title">Nicht für die Schule.<br />Fürs Überleben.</h2>
                         <div className="features-grid">
                             <div className="feature">
                                 <h3>Zwei Bücher, ein Universum</h3>
-                                <p>Lesen Sie beide Bände. Nur eines ist wie nur einen Schuh anzuziehen – geht, aber sieht dämlich aus.</p>
+                                <p>Lies beide Bände. Nur eines ist wie nur einen Schuh anzuziehen – geht, aber sieht dämlich aus.</p>
                             </div>
                             <div className="feature">
                                 <h3>Doppelte Dosis Sarkasmus</h3>
                                 <p>Doppelt Sarkasmus, doppelt Wahrheit. Oder so ähnlich.</p>
                             </div>
                             <div className="feature">
-                                <h3>Unterstützen Sie die Autoren</h3>
-                                <p>Philipp und Max brauchen Kaffee. Überteuerten. Damit sie noch mehr Unsinn schreiben können.</p>
+                                <h3>Unterstütze die Autoren</h3>
+                                <p>Mit jedem Kauf finanzierst Du den nächsten Band. Philipp und Max haben noch viel zu viele Ideen.</p>
                             </div>
                         </div>
                     </div>
@@ -212,9 +211,9 @@ export default function ShopPage() {
                                 <h2>Hallo Welt – Stimmen einer Generation</h2>
                                 <h3 style={{color:'var(--text-light)', fontWeight:400, fontSize:'1.2rem', marginBottom:'20px'}}>Zwischen Euphorie und Überforderung: Fragmente des Schülerdaseins</h3>
                                 
-                                <p>"Hallo Welt" ist ein Buch, das die Perspektiven und Lebensumstände junger Menschen in einem besonderen Ort einfängt – der Schule. Es ist keine lineare Erzählung, kein Roman mit fester Handlung, sondern eine Sammlung von einzelnen Episoden, die stets mit neuem Stoff aufwarten. Dadurch entsteht ein vielseitiges Panorama, in dem das Alltägliche und das Außergewöhnliche nebeneinanderstehen.</p>
+                                <p>„Hallo Welt“ ist ein Buch, das die Perspektiven und Lebensumstände junger Menschen in einem besonderen Ort einfängt – der Schule. Es ist keine lineare Erzählung, kein Roman mit fester Handlung, sondern eine Sammlung von einzelnen Episoden, die stets mit neuem Stoff aufwarten. Dadurch entsteht ein vielseitiges Panorama, in dem das Alltägliche und das Außergewöhnliche nebeneinanderstehen.</p>
                                 
-                                <h3>Darum solltest du Hallo Welt lesen:</h3>
+                                <h3>Darum solltest Du Hallo Welt lesen:</h3>
                                 <ul className="check-list">
                                     <li>Einzelne Episoden statt einer in sich geschlossenen Handlung – wie das echte Leben</li>
                                     <li>Satire, Kritik und Selbstironie im Stil einer rebellischen Generation</li>
@@ -228,8 +227,7 @@ export default function ShopPage() {
                             {/* Technische Daten */}
                             <div className="shop-specs">
                                 <h3 style={{marginBottom:'20px'}}>Produktinformationen</h3>
-                                <p style={{fontSize:'0.8rem', color:'#888'}}>Stand: 08. Februar 2026</p>
-                                
+
                                 <div className="specs-grid">
                                     <div className="spec-item">
                                         <span className="spec-label">Bewertung</span>
@@ -256,10 +254,6 @@ export default function ShopPage() {
                                      <div className="spec-item">
                                         <span className="spec-label">ASIN</span>
                                         <span className="spec-value">B0CVXT9X4J</span>
-                                    </div>
-                                    <div className="spec-item" style={{gridColumn: 'span 2'}}>
-                                        <span className="spec-label">Bestseller-Rang</span>
-                                        <span className="spec-value">Nr. 1.267 in Schreibkunst</span>
                                     </div>
                                 </div>
                             </div>

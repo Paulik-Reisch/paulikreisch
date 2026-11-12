@@ -26,7 +26,7 @@ function NewsletterFormContent() {
             name="email"
             aria-label="E-Mail-Adresse"
             className="h-[52px] pl-10 pr-4 rounded-[10px] bg-white border-2 border-[#e8ddd0] text-[#1d1a15] placeholder:text-[#9a9184] focus-visible:border-[#1d1a15] focus-visible:ring-0 shadow-sm"
-            placeholder="deine@email.de"
+            placeholder="Deine@email.de"
             type="email"
             required
           />
@@ -35,7 +35,7 @@ function NewsletterFormContent() {
         <Button
           type="submit"
           disabled={pending || !isConsentGiven}
-          className="h-[52px] px-7 rounded-[10px] bg-[#ffe14d] text-[#1d1a15] border-2 border-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:bg-[#ffeb7a] hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] font-bold text-[1.02rem] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 shrink-0"
+          className="h-[52px] px-7 rounded-[10px] bg-[#ffe14d] text-[#1d1a15] border-2 border-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:bg-[#ffeb7a] hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] dark:border-[#bfa100] dark:shadow-[0_3px_0_#6b5700] dark:hover:shadow-[0_4px_0_#6b5700] dark:active:shadow-[0_1px_0_#6b5700] font-bold text-[1.02rem] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 shrink-0"
         >
           {pending ? (
             <>
@@ -101,10 +101,10 @@ export function Newsletter() {
               id="newsletter-heading"
               className="font-[Georgia,_Iowan_Old_Style,_Times_New_Roman,_serif] text-[clamp(1.9rem,4vw,2.8rem)] font-bold leading-[1.05] tracking-[-0.015em] text-balance"
             >
-              Verpasse nichts —<br className="hidden sm:block" /> sonst lachen andere ohne dich
+              Verpasse nichts —<br className="hidden sm:block" /> sonst lachen andere ohne Dich
             </h2>
             <p className="mx-auto max-w-[560px] text-[clamp(1rem,1.6vw,1.12rem)] leading-relaxed text-[#e6ddc9] text-balance">
-              Neue Episoden aus der Lernvollzugsanstalt direkt ins Postfach. Satire, die den Schulwahnsinn ernst nimmt — damit du es nicht mehr musst.
+              Neue Episoden aus der Lernvollzugsanstalt direkt ins Postfach. Satire, die den Schulwahnsinn ernst nimmt — damit Du es nicht mehr musst.
             </p>
           </div>
 

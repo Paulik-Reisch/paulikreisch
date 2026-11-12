@@ -26,8 +26,8 @@ import { Label } from '@/components/ui/label';
 import FeedbackDrawer from './FeedbackDrawer';
 import WordDefinitionDialog from './WordDefinitionDialog';
 import { initializeFirebase } from '@/firebase';
+import { ensureWorthaftAuth } from '@/firebase/on-demand-auth';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import type { Firestore } from 'firebase/firestore';
 import confetti from 'canvas-confetti';
 import { getWorthaftKeyDimensions, getWorthaftTileDimensions, getWorthaftStatusClass, normalizeWorthaftSettings, DEFAULT_WORTHAFT_SETTINGS as DEFAULT_SETTINGS, type WorthaftSettings } from '@/lib/worthaft-settings';
 import {
@@ -452,7 +452,7 @@ const GameEndDisplay = (props: {
                     <div className="p-6">
                         <SheetHeader className="text-center">
                             <SheetTitle className="text-2xl font-bold font-headline">
-                                {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
+                                {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Du hast bereits gespielt!'}
                             </SheetTitle>
                             <SheetDescription className="text-muted-foreground pt-1">
                                 Das heutige Wort: <span className="font-bold text-primary">{rest.solution}</span>
@@ -471,7 +471,7 @@ const GameEndDisplay = (props: {
                 <div className="p-6">
                     <DialogHeader>
                         <DialogTitle className="text-2xl font-bold font-headline text-center">
-                            {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Sie haben bereits gespielt!'}
+                            {rest.gameState === 'won' ? 'Gratulation!' : rest.gameState === 'lost' ? 'Leider verloren!' : 'Du hast bereits gespielt!'}
                         </DialogTitle>
                         <DialogDescription className="text-muted-foreground pt-1 text-center">
                             Das heutige Wort: <span className="font-bold text-primary">{rest.solution}</span>
@@ -555,7 +555,7 @@ const WorthaftSettingsDrawer = ({
       <div className="space-y-6">
         <section className="space-y-4" aria-label="Aussehen">
           <div>
-            <h3 className="font-semibold">Dein Worthaft, dein Stil</h3>
+            <h3 className="font-semibold">Dein Worthaft, Dein Stil</h3>
             <p className="text-sm text-muted-foreground mt-1">Alles wird direkt übernommen und auf diesem Gerät gespeichert.</p>
           </div>
           <div className="grid grid-cols-2 gap-2" role="group" aria-label="Farbschema">
@@ -576,13 +576,22 @@ const WorthaftSettingsDrawer = ({
             <div className="flex justify-center gap-1.5">
               {['W', 'O', 'R', 'T', 'E'].map((letter, index) => {
                 const dimensions = getWorthaftTileDimensions(settings.tileWidth, settings.tileHeight);
-                return <span key={letter} className={cn('flex min-w-0 shrink items-center justify-center border-2 font-bold', getWorthaftStatusClass(['correct', 'present', 'absent'][index % 3], settings.palette))}
+                return <span key={letter} className={cn('flex min-w-0 shrink items-center justify-center border-2 text-3xl sm:text-4xl font-bold', getWorthaftStatusClass(['correct', 'present', 'absent'][index % 3], settings.palette))}
                   style={{ width: dimensions.width, aspectRatio: dimensions.width / dimensions.height, borderRadius: settings.tileRadius * 6 }}>{letter}</span>;
               })}
             </div>
             <div className="flex justify-center gap-1.5" aria-hidden="true">
-              {['A', 'B', 'C'].map((letter, index) => <span key={letter} className={cn('flex items-center justify-center font-bold', getWorthaftStatusClass(['correct', 'present', 'absent'][index], settings.palette))}
-                style={{ ...getWorthaftKeyDimensions(settings.keyWidth, settings.keyHeight), borderRadius: settings.keyRadius * 6, fontSize: 12 + settings.keySize * 2.5 }}>{letter}</span>)}
+              {['A', 'B', 'C'].map((letter, index) => {
+                const keyDimensions = getWorthaftKeyDimensions(settings.keyWidth, settings.keyHeight);
+                const defaultKeyWidth = getWorthaftKeyDimensions(2, settings.keyHeight).width;
+                const tileWidth = getWorthaftTileDimensions(settings.tileWidth, settings.tileHeight).width;
+                const boardWidth = 5 * tileWidth + 4 * 6;
+                const keyboardWidth = Math.max(boardWidth, Math.round(boardWidth * keyDimensions.width / defaultKeyWidth));
+                const slotWidth = (keyboardWidth - 9 * 4) / 10;
+                const keyWidthPx = Math.min(keyDimensions.width, Math.max(slotWidth, 18));
+                return <span key={letter} className={cn('flex items-center justify-center font-bold', getWorthaftStatusClass(['correct', 'present', 'absent'][index], settings.palette))}
+                  style={{ width: keyWidthPx, height: keyDimensions.height, borderRadius: settings.keyRadius * 6, fontSize: 12 + settings.keySize * 2.5 }}>{letter}</span>;
+              })}
             </div>
           </div>
           {([
@@ -706,22 +715,17 @@ const InvalidWordModal = ({
   const { word, isKnownInvalid } = submission;
   const isMobile = useIsMobile();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [fb, setFb] = useState<{ firestore: Firestore } | null>(null);
   const [showReviewedMessage, setShowReviewedMessage] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (isKnownInvalid) return;
-    const app = initializeFirebase();
-    setFb(app);
-  }, [isKnownInvalid]);
-
   const handleSubmit = async (shouldExist: boolean) => {
-    if (!fb || isKnownInvalid) return;
+    if (isKnownInvalid || isSubmitting) return;
     setIsSubmitting(true);
     setSubmitError(null);
     try {
-      await addDoc(collection(fb.firestore, 'worthaft-word-suggestions'), {
+      const { auth, firestore } = initializeFirebase();
+      await ensureWorthaftAuth(auth);
+      await addDoc(collection(firestore, 'worthaft-word-suggestions'), {
         word,
         shouldExist,
         date: new Date().toISOString().split('T')[0],
@@ -1462,7 +1466,7 @@ Jetzt spielen:`;
             saveState(guesses, 'playing', letterStatuses, true, newJokerPosition, rowTimes);
             toast({
                 title: 'Heißer Tipp!',
-                description: `Ein Buchstabe wurde für dich aufgedeckt.`,
+                description: `Ein Buchstabe wurde für Dich aufgedeckt.`,
                 duration: 3000
             });
         } else {
@@ -1615,4 +1619,4 @@ Jetzt spielen:`;
             )}
         </div>
     );
-            }
+}

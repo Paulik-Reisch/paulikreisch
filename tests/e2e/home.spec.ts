@@ -29,7 +29,7 @@ test('reading sample stays simple and the selected-page slideshow supports contr
   await page.goto('/leseprobe');
 
   await expect(page.getByRole('heading', { level: 1, name: 'Ein Blick ins Buch.' })).toBeVisible();
-  await expect(page.getByText(/Hier kannst du durch ausgewählte Seiten/)).toBeVisible();
+  await expect(page.getByText(/Hier kannst Du durch ausgewählte Seiten/)).toBeVisible();
   const pdfSlide = page.locator('figure[data-slide-type="pdf"]').nth(0);
   await expect(pdfSlide).toBeVisible();
   const pdfImage = pdfSlide.locator('img');
@@ -254,8 +254,25 @@ test('mobile navigation keeps the same three actions and order as desktop', asyn
   expect(drawerBounds.width).toBeLessThan(330);
   expect(drawerBounds.x).toBeGreaterThan(0);
   expect(drawerBounds.y).toBe(12);
-  expect(drawerBounds.height).toBeGreaterThanOrEqual(300);
-  expect(drawerBounds.height).toBeLessThan(310);
+  // The theme row is part of the drawer, below the three navigation actions.
+  // Check its structure and containment instead of the old pre-theme pixel height.
+  const themeSwitch = mobileDialog.getByRole('switch', { name: 'Dunkelmodus' });
+  await expect(mobileDialog.getByText('Dunkelmodus', { exact: true })).toBeVisible();
+  await expect(themeSwitch).toBeVisible();
+  const navigationBounds = await mobileDialog.getByRole('navigation', { name: 'Hauptnavigation' }).boundingBox();
+  const themeBounds = await themeSwitch.boundingBox();
+  if (!navigationBounds || !themeBounds) throw new Error('Navigation or theme control is not visible.');
+  expect(themeBounds.y).toBeGreaterThanOrEqual(navigationBounds.y + navigationBounds.height);
+  expect(themeBounds.y + themeBounds.height).toBeLessThanOrEqual(drawerBounds.y + drawerBounds.height);
+  expect(themeBounds.x).toBeGreaterThanOrEqual(drawerBounds.x);
+  expect(themeBounds.x + themeBounds.width).toBeLessThanOrEqual(drawerBounds.x + drawerBounds.width);
+  expect(drawerBounds.y + drawerBounds.height).toBeLessThanOrEqual(812 - 12);
+  const wasChecked = await themeSwitch.getAttribute('aria-checked');
+  await themeSwitch.click();
+  await expect(themeSwitch).toHaveAttribute('aria-checked', wasChecked === 'true' ? 'false' : 'true');
+  // Restore the initial theme before the remaining layout assertions.
+  await themeSwitch.click();
+  await expect(themeSwitch).toHaveAttribute('aria-checked', wasChecked!);
   await expect(mobileDialog).toHaveCSS('border-radius', '24px');
   const drawerCenter = drawerBounds.x + drawerBounds.width / 2;
   for (const action of await mobileNav.all()) {

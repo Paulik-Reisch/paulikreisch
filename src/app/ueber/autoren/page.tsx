@@ -6,8 +6,8 @@ import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Über die Autoren | Paulik & Reisch",
-    description: "Lernen Sie die kreativen und chaotischen Köpfe hinter der 'Hallo Welt'-Buchreihe kennen: Philipp Paulik, Maximilian Reisch und den Illustrator Luin Schiffbauer.",
+    title: "Über die Autoren",
+    description: "Lerne die kreativen und chaotischen Köpfe hinter der „Hallo Welt“-Buchreihe kennen: Philipp Paulik, Maximilian Reisch und den Illustrator Luin Schiffbauer.",
     alternates: {
       canonical: '/ueber/autoren',
     },
@@ -36,7 +36,7 @@ export default function UeberAutorenPage() {
               "@id": "https://www.paulikreisch.de/autoren",
               "name": "Unsere Autoren",
               "url": "https://www.paulikreisch.de/autoren",
-              "description": "Lernen Sie die kreativen Köpfe hinter den Büchern und Projekten von Paulik & Reisch kennen."
+              "description": "Lerne die kreativen Köpfe hinter den Büchern und Projekten von Paulik & Reisch kennen."
             }
           ]
       }
@@ -44,7 +44,7 @@ export default function UeberAutorenPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen bg-background dark:bg-[oklch(21%_0.012_85)]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

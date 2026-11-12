@@ -55,7 +55,7 @@ export function HomePage() {
             <div className={styles.previewCopy}>
               <p className={styles.eyebrow}>Leseprobe</p>
               <h2 id="preview-title">Erst mal reinlesen?</h2>
-              <p className={styles.body}>Lies ausgewählte Kapitel und wirf einen Blick auf den ganz normalen Schulwahnsinn, bevor du dich für das ganze Buch entscheidest.</p>
+              <p className={styles.body}>Lies ausgewählte Kapitel und wirf einen Blick auf den ganz normalen Schulwahnsinn, bevor Du Dich für das ganze Buch entscheidest.</p>
               <Link className={styles.button} href="/leseprobe">Seiten lesen {arrow}</Link>
             </div>
           </div>

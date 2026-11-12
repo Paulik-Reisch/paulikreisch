@@ -1,14 +1,17 @@
+import type { Metadata } from 'next';
 import { LegalPage } from "@/components/landing/legal-page";
+import { pageMetadata } from '@/lib/page-metadata';
 
-export const metadata = {
-  title: "Barrierefreiheit – Paulik & Reisch",
+export const metadata: Metadata = pageMetadata({
+  title: "Barrierefreiheit",
   description: "Erklärung zur Barrierefreiheit gemäß BITV 2.0 und EU-Richtlinie 2016/2102.",
-};
+  path: '/barrierefreiheit',
+});
 
 export default function BarrierefreiheitPage() {
   return (
     <>
-      <LegalPage title="Erklärung zur Barrierefreiheit" description="Informationen zur Zugänglichkeit dieser Website und zu Möglichkeiten der Rückmeldung.">
+      <LegalPage title={"Erklärung zur Barriere\u00ADfreiheit"} description="Informationen zur Zugänglichkeit dieser Website und zu Möglichkeiten der Rückmeldung.">
           <p>
             Die vorliegende Erklärung zur Barrierefreiheit verpflichtet sich der Erfüllung der Anforderungen,
             welche sich aus der Barrierefreie-Informationstechnik-Verordnung (BITV 2.0) in Verbindung mit der
@@ -20,7 +23,7 @@ export default function BarrierefreiheitPage() {
           <h2>1. Geltungsbereich</h2>
           <p>
             Diese Erklärung erfasst die Webpräsenz unter der Domain paulikreisch.de einschließlich der
-            integrierten Unterangebote, mithin insbesondere des Worträtsels &bdquo;Worthaft&rdquo; sowie der
+            integrierten Unterangebote, mithin insbesondere des Worträtsels &bdquo;Worthaft&ldquo; sowie der
             redaktionellen Beiträge. Mobile Applikationen im Sinne des § 1 Abs. 2 Nr. 2 BITV 2.0 bleiben von
             dieser Erklärung ausdrücklich unberührt.
           </p>
@@ -40,7 +43,7 @@ export default function BarrierefreiheitPage() {
           </p>
           <ul className="list-disc pl-6 space-y-2">
             <li>Die vollständige maschinelle Erfassbarkeit sämtlicher satirischer Bild- und Tongestaltungen.</li>
-            <li>Die durchgängige Fehlervermeidung bei der Eingabe innerhalb des Spielmodus &bdquo;Worthaft&rdquo;.</li>
+            <li>Die durchgängige Fehlervermeidung bei der Eingabe innerhalb des Spielmodus &bdquo;Worthaft&ldquo;.</li>
             <li>Die vollständige Kontrastwahrung sämtlicher dekorativer Übergangselemente.</li>
           </ul>
 

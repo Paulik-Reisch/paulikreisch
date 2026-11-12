@@ -1,9 +1,12 @@
+import type { Metadata } from 'next';
 import { LegalPage } from "@/components/landing/legal-page";
+import { pageMetadata } from '@/lib/page-metadata';
 
-export const metadata = {
-  title: "Urheberrecht – Paulik & Reisch",
+export const metadata: Metadata = pageMetadata({
+  title: "Urheberrecht",
   description: "Urheberrechtliche Hinweise zu sämtlichen Inhalten von Paulik & Reisch.",
-};
+  path: '/urheberrecht',
+});
 
 export default function UrheberrechtPage() {
   return (
@@ -11,7 +14,7 @@ export default function UrheberrechtPage() {
       <LegalPage title="Urheberrecht" description="Hinweise zum Schutz und zur Nutzung der Inhalte von Paulik &amp; Reisch.">
           <p>
             Sämtliche auf dieser Webpräsenz bereitgestellten Inhalte – darunter, jedoch nicht abschließend,
-            textliche Darstellungen, satirische Artikel, Buchauszüge, das Spiel &bdquo;Worthaft&rdquo; samt
+            textliche Darstellungen, satirische Artikel, Buchauszüge, das Spiel &bdquo;Worthaft&ldquo; samt
             zugrundeliegender Programmierroutine, klangliche und bildliche Erzeugnisse sowie die getroffene
             gestalterische Anordnung – unterliegen dem Schutz des Urheberrechtsgesetzes (UrhG) sowie
             ergänzenden leistungsschutzrechtlichen Bestimmungen. Die ausschließlichen Nutzungsrechte an den

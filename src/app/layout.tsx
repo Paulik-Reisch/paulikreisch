@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     default: 'Hallo Welt — Das satirische Buch über Schule | Paulik & Reisch',
     template: '%s | Paulik & Reisch',
   },
-  description: 'Satire die weh tut und heilt: Paulik & Reisch sezieren Schulsystem, Bürokratie und Alltag. Buch „Hallo Welt" (106 S., 10,99€) + tägliches Worthaft.',
+  description: 'Satire die weh tut und heilt: Paulik & Reisch sezieren Schulsystem, Bürokratie und Alltag. Buch „Hallo Welt“ (106 S., 10,99€) + tägliches Worthaft.',
   applicationName: 'Paulik & Reisch',
   appleWebApp: { title: 'Paulik & Reisch' },
   authors: [{ name: 'Philipp Paulik' }, { name: 'Maximilian Reisch' }],

@@ -19,7 +19,7 @@ const games: Game[] = [
   {
     id: 'wikiland',
     title: 'Wikiland',
-    description: 'Ein verborgener Wikipedia-Artikel. Deine Wörter bringen ihn ans Licht. Findest du den Titel?',
+    description: 'Ein verborgener Wikipedia-Artikel. Deine Wörter bringen ihn ans Licht. Findest Du den Titel?',
     status: 'live',
     href: '/game-labs/wikiland',
     icon: 'Wi',
@@ -58,7 +58,7 @@ export default function GameLabsPage() {
         <section className={styles.hero}>
           <p className={styles.eyebrow}>Game Labs</p>
           <h1>Kleine Spiele.<br /><span>Große Pause.</span></h1>
-          <p className={styles.lead}>Wörter finden, Bits sortieren, Wissen aufdecken.<br />Such dir deine nächste Denkpause aus.</p>
+          <p className={styles.lead}>Wörter finden, Bits sortieren, Wissen aufdecken.<br />Such Dir Deine nächste Denkpause aus.</p>
         </section>
 
         <section className={styles.games} aria-labelledby="games-title">

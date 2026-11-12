@@ -1,15 +1,11 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import { Button } from '@/components/ui/button';
+import './cookie-banner.css';
 import Link from 'next/link';
-import { Card } from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import { ArrowLeft } from 'lucide-react';
 import { Logo } from '../ui/logo';
+import { ANALYTICS_ID_KEY, CONSENT_CHANGED, OPEN_CONSENT } from '@/lib/analytics-consent';
 
 const COOKIE_NAME = 'hallowelt_cookie_consent';
 
@@ -38,28 +34,63 @@ const initialConsent: ConsentValue = {
 
 export function CookieBanner() {
   const pathname = usePathname();
+  const dialogRef = useRef<HTMLDivElement>(null);
   const [showBanner, setShowBanner] = useState(false);
   const [view, setView] = useState<'main' | 'settings'>('main');
   const [consent, setConsent] = useState<ConsentValue>(initialConsent);
 
-  // Auf Legal-Pages (Impressum, Datenschutz, etc.) den Banner niemals anzeigen.
+  // Legal pages remain readable without an automatic prompt; settings can still be opened.
   const isLegalPage = HIDE_ON_PATHS.some(p => pathname === p || pathname.startsWith(`${p}/`));
 
   useEffect(() => {
     if (isLegalPage) return;
-    const storedConsent = localStorage.getItem(COOKIE_NAME);
-    if (storedConsent === null) {
+    let storedConsent: string | null = null;
+    try { storedConsent = localStorage.getItem(COOKIE_NAME); } catch { /* Show choice when storage is blocked. */ }
+    let currentVersion = false;
+    try { currentVersion = (() => { const saved = JSON.parse(storedConsent ?? 'null'); return saved?.version === 2 || saved?.analytics === false; })(); } catch { /* Ask again after malformed consent. */ }
+    if (!currentVersion) {
       const timer = setTimeout(() => setShowBanner(true), 500);
       return () => clearTimeout(timer);
     }
   }, [isLegalPage]);
 
+  useEffect(() => {
+    const open = () => {
+      try { const saved = JSON.parse(localStorage.getItem(COOKIE_NAME) ?? 'null'); setConsent({ necessary: true, analytics: saved?.version === 2 && saved?.analytics === true, marketing: saved?.marketing === true }); } catch { setConsent(initialConsent); }
+      setView('settings'); setShowBanner(true);
+    };
+    window.addEventListener(OPEN_CONSENT, open);
+    return () => window.removeEventListener(OPEN_CONSENT, open);
+  }, []);
+
+  useEffect(() => {
+    if (!showBanner) return;
+    const previous = document.activeElement as HTMLElement | null;
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const focusable = () => Array.from(dialogRef.current?.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], [tabindex="0"]') ?? []);
+    // Focus the dialog, not a legal link, so opening it does not outline a link.
+    dialogRef.current?.focus({ preventScroll: true });
+    const trap = (event: KeyboardEvent) => {
+      if (event.key !== 'Tab') return;
+      const items = focusable(), first = items[0], last = items[items.length - 1];
+      if (event.shiftKey && (document.activeElement === first || document.activeElement === dialogRef.current)) { event.preventDefault(); last?.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+    };
+    document.addEventListener('keydown', trap);
+    return () => { document.body.style.overflow = overflow; document.removeEventListener('keydown', trap); previous?.focus(); };
+  }, [showBanner, view]);
+
   const handleConsent = (value: 'all' | 'necessary' | ConsentValue) => {
     const consentValue = typeof value === 'string'
-      ? { necessary: true, analytics: value === 'all', marketing: value === 'all' }
+      ? { necessary: true, analytics: value === 'all', marketing: false }
       : value;
 
-    localStorage.setItem(COOKIE_NAME, JSON.stringify(consentValue));
+    try {
+      localStorage.setItem(COOKIE_NAME, JSON.stringify({ ...consentValue, version: 2 }));
+      if (!consentValue.analytics) localStorage.removeItem(ANALYTICS_ID_KEY);
+    } catch { /* No stored consent means analytics stays off. */ }
+    window.dispatchEvent(new Event(CONSENT_CHANGED));
     setShowBanner(false);
   };
 
@@ -67,73 +98,33 @@ export function CookieBanner() {
     setConsent(prev => ({ ...prev, [category]: !prev[category] }));
   };
 
-  if (isLegalPage || !showBanner) {
+  if (!showBanner) {
     return null;
   }
 
+  const legal = <div className="legal"><Link href="/datenschutz">Datenschutz</Link>{' · '}<Link href="/cookie-richtlinie">Cookie-Richtlinie</Link><p>Du kannst Deine Auswahl jederzeit im Footer unter „Mehr“ → „Cookie-Einstellungen“ ändern.</p></div>;
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <Card className="w-full max-w-lg shadow-2xl animate-in fade-in-0 zoom-in-95 duration-300">
-        {view === 'main' ? (
-          <div className="p-8">
-            <Logo className="h-10 w-auto mb-6 mx-auto text-foreground" />
-            <h3 className="font-bold font-headline text-2xl text-center">{'Bevor Sie fortfahren …'}</h3>
-            <p className="text-sm text-muted-foreground mt-4">
-              Wir und unsere Partner verwenden Cookies und andere Technologien, um Informationen auf Ihrem Gerät zu speichern und abzurufen. Dies hilft uns, die Nutzung der Website zu analysieren, die Leistung zu verbessern und Ihnen relevante Inhalte anzuzeigen. Indem Sie auf „Zustimmen" klicken, willigen Sie in die Verwendung dieser Technologien für alle genannten Zwecke ein.
-            </p>
-            <p className="text-sm text-muted-foreground mt-2">
-              Sie können Ihre Einwilligung jederzeit widerrufen oder anpassen. Weitere Informationen finden Sie in unserer{' '}
-              <Link href="/datenschutz" className="underline hover:text-primary">Datenschutzerklärung</Link> und in der{' '}
-              <Link href="/cookie-richtlinie" className="underline hover:text-primary">Cookie-Richtlinie</Link>.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 mt-8">
-              <Button onClick={() => handleConsent('all')} className="flex-1 bg-foreground text-background hover:bg-foreground/80 h-12 text-base">Zustimmen</Button>
-              <Button onClick={() => handleConsent('necessary')} variant="outline" className="flex-1 border-foreground/50 hover:bg-accent h-12 text-base">Ablehnen</Button>
-            </div>
-             <Button onClick={() => setView('settings')} variant="link" className="mt-4 text-muted-foreground">Einstellungen anpassen</Button>
-          </div>
-        ) : (
-          <div className="p-8">
-            <button onClick={() => setView('main')} className="flex items-center text-sm font-semibold mb-4 text-muted-foreground hover:text-foreground">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Zurück
-            </button>
-            <h3 className="font-bold font-headline text-2xl">Passen Sie Ihre Auswahl an</h3>
-            <p className="text-sm text-muted-foreground mt-2">
-              Verwalten Sie hier Ihre individuellen Cookie-Präferenzen. Notwendige Cookies können nicht deaktiviert werden.
-            </p>
-            <div className="space-y-4 mt-6">
-              <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50">
-                <div>
-                  <Label htmlFor="necessary" className="font-bold">Notwendig</Label>
-                  <p className="text-xs text-muted-foreground mt-1">Diese Cookies sind für die Grundfunktionen der Website erforderlich. Beispiel: Speicherung Ihrer Cookie-Einwilligung.</p>
-                </div>
-                <Switch id="necessary" checked disabled />
-              </div>
-              <Separator />
-              <div className="flex items-center justify-between p-4 rounded-lg">
-                <div>
-                  <Label htmlFor="analytics" className="font-bold">Analyse &amp; Leistung</Label>
-                   <p className="text-xs text-muted-foreground mt-1">Diese Cookies helfen uns, die Nutzung der Website zu verfolgen und die Benutzererfahrung zu verbessern.</p>
-                </div>
-                <Switch id="analytics" checked={consent.analytics} onCheckedChange={() => handleToggle('analytics')} />
-              </div>
-               <Separator />
-              <div className="flex items-center justify-between p-4 rounded-lg">
-                <div>
-                  <Label htmlFor="marketing" className="font-bold">Marketing</Label>
-                  <p className="text-xs text-muted-foreground mt-1">Wird verwendet, um Ihnen auf Sie zugeschnittene Werbung über das Internet anzuzeigen.</p>
-                </div>
-                <Switch id="marketing" checked={consent.marketing} onCheckedChange={() => handleToggle('marketing')} />
-              </div>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3 mt-8">
-                <Button onClick={() => handleConsent(consent)} className="flex-1 bg-foreground text-background hover:bg-foreground/80 h-12">Auswahl speichern</Button>
-                <Button onClick={() => handleConsent('all')} variant="outline" className="flex-1 border-foreground/50 hover:bg-accent h-12">Alle akzeptieren</Button>
-            </div>
-          </div>
-        )}
-      </Card>
-    </div>
+    <section id="pr-cookie-consent">
+      <article ref={dialogRef} tabIndex={-1} className="panel" role="dialog" aria-modal="true" aria-labelledby="consent-title">
+        <div className="brand"><Logo /><span>Paulik &amp; Reisch</span></div>
+        {view === 'main' ? <>
+          <div className="eyebrow">Cookies &amp; Statistik</div>
+          <h2 id="consent-title">Deine Daten.<br />Deine Wahl.</h2>
+          <p>Mit Deinem Okay zählen wir Seitenaufrufe und wiederkehrende Besuche. Dafür speichern wir eine zufällige ID für höchstens 90 Tage in Deinem Browser und senden sie mit Nutzungsereignissen an unsere Firebase-Datenbank.</p>
+          <p>Ohne Zustimmung bleibt die Analyse aus. Die Seite funktioniert trotzdem.</p>
+          <div className="actions"><button className="accept" onClick={() => handleConsent('all')}>Zustimmen</button><button onClick={() => handleConsent('necessary')}>Ablehnen</button><button onClick={() => setView('settings')}>Einstellungen</button></div>
+          {legal}
+        </> : <>
+          <button className="back" onClick={() => setView('main')}>← &nbsp; Zurück</button>
+          <div className="eyebrow">Du entscheidest</div>
+          <h2 id="consent-title">Deine Einstellungen.</h2>
+          <p>Nur das, was Du erlaubst. Die Analyse ist standardmäßig aus.</p>
+          <div className="row"><div><h3>Notwendig</h3><p>Speichert Deine Auswahl und ermöglicht Grundfunktionen. Keine Reichweitenmessung.</p></div><span className="badge">Immer aktiv</span></div>
+          <div className="row"><div><h3><label htmlFor="analytics">Analyse &amp; Leistung</label></h3><p>Zählt Seitenaufrufe und wiederkehrende Besuche mit einer zufälligen Browser-ID. Die ID gilt höchstens 90 Tage. Nutzungsereignisse gehen an unsere Firebase-Datenbank. Kein Konto, keine Anmelde-ID.</p></div><button id="analytics" role="switch" aria-checked={consent.analytics} aria-label="Analyse & Leistung" className="toggle" onClick={() => handleToggle('analytics')} /></div>
+          <div className="actions two"><button onClick={() => handleConsent('necessary')}>Alles ablehnen</button><button onClick={() => handleConsent(consent)}>Auswahl speichern</button></div>
+          {legal}
+        </>}
+      </article>
+    </section>
   );
 }

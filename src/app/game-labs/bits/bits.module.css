@@ -69,3 +69,35 @@
 @media (max-width: 540px) { .brand span { display: none; } .navInner { gap: 12px; } .heading { padding-left: 12px; } .help { width: 42px; padding: 8px; } .help span { display: none; } }
 @media (max-width: 360px) { .main { padding-top: 12px; } .board { gap: 4px; } .cell { font-size: 19px; } .lock { width: 7px; height: 7px; bottom: 2px; right: 2px; } .sizes button { padding: 8px 11px; } .tools { gap: 6px; } }
 @media (prefers-reduced-motion: reduce) { .page *, .page *::before, .page *::after { transition: none !important; animation: none !important; } }
+
+/* Dark Mode: warme Papier-Palette wie der Rest der Site (Header/Footer-Hexwerte). */
+:global(.dark) .page { background: #211d17; color: #f2ede3; }
+:global(.dark) .page :is(button, a):focus-visible { outline-color: #7aa8ff; }
+:global(.dark) .nav { border-bottom-color: #3a352d; background: #2a251e; }
+:global(.dark) .heading { border-left-color: #3a352d; }
+:global(.dark) .help { border-color: #4f493d; background: #2a251e; color: #f2ede3; }
+:global(.dark) .help:hover { background: #332d24; }
+:global(.dark) .sizes button { border-color: #4f493d; color: #b6ad9c; background: #2a251e; }
+:global(.dark) .sizes button[aria-pressed="true"] { background: #0067d9; color: #fff; border-color: #0067d9; }
+:global(.dark) .sizes button:hover:not([aria-pressed="true"]) { background: #332d24; }
+:global(.dark) .time { color: #b6ad9c; }
+:global(.dark) .empty { background: #2a251e; border-color: #4f493d; }
+:global(.dark) .empty:hover { background: #332d24; }
+:global(.dark) .hinted { box-shadow: inset 0 0 0 3px #f2ede3; }
+:global(.dark) .solved { outline-color: #7aa8ff; }
+:global(.dark) .progress { color: #b6ad9c; }
+:global(.dark) .progressTrack { background: #3a352d; }
+:global(.dark) .tools button { border-color: #4f493d; background: #2a251e; color: #f2ede3; }
+:global(.dark) .tools button:nth-child(2) { background: #3a3113; border-color: #e8be3c; }
+:global(.dark) .tools button:hover:enabled { background: #332d24; }
+:global(.dark) .message { color: #b6ad9c; }
+:global(.dark) .win { color: #7aa8ff; }
+:global(.dark) .loading { background: #2a251e; }
+:global(.dark) .footer { color: #b6ad9c; }
+:global(.dark) .storageNotice { color: #b6ad9c; }
+:global(html.dark) .rulesDialog, :global(html.dark) .confirmDialog { background: #2a251e; color: #f2ede3; }
+:global(.dark) .rules li { border-top-color: #3a352d; }
+:global(.dark) .ruleNumber { color: #7aa8ff; }
+:global(.dark) .rules p, :global(.dark) .instructions p { color: #b6ad9c; }
+:global(.dark) .instructions { border-top-color: #3a352d; }
+:global(.dark) .instructions kbd { border-color: #4f493d; }

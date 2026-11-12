@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2, Lock, Mail } from "lucide-react";
 import { useFormStatus } from "react-dom";
 import { subscribeToNewsletterAction, logEventAction } from "@/app/actions";
-import { useUser } from "@/firebase/provider";
+import { getBrowserAnalyticsId } from '@/lib/analytics-consent';
 import { usePathname } from 'next/navigation';
 
 const initialNewsletterState = { success: undefined, error: undefined, message: undefined };
@@ -26,21 +26,21 @@ export function ExcerptGate({ onUnlock }: { onUnlock: () => void }) {
   const { toast } = useToast();
   const formRef = React.useRef<HTMLFormElement>(null);
   const [state, formAction] = useActionState(subscribeToNewsletterAction, initialNewsletterState);
-  const { user } = useUser();
   const pathname = usePathname();
+  const handledNewsletterState = useRef<typeof state | null>(null);
 
   useEffect(() => {
-    if (state.success) {
+    if (state.success && handledNewsletterState.current !== state) {
+      handledNewsletterState.current = state;
       toast({ title: "Erfolgreich eingetragen!", description: state.message });
-      if (user) {
-        logEventAction('newsletter_subscription', user.uid, pathname, { source: 'excerpt-gate' });
-      }
+      const analyticsId = getBrowserAnalyticsId();
+      if (analyticsId) void logEventAction('newsletter_subscription', analyticsId, pathname, { source: 'excerpt-gate' }).catch(() => {});
       onUnlock();
     }
     if (state.error) {
       toast({ variant: "destructive", title: "Fehler", description: state.error });
     }
-  }, [state, toast, onUnlock, user, pathname]);
+  }, [state, toast, onUnlock, pathname]);
   
   return (
     <div className="relative flex justify-center py-12">
