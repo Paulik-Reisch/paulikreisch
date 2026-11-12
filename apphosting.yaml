@@ -24,3 +24,19 @@ env:
     secret: OPENROUTER_API_KEY@1
     availability:
       - RUNTIME
+  - variable: PRIVATE_ASSET_RELEASE
+    value: "private-prefix-v1-accepted"
+    availability:
+      - RUNTIME
+  - variable: WORTHAFT_DAILY_RELEASE
+    value: "persistent-v1-accepted"
+    availability:
+      - RUNTIME
+  - variable: PRIVATE_ASSET_ACCEPTANCE_NONCE
+    value: "c4ff5129ab7241a0a85ab684"
+    availability:
+      - RUNTIME
+  - variable: PRIVATE_ASSET_ACCEPTANCE_EXPIRES
+    value: "2026-11-13T18:00:00.000Z"
+    availability:
+      - RUNTIME
