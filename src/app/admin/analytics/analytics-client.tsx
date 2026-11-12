@@ -58,7 +58,7 @@ type TrackingData = {
     term: string | null;
 }
 
-type AnalyticsClientProps = {
+export type AnalyticsClientProps = {
     summary: {
         visitors: { value: number; change: number };
         pageViews: { value: number; change: number };
@@ -69,15 +69,16 @@ type AnalyticsClientProps = {
     topPages: { path: string; views: number }[];
     topSources: { source: string; visitors: number }[];
     deviceBreakdown: { type: string; count: number }[];
-    recentEvents: AnalyticsEvent[];
+    recentEvents: Pick<AnalyticsEvent, "id" | "path" | "params" | "timestamp">[];
+    scopeLabel?: string;
 }
 
 
-export function AnalyticsClient({ summary, chartData, topPages, topSources, deviceBreakdown, recentEvents }: AnalyticsClientProps) {
+export function AnalyticsClient({ summary, chartData, topPages, topSources, deviceBreakdown, recentEvents, scopeLabel }: AnalyticsClientProps) {
   const { toast } = useToast();
   
   // State for UTM Link Generator
-  const [baseUrl, setBaseUrl] = useState("https://paulik-reisch.de");
+  const [baseUrl, setBaseUrl] = useState("https://paulikreisch.de");
   const [campaign, setCampaign] = useState("");
   const [medium, setMedium] = useState("");
   const [content, setContent] = useState("");
@@ -106,10 +107,10 @@ export function AnalyticsClient({ summary, chartData, topPages, topSources, devi
   const pieChartColors = [deviceChartConfig.desktop.color, deviceChartConfig.mobile.color];
 
   return (
-    <div className="space-y-8">
+    <div className="min-w-0 space-y-8">
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card className="min-w-0">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Besucher</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
@@ -119,7 +120,7 @@ export function AnalyticsClient({ summary, chartData, topPages, topSources, devi
             <p className="text-xs text-muted-foreground">{summary.visitors.change >= 0 ? '+' : ''}{summary.visitors.change.toFixed(1)}% zum Vormonat</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="min-w-0">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Seitenaufrufe</CardTitle>
             <BarChartIcon className="h-4 w-4 text-muted-foreground" />
@@ -129,7 +130,7 @@ export function AnalyticsClient({ summary, chartData, topPages, topSources, devi
             <p className="text-xs text-muted-foreground">{summary.pageViews.change >= 0 ? '+' : ''}{summary.pageViews.change.toFixed(1)}% zum Vormonat</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="min-w-0">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Newsletter Abos</CardTitle>
             <MousePointerClick className="h-4 w-4 text-muted-foreground" />
@@ -139,47 +140,47 @@ export function AnalyticsClient({ summary, chartData, topPages, topSources, devi
             <p className="text-xs text-muted-foreground">{summary.newsletterSubscriptions.change >= 0 ? '+' : ''}{summary.newsletterSubscriptions.change.toFixed(1)}% zum Vormonat</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="min-w-0">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
             <Percent className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{summary.conversionRate.value.toFixed(1)}%</div>
-            <p className="text-xs text-muted-foreground">Buchkäufe / Besucher</p>
+            <div className="text-2xl font-bold">Nicht erfasst</div>
+            <p className="text-xs text-muted-foreground">Keine bestätigten Kaufdaten vorhanden</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Main Grid */}
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
+      <div className="grid min-w-0 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <Card className="min-w-0 lg:col-span-2">
           <CardHeader>
             <CardTitle>Seitenaufrufe</CardTitle>
             <CardDescription>Letzte 6 Monate</CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={pageViewChartConfig} className="h-[250px] w-full">
+            <ChartContainer config={pageViewChartConfig} className="h-[250px] min-w-0 w-full">
               <BarChart accessibilityLayer data={chartData}>
                 <CartesianGrid vertical={false} />
                 <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} />
                 <YAxis hide />
                 <ChartTooltip cursor={false} content={<ChartTooltipContent hideIndicator />} />
-                <Bar dataKey="pageViews" fill="var(--color-pageViews)" radius={8} />
+                <Bar isAnimationActive={false} dataKey="pageViews" fill="var(--color-pageViews)" radius={8} />
               </BarChart>
             </ChartContainer>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="min-w-0">
           <CardHeader>
             <CardTitle>Geräte</CardTitle>
             <CardDescription>Besucher nach Gerätetyp</CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center">
-            <ChartContainer config={deviceChartConfig} className="h-[250px] w-[250px]">
+            <ChartContainer config={deviceChartConfig} className="h-[250px] w-full max-w-[250px] min-w-0">
                 <PieChart>
-                    <Pie data={deviceBreakdown} dataKey="count" nameKey="type" cx="50%" cy="50%" outerRadius={80} label>
+                    <Pie isAnimationActive={false} data={deviceBreakdown} dataKey="count" nameKey="type" cx="50%" cy="50%" outerRadius={80} label>
                         {deviceBreakdown.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={pieChartColors[index % pieChartColors.length]} />
                         ))}
@@ -201,9 +202,9 @@ export function AnalyticsClient({ summary, chartData, topPages, topSources, devi
       </div>
       
       <div className="grid gap-8 md:grid-cols-2">
-        <Card>
+        <Card className="min-w-0">
           <CardHeader>
-            <CardTitle>Top-Seiten</CardTitle>
+            <CardTitle>Top-Seiten</CardTitle>{scopeLabel && <CardDescription>{scopeLabel}</CardDescription>}
           </CardHeader>
           <CardContent>
             <Table>
@@ -224,9 +225,9 @@ export function AnalyticsClient({ summary, chartData, topPages, topSources, devi
             </Table>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="min-w-0">
           <CardHeader>
-            <CardTitle>Top-Quellen</CardTitle>
+            <CardTitle>Top-Quellen</CardTitle>{scopeLabel && <CardDescription>{scopeLabel}</CardDescription>}
           </CardHeader>
           <CardContent>
             <Table>
@@ -250,7 +251,7 @@ export function AnalyticsClient({ summary, chartData, topPages, topSources, devi
       </div>
 
        <div>
-         <Card>
+         <Card className="min-w-0">
            <CardHeader>
              <CardTitle>Letzte Aktivitäten</CardTitle>
            </CardHeader>
@@ -261,7 +262,7 @@ export function AnalyticsClient({ summary, chartData, topPages, topSources, devi
                    <div className="p-2 bg-muted rounded-full">
                      { (event.params?.userAgent || '').toLowerCase().includes('mobi') ? <Smartphone className="h-5 w-5 text-muted-foreground"/> : <Monitor className="h-5 w-5 text-muted-foreground"/> }
                    </div>
-                   <div className="flex-grow">
+                   <div className="min-w-0 flex-grow">
                      <p className="font-medium truncate">{event.path}</p>
                      <p className="text-xs text-muted-foreground">
                         {event.params?.utm_source ? `via ${event.params.utm_source}` : 'Direkter Zugriff'}
@@ -278,7 +279,7 @@ export function AnalyticsClient({ summary, chartData, topPages, topSources, devi
        </div>
 
       <div>
-        <Card>
+        <Card className="min-w-0">
           <CardHeader>
             <CardTitle className="flex items-center gap-2"><LinkIcon className="h-5 w-5" /> UTM-Link-Generator</CardTitle>
             <CardDescription>Erstellen Sie nachverfolgbare Links für Ihre Kampagnen.</CardDescription>
@@ -287,7 +288,7 @@ export function AnalyticsClient({ summary, chartData, topPages, topSources, devi
              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="space-y-2 lg:col-span-2">
                     <Label htmlFor="base-url">Basis-URL</Label>
-                    <Input id="base-url" value={baseUrl} onChange={(e) => setBaseUrl(e.target.value)} placeholder="https://paulik-reisch.de/..." />
+                    <Input id="base-url" value={baseUrl} onChange={(e) => setBaseUrl(e.target.value)} placeholder="https://paulikreisch.de/..." />
                 </div>
                  <div className="space-y-2">
                     <Label htmlFor="campaign">Kampagne (utm_campaign)</Label>
@@ -307,7 +308,7 @@ export function AnalyticsClient({ summary, chartData, topPages, topSources, devi
                     <Label>Generierter Link</Label>
                     <div className="flex items-center gap-2">
                         <Input value={generatedUrl} readOnly className="text-xs bg-muted" />
-                        <Button variant="outline" size="icon" onClick={copyToClipboard}><Copy className="h-4 w-4" /></Button>
+                        <Button variant="outline" size="icon" aria-label="Tracking-Link kopieren" onClick={copyToClipboard}><Copy className="h-4 w-4" /></Button>
                     </div>
                 </div>
             )}
