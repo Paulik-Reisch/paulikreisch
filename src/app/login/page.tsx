@@ -1,4 +1,12 @@
 
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Verwaltung anmelden',
+  robots: { index: false, follow: false, googleBot: { index: false, follow: false } },
+  alternates: { canonical: null },
+};
+
 import { LoginForm } from './login-form';
 import { getSession } from '@/lib/session';
 import { redirect } from 'next/navigation';
