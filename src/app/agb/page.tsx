@@ -5,12 +5,13 @@ import { LegalPage } from "@/components/landing/legal-page";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/page-metadata';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Allgemeine Geschäftsbedingungen',
   description: 'Bedingungen für die Nutzung unserer Angebote und den Erwerb unserer Publikationen.',
-  alternates: { canonical: '/agb' },
-};
+  path: '/agb',
+});
 
 // This is now a Server Component
 export default async function AGBPage() {
