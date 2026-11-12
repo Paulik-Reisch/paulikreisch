@@ -7,7 +7,13 @@ export const dynamic = "force-dynamic";
 import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { AdminHeader } from "./header";
-import { Footer } from "@/components/landing/footer";
+import { AdminFooter } from "./footer";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false, googleBot: { index: false, follow: false } },
+  alternates: { canonical: null },
+};
 
 export default async function AdminLayout({
   children,
@@ -23,7 +29,7 @@ export default async function AdminLayout({
     <div className="flex flex-col min-h-screen">
       <AdminHeader />
       <main className="flex-1 container py-8 md:py-12">{children}</main>
-      <Footer />
+      <AdminFooter />
     </div>
   );
 }
