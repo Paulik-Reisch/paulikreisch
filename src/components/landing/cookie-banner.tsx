@@ -1,5 +1,6 @@
 "use client";
 
+import { isIsolatedManagementHost } from '@/lib/management-hosts';
 import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import './cookie-banner.css';
@@ -43,7 +44,7 @@ export function CookieBanner() {
   const isLegalPage = HIDE_ON_PATHS.some(p => pathname === p || pathname.startsWith(`${p}/`));
 
   useEffect(() => {
-    if (isLegalPage) return;
+    if (isLegalPage || isIsolatedManagementHost(window.location.hostname)) return;
     let storedConsent: string | null = null;
     try { storedConsent = localStorage.getItem(COOKIE_NAME); } catch { /* Show choice when storage is blocked. */ }
     let currentVersion = false;
@@ -56,6 +57,7 @@ export function CookieBanner() {
 
   useEffect(() => {
     const open = () => {
+      if (isIsolatedManagementHost(window.location.hostname)) return;
       try { const saved = JSON.parse(localStorage.getItem(COOKIE_NAME) ?? 'null'); setConsent({ necessary: true, analytics: saved?.version === 2 && saved?.analytics === true, marketing: saved?.marketing === true }); } catch { setConsent(initialConsent); }
       setView('settings'); setShowBanner(true);
     };
