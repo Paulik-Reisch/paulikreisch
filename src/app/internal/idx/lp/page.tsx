@@ -12,7 +12,6 @@ const staticLPs = [
     { href: '/lp2', title: 'LP2 - Excerpt Gate' },
     { href: '/lp3', title: 'LP3 - Book is Live' },
     { href: '/lp-series', title: 'LP - Buchserie' },
-    { href: '/lp-pfeifer', title: 'LP - Pfeifer' },
     { href: '/lp-risitas', title: 'LP - Risitas' },
     { href: '/lp-luin', title: 'LP - Luin' },
     { href: '/lp-mietenwahnsinn', title: 'LP - Mietenwahnsinn' },
