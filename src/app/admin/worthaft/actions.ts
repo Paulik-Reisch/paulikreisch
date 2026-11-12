@@ -2,6 +2,7 @@
 
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
+import { assertAdminMutationOrigin } from "@/lib/admin-request";
 import { getSession } from "@/lib/session";
 import { refreshWorthaftWordLists } from "@/lib/worthaft-refresh";
 
@@ -11,6 +12,7 @@ import { refreshWorthaftWordLists } from "@/lib/worthaft-refresh";
  * which cannot notify the app. Admin session required.
  */
 export async function refreshWorthaftWordListsAction(): Promise<void> {
+  await assertAdminMutationOrigin();
   const result = await refreshWorthaftWordLists({
     getSession,
     expireTag: (tag) => revalidateTag(tag, { expire: 0 }),
