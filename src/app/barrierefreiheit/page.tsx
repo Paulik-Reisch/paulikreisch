@@ -1,9 +1,12 @@
+import type { Metadata } from 'next';
 import { LegalPage } from "@/components/landing/legal-page";
+import { pageMetadata } from '@/lib/page-metadata';
 
-export const metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Barrierefreiheit",
   description: "Erklärung zur Barrierefreiheit gemäß BITV 2.0 und EU-Richtlinie 2016/2102.",
-};
+  path: '/barrierefreiheit',
+});
 
 export default function BarrierefreiheitPage() {
   return (
