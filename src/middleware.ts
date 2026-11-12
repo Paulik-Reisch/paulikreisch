@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
+import { ANALYTICS_HOST, ANALYTICS_ORIGIN, STATIC_HOST, isHiddenManagementPath } from './lib/management-hosts';
 import {
   ADMIN_HOST, ADMIN_ORIGIN, PUBLIC_HOST, PUBLIC_ORIGIN,
   isPrivilegedPath, isLocalHost, isSafeMethod, isSameOrigin, isSiteHost, requestHost,
@@ -27,6 +28,34 @@ export function middleware(request: NextRequest) {
     url.search = search;
     return NextResponse.redirect(url, 301);
   };
+
+  if ((host === ADMIN_HOST || host === STATIC_HOST) && (path === '/upload' || path === '/upload/')) {
+    return safe ? privateResponse(move(ADMIN_ORIGIN, '/admin/upload')) : reject();
+  }
+  // File gateway is a separate public-download surface. Never accept mutation POSTs here.
+  if (host === STATIC_HOST) {
+    if (safe && /^\/f\/[a-f0-9-]{36}$/.test(path)) {
+      const url=request.nextUrl.clone();url.pathname='/static-private'+path;url.search='';
+      return privateResponse(NextResponse.rewrite(url));
+    }
+    return privateResponse(new NextResponse('Not found',{status:404}));
+  }
+  // Dedicated analytics surface: no content mutation routes or ambient admin cookie.
+  if (host === ANALYTICS_HOST) {
+    const destination = path === '/' ? '/analytics-private' : path === '/login' ? '/analytics-private/login' : null;
+    if (destination) {
+      if (!safe && !isSameOrigin(request.headers.get('origin'), ANALYTICS_HOST, true)) return reject();
+      const url = request.nextUrl.clone(); url.pathname = destination; url.search = '';
+      return privateResponse(NextResponse.rewrite(url));
+    }
+    if (safe && (path.startsWith('/_next/') || path === '/favicon.ico')) return privateResponse(NextResponse.next());
+    return privateResponse(new NextResponse('Not found', {status:404}));
+  }
+  // Never expose implementation paths on apex, default backend, admin or another subdomain.
+  if (isHiddenManagementPath(path)) return privateResponse(new NextResponse('Not found',{status:404}));
+  if (host === ADMIN_HOST && (path === '/admin/analytics' || path.startsWith('/admin/analytics/'))) {
+    return safe ? privateResponse(move(ANALYTICS_ORIGIN, '/')) : reject();
+  }
 
   if (host === ADMIN_HOST || local) {
     if (!safe && ((!local && !protectedPath) || (protectedPath && !isSameOrigin(request.headers.get('origin'), host!, !local)))) return reject();
