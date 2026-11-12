@@ -77,15 +77,15 @@ export function LoginForm() {
               type="email" 
               required 
               autoComplete="username" 
-              className="peer rounded-sm bg-gray-100 h-12 pt-4"
+              className="peer rounded-sm h-12 pt-4"
               placeholder=" "
             />
             <Label 
                 htmlFor="email" 
-                className="absolute left-3 top-3.5 text-gray-500 transition-all duration-300 transform 
+                className="absolute left-3 top-3.5 text-muted-foreground transition-all duration-300 transform 
                            peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base 
-                           peer-focus:top-1.5 peer-focus:text-xs peer-focus:text-gray-600
-                           peer-[:not(:placeholder-shown)]:top-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-600">
+                           peer-focus:top-1.5 peer-focus:text-xs peer-focus:text-muted-foreground
+                           peer-[:not(:placeholder-shown)]:top-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-muted-foreground">
                 E-Mail
             </Label>
         </div>
@@ -96,15 +96,15 @@ export function LoginForm() {
               type="password" 
               required 
               autoComplete="current-password" 
-              className="peer rounded-sm bg-gray-100 h-12 pt-4"
+              className="peer rounded-sm h-12 pt-4"
               placeholder=" "
             />
             <Label 
                 htmlFor="password" 
-                className="absolute left-3 top-3.5 text-gray-500 transition-all duration-300 transform 
+                className="absolute left-3 top-3.5 text-muted-foreground transition-all duration-300 transform 
                            peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base 
-                           peer-focus:top-1.5 peer-focus:text-xs peer-focus:text-gray-600
-                           peer-[:not(:placeholder-shown)]:top-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-600">
+                           peer-focus:top-1.5 peer-focus:text-xs peer-focus:text-muted-foreground
+                           peer-[:not(:placeholder-shown)]:top-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-muted-foreground">
                 Passwort
             </Label>
         </div>
