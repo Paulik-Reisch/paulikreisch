@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import { ImageWithLoader as Image } from "@/components/ui/image-with-loader";
@@ -132,6 +133,9 @@ export default function ShopPage() {
                                         <ElevenReaderIcon />
                                         <span><small className="free-badge">Gratis hören auf</small> 11Reader</span>
                                     </a>
+                                    <Link href="/leseprobe" className="link-leseprobe">
+                                        Erst mal reinlesen? 4 Seiten Leseprobe <span aria-hidden="true">→</span>
+                                    </Link>
                                 </div>
                             </article>
 
@@ -223,8 +227,7 @@ export default function ShopPage() {
                             {/* Technische Daten */}
                             <div className="shop-specs">
                                 <h3 style={{marginBottom:'20px'}}>Produktinformationen</h3>
-                                <p style={{fontSize:'0.8rem', color:'#888'}}>Stand: 11. November 2026</p>
-                                
+
                                 <div className="specs-grid">
                                     <div className="spec-item">
                                         <span className="spec-label">Bewertung</span>
@@ -251,10 +254,6 @@ export default function ShopPage() {
                                      <div className="spec-item">
                                         <span className="spec-label">ASIN</span>
                                         <span className="spec-value">B0CVXT9X4J</span>
-                                    </div>
-                                    <div className="spec-item" style={{gridColumn: 'span 2'}}>
-                                        <span className="spec-label">Bestseller-Rang</span>
-                                        <span className="spec-value">Nr. 5.995 in Satire</span>
                                     </div>
                                 </div>
                             </div>
