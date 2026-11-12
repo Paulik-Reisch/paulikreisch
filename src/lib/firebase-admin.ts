@@ -1,4 +1,5 @@
 import 'server-only';
+import {getStorage} from 'firebase-admin/storage';
 import { getApps, initializeApp, applicationDefault, type App } from 'firebase-admin/app';
 import { getAuth, type Auth } from 'firebase-admin/auth';
 import { getFirestore, type Firestore } from 'firebase-admin/firestore';
@@ -22,3 +23,5 @@ export function getAdminAuth(): Auth {
 export function getAdminDb(): Firestore {
   return getFirestore(getAdminApp());
 }
+
+export function getAdminStorage() { return getStorage(getAdminApp()); }

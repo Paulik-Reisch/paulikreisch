@@ -27,8 +27,8 @@ export default async function AdminLayout({
 
   return (
     <div className="flex flex-col min-h-screen">
-      <AdminHeader />
-      <main className="flex-1 container py-8 md:py-12">{children}</main>
+      <AdminHeader showUploads={process.env.PRIVATE_ASSET_RELEASE==='private-prefix-v1-accepted'} />
+      <main className="flex-1 min-w-0 w-full container py-8 md:py-12">{children}</main>
       <AdminFooter />
     </div>
   );

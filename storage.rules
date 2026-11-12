@@ -1,9 +1,18 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    // Allow read and write access to all paths
-    match /{allPaths=**} {
-      allow read, write: if true;
+    function isAuthorizedAdmin() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in [
+          'maximilian.reisch@t-online.de',
+          'philipp.l.paulik@gmail.com'
+        ];
+    }
+    match /{top}/{rest=**} {
+      allow get: if top != 'managed-private-v1';
+      allow list: if request.path != /b/$(bucket)/o && top != 'managed-private-v1';
+      allow write: if top != null && top != 'managed-private-v1' && isAuthorizedAdmin();
     }
   }
 }

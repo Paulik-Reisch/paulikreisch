@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button";
 import { LogoutButton } from "./logout-button";
 import Link from "next/link";
 import { Logo } from "@/components/ui/logo";
-import { Home, BarChart3, Presentation, Sparkles, Users } from "lucide-react";
+import { Home, BarChart3, Presentation, Sparkles, Users, BookOpen } from "lucide-react";
 
-export function AdminHeader() {
+export function AdminHeader({showUploads=false}:{showUploads?:boolean}) {
   return (
     <header className="px-4 lg:px-6 min-h-14 py-2 flex items-center sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur-sm">
       <div className="container mx-auto flex flex-wrap items-center justify-between gap-y-2">
@@ -30,12 +30,14 @@ export function AdminHeader() {
                         Landing Pages
                     </Button>
                 </Link>
-                <Link href="/admin/analytics">
+                <Link href="https://analytics.paulikreisch.de/">
                     <Button variant="ghost">
                         <BarChart3 className="mr-2 h-4 w-4" />
                         Analytics
                     </Button>
                 </Link>
+                 {showUploads&&<Link href="/admin/upload"><Button variant="ghost">Dateien</Button></Link>}
+                 <Link href="/admin/worthaft"><Button variant="ghost"><BookOpen className="mr-2 h-4 w-4" />Worthaft</Button></Link>
                  <Link href="/admin/seo">
                     <Button variant="ghost">
                         <Sparkles className="mr-2 h-4 w-4" />
