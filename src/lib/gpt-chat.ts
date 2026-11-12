@@ -1,10 +1,12 @@
 import { ragContext } from './rag';
 
 const MAX_REQUEST_BYTES = 120_000;
-const MAX_PROVIDER_BYTES = 262_144;
+const MAX_PROVIDER_BYTES = 8_388_608; // 8 MiB abuse backstop; the character cap below is the real limit
 const MAX_MESSAGES = 18;
 const MAX_MESSAGE_LENGTH = 6_000;
 const MAX_TOTAL_CHARACTERS = 50_000;
+const MAX_RESPONSE_CHARACTERS = 120_000; // far beyond max_tokens, only a runaway-stream backstop
+const MAX_OUTPUT_TOKENS = 8_192;
 const WINDOW_MS = 60_000;
 const MAX_REQUESTS_PER_WINDOW = 8;
 const MAX_CONCURRENT_REQUESTS = 2;
@@ -21,6 +23,7 @@ type Dependencies = {
   apiKey: () => string | undefined;
   fetch?: typeof fetch;
   now?: () => number;
+  /** Abort the provider stream after this long without a single byte. Defaults to 60s. */
   timeoutMs?: number;
 };
 
@@ -66,13 +69,13 @@ const TOOLS = [
   },
 ] as const;
 
-function providerEventContent(event: string): { done: boolean; content: string } {
+function providerEventContent(event: string): { done: boolean; content: string; truncated: boolean } {
   const data = event.split('\n')
     .filter(line => line.startsWith('data:'))
     .map(line => line.slice(5).trimStart())
     .join('\n');
-  if (!data) return { done: false, content: '' };
-  if (data === '[DONE]') return { done: true, content: '' };
+  if (!data) return { done: false, content: '', truncated: false };
+  if (data === '[DONE]') return { done: true, content: '', truncated: false };
 
   let payload: unknown;
   try {
@@ -81,15 +84,16 @@ function providerEventContent(event: string): { done: boolean; content: string }
     throw new ChatError(503, 'Die Schreibstube hat gerade keine lesbare Antwort geliefert.');
   }
   if (!payload || typeof payload !== 'object' || !('choices' in payload) || !Array.isArray(payload.choices)) {
-    return { done: false, content: '' };
+    return { done: false, content: '', truncated: false };
   }
   const first = payload.choices[0];
+  const truncated = Boolean(first && typeof first === 'object' && 'finish_reason' in first && first.finish_reason === 'length');
   if (!first || typeof first !== 'object' || !('delta' in first) || !first.delta || typeof first.delta !== 'object'
     || !('content' in first.delta) || typeof first.delta.content !== 'string') {
-    return { done: false, content: '' };
+    return { done: false, content: '', truncated };
   }
   // Deltas are arbitrary fragments: even a single space or newline is content.
-  return { done: false, content: first.delta.content };
+  return { done: false, content: first.delta.content, truncated };
 }
 
 const SYSTEM_PROMPT = `Du bist die experimentelle Schreib-KI von Paulik & Reisch. Schreibe auf Deutsch mit pointierter, warmherziger Satire: genaue Alltagsbeobachtungen, trockenes Understatement, überraschende Vergleiche und gelegentliche bürokratische Übertreibung. Richte den Witz auf Situationen und Systeme, nicht auf schutzbedürftige Menschen. Passe dich dem Auftrag an, hilf auch beim Überarbeiten und Erklären. Erfinde keine Tatsachen über reale Personen. Übernimm keine längeren Passagen aus dem Buch und behaupte nicht, ein Originaltext zu sein. Wenn ein nüchterner Ton gewünscht wird, folge diesem Wunsch.
@@ -202,7 +206,12 @@ export function createChatHandler(dependencies: Dependencies) {
       activeRequests += 1;
 
       const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), dependencies.timeoutMs ?? 30_000);
+      const timeoutMs = dependencies.timeoutMs ?? 60_000;
+      let timer = setTimeout(() => controller.abort(), timeoutMs);
+      const resetTimer = () => {
+        clearTimeout(timer);
+        timer = setTimeout(() => controller.abort(), timeoutMs);
+      };
       let streamStarted = false;
       try {
         const lastUserMessage = messages.at(-1)?.content ?? '';
@@ -210,7 +219,7 @@ export function createChatHandler(dependencies: Dependencies) {
         const systemContent = ragCtx
           ? `${SYSTEM_PROMPT}\n\nStilistische Referenzen (nicht kopieren, nur adaptieren):\n${ragCtx}`
           : SYSTEM_PROMPT;
-        const response = await fetchProvider('https://openrouter.ai/api/v1/chat/completions', {
+        const requestFromProvider = (maxTokens?: number) => fetchProvider('https://openrouter.ai/api/v1/chat/completions', {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${apiKey}`,
@@ -222,7 +231,7 @@ export function createChatHandler(dependencies: Dependencies) {
           },
           body: JSON.stringify({
             model: 'openrouter/free',
-            max_tokens: 900,
+            ...(maxTokens ? { max_tokens: maxTokens } : {}),
             temperature: 0.82,
             reasoning: { effort: 'low' },
             stream: true,
@@ -233,6 +242,13 @@ export function createChatHandler(dependencies: Dependencies) {
           signal: controller.signal,
           cache: 'no-store',
         });
+        let response = await requestFromProvider(MAX_OUTPUT_TOKENS);
+        if (!response.ok && response.status === 400) {
+          // openrouter/free rotates between models; a few reject an explicit
+          // max_tokens above their own cap. Retry once letting the model decide.
+          await response.body?.cancel();
+          response = await requestFromProvider();
+        }
         if (!response.ok) {
           await response.body?.cancel();
           throw new ChatError(503, 'Die Schreibstube ist gerade nicht erreichbar. Bitte versuche es später erneut.');
@@ -257,15 +273,17 @@ export function createChatHandler(dependencies: Dependencies) {
               let totalBytes = 0;
               let totalCharacters = 0;
               let fullMessage = '';
+              let truncated = false;
               let done = false;
               const sendEvent = (event: string, data: unknown) => {
                 stream.enqueue(encoder.encode(`${event ? `event: ${event}\n` : ''}data: ${JSON.stringify(data)}\n\n`));
               };
               const processEvent = (event: string) => {
                 const result = providerEventContent(event);
+                truncated = truncated || result.truncated;
                 if (result.content) {
                   totalCharacters += result.content.length;
-                  if (totalCharacters > 40_000) throw new ChatError(503, 'Die Antwort der Schreibstube ist zu lang.');
+                  if (totalCharacters > MAX_RESPONSE_CHARACTERS) throw new ChatError(503, 'Die Antwort der Schreibstube ist zu lang.');
                   fullMessage += result.content;
                   sendEvent('', { content: result.content });
                 }
@@ -275,6 +293,7 @@ export function createChatHandler(dependencies: Dependencies) {
                 while (!done) {
                   const { done: ended, value } = await reader.read();
                   if (ended) break;
+                  resetTimer();
                   totalBytes += value.byteLength;
                   if (totalBytes > MAX_PROVIDER_BYTES) throw new ChatError(413, 'Die Antwort der Schreibstube ist zu groß.');
                   buffer = (buffer + decoder.decode(value, { stream: true })).replace(/\r\n/g, '\n');
@@ -293,6 +312,11 @@ export function createChatHandler(dependencies: Dependencies) {
                 if (!done && buffer.trim()) done = processEvent(buffer);
                 if (!done || !fullMessage.trim()) {
                   throw new ChatError(503, 'Die Schreibstube hat gerade keine vollständige Antwort geliefert.');
+                }
+                if (truncated) {
+                  const hint = '\n\n*\u2026Antwort gek\u00fcrzt. Schreib \u201eweiter\u201c, dann mache ich weiter.*';
+                  fullMessage += hint;
+                  sendEvent('', { content: hint });
                 }
               } catch (error) {
                 if (!cancelled) {
