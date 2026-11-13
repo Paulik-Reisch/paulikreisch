@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSearchParams } from 'next/navigation';
+import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { createTrackedUrl } from "@/lib/utils";
+import { buildCampaignUrl, CAMPAIGN_MEDIUMS, CAMPAIGN_SOURCES } from "@/lib/campaign-url";
 import {
   Users,
   BarChart as BarChartIcon,
@@ -15,8 +15,6 @@ import {
   Percent,
   Link as LinkIcon,
   Copy,
-  TrendingUp,
-  Globe,
   Smartphone,
   Monitor
 } from "lucide-react";
@@ -50,20 +48,14 @@ const deviceChartConfig = {
   },
 } satisfies ChartConfig;
 
-type TrackingData = {
-    source: string | null;
-    medium: string | null;
-    campaign: string | null;
-    content: string | null;
-    term: string | null;
-}
+type Metric = { value: number; change: number; changeSamePeriod: number };
 
 export type AnalyticsClientProps = {
     summary: {
-        visitors: { value: number; change: number };
-        pageViews: { value: number; change: number };
-        newsletterSubscriptions: { value: number; change: number };
-        conversionRate: { value: number; change: number };
+        visitors: Metric;
+        pageViews: Metric;
+        newsletterSubscriptions: Metric;
+        conversionRate: Metric;
     };
     chartData: { month: string; pageViews: number }[];
     topPages: { path: string; views: number }[];
@@ -73,33 +65,39 @@ export type AnalyticsClientProps = {
     scopeLabel?: string;
 }
 
+const formatChange = (value: number) => `${value >= 0 ? '+' : ''}${value.toFixed(1)}%`;
+
+/** The current month to date compared with the previous month, both ways. */
+function ComparisonLines({ metric }: { metric: Metric }) {
+  return (
+    <>
+      <p className="text-xs text-muted-foreground">{formatChange(metric.changeSamePeriod)} zum Vormonat (gleicher Zeitraum)</p>
+      <p className="text-xs text-muted-foreground">{formatChange(metric.change)} zum Vormonat (gesamt)</p>
+    </>
+  );
+}
 
 export function AnalyticsClient({ summary, chartData, topPages, topSources, deviceBreakdown, recentEvents, scopeLabel }: AnalyticsClientProps) {
   const { toast } = useToast();
-  
-  // State for UTM Link Generator
-  const [baseUrl, setBaseUrl] = useState("https://paulikreisch.de");
+
+  // State for the campaign link builder
+  const [baseUrl, setBaseUrl] = useState("https://paulikreisch.de/shop");
+  const [source, setSource] = useState<string>(CAMPAIGN_SOURCES[0]);
+  const [medium, setMedium] = useState<string>(CAMPAIGN_MEDIUMS[0]);
   const [campaign, setCampaign] = useState("");
-  const [medium, setMedium] = useState("");
   const [content, setContent] = useState("");
-  const [generatedUrl, setGeneratedUrl] = useState("");
-  
-  // Effect for UTM Generator
-  useEffect(() => {
-    if (baseUrl && campaign && medium) {
-        const url = createTrackedUrl(baseUrl, campaign, medium, content);
-        setGeneratedUrl(url);
-    } else {
-        setGeneratedUrl("");
-    }
-  }, [baseUrl, campaign, medium, content]);
+
+  const linkResult = campaign.trim()
+    ? buildCampaignUrl({ baseUrl, source, medium, campaign, content })
+    : null;
+  const generatedUrl = linkResult?.ok ? linkResult.url : "";
 
   const copyToClipboard = () => {
     if (generatedUrl) {
       navigator.clipboard.writeText(generatedUrl);
       toast({
         title: "Kopiert!",
-        description: "Der Tracking-Link wurde in die Zwischenablage kopiert.",
+        description: "Der Kampagnen-Link wurde in die Zwischenablage kopiert.",
       });
     }
   };
@@ -112,12 +110,13 @@ export function AnalyticsClient({ summary, chartData, topPages, topSources, devi
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="min-w-0">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Besucher</CardTitle>
+            <CardTitle className="text-sm font-medium">Eingewilligte Browser</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{summary.visitors.value.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">{summary.visitors.change >= 0 ? '+' : ''}{summary.visitors.change.toFixed(1)}% zum Vormonat</p>
+            <ComparisonLines metric={summary.visitors} />
+            <p className="text-xs text-muted-foreground">Pseudonyme Browser-IDs, keine verifizierten Personen</p>
           </CardContent>
         </Card>
         <Card className="min-w-0">
@@ -127,17 +126,18 @@ export function AnalyticsClient({ summary, chartData, topPages, topSources, devi
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{summary.pageViews.value.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">{summary.pageViews.change >= 0 ? '+' : ''}{summary.pageViews.change.toFixed(1)}% zum Vormonat</p>
+            <ComparisonLines metric={summary.pageViews} />
           </CardContent>
         </Card>
         <Card className="min-w-0">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Newsletter Abos</CardTitle>
+            <CardTitle className="text-sm font-medium">Anmeldeanfragen</CardTitle>
             <MousePointerClick className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{summary.newsletterSubscriptions.value.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">{summary.newsletterSubscriptions.change >= 0 ? '+' : ''}{summary.newsletterSubscriptions.change.toFixed(1)}% zum Vormonat</p>
+            <ComparisonLines metric={summary.newsletterSubscriptions} />
+            <p className="text-xs text-muted-foreground">Erfolgreiche Formular-Anfragen, keine bestätigten Abos</p>
           </CardContent>
         </Card>
         <Card className="min-w-0">
@@ -175,7 +175,7 @@ export function AnalyticsClient({ summary, chartData, topPages, topSources, devi
         <Card className="min-w-0">
           <CardHeader>
             <CardTitle>Geräte</CardTitle>
-            <CardDescription>Besucher nach Gerätetyp</CardDescription>
+            <CardDescription>Eingewilligte Browser pro Tag nach Gerätetyp</CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center">
             <ChartContainer config={deviceChartConfig} className="h-[250px] w-full max-w-[250px] min-w-0">
@@ -200,7 +200,7 @@ export function AnalyticsClient({ summary, chartData, topPages, topSources, devi
           </CardContent>
         </Card>
       </div>
-      
+
       <div className="grid gap-8 md:grid-cols-2">
         <Card className="min-w-0">
           <CardHeader>
@@ -234,7 +234,7 @@ export function AnalyticsClient({ summary, chartData, topPages, topSources, devi
                 <TableHeader>
                     <TableRow>
                         <TableHead>Quelle</TableHead>
-                        <TableHead className="text-right">Besucher</TableHead>
+                        <TableHead className="text-right">Eingewilligte Browser</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -246,6 +246,7 @@ export function AnalyticsClient({ summary, chartData, topPages, topSources, devi
                     ))}
                 </TableBody>
             </Table>
+            <p className="mt-3 text-xs text-muted-foreground">„Unbekannt“ heißt: keine Herkunft erkannt, nicht sicher direkt eingegeben.</p>
           </CardContent>
         </Card>
       </div>
@@ -265,7 +266,7 @@ export function AnalyticsClient({ summary, chartData, topPages, topSources, devi
                    <div className="min-w-0 flex-grow">
                      <p className="font-medium truncate">{event.path}</p>
                      <p className="text-xs text-muted-foreground">
-                        {event.params?.utm_source ? `via ${event.params.utm_source}` : 'Direkter Zugriff'}
+                        {event.params?.utm_source ? `via ${event.params.utm_source}` : 'Keine erkennbare Quelle'}
                      </p>
                    </div>
                    <div className="text-xs text-muted-foreground text-right shrink-0">
@@ -281,37 +282,55 @@ export function AnalyticsClient({ summary, chartData, topPages, topSources, devi
       <div>
         <Card className="min-w-0">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2"><LinkIcon className="h-5 w-5" /> UTM-Link-Generator</CardTitle>
-            <CardDescription>Erstellen Sie nachverfolgbare Links für Ihre Kampagnen.</CardDescription>
+            <CardTitle className="flex items-center gap-2"><LinkIcon className="h-5 w-5" /> Kampagnen-Link-Builder</CardTitle>
+            <CardDescription>Feste UTM-Begriffe, damit Kampagnen überall gleich heißen. Keine Empfänger-IDs, E-Mail-Adressen oder Tokens in den Werten.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="space-y-2 lg:col-span-2">
-                    <Label htmlFor="base-url">Basis-URL</Label>
-                    <Input id="base-url" value={baseUrl} onChange={(e) => setBaseUrl(e.target.value)} placeholder="https://paulikreisch.de/..." />
+                    <Label htmlFor="base-url">Ziel-URL</Label>
+                    <Input id="base-url" value={baseUrl} onChange={(e) => setBaseUrl(e.target.value)} placeholder="https://paulikreisch.de/shop" />
                 </div>
                  <div className="space-y-2">
-                    <Label htmlFor="campaign">Kampagne (utm_campaign)</Label>
-                    <Input id="campaign" value={campaign} onChange={(e) => setCampaign(e.target.value)} placeholder="z.B. sommer-aktion" required />
-                </div>
+                    <Label htmlFor="utm-source">Quelle (utm_source)</Label>
+                    <Select value={source} onValueChange={setSource}>
+                      <SelectTrigger id="utm-source"><SelectValue placeholder="Quelle wählen" /></SelectTrigger>
+                      <SelectContent>
+                        {CAMPAIGN_SOURCES.map((option) => <SelectItem key={option} value={option}>{option}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                 </div>
                  <div className="space-y-2">
-                    <Label htmlFor="medium">Medium (utm_medium)</Label>
-                    <Input id="medium" value={medium} onChange={(e) => setMedium(e.target.value)} placeholder="z.B. social, email" required />
-                </div>
+                    <Label htmlFor="utm-medium">Medium (utm_medium)</Label>
+                    <Select value={medium} onValueChange={setMedium}>
+                      <SelectTrigger id="utm-medium"><SelectValue placeholder="Medium wählen" /></SelectTrigger>
+                      <SelectContent>
+                        {CAMPAIGN_MEDIUMS.map((option) => <SelectItem key={option} value={option}>{option}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                 </div>
+                 <div className="space-y-2">
+                    <Label htmlFor="utm-campaign">Kampagne (utm_campaign)</Label>
+                    <Input id="utm-campaign" value={campaign} onChange={(e) => setCampaign(e.target.value)} placeholder="z.B. buchstart_2026_11" required />
+                 </div>
                  <div className="space-y-2 lg:col-span-2">
-                    <Label htmlFor="content">Inhalt (utm_content, optional)</Label>
-                    <Input id="content" value={content} onChange={(e) => setContent(e.target.value)} placeholder="z.B. post-1, header-link" />
-                </div>
+                    <Label htmlFor="utm-content">Inhalt (utm_content, optional)</Label>
+                    <Input id="utm-content" value={content} onChange={(e) => setContent(e.target.value)} placeholder="z.B. bio, story_01, poster_a" />
+                 </div>
              </div>
+            {linkResult && !linkResult.ok && (
+                <p role="alert" className="text-sm text-destructive">{linkResult.error}</p>
+            )}
             {generatedUrl && (
                 <div className="space-y-2 pt-2">
                     <Label>Generierter Link</Label>
                     <div className="flex items-center gap-2">
                         <Input value={generatedUrl} readOnly className="text-xs bg-muted" />
-                        <Button variant="outline" size="icon" aria-label="Tracking-Link kopieren" onClick={copyToClipboard}><Copy className="h-4 w-4" /></Button>
+                        <Button variant="outline" size="icon" aria-label="Kampagnen-Link kopieren" onClick={copyToClipboard}><Copy className="h-4 w-4" /></Button>
                     </div>
                 </div>
             )}
+            <p className="text-xs text-muted-foreground">Nur Kleinbuchstaben und feste Begriffe halten die Auswertung vergleichbar. Die laufende UTM-Erfassung auf der Website ist eine eigene Ausbaustufe und noch nicht live; die Quellen-Auswertung oben nutzt bis dahin nur vorhandene Daten.</p>
           </CardContent>
         </Card>
       </div>
