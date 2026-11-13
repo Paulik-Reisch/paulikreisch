@@ -9,7 +9,7 @@ export function AdminHeader({showUploads=false}:{showUploads?:boolean}) {
     <header className="px-4 lg:px-6 min-h-14 py-2 flex items-center sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur-sm">
       <div className="container mx-auto flex flex-wrap items-center justify-between gap-y-2">
         <div className="flex items-center gap-2 sm:gap-4">
-            <Link href="/admin/authors" className="flex items-center justify-center">
+            <Link href="/authors" className="flex items-center justify-center">
               <div className="flex items-center gap-2">
                 <Logo className="h-8 w-auto" />
                 <span className="hidden sm:inline font-headline font-semibold text-lg ml-2">Admin</span>
@@ -18,13 +18,13 @@ export function AdminHeader({showUploads=false}:{showUploads?:boolean}) {
 
         </div>
              <nav aria-label="Verwaltung" className="order-last flex w-full flex-wrap items-center gap-1 xl:order-none xl:w-auto">
-                 <Link href="/admin/authors">
+                 <Link href="/authors">
                     <Button variant="ghost">
                         <Users className="mr-2 h-4 w-4" />
                         Autoren
                     </Button>
                 </Link>
-                <Link href="/admin/lp">
+                <Link href="/lp">
                     <Button variant="ghost">
                         <Presentation className="mr-2 h-4 w-4" />
                         Landing Pages
@@ -36,9 +36,9 @@ export function AdminHeader({showUploads=false}:{showUploads?:boolean}) {
                         Analytics
                     </Button>
                 </Link>
-                 {showUploads&&<Link href="/admin/upload"><Button variant="ghost">Dateien</Button></Link>}
-                 <Link href="/admin/worthaft"><Button variant="ghost"><BookOpen className="mr-2 h-4 w-4" />Worthaft</Button></Link>
-                 <Link href="/admin/seo">
+                 {showUploads&&<Link href="/upload"><Button variant="ghost">Dateien</Button></Link>}
+                 <Link href="/worthaft"><Button variant="ghost"><BookOpen className="mr-2 h-4 w-4" />Worthaft</Button></Link>
+                 <Link href="/seo">
                     <Button variant="ghost">
                         <Sparkles className="mr-2 h-4 w-4" />
                         SEO
