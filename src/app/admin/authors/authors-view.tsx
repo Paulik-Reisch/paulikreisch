@@ -1,3 +1,4 @@
+
 import type { Author } from "@/lib/firestore";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -23,7 +24,7 @@ export function AuthorsAdminView({authors}:{authors:Author[]}) {
                     <p className="text-muted-foreground">Verwalten Sie hier die Autorenprofile.</p>
                 </div>
                 <Button asChild className="w-full sm:w-auto shrink-0">
-                    <Link href="/admin/authors/editor/new">
+                    <Link href="/authors/editor/new">
                         <PlusCircle className="mr-2 h-4 w-4" />
                         Neuen Autor anlegen
                     </Link>

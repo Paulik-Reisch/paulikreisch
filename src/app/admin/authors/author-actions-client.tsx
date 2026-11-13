@@ -48,7 +48,7 @@ export function AuthorActions({ author }: { author: Author }) {
             </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-            <Link href={`/admin/authors/editor/${author.slug}`}>
+            <Link href={`/authors/editor/${author.slug}`}>
                 <DropdownMenuItem>
                     <Edit className="mr-2 h-4 w-4" />
                     Bearbeiten

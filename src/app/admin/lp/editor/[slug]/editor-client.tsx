@@ -58,9 +58,9 @@ export function LpEditorClient({ page }: { page?: LandingPage }) {
             
             const timer = setTimeout(() => {
                 if (isNew && state.newSlug) {
-                    window.location.href = `/admin/lp/editor/${state.newSlug}`;
+                    window.location.href = `/lp/editor/${state.newSlug}`;
                 } else {
-                    window.location.href = '/admin/lp';
+                    window.location.href = '/lp';
                 }
             }, 500);
             
@@ -132,7 +132,7 @@ export function LpEditorClient({ page }: { page?: LandingPage }) {
             </Tabs>
 
             <div className="flex justify-end gap-4 mt-6">
-                <Link href="/admin/lp">
+                <Link href="/lp">
                     <Button type="button" variant="outline">Abbrechen</Button>
                 </Link>
                 <Button type="submit" disabled={isPending}>

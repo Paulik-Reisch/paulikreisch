@@ -31,9 +31,9 @@ export function AuthorEditorClient({ author }: { author?: Author }) {
       
       const timer = setTimeout(() => {
         if (isNew && state.newSlug) {
-            router.push(`/admin/authors/editor/${state.newSlug}`);
+            router.push(`/authors/editor/${state.newSlug}`);
         } else {
-            router.push('/admin/authors');
+            router.push('/authors');
             router.refresh();
         }
       }, 500);
@@ -89,7 +89,7 @@ export function AuthorEditorClient({ author }: { author?: Author }) {
       </div>
 
       <div className="flex justify-end gap-4">
-        <Link href="/admin/authors">
+        <Link href="/authors">
             <Button type="button" variant="outline">Abbrechen</Button>
         </Link>
         <Button type="submit" disabled={isPending}>

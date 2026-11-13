@@ -22,5 +22,5 @@ export async function refreshWorthaftWordListsAction(): Promise<void> {
     redirect("/login");
   }
 
-  redirect("/admin/worthaft?refreshed=1");
+  redirect("/worthaft?refreshed=1");
 }

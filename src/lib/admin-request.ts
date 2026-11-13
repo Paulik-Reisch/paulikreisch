@@ -11,3 +11,10 @@ export async function assertAdminMutationOrigin(): Promise<void> {
     throw new Error('Admin-Aktion nur auf der Verwaltungsadresse erlaubt.');
   }
 }
+
+/** Only login/logout and file actions opt into the static host. General admin mutations stay admin-only. */
+export async function assertFileMutationOrigin(): Promise<void> {
+  const h = await headers(); const host = requestHost(h);
+  if (host === 'static.paulikreisch.de' && isSameOrigin(h.get('origin'), host, true)) return;
+  return assertAdminMutationOrigin();
+}
