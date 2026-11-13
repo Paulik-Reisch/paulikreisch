@@ -43,9 +43,12 @@ export const getWorthaftTileDimensions = (width: number, height: number) => ({
 });
 
 export const getWorthaftStatusClass = (status: string, palette: WorthaftSettings['palette']) => {
+  // Hover-Farben muessen der Statusfarbe entsprechen: Auf Touch-Geraeten bleibt
+  // :hover nach dem Tippen "kleben" und wuerde sonst die Statusfarbe uebermalen.
   if (status === 'correct') return palette === 'classic'
-    ? 'bg-[#477a43] text-white border-[#477a43]' : 'bg-[#0067d9] text-white border-[#0067d9]';
-  if (status === 'present') return 'bg-[#e8be3c] text-neutral-950 border-[#e8be3c]';
-  if (status === 'absent') return 'bg-[#56565d] text-white border-[#56565d]';
+    ? 'bg-[#477a43] text-white border-[#477a43] hover:bg-[#477a43] hover:text-white'
+    : 'bg-[#0067d9] text-white border-[#0067d9] hover:bg-[#0067d9] hover:text-white';
+  if (status === 'present') return 'bg-[#e8be3c] text-neutral-950 border-[#e8be3c] hover:bg-[#e8be3c] hover:text-neutral-950';
+  if (status === 'absent') return 'bg-[#56565d] text-white border-[#56565d] hover:bg-[#56565d] hover:text-white';
   return '';
 };

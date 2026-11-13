@@ -141,21 +141,28 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
   const radiusPx = (settings.keyRadius / 4) * 24;
   const keyGap = 4;
 
-  const keyStyle = (rowLength: number, widthMultiplier = 1): React.CSSProperties => {
-    const slotWidth = (keyboardWidth - (rowLength - 1) * keyGap) / rowLength;
-    return {
-      width: `${Math.min(widthPx * widthMultiplier, Math.max(slotWidth, 18))}px`,
-      minWidth: 0,
-      flexShrink: 1,
-      height: `${heightPx}px`,
-      fontSize: `${fontPx}px`,
-      borderRadius: `${radiusPx}px`,
-    };
-  };
+  // Alle Tasten gleich breit: Breite richtet sich nach der laengsten Reihe (10 Tasten),
+  // kuerzere Reihen bleiben dadurch schmaler und werden zentriert.
+  const uniformKeyWidth = Math.min(widthPx, Math.max((keyboardWidth - 9 * keyGap) / 10, 18));
+  // SEND und LOESCHEN sind bewusst breiter (exakt 2 Tastenslots), alle anderen Tasten
+  // gleich breit. Dadurch ist die letzte Reihe trotz Heisser-Tipp- und
+  // Einstellungs-Taste exakt so lang wie die laengste Reihe (10 Slots) und niemals
+  // laenger (Vorgabe von Max, 13.11.2026).
+  const keyStyle = (wide = false): React.CSSProperties => ({
+    // Auf schmalen Screens gegen die tatsaechliche Container-Breite (100vw - 2rem) kappen,
+    // damit Reihe 1 nicht schmaler wird als die kuerzeren Reihen.
+    width: wide
+      ? `min(${2 * uniformKeyWidth + keyGap}px, calc(2 * (100vw - 2rem - ${9 * keyGap}px) / 10 + ${keyGap}px))`
+      : `min(${uniformKeyWidth}px, calc((100vw - 2rem - ${9 * keyGap}px) / 10))`,
+    minWidth: 0,
+    flexShrink: 1,
+    height: `${heightPx}px`,
+    fontSize: `${fontPx}px`,
+    borderRadius: `${radiusPx}px`,
+  });
 
   const isHotTipActive = !hotTipUsed && gameState === 'playing' && settings.hotTipEnabled;
   const letterRows = rows.slice(0, 3);
-  const lastRowLength = 7 + (settings.hotTipEnabled && !hotTipUsed ? 1 : 0);
 
   return (
     <div
@@ -164,14 +171,14 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
       style={{ width: `min(calc(100vw - 2rem), ${keyboardWidth}px)` }}
     >
       {letterRows.map((row, i) => (
-        <div key={i} className="flex flex-row justify-between gap-1 w-full">
+        <div key={i} className="flex flex-row justify-center gap-1 w-full">
           {row.map(key => {
             return (
               <Button
                 key={key}
                 onClick={() => handleKeyClick(key)}
                 variant="outline"
-                style={keyStyle(row.length)}
+                style={keyStyle()}
                 className={cn(
                   'h-auto p-0 font-bold uppercase flex items-center justify-center transition-colors duration-300 rounded-[5px] md:rounded-[10px]',
                   getStatusClass(key)
@@ -185,7 +192,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
       ))}
 
       {/* Letzte Reihe: SEND + Sondertasten + die zwei Icon-Keys (🔥 Heißer Tipp, ⚙️ Einstellungen) */}
-      <div className="flex flex-row justify-between gap-1 w-full">
+      <div className="flex flex-row justify-center gap-1 w-full">
         {['SEND', 'Ü', 'Ö', 'Ä', 'ẞ', 'DELETE'].map(key => {
           const isSend = key === 'SEND';
           return (
@@ -194,7 +201,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
               onClick={() => handleKeyClick(key)}
               aria-label={isSend ? 'Wort prüfen' : key === 'DELETE' ? 'Rücktaste' : undefined}
               variant="outline"
-              style={keyStyle(lastRowLength, isSend ? 1.35 : 1)}
+              style={keyStyle(isSend || key === 'DELETE')}
               className={cn(
                 'h-auto p-0 font-bold uppercase flex items-center justify-center transition-colors duration-300 rounded-[5px] md:rounded-[10px]',
                 getStatusClass(key)
@@ -212,7 +219,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
             disabled={hotTipUsed || gameState !== 'playing'}
             variant="outline"
             aria-label="Heißer Tipp – einen Buchstaben aufdecken"
-            style={keyStyle(lastRowLength)}
+            style={keyStyle()}
             className={cn(
               "h-auto p-0 text-orange-500 border-orange-500/60 dark:text-orange-200/70 dark:border-orange-200/25 flex items-center justify-center transition-colors rounded-[5px] md:rounded-[10px] relative overflow-hidden",
               isHotTipActive && settings.animationsEnabled && "flame-inner-glow"
@@ -227,7 +234,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
           onClick={onOpenSettings}
           variant="outline"
           aria-label="Einstellungen öffnen"
-          style={keyStyle(lastRowLength)}
+          style={keyStyle()}
           className="h-auto p-0 flex items-center justify-center transition-colors rounded-[5px] md:rounded-[10px]"
         >
           <Gear className="h-5 w-5" />
