@@ -25,7 +25,7 @@ export default async function LandingPagesAdminPage() {
                     <h1 className="text-3xl font-bold font-headline">Landing Page Manager</h1>
                     <p className="text-muted-foreground">Erstellen, bearbeiten und verwalten Sie hier Ihre Landing Pages.</p>
                 </div>
-                <Link href="/admin/lp/editor/new">
+                <Link href="/lp/editor/new">
                     <Button>
                         <PlusCircle className="mr-2 h-4 w-4" />
                         Neue Landing Page
