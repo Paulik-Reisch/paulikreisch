@@ -14,6 +14,8 @@ export interface ShortLinkRepository {
   get(code:string):Promise<ShortLink|null>;
   list(cursor?:string):Promise<{records:ShortLink[];nextCursor?:string}>;
   setActive(code:string,revision:string,active:boolean):Promise<void>;
+  update(code:string,revision:string,fields:{label:string;target:string}):Promise<void>;
+  delete(code:string,revision:string):Promise<void>;
   increment(record:ShortLink):Promise<void>;
 }
 export function validateShortLinkTarget(input:unknown):string {
