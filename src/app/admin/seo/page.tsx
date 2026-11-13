@@ -49,7 +49,7 @@ export default async function SeoAdminPage() {
                 <TableCell>{hasTitle ? <CheckCircle2 className="h-5 w-5 text-green-600"/> : <XCircle className="h-5 w-5 text-amber-600" />}</TableCell>
                 <TableCell>{hasDesc ? <CheckCircle2 className="h-5 w-5 text-green-600"/> : <XCircle className="h-5 w-5 text-amber-600" />}</TableCell>
                 <TableCell className="text-right">
-                    <Link href={`/admin/seo/editor/${item.slug}`}>
+                    <Link href={`/seo/editor/${item.slug}`}>
                         <Button variant="outline" size="sm">
                             <Edit className="mr-2 h-3 w-3"/> Bearbeiten
                         </Button>
