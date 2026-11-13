@@ -29,7 +29,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(url, 301);
   };
 
-  if ((host === ADMIN_HOST || host === STATIC_HOST) && (path === '/upload' || path === '/upload/')) {
+  if ((host === PUBLIC_HOST || host === ADMIN_HOST || host === STATIC_HOST) && (path === '/upload' || path === '/upload/')) {
     return safe ? privateResponse(move(ADMIN_ORIGIN, '/admin/upload')) : reject();
   }
   // File gateway is a separate public-download surface. Never accept mutation POSTs here.
