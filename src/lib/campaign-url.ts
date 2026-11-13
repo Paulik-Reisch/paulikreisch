@@ -83,4 +83,4 @@ export function buildCampaignUrl(input: CampaignUrlInput): CampaignUrlResult {
   if (content) url.searchParams.set('utm_content', content);
 
   return { ok: true, url: url.toString() };
-  }
+}
