@@ -26,3 +26,22 @@ export async function setShortLinkActiveAction(form:FormData):Promise<void>{
   revalidatePath('/links');
   redirect(error?'/links?notice=change-error':'/links?notice=changed');
 }
+
+export async function updateShortLinkAction(form:FormData):Promise<void>{
+  await requireShortLinkManager();let error=false;
+  try{
+    const code=form.get('code');const revision=form.get('revision');
+    if(typeof code!=='string'||!SHORT_LINK_CODE.test(code)||typeof revision!=='string'||!/^\d+$/.test(revision))throw new Error('Ungültige Änderung.');
+    await shortLinks().update(code,revision,{label:validateShortLinkLabel(form.get('label')),target:validateShortLinkTarget(form.get('target'))});
+  }catch{error=true;}
+  revalidatePath('/links');redirect(error?'/links?notice=change-error':'/links?notice=changed');
+}
+export async function deleteShortLinkAction(form:FormData):Promise<void>{
+  await requireShortLinkManager();let error=false;
+  try{
+    const code=form.get('code');const revision=form.get('revision');
+    if(form.get('confirmDelete')!=='yes'||typeof code!=='string'||!SHORT_LINK_CODE.test(code)||typeof revision!=='string'||!/^\d+$/.test(revision))throw new Error('Löschung nicht bestätigt.');
+    await shortLinks().delete(code,revision);
+  }catch{error=true;}
+  revalidatePath('/links');redirect(error?'/links?notice=change-error':'/links?notice=deleted');
+}
