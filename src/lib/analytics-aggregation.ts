@@ -6,6 +6,11 @@
  * list of events, so the dashboard needs a single read of that history. The
  * results are the same as before: all-time top pages, sources and devices, the
  * current and previous month summary, and the last six months chart.
+ *
+ * Each summary metric carries two comparisons: the full previous month and the
+ * equally long elapsed period of the previous month. A young month compared
+ * only with a complete one always looks bad, so both numbers are shown with
+ * clear labels instead.
  */
 
 export interface AnalyticsEventInput {
@@ -21,18 +26,35 @@ export interface MonthlyPageViews {
   pageViews: number;
 }
 
+export interface AnalyticsMetric {
+  /** Current month to date. */
+  value: number;
+  /** Percent change vs. the full previous month. */
+  change: number;
+  /** Percent change vs. the equally long elapsed period of the previous month. */
+  changeSamePeriod: number;
+}
+
 export interface AnalyticsAggregates {
   summary: {
-    visitors: { value: number; change: number };
-    pageViews: { value: number; change: number };
-    newsletterSubscriptions: { value: number; change: number };
-    conversionRate: { value: number; change: number };
+    visitors: AnalyticsMetric;
+    pageViews: AnalyticsMetric;
+    newsletterSubscriptions: AnalyticsMetric;
+    conversionRate: AnalyticsMetric;
   };
   chart: MonthlyPageViews[];
   topPages: { path: string; views: number }[];
   topSources: { source: string; visitors: number }[];
   deviceBreakdown: { type: string; count: number }[];
 }
+
+/**
+ * Events without campaign data land here. A missing origin is unknown, not
+ * proof that someone typed the address directly, so the bucket is named
+ * accordingly. Historical events keep their stored data; only the grouping
+ * label changed.
+ */
+export const UNKNOWN_SOURCE = 'Unbekannt';
 
 export const CHART_MONTHS = 6;
 
@@ -43,6 +65,12 @@ const percentChange = (current: number, previous: number) => {
   if (previous === 0) return current > 0 ? 100 : 0;
   return ((current - previous) / previous) * 100;
 };
+
+const metric = (current: number, previousFull: number, previousSamePeriod: number): AnalyticsMetric => ({
+  value: current,
+  change: percentChange(current, previousFull),
+  changeSamePeriod: percentChange(current, previousSamePeriod),
+});
 
 function summaryForPeriod(events: AnalyticsEventInput[], start: Date, end: Date) {
   const inPeriod = events.filter(e => e.timestamp >= start && e.timestamp <= end);
@@ -61,8 +89,17 @@ function summaryForPeriod(events: AnalyticsEventInput[], start: Date, end: Date)
 export function aggregateAnalytics(events: AnalyticsEventInput[], now: Date, topLimit = 7): AnalyticsAggregates {
   const pageViews = events.filter(e => e.type === 'page_view');
 
-  const current = summaryForPeriod(events, monthStartOf(now, 0), now);
-  const previous = summaryForPeriod(events, monthStartOf(now, 1), monthEndOf(now, 1));
+  const currentStart = monthStartOf(now, 0);
+  const previousStart = monthStartOf(now, 1);
+  const previousEnd = monthEndOf(now, 1);
+
+  const current = summaryForPeriod(events, currentStart, now);
+  const previous = summaryForPeriod(events, previousStart, previousEnd);
+
+  // Same elapsed duration one month earlier, clamped so a longer current
+  // month never reaches into its own days.
+  const samePeriodEnd = new Date(Math.min(previousStart.getTime() + (now.getTime() - currentStart.getTime()), previousEnd.getTime()));
+  const previousSamePeriod = summaryForPeriod(events, previousStart, samePeriodEnd);
 
   const chart: MonthlyPageViews[] = [];
   for (let i = CHART_MONTHS - 1; i >= 0; i--) {
@@ -83,7 +120,7 @@ export function aggregateAnalytics(events: AnalyticsEventInput[], now: Date, top
     const basePath = (event.path ?? '').split('?')[0];
     pageCounts[basePath] = (pageCounts[basePath] || 0) + 1;
 
-    const source = event.params?.utm_source || event.params?.source || '(direct)';
+    const source = event.params?.utm_source || event.params?.source || UNKNOWN_SOURCE;
     (sourceUsers[source] ||= new Set()).add(event.userId);
 
     const userDay = `${event.userId}-${event.timestamp.toDateString()}`;
@@ -97,14 +134,15 @@ export function aggregateAnalytics(events: AnalyticsEventInput[], now: Date, top
 
   return {
     summary: {
-      visitors: { value: current.visitors, change: percentChange(current.visitors, previous.visitors) },
-      pageViews: { value: current.pageViews, change: percentChange(current.pageViews, previous.pageViews) },
-      newsletterSubscriptions: {
-        value: current.newsletterSubscriptions,
-        change: percentChange(current.newsletterSubscriptions, previous.newsletterSubscriptions),
-      },
+      visitors: metric(current.visitors, previous.visitors, previousSamePeriod.visitors),
+      pageViews: metric(current.pageViews, previous.pageViews, previousSamePeriod.pageViews),
+      newsletterSubscriptions: metric(
+        current.newsletterSubscriptions,
+        previous.newsletterSubscriptions,
+        previousSamePeriod.newsletterSubscriptions,
+      ),
       // Conversion rate is still a placeholder, as before.
-      conversionRate: { value: 5.4, change: 0 },
+      conversionRate: { value: 5.4, change: 0, changeSamePeriod: 0 },
     },
     chart,
     topPages: Object.entries(pageCounts)
