@@ -1,5 +1,5 @@
 'use server';
-import {randomBytes} from 'node:crypto';
+import {createManagedShortLink} from '@/lib/short-link-create';
 import {redirect} from 'next/navigation';
 import {revalidatePath} from 'next/cache';
 import {requireShortLinkManager,shortLinks} from '@/lib/short-links-server';
@@ -10,9 +10,7 @@ export async function createShortLinkAction(form:FormData):Promise<void>{
   try{
     const target=validateShortLinkTarget(form.get('target'));
     const label=validateShortLinkLabel(form.get('label'));
-    // 96 random bits; create-only storage preconditions prohibit collisions replacing a link.
-    code=randomBytes(12).toString('base64url');
-    await shortLinks().create({code,label,target,active:true,clicks:0,createdAt:new Date().toISOString()});
+    code=await createManagedShortLink(shortLinks(),{label,target},form.get('format')??'random',form.get('customCode'));
   }catch{error=true;}
   revalidatePath('/links');
   redirect(error?'/links?notice=create-error':`/links?created=${code}`);
