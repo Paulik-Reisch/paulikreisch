@@ -39,3 +39,5 @@ test('tampered session signature is rejected', async () => {
   const tampered = `${header}.${payload}.${signature[0] === 'A' ? 'B' : 'A'}${signature.slice(1)}`;
   assert.equal(await decodeAdminSession(tampered, testKey, fixedDate), null);
 });
+
+ test('static sessions cannot authenticate as admin and admin sessions cannot authenticate as static',async()=>{const key=new TextEncoder().encode('12345678901234567890123456789012');const now=new Date();const host='static.paulikreisch.de';const token=await encodeAdminSession({user:{id:'test'}},key,now,host);assert.equal(await decodeAdminSession(token,key,now),null);assert.ok(await decodeAdminSession(token,key,now,host));const admin=await encodeAdminSession({user:{id:'test'}},key,now);assert.equal(await decodeAdminSession(admin,key,now,host),null)});
