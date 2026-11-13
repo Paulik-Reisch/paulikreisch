@@ -14,7 +14,7 @@ export default async function AdminWorthaftPage() {
   let initial;
   try { initial = await loadWorthaftEditorLists(); }
   catch {
-    return <section className="mx-auto max-w-xl space-y-4 rounded-xl border p-6"><h1 className="font-headline text-3xl font-bold">Worthaft</h1><p role="alert">Die Wortlisten konnten nicht sicher geladen werden. Es wird kein leerer Editor geöffnet und nichts überschrieben.</p><p className="text-sm text-muted-foreground">Bitte den aktuellen Stand erneut laden. Die Spielseite bleibt davon unberührt.</p><Link prefetch={false} className="inline-block underline" href="/admin/worthaft">Erneut laden</Link></section>;
+    return <section className="mx-auto max-w-xl space-y-4 rounded-xl border p-6"><h1 className="font-headline text-3xl font-bold">Worthaft</h1><p role="alert">Die Wortlisten konnten nicht sicher geladen werden. Es wird kein leerer Editor geöffnet und nichts überschrieben.</p><p className="text-sm text-muted-foreground">Bitte den aktuellen Stand erneut laden. Die Spielseite bleibt davon unberührt.</p><Link prefetch={false} className="inline-block underline" href="/worthaft">Erneut laden</Link></section>;
   }
   return <>
     {!persistentDailyEnabled()&&<p className="mx-auto mb-4 max-w-5xl rounded-lg border p-4 text-sm">Listen speichern ist noch gesperrt, bis das Tageswort dauerhaft über Serverneustarts abgesichert ist. Entwürfe und Vorschau bleiben möglich.</p>}
