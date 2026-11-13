@@ -16,6 +16,17 @@ export async function verifyPrivateAssetContent(bytes:Uint8Array,type:string,nam
   const output=await verifyPdfInWorker(bytes);
   return {bytes:output,type,safeName:name};
  }
+ if(type==='image/gif'){
+  if(!hasExpectedAssetSignature(type,bytes))throw new Error('Ungültige GIF-Datei.');
+  const input=sharp(Buffer.from(bytes),{failOn:'warning',limitInputPixels:16_000_000,animated:true});
+  const meta=await input.metadata();const frames=meta.pages??1;const height=meta.pageHeight??meta.height;
+  if(meta.format!=='gif'||!meta.width||!height||meta.width>8000||height>8000||frames>200||meta.width*height*frames>16_000_000)throw new Error('GIF überschreitet die Grenze von 200 Bildern oder insgesamt 16 Megapixeln.');
+  const output=await input.gif({effort:3}).toBuffer();
+  if(output.byteLength>MAX_INPUT)throw new Error('Das bereinigte GIF überschreitet die Dateigröße.');
+  const checked=await sharp(output,{animated:true,limitInputPixels:16_000_000}).metadata();
+  if(checked.format!=='gif'||(checked.pages??1)!==frames)throw new Error('GIF-Animation konnte nicht erhalten werden.');
+  return {bytes:output,type,safeName:name.normalize('NFC').replace(/[\u0000-\u001f\u007f"<>]/g,'_')};
+ }
  if(!['image/png','image/jpeg','image/webp'].includes(type)||!hasExpectedAssetSignature(type,bytes))throw new Error('Dateiinhalt und Dateityp stimmen nicht überein.');
  const input=sharp(Buffer.from(bytes),{failOn:'warning',limitInputPixels:16_000_000,animated:true});
  const meta=await input.metadata();
