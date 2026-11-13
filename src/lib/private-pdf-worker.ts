@@ -18,7 +18,7 @@ const {PDFDocument,PDFDict,PDFArray,PDFName,PDFRef}=require(workerData.modulePat
  else if(object&&typeof object==='object'&&'dict'in object)inspect(object.dict,depth+1)
  }
  for(const [,object]of doc.context.enumerateIndirectObjects())inspect(object);
- const output=await doc.save({useObjectStreams:false,addDefaultPage:false});if(output.byteLength>5*1024*1024)throw Error('Das geprüfte PDF überschreitet 5 MB.');
+ const output=await doc.save({useObjectStreams:false,addDefaultPage:false});if(output.byteLength>10_000_000)throw Error('Das geprüfte PDF überschreitet 10 MB.');
  parentPort.postMessage({bytes:output});
 })().catch(error=>parentPort.postMessage({error:error.message}));
 `;
