@@ -33,7 +33,7 @@ export function LandingPageActions({ page }: { page: LandingPage }) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <Link href={`/admin/lp/editor/${page.slug}`}>
+        <Link href={`/lp/editor/${page.slug}`}>
           <DropdownMenuItem>
             <Edit className="mr-2 h-4 w-4" />
             Bearbeiten
