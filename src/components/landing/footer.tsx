@@ -119,18 +119,18 @@ export function Footer() {
             <h3 className={`text-[0.72rem] font-bold uppercase tracking-[0.12em] text-[#9c2d22] ${tAccent}`}>Entdecken</h3>
             <ul className="flex w-full flex-col gap-3">
               <li className="flex">
+                <a href={amazonLink} target="_blank" rel="noopener noreferrer" className={`${actionClass} w-[125px] self-start bg-[#ffe14d] ${darkTonalYellow}`}>
+                  <AmazonIcon className="h-4 w-4 shrink-0" />
+                  <span>Amazon</span>
+                </a>
+              </li>
+              <li className="flex">
                 <Link href="/worthaft" className={`${actionClass} w-[125px] self-start bg-white hover:bg-[#f7f2e7] ${tPanel} ${tInk} ${tPanelHover} ${tEdgeWorthaft} ${darkShadowBlack}`}>
                   <span className="worthaft-icon-shimmer shrink-0">
                     <WorthaftIcon className="h-4 w-4" />
                   </span>
                   Worthaft
                 </Link>
-              </li>
-              <li className="flex">
-                <a href={amazonLink} target="_blank" rel="noopener noreferrer" className={`${actionClass} w-[125px] self-start bg-[#ffe14d] ${darkTonalYellow}`}>
-                  <AmazonIcon className="h-4 w-4 shrink-0" />
-                  <span>Amazon</span>
-                </a>
               </li>
               <li className="flex">
                 <Link href="/ratgeber" className={`${actionClass} w-[125px] self-start bg-[#2275d3] text-white ${darkTonalBlue}`}>
