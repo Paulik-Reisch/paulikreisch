@@ -2,12 +2,14 @@
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
-import { ADMIN_SESSION_COOKIE, encrypt, getSession } from "@/lib/session";
+import { cookies, headers } from "next/headers";
+import { ADMIN_SESSION_COOKIE, STATIC_SESSION_COOKIE, encrypt, getSession, getStaticSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { getAdminAuth } from "@/lib/firebase-admin";
 import { isAdminEmail } from "@/lib/admin-allowlist";
-import { assertAdminMutationOrigin } from "@/lib/admin-request";
+import { STATIC_HOST } from "@/lib/management-hosts";
+import { ADMIN_HOST, requestHost } from "@/lib/admin-host-policy";
+import { assertFileMutationOrigin } from "@/lib/admin-request";
 import { addAdminLog } from "@/lib/admin-writes";
 
 const LoginSchema = z.object({
@@ -28,7 +30,8 @@ export async function loginAction(
     prevState: LoginState,
     formData: FormData
 ): Promise<LoginState> {
-    await assertAdminMutationOrigin();
+    await assertFileMutationOrigin();
+    const staticHost = requestHost(await headers()) === STATIC_HOST;
     const validatedFields = LoginSchema.safeParse(Object.fromEntries(formData.entries()));
 
     if (!validatedFields.success) {
@@ -56,20 +59,21 @@ export async function loginAction(
 
     // Create session
     const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
-    const session = await encrypt({ user: { id: email }, expires });
+    const session = await encrypt({ user: { id: email }, expires }, staticHost ? STATIC_HOST : ADMIN_HOST);
 
-    (await cookies()).set(ADMIN_SESSION_COOKIE, session, { expires, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', path: '/' });
+    (await cookies()).set(staticHost ? STATIC_SESSION_COOKIE : ADMIN_SESSION_COOKIE, session, { expires, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', path: '/' });
 
     await addAdminLog(email, 'Login erfolgreich', `Benutzer '${email}' hat sich angemeldet.`);
     revalidatePath("/admin/authors");
-    redirect('/admin/authors');
+    redirect(staticHost ? '/' : '/authors');
 }
 
 export async function logoutAction() {
-    await assertAdminMutationOrigin();
-    const session = await getSession();
+    await assertFileMutationOrigin();
+    const staticHost = requestHost(await headers()) === STATIC_HOST;
+    const session = staticHost ? await getStaticSession() : await getSession();
     const user = session?.user.id || 'Unbekannt';
-    (await cookies()).set(ADMIN_SESSION_COOKIE, "", { expires: new Date(0), httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', path: '/' });
+    (await cookies()).set(staticHost ? STATIC_SESSION_COOKIE : ADMIN_SESSION_COOKIE, "", { expires: new Date(0), httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', path: '/' });
     await addAdminLog(user, 'Logout', `Benutzer '${user}' hat sich abgemeldet.`);
     redirect('/login');
 }
