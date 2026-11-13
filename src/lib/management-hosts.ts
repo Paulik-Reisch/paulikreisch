@@ -7,6 +7,7 @@ export function isIsolatedManagementHost(host: string | null): boolean {
   return host === ANALYTICS_HOST || host === STATIC_HOST || host === ADMIN_HOST;
 }
 export function isHiddenManagementPath(path: string): boolean {
-  return path === '/analytics-private' || path.startsWith('/analytics-private/')
+  return path === '/link-private' || path.startsWith('/link-private/')
+    || path === '/analytics-private' || path.startsWith('/analytics-private/')
     || path === '/static-private' || path.startsWith('/static-private/');
 }
