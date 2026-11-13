@@ -6,6 +6,8 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { app } from "@/app/firebase";
 import { loginAction } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
+import { PasswordInput } from '@/components/ui/password-input';
+import { loginFailureMessage } from '@/lib/login-errors';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
@@ -61,8 +63,8 @@ export function LoginForm() {
       const tokenData = new FormData();
       tokenData.set("idToken", idToken);
       formAction(tokenData);
-    } catch {
-      setClientError("Falsche E-Mail-Adresse oder falsches Passwort.");
+    } catch (error) {
+      setClientError(loginFailureMessage(error));
     }
   }
 
@@ -89,25 +91,7 @@ export function LoginForm() {
                 E-Mail
             </Label>
         </div>
-        <div className="relative group">
-             <Input 
-              id="password" 
-              name="password" 
-              type="password" 
-              required 
-              autoComplete="current-password" 
-              className="peer rounded-sm h-12 pt-4"
-              placeholder=" "
-            />
-            <Label 
-                htmlFor="password" 
-                className="absolute left-3 top-3.5 text-muted-foreground transition-all duration-300 transform 
-                           peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base 
-                           peer-focus:top-1.5 peer-focus:text-xs peer-focus:text-muted-foreground
-                           peer-[:not(:placeholder-shown)]:top-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-muted-foreground">
-                Passwort
-            </Label>
-        </div>
+        <PasswordInput id="password" name="password" required autoComplete="current-password" className="peer rounded-sm h-12 pt-4" placeholder=" " floatingLabel="Passwort"/>
         
         {error && (
             <Alert variant="destructive" className="mt-4 rounded-sm">
