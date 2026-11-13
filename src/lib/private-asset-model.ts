@@ -2,10 +2,10 @@ export type AssetStatus = 'private' | 'published';
 export type PrivateAsset = { id:string; name:string; size:number; type:string; status:AssetStatus; revision:string; publicUrl?:string };
 export type UploadPolicy = { maxBytes:number; types:readonly string[] };
 /** This is a local proposal, not a verified production quota or enabled upload policy. */
-export const PROPOSED_UPLOAD_POLICY: UploadPolicy = { maxBytes:5*1024*1024, types:['image/png','image/jpeg','image/webp','image/gif','application/pdf','text/plain'] };
+export const PROPOSED_UPLOAD_POLICY: UploadPolicy = { maxBytes:10_000_000, types:['image/png','image/jpeg','image/webp','image/gif','application/pdf','text/plain'] };
 export function validateAssetCandidate(file:{name:string;size:number;type:string}, policy:UploadPolicy):string|null {
  if(!file.name || file.name.length>180 || /[\/\\\u0000-\u001f]/.test(file.name))return 'Der Dateiname ist ungültig. Bitte ohne Ordnerpfade hochladen.';
- if(!Number.isSafeInteger(file.size)||file.size<1||file.size>policy.maxBytes)return `Die Datei muss zwischen 1 Byte und ${Math.floor(policy.maxBytes/1024/1024)} MB groß sein.`;
+ if(!Number.isSafeInteger(file.size)||file.size<1||file.size>policy.maxBytes)return `Die Datei muss zwischen 1 Byte und ${Math.floor(policy.maxBytes/1_000_000)} MB groß sein.`;
  if(!policy.types.includes(file.type))return 'Dieser Dateityp ist nicht freigegeben. Vorgesehen sind PNG, JPEG, WebP, GIF, PDF und UTF-8-Text.';
  const extension=file.name.toLowerCase().split('.').at(-1);
  const mapping:Record<string,string[]>={'image/png':['png'],'image/jpeg':['jpg','jpeg'],'image/webp':['webp'],'image/gif':['gif'],'application/pdf':['pdf'],'text/plain':['txt']};
