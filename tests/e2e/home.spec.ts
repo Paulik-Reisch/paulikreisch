@@ -234,8 +234,8 @@ test('mobile navigation keeps the same three actions as desktop, ordered Buch ka
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('/');
   await expect(page.locator('header nav a').nth(0)).toHaveAttribute('href', '/worthaft');
-  await expect(page.locator('header nav a').nth(1)).toHaveAttribute('href', '/shop');
-  await expect(page.locator('header nav a').nth(2)).toHaveAttribute('href', '/gpt');
+  await expect(page.locator('header nav a').nth(1)).toHaveAttribute('href', '/gpt');
+  await expect(page.locator('header nav a').nth(2)).toHaveAttribute('href', '/shop');
 
   await page.setViewportSize({ width: 375, height: 812 });
   await page.getByRole('button', { name: 'Menü öffnen' }).click();
