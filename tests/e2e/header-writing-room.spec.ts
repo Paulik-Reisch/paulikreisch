@@ -92,8 +92,8 @@ for (const width of [375, 1440]) {
       expect(worthaftBox).not.toBeNull();
       expect(shopBox).not.toBeNull();
       expect(writingRoomNavBox).not.toBeNull();
-      expect(worthaftBox!.x).toBeLessThan(shopBox!.x);
-      expect(shopBox!.x).toBeLessThan(writingRoomNavBox!.x);
+      expect(worthaftBox!.x).toBeLessThan(writingRoomNavBox!.x);
+      expect(writingRoomNavBox!.x).toBeLessThan(shopBox!.x);
     }
 
     await writingRoomLink.click();
