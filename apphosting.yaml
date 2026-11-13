@@ -40,3 +40,9 @@ env:
     value: "2026-11-13T18:00:00.000Z"
     availability:
       - RUNTIME
+
+  # Accepted isolated shortlinks on the existing private Storage prefix.
+  - variable: SHORT_LINK_RELEASE
+    value: private-prefix-v1-accepted
+    availability:
+      - RUNTIME
