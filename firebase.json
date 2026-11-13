@@ -1,5 +1,11 @@
 {
   "firestore": {
     "rules": "firestore.rules"
-  }
+  },
+  "storage": [
+    {
+      "target": "primary-storage",
+      "rules": "storage.rules"
+    }
+  ]
 }
