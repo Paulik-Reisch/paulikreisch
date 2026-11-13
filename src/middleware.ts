@@ -29,16 +29,25 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(url, 301);
   };
 
-  if ((host === PUBLIC_HOST || host === ADMIN_HOST || host === STATIC_HOST) && (path === '/upload' || path === '/upload/')) {
-    return safe ? privateResponse(move(ADMIN_ORIGIN, '/admin/upload')) : reject();
+  // The legacy apex entry is an explicit entry link. Static itself never changes host.
+  if (host === PUBLIC_HOST && (path === '/upload' || path === '/upload/')) {
+    return safe ? privateResponse(move('https://' + STATIC_HOST, '/')) : reject();
   }
-  // File gateway is a separate public-download surface. Never accept mutation POSTs here.
   if (host === STATIC_HOST) {
-    if (safe && /^\/f\/[a-f0-9-]{36}$/.test(path)) {
-      const url=request.nextUrl.clone();url.pathname='/static-private'+path;url.search='';
+    if (!safe && !isSameOrigin(request.headers.get('origin'), STATIC_HOST, true)) return reject();
+    let destination: string | null = null;
+    if (path === '/') destination = '/static-private/manage';
+    else if (path === '/login') destination = '/login';
+    else if (path === '/acceptance') destination = '/static-private/acceptance';
+    else if (/^\/file\/[a-f0-9-]{36}$/.test(path)) destination = '/admin/upload' + path;
+    else if (safe && /^\/f\/[a-f0-9-]{36}$/.test(path)) destination = '/static-private' + path;
+    else if (['/upload', '/upload/', '/_upload'].includes(path)) return safe ? privateResponse(move('https://' + STATIC_HOST, '/')) : reject();
+    if (destination) {
+      const url = request.nextUrl.clone(); url.pathname = destination; url.search = '';
       return privateResponse(NextResponse.rewrite(url));
     }
-    return privateResponse(new NextResponse('Not found',{status:404}));
+    if (safe && (path.startsWith('/_next/') || path === '/favicon.ico' || path === '/icon.svg')) return privateResponse(NextResponse.next());
+    return privateResponse(new NextResponse('Not found', {status:404}));
   }
   // Dedicated analytics surface: no content mutation routes or ambient admin cookie.
   if (host === ANALYTICS_HOST) {
@@ -57,10 +66,23 @@ export function middleware(request: NextRequest) {
     return safe ? privateResponse(move(ANALYTICS_ORIGIN, '/')) : reject();
   }
 
+  if (host === ADMIN_HOST) {
+    // A fixed route allowlist keeps public game/content paths off the admin surface.
+    const roots = ['authors','lp','worthaft','upload','seo','database','chistes','excerpts','storage','feedback','nle','genkit','logs','marketing','exzerpt'];
+    const first = path.split('/')[1];
+    const clean = path === '/' ? '/admin/authors' : roots.includes(first) ? '/admin' + path : null;
+    if (clean) {
+      if (!safe && !isSameOrigin(request.headers.get('origin'), ADMIN_HOST, true)) return reject();
+      const url = request.nextUrl.clone(); url.pathname = clean;
+      return privateResponse(NextResponse.rewrite(url));
+    }
+    if (safe && (path === '/admin' || path === '/admin/')) return privateResponse(move(ADMIN_ORIGIN, '/'));
+    if (safe && path.startsWith('/admin/')) return privateResponse(move(ADMIN_ORIGIN, path.slice('/admin'.length)));
+  }
+
   if (host === ADMIN_HOST || local) {
     if (!safe && ((!local && !protectedPath) || (protectedPath && !isSameOrigin(request.headers.get('origin'), host!, !local)))) return reject();
     if (local) return protectedPath ? privateResponse(NextResponse.next()) : NextResponse.next();
-    if (path === '/') return privateResponse(move(ADMIN_ORIGIN, '/admin'));
     if (protectedPath) return privateResponse(NextResponse.next());
     // Assets are shared by both surfaces. Never let an extension bypass the
     // /admin and /login decisions above.
