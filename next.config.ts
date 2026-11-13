@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {'/*':['./node_modules/pdf-lib/**/*','./node_modules/@pdf-lib/**/*','./node_modules/tslib/**/*','./node_modules/pako/**/*']},
   experimental: {
     ...(process.env.LOCAL_LOW_MEMORY_BUILD==='1'?{useTypeScriptCli:true,cpus:1,turbopackMemoryEviction:'full' as const}:{}),
-    serverActions: {bodySizeLimit:'6mb'},
+    serverActions: {bodySizeLimit:'11mb'},
   },
   allowedDevOrigins: ['127.0.0.1'],
   turbopack: {
