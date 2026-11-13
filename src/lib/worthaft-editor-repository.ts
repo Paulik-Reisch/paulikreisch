@@ -44,7 +44,7 @@ export async function loadWorthaftModeration(kind: ModerationKind, cursor: strin
   assertModerationKind(kind);
   if (cursor !== null) assertDocumentId(cursor);
   const name = kind === 'feedback' ? 'worthaft-feedback' : 'worthaft-word-suggestions';
-  let query = getAdminDb().collection(name).orderBy('__name__', 'desc').limit(PAGE_SIZE + 1);
+  let query = getAdminDb().collection(name).orderBy('__name__', 'asc').limit(PAGE_SIZE + 1);
   if (cursor) query = query.startAfter(cursor);
   const result = await query.get();
   const selected = result.docs.slice(0, PAGE_SIZE);
