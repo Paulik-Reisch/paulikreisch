@@ -15,7 +15,7 @@ test('admin login stays on admin host instead of canonicalizing to apex', () => 
   assert.equal(response.headers.get('location'), null);
 });
 test('admin root enters dashboard without a host redirect loop', () => {
-  assert.equal(middleware(request('/')).headers.get('location'), 'https://admin.paulikreisch.de/admin');
+  assert.equal(middleware(request('/')).headers.get('x-middleware-rewrite'), 'https://admin.paulikreisch.de/admin/authors');
 });
 test('public login redirects to the same path on admin', () => {
   assert.equal(middleware(request('/login', 'paulikreisch.de')).headers.get('location'), 'https://admin.paulikreisch.de/login');
