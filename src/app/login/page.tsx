@@ -8,7 +8,10 @@ export const metadata: Metadata = {
 };
 
 import { LoginForm } from './login-form';
-import { getSession } from '@/lib/session';
+import { getSession, getStaticSession } from '@/lib/session';
+import { headers } from 'next/headers';
+import { requestHost } from '@/lib/admin-host-policy';
+import { STATIC_HOST } from '@/lib/management-hosts';
 import { redirect } from 'next/navigation';
 
 function AdminIcon() {
@@ -20,9 +23,10 @@ function AdminIcon() {
 }
 
 export default async function AdminLoginPage() {
-  const session = await getSession();
+  const staticHost = requestHost(await headers()) === STATIC_HOST;
+  const session = staticHost ? await getStaticSession() : await getSession();
   if (session) {
-    redirect("/admin/authors");
+    redirect(staticHost ? "/" : "/authors");
   }
 
   return (
@@ -33,6 +37,7 @@ export default async function AdminLoginPage() {
               <AdminIcon />
               <h1 className="font-semibold text-2xl mt-4">Paulik &amp; Reisch</h1>
           </div>
+          <h2 className="text-lg mb-6">{staticHost ? "Static - Dateiverwaltung" : "Admin - Verwaltung"}</h2>
           <LoginForm />
         </div>
       </div>
