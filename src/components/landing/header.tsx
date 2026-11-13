@@ -95,6 +95,16 @@ export function Header() {
   const showWorthaftLink = !isWorthaftPage;
   const showShopLink = pathname !== '/shop';
   const showWritingRoomLink = pathname !== '/gpt';
+  // Z-flow on the index: the primary CTA closes the desktop bar on the far right.
+  const shopCtaLast = pathname === '/';
+  const desktopShopLink = showShopLink ? (
+    <Link
+      href="/shop"
+      className={`inline-flex items-center justify-center rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-5 py-2 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] transition-[transform,box-shadow] ${darkTonalYellow}`}
+    >
+      Buch kaufen
+    </Link>
+  ) : null;
 
   return (
     <>
@@ -133,14 +143,7 @@ export function Header() {
                   Worthaft
                 </Link>
               )}
-              {showShopLink && (
-                <Link
-                  href="/shop"
-                  className={`inline-flex items-center justify-center rounded-[10px] border-2 border-[#1d1a15] bg-[#ffe14d] px-5 py-2 text-[0.9rem] font-bold text-[#1d1a15] shadow-[0_3px_0_#1d1a15] hover:translate-y-[-1px] hover:shadow-[0_4px_0_#1d1a15] active:translate-y-[1px] active:shadow-[0_1px_0_#1d1a15] transition-[transform,box-shadow] ${darkTonalYellow}`}
-                >
-                  Buch kaufen
-                </Link>
-              )}
+              {!shopCtaLast && desktopShopLink}
               {showWritingRoomLink && (
                 <Link
                   href="/gpt"
@@ -150,6 +153,7 @@ export function Header() {
                   Schreibstube
                 </Link>
               )}
+              {shopCtaLast && desktopShopLink}
             </nav>
 
             {/* Mobile burger */}

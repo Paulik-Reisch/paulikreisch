@@ -2,13 +2,13 @@ export type AssetStatus = 'private' | 'published';
 export type PrivateAsset = { id:string; name:string; size:number; type:string; status:AssetStatus; revision:string; publicUrl?:string };
 export type UploadPolicy = { maxBytes:number; types:readonly string[] };
 /** This is a local proposal, not a verified production quota or enabled upload policy. */
-export const PROPOSED_UPLOAD_POLICY: UploadPolicy = { maxBytes:5*1024*1024, types:['image/png','image/jpeg','image/webp','application/pdf','text/plain'] };
+export const PROPOSED_UPLOAD_POLICY: UploadPolicy = { maxBytes:5*1024*1024, types:['image/png','image/jpeg','image/webp','image/gif','application/pdf','text/plain'] };
 export function validateAssetCandidate(file:{name:string;size:number;type:string}, policy:UploadPolicy):string|null {
  if(!file.name || file.name.length>180 || /[\/\\\u0000-\u001f]/.test(file.name))return 'Der Dateiname ist ungültig. Bitte ohne Ordnerpfade hochladen.';
  if(!Number.isSafeInteger(file.size)||file.size<1||file.size>policy.maxBytes)return `Die Datei muss zwischen 1 Byte und ${Math.floor(policy.maxBytes/1024/1024)} MB groß sein.`;
- if(!policy.types.includes(file.type))return 'Dieser Dateityp ist nicht freigegeben. Vorgesehen sind PNG, JPEG, WebP, PDF und UTF-8-Text.';
+ if(!policy.types.includes(file.type))return 'Dieser Dateityp ist nicht freigegeben. Vorgesehen sind PNG, JPEG, WebP, GIF, PDF und UTF-8-Text.';
  const extension=file.name.toLowerCase().split('.').at(-1);
- const mapping:Record<string,string[]>={'image/png':['png'],'image/jpeg':['jpg','jpeg'],'image/webp':['webp'],'application/pdf':['pdf'],'text/plain':['txt']};
+ const mapping:Record<string,string[]>={'image/png':['png'],'image/jpeg':['jpg','jpeg'],'image/webp':['webp'],'image/gif':['gif'],'application/pdf':['pdf'],'text/plain':['txt']};
  if(!mapping[file.type]?.includes(extension??''))return 'Dateiendung und angegebener Dateityp stimmen nicht überein.';
  return null;
 }
@@ -16,6 +16,7 @@ export function validateAssetCandidate(file:{name:string;size:number;type:string
 export function hasExpectedAssetSignature(type:string,bytes:Uint8Array):boolean {
  const prefix=(value:number[])=>value.every((x,i)=>bytes[i]===x);
  if(type==='text/plain')return true;
+ if(type==='image/gif')return prefix([71,73,70,56,55,97])||prefix([71,73,70,56,57,97]);
  if(type==='image/png')return prefix([137,80,78,71,13,10,26,10]);
  if(type==='image/jpeg')return prefix([255,216,255]);
  if(type==='application/pdf')return prefix([37,80,68,70,45]);

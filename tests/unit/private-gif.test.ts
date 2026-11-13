@@ -1,0 +1,8 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import sharp from 'sharp';
+import {verifyPrivateAssetContent} from '../../src/lib/private-asset-content';
+import {hasExpectedAssetSignature,validateAssetCandidate,PROPOSED_UPLOAD_POLICY} from '../../src/lib/private-asset-model';
+const animated=Buffer.from('R0lGODlhAgACAIEAAP8AAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh/hR0ZXN0LXByaXZhdGUtY29tbWVudAAh+QQACgAAACwAAAAAAgACAAAIBgABCAQQEAAh+QQBFAABACwAAAAAAgACAIEAAP8AAAAAAAAAAAAIBgABCAQQEAA7','base64');
+test('GIF accepts exact GIF87a/GIF89a signatures and matching MIME/extension only',()=>{assert.equal(hasExpectedAssetSignature('image/gif',animated),true);assert.equal(hasExpectedAssetSignature('image/gif',Buffer.from('GIF87a')),true);assert.equal(hasExpectedAssetSignature('image/gif',Buffer.from('<html>')),false);assert.equal(validateAssetCandidate({name:'animation.gif',type:'image/gif',size:animated.length},PROPOSED_UPLOAD_POLICY),null);assert.ok(validateAssetCandidate({name:'animation.html',type:'image/gif',size:50},PROPOSED_UPLOAD_POLICY))});
+test('GIF decoding preserves frames, delays and loop, removes comments, stays bounded',async()=>{const result=await verifyPrivateAssetContent(animated,'image/gif','animation.gif');const meta=await sharp(result.bytes,{animated:true}).metadata();assert.equal(result.type,'image/gif');assert.equal(meta.format,'gif');assert.equal(meta.pages,2);assert.deepEqual(meta.delay,[100,200]);assert.equal(meta.loop,0);assert.equal(Buffer.from(result.bytes).includes(Buffer.from('test-private-comment')),false);await assert.rejects(verifyPrivateAssetContent(Buffer.from('GIF89anot-valid'),'image/gif','bad.gif'));await assert.rejects(verifyPrivateAssetContent(animated,'image/png','fake.png'));});
