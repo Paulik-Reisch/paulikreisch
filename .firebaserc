@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "hallo-welt-paulik-reisch"
+  },
+  "targets": {
+    "hallo-welt-paulik-reisch": {
+      "storage": {
+        "primary-storage": [
+          "hallo-welt-paulik-reisch.firebasestorage.app"
+        ]
+      }
+    }
   }
 }
