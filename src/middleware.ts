@@ -1,3 +1,4 @@
+import { SHORT_LINK_HOST, SHORT_LINK_CODE } from './lib/short-links';
 import { NextResponse, type NextRequest } from 'next/server';
 import { ANALYTICS_HOST, ANALYTICS_ORIGIN, STATIC_HOST, isHiddenManagementPath } from './lib/management-hosts';
 import {
@@ -49,12 +50,20 @@ export function middleware(request: NextRequest) {
     if (safe && (path.startsWith('/_next/') || path === '/favicon.ico' || path === '/icon.svg')) return privateResponse(NextResponse.next());
     return privateResponse(new NextResponse('Not found', {status:404}));
   }
+  if (host === SHORT_LINK_HOST) {
+    const shortResponse = (response: NextResponse) => { const result = privateResponse(response); result.headers.set('Referrer-Policy', 'no-referrer'); return result; };
+    if (safe && SHORT_LINK_CODE.test(path.slice(1)) && path === '/' + path.slice(1)) {
+      const url = request.nextUrl.clone(); url.pathname = '/link-private' + path; url.search = '';
+      return shortResponse(NextResponse.rewrite(url));
+    }
+    return shortResponse(new NextResponse('Not found', {status:404}));
+  }
   // Dedicated analytics surface: no content mutation routes or ambient admin cookie.
   if (host === ANALYTICS_HOST) {
-    const destination = path === '/' ? '/analytics-private' : path === '/login' ? '/analytics-private/login' : null;
+    const destination = path === '/' ? '/analytics-private' : path === '/login' ? '/analytics-private/login' : path === '/links' ? '/analytics-private/links' : null;
     if (destination) {
       if (!safe && !isSameOrigin(request.headers.get('origin'), ANALYTICS_HOST, true)) return reject();
-      const url = request.nextUrl.clone(); url.pathname = destination; url.search = '';
+      const url = request.nextUrl.clone(); url.pathname = destination; if(path !== '/links') url.search = '';
       return privateResponse(NextResponse.rewrite(url));
     }
     if (safe && (path.startsWith('/_next/') || path === '/favicon.ico')) return privateResponse(NextResponse.next());
