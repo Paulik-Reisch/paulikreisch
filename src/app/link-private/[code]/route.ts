@@ -1,12 +1,12 @@
 import type {NextRequest} from 'next/server';
 import {requestHost} from '@/lib/admin-host-policy';
-import {SHORT_LINK_HOST,resolveShortLink,shouldCountShortLink} from '@/lib/short-links';
+import {SHORT_LINK_HOSTS,resolveShortLink,shouldCountShortLink} from '@/lib/short-links';
 import {shortLinks,shortLinksEnabled} from '@/lib/short-links-server';
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
 const headers={'Cache-Control':'private, no-store, max-age=0','X-Robots-Tag':'noindex, nofollow, noarchive','Referrer-Policy':'no-referrer'};
 async function respond(request:NextRequest,{params}:{params:Promise<{code:string}>}){
-  if(requestHost(request.headers)!==SHORT_LINK_HOST||!shortLinksEnabled())return new Response('Nicht gefunden.',{status:404,headers});
+  if(!SHORT_LINK_HOSTS.some(host=>host===requestHost(request.headers))||!shortLinksEnabled())return new Response('Nicht gefunden.',{status:404,headers});
   try{
     const target=await resolveShortLink(shortLinks(),(await params).code,shouldCountShortLink(request.method,request.headers));
     if(!target)return new Response('Nicht gefunden.',{status:404,headers});

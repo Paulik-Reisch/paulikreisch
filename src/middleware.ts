@@ -1,4 +1,4 @@
-import { SHORT_LINK_HOST, SHORT_LINK_CODE } from './lib/short-links';
+import { SHORT_LINK_HOSTS, SHORT_LINK_CODE } from './lib/short-links';
 import { NextResponse, type NextRequest } from 'next/server';
 import { ANALYTICS_HOST, ANALYTICS_ORIGIN, STATIC_HOST, isHiddenManagementPath } from './lib/management-hosts';
 import {
@@ -50,7 +50,7 @@ export function middleware(request: NextRequest) {
     if (safe && (path.startsWith('/_next/') || path === '/favicon.ico' || path === '/icon.svg')) return privateResponse(NextResponse.next());
     return privateResponse(new NextResponse('Not found', {status:404}));
   }
-  if (host === SHORT_LINK_HOST) {
+  if (SHORT_LINK_HOSTS.some(value => value === host)) {
     const shortResponse = (response: NextResponse) => { const result = privateResponse(response); result.headers.set('Referrer-Policy', 'no-referrer'); return result; };
     if (safe && SHORT_LINK_CODE.test(path.slice(1)) && path === '/' + path.slice(1)) {
       const url = request.nextUrl.clone(); url.pathname = '/link-private' + path; url.search = '';

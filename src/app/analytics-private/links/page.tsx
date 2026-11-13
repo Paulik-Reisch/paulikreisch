@@ -16,8 +16,9 @@ export default async function ShortLinksPage({searchParams}:{searchParams:Promis
     {!enabled&&<p role="status" className="rounded-lg border p-4">Die Kurzlinks sind noch nicht freigeschaltet. Domain und privater Speicher müssen vor der Nutzung bestätigt sein.</p>}
     {failed&&<p role="alert" className="rounded-lg border p-4">Kurzlinks konnten nicht vollständig geladen werden. Bitte später erneut versuchen. Es werden keine unvollständigen Zahlen angezeigt.</p>}
     {createdRecord&&<p role="status" className="rounded-lg border p-4">Kurzlink wurde erstellt. Du findest ihn in der Liste und kannst ihn dort kopieren.</p>}
+    {query.notice==='deleted'&&<p role="status" className="rounded-lg border p-4">Kurzlink gelöscht. Der Code bleibt gesperrt und kann nicht erneut vergeben werden.</p>}
     {query.notice==='changed'&&<p role="status" className="rounded-lg border p-4">Kurzlink wurde geändert.</p>}
-    {query.notice==='create-error'&&<p role="alert" className="rounded-lg border p-4">Kurzlink konnte nicht erstellt werden. Bitte Name und öffentliche HTTPS-Zieladresse prüfen und erneut versuchen.</p>}
+    {query.notice==='create-error'&&<p role="alert" className="rounded-lg border p-4">Kurzlink konnte nicht erstellt werden. Bitte Name, öffentliche HTTPS-Zieladresse und Code-Format prüfen. Wunschnamen können bereits belegt oder reserviert sein; kurze Zufallscodes können bei hoher Belegung mehrere Versuche brauchen. Es wird kein vorhandener Link überschrieben.</p>}
     {query.notice==='change-error'&&<p role="alert" className="rounded-lg border p-4">Änderung nicht gespeichert. Der Link wurde möglicherweise gleichzeitig aufgerufen oder geändert. Bitte neu laden und erneut versuchen.</p>}
     {!failed&&<ShortLinksPanel records={result?.records??[]} enabled={enabled}/>}
     {result?.nextCursor&&<Link href={`/links?cursor=${encodeURIComponent(result.nextCursor)}`} className="inline-block text-primary underline underline-offset-4">Weitere Kurzlinks</Link>}
