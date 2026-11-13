@@ -234,7 +234,7 @@ export function AnalyticsClient({ summary, chartData, topPages, topSources, devi
                 <TableHeader>
                     <TableRow>
                         <TableHead>Quelle</TableHead>
-                        <TableHead className="text-right">Besucher</TableHead>
+                        <TableHead className="text-right">Eingewilligte Browser</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
