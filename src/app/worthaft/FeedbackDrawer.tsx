@@ -118,7 +118,10 @@ export default function FeedbackDrawer({
       onSubmitted?.();
     } catch (err) {
       console.error('Feedback could not be saved:', err);
-      setSubmitError('Feedback konnte nicht gespeichert werden. Bitte versuche es erneut.');
+      const errorCode = (err as { code?: string })?.code;
+      setSubmitError(
+        `Feedback konnte nicht gespeichert werden. Bitte versuche es erneut.${errorCode ? ` (${errorCode})` : ''}`,
+      );
     } finally {
       setIsSending(false);
     }
