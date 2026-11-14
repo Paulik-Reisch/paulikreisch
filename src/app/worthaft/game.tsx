@@ -1630,4 +1630,3 @@ Jetzt spielen:`;
         </div>
     );
 }
-
