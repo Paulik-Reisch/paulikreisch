@@ -17,7 +17,18 @@ export const ensureWorthaftAuth = createOnDemandSignIn<Auth, User>(
       return auth.currentUser;
     } catch (error) {
       const code = (error as { code?: string }).code;
-      if (!['auth/user-token-expired', 'auth/user-not-found', 'auth/invalid-user-token'].includes(code ?? '')) throw error;
+      if (
+        ![
+          'auth/user-token-expired',
+          'auth/user-not-found',
+          'auth/invalid-user-token',
+          // Blockierte/instabile Verbindung zum Token-Refresh: gecachten
+          // anonymen Account verwerfen und frisch anmelden, statt hart abzubrechen.
+          'auth/network-request-failed',
+          'auth/internal-error',
+        ].includes(code ?? '')
+      )
+        throw error;
       if (auth.currentUser?.uid === user.uid) await signOut(auth);
       return auth.currentUser;
     }
