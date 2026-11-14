@@ -741,7 +741,10 @@ const InvalidWordModal = ({
       onOpenChange(false);
     } catch (err) {
       console.error('Failed to save word suggestion:', err);
-      setSubmitError('Dein Vorschlag konnte nicht gespeichert werden. Bitte versuche es erneut.');
+      const errorCode = (err as { code?: string })?.code;
+      setSubmitError(
+        `Dein Vorschlag konnte nicht gespeichert werden. Bitte versuche es erneut.${errorCode ? ` (${errorCode})` : ''}`,
+      );
     } finally {
       setIsSubmitting(false);
     }
