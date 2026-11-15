@@ -74,17 +74,8 @@ export function Authors({ variant = "classic" }: { variant?: "classic" | "editor
 
         {/* Cards — 3 nebeneinander, Paper + Plus-Hauch wie Features */}
         <div className={isEditorial ? styles.editorialGrid : "mx-auto mt-10 md:mt-12 max-w-[1180px] grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6"}>
-          {AUTHORS.map((a) => (
-            <article
-              key={a.name}
-              className={isEditorial
-                ? styles.editorialCard
-                : "group relative flex flex-col bg-white border border-[#e8ddd0] rounded-[18px] shadow-[0_2px_16px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_28px_rgba(0,0,0,0.10)] hover:-translate-y-[1px] transition-[box-shadow,transform] duration-200 overflow-hidden"}
-            >
-              {!isEditorial && <div className="h-[3px] w-full bg-gradient-to-r from-[#ffe14d] via-[#ffcf4d] to-[#e8ddd0] opacity-90" aria-hidden="true" />}
-              <div className={isEditorial ? styles.editorialContent : "flex flex-1 flex-col p-7 text-center"}>
-                <div className={isEditorial ? styles.editorialPortrait : "mx-auto relative"}>
-                  {!isEditorial && <div className="absolute -inset-1 rounded-full bg-[#ffe14d]/30 blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true" />}
+          {AUTHORS.map((a) => {
+            const portrait = (
                   <Image
                     alt={`Porträt von ${a.name}`}
                     className={isEditorial
@@ -98,7 +89,31 @@ export function Authors({ variant = "classic" }: { variant?: "classic" | "editor
                       : { aspectRatio: "1/1", objectFit: "cover" }}
                     width={isEditorial ? 440 : 112}
                   />
-                </div>
+            );
+
+            return (
+            <article
+              key={a.name}
+              className={isEditorial
+                ? styles.editorialCard
+                : "group relative flex flex-col bg-white border border-[#e8ddd0] rounded-[18px] shadow-[0_2px_16px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_28px_rgba(0,0,0,0.10)] hover:-translate-y-[1px] transition-[box-shadow,transform] duration-200 overflow-hidden"}
+            >
+              {!isEditorial && <div className="h-[3px] w-full bg-gradient-to-r from-[#ffe14d] via-[#ffcf4d] to-[#e8ddd0] opacity-90" aria-hidden="true" />}
+              <div className={isEditorial ? styles.editorialContent : "flex flex-1 flex-col p-7 text-center"}>
+                {isEditorial ? (
+                  <Link
+                    href={a.href}
+                    aria-label={`Mehr über ${a.name}`}
+                    className={`${styles.editorialPortrait} block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4`}
+                  >
+                    {portrait}
+                  </Link>
+                ) : (
+                  <div className="mx-auto relative">
+                    <div className="absolute -inset-1 rounded-full bg-[#ffe14d]/30 blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true" />
+                    {portrait}
+                  </div>
+                )}
 
                 <h3 className={isEditorial
                   ? styles.editorialName
@@ -120,7 +135,8 @@ export function Authors({ variant = "classic" }: { variant?: "classic" | "editor
                 </Link>
               </div>
             </article>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
