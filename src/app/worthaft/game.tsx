@@ -1361,13 +1361,9 @@ export default function WorthaftGame({
         const totalTime = rowTimes.reduce((sum, t) => sum + t, 0);
         const tipUsedLine = hotTipUsed ? `(1 Heißer Tipp verwendet 🔥)` : "";
 
-        const text = `Worthaft
+        const text = `Mein Ergebnis: ${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} innerhalb von ${formatDuration(totalTime)} Minuten ${tipUsedLine}
 
-Mein Ergebnis: ${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} innerhalb von ${formatDuration(totalTime)} Minuten ${tipUsedLine}
-
-${resultGrid}
-
-Jetzt spielen:`;
+${resultGrid}`;
 
         const shareData = {
             title: 'Worthaft – Das Paulik & Reisch Spiel',
