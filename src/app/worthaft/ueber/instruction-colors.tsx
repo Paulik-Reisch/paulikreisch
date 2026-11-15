@@ -26,21 +26,21 @@ export function WorthaftColorExplanation() {
     };
   }, []);
 
-  const badgeClass = (status: string) => `p-2 rounded-[10px] font-bold mr-2 inline-block ${getWorthaftStatusClass(status, palette)}`;
+  const badgeClass = (status: string) => `p-2 rounded-[10px] font-bold inline-block text-center ${getWorthaftStatusClass(status, palette)}`;
 
   return (
     <ul>
-      <li>
-        <span className={badgeClass('correct')}>{palette === 'classic' ? 'Grün' : 'Blau'}</span>
-        Der Buchstabe ist korrekt und an der richtigen Stelle.
+      <li style={{ display: 'flex', alignItems: 'baseline', gap: 16, paddingLeft: 0 }}>
+        <span style={{ width: 64, flexShrink: 0 }} className={badgeClass('correct')}>{palette === 'classic' ? 'Grün' : 'Blau'}</span>
+        <span>Buchstabe ist korrekt und an der richtigen Stelle</span>
       </li>
-      <li>
-        <span className={badgeClass('present')}>Gelb</span>
-        Der Buchstabe ist im Wort enthalten, aber an anderer Stelle.
+      <li style={{ display: 'flex', alignItems: 'baseline', gap: 16, paddingLeft: 0 }}>
+        <span style={{ width: 64, flexShrink: 0 }} className={badgeClass('present')}>Gelb</span>
+        <span>Buchstabe ist im Wort enthalten, aber an anderer Stelle</span>
       </li>
-      <li>
-        <span className={badgeClass('absent')}>Grau</span>
-        Der Buchstabe kommt im Wort nicht vor.
+      <li style={{ display: 'flex', alignItems: 'baseline', gap: 16, paddingLeft: 0 }}>
+        <span style={{ width: 64, flexShrink: 0 }} className={badgeClass('absent')}>Grau</span>
+        <span>Buchstabe kommt im Wort nicht vor</span>
       </li>
     </ul>
   );
