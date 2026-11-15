@@ -33,9 +33,9 @@ export default function UeberAutorenPage() {
         "hasPart": [
             {
               "@type": "WebPage",
-              "@id": "https://www.paulikreisch.de/autoren",
+              "@id": "https://www.paulikreisch.de/ueber/autoren",
               "name": "Unsere Autoren",
-              "url": "https://www.paulikreisch.de/autoren",
+              "url": "https://www.paulikreisch.de/ueber/autoren",
               "description": "Lerne die kreativen Köpfe hinter den Büchern und Projekten von Paulik & Reisch kennen."
             }
           ]
