@@ -36,7 +36,7 @@ export function WorthaftColorExplanation() {
       </li>
       <li>
         <span className={badgeClass('present')}>Gelb</span>
-        Der Buchstabe ist im Wort enthalten, aber an der falschen Stelle.
+        Der Buchstabe ist im Wort enthalten, aber an anderer Stelle.
       </li>
       <li>
         <span className={badgeClass('absent')}>Grau</span>
