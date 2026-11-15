@@ -52,20 +52,20 @@ export default function AboutWorthaftPage() {
               </p>
               <ul>
                 <li>
-                  <span className="p-2 rounded-md font-bold text-primary-foreground mr-2 inline-block" style={{ backgroundColor: 'hsl(var(--primary))' }}>
+                  <span className="p-2 rounded-[10px] font-bold text-primary-foreground mr-2 inline-block" style={{ backgroundColor: 'hsl(var(--primary))' }}>
                     Blau
                   </span>
                     Der Buchstabe ist korrekt und an der richtigen Stelle.
                 </li>
                 <li>
-                  <span className="p-2 rounded-md font-bold text-secondary-foreground mr-2 inline-block" style={{ backgroundColor: 'hsl(var(--secondary))' }}>
+                  <span className="p-2 rounded-[10px] font-bold text-secondary-foreground mr-2 inline-block" style={{ backgroundColor: 'hsl(var(--secondary))' }}>
                     Gelb
                   </span>
                     Der Buchstabe ist im Wort enthalten, aber an der falschen
                   Stelle.
                 </li>
                 <li>
-                  <span className="p-2 rounded-md font-bold mr-2 inline-block" style={{ backgroundColor: 'hsl(var(--muted))' }}>
+                  <span className="p-2 rounded-[10px] font-bold mr-2 inline-block" style={{ backgroundColor: 'hsl(var(--muted))' }}>
                     Grau
                   </span>
                     Der Buchstabe kommt im Wort nicht vor.
@@ -79,7 +79,7 @@ export default function AboutWorthaftPage() {
               </ul>
               <div className="not-prose text-center mt-12 flex flex-col items-center gap-3">
                   <Link href="/worthaft">
-                      <Button size="lg">Genug gelesen!</Button>
+                      <Button size="lg" className="rounded-[10px] bg-[#1d1a15] text-white hover:bg-black">Verstanden!</Button>
                   </Link>
               </div>
             </article>
