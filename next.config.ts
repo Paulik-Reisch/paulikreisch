@@ -65,14 +65,54 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-       {
+      {
         source: '/autor',
-        destination: '/autoren',
+        destination: '/ueber/autoren',
+        permanent: true,
+      },
+      {
+        source: '/autor/philipp-paulik',
+        destination: '/ueber/philipp-paulik',
+        permanent: true,
+      },
+      {
+        source: '/autor/max-reisch',
+        destination: '/ueber/max-reisch',
+        permanent: true,
+      },
+      {
+        source: '/autor/luin-schiffbauer',
+        destination: '/ueber/luin-schiffbauer',
         permanent: true,
       },
       {
         source: '/autor/:slug*',
-        destination: '/autoren/:slug*',
+        destination: '/ueber/autoren',
+        permanent: true,
+      },
+      {
+        source: '/autoren',
+        destination: '/ueber/autoren',
+        permanent: true,
+      },
+      {
+        source: '/autoren/philipp-paulik',
+        destination: '/ueber/philipp-paulik',
+        permanent: true,
+      },
+      {
+        source: '/autoren/max-reisch',
+        destination: '/ueber/max-reisch',
+        permanent: true,
+      },
+      {
+        source: '/autoren/luin-schiffbauer',
+        destination: '/ueber/luin-schiffbauer',
+        permanent: true,
+      },
+      {
+        source: '/autoren/:slug*',
+        destination: '/ueber/autoren',
         permanent: true,
       },
       {
