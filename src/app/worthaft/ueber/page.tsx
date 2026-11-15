@@ -61,7 +61,7 @@ export default function AboutWorthaftPage() {
               </ul>
               <div className="not-prose text-center mt-12 flex flex-col items-center gap-3">
                   <Link href="/worthaft">
-                      <Button size="lg" className="rounded-[10px] bg-[#1d1a15] text-white hover:bg-black">Verstanden!</Button>
+                      <Button size="lg" className="rounded-[10px] bg-[var(--color-ink)] text-[var(--color-paper)] hover:bg-[var(--color-ink)] hover:opacity-90">Verstanden!</Button>
                   </Link>
               </div>
             </article>
