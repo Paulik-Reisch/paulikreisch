@@ -25,7 +25,7 @@ const sitemapData: SitemapNode[] = [
   },
   {
     label: 'Autoren',
-    href: '/autoren',
+    href: '/ueber/autoren',
     icon: Users,
     description: 'Autoren-Portraits',
   },
