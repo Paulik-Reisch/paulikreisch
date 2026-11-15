@@ -8,12 +8,12 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: 'Worthaft',
-  description: 'Worthaft: Das tägliche Worträtsel',
+  description: 'Das tägliche Worträtsel',
   applicationName: 'Worthaft | Paulik & Reisch',
   alternates: { canonical: '/worthaft' },
   openGraph: {
     title: 'Worthaft',
-    description: 'Worthaft: Das tägliche Worträtsel',
+    description: 'Das tägliche Worträtsel',
     url: 'https://paulikreisch.de/worthaft',
     images: [
       {
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     title: 'Worthaft',
-    description: 'Worthaft: Das tägliche Worträtsel',
+    description: 'Das tägliche Worträtsel',
   },
   icons: {
     icon: '/worthaft_favicon.ico',
