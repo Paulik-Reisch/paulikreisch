@@ -9,7 +9,7 @@ Voraussetzung: Node.js 22 und npm.
 
 ```sh
 npm ci
-npm run dev:preview
+npm run dev
 ```
 
 Die Vorschau läuft unter **http://localhost:9002**. Dieser Modus deaktiviert automatische Firebase-Anmeldungen und Analytics-Schreibzugriffe. Öffentliche Inhalte können weiterhin aus Firebase gelesen werden. Formulare und Admin-Aktionen nicht gegen Produktionsdaten testen.
