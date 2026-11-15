@@ -1,7 +1,9 @@
+import "../../../../tokens.css";
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { WorthaftColorExplanation } from "./instruction-colors";
 
 export default function AboutWorthaftPage() {
   const jsonLd = {
@@ -37,7 +39,7 @@ export default function AboutWorthaftPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="flex flex-col min-h-screen bg-background">
+      <div className="pr-home flex flex-col min-h-screen bg-[var(--color-paper)]">
         <Header />
         <main className="flex-1 py-12 md:py-24">
           <div className="container max-w-3xl mx-auto px-4">
@@ -50,27 +52,7 @@ export default function AboutWorthaftPage() {
                 Buchstaben zu erraten. Nach jedem Versuch geben Dir die Farben
                 einen Hinweis:
               </p>
-              <ul>
-                <li>
-                  <span className="p-2 rounded-md font-bold text-primary-foreground mr-2 inline-block" style={{ backgroundColor: 'hsl(var(--primary))' }}>
-                    Blau
-                  </span>
-                    Der Buchstabe ist korrekt und an der richtigen Stelle.
-                </li>
-                <li>
-                  <span className="p-2 rounded-md font-bold text-secondary-foreground mr-2 inline-block" style={{ backgroundColor: 'hsl(var(--secondary))' }}>
-                    Gelb
-                  </span>
-                    Der Buchstabe ist im Wort enthalten, aber an der falschen
-                  Stelle.
-                </li>
-                <li>
-                  <span className="p-2 rounded-md font-bold mr-2 inline-block" style={{ backgroundColor: 'hsl(var(--muted))' }}>
-                    Grau
-                  </span>
-                    Der Buchstabe kommt im Wort nicht vor.
-                </li>
-              </ul>
+              <WorthaftColorExplanation />
               <h2>Welche Wörter erlauben wir?</h2>
               <ul>
                 <li>Substantive (im Singular), darunter auch Namen</li>
@@ -79,7 +61,7 @@ export default function AboutWorthaftPage() {
               </ul>
               <div className="not-prose text-center mt-12 flex flex-col items-center gap-3">
                   <Link href="/worthaft">
-                      <Button size="lg">Genug gelesen!</Button>
+                      <Button size="lg" className="rounded-[10px] bg-[var(--color-ink)] text-[var(--color-paper)] hover:bg-[var(--color-ink)] hover:opacity-90">Verstanden!</Button>
                   </Link>
               </div>
             </article>

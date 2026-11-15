@@ -1363,12 +1363,13 @@ export default function WorthaftGame({
 
         const text = `Mein Ergebnis: ${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} innerhalb von ${formatDuration(totalTime)} Minuten ${tipUsedLine}
 
-${resultGrid}`;
+${resultGrid}
+
+https://paulikreisch.de/worthaft`;
 
         const shareData = {
             title: 'Worthaft – Das Paulik & Reisch Spiel',
             text: text,
-            url: 'https://paulikreisch.de/worthaft',
         };
 
         if (navigator.share) {
@@ -1378,7 +1379,7 @@ ${resultGrid}`;
                 console.log('Teilen abgebrochen', error);
             }
         } else {
-            navigator.clipboard.writeText(`${text}\n\nhttps://paulikreisch.de/worthaft`).then(() => {
+            navigator.clipboard.writeText(text).then(() => {
                 toast({ title: 'Kopiert!', description: 'Ergebnis in die Zwischenablage kopiert.', duration: 2000 });
             });
         }
