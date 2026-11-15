@@ -30,17 +30,23 @@ export function WorthaftColorExplanation() {
 
   return (
     <ul>
-      <li style={{ display: 'flex', alignItems: 'baseline', gap: 16, paddingLeft: 0 }}>
+      <li>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         <span style={{ width: 64, flexShrink: 0 }} className={badgeClass('correct')}>{palette === 'classic' ? 'Grün' : 'Blau'}</span>
         <span>Buchstabe ist korrekt und an der richtigen Stelle</span>
+        </div>
       </li>
-      <li style={{ display: 'flex', alignItems: 'baseline', gap: 16, paddingLeft: 0 }}>
+      <li>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         <span style={{ width: 64, flexShrink: 0 }} className={badgeClass('present')}>Gelb</span>
         <span>Buchstabe ist im Wort enthalten, aber an anderer Stelle</span>
+        </div>
       </li>
-      <li style={{ display: 'flex', alignItems: 'baseline', gap: 16, paddingLeft: 0 }}>
+      <li>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         <span style={{ width: 64, flexShrink: 0 }} className={badgeClass('absent')}>Grau</span>
         <span>Buchstabe kommt im Wort nicht vor</span>
+        </div>
       </li>
     </ul>
   );
