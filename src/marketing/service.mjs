@@ -38,6 +38,6 @@ export class MemoryStorage {
   async list(){return structuredClone([...this.records.values()]);}
   async get(id){return structuredClone(this.records.get(id)??null);}
   async mutate(id,fn){return this.atomic(()=>{const {record,value}=fn(structuredClone(this.records.get(id)??null));if(record)this.records.set(id,structuredClone(record));else this.records.delete(id);return structuredClone(value);});}
-  async findPublished(slug,kind){return structuredClone([...this.records.values()].find(r=>r.published?.document.slug===slug&&(kind==='ads'?r.published.document.kind!=='lp':r.published.document.kind===kind))??null);}
+  async findPublished(slug,kind){return structuredClone([...this.records.values()].find(r=>r.published?.document.slug===slug&&(kind==='ads'?!['lp','newsletter'].includes(r.published.document.kind):r.published.document.kind===kind))??null);}
   async publish(id,revision,actor,at,check){return this.atomic(()=>{const r=structuredClone(this.records.get(id));if(!r)throw new MarketingError(404,'Nicht gefunden.');if(r.revision!==revision)throw new MarketingError(409,'Zwischenzeitlich geändert.');check(r.draft);if([...this.records.values()].some(x=>x.id!==id&&x.published?.document.slug===r.draft.slug&&surface(x.published.document.kind)===surface(r.draft.kind)))throw new MarketingError(409,'URL bereits veröffentlicht.');r.revision++;r.published={document:structuredClone(r.draft),revision:r.revision,at};r.updated=at;r.audit=[...r.audit,{action:'publish',actor,at}].slice(-100);this.records.set(id,r);return structuredClone(r);});}
 }

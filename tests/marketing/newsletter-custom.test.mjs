@@ -37,3 +37,25 @@ test('preview image and export asset are separate and honest',()=>{
 test('preview-src must be a small data image',()=>{
   const d=base();d.code.html='<img src="cid:a" data-preview-src="https://evil.example/x.png">';assert.throws(()=>validateDocument(d));
 });
+
+import {MarketingService,MemoryStorage} from '../../src/marketing/service.mjs';
+import {renderNewsletterWeb} from '../../src/marketing/render.mjs';
+test('custom newsletter can be published as a browser view; public render has no tokens, scripts or personal links',async()=>{
+  const d=base();d.code.html=d.code.html.replace('</td>','<a href="{{webansicht}}">Im Browser ansehen</a></td>');
+  const doc=validateDocument(d),service=new MarketingService(new MemoryStorage()),r=await service.create(d,'fixture');
+  const pub=await service.publish(r.id,1,'fixture');
+  assert.ok(pub.published);
+  const snap=await service.public('sommer','newsletter');
+  const html=renderNewsletterWeb(snap);
+  assert.match(html,/href="https:\/\/paulikreisch\.de\/nl\/view\/sommer"/);
+  assert.match(html,/https:\/\/paulikreisch\.de\/nl\/unsubscribe"/);
+  assert.doesNotMatch(html,/\{\{|<script|abmeldelink-fehlt|[?&]t=/);
+  assert.match(html,/Content-Security-Policy/);
+  await assert.rejects(()=>service.public('sommer','ads'),e=>e.status===404);
+  assert.ok(doc);
+});
+test('newsletter with a cid image without stand-in cannot be published',async()=>{
+  const d=base();d.code.html+='<img src="cid:hero" alt="x" width="10" height="10">';
+  const service=new MarketingService(new MemoryStorage()),r=await service.create(d,'fixture');
+  await assert.rejects(()=>service.publish(r.id,1,'fixture'),e=>e.status===409&&/cid/.test(e.message));
+});

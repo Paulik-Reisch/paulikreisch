@@ -84,8 +84,8 @@ export function createMarketingHandler({service,auth,assets,files,links,newslett
       if(role!=='manager'||record.draft.kind!=='newsletter')throw new MarketingError(404,'Nicht gefunden.');
       if(!newsletter)throw new MarketingError(404,'Versand ist nicht eingerichtet.');
       try{
-        if(action==='send-preview')return json(await newsletter.preview(record.draft));
-        return json(await newsletter.send(record.draft,{digest:body.digest,phrase:body.phrase},record.id));
+        if(action==='send-preview')return json(await newsletter.preview(record));
+        return json(await newsletter.send(record,{digest:body.digest,phrase:body.phrase}));
       }catch(error){if(error instanceof MarketingError||error?.status===409)throw error;throw new MarketingError(503,'Versand derzeit nicht verfügbar.');}
     }
     if(!action&&method==='PUT'){if(!permitted(body.document))throw new MarketingError(403,'Falscher Arbeitsbereich.');if(body.document.kind!==record.draft.kind)throw new MarketingError(409,'Format kann nicht geändert werden.');return json(await service.update(id,body.document,body.revision,session.email));}

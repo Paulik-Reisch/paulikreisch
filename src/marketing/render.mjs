@@ -1,5 +1,5 @@
 import {customFrame} from './custom.mjs';
-import {escapeHTML as e, validateDocument, HOSTS, MarketingError, UNSUBSCRIBE_TOKEN} from './model.mjs';
+import {escapeHTML as e, validateDocument, HOSTS, MarketingError, UNSUBSCRIBE_TOKEN, WEB_VIEW_TOKEN, NEWSLETTER_WEB_BASE} from './model.mjs';
 export const PUBLIC_HEADERS = {'content-type':'text/html; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff','referrer-policy':'no-referrer','content-security-policy':"default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src https://static.paulikreisch.de data:; media-src https://static.paulikreisch.de; font-src https://static.paulikreisch.de; frame-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'"};
 const legal = '<a href="https://paulikreisch.de/impressum">Impressum</a> · <a href="https://paulikreisch.de/datenschutz">Datenschutz</a>';
 const paragraphs = value => value.split(/\n\s*\n/).map(p=>`<p>${e(p).replace(/\n/g,'<br>')}</p>`).join('');
@@ -10,7 +10,7 @@ const NEWSLETTER_CSP="default-src 'none'; img-src https://static.paulikreisch.de
 function newsletterFrame(doc){
   const cids=[...doc.code.html.matchAll(/<img\b[^>]*>/gi)].map(m=>m[0]).filter(t=>/\ssrc\s*=\s*["']cid:/i.test(t));
   const missing=cids.filter(t=>!/\sdata-preview-src\s*=/i.test(t)).length;
-  let html=doc.code.html.split(UNSUBSCRIBE_TOKEN).join('#abmeldelink-fehlt');
+  let html=doc.code.html.split(UNSUBSCRIBE_TOKEN).join('#abmeldelink-fehlt').split(WEB_VIEW_TOKEN).join('#browseransicht');
   // Preview asset and export asset are separate: the preview swaps cid: for the
   // data-preview-src stand-in; the export keeps cid: and drops the stand-in.
   html=html.replace(/<img\b[^>]*>/gi,t=>{const m=t.match(/\sdata-preview-src\s*=\s*"([^"]*)"/i);return m&&/\ssrc\s*=\s*["']cid:/i.test(t)?t.replace(/\ssrc\s*=\s*"cid:[^"]*"/i,` src="${m[1]}"`):t;});
@@ -62,3 +62,17 @@ export function adExport(doc) {
   if(doc.kind==='lp'||doc.kind==='newsletter') throw new MarketingError(400,'Kein Anzeigenformat.');
   return {format:doc.kind,document:doc,connected:false,spendEnabled:false,note:'Asset-Export, keine Kampagne und keine Ausspielung. Plattformrichtlinien und Vorschau vor Import prüfen.'};
 }
+
+/** Public browser view of a PUBLISHED newsletter snapshot. Same HTML as the mail, with
+ * the two sender placeholders resolved to neutral public targets: the unsubscribe link
+ * leads to the generic unsubscribe page (which asks for the personal link from the mail,
+ * no recipient data and no token exist here) and the browser-view link points to this page.
+ * No scripts, forms or external resources (CSP). */
+export function renderNewsletterWeb(doc,{origin='https://paulikreisch.de'}={}){
+  if(doc.kind!=='newsletter'||doc.mode!=='custom')throw new MarketingError(404,'Nicht gefunden.');
+  const self=NEWSLETTER_WEB_BASE+encodeURIComponent(doc.slug);
+  let html=doc.code.html.split(UNSUBSCRIBE_TOKEN).join(origin+'/nl/unsubscribe').split(WEB_VIEW_TOKEN).join(self);
+  html=html.replace(/<img\b[^>]*>/gi,t=>{const m=t.match(/\sdata-preview-src\s*=\s*"([^"]*)"/i);return m&&/\ssrc\s*=\s*["']cid:/i.test(t)?t.replace(/\ssrc\s*=\s*"cid:[^"]*"/i,` src="${m[1]}"`).replace(/\sdata-preview-src\s*=\s*"[^"]*"/i,''):t;});
+  return `<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta http-equiv="Content-Security-Policy" content="${e(NEWSLETTER_CSP)}"><title>${e(doc.subject)} | Paulik &amp; Reisch</title></head><body style="margin:0">${html}</body></html>`;
+}
+export const NEWSLETTER_WEB_HEADERS={'content-type':'text/html; charset=utf-8','cache-control':'public, max-age=60','x-content-type-options':'nosniff','x-robots-tag':'noindex, nofollow','referrer-policy':'no-referrer','content-security-policy':NEWSLETTER_CSP};

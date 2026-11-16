@@ -20,11 +20,18 @@ Status: Code vorbereitet, **alles aus**. Ohne die Flags unten liest, schreibt un
 5. Resend-Webhook auf die Webhook-URL anlegen, erst wenn die Route live ist.
 6. `NEWSLETTER_SEND_ENABLED=1` ist ein eigener Schalter für das tatsächliche Senden. Erster Versand nur nach ausdrücklicher Freigabe.
 
+## Browseransicht ("Im Browser ansehen")
+- Nur Newsletter mit eigenem HTML. Im HTML steht der Platzhalter `{{webansicht}}` (zusätzlich zu `{{abmeldelink}}`).
+- Öffentlich wird erst, was im Studio ausdrücklich veröffentlicht wird: `https://paulikreisch.de/nl/view/<slug>` zeigt den unveränderlichen veröffentlichten Stand, nie den Entwurf. Ohne Veröffentlichung 404.
+- Die Ansicht enthält keine Empfänger, keine Tokens, keine Einwilligungsdaten. Der Abmeldelink der Browseransicht führt auf die allgemeine Seite `/nl/unsubscribe`, die den persönlichen Link aus der Mail verlangt. Kein Skript, keine Formulare (CSP), `noindex`.
+- Beim Versand wird `{{webansicht}}` nur ersetzt, wenn genau die aktuelle Revision veröffentlicht ist. Sonst wird der Versand verweigert (Link würde etwas anderes zeigen als die Mail).
+- Gleiche Freigabeschranke wie das Studio (`MARKETING_STUDIO_RELEASE`). cid-Bilder brauchen ein Vorschaubild, sonst ist keine Veröffentlichung möglich.
+
 ## Token-Rotation
 `NEWSLETTER_TOKEN_SECRET` rotieren: altes Secret nach `NEWSLETTER_TOKEN_SECRET_PREVIOUS` (kommagetrennt), neues als Hauptsecret. Bereits versendete Links bleiben gültig.
 
 ## Anmeldeformulare
-Die Server-Action `subscribeToNewsletterAction` (Footer, Hero/Funnel, Shop, Shop-Seite) nutzt bei `NEWSLETTER_STORE_ENABLED=1` den Double-Opt-in-Weg. Bei ausgeschaltetem Flag bleibt der bisherige Weg unverändert. Mit Flag an entfallen der alte MailerSend-Kontakt, die Day-0-Mail und die `funnel_queue`-Einträge: vor der Bestätigung geht keine weitere Mail raus. Die Funnel-Mails (Checkliste) laufen damit nicht mehr automatisch. Das ist eine Entscheidung für Philipp, falls der Funnel sie braucht.
+Die Server-Action `subscribeToNewsletterAction` (Footer, Hero/Funnel, Shop, Shop-Seite) nutzt bei `NEWSLETTER_STORE_ENABLED=1` den Double-Opt-in-Weg. Bei ausgeschaltetem Flag bleibt der bisherige Weg unverändert. Mit Flag an entfallen der alte MailerSend-Kontakt, die Day-0-Mail und die `funnel_queue`-Einträge: vor der Bestätigung geht keine weitere Mail raus. Nach der Bestätigung geht die Day-0-Mail (Checkliste) raus, aber nur mit `NEWSLETTER_FUNNEL_DAY0=1` und ohne den Satz "Du bekommst in den nächsten Tagen noch 4 kurze Mails", weil Day 1/3/5/7 bewusst nicht gesendet werden. Day 1/3/5/7 brauchen eine Inhaltsentscheidung (u.a. "4.8 Sterne", Preisaktion "Letzte Chance", Leserzitat, kaputter Abmeldeplatzhalter).
 
 ## Offen (konkret)
 - Einwilligungstext: Als Nachweis wird der Satz der Bestätigungsseite gespeichert (`CONSENT_TEXT` in `src/newsletter/doi.mjs`, identisch mit `/nl/confirm`). Die Formulare zeigen je Quelle andere Texte: Footer "Ich akzeptiere die Datenschutzerklärung und die AGB", Newsletter-Block "...stimme dem Erhalt des Newsletters zu. Einmal wöchentlich, jederzeit abbestellbar", Shop-Seite nur "Datenschutzerklärung gelesen". Der Satz "Einmal wöchentlich" steht nur dort. Der Fußtext des Newsletters ("weil du dich für den Newsletter angemeldet hast") ist ungeprüft. Keine juristische Zusicherung.

@@ -11,7 +11,7 @@ export class PrivateBucketStorage {
   async list(){return(await this.read()).records;}
   async get(id){return(await this.read()).records.find(r=>r.id===id)??null;}
   async mutate(id,fn){return this.change(records=>{const index=records.findIndex(r=>r.id===id),{record,value}=fn(index<0?null:records[index]);if(record){if(index<0)records.push(record);else records[index]=record;}else if(index>=0)records.splice(index,1);return value;});}
-  async findPublished(slug,kind){return(await this.read()).records.find(r=>r.published?.document.slug===slug&&(kind==='ads'?r.published.document.kind!=='lp':r.published.document.kind===kind))??null;}
+  async findPublished(slug,kind){return(await this.read()).records.find(r=>r.published?.document.slug===slug&&(kind==='ads'?!['lp','newsletter'].includes(r.published.document.kind):r.published.document.kind===kind))??null;}
   async publish(id,revision,actor,at,check){return this.change(records=>{const r=records.find(r=>r.id===id);if(!r)throw new MarketingError(404,'Nicht gefunden.');if(r.revision!==revision)throw new MarketingError(409,'Zwischenzeitlich geändert.');check(r.draft);if(records.some(x=>x.id!==id&&x.published?.document.slug===r.draft.slug&&surface(x.published.document.kind)===surface(r.draft.kind)))throw new MarketingError(409,'URL bereits veröffentlicht.');r.revision++;r.published={document:structuredClone(r.draft),revision:r.revision,at};r.updated=at;r.audit=[...r.audit,{action:'publish',actor,at}].slice(-100);return r;});}
 }
 
