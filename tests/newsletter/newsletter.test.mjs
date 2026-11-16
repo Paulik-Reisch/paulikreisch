@@ -222,3 +222,17 @@ test('read projection counts all states but returns eligible ids only, no person
   assert.deepEqual(p,{counts:{pending:1,active:2,unsubscribed:1,suppressed:1},recipients:[{id:'ok'}]});
   assert.doesNotMatch(JSON.stringify(p),/email|token|consent|private@/);assert.equal(JSON.stringify(rows),before);
 });
+
+import {createMarketingHandler} from '../../src/marketing/http.mjs';
+test('private preflight route requires studio auth and CSRF before invoking read model',async()=>{
+  let reads=0;
+  const service={get:async()=>({draft:{kind:'newsletter'}})};
+  const newsletter={preview:async()=>{reads++;return {count:0};}};
+  const url='https://m.paulikreisch.de/api/marketing/documents/18ecf984-fe6c-4300-bf21-73fe1257b5ae/send-preview';
+  const req=csrf=>new Request(url,{method:'POST',headers:{origin:'https://m.paulikreisch.de','content-type':'application/json',...(csrf?{'x-csrf-token':csrf}:{})},body:'{}'});
+  const anonymous=createMarketingHandler({service,newsletter,assets:{},auth:{session:async()=>null}});
+  assert.equal((await anonymous(req('x'))).status,401);assert.equal(reads,0);
+  const authenticated=createMarketingHandler({service,newsletter,assets:{},auth:{session:async()=>({csrf:'valid'})}});
+  assert.equal((await authenticated(req('wrong'))).status,403);assert.equal(reads,0);
+  assert.equal((await authenticated(req('valid'))).status,200);assert.equal(reads,1);
+});

@@ -8,7 +8,7 @@ import { summarizeNewsletterRecipients } from './read-model.mjs';
 export function getNewsletterReadModel() {
   return Object.freeze({
     async snapshot() {
-      const snapshot = await getAdminDb().collection('newsletter_recipients').get();
+      const snapshot = await getAdminDb().collection('newsletter_recipients').select('id', 'status', 'confirmedAt', 'consent').get();
       return summarizeNewsletterRecipients(snapshot.docs.map(doc => doc.data()));
     },
   });
