@@ -14,10 +14,11 @@ export function personalize({html,text},url){
   if(/cid:/i.test(out.html))throw new SendRefused('cid-Bilder werden nicht mitgesendet.');
   return out;
 }
+export function oneClickUrl(base,token){return `${base.replace(/\/$/,'')}/nl/unsubscribe/one-click?t=${encodeURIComponent(token)}`;}
 export function listHeaders(url){return {'List-Unsubscribe':`<${url}>`,'List-Unsubscribe-Post':'List-Unsubscribe=One-Click'};}
 export function buildMessage({from,replyTo,subject,content,recipient,baseUrl}){
   const url=unsubscribeUrl(baseUrl,recipient.unsubscribeToken),body=personalize(content,url);
-  return {from,replyTo,to:[recipient.email],subject,html:body.html,text:body.text,headers:listHeaders(url)};
+  return {from,replyTo,to:[recipient.email],subject,html:body.html,text:body.text,headers:listHeaders(oneClickUrl(baseUrl,recipient.unsubscribeToken))};
 }
 /** Digest binds an approval to this exact content, sender and recipient set. */
 export function previewDigest({from,replyTo,subject,content,recipients}){

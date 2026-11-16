@@ -30,6 +30,7 @@ const REASONS: { value: Reason; label: string; icon: string; saveOffer: { title:
 function UnsubscribeInner() {
   const searchParams = useSearchParams();
   const initialEmail = searchParams.get("email") || "";
+  const token = searchParams.get("t") || "";
   const [email, setEmail] = useState(initialEmail);
   useEffect(() => { if (initialEmail) setEmail(initialEmail); }, [initialEmail]);
   const [step, setStep] = useState<Step>("choice");
@@ -90,15 +91,22 @@ function UnsubscribeInner() {
   }
 
   async function handleConfirmUnsubscribe() {
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      toast({ title: "E-Mail fehlt", description: "Bitte gib deine E-Mail ein.", variant: "destructive" });
+    if (!token) {
+      toast({ title: "Link aus der Mail nötig", description: "Bitte nutze den Abmelde-Link in einer Newsletter-Mail. Ohne ihn können wir dich nicht sicher abmelden.", variant: "destructive" });
       return;
     }
     setLoading(true);
-    await track("newsletter_unsubscribe_confirm", { reason, frequency });
-    // In production this would call MailerSend delete; for now we log + show success
-    setLoading(false);
-    setStep("unsubscribed");
+    try {
+      const res = await fetch("/nl/unsubscribe/confirm", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ token }) });
+      const data = await res.json().catch(() => ({ ok: false }));
+      if (!res.ok || !data.ok) throw new Error("failed");
+      await track("newsletter_unsubscribe_confirm", { reason, frequency });
+      setStep("unsubscribed");
+    } catch {
+      toast({ title: "Abmeldung nicht möglich", description: "Der Link ist ungültig oder abgelaufen. Bitte nutze den Link aus der neuesten Mail.", variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

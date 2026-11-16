@@ -59,7 +59,7 @@ test('personalize requires the placeholder and refuses cid and unknown placehold
   assert.throws(()=>personalize({html:'{{abmeldelink}} {{vorname}}',text:'{{abmeldelink}}'},'u'),SendRefused);
   assert.throws(()=>personalize({html:'<img src="cid:a">{{abmeldelink}}',text:'{{abmeldelink}}'},'u'),SendRefused);
   const m=buildMessage({from:'A <a@news.example.invalid>',subject:'S',content,recipient:recipients[0],baseUrl:'https://paulikreisch.de/'});
-  assert.match(m.headers['List-Unsubscribe'],/^<https:\/\/paulikreisch\.de\/nl\/unsubscribe\?t=t1>$/);assert.equal(m.headers['List-Unsubscribe-Post'],'List-Unsubscribe=One-Click');
+  assert.match(m.headers['List-Unsubscribe'],/^<https:\/\/paulikreisch\.de\/nl\/unsubscribe\/one-click\?t=t1>$/);assert.equal(m.headers['List-Unsubscribe-Post'],'List-Unsubscribe=One-Click');
   assert.ok(m.text.includes('?t=t1')&&!m.html.includes('{{'));
 });
 function args(over={}){const calls=[];const resend={send:async(m,o)=>{calls.push([m,o]);return {id:'r'+calls.length};}};return {calls,args:{enabled:true,from:'A <a@news.example.invalid>',subject:'S',content,recipients,dailyLimit:100,resend,baseUrl:'https://paulikreisch.de',campaignId:'sommer-1',sleep:async()=>{},...over}};}
