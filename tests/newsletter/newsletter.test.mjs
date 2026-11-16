@@ -166,3 +166,19 @@ test('studio sender: preview is read-only, send needs digest and phrase and the 
   assert.equal(sent.length,0);
   await assert.rejects(()=>on.preview({...draft,mode:'blocks'}),/eigenem HTML/);
 });
+
+import {requestSubscription,CONSENT_TEXT} from '../../src/newsletter/doi.mjs';
+test('double opt-in: mail only for a fresh pending request, neutral otherwise, honeypot ignored, confirm activates',async()=>{
+  const subs=new NewsletterSubscribers(new MemorySubscriberStore(),{secret:'s'.repeat(40),idKey:'k'.repeat(40)});
+  const sent=[],resend={send:async m=>{sent.push(m);return {id:'x'};}};
+  const call=(email,hp)=>requestSubscription({subscribers:subs,resend,from:'N <n@news.example.invalid>',baseUrl:'https://example.invalid',email,hp});
+  assert.deepEqual(await call('a@example.invalid','bot'),{ok:true});assert.equal(sent.length,0);
+  assert.equal((await call('kaputt')).ok,false);
+  assert.deepEqual(await call('A@Example.invalid'),{ok:true});assert.equal(sent.length,1);
+  assert.deepEqual(await call('a@example.invalid'),{ok:true});assert.equal(sent.length,1,'throttled, no second mail');
+  assert.equal((await subs.mailable()).length,0,'pending is not mailable');
+  const token=new URL(sent[0].text.match(/https:\S+/)[0]).searchParams.get('t');
+  assert.equal((await subs.confirm(token)).ok,true);
+  assert.equal((await subs.mailable()).length,1);
+  assert.equal(CONSENT_TEXT.length>10,true);
+});
