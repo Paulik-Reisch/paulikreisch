@@ -11,7 +11,7 @@ export async function readBinaryBody(request,maxBytes){const reader=request.body
  * scoped HttpOnly session and checks the current account allowlist/status.
  * auth.login/logout return Responses. Hosting adapter handles auth rate limits.
  */
-export function createMarketingHandler({service,auth,assets,files,links,newsletter}){
+export function createMarketingHandler({service,auth,assets,files,links,newsletter,transportTest}){
   return async request=>{try{
     const url=new URL(request.url),host=url.hostname,role=Object.entries(HOSTS).find(([,value])=>value===host)?.[0];
     if(!role||url.port)throw new MarketingError(404,'Nicht gefunden.');
@@ -31,6 +31,12 @@ export function createMarketingHandler({service,auth,assets,files,links,newslett
     const permitted=doc=>doc&& (role==='manager'||(role==='lp'?doc.kind==='lp':doc.kind!=='lp'));
     const owned=async id=>{const record=await service.get(id);if(!permitted(record.draft))throw new MarketingError(404,'Nicht gefunden.');return record;};
     if(path==='/api/marketing/session'&&method==='GET')return json({csrf:session.csrf,role});
+    if(path==='/api/marketing/newsletter/transport-test'){
+      if(role!=='manager'||!transportTest)throw new MarketingError(404,'Nicht gefunden.');
+      if(method==='GET')return json(transportTest.preview());
+      if(method==='POST')return json(await transportTest.send(await readBody(request)));
+      throw new MarketingError(405,'Methode nicht erlaubt.');
+    }
     if(path==='/api/marketing/documents'){
       if(method==='GET')return json((await service.list()).filter(permitted));
       if(method==='POST'){const body=await readBody(request);if(!permitted(body.document))throw new MarketingError(403,'Falscher Arbeitsbereich.');return json(await service.create(body.document,session.email),201);}

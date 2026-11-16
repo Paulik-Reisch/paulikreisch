@@ -57,3 +57,43 @@ that no removal happened and offer the existing contact route; never turn an
 arbitrary URL address into a verified identity or a false success. Compatibility
 with any previous provider-native signed links needs their original scheme and
 provider support, not guessed token conversion. No legacy list was migrated.
+
+
+## Private campaign capability and transport probe
+Campaign sending no longer needs public registration enabled. Its server-only
+capability exposes only mailable recipients and is gated by SEND. Private preview
+still uses the address-free read model. A configured signed feedback gate is
+required by both preview and direct campaign send. STORE and FUNNEL stay off.
+
+The private manager-only `/api/marketing/newsletter/transport-test` supports GET
+for exact review and POST for a fixed one-off technical message to
+`philipp.l.paulik@gmail.com`. POST requires the existing origin/session/CSRF
+checks, its own default-off `NEWSLETTER_TRANSPORT_TEST_ENABLED`, exact digest and
+phrase, and the configured approved sender identity. It never calls the
+newsletter store or changes the summer draft. A create-only private bucket claim
+is written before provider submission. Concurrent requests and all later retries
+are refused, even if the first response is lost. There is no automatic reset.
+Provider acceptance does not establish inbox delivery. No activation or message
+approval is implied by deploying this code.
+
+## Scoped provider feedback
+The isolated Resend webhook subscribes only to `email.bounced`,
+`email.complained`, `email.suppressed`. It remains disabled until the signature
+secret is safely bound and the endpoint is verified. The route uses
+`NEWSLETTER_RESEND_WEBHOOK_SECRET` and the separate default-off
+`NEWSLETTER_FEEDBACK_ENABLED`. It verifies the raw signed body and timestamp
+before constructing any DB adapter. Only the exact configured From is accepted:
+this Resend account also contains other projects. Only existing new-store records
+can be suppressed, with idempotent terminal status; unknown addresses are not
+created and a complaint cannot revive consent. No provider API call, list import,
+confirmation or newsletter send occurs in feedback handling.
+
+Provider payload references checked 2026-11-16:
+- https://resend.com/docs/webhooks/emails/bounced
+- https://resend.com/docs/webhooks/emails/complained
+- https://resend.com/docs/webhooks/create-webhook
+- https://resend.com/docs/api-reference/emails/send-email
+
+The probe and feedback gates remain unset in this code bundle. The provider
+webhook was created disabled pending secure secret transfer. Do not mistake this
+for a production feedback acceptance test or a mail test.
