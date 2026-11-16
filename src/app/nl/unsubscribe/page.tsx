@@ -46,22 +46,10 @@ function UnsubscribeInner() {
     try { const id = getBrowserAnalyticsId(); if (id) await logEventAction(type, id, "/nl/unsubscribe", { reason, ...extra }); } catch {}
   }
 
-  async function handlePause(days: number) {
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      toast({ title: "E-Mail fehlt", description: "Bitte gib deine E-Mail ein.", variant: "destructive" });
-      return;
-    }
-    setLoading(true);
-    await track("newsletter_pause", { days });
-    // Store pause in localStorage for UX + Firestore via analytics event
-    try {
-      const until = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
-      localStorage.setItem("pr_newsletter_paused_until", until);
-      localStorage.setItem("pr_newsletter_paused_email", email);
-    } catch {}
-    setLoading(false);
-    setStep("paused");
-    toast({ title: "Pause aktiv ✅", description: `Bis ${new Date(Date.now() + days * 24 * 60 * 60 * 1000).toLocaleDateString("de-DE")} hörst du nichts von uns — danach automatisch wieder da.` });
+  async function handlePause(_days: number) {
+    // Honest state: there is no server-side pause, so we never claim one. A pause
+    // that only lives in this browser would not stop any mail.
+    toast({ title: "Pause ist noch nicht möglich", description: "Wir können Mails derzeit nicht pausieren. Wenn du nichts mehr bekommen möchtest, melde dich ab. Du kannst dich später wieder anmelden." });
   }
 
   async function handleSurveyNext() {

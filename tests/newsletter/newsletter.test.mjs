@@ -93,12 +93,23 @@ test('resend client sends bearer auth and idempotency header, never leaks the ke
 });
 
 import {FirestoreSubscriberStore} from '../../src/newsletter/firestore-store.mjs';
-test('firestore store keeps change atomic and returns copies',async()=>{
-  let doc;const ref={get:async()=>({exists:!!doc,data:()=>doc})};
-  const db={collection:()=>({doc:()=>ref}),runTransaction:async fn=>fn({get:r=>r.get(),set:(r,d)=>{doc=structuredClone(d);}})};
+import {recipientId} from '../../src/newsletter/subscribers.mjs';
+test('firestore store: one document per recipient, update is transactional',async()=>{
+  const docs=new Map();
+  const ref=id=>({id,get:async()=>({exists:docs.has(id),data:()=>docs.get(id)})});
+  const db={collection:()=>({doc:ref,get:async()=>({docs:[...docs.values()].map(v=>({data:()=>v}))})}),runTransaction:async fn=>fn({get:r=>r.get(),set:(r,d)=>{docs.set(r.id,structuredClone(d));}})};
   const s=new FirestoreSubscriberStore(db);
-  assert.deepEqual(await s.read(),[]);
-  const v=await s.change(r=>{r.push({id:'a'});return r.length;});
-  assert.equal(v,1);assert.deepEqual(await s.read(),[{id:'a'}]);
-  assert.equal(doc.schema,1);
+  assert.deepEqual(await s.list(),[]);
+  assert.equal(await s.update('a',old=>({value:old,record:{id:'a'}})),null);
+  assert.equal(await s.update('a',old=>({value:old.id})),'a');
+  assert.equal(docs.size,1);
+  await s.update('b',()=>({value:1,record:{id:'b'}}));
+  assert.equal((await s.list()).length,2);
+});
+test('record id is a keyed UUID-shaped hash of the address, not the address',()=>{
+  const a=recipientId(SECRET,'a@b.de');
+  assert.match(a,/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/);
+  assert.equal(a,recipientId(SECRET,'a@b.de'));
+  assert.notEqual(a,recipientId(SECRET,'c@d.de'));
+  assert.notEqual(a,recipientId('y'.repeat(40),'a@b.de'));
 });
