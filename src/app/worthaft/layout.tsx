@@ -17,9 +17,9 @@ export const metadata: Metadata = {
     url: 'https://paulikreisch.de/worthaft',
     images: [
       {
-        url: 'https://paulikreisch.de/worthaft-og.png',
-        width: 1200,
-        height: 1200,
+        url: 'https://paulikreisch.de/worthaft-og-256.png',
+        width: 256,
+        height: 256,
         alt: 'Worthaft-Logo: 3x3-Raster aus gelben, grauen und blauen Kacheln',
       },
     ],
