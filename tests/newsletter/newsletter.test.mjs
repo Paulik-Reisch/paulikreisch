@@ -151,3 +151,18 @@ test('rotation: old tokens still verify, record ids survive a token secret chang
   const three=new NewsletterSubscribers(store,{secret:B,idKey:'i'.repeat(40)});
   assert.equal((await three.unsubscribe(m.unsubscribeToken)).ok,false);
 });
+
+import {createNewsletterSender} from '../../src/newsletter/studio-api.mjs';
+test('studio sender: preview is read-only, send needs digest and phrase and the enabled flag',async()=>{
+  const draft={kind:'newsletter',mode:'custom',subject:'S',code:{html:'<p>x {{abmeldelink}}</p>',text:'x {{abmeldelink}}'}};
+  const sent=[];
+  const make=enabled=>createNewsletterSender({getSubscribers:()=>({mailable:async()=>[{id:'a',email:'a@example.invalid',unsubscribeToken:'t.t'}]}),getResend:()=>({send:async m=>{sent.push(m);return {id:'p1'};}}),from:'N <n@news.example.invalid>',baseUrl:'https://example.invalid',dailyLimit:5,enabled});
+  const off=make(false),p=await off.preview(draft);
+  assert.equal(p.count,1);assert.equal(sent.length,0);
+  await assert.rejects(()=>off.send(draft,{digest:p.digest,phrase:p.phrase},'abc'),/nicht freigeschaltet/);
+  const on=make(true);
+  await assert.rejects(()=>on.send(draft,{digest:p.digest,phrase:'SENDEN 2'},'abc'),/Bestätigungsphrase/);
+  await assert.rejects(()=>on.send(draft,{digest:'x',phrase:p.phrase},'abc'),/veraltet/);
+  assert.equal(sent.length,0);
+  await assert.rejects(()=>on.preview({...draft,mode:'blocks'}),/eigenem HTML/);
+});

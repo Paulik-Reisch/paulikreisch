@@ -5,5 +5,5 @@ export function createFirebaseMarketing(options: {
   secret: string;
   allowedEmail: (email: string | null | undefined) => boolean;
   files?: unknown;
-  links?: unknown;
+  links?: unknown; newsletter?: unknown;
 }): (request: Request) => Promise<Response>;

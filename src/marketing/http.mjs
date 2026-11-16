@@ -11,7 +11,7 @@ export async function readBinaryBody(request,maxBytes){const reader=request.body
  * scoped HttpOnly session and checks the current account allowlist/status.
  * auth.login/logout return Responses. Hosting adapter handles auth rate limits.
  */
-export function createMarketingHandler({service,auth,assets,files,links}){
+export function createMarketingHandler({service,auth,assets,files,links,newsletter}){
   return async request=>{try{
     const url=new URL(request.url),host=url.hostname,role=Object.entries(HOSTS).find(([,value])=>value===host)?.[0];
     if(!role||url.port)throw new MarketingError(404,'Nicht gefunden.');
@@ -74,12 +74,20 @@ export function createMarketingHandler({service,auth,assets,files,links}){
     }
     const preview=path.match(/^\/preview\/([a-f0-9-]{36})$/);
     if(preview&&safe){const record=await owned(preview[1]);const headers={...PUBLIC_HEADERS,...PRIVATE};return new Response(method==='HEAD'?null:renderPage(record.draft,{preview:true,previewId:record.id,stepSlug:url.searchParams.get('step')}),{headers});}
-    const match=path.match(/^\/api\/marketing\/documents\/([a-f0-9-]{36})(?:\/(publish|unpublish|export))?$/);
+    const match=path.match(/^\/api\/marketing\/documents\/([a-f0-9-]{36})(?:\/(publish|unpublish|export|send-preview|send))?$/);
     if(!match)throw new MarketingError(404,'Nicht gefunden.');
     const[,id,action]=match,record=await owned(id);
     if(!action&&method==='GET')return json(record);
     if(action==='export'&&method==='GET')return json(record.draft.kind==='newsletter'?newsletterExport(record.draft):adExport(record.draft));
     const body=await readBody(request);
+    if((action==='send-preview'||action==='send')&&method==='POST'){
+      if(role!=='manager'||record.draft.kind!=='newsletter')throw new MarketingError(404,'Nicht gefunden.');
+      if(!newsletter)throw new MarketingError(404,'Versand ist nicht eingerichtet.');
+      try{
+        if(action==='send-preview')return json(await newsletter.preview(record.draft));
+        return json(await newsletter.send(record.draft,{digest:body.digest,phrase:body.phrase},record.id));
+      }catch(error){if(error instanceof MarketingError||error?.status===409)throw error;throw new MarketingError(503,'Versand derzeit nicht verfügbar.');}
+    }
     if(!action&&method==='PUT'){if(!permitted(body.document))throw new MarketingError(403,'Falscher Arbeitsbereich.');if(body.document.kind!==record.draft.kind)throw new MarketingError(409,'Format kann nicht geändert werden.');return json(await service.update(id,body.document,body.revision,session.email));}
     if(!action&&method==='DELETE')return json(await service.remove(id,body.revision,session.email));
     if(action==='publish'&&method==='POST')return json(await service.publish(id,body.revision,session.email));
