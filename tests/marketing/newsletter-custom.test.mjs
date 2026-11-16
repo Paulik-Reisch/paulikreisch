@@ -59,3 +59,8 @@ test('newsletter with a cid image without stand-in cannot be published',async()=
   const service=new MarketingService(new MemoryStorage()),r=await service.create(d,'fixture');
   await assert.rejects(()=>service.publish(r.id,1,'fixture'),e=>e.status===409&&/cid/.test(e.message));
 });
+test('public view keeps a full mail document and puts the CSP guard in its head',()=>{
+  const d=base();d.code.html='<!doctype html><html lang="de"><head><meta charset="utf-8"><style>.a{color:red}</style></head><body><a href="{{abmeldelink}}">x</a></body></html>';
+  const html=renderNewsletterWeb(validateDocument(d));
+  assert.equal((html.match(/<html/g)||[]).length,1);assert.match(html,/<head><meta name="robots"[^>]*><meta http-equiv="Content-Security-Policy"/);
+});

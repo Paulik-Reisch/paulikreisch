@@ -73,6 +73,9 @@ export function renderNewsletterWeb(doc,{origin='https://paulikreisch.de'}={}){
   const self=NEWSLETTER_WEB_BASE+encodeURIComponent(doc.slug);
   let html=doc.code.html.split(UNSUBSCRIBE_TOKEN).join(origin+'/nl/unsubscribe').split(WEB_VIEW_TOKEN).join(self);
   html=html.replace(/<img\b[^>]*>/gi,t=>{const m=t.match(/\sdata-preview-src\s*=\s*"([^"]*)"/i);return m&&/\ssrc\s*=\s*["']cid:/i.test(t)?t.replace(/\ssrc\s*=\s*"cid:[^"]*"/i,` src="${m[1]}"`).replace(/\sdata-preview-src\s*=\s*"[^"]*"/i,''):t;});
-  return `<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta http-equiv="Content-Security-Policy" content="${e(NEWSLETTER_CSP)}"><title>${e(doc.subject)} | Paulik &amp; Reisch</title></head><body style="margin:0">${html}</body></html>`;
+  const guard=`<meta name="robots" content="noindex,nofollow"><meta http-equiv="Content-Security-Policy" content="${e(NEWSLETTER_CSP)}">`;
+  // Mail HTML is often a complete document: keep its head (styles, viewport) and add the guard first.
+  if(/^\s*(<!doctype[^>]*>\s*)?<html[\s>]/i.test(html)&&/<head[^>]*>/i.test(html))return html.replace(/<head[^>]*>/i,m=>m+guard);
+  return `<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${guard}<title>${e(doc.subject)} | Paulik &amp; Reisch</title></head><body style="margin:0">${html}</body></html>`;
 }
 export const NEWSLETTER_WEB_HEADERS={'content-type':'text/html; charset=utf-8','cache-control':'public, max-age=60','x-content-type-options':'nosniff','x-robots-tag':'noindex, nofollow','referrer-policy':'no-referrer','content-security-policy':NEWSLETTER_CSP};
