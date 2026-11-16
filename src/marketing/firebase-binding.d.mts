@@ -4,4 +4,6 @@ export function createFirebaseMarketing(options: {
   apiKey: string;
   secret: string;
   allowedEmail: (email: string | null | undefined) => boolean;
+  files?: unknown;
+  links?: unknown;
 }): (request: Request) => Promise<Response>;
