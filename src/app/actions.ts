@@ -1,9 +1,6 @@
 'use server';
 
 import { z } from "zod";
-import { addSubscriber } from "@/lib/firestore";
-import { addContact, sendTransactionalEmail } from "@/lib/resend";
-import { funnelEmails } from "@/lib/funnel-emails";
 import { newsletterStoreEnabled } from "@/newsletter/server";
 
 const SubscriberSchema = z.object({
@@ -15,7 +12,7 @@ const SubscriberSchema = z.object({
 export async function subscribeToNewsletterAction(
   prevState: { success?: boolean; error?: string; message?: string },
   formData: FormData
-) {
+): Promise<{ success?: boolean; error?: string; message?: string }> {
   const rawConsent: unknown = formData.get("consent");
   const source = (formData.get("source") as string) || "unknown";
   const isFunnel = source.startsWith("funnel-");
@@ -48,72 +45,20 @@ export async function subscribeToNewsletterAction(
     if (c !== "true") return { error: "Bitte stimme der Datenschutzerklärung zu." };
   }
 
-  // Double opt-in path. Only when the private recipient store is enabled; the
-  // legacy path below stays untouched while the flag is off. No address is
-  // mailed or stored before the person confirms, and the answer never reveals
-  // whether the address was already known.
-  if (newsletterStoreEnabled()) {
-    try {
-      const { subscribeWithDoubleOptIn } = await import("@/newsletter/signup");
-      const r = await subscribeWithDoubleOptIn({ email, source, hp: String(formData.get("website") || "") });
-      if (!r.ok) return { error: "Bitte gib eine gültige E-Mail-Adresse ein." };
-      return { success: true, message: "Fast geschafft: Wenn die Adresse stimmt, bekommst du gleich eine Mail mit einem Bestätigungslink." };
-    } catch (e) {
-      console.error("Newsletter double opt-in failed");
-      return { error: "Die Anmeldung ist gerade nicht möglich. Bitte versuche es später noch einmal." };
-    }
+  // No fallback to the legacy MailerSend/Firestore/Day-0/queue path. A disabled
+  // new store means no newsletter registration or email side effects at all.
+  if (!newsletterStoreEnabled()) {
+    return { error: "Die Newsletter-Anmeldung ist gerade nicht verfügbar. Bitte versuche es später noch einmal." };
   }
-
   try {
-    await addContact(email);
-  } catch (e) {
-    console.error("MailerSend addContact failed, fallback to Firestore", e);
+    const { subscribeWithDoubleOptIn } = await import("@/newsletter/signup");
+    const r = await subscribeWithDoubleOptIn({ email, source, hp: String(formData.get("website") || "") });
+    if (!r.ok) return { error: "Bitte gib eine gültige E-Mail-Adresse ein." };
+    return { success: true, message: "Fast geschafft: Wenn die Adresse stimmt, bekommst du gleich eine Mail mit einem Bestätigungslink." };
+  } catch {
+    console.error("Newsletter double opt-in failed");
+    return { error: "Die Anmeldung ist gerade nicht möglich. Bitte versuche es später noch einmal." };
   }
-
-  try {
-    await addSubscriber({ email, source });
-  } catch (e: any) {
-    console.error("Firestore addSubscriber failed", e);
-    return { error: e?.message || "Anmeldung fehlgeschlagen." };
-  }
-
-  // Day 0 transactional: checklist + bonus (only for funnel sources)
-  if (isFunnel) {
-    try {
-      const checklistUrl = "https://paulikreisch.de/checkliste-lernvollzugsanstalt.pdf";
-      const shopUrl = "https://paulikreisch.de/shop";
-      const { subject, html } = funnelEmails.day0;
-      const htmlContent = html({ checklistUrl, shopUrl });
-      await sendTransactionalEmail(email, subject, htmlContent);
-    } catch (e) {
-      console.error("Day0 mail failed (non-blocking)", e);
-    }
-    // also queue future mails as Firestore docs for cron/manual send
-    try {
-      const { addDocument } = await import("@/lib/admin-writes");
-      const now = Date.now();
-      const schedule = [
-        { day: "day1", delayMs: 1 * 24 * 60 * 60 * 1000 },
-        { day: "day3", delayMs: 3 * 24 * 60 * 60 * 1000 },
-        { day: "day5", delayMs: 5 * 24 * 60 * 60 * 1000 },
-        { day: "day7", delayMs: 7 * 24 * 60 * 60 * 1000 },
-      ];
-      for (const s of schedule) {
-        await addDocument("funnel_queue", {
-          email,
-          source,
-          day: s.day,
-          scheduledAt: new Date(now + s.delayMs).toISOString(),
-          sent: false,
-          createdAt: new Date().toISOString(),
-        }, "system-funnel");
-      }
-    } catch (e) {
-      console.error("Funnel queue failed", e);
-    }
-  }
-
-  return { success: true, message: `Wir haben eine Bestätigungs-E-Mail an ${email} gesendet.` };
 }
 
 export async function logEventAction(type: 'page_view' | 'newsletter_subscription' | string, userId: string, path: string, params: object = {}) {
