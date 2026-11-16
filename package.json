@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint src --quiet",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test tests/unit/*.test.ts",
+    "test": "tsx --test tests/unit/*.test.ts && node --test tests/marketing/*.test.mjs",
     "test:e2e": "playwright test",
     "seed:worthaft-lists": "tsx scripts/seed-worthaft-word-lists.ts",
     "check": "npm run lint && npm run typecheck && npm test",
