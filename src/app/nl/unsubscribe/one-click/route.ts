@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getNewsletterSubscribers } from '@/newsletter/server';
+import { getNewsletterUnsubscriber } from '@/newsletter/server';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false }, { status: 400 });
   }
   try {
-    const r = await getNewsletterSubscribers().unsubscribe(token);
+    const r = await getNewsletterUnsubscriber().unsubscribe(token);
     return NextResponse.json({ ok: !!r.ok }, { status: r.ok ? 200 : 400 });
   } catch (e) {
     console.error('newsletter one-click unsubscribe failed');

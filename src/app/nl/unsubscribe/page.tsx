@@ -10,7 +10,9 @@ import { Button } from "@/components/ui/button";
 type Step = "confirm" | "done" | "failed";
 
 function UnsubscribeInner() {
-  const token = useSearchParams().get("t") || "";
+  const params = useSearchParams();
+  const token = params.get("t") || "";
+  const legacyLink = params.has("email");
   const [step, setStep] = useState<Step>("confirm");
   const [loading, setLoading] = useState(false);
 
@@ -49,10 +51,12 @@ function UnsubscribeInner() {
           )}
           {step === "confirm" && !token && (
             <>
-              <h1 className="font-headline text-3xl font-bold">Abmelde-Link fehlt</h1>
+              <h1 className="font-headline text-3xl font-bold">{legacyLink ? "Alter Abmelde-Link" : "Abmelde-Link fehlt"}</h1>
               <p className="mt-3 text-muted-foreground text-balance">
-                Bitte nutze den Abmelde-Link am Ende einer Newsletter-Mail. Ohne ihn können wir dich nicht sicher abmelden.
-                Schreib uns sonst über das Impressum.
+                {legacyLink
+                  ? "Dieser ältere Link enthält keinen sicheren persönlichen Schlüssel. Hier wurde noch keine Abmeldung vorgenommen."
+                  : "Bitte nutze den persönlichen Abmelde-Link am Ende einer Newsletter-Mail. Ohne ihn können wir dich nicht sicher abmelden."}
+                {" "}Bitte schreib uns über das <Link href="/impressum" className="underline">Impressum</Link>, wenn dein Link nicht funktioniert.
               </p>
             </>
           )}
