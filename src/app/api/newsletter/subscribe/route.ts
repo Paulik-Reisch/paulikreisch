@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 export async function POST(req: Request) {
   const body = await req.json().catch(() => null) as { email?: unknown; hp?: unknown } | null;
   try {
-    const apiKey = process.env.RESEND_API_KEY || '';
+    const apiKey = process.env.NEWSLETTER_RESEND_API_KEY || '';
     const from = process.env.NEWSLETTER_FROM || '';
     if (!apiKey || !from) throw new Error('not configured');
     const r = await requestSubscription({

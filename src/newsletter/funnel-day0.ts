@@ -14,7 +14,7 @@ export async function sendFunnelDay0(
 ) {
   // Separate switch: the Day-0 wording needs Philipp's decision first.
   if (process.env.NEWSLETTER_FUNNEL_DAY0 !== '1') return null;
-  const apiKey = process.env.RESEND_API_KEY || '';
+  const apiKey = process.env.NEWSLETTER_RESEND_API_KEY || '';
   const from = process.env.NEWSLETTER_FROM || '';
   if (!apiKey || !from) throw new Error('not configured');
   const base = process.env.NEWSLETTER_BASE_URL || 'https://paulikreisch.de';

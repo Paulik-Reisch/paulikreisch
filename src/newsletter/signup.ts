@@ -7,7 +7,7 @@ import { createResend } from './resend.mjs';
 
 /** Shared by the signup server action and the JSON route. Throws when not configured. */
 export async function subscribeWithDoubleOptIn({ email, source, hp }: { email: string; source: string; hp?: string }): Promise<{ ok: boolean }> {
-  const apiKey = process.env.RESEND_API_KEY || '';
+  const apiKey = process.env.NEWSLETTER_RESEND_API_KEY || '';
   const from = process.env.NEWSLETTER_FROM || '';
   if (!apiKey || !from) throw new Error('not configured');
   return requestSubscription({

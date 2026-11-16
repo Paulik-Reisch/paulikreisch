@@ -13,7 +13,7 @@ Status: Code vorbereitet, **alles aus**. Ohne die Flags unten liest, schreibt un
 
 ## Voraussetzungen vor dem Einschalten (Reihenfolge)
 1. **Firestore-Rules**: am 2026-11-16 16:11 in der Konsole veröffentlicht (Stand in `firestore.rules`): `subscribers` und `newsletter_recipients` nur für Admins lesbar, alles andere unverändert. Per REST-Abruf eines nicht existierenden Dokuments geprüft: 403 für beide, 404 für `articles` und `users`. Rollback: vorherige Version im Regelverlauf der Konsole. `users` ist bewusst nicht angefasst.
-2. Secrets (Secret Manager / App Hosting): `NEWSLETTER_TOKEN_SECRET` (≥32 Zeichen), `NEWSLETTER_ID_KEY` (≥32 Zeichen, nie rotieren ohne Migration, Backup im Vault), `RESEND_API_KEY` (Sending-only, auf die Domain beschränkt), `RESEND_WEBHOOK_SECRET`.
+2. Secrets (Secret Manager / App Hosting): `NEWSLETTER_TOKEN_SECRET` (≥32 Zeichen), `NEWSLETTER_ID_KEY` (≥32 Zeichen, nie rotieren ohne Migration, Backup im Vault), `NEWSLETTER_RESEND_API_KEY` (Sending-only, auf die Domain beschränkt; bewusst nicht `RESEND_API_KEY`, den Namen belegt schon ein vorhandenes, ungenutztes Secret, das unberührt bleibt), `RESEND_WEBHOOK_SECRET`.
    Die Einträge in `apphosting.yaml` kommen erst, wenn die Secrets existieren, sonst scheitert der Rollout.
 3. Umgebung: `NEWSLETTER_FROM`, optional `NEWSLETTER_REPLY_TO`, `NEWSLETTER_BASE_URL` (Standard https://paulikreisch.de), `NEWSLETTER_DAILY_LIMIT` (Standard 100).
 4. `NEWSLETTER_STORE_ENABLED=1` schaltet Store, Anmeldung, Bestätigung, Abmeldung, Webhook und Studio-Panel frei.
