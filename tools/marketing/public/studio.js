@@ -22,8 +22,9 @@ function el(tag,text,className){const n=document.createElement(tag);if(text!=nul
 async function liveDocument(id){
   const record=await api('/documents/'+encodeURIComponent(id));
   const doc=record.published?.document;
-  if(!doc||!['lp','google','meta','other'].includes(doc.kind))throw Error('Keine öffentliche Web-Ansicht verfügbar.');
+  if(!doc||!['lp','google','meta','other','newsletter'].includes(doc.kind))throw Error('Keine öffentliche Web-Ansicht verfügbar.');
   if(!/^[a-z0-9-]+$/.test(doc.slug))throw Error('Ungültige veröffentlichte URL.');
+  if(doc.kind==='newsletter')return {doc,url:'https://paulikreisch.de/nl/view/'+doc.slug};
   return {doc,url:'https://'+(doc.kind==='lp'?'lp.paulikreisch.de':'ads.paulikreisch.de')+'/'+doc.slug};
 }
 function liveActions(id,mount){
@@ -51,7 +52,7 @@ function render(){
   $('#total').textContent=`${items.length} Dokument${items.length===1?'':'e'}`;
   const container=$('#documents');container.replaceChildren();
   if(!items.length){const card=el('div',null,'empty');card.append(el('h3',documents.length?'Keine Treffer':'Noch keine Inhalte'),el('p',documents.length?'Suche oder Format ändern.':'Neue Inhalte bleiben zunächst privat.'));const button=el('button','+ Neu erstellen');button.onclick=()=>edit(null);card.append(button);container.append(card);}
-  for(const d of items){const row=el('article',null,'document'),info=el('div');info.append(el('strong',d.name),el('small',`${kindNames[d.kind]} · ${d.campaign||'Ohne Kampagne'} · /${d.slug}`));const button=el('button','Bearbeiten');button.onclick=()=>load(d.id);const actions=el('div',null,'row-actions');actions.append(button);if(d.published&&d.kind!=='newsletter')liveActions(d.id,actions);row.append(info,el('span',d.published?(d.unpublishedChanges?'Live + neue Änderungen':'Veröffentlicht'):'Privater Entwurf','badge'),actions);container.append(row);}
+  for(const d of items){const row=el('article',null,'document'),info=el('div');info.append(el('strong',d.name),el('small',`${kindNames[d.kind]} · ${d.campaign||'Ohne Kampagne'} · /${d.slug}`));const button=el('button','Bearbeiten');button.onclick=()=>load(d.id);const actions=el('div',null,'row-actions');actions.append(button);if(d.published)liveActions(d.id,actions);row.append(info,el('span',d.published?(d.unpublishedChanges?'Live + neue Änderungen':'Veröffentlicht'):'Privater Entwurf','badge'),actions);container.append(row);}
 }
 async function refresh(){documents=await api('/documents');render();}
 function step(data={slug:'start',title:'',body:'',bullets:[]}){const fragment=$('#step-template').content.cloneNode(true),root=fragment.querySelector('fieldset');for(const input of root.querySelectorAll('[data-key]'))input.value=Array.isArray(data[input.dataset.key])?data[input.dataset.key].join('\n'):data[input.dataset.key]??'';root.querySelector('.remove-step').onclick=()=>root.remove();$('#steps').append(fragment);}
