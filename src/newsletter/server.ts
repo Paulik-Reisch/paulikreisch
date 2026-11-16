@@ -12,18 +12,27 @@ export function newsletterSecret(): string {
   return s;
 }
 
-/** Fail closed: the recipient collection must be private first. The live Firestore
- * rules currently allow public reads on every collection, so nothing here may
- * read or write until the rules exclude `newsletter_recipients` and this flag is
- * set to "1" in the App Hosting environment. */
+/** Public registration and ordinary recipient writes remain separately gated. */
 export function newsletterStoreEnabled(): boolean {
   return process.env.NEWSLETTER_STORE_ENABLED === '1';
 }
 
-export function getNewsletterSubscribers() {
-  if (!newsletterStoreEnabled()) throw new Error('newsletter store disabled');
+function buildNewsletterSubscribers() {
   const idKey = process.env.NEWSLETTER_ID_KEY || '';
   if (idKey.length < 32) throw new Error('NEWSLETTER_ID_KEY missing');
   const previousSecrets = (process.env.NEWSLETTER_TOKEN_SECRET_PREVIOUS || '').split(',').map((x) => x.trim()).filter((x) => x.length >= 32);
   return new NewsletterSubscribers(new FirestoreSubscriberStore(getAdminDb()), { secret: newsletterSecret(), previousSecrets, idKey });
+}
+
+export function getNewsletterSubscribers() {
+  if (!newsletterStoreEnabled()) throw new Error('newsletter store disabled');
+  return buildNewsletterSubscribers();
+}
+
+/** Only removal of an existing recipient with a valid signed token. It cannot
+ * subscribe, confirm, list, or create a provider request. Off by default. */
+export function getNewsletterUnsubscriber() {
+  if (process.env.NEWSLETTER_UNSUBSCRIBE_ENABLED !== '1') throw new Error('newsletter unsubscribe disabled');
+  const subscribers = buildNewsletterSubscribers();
+  return Object.freeze({ unsubscribe: (token: string) => subscribers.unsubscribe(token) });
 }

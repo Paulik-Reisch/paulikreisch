@@ -44,3 +44,16 @@ Die Server-Action `subscribeToNewsletterAction` (Footer, Hero/Funnel, Shop, Shop
 - Private Entwürfe sind prüfbar. Eine unveröffentlichte/veraltete Browseransicht wird als Versandhindernis angezeigt, nicht durch Veröffentlichung umgangen. Die eigentliche Sendemethode verlangt weiterhin den passenden veröffentlichten Stand, STORE, SEND, Digest und Phrase.
 - Das angezeigte Limit ist ein **Kampagnenlimit**, kein aufaddiertes Tagesbudget. Das verbleibende Resend-Kontingent und die Zustellbarkeit sind nicht geprüft.
 - Anmeldung/DOI, Abmeldung und Webhook bleiben durch das bisherige STORE-Gate gesperrt. Für bereits versandte persönliche Links ist später ein getrenntes Abmelde-Gate nötig; das Einschalten des Versands darf dafür keine Voraussetzung sein.
+
+## Separate removal capability (preparation, off by default)
+`NEWSLETTER_UNSUBSCRIBE_ENABLED=1` permits only a valid signed token to remove an
+existing new-store recipient, through the manual-confirm or RFC8058 POST route.
+It does not enable registration, confirmation, list reads, provider calls or
+sending. Leaving STORE/SEND off must never prevent removal once this removal
+capability has been explicitly activated. No code change activates the flag.
+
+Old `?email=` links are not authenticated personal tokens. The page must state
+that no removal happened and offer the existing contact route; never turn an
+arbitrary URL address into a verified identity or a false success. Compatibility
+with any previous provider-native signed links needs their original scheme and
+provider support, not guessed token conversion. No legacy list was migrated.

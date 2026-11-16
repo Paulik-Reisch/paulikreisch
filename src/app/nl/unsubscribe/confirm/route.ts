@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getNewsletterSubscribers } from '@/newsletter/server';
+import { getNewsletterUnsubscriber } from '@/newsletter/server';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   const body = await req.json().catch(() => null) as { token?: unknown } | null;
   const token = typeof body?.token === 'string' ? body.token : '';
   try {
-    const r = await getNewsletterSubscribers().unsubscribe(token);
+    const r = await getNewsletterUnsubscriber().unsubscribe(token);
     return NextResponse.json({ ok: !!r.ok }, { status: r.ok ? 200 : 400 });
   } catch (e) {
     console.error('newsletter unsubscribe failed');
