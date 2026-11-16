@@ -18,6 +18,32 @@ function status(message,error=false){$('#status').textContent=message;$('#status
 async function api(path,options={}){const res=await fetch('/api/marketing'+path,{credentials:'same-origin',...options,headers:{'content-type':'application/json','x-csrf-token':csrf,...options.headers}});let data;try{data=await res.json();}catch{throw Error('Der Server antwortet nicht im erwarteten Format.');}if(!res.ok)throw Error(data.error||'Aktion fehlgeschlagen.');return data;}
 function view(name){pendingConfirmation?.(false);for(const id of ['login','workspace','editor','files','links'])$('#'+id).hidden=id!==name;for(const b of $$('nav button'))b.disabled=name==='login';$('#logout').hidden=name==='login';$('#logout-mobile').hidden=name==='login';}
 function el(tag,text,className){const n=document.createElement(tag);if(text!=null)n.textContent=text;if(className)n.className=className;return n;}
+// Read the immutable live snapshot at action time, never unsaved form values.
+async function liveDocument(id){
+  const record=await api('/documents/'+encodeURIComponent(id));
+  const doc=record.published?.document;
+  if(!doc||!['lp','google','meta','other'].includes(doc.kind))throw Error('Keine öffentliche Web-Ansicht verfügbar.');
+  if(!/^[a-z0-9-]+$/.test(doc.slug))throw Error('Ungültige veröffentlichte URL.');
+  return {doc,url:'https://'+(doc.kind==='lp'?'lp.paulikreisch.de':'ads.paulikreisch.de')+'/'+doc.slug};
+}
+function liveActions(id,mount){
+  const copy=el('button','Live-URL kopieren'),track=el('button','Tracking-Kurzlink erstellen');
+  copy.type=track.type='button';
+  copy.onclick=async()=>{try{const {url}=await liveDocument(id);await copyText(url);}catch(e){status(e.message,true);}};
+  track.hidden=role!=='manager';
+  track.onclick=async()=>{try{
+    const {doc,url}=await liveDocument(id);
+    $$('[data-filter]').forEach(b=>b.classList.remove('active'));
+    $$('[data-section]').forEach(b=>b.classList.toggle('active',b.dataset.section==='links'));
+    view('links');const form=$('#link-form');form.reset();$('#custom-code-label').hidden=true;
+    form.elements.label.value=(doc.name||'').slice(0,100);
+    form.elements.campaign.value=(doc.campaign||'').slice(0,100);
+    form.elements.target.value=url;
+    status('Veröffentlichtes Ziel übernommen. Noch kein Kurzlink erstellt.');
+    await loadLinks(true);form.scrollIntoView({block:'start'});form.elements.label.focus();
+  }catch(e){status(e.message,true);}};
+  mount.append(copy,track);
+}
 function render(){
   const counts={lp:0,ads:0,newsletter:0};for(const d of documents)counts[d.kind==='lp'?'lp':d.kind==='newsletter'?'newsletter':'ads']++;
   for(const k of Object.keys(counts))$('#count-'+k).textContent=counts[k];
@@ -25,12 +51,12 @@ function render(){
   $('#total').textContent=`${items.length} Dokument${items.length===1?'':'e'}`;
   const container=$('#documents');container.replaceChildren();
   if(!items.length){const card=el('div',null,'empty');card.append(el('h3',documents.length?'Keine Treffer':'Noch keine Inhalte'),el('p',documents.length?'Suche oder Format ändern.':'Neue Inhalte bleiben zunächst privat.'));const button=el('button','+ Neu erstellen');button.onclick=()=>edit(null);card.append(button);container.append(card);}
-  for(const d of items){const row=el('article',null,'document'),info=el('div');info.append(el('strong',d.name),el('small',`${kindNames[d.kind]} · ${d.campaign||'Ohne Kampagne'} · /${d.slug}`));const button=el('button','Bearbeiten');button.onclick=()=>load(d.id);row.append(info,el('span',d.published?(d.unpublishedChanges?'Live + neue Änderungen':'Veröffentlicht'):'Privater Entwurf','badge'),button);container.append(row);}
+  for(const d of items){const row=el('article',null,'document'),info=el('div');info.append(el('strong',d.name),el('small',`${kindNames[d.kind]} · ${d.campaign||'Ohne Kampagne'} · /${d.slug}`));const button=el('button','Bearbeiten');button.onclick=()=>load(d.id);const actions=el('div',null,'row-actions');actions.append(button);if(d.published&&d.kind!=='newsletter')liveActions(d.id,actions);row.append(info,el('span',d.published?(d.unpublishedChanges?'Live + neue Änderungen':'Veröffentlicht'):'Privater Entwurf','badge'),actions);container.append(row);}
 }
 async function refresh(){documents=await api('/documents');render();}
 function step(data={slug:'start',title:'',body:'',bullets:[]}){const fragment=$('#step-template').content.cloneNode(true),root=fragment.querySelector('fieldset');for(const input of root.querySelectorAll('[data-key]'))input.value=Array.isArray(data[input.dataset.key])?data[input.dataset.key].join('\n'):data[input.dataset.key]??'';root.querySelector('.remove-step').onclick=()=>root.remove();$('#steps').append(fragment);}
 function kindChanged(){const kind=$('[name=kind]').value;$('[name=mode] option[value=custom]').disabled=false;for(const b of $$('[data-language]')){if(b.dataset.language==='css')b.textContent=kind==='newsletter'?'Plaintext':'CSS';if(b.dataset.language==='javascript')b.hidden=kind==='newsletter';}const custom=$('[name=mode]').value==='custom';$('#code-fields').hidden=!custom;$('#lp-fields').hidden=kind!=='lp'||custom;$('#ad-fields').hidden=kind==='lp'||custom;$('#google-fields').hidden=kind!=='google';$('#newsletter-fields').hidden=kind!=='newsletter';for(const input of $$('#lp-fields input, #lp-fields textarea'))input.disabled=kind!=='lp'||custom;for(const input of $$('#ad-fields input, #ad-fields textarea'))input.disabled=kind==='lp'||custom;$('[name=title]').parentElement.hidden=kind==='google';$('[name=body]').parentElement.hidden=kind==='google';const nlc=kind==='newsletter'&&custom;if(nlc){$('#ad-fields').hidden=false;for(const c of $('#ad-fields').children)if(c.id!=='newsletter-fields'){c.hidden=true;for(const i of c.querySelectorAll('input,textarea'))i.disabled=true;}for(const i of $$('#newsletter-fields input'))i.disabled=false;}else for(const c of $('#ad-fields').querySelectorAll('.form-grid'))c.hidden=false;$('#publish').hidden=kind==='newsletter'||!current;$('#unpublish').hidden=!current?.published;$('#export').hidden=kind==='lp'||!current;if(custom)setTimeout(()=>mountCode().catch(e=>status(e.message,true)),0);}
-function edit(record){codeEditor?.dispose();codeEditor=null;codeState={html:record?.draft.code?.html??'',css:record?.draft.code?.text??record?.draft.code?.css??'',js:record?.draft.code?.js??''};activeLanguage='html';$('#file-mappings').replaceChildren();current=record;$('#editor-form').reset();for(const file of record?.draft.files??[])addFile(file);$('#steps').replaceChildren();if(record){for(const [key,value]of Object.entries(record.draft)){const input=$(`[name="${key}"]`);if(input)input.value=Array.isArray(value)?value.join('\n'):value??'';}for(const s of record.draft.steps??[])step(s);}else{if(role==='ads')$('[name=kind]').value='google';step();}$('[name=kind]').disabled=!!record;$('#revision').textContent=record?`VERSION ${record.revision}${record.published?' · LIVE-SNAPSHOT V'+record.published.revision:''}`:'NEUER ENTWURF';$('#delete').hidden=!record;$('#preview').hidden=!record;kindChanged();view('editor');status('');window.scrollTo(0,0);}
+function edit(record){codeEditor?.dispose();codeEditor=null;codeState={html:record?.draft.code?.html??'',css:record?.draft.code?.text??record?.draft.code?.css??'',js:record?.draft.code?.js??''};activeLanguage='html';$('#file-mappings').replaceChildren();current=record;$('#editor-form').reset();for(const file of record?.draft.files??[])addFile(file);$('#steps').replaceChildren();if(record){for(const [key,value]of Object.entries(record.draft)){const input=$(`[name="${key}"]`);if(input)input.value=Array.isArray(value)?value.join('\n'):value??'';}for(const s of record.draft.steps??[])step(s);}else{if(role==='ads')$('[name=kind]').value='google';step();}$('[name=kind]').disabled=!!record;$('#revision').textContent=record?`VERSION ${record.revision}${record.published?' · LIVE-SNAPSHOT V'+record.published.revision:''}`:'NEUER ENTWURF';$('#delete').hidden=!record;$('#preview').hidden=!record;kindChanged();$('#live-actions')?.remove();if(record?.published&&record.published.document?.kind!=='newsletter'){const actions=el('div',null,'editor-actions');actions.id='live-actions';liveActions(record.id,actions);$('.editor-actions').after(actions);}view('editor');status('');window.scrollTo(0,0);}
 async function load(id){try{edit(await api('/documents/'+id));}catch(e){status(e.message,true);}}
 function draft(){const form=$('#editor-form'),data=Object.fromEntries(new FormData(form));data.kind=$('[name=kind]').value;data.headlines=(data.headlines??'').split('\n').filter(s=>s.trim());data.descriptions=(data.descriptions??'').split('\n').filter(s=>s.trim());data.steps=$$('.step').map(root=>Object.fromEntries([...root.querySelectorAll('[data-key]')].map(input=>[input.dataset.key,input.dataset.key==='bullets'?input.value.split('\n').filter(s=>s.trim()):input.value])));data.mode=$('[name=mode]').value;data.code={...codeState};data.files=$$('.file-row').map(row=>({path:row.querySelector('[data-file=path]').value,target:row.querySelector('[data-file=target]').value}));return data;}
 function download(name,type,body){const url=URL.createObjectURL(new Blob([body],{type})),a=el('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
