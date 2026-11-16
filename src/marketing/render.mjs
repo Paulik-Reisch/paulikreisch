@@ -1,5 +1,5 @@
 import {customFrame} from './custom.mjs';
-import {escapeHTML as e, HOSTS, MarketingError, UNSUBSCRIBE_TOKEN} from './model.mjs';
+import {escapeHTML as e, validateDocument, HOSTS, MarketingError, UNSUBSCRIBE_TOKEN} from './model.mjs';
 export const PUBLIC_HEADERS = {'content-type':'text/html; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff','referrer-policy':'no-referrer','content-security-policy':"default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src https://static.paulikreisch.de data:; media-src https://static.paulikreisch.de; font-src https://static.paulikreisch.de; frame-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'"};
 const legal = '<a href="https://paulikreisch.de/impressum">Impressum</a> · <a href="https://paulikreisch.de/datenschutz">Datenschutz</a>';
 const paragraphs = value => value.split(/\n\s*\n/).map(p=>`<p>${e(p).replace(/\n/g,'<br>')}</p>`).join('');
@@ -20,6 +20,8 @@ function newsletterFrame(doc){
   return `${note}<iframe title="Newsletter-Vorschau" sandbox="" referrerpolicy="no-referrer" srcdoc="${e(child)}" style="display:block;width:100%;height:2400px;border:0;background:white"></iframe>`;
 }
 export function renderPage(doc,{stepSlug=null,preview=false,previewId=null}={}) {
+  // Revalidate persisted/caller data at the HTML boundary, including URL schemes.
+  doc=validateDocument(doc);
   const customListener = doc.mode==='custom'?'<script>(function(){window.addEventListener("message",function(ev){var f=document.querySelector(\'iframe[title="Customseite"]\');if(!f||ev.source!==f.contentWindow)return;var d=ev.data;if(!d||typeof d!=="object")return;if(d.__prCustomFrame==="height"&&typeof d.value==="number"&&isFinite(d.value)){f.style.height=Math.min(Math.max(Math.ceil(d.value),300),50000)+"px";}else if(d.__prCustomFrame==="scroll"&&typeof d.value==="number"&&isFinite(d.value)){var top=f.getBoundingClientRect().top+(window.scrollY||window.pageYOffset||0)+d.value;var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;window.scrollTo({top:top,behavior:reduce?"auto":"smooth"});}});})();</script>':'';
   let body, title;
   if(doc.mode==='custom'&&doc.kind==='newsletter'){title=doc.subject;body=newsletterFrame(doc);}
@@ -37,6 +39,7 @@ export function renderPage(doc,{stepSlug=null,preview=false,previewId=null}={}) 
   return `<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${e(title)} | Paulik &amp; Reisch</title>${preview?'<meta name="robots" content="noindex,nofollow">':''}<style>${css}${doc.mode==='custom'?'body{background:#fff}main{width:100%;max-width:none;padding:0}main>.preview{margin:0 0 20px;border-left:0;border-right:0;border-radius:0}footer{width:100%;max-width:none}header{display:none}':''}</style></head><body><header><a href="https://paulikreisch.de">PAULIK &amp; REISCH</a><span>BÜCHER &amp; DIGITALES</span></header><main>${preview?'<div class="preview">Private Entwurfsvorschau. Nicht veröffentlicht. Externe Schaltflächen zeigen auf das konfigurierte Ziel.</div>':''}${body}</main><footer>${legal}</footer>${customListener}</body></html>`;
 }
 export function newsletterExport(doc) {
+  doc=validateDocument(doc);
   if(doc.kind!=='newsletter') throw new MarketingError(400,'Kein Newsletter.');
   if(doc.mode==='custom'){
     const warnings=[];

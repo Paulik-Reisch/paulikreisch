@@ -17,3 +17,30 @@ test('newsletter publication stays disabled without a delivery/unsubscribe integ
 test('audit records actions and all returned values are defensive copies',async()=>{const service=new MarketingService(new MemoryStorage());const r=await service.create(lp(),'fixture');r.draft.name='mutated';assert.equal((await service.get(r.id)).draft.name,'Buch-Funnel');await service.remove(r.id,1,'fixture');await assert.rejects(()=>service.get(r.id),e=>e.status===404);});
 
 test('hosted advertising views can be published without activating any network campaign',async()=>{const service=new MarketingService(new MemoryStorage());const d={kind:'meta',name:'Local fixture',slug:'creative',title:'Fixture title',body:'Fixture body',target:'https://paulikreisch.de',ctaLabel:'Open'};const r=await service.create(d,'fixture');await service.publish(r.id,1,'fixture');assert.equal((await service.public('creative','ads')).kind,'meta');const s=await service.create({...d,kind:'other'},'fixture');await assert.rejects(()=>service.publish(s.id,1,'fixture'),e=>e.status===409);});
+
+test('HTML boundaries reject unsafe URLs even when callers bypass document validation',()=>{
+  const unsafe=['javascript:alert(1)','data:text/html,<script>alert(1)</script>','http://example.com','https://user:pass@example.com'];
+  for(const target of unsafe){
+    const funnel=validateDocument(lp());funnel.steps[1].ctaUrl=target;
+    assert.throws(()=>renderPage(funnel,{stepSlug:'details'}));
+    const newsletter=validateDocument(nl());newsletter.target=target;
+    assert.throws(()=>renderPage(newsletter));
+    assert.throws(()=>newsletterExport(newsletter));
+  }
+  for(const render of [renderPage,newsletterExport]){
+    const newsletter=validateDocument(nl());newsletter.image='https://tracker.example/pixel';
+    assert.throws(()=>render(newsletter));
+  }
+});
+
+test('HTML boundary validation preserves escaped text and valid URL attributes',()=>{
+  const raw=nl();raw.title='"<Title> & test';raw.body='First <script>x</script>\n\nSecond';
+  raw.target='https://paulikreisch.de/shop?a=1&b=2';raw.image='https://static.paulikreisch.de/f/12345678-1234-1234-1234-123456789abc';raw.imageAlt='" onerror="alert(1)';
+  const doc=validateDocument(raw);
+  for(const html of [renderPage(doc),newsletterExport(doc).html]){
+    assert.match(html,/href="https:\/\/paulikreisch.de\/shop\?a=1&amp;b=2"/);
+    assert.match(html,/alt="&quot; onerror=&quot;alert\(1\)"/);
+    assert.match(html,/&lt;Title&gt; &amp; test/);
+    assert.doesNotMatch(html,/<script>|alt="" onerror=/);
+  }
+});
