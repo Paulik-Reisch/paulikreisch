@@ -1,9 +1,22 @@
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 let documents=[],current=null,filter='all',csrf='',role='manager',codeState={html:'',css:'',js:''},codeEditor=null,activeLanguage='html';
+let pendingConfirmation=null;
+function confirmAction(question,label){
+  pendingConfirmation?.(false);
+  return new Promise(resolve=>{
+    const panel=el('section',null,'action-confirmation');panel.setAttribute('role','group');panel.setAttribute('aria-labelledby','confirmation-question');
+    const text=el('p',question);text.id='confirmation-question';
+    const buttons=el('div'),cancel=el('button','Abbrechen'),accept=el('button',label,'primary');cancel.type=accept.type='button';
+    let settled=false;const finish=value=>{if(settled)return;settled=true;panel.remove();pendingConfirmation=null;resolve(value);};
+    pendingConfirmation=finish;cancel.onclick=()=>finish(false);accept.onclick=()=>finish(true);
+    panel.onkeydown=event=>{if(event.key==='Escape'){event.preventDefault();finish(false);}};
+    buttons.append(cancel,accept);panel.append(text,buttons);$('.editor-actions').after(panel);cancel.focus();
+  });
+}
 const kindNames={lp:'Landingpage',google:'Google',meta:'Meta',other:'Anzeige',newsletter:'Newsletter'};
 function status(message,error=false){$('#status').textContent=message;$('#status').classList.toggle('error',error);}
 async function api(path,options={}){const res=await fetch('/api/marketing'+path,{credentials:'same-origin',...options,headers:{'content-type':'application/json','x-csrf-token':csrf,...options.headers}});let data;try{data=await res.json();}catch{throw Error('Der Server antwortet nicht im erwarteten Format.');}if(!res.ok)throw Error(data.error||'Aktion fehlgeschlagen.');return data;}
-function view(name){for(const id of ['login','workspace','editor'])$('#'+id).hidden=id!==name;for(const b of $$('nav button'))b.disabled=name==='login';$('#logout').hidden=name==='login';$('#logout-mobile').hidden=name==='login';}
+function view(name){pendingConfirmation?.(false);for(const id of ['login','workspace','editor'])$('#'+id).hidden=id!==name;for(const b of $$('nav button'))b.disabled=name==='login';$('#logout').hidden=name==='login';$('#logout-mobile').hidden=name==='login';}
 function el(tag,text,className){const n=document.createElement(tag);if(text!=null)n.textContent=text;if(className)n.className=className;return n;}
 function render(){
   const counts={lp:0,ads:0,newsletter:0};for(const d of documents)counts[d.kind==='lp'?'lp':d.kind==='newsletter'?'newsletter':'ads']++;
@@ -27,7 +40,7 @@ $('#new').onclick=()=>edit(null);$('#back').onclick=()=>{view('workspace');statu
 for(const button of $$('[data-filter]'))button.onclick=()=>{filter=button.dataset.filter;$$('[data-filter]').forEach(b=>b.classList.toggle('active',b===button));view('workspace');render();};
 $('#preview').onclick=()=>{if(current)window.open('/preview/'+encodeURIComponent(current.id),'_blank','noopener,noreferrer');};
 $('#export').onclick=async()=>{if(!current)return;try{const data=await api('/documents/'+current.id+'/export');if(current.draft.kind==='newsletter'){download(current.draft.slug+'.html','text/html;charset=utf-8',data.html);download(current.draft.slug+'.txt','text/plain;charset=utf-8',data.text);download(current.draft.slug+'-requirements.json','application/json',JSON.stringify({subject:data.subject,preheader:data.preheader,sendReady:data.sendReady,requirements:data.requirements},null,2));}else download(current.draft.slug+'.json','application/json',JSON.stringify(data,null,2));status('Export erstellt. Nichts wurde versendet oder als Kampagne geschaltet.');}catch(e){status(e.message,true);}};
-for(const action of ['publish','unpublish','delete'])$('#'+action).onclick=async()=>{if(!current)return;const question=action==='publish'?'Diesen gespeicherten Inhalt öffentlich freigeben? Alle Texte, Ziele und Bilder geprüft?':action==='unpublish'?'Veröffentlichung zurückziehen? Die öffentliche URL ist danach nicht mehr verfügbar.':'Diesen unveröffentlichten Entwurf endgültig löschen?';if(!confirm(question))return;try{const result=await api('/documents/'+current.id+(action==='delete'?'':'/'+action),{method:action==='delete'?'DELETE':'POST',body:JSON.stringify({revision:current.revision})});await refresh();if(action==='delete')view('workspace');else edit(result);status(action==='publish'?'Gespeicherter Stand veröffentlicht.':action==='unpublish'?'Veröffentlichung zurückgezogen.':'Entwurf gelöscht.');}catch(e){status(e.message,true);}};
+for(const action of ['publish','unpublish','delete'])$('#'+action).onclick=async()=>{if(!current)return;const question=action==='publish'?'Diesen gespeicherten Inhalt öffentlich freigeben? Alle Texte, Ziele und Bilder geprüft?':action==='unpublish'?'Veröffentlichung zurückziehen? Die öffentliche URL ist danach nicht mehr verfügbar.':'Diesen unveröffentlichten Entwurf endgültig löschen?';const selected=current;if(!await confirmAction(question,action==='delete'?'Endgültig löschen':action==='publish'?'Öffentlich freigeben':'Zurückziehen'))return;if(current!==selected)return;try{const result=await api('/documents/'+current.id+(action==='delete'?'':'/'+action),{method:action==='delete'?'DELETE':'POST',body:JSON.stringify({revision:current.revision})});await refresh();if(action==='delete')view('workspace');else edit(result);status(action==='publish'?'Gespeicherter Stand veröffentlicht.':action==='unpublish'?'Veröffentlichung zurückgezogen.':'Entwurf gelöscht.');}catch(e){status(e.message,true);}};
 const logout=async()=>{try{await api('/logout',{method:'POST',body:'{}'});csrf='';documents=[];current=null;view('login');status('Abgemeldet.');}catch(e){status(e.message,true);}};
 async function mountCode(){if($('#code-fields').hidden)return;if(!window.PRCodeEditors){await Promise.race([new Promise(resolve=>window.addEventListener('pr-code-ready',resolve,{once:true})),new Promise((_,reject)=>setTimeout(()=>reject(Error('Codeeditor konnte nicht geladen werden.')),15000))]);}codeEditor?.dispose();const key=activeLanguage==='javascript'?'js':activeLanguage;for(const b of $$('[data-language]'))b.setAttribute('aria-selected',String(b.dataset.language===activeLanguage));codeEditor=window.PRCodeEditors.mount($('#code-editor'),{engine:$('#code-engine').value,language:activeLanguage,value:codeState[key],onChange:value=>{codeState[key]=value;}});}
 for(const button of $$('[data-language]'))button.onclick=()=>{activeLanguage=button.dataset.language;mountCode().catch(e=>status(e.message,true));};
