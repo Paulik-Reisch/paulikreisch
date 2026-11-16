@@ -80,7 +80,12 @@ https://support.google.com/google-ads/answer/7684791
 
 Hosted ads are content previews, not Google/Meta campaigns. No spend, activation,
 tracking, checkout or digital-product fulfillment is added. Newsletter export is
-table HTML with inline styles plus plain text. It is explicitly not send-ready:
+table HTML with inline styles plus plain text. Newsletters can use structured fields or
+"Eigener Code" (HTML plus plaintext). Custom newsletter HTML never runs scripts: JavaScript is
+rejected, previews use `sandbox=""` with a CSP that blocks scripts, and the lint for forms,
+handlers and non-https links is a guard rail, not an HTML sanitizer. Images use `cid:` in the
+export; an optional `data-preview-src` attribute (small data: image) is swapped in for the preview
+only and stripped from the export, which lists the cid images the sender must attach. It is explicitly not send-ready:
 a sending system must add sender identity, consent/suppression handling and
 personal unsubscribe URLs. Newsletter publication and delivery remain disabled.
 Real Gmail/Outlook rendering remains a required pre-send acceptance check.

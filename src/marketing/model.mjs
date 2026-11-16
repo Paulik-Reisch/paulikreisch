@@ -27,13 +27,48 @@ export function image(value) {
   if (u.hostname !== 'static.paulikreisch.de' || !/^\/f\/[a-f0-9-]{36}$/.test(u.pathname) || u.search || u.hash) invalid('Bild: freigegebene Datei von static.paulikreisch.de erforderlich.');
   return u.href;
 }
+
+// Security note: the checks below are a lint for honest mail HTML, NOT an HTML sanitizer
+// and not the security boundary. The boundary is the sandbox="" iframe plus a CSP with
+// script-src 'none' used for every preview, and the fact that the studio never sends mail.
+// Custom newsletter: mail-client HTML (tables, inline styles) plus plaintext.
+// Never executable: mail clients strip scripts, so the studio refuses them
+// instead of pretending they would run. Mails reference only https links,
+// mailto links and the unsubscribe placeholder that a sender must replace.
+export const UNSUBSCRIBE_TOKEN = '{{abmeldelink}}';
+function validateNewsletterCode(input, base) {
+  if (!input.code || typeof input.code !== 'object') invalid('Code erforderlich.');
+  if (input.code.js) invalid('Newsletter: JavaScript wird von Mailclients entfernt und ist nicht erlaubt.');
+  base.mode = 'custom';
+  base.subject = text(input.subject, 200, 'Betreff');
+  base.preheader = text(input.preheader, 200, 'Vorschautext', true);
+  const html = text(input.code.html, 100000, 'HTML');
+  const plain = text(input.code.text ?? input.code.css, 30000, 'Plaintext');
+  if (/<\s*(script|iframe|object|embed|form|input|button|textarea|select|link|base|style[^>]*\bsrc)\b/i.test(html) || /<\s*meta[^>]+http-equiv/i.test(html)) invalid('Newsletter-HTML: Skripte, Formulare, eingebettete Frames und Fremd-Ressourcen sind nicht erlaubt.');
+  if (/\son[a-z]+\s*=/i.test(html) || /javascript:|vbscript:/i.test(html) || /@import|expression\s*\(/i.test(html)) invalid('Newsletter-HTML: Eventhandler, javascript-Links und @import sind nicht erlaubt.');
+  // data-preview-src is a preview-only stand-in for a cid: image. The export strips it.
+  for (const m of html.matchAll(/\sdata-preview-src\s*=\s*("([^"]*)"|'([^']*)')/gi)) {
+    const v = (m[2] ?? m[3]).trim();
+    if (v.length > 80000 || !/^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(v)) invalid('Newsletter-Vorschaubild: data:-Bild (png/jpeg/webp/gif, base64) bis ca. 60 KB erlaubt.');
+  }
+  for (const m of html.matchAll(/\s(?:href|src)\s*=\s*("([^"]*)"|'([^']*)')/gi)) {
+    const v = (m[2] ?? m[3]).trim();
+    if (v === UNSUBSCRIBE_TOKEN || /^mailto:[^\s]+$/i.test(v) || /^cid:[A-Za-z0-9._-]{1,80}$/.test(v) || /^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(v)) continue;
+    if (/^https:\/\//i.test(v)) { const clean=v.replace(/&amp;/g, '&'); if (/^\s*src/i.test(m[0])) image(clean); else https(clean); continue; }
+    invalid('Newsletter-HTML: nur https-, mailto-, cid- und data-Bildlinks erlaubt.');
+  }
+  if (/url\(\s*['"]?\s*(?!data:)[a-z]+:/i.test(html)) invalid('Newsletter-HTML: CSS-url() mit Fremdadresse ist nicht erlaubt.');
+  base.code = {html, css: '', js: '', text: plain};
+  base.files = [];
+  return base;
+}
 const array = (value, max, label) => { if (!Array.isArray(value) || value.length > max) invalid(`${label}: maximal ${max} Einträge.`); return value; };
 export function validateDocument(input) {
   if (!input || typeof input !== 'object' || Array.isArray(input)) invalid('Dokument erforderlich.');
   if (!['lp','google','meta','other','newsletter'].includes(input.kind)) invalid('Unbekanntes Format.');
   const base = {kind:input.kind, slug:slug(input.slug), name:text(input.name,120,'Interner Name'), campaign:text(input.campaign,120,'Kampagne',true)};
   if (input.mode === 'custom') {
-    if (input.kind === 'newsletter') invalid('Newsletter unterstützen keinen ausführbaren Customcode.');
+    if (input.kind === 'newsletter') return validateNewsletterCode(input, base);
     base.mode='custom'; base.title=text(input.title||input.name,200,'Seitentitel');
     if (!input.code || typeof input.code !== 'object') invalid('Code erforderlich.');
     base.code={html:text(input.code.html,100000,'HTML'),css:text(input.code.css,100000,'CSS',true),js:text(input.code.js,100000,'JavaScript',true)};
