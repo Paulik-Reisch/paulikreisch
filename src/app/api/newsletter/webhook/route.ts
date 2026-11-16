@@ -1,15 +1,15 @@
 import { NextResponse } from 'next/server';
-import { getNewsletterSubscribers } from '@/newsletter/server';
+import { getNewsletterFeedback } from '@/newsletter/server';
 // @ts-ignore plain ESM module
-import { handleWebhook, WebhookRefused } from '@/newsletter/webhook.mjs';
+import { verifyWebhook, suppressionsFor, WebhookRefused } from '@/newsletter/webhook.mjs';
 
 export const dynamic = 'force-dynamic';
 
 /** Resend (Svix) webhook: permanent bounces and spam complaints suppress the address.
  * The raw body is read as text before anything parses it, as the signature needs. */
 export async function POST(req: Request) {
-  const secret = process.env.RESEND_WEBHOOK_SECRET || '';
-  if (!secret) return new NextResponse('not configured', { status: 503 });
+  const secret = process.env.NEWSLETTER_RESEND_WEBHOOK_SECRET || '';
+  if (!secret || process.env.NEWSLETTER_FEEDBACK_ENABLED !== '1') return new NextResponse('not configured', { status: 503 });
   const rawBody = await req.text();
   const headers = {
     'svix-id': req.headers.get('svix-id') || '',
@@ -17,8 +17,15 @@ export async function POST(req: Request) {
     'svix-signature': req.headers.get('svix-signature') || '',
   };
   try {
-    const r = await handleWebhook({ subscribers: getNewsletterSubscribers(), secret, rawBody, headers });
-    return NextResponse.json({ ok: true, handled: r.handled });
+    const event = verifyWebhook({ secret, rawBody, headers });
+    // This provider account has other projects. Never apply their feedback here.
+    if (!process.env.NEWSLETTER_FROM || event?.data?.from !== process.env.NEWSLETTER_FROM) return NextResponse.json({ ok: true, handled: 0 });
+    const list = suppressionsFor(event);
+    if (list.length) {
+      const feedback = getNewsletterFeedback();
+      for (const item of list) await feedback.suppress(item.email, item.reason);
+    }
+    return NextResponse.json({ ok: true, handled: list.length });
   } catch (e) {
     if (e instanceof WebhookRefused) return new NextResponse('invalid webhook', { status: 400 });
     console.error('newsletter webhook failed');

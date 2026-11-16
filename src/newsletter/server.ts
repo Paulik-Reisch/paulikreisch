@@ -45,3 +45,15 @@ export function getNewsletterUnsubscriber() {
     },
   });
 }
+
+/** Read/sign only, used by the authenticated campaign sender. No public signup. */
+export function getNewsletterMailingRecipients() {
+  if (process.env.NEWSLETTER_SEND_ENABLED !== '1') throw new Error('newsletter send disabled');
+  return Object.freeze({ mailable: () => buildNewsletterSubscribers().mailable() });
+}
+
+/** Signed provider feedback may only suppress existing new-store records. */
+export function getNewsletterFeedback() {
+  if (process.env.NEWSLETTER_FEEDBACK_ENABLED !== '1') throw new Error('newsletter feedback disabled');
+  return Object.freeze({ suppress: (email: string, reason: string) => buildNewsletterSubscribers().suppress(email, reason, {existingOnly:true}) });
+}

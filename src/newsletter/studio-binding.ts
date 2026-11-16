@@ -3,21 +3,21 @@ import 'server-only';
 import { createNewsletterSender } from './studio-api.mjs';
 // @ts-ignore
 import { createResend } from './resend.mjs';
-import { getNewsletterSubscribers, newsletterStoreEnabled } from './server';
+import { getNewsletterMailingRecipients, newsletterStoreEnabled } from './server';
 import { getNewsletterReadModel } from './read-model';
 
-/** Private read/preflight is independent from public recipient writes. Actual
- * sending still needs both the existing write store and separate send gate. */
+/** Private campaign recipient reads are independent from public signup writes.
+ * Sending still needs SEND, active signed feedback, and explicit confirmation. */
 export function createStudioNewsletter() {
   return createNewsletterSender({
-    getSubscribers: getNewsletterSubscribers,
+    getSubscribers: getNewsletterMailingRecipients,
     getReadModel: getNewsletterReadModel,
     getStatus: () => ({
       storeEnabled: newsletterStoreEnabled(),
       sendEnabled: process.env.NEWSLETTER_SEND_ENABLED === '1',
       day0Enabled: process.env.NEWSLETTER_FUNNEL_DAY0 === '1',
       providerConfigured: Boolean(process.env.NEWSLETTER_RESEND_API_KEY && process.env.NEWSLETTER_FROM),
-      webhookConfigured: Boolean(process.env.RESEND_WEBHOOK_SECRET),
+      webhookConfigured: Boolean(process.env.NEWSLETTER_RESEND_WEBHOOK_SECRET && process.env.NEWSLETTER_FEEDBACK_ENABLED === '1'),
       tokenKeysConfigured: Boolean((process.env.NEWSLETTER_TOKEN_SECRET?.length ?? 0) >= 32 && (process.env.NEWSLETTER_ID_KEY?.length ?? 0) >= 32),
     }),
     getResend: () => {

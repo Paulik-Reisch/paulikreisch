@@ -80,10 +80,11 @@ export class NewsletterSubscribers {
     });
   }
   /** Bounce/complaint webhooks. Applies to unknown addresses harmlessly. */
-  async suppress(input,reason){
+  async suppress(input,reason,{existingOnly=false}={}){
     const email=normalizeEmail(input);if(!email)return {ok:false};
     const at=this.now(),id=recipientId(this.idKey,email);
     return this.store.update(id,old=>{
+      if(existingOnly&&(!old||old.status==='suppressed'))return {value:{ok:true}};
       const r=old?structuredClone(old):{id,email,status:'suppressed',createdAt:at};
       r.status='suppressed';r.suppressedAt=at;r.suppressedReason=String(reason).slice(0,40);delete r.confirmNonce;note(r,'suppressed',at);
       return {record:r,value:{ok:true}};
