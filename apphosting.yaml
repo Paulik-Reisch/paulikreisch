@@ -46,3 +46,13 @@ env:
     value: private-prefix-v1-accepted
     availability:
       - RUNTIME
+
+  # Isolated marketing Auth key; public identifier, host/API restricted.
+  - variable: MARKETING_FIREBASE_API_KEY
+    value: AIzaSyDwLVfnlwtxZle7wlwNFR61DXkgggyeOLw
+    availability:
+      - RUNTIME
+  - variable: MARKETING_STUDIO_RELEASE
+    value: structured-v1-accepted
+    availability:
+      - RUNTIME

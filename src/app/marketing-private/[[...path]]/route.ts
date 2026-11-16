@@ -2,7 +2,6 @@ import { headers } from 'next/headers';
 import { requestHost } from '@/lib/admin-host-policy';
 import { getAdminAuth, getAdminStorage } from '@/lib/firebase-admin';
 import { isAdminEmail } from '@/lib/admin-allowlist';
-import { firebaseConfig } from '@/firebase/config';
 import { createFirebaseMarketing } from '@/marketing/firebase-binding.mjs';
 
 export const runtime = 'nodejs';
@@ -17,9 +16,11 @@ async function route(request: Request, context: { params: Promise<{ path?: strin
   if (!host || !hosts.has(host)) return new Response('Not found', { status: 404 });
   const secret = process.env.SESSION_SECRET;
   if (!secret || secret.length < 32) return new Response('Not ready', { status: 503 });
+  const apiKey = process.env.MARKETING_FIREBASE_API_KEY;
+  if (!apiKey) return new Response('Not ready', { status: 503 });
   handler ??= createFirebaseMarketing({
     bucket: getAdminStorage().bucket('hallo-welt-paulik-reisch.firebasestorage.app'),
-    firebaseAuth: getAdminAuth(), apiKey: firebaseConfig.apiKey, secret, allowedEmail: isAdminEmail,
+    firebaseAuth: getAdminAuth(), apiKey, secret, allowedEmail: isAdminEmail,
   });
   const { path = [] } = await context.params;
   const url = new URL(request.url);

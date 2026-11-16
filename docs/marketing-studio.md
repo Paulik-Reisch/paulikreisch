@@ -17,6 +17,10 @@ disablement, revocation and allowlist membership on authenticated requests.
 
 New features are gated by `MARKETING_STUDIO_RELEASE=structured-v1-accepted`.
 Without it the feature is unavailable, including on its dedicated hosts.
+`MARKETING_FIREBASE_API_KEY` is a separate Firebase public browser identifier,
+restricted to Identity Toolkit and Token Service and exactly the three HTTPS
+studio hosts. It intentionally does not reuse or alter the legacy app key.
+This key is not a secret and confers no access without authenticated user credentials.
 
 ### Persistence and privacy
 
