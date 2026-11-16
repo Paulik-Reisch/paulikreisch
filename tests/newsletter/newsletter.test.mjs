@@ -164,7 +164,7 @@ test('studio sender: preview is read-only, send needs digest and phrase and the 
   await assert.rejects(()=>on.send(rec,{digest:p.digest,phrase:'SENDEN 2'}),/Bestätigungsphrase/);
   await assert.rejects(()=>on.send(rec,{digest:'x',phrase:p.phrase}),/veraltet/);
   assert.equal(sent.length,0);
-  await assert.rejects(()=>on.preview({...rec,draft:{...draft,mode:'blocks'}}),/eigenem HTML/);
+  assert.match((await on.preview({...rec,draft:{...draft,mode:'blocks'}})).blockers.join('|'),/eigenem HTML/);
 });
 
 import {requestSubscription,CONSENT_TEXT} from '../../src/newsletter/doi.mjs';
@@ -188,10 +188,37 @@ test('browser-view placeholder is only filled for the exactly published revision
   const draft={kind:'newsletter',slug:'sommer',mode:'custom',subject:'S',code:{html:'<a href="{{webansicht}}">Browser</a> {{abmeldelink}}',text:'{{webansicht}} {{abmeldelink}}'}};
   const sent=[];
   const nl=createNewsletterSender({getSubscribers:()=>({mailable:async()=>[{id:'a',email:'a@example.invalid',unsubscribeToken:'t.t'}]}),getResend:()=>({send:async m=>{sent.push(m);return {id:'p'};}}),from:'N <n@news.example.invalid>',baseUrl:'https://example.invalid',dailyLimit:5,enabled:true});
-  await assert.rejects(()=>nl.preview({id:'abc',draft,published:null,revision:2}),/nicht veröffentlicht/);
-  await assert.rejects(()=>nl.preview({id:'abc',draft,published:{revision:1},revision:2}),/nicht veröffentlicht oder nicht auf dem aktuellen Stand/);
+  assert.match((await nl.preview({id:'abc',draft,published:null,revision:2})).blockers.join('|'),/nicht veröffentlicht/);
+  await assert.rejects(()=>nl.send({id:'abc',draft,published:null,revision:2},{}),/nicht veröffentlicht/);
+  assert.match((await nl.preview({id:'abc',draft,published:{revision:1},revision:2})).blockers.join('|'),/nicht veröffentlicht oder nicht auf dem aktuellen Stand/);
   const rec={id:'abc',draft,published:{revision:2},revision:2},p=await nl.preview(rec);
   const r=await nl.send(rec,{digest:p.digest,phrase:p.phrase});
   assert.equal(r.sent,1);assert.match(sent[0].html,/href="https:\/\/paulikreisch\.de\/nl\/view\/sommer"/);
   assert.match(sent[0].html,/nl\/unsubscribe\?t=/);assert.doesNotMatch(sent[0].html+sent[0].text,/\{\{/);
+});
+
+test('private preflight uses read-only capability with public store off and never exposes recipient data',async()=>{
+  let reads=0,providers=0,writes=0;
+  const nl=createNewsletterSender({getSubscribers:()=>{writes++;throw Error('public store off');},getReadModel:()=>({snapshot:async()=>{reads++;return {counts:{pending:2,active:1,unsubscribed:3,suppressed:4},recipients:[{id:'private-id-only'}]};}}),getStatus:()=>({storeEnabled:false,providerConfigured:false}),getResend:()=>{providers++;throw Error('no provider');},from:'',baseUrl:'https://example.invalid',dailyLimit:100,enabled:false});
+  const rec={id:'record',revision:5,published:null,draft:{kind:'newsletter',mode:'custom',slug:'sommer',subject:'S',code:{html:'<a href="{{webansicht}}">Browser</a> {{abmeldelink}}',text:'{{webansicht}} {{abmeldelink}}'}}};
+  const p=await nl.preview(rec);
+  assert.equal(p.count,1);assert.equal(p.ready,false);assert.equal(p.counts.suppressed,4);assert.ok(p.digest);assert.equal(p.publishedCurrent,false);
+  assert.match(p.blockers.join('|'),/nicht veröffentlicht/);assert.match(p.blockers.join('|'),/Schreibpfade sind gesperrt/);
+  assert.doesNotMatch(JSON.stringify(p),/private-id-only|unsubscribeToken|VORSCHAU-KEIN-TOKEN/);
+  await assert.rejects(()=>nl.send(rec,{digest:p.digest,phrase:p.phrase}),/nicht freigeschaltet/);
+  assert.equal(reads,1);assert.equal(writes,0);assert.equal(providers,0);
+});
+
+test('read failure is not represented as zero recipients and private preflight stays available',async()=>{
+  const nl=createNewsletterSender({getReadModel:()=>({snapshot:async()=>{throw Error('private backend details');}}),getResend:()=>{throw Error('forbidden');},getSubscribers:()=>{throw Error('forbidden');},from:'',enabled:false,dailyLimit:100});
+  const p=await nl.preview({revision:1,draft:{kind:'newsletter',mode:'custom',slug:'s',subject:'S',code:{html:'{{abmeldelink}}',text:'{{abmeldelink}}'}}});
+  assert.equal(p.count,null);assert.equal(p.counts,null);assert.equal(p.digest,null);assert.equal(p.ready,false);assert.match(p.blockers.join('|'),/nicht gelesen/);assert.doesNotMatch(JSON.stringify(p),/private backend details/);
+});
+
+import {summarizeNewsletterRecipients} from '../../src/newsletter/read-model.mjs';
+test('read projection counts all states but returns eligible ids only, no personal fields',()=>{
+  const rows=[{id:'ok',status:'active',confirmedAt:'2026-11-16',consent:{text:'yes'},email:'private@example.invalid',unsubscribeToken:'private-token'},...['pending','unsubscribed','suppressed'].map(status=>({id:status,status,email:'private@example.invalid'})),{id:'no-consent',status:'active',confirmedAt:'x'},{id:'legacy',email:'private@example.invalid'}];
+  const before=JSON.stringify(rows),p=summarizeNewsletterRecipients(rows);
+  assert.deepEqual(p,{counts:{pending:1,active:2,unsubscribed:1,suppressed:1},recipients:[{id:'ok'}]});
+  assert.doesNotMatch(JSON.stringify(p),/email|token|consent|private@/);assert.equal(JSON.stringify(rows),before);
 });
