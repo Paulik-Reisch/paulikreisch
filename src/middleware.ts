@@ -30,6 +30,17 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(url, 301);
   };
 
+  const marketingHosts = ['m.paulikreisch.de','lp.paulikreisch.de','ads.paulikreisch.de'];
+  if (host && marketingHosts.includes(host)) {
+    if (!safe && !isSameOrigin(request.headers.get('origin'), host, true)) return reject();
+    const url = request.nextUrl.clone();
+    url.pathname = '/marketing-private' + (path === '/' ? '' : path);
+    return NextResponse.rewrite(url);
+  }
+  if (path === '/marketing-private' || path.startsWith('/marketing-private/')) {
+    return privateResponse(new NextResponse('Not found', {status:404}));
+  }
+
   // The legacy apex entry is an explicit entry link. Static itself never changes host.
   if (host === PUBLIC_HOST && (path === '/upload' || path === '/upload/')) {
     return safe ? privateResponse(move('https://' + STATIC_HOST, '/')) : reject();
