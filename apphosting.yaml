@@ -73,3 +73,17 @@ env:
     secret: NEWSLETTER_RESEND_API_KEY@1
     availability:
       - RUNTIME
+
+  # Sender identity approved 2026-11-16. Configuration only, no send gate enabled.
+  - variable: NEWSLETTER_FROM
+    value: "Paulik & Reisch <newsletter@news.paulikreisch.de>"
+    availability:
+      - RUNTIME
+  - variable: NEWSLETTER_REPLY_TO
+    value: philipp.l.paulik@gmail.com
+    availability:
+      - RUNTIME
+  - variable: NEWSLETTER_BASE_URL
+    value: https://paulikreisch.de
+    availability:
+      - RUNTIME
