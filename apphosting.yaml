@@ -56,3 +56,20 @@ env:
     value: structured-v1-accepted
     availability:
       - RUNTIME
+
+  # Newsletter (Resend). Values stay in Secret Manager. All newsletter flags
+  # (NEWSLETTER_STORE_ENABLED, NEWSLETTER_SEND_ENABLED, NEWSLETTER_FUNNEL_DAY0)
+  # are deliberately NOT set: unset means off and the routes fail closed.
+  # RESEND_WEBHOOK_SECRET is not bound until the Resend webhook exists.
+  - variable: NEWSLETTER_TOKEN_SECRET
+    secret: NEWSLETTER_TOKEN_SECRET@1
+    availability:
+      - RUNTIME
+  - variable: NEWSLETTER_ID_KEY
+    secret: NEWSLETTER_ID_KEY@1
+    availability:
+      - RUNTIME
+  - variable: NEWSLETTER_RESEND_API_KEY
+    secret: NEWSLETTER_RESEND_API_KEY@1
+    availability:
+      - RUNTIME

@@ -36,6 +36,9 @@ export function image(value) {
 // instead of pretending they would run. Mails reference only https links,
 // mailto links and the unsubscribe placeholder that a sender must replace.
 export const UNSUBSCRIBE_TOKEN = '{{abmeldelink}}';
+/** Link to the public browser view. The sender fills it in; it points to the published snapshot of this newsletter. */
+export const WEB_VIEW_TOKEN = '{{webansicht}}';
+export const NEWSLETTER_WEB_BASE = 'https://paulikreisch.de/nl/view/';
 function validateNewsletterCode(input, base) {
   if (!input.code || typeof input.code !== 'object') invalid('Code erforderlich.');
   if (input.code.js) invalid('Newsletter: JavaScript wird von Mailclients entfernt und ist nicht erlaubt.');
@@ -53,7 +56,7 @@ function validateNewsletterCode(input, base) {
   }
   for (const m of html.matchAll(/\s(?:href|src)\s*=\s*("([^"]*)"|'([^']*)')/gi)) {
     const v = (m[2] ?? m[3]).trim();
-    if (v === UNSUBSCRIBE_TOKEN || /^mailto:[^\s]+$/i.test(v) || /^cid:[A-Za-z0-9._-]{1,80}$/.test(v) || /^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(v)) continue;
+    if (v === UNSUBSCRIBE_TOKEN || v === WEB_VIEW_TOKEN || /^mailto:[^\s]+$/i.test(v) || /^cid:[A-Za-z0-9._-]{1,80}$/.test(v) || /^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(v)) continue;
     if (/^https:\/\//i.test(v)) { const clean=v.replace(/&amp;/g, '&'); if (/^\s*src/i.test(m[0])) image(clean); else https(clean); continue; }
     invalid('Newsletter-HTML: nur https-, mailto-, cid- und data-Bildlinks erlaubt.');
   }
@@ -106,10 +109,15 @@ export function validateDocument(input) {
 export const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function publicationCheck(doc) {
   validateDocument(doc);
-  if (doc.kind === 'newsletter') throw new MarketingError(409, 'Newsletter werden nur exportiert. Versand und öffentliche Archive sind nicht eingerichtet.');
+  if (doc.kind === 'newsletter') {
+    if (doc.mode !== 'custom') throw new MarketingError(409, 'Nur Newsletter mit eigenem HTML haben eine Browseransicht.');
+    // The public view cannot load cid: attachments. A stand-in image is needed for each one.
+    const missing = [...doc.code.html.matchAll(/<img\b[^>]*>/gi)].map(m => m[0]).filter(t => /\ssrc\s*=\s*["']cid:/i.test(t) && !/\sdata-preview-src\s*=/i.test(t));
+    if (missing.length) throw new MarketingError(409, 'Browseransicht: cid-Bild ohne Vorschaubild kann nicht veröffentlicht werden.');
+  }
 
 }
 
-export const surface = kind => kind === 'lp' ? 'lp' : 'ads';
+export const surface = kind => kind === 'lp' ? 'lp' : kind === 'newsletter' ? 'newsletter' : 'ads';
 
 export function assetPath(value){if(typeof value!=='string'||value.length>180||!/^\/[A-Za-z0-9][A-Za-z0-9_./-]*$/.test(value)||value.includes('//')||value.split('/').some(p=>p==='.'||p==='..')||value.endsWith('/'))invalid('Virtueller Pfad ungültig. Beispiel: /bilder/cover.jpg');return value;}

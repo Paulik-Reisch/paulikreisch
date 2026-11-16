@@ -21,8 +21,11 @@ service cloud.firestore {
         && date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
     }
 
-    match /{document=**} {
-      allow read: if true;
+    // Public read stays for everything except the newsletter recipient
+    // collections. Writes stay admin-only. Admin SDK servers bypass rules.
+    match /{collection}/{path=**} {
+      allow read: if (collection != 'subscribers' && collection != 'newsletter_recipients') && collection != 'users'
+        || isAuthorizedAdmin();
       allow write: if isAuthorizedAdmin();
     }
 

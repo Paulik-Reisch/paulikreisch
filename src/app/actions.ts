@@ -4,6 +4,7 @@ import { z } from "zod";
 import { addSubscriber } from "@/lib/firestore";
 import { addContact, sendTransactionalEmail } from "@/lib/resend";
 import { funnelEmails } from "@/lib/funnel-emails";
+import { newsletterStoreEnabled } from "@/newsletter/server";
 
 const SubscriberSchema = z.object({
   email: z.string().email("Bitte gib eine gültige E-Mail-Adresse ein."),
@@ -45,6 +46,22 @@ export async function subscribeToNewsletterAction(
     // allow if source is funnel but consent missing -> still require
     const c = String(rawConsent || "");
     if (c !== "true") return { error: "Bitte stimme der Datenschutzerklärung zu." };
+  }
+
+  // Double opt-in path. Only when the private recipient store is enabled; the
+  // legacy path below stays untouched while the flag is off. No address is
+  // mailed or stored before the person confirms, and the answer never reveals
+  // whether the address was already known.
+  if (newsletterStoreEnabled()) {
+    try {
+      const { subscribeWithDoubleOptIn } = await import("@/newsletter/signup");
+      const r = await subscribeWithDoubleOptIn({ email, source, hp: String(formData.get("website") || "") });
+      if (!r.ok) return { error: "Bitte gib eine gültige E-Mail-Adresse ein." };
+      return { success: true, message: "Fast geschafft: Wenn die Adresse stimmt, bekommst du gleich eine Mail mit einem Bestätigungslink." };
+    } catch (e) {
+      console.error("Newsletter double opt-in failed");
+      return { error: "Die Anmeldung ist gerade nicht möglich. Bitte versuche es später noch einmal." };
+    }
   }
 
   try {
