@@ -22,5 +22,8 @@ export function newsletterStoreEnabled(): boolean {
 
 export function getNewsletterSubscribers() {
   if (!newsletterStoreEnabled()) throw new Error('newsletter store disabled');
-  return new NewsletterSubscribers(new FirestoreSubscriberStore(getAdminDb()), { secret: newsletterSecret() });
+  const idKey = process.env.NEWSLETTER_ID_KEY || '';
+  if (idKey.length < 32) throw new Error('NEWSLETTER_ID_KEY missing');
+  const previousSecrets = (process.env.NEWSLETTER_TOKEN_SECRET_PREVIOUS || '').split(',').map((x) => x.trim()).filter((x) => x.length >= 32);
+  return new NewsletterSubscribers(new FirestoreSubscriberStore(getAdminDb()), { secret: newsletterSecret(), previousSecrets, idKey });
 }

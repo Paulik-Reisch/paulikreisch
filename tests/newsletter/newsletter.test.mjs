@@ -113,3 +113,41 @@ test('record id is a keyed UUID-shaped hash of the address, not the address',()=
   assert.notEqual(a,recipientId(SECRET,'c@d.de'));
   assert.notEqual(a,recipientId('y'.repeat(40),'a@b.de'));
 });
+
+import {createHmac as _h} from 'node:crypto';
+import {verifyWebhook,suppressionsFor,handleWebhook,WebhookRefused} from '../../src/newsletter/webhook.mjs';
+test('webhook: svix documented example vector verifies, tampering and stale timestamps are refused',()=>{
+  const secret='whsec_plJ3nmyCDGBKInavdOK15jsl',rawBody='{"event_type":"ping","data":{"success":true}}';
+  const headers={'svix-id':'msg_loFOjxBNrRLzqYUf','svix-timestamp':'1731705121','svix-signature':'v1,rAvfW3dJ/X/qxhsaXPOyyCGmRKsaKWcsNccKXlIktD0='};
+  const nowMs=1731705121*1000+1000;
+  assert.equal(verifyWebhook({secret,rawBody,headers,nowMs}).event_type,'ping');
+  assert.throws(()=>verifyWebhook({secret,rawBody:rawBody+' ',headers,nowMs}),WebhookRefused);
+  assert.throws(()=>verifyWebhook({secret,rawBody,headers,nowMs:nowMs+3600e3}),WebhookRefused);
+  assert.throws(()=>verifyWebhook({secret:'whsec_AAAA',rawBody,headers,nowMs}),WebhookRefused);
+  assert.equal(verifyWebhook({secret,rawBody,headers:{...headers,'svix-signature':'v1,AAAA '+headers['svix-signature']},nowMs}).event_type,'ping');
+});
+test('webhook: only permanent bounces, complaints and provider suppressions suppress; idempotent',async()=>{
+  assert.deepEqual(suppressionsFor({type:'email.bounced',data:{to:['a@b.de'],bounce:{type:'Permanent'}}}),[{email:'a@b.de',reason:'bounce'}]);
+  assert.deepEqual(suppressionsFor({type:'email.bounced',data:{to:['a@b.de'],bounce:{type:'Temporary'}}}),[]);
+  assert.deepEqual(suppressionsFor({type:'email.delivered',data:{to:['a@b.de']}}),[]);
+  const secret='whsec_'+Buffer.from('k'.repeat(24)).toString('base64'),{subs}=mk();
+  await subs.subscribe('a@b.de',consent);
+  const rawBody=JSON.stringify({type:'email.complained',data:{to:['a@b.de']}}),id='msg_1',ts=String(Math.floor(Date.now()/1000));
+  const signature='v1,'+_h('sha256',Buffer.from(secret.slice(6),'base64')).update(`${id}.${ts}.${rawBody}`).digest('base64');
+  const headers={'svix-id':id,'svix-timestamp':ts,'svix-signature':signature};
+  assert.equal((await handleWebhook({subscribers:subs,secret,rawBody,headers})).handled,1);
+  assert.equal((await handleWebhook({subscribers:subs,secret,rawBody,headers})).handled,1);
+  assert.equal((await subs.counts()).suppressed,1);
+});
+test('rotation: old tokens still verify, record ids survive a token secret change',async()=>{
+  const store=new MemorySubscriberStore(),A='a'.repeat(40),B='b'.repeat(40);
+  const one=new NewsletterSubscribers(store,{secret:A,idKey:'i'.repeat(40)});
+  const r=await one.subscribe('x@y.de',consent);await one.confirm(r.confirmToken);
+  const [m]=await one.mailable();
+  const two=new NewsletterSubscribers(store,{secret:B,previousSecrets:[A],idKey:'i'.repeat(40)});
+  assert.equal((await two.unsubscribe(m.unsubscribeToken)).ok,true);
+  assert.equal((await two.suppress('x@y.de','bounce')).ok,true);
+  assert.equal((await two.counts()).suppressed,1);assert.equal((await two.counts()).unsubscribed,0);
+  const three=new NewsletterSubscribers(store,{secret:B,idKey:'i'.repeat(40)});
+  assert.equal((await three.unsubscribe(m.unsubscribeToken)).ok,false);
+});

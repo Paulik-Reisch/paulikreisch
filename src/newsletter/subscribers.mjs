@@ -29,7 +29,13 @@ export class NewsletterSubscribers {
   /** store.update(id, fn): fn(record|null) returns {value, record?}; a returned
    * record is saved atomically, no record means no write. store.list() returns
    * a copy of all records. */
-  constructor(store,{secret,now=()=>new Date().toISOString()}){this.store=store;this.secret=secret;this.now=now;}
+  /** `secret` signs new tokens. `previousSecrets` still verify tokens already mailed
+   * out, so rotating the token secret never breaks unsubscribe links. `idKey`
+   * derives record ids from addresses (pseudonymous, not anonymous) and must NOT
+   * be rotated without migrating records; it is separate from the token secret
+   * for exactly that reason (suppression lookup depends on it). */
+  constructor(store,{secret,previousSecrets=[],idKey=secret,now=()=>new Date().toISOString()}){this.store=store;this.secret=secret;this.previous=previousSecrets;this.idKey=idKey;this.now=now;}
+  tokenOk(purpose,token,id,extra=''){return [this.secret,...this.previous].some(k=>checkToken(k,purpose,token,id,extra));}
   /** Registers consent intent. Always returns the same outward shape; callers
    * must show the same neutral message for every outcome (no address probing).
    * `confirmToken` is set only when a confirmation mail should be sent now. */
@@ -37,7 +43,7 @@ export class NewsletterSubscribers {
     const email=normalizeEmail(input);
     if(!email)return {ok:false,reason:'invalid'};
     if(typeof consentText!=='string'||consentText.length<10||typeof consentVersion!=='string'||!consentVersion)throw Error('Consent evidence required.');
-    const at=this.now(),id=recipientId(this.secret,email);
+    const at=this.now(),id=recipientId(this.idKey,email);
     return this.store.update(id,old=>{
       const none={ok:true,confirmToken:null,email:null};
       if(old?.status==='suppressed'||old?.status==='active')return {value:none};
@@ -56,7 +62,7 @@ export class NewsletterSubscribers {
     const at=this.now();
     return this.store.update(id,old=>{
       const r=old&&structuredClone(old);
-      if(!r||r.status!=='pending'||!r.confirmNonce||!checkToken(this.secret,'confirm',token,id,r.confirmNonce))return {value:{ok:false}};
+      if(!r||r.status!=='pending'||!r.confirmNonce||!this.tokenOk('confirm',token,id,r.confirmNonce))return {value:{ok:false}};
       if(Date.parse(at)-Date.parse(r.confirmSentAt)>CONFIRM_TTL_MS)return {value:{ok:false,expired:true}};
       r.status='active';r.confirmedAt=at;delete r.confirmNonce;note(r,'confirmed',at);
       return {record:r,value:{ok:true}};
@@ -66,7 +72,7 @@ export class NewsletterSubscribers {
     const id=tokenId(token);if(!id)return {ok:false};
     const at=this.now();
     return this.store.update(id,old=>{
-      if(!old||!checkToken(this.secret,'unsubscribe',token,id))return {value:{ok:false}};
+      if(!old||!this.tokenOk('unsubscribe',token,id))return {value:{ok:false}};
       if(old.status==='unsubscribed'||old.status==='suppressed')return {value:{ok:true}};
       const r=structuredClone(old);r.status='unsubscribed';r.unsubscribedAt=at;delete r.confirmNonce;note(r,'unsubscribed',at);
       return {record:r,value:{ok:true}};
@@ -75,7 +81,7 @@ export class NewsletterSubscribers {
   /** Bounce/complaint webhooks. Applies to unknown addresses harmlessly. */
   async suppress(input,reason){
     const email=normalizeEmail(input);if(!email)return {ok:false};
-    const at=this.now(),id=recipientId(this.secret,email);
+    const at=this.now(),id=recipientId(this.idKey,email);
     return this.store.update(id,old=>{
       const r=old?structuredClone(old):{id,email,status:'suppressed',createdAt:at};
       r.status='suppressed';r.suppressedAt=at;r.suppressedReason=String(reason).slice(0,40);delete r.confirmNonce;note(r,'suppressed',at);
