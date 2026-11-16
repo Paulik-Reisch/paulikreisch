@@ -40,7 +40,7 @@ function ConfirmInner() {
             <>
               <h1 className="font-headline text-3xl font-bold">Anmeldung bestätigen</h1>
               <p className="mt-3 text-muted-foreground text-balance">
-                Mit einem Klick bestätigst du, dass du den Newsletter von Paulik & Reisch per E-Mail erhalten möchtest. Abmelden geht jederzeit.
+                Mit einem Klick bestätigst du, dass du den Newsletter von Paulik &amp; Reisch per E-Mail erhalten möchtest. Abmelden geht jederzeit.
               </p>
               <Button className="mt-6 w-full" onClick={confirmSignup} disabled={loading}>
                 {loading ? "Wird verarbeitet…" : "Ja, Newsletter senden"}
