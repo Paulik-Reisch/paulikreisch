@@ -4,15 +4,22 @@ import { createNewsletterSender } from './studio-api.mjs';
 // @ts-ignore
 import { createResend } from './resend.mjs';
 import { getNewsletterSubscribers, newsletterStoreEnabled } from './server';
+import { getNewsletterReadModel } from './read-model';
 
-/** Studio send panel wiring. Preview and send both read the recipient store, so
- * they fail closed (503 in the studio) until NEWSLETTER_STORE_ENABLED=1.
- * Actual sending additionally needs NEWSLETTER_SEND_ENABLED=1, which is a
- * separate, deliberate switch. */
+/** Private read/preflight is independent from public recipient writes. Actual
+ * sending still needs both the existing write store and separate send gate. */
 export function createStudioNewsletter() {
-  if (!newsletterStoreEnabled()) return undefined;
   return createNewsletterSender({
     getSubscribers: getNewsletterSubscribers,
+    getReadModel: getNewsletterReadModel,
+    getStatus: () => ({
+      storeEnabled: newsletterStoreEnabled(),
+      sendEnabled: process.env.NEWSLETTER_SEND_ENABLED === '1',
+      day0Enabled: process.env.NEWSLETTER_FUNNEL_DAY0 === '1',
+      providerConfigured: Boolean(process.env.NEWSLETTER_RESEND_API_KEY && process.env.NEWSLETTER_FROM),
+      webhookConfigured: Boolean(process.env.RESEND_WEBHOOK_SECRET),
+      tokenKeysConfigured: Boolean((process.env.NEWSLETTER_TOKEN_SECRET?.length ?? 0) >= 32 && (process.env.NEWSLETTER_ID_KEY?.length ?? 0) >= 32),
+    }),
     getResend: () => {
       const apiKey = process.env.NEWSLETTER_RESEND_API_KEY || '';
       if (!apiKey) throw new Error('NEWSLETTER_RESEND_API_KEY missing');

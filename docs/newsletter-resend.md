@@ -1,6 +1,6 @@
 # Newsletter über Resend (news.paulikreisch.de)
 
-Status: Code vorbereitet, **alles aus**. Ohne die Flags unten liest, schreibt und sendet nichts.
+Status: Resend-Einbau vorhanden, neue öffentliche Newsletter-Schreibpfade und Resend-Versand gesperrt. Die private Studio-Prüfung liest Status und bestätigte Empfängerzahl ohne diese Gates zu öffnen. Vorbestehende MailerSend-Pfade sind von den neuen Flags nicht abgedeckt.
 
 ## Bausteine
 - Absender-Domain `news.paulikreisch.de` bei Resend (Free-Plan, Limits gelten pro Produkt). DNS bei Netcup: DKIM-TXT und zwei CNAMEs (`send.news`, `rsend.news`). Kein MX, kein Apex-DMARC.
@@ -37,3 +37,10 @@ Die Server-Action `subscribeToNewsletterAction` (Footer, Hero/Funnel, Shop, Shop
 - Einwilligungstext: Als Nachweis wird der Satz der Bestätigungsseite gespeichert (`CONSENT_TEXT` in `src/newsletter/doi.mjs`, identisch mit `/nl/confirm`). Die Formulare zeigen je Quelle andere Texte: Footer "Ich akzeptiere die Datenschutzerklärung und die AGB", Newsletter-Block "...stimme dem Erhalt des Newsletters zu. Einmal wöchentlich, jederzeit abbestellbar", Shop-Seite nur "Datenschutzerklärung gelesen". Der Satz "Einmal wöchentlich" steht nur dort. Der Fußtext des Newsletters ("weil du dich für den Newsletter angemeldet hast") ist ungeprüft. Keine juristische Zusicherung.
 - Honeypot-Feld `website` ist in den Formularen nicht eingebaut. Die Route akzeptiert es, ohne dass es Pflicht ist.
 - Zustellbarkeit ist nicht gemessen. Keine Aussage zu einzelnen Mailclients.
+
+## Private Status- und Versandprüfung
+- `m.*` stellt die Prüfung auch bei `NEWSLETTER_STORE_ENABLED` aus bereit. Die bestehende verifizierte Studio-Sitzung und CSRF-Prüfung gelten weiter.
+- Ein eigener Readadapter kann nur lesen: Statuszähler und pseudonyme Empfänger-IDs für den serverseitigen Digest. Keine Adressen, Einwilligungsdaten oder persönlichen Abmeldetokens gehen an den Browser. Keine Anbieterabfrage, kein Schreiben, kein Mailversand.
+- Private Entwürfe sind prüfbar. Eine unveröffentlichte/veraltete Browseransicht wird als Versandhindernis angezeigt, nicht durch Veröffentlichung umgangen. Die eigentliche Sendemethode verlangt weiterhin den passenden veröffentlichten Stand, STORE, SEND, Digest und Phrase.
+- Das angezeigte Limit ist ein **Kampagnenlimit**, kein aufaddiertes Tagesbudget. Das verbleibende Resend-Kontingent und die Zustellbarkeit sind nicht geprüft.
+- Anmeldung/DOI, Abmeldung und Webhook bleiben durch das bisherige STORE-Gate gesperrt. Für bereits versandte persönliche Links ist später ein getrenntes Abmelde-Gate nötig; das Einschalten des Versands darf dafür keine Voraussetzung sein.
