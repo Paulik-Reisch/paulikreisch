@@ -34,6 +34,7 @@ export class NewsletterSubscribers {
    * derives record ids from addresses (pseudonymous, not anonymous) and must NOT
    * be rotated without migrating records; it is separate from the token secret
    * for exactly that reason (suppression lookup depends on it). */
+  /** @param {any} store @param {{secret:string,previousSecrets?:string[],idKey?:string,now?:()=>string}} opts */
   constructor(store,{secret,previousSecrets=[],idKey=secret,now=()=>new Date().toISOString()}){this.store=store;this.secret=secret;this.previous=previousSecrets;this.idKey=idKey;this.now=now;}
   tokenOk(purpose,token,id,extra=''){return [this.secret,...this.previous].some(k=>checkToken(k,purpose,token,id,extra));}
   /** Registers consent intent. Always returns the same outward shape; callers

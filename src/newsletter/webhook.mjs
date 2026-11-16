@@ -35,6 +35,7 @@ export function suppressionsFor(event){
   else if(event.type==='email.suppressed')reason='provider-suppressed';
   return reason?d.to.filter(x=>typeof x==='string').map(email=>({email,reason})):[];
 }
+/** @param {{subscribers:any,secret:string,rawBody:string,headers:Record<string,string>,nowMs?:number}} p */
 export async function handleWebhook({subscribers,secret,rawBody,headers,nowMs}){
   const event=verifyWebhook({secret,rawBody,headers,nowMs});
   const list=suppressionsFor(event);
