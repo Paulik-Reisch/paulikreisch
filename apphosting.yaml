@@ -87,3 +87,9 @@ env:
     value: https://paulikreisch.de
     availability:
       - RUNTIME
+
+  # Removal only: does not enable registration, confirmation or sending.
+  - variable: NEWSLETTER_UNSUBSCRIBE_ENABLED
+    value: "1"
+    availability:
+      - RUNTIME

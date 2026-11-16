@@ -31,7 +31,7 @@ Status: Resend-Einbau vorhanden, neue öffentliche Newsletter-Schreibpfade und R
 `NEWSLETTER_TOKEN_SECRET` rotieren: altes Secret nach `NEWSLETTER_TOKEN_SECRET_PREVIOUS` (kommagetrennt), neues als Hauptsecret. Bereits versendete Links bleiben gültig.
 
 ## Anmeldeformulare
-Die Server-Action `subscribeToNewsletterAction` (Footer, Hero/Funnel, Shop, Shop-Seite) nutzt bei `NEWSLETTER_STORE_ENABLED=1` den Double-Opt-in-Weg. Bei ausgeschaltetem Flag bleibt der bisherige Weg unverändert. Mit Flag an entfallen der alte MailerSend-Kontakt, die Day-0-Mail und die `funnel_queue`-Einträge: vor der Bestätigung geht keine weitere Mail raus. Nach der Bestätigung geht die Day-0-Mail (Checkliste) raus, aber nur mit `NEWSLETTER_FUNNEL_DAY0=1` und ohne den Satz "Du bekommst in den nächsten Tagen noch 4 kurze Mails", weil Day 1/3/5/7 bewusst nicht gesendet werden. Day 1/3/5/7 brauchen eine Inhaltsentscheidung (u.a. "4.8 Sterne", Preisaktion "Letzte Chance", Leserzitat, kaputter Abmeldeplatzhalter).
+Die Server-Action `subscribeToNewsletterAction` (Footer, Hero/Funnel, Shop, Shop-Seite) nutzt bei `NEWSLETTER_STORE_ENABLED=1` den Double-Opt-in-Weg. Bei ausgeschaltetem Flag meldet das Formular die Nichtverfügbarkeit. Der alte MailerSend-/Queue-Fallback ist aus Sicherheitsgründen stillgelegt. Mit Flag an entfallen der alte MailerSend-Kontakt, die Day-0-Mail und die `funnel_queue`-Einträge: vor der Bestätigung geht keine weitere Mail raus. Nach der Bestätigung geht die Day-0-Mail (Checkliste) raus, aber nur mit `NEWSLETTER_FUNNEL_DAY0=1` und ohne den Satz "Du bekommst in den nächsten Tagen noch 4 kurze Mails", weil Day 1/3/5/7 bewusst nicht gesendet werden. Day 1/3/5/7 brauchen eine Inhaltsentscheidung (u.a. "4.8 Sterne", Preisaktion "Letzte Chance", Leserzitat, kaputter Abmeldeplatzhalter).
 
 ## Offen (konkret)
 - Einwilligungstext: Als Nachweis wird der Satz der Bestätigungsseite gespeichert (`CONSENT_TEXT` in `src/newsletter/doi.mjs`, identisch mit `/nl/confirm`). Die Formulare zeigen je Quelle andere Texte: Footer "Ich akzeptiere die Datenschutzerklärung und die AGB", Newsletter-Block "...stimme dem Erhalt des Newsletters zu. Einmal wöchentlich, jederzeit abbestellbar", Shop-Seite nur "Datenschutzerklärung gelesen". Der Satz "Einmal wöchentlich" steht nur dort. Der Fußtext des Newsletters ("weil du dich für den Newsletter angemeldet hast") ist ungeprüft. Keine juristische Zusicherung.
@@ -43,14 +43,14 @@ Die Server-Action `subscribeToNewsletterAction` (Footer, Hero/Funnel, Shop, Shop
 - Ein eigener Readadapter kann nur lesen: Statuszähler und pseudonyme Empfänger-IDs für den serverseitigen Digest. Keine Adressen, Einwilligungsdaten oder persönlichen Abmeldetokens gehen an den Browser. Keine Anbieterabfrage, kein Schreiben, kein Mailversand.
 - Private Entwürfe sind prüfbar. Eine unveröffentlichte/veraltete Browseransicht wird als Versandhindernis angezeigt, nicht durch Veröffentlichung umgangen. Die eigentliche Sendemethode verlangt weiterhin den passenden veröffentlichten Stand, STORE, SEND, Digest und Phrase.
 - Das angezeigte Limit ist ein **Kampagnenlimit**, kein aufaddiertes Tagesbudget. Das verbleibende Resend-Kontingent und die Zustellbarkeit sind nicht geprüft.
-- Anmeldung/DOI, Abmeldung und Webhook bleiben durch das bisherige STORE-Gate gesperrt. Für bereits versandte persönliche Links ist später ein getrenntes Abmelde-Gate nötig; das Einschalten des Versands darf dafür keine Voraussetzung sein.
+- Anmeldung/DOI und Webhook bleiben durch STORE gesperrt. Die signierte Abmeldung ist getrennt, siehe unten. Der alte Funnel-Dispatcher antwortet auf GET/POST mit 410 und verarbeitet keine Queue.
 
-## Separate removal capability (preparation, off by default)
+## Separate removal capability
 `NEWSLETTER_UNSUBSCRIBE_ENABLED=1` permits only a valid signed token to remove an
 existing new-store recipient, through the manual-confirm or RFC8058 POST route.
 It does not enable registration, confirmation, list reads, provider calls or
 sending. Leaving STORE/SEND off must never prevent removal once this removal
-capability has been explicitly activated. No code change activates the flag.
+capability has been explicitly activated. App Hosting enables only this removal flag. STORE/SEND/FUNNEL remain off. Malformed or incorrectly signed tokens are rejected before constructing a database adapter. The recipient transaction verifies the signature again; repeated removal is idempotent.
 
 Old `?email=` links are not authenticated personal tokens. The page must state
 that no removal happened and offer the existing contact route; never turn an
