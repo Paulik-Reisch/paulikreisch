@@ -91,3 +91,14 @@ test('resend client sends bearer auth and idempotency header, never leaks the ke
   await assert.rejects(()=>bad.send({from:'a',to:['b@example.de'],subject:'s',html:'h',text:'t'}),e=>e.status===403&&!e.message.includes('re_secret'));
   await assert.rejects(()=>c.send({from:'a',to:['a@x.de','b@x.de'],subject:'s'}));
 });
+
+import {FirestoreSubscriberStore} from '../../src/newsletter/firestore-store.mjs';
+test('firestore store keeps change atomic and returns copies',async()=>{
+  let doc;const ref={get:async()=>({exists:!!doc,data:()=>doc})};
+  const db={collection:()=>({doc:()=>ref}),runTransaction:async fn=>fn({get:r=>r.get(),set:(r,d)=>{doc=structuredClone(d);}})};
+  const s=new FirestoreSubscriberStore(db);
+  assert.deepEqual(await s.read(),[]);
+  const v=await s.change(r=>{r.push({id:'a'});return r.length;});
+  assert.equal(v,1);assert.deepEqual(await s.read(),[{id:'a'}]);
+  assert.equal(doc.schema,1);
+});
