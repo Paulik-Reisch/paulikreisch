@@ -15,6 +15,14 @@ export const metadata: Metadata = {
     title: 'Worthaft',
     description: 'Das tägliche Worträtsel',
     url: 'https://paulikreisch.de/worthaft',
+    images: [
+      {
+        url: 'https://paulikreisch.de/worthaft-og.png',
+        width: 1200,
+        height: 1200,
+        alt: 'Worthaft-Logo: 3x3-Raster aus gelben, grauen und blauen Kacheln',
+      },
+    ],
   },
   twitter: {
     title: 'Worthaft',
