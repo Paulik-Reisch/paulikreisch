@@ -5,7 +5,7 @@ import {createResend} from '../../src/newsletter/resend.mjs';
 import {sendCampaign,previewSend,personalize,buildMessage,SendRefused} from '../../src/newsletter/campaign.mjs';
 const SECRET='x'.repeat(40),consent={source:'test',consentText:'Ich willige in den Newsletter ein.',consentVersion:'v1'};
 const mk=()=>{let t=Date.parse('2026-11-16T12:00:00Z');const clock={advance:ms=>{t+=ms;}};const subs=new NewsletterSubscribers(new MemorySubscriberStore(),{secret:SECRET,now:()=>new Date(t).toISOString()});return {subs,clock};};
-async function activate(subs,email){const r=await subs.subscribe(email,consent);assert.ok(r.confirmToken);assert.deepEqual(await subs.confirm(r.confirmToken),{ok:true});}
+async function activate(subs,email){const r=await subs.subscribe(email,consent);assert.ok(r.confirmToken);assert.equal((await subs.confirm(r.confirmToken)).ok,true);}
 test('tokens are purpose-bound, opaque and tamper-proof',()=>{
   const id='123e4567-e89b-42d3-a456-426614174000',t=tokenFor(SECRET,'unsubscribe',id);
   assert.equal(tokenId(t),id);assert.ok(checkToken(SECRET,'unsubscribe',t,id));
@@ -24,7 +24,7 @@ test('only double opt-in recipients are mailable; same outward answer for known 
   const first=await subs.subscribe('a@example.de',consent);assert.ok(first.ok&&first.confirmToken);
   assert.deepEqual(await subs.mailable(),[]);
   const repeat=await subs.subscribe('a@example.de',consent);assert.ok(repeat.ok);assert.equal(repeat.confirmToken,null);
-  assert.deepEqual(await subs.confirm(first.confirmToken),{ok:true});
+  assert.equal((await subs.confirm(first.confirmToken)).ok,true);
   assert.deepEqual(await subs.confirm(first.confirmToken),{ok:false});
   const list=await subs.mailable();assert.equal(list.length,1);assert.equal(list[0].email,'a@example.de');
   const again=await subs.subscribe('a@example.de',consent);assert.equal(again.confirmToken,null);
@@ -178,7 +178,8 @@ test('double opt-in: mail only for a fresh pending request, neutral otherwise, h
   assert.deepEqual(await call('a@example.invalid'),{ok:true});assert.equal(sent.length,1,'throttled, no second mail');
   assert.equal((await subs.mailable()).length,0,'pending is not mailable');
   const token=new URL(sent[0].text.match(/https:\S+/)[0]).searchParams.get('t');
-  assert.equal((await subs.confirm(token)).ok,true);
+  const c=await subs.confirm(token);assert.equal(c.ok,true);assert.equal(c.source,'website');assert.equal(typeof c.id,'string');
+  assert.equal((await subs.confirm(token)).ok,false,'second confirm is a no-op');
   assert.equal((await subs.mailable()).length,1);
   assert.equal(CONSENT_TEXT.length>10,true);
 });

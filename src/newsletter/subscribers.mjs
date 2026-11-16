@@ -66,7 +66,7 @@ export class NewsletterSubscribers {
       if(!r||r.status!=='pending'||!r.confirmNonce||!this.tokenOk('confirm',token,id,r.confirmNonce))return {value:{ok:false}};
       if(Date.parse(at)-Date.parse(r.confirmSentAt)>CONFIRM_TTL_MS)return {value:{ok:false,expired:true}};
       r.status='active';r.confirmedAt=at;delete r.confirmNonce;note(r,'confirmed',at);
-      return {record:r,value:{ok:true}};
+      return {record:r,value:{ok:true,id:r.id,email:r.email,source:r.consent?.source??null}};
     });
   }
   async unsubscribe(token){
