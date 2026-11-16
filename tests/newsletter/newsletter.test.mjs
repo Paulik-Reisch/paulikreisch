@@ -156,7 +156,7 @@ import {createNewsletterSender} from '../../src/newsletter/studio-api.mjs';
 test('studio sender: preview is read-only, send needs digest and phrase and the enabled flag',async()=>{
   const draft={kind:'newsletter',slug:'sommer',mode:'custom',subject:'S',code:{html:'<p>x {{abmeldelink}}</p>',text:'x {{abmeldelink}}'}};const rec={id:'abc',draft,published:null,revision:3};
   const sent=[];
-  const make=enabled=>createNewsletterSender({getSubscribers:()=>({mailable:async()=>[{id:'a',email:'a@example.invalid',unsubscribeToken:'t.t'}]}),getResend:()=>({send:async m=>{sent.push(m);return {id:'p1'};}}),from:'N <n@news.example.invalid>',baseUrl:'https://example.invalid',dailyLimit:5,enabled});
+  const make=enabled=>createNewsletterSender({getStatus:()=>({webhookConfigured:true}),getSubscribers:()=>({mailable:async()=>[{id:'a',email:'a@example.invalid',unsubscribeToken:'t.t'}]}),getResend:()=>({send:async m=>{sent.push(m);return {id:'p1'};}}),from:'N <n@news.example.invalid>',baseUrl:'https://example.invalid',dailyLimit:5,enabled});
   const off=make(false),p=await off.preview(rec);
   assert.equal(p.count,1);assert.equal(sent.length,0);
   await assert.rejects(()=>off.send(rec,{digest:p.digest,phrase:p.phrase}),/nicht freigeschaltet/);
@@ -187,7 +187,7 @@ test('double opt-in: mail only for a fresh pending request, neutral otherwise, h
 test('browser-view placeholder is only filled for the exactly published revision',async()=>{
   const draft={kind:'newsletter',slug:'sommer',mode:'custom',subject:'S',code:{html:'<a href="{{webansicht}}">Browser</a> {{abmeldelink}}',text:'{{webansicht}} {{abmeldelink}}'}};
   const sent=[];
-  const nl=createNewsletterSender({getSubscribers:()=>({mailable:async()=>[{id:'a',email:'a@example.invalid',unsubscribeToken:'t.t'}]}),getResend:()=>({send:async m=>{sent.push(m);return {id:'p'};}}),from:'N <n@news.example.invalid>',baseUrl:'https://example.invalid',dailyLimit:5,enabled:true});
+  const nl=createNewsletterSender({getStatus:()=>({webhookConfigured:true}),getSubscribers:()=>({mailable:async()=>[{id:'a',email:'a@example.invalid',unsubscribeToken:'t.t'}]}),getResend:()=>({send:async m=>{sent.push(m);return {id:'p'};}}),from:'N <n@news.example.invalid>',baseUrl:'https://example.invalid',dailyLimit:5,enabled:true});
   assert.match((await nl.preview({id:'abc',draft,published:null,revision:2})).blockers.join('|'),/nicht veröffentlicht/);
   await assert.rejects(()=>nl.send({id:'abc',draft,published:null,revision:2},{}),/nicht veröffentlicht/);
   assert.match((await nl.preview({id:'abc',draft,published:{revision:1},revision:2})).blockers.join('|'),/nicht veröffentlicht oder nicht auf dem aktuellen Stand/);
@@ -203,7 +203,7 @@ test('private preflight uses read-only capability with public store off and neve
   const rec={id:'record',revision:5,published:null,draft:{kind:'newsletter',mode:'custom',slug:'sommer',subject:'S',code:{html:'<a href="{{webansicht}}">Browser</a> {{abmeldelink}}',text:'{{webansicht}} {{abmeldelink}}'}}};
   const p=await nl.preview(rec);
   assert.equal(p.count,1);assert.equal(p.ready,false);assert.equal(p.counts.suppressed,4);assert.ok(p.digest);assert.equal(p.publishedCurrent,false);
-  assert.match(p.blockers.join('|'),/nicht veröffentlicht/);assert.match(p.blockers.join('|'),/Schreibpfade sind gesperrt/);
+  assert.match(p.blockers.join('|'),/nicht veröffentlicht/);assert.doesNotMatch(p.blockers.join('|'),/Schreibpfade sind gesperrt/);
   assert.doesNotMatch(JSON.stringify(p),/private-id-only|unsubscribeToken|VORSCHAU-KEIN-TOKEN/);
   await assert.rejects(()=>nl.send(rec,{digest:p.digest,phrase:p.phrase}),/nicht freigeschaltet/);
   assert.equal(reads,1);assert.equal(writes,0);assert.equal(providers,0);

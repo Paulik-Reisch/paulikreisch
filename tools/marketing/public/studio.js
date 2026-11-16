@@ -79,6 +79,18 @@ function showNewsletterPreflight(p){
   for(const x of p.warnings)panel.append(el('p',x,'muted'));
   panel.append(el('p','Geplante Browseradresse: '+p.browserUrl));
   panel.append(el('p','Nur private Prüfung. Keine Mail, kein persönlicher Link und kein Abruf beim Versandanbieter.'));
+  const probe=el('button','Technischen Einzeltest prüfen');probe.type='button';
+  probe.onclick=async()=>{try{
+    const p=await api('/newsletter/transport-test');
+    const text=`An: ${p.to}\nVon: ${p.from}\nAntworten: ${p.replyTo}\nBetreff: ${p.subject}\n\n${p.text}\n\n${p.warning}`;
+    if(!p.enabled||!p.configured){alert(text+'\n\nTest ist gesperrt. Nichts wurde versendet.');return;}
+    const phrase=prompt(text+'\n\nZum einmaligen Senden exakt eintippen: '+p.phrase);
+    if(phrase===null)return;
+    const result=await api('/newsletter/transport-test',{method:'POST',body:JSON.stringify({digest:p.digest,phrase})});
+    status(result.accepted?'Technische Einzelmail vom Anbieter angenommen. Posteingang prüfen; dies ist kein Zustellnachweis.':'Keine Annahme bestätigt.',!result.accepted);
+  }catch(e){status(e.message+' Bei unklarem Versuch nicht erneut senden.',true);}};
+  panel.append(probe);
+
   panel.scrollIntoView({block:'start'});
 }
 $('#send-check').onclick=async()=>{if(!current||current.draft.kind!=='newsletter')return;try{

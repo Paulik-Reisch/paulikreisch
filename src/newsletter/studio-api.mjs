@@ -31,7 +31,7 @@ export function createNewsletterSender({getSubscribers,getReadModel,getStatus=()
         else{const s=getSubscribers();recipients=await s.mailable();counts=s.counts?await s.counts():null;}
       }catch{blockers.push('Empfängerstatus kann gerade nicht gelesen werden.');}
       if(!enabled)blockers.push('Versand ist serverseitig nicht freigeschaltet.');
-      if(configuration.storeEnabled===false)blockers.push('Öffentliche Anmeldung und Empfänger-Schreibpfade sind gesperrt.');
+      if(configuration.webhookConfigured!==true)blockers.push('Signierter Bounce-/Beschwerde-Rückkanal ist nicht aktiv.');
       if(configuration.providerConfigured===false)blockers.push('Versandanbieter ist nicht vollständig konfiguriert.');
       if(configuration.tokenKeysConfigured===false)blockers.push('Persönliche Link-Schlüssel sind nicht vollständig konfiguriert.');
       if(!from)blockers.push('Absender fehlt.');
@@ -46,6 +46,7 @@ export function createNewsletterSender({getSubscribers,getReadModel,getStatus=()
     },
     async send(record,confirmation){
       if(!enabled)throw new SendRefused('Versand ist nicht freigeschaltet.');
+      if(getStatus().webhookConfigured!==true)throw new SendRefused('Signierter Bounce-/Beschwerde-Rückkanal ist nicht aktiv.');
       const {args}=await prepare(record),p=previewSend(args);
       if(confirmation?.digest!==p.digest)throw new SendRefused('Vorschau ist veraltet. Bitte neu prüfen.');
       if(confirmation?.phrase!==p.phrase)throw new SendRefused('Bestätigungsphrase stimmt nicht.');

@@ -60,7 +60,7 @@ env:
   # Newsletter (Resend). Values stay in Secret Manager. All newsletter flags
   # (NEWSLETTER_STORE_ENABLED, NEWSLETTER_SEND_ENABLED, NEWSLETTER_FUNNEL_DAY0)
   # are deliberately NOT set: unset means off and the routes fail closed.
-  # RESEND_WEBHOOK_SECRET is not bound until the Resend webhook exists.
+  # Feedback is removal-only and independent of public signup/sending.
   - variable: NEWSLETTER_TOKEN_SECRET
     secret: NEWSLETTER_TOKEN_SECRET@1
     availability:
@@ -90,6 +90,16 @@ env:
 
   # Removal only: does not enable registration, confirmation or sending.
   - variable: NEWSLETTER_UNSUBSCRIBE_ENABLED
+    value: "1"
+    availability:
+      - RUNTIME
+
+  # Only signed existing-recipient suppression. No signup or sending.
+  - variable: NEWSLETTER_RESEND_WEBHOOK_SECRET
+    secret: NEWSLETTER_RESEND_WEBHOOK_SECRET@1
+    availability:
+      - RUNTIME
+  - variable: NEWSLETTER_FEEDBACK_ENABLED
     value: "1"
     availability:
       - RUNTIME

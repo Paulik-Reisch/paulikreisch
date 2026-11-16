@@ -1,6 +1,6 @@
 # Newsletter über Resend (news.paulikreisch.de)
 
-Status: Resend-Einbau vorhanden, neue öffentliche Newsletter-Schreibpfade und Resend-Versand gesperrt. Die private Studio-Prüfung liest Status und bestätigte Empfängerzahl ohne diese Gates zu öffnen. Vorbestehende MailerSend-Pfade sind von den neuen Flags nicht abgedeckt.
+Status: Resend-Einbau vorhanden, neue öffentliche Newsletter-Schreibpfade und Resend-Versand gesperrt. Die private Studio-Prüfung liest Status und bestätigte Empfängerzahl ohne diese Gates zu öffnen. Der alte MailerSend-Dispatcher und der Anmelde-Fallback sind stillgelegt. Nur signierte Abmeldung ist live. Das nächste Bundle bindet den separat schaltbaren Feedback-Rückkanal ein.
 
 ## Bausteine
 - Absender-Domain `news.paulikreisch.de` bei Resend (Free-Plan, Limits gelten pro Produkt). DNS bei Netcup: DKIM-TXT und zwei CNAMEs (`send.news`, `rsend.news`). Kein MX, kein Apex-DMARC.
@@ -13,11 +13,11 @@ Status: Resend-Einbau vorhanden, neue öffentliche Newsletter-Schreibpfade und R
 
 ## Voraussetzungen vor dem Einschalten (Reihenfolge)
 1. **Firestore-Rules**: am 2026-11-16 16:11 in der Konsole veröffentlicht (Stand in `firestore.rules`): `subscribers` und `newsletter_recipients` nur für Admins lesbar, alles andere unverändert. Per REST-Abruf eines nicht existierenden Dokuments geprüft: 403 für beide, 404 für `articles` und `users`. Rollback: vorherige Version im Regelverlauf der Konsole. `users` ist bewusst nicht angefasst.
-2. Secrets (Secret Manager / App Hosting): `NEWSLETTER_TOKEN_SECRET` (≥32 Zeichen), `NEWSLETTER_ID_KEY` (≥32 Zeichen, nie rotieren ohne Migration, Backup im Vault), `NEWSLETTER_RESEND_API_KEY` (Sending-only, auf die Domain beschränkt; bewusst nicht `RESEND_API_KEY`, den Namen belegt schon ein vorhandenes, ungenutztes Secret, das unberührt bleibt), `RESEND_WEBHOOK_SECRET`.
+2. Secrets (Secret Manager / App Hosting): `NEWSLETTER_TOKEN_SECRET` (≥32 Zeichen), `NEWSLETTER_ID_KEY` (≥32 Zeichen, nie rotieren ohne Migration, Backup im Vault), `NEWSLETTER_RESEND_API_KEY` (Sending-only, auf die Domain beschränkt; bewusst nicht `RESEND_API_KEY`, den Namen belegt schon ein vorhandenes, ungenutztes Secret, das unberührt bleibt), `NEWSLETTER_RESEND_WEBHOOK_SECRET`.
    Die Einträge in `apphosting.yaml` kommen erst, wenn die Secrets existieren, sonst scheitert der Rollout.
 3. Umgebung: `NEWSLETTER_FROM`, optional `NEWSLETTER_REPLY_TO`, `NEWSLETTER_BASE_URL` (Standard https://paulikreisch.de), `NEWSLETTER_DAILY_LIMIT` (Standard 100).
-4. `NEWSLETTER_STORE_ENABLED=1` schaltet Store, Anmeldung, Bestätigung, Abmeldung, Webhook und Studio-Panel frei.
-5. Resend-Webhook auf die Webhook-URL anlegen, erst wenn die Route live ist.
+4. `NEWSLETTER_STORE_ENABLED=1` schaltet die öffentliche Anmeldung und Bestätigung frei. Private Prüfung, signierte Abmeldung, Feedback und Versand haben eigene schmale Fähigkeiten und Gates.
+5. Resend-Webhook auf die Webhook-URL anlegen; erst nach Signatursecret-Bindung und Abnahme aktivieren.
 6. `NEWSLETTER_SEND_ENABLED=1` ist ein eigener Schalter für das tatsächliche Senden. Erster Versand nur nach ausdrücklicher Freigabe.
 
 ## Browseransicht ("Im Browser ansehen")
@@ -41,9 +41,9 @@ Die Server-Action `subscribeToNewsletterAction` (Footer, Hero/Funnel, Shop, Shop
 ## Private Status- und Versandprüfung
 - `m.*` stellt die Prüfung auch bei `NEWSLETTER_STORE_ENABLED` aus bereit. Die bestehende verifizierte Studio-Sitzung und CSRF-Prüfung gelten weiter.
 - Ein eigener Readadapter kann nur lesen: Statuszähler und pseudonyme Empfänger-IDs für den serverseitigen Digest. Keine Adressen, Einwilligungsdaten oder persönlichen Abmeldetokens gehen an den Browser. Keine Anbieterabfrage, kein Schreiben, kein Mailversand.
-- Private Entwürfe sind prüfbar. Eine unveröffentlichte/veraltete Browseransicht wird als Versandhindernis angezeigt, nicht durch Veröffentlichung umgangen. Die eigentliche Sendemethode verlangt weiterhin den passenden veröffentlichten Stand, STORE, SEND, Digest und Phrase.
+- Private Entwürfe sind prüfbar. Eine unveröffentlichte/veraltete Browseransicht wird als Versandhindernis angezeigt, nicht durch Veröffentlichung umgangen. Die eigentliche Sendemethode verlangt den passenden veröffentlichten Stand, SEND, konfiguriertes Feedback, Digest und Phrase. STORE ist dafür nicht nötig.
 - Das angezeigte Limit ist ein **Kampagnenlimit**, kein aufaddiertes Tagesbudget. Das verbleibende Resend-Kontingent und die Zustellbarkeit sind nicht geprüft.
-- Anmeldung/DOI und Webhook bleiben durch STORE gesperrt. Die signierte Abmeldung ist getrennt, siehe unten. Der alte Funnel-Dispatcher antwortet auf GET/POST mit 410 und verarbeitet keine Queue.
+- Anmeldung/DOI bleiben durch STORE gesperrt. Feedback hat einen eigenen Schalter. Die signierte Abmeldung ist getrennt, siehe unten. Der alte Funnel-Dispatcher antwortet auf GET/POST mit 410 und verarbeitet keine Queue.
 
 ## Separate removal capability
 `NEWSLETTER_UNSUBSCRIBE_ENABLED=1` permits only a valid signed token to remove an
@@ -57,3 +57,47 @@ that no removal happened and offer the existing contact route; never turn an
 arbitrary URL address into a verified identity or a false success. Compatibility
 with any previous provider-native signed links needs their original scheme and
 provider support, not guessed token conversion. No legacy list was migrated.
+
+
+## Private campaign capability and transport probe
+Campaign sending no longer needs public registration enabled. Its server-only
+capability exposes only mailable recipients and is gated by SEND. Private preview
+still uses the address-free read model. A configured signed feedback gate is
+required by both preview and direct campaign send. STORE and FUNNEL stay off.
+
+The private manager-only `/api/marketing/newsletter/transport-test` supports GET
+for exact review and POST for a fixed one-off technical message to
+`philipp.l.paulik@gmail.com`. POST requires the existing origin/session/CSRF
+checks, its own default-off `NEWSLETTER_TRANSPORT_TEST_ENABLED`, exact digest and
+phrase, and the configured approved sender identity. It never calls the
+newsletter store or changes the summer draft. A create-only private bucket claim
+is written before provider submission. Concurrent requests and all later retries
+are refused, even if the first response is lost. There is no automatic reset.
+Provider acceptance does not establish inbox delivery. No activation or message
+approval is implied by deploying this code.
+
+## Scoped provider feedback
+The isolated Resend webhook subscribes only to `email.bounced`,
+`email.complained`, `email.suppressed`. It remains disabled until the signature
+secret is safely bound and the endpoint is verified. The route uses
+`NEWSLETTER_RESEND_WEBHOOK_SECRET` and the separate default-off
+`NEWSLETTER_FEEDBACK_ENABLED`. It verifies the raw signed body and timestamp
+before constructing any DB adapter. Only the exact configured From is accepted:
+this Resend account also contains other projects. Only existing new-store records
+can be suppressed, with idempotent terminal status; unknown addresses are not
+created and a complaint cannot revive consent. No provider API call, list import,
+confirmation or newsletter send occurs in feedback handling.
+
+Provider payload references checked 2026-11-16:
+- https://resend.com/docs/webhooks/emails/bounced
+- https://resend.com/docs/webhooks/emails/complained
+- https://resend.com/docs/webhooks/create-webhook
+- https://resend.com/docs/api-reference/emails/send-email
+
+Runtime binding prepared 2026-11-16: signature secret version 1 exists Enabled;
+the actual App Hosting compute service account has Secret Accessor on this secret
+only. This bundle pins `NEWSLETTER_RESEND_WEBHOOK_SECRET@1` and sets only
+`NEWSLETTER_FEEDBACK_ENABLED=1`. The provider webhook remains disabled until live
+endpoint acceptance. STORE/SEND/FUNNEL and the transport probe remain unset/off.
+A configured callback and synthetic fixture acceptance do not prove real provider
+event delivery or inbox delivery. No actual or test email has been sent.
