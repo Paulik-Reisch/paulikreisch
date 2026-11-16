@@ -1,5 +1,6 @@
-export const CONSENT_VERSION='2026-11-v1';
-export const CONSENT_TEXT='Ich möchte den Newsletter von Paulik & Reisch per E-Mail erhalten. Ich kann mich jederzeit abmelden.';
+/** Must match the sentence on the /nl/confirm page word for word: that click is the consent evidence. */
+export const CONSENT_VERSION='2026-11-confirm-page-v1';
+export const CONSENT_TEXT='Mit einem Klick bestätigst du, dass du den Newsletter von Paulik & Reisch per E-Mail erhalten möchtest. Abmelden geht jederzeit.';
 export function confirmUrl(base,token){return `${base.replace(/\/$/,'')}/nl/confirm?t=${encodeURIComponent(token)}`;}
 export function confirmMessage({from,replyTo,email,url}){
   const text=`Hallo,\n\nbitte bestätige deine Anmeldung zum Newsletter von Paulik & Reisch:\n${url}\n\nDer Link gilt 7 Tage. Wenn du dich nicht angemeldet hast, ignoriere diese Mail. Dann passiert nichts.\n`;

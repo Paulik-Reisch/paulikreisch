@@ -23,7 +23,10 @@ Status: Code vorbereitet, **alles aus**. Ohne die Flags unten liest, schreibt un
 ## Token-Rotation
 `NEWSLETTER_TOKEN_SECRET` rotieren: altes Secret nach `NEWSLETTER_TOKEN_SECRET_PREVIOUS` (kommagetrennt), neues als Hauptsecret. Bereits versendete Links bleiben gültig.
 
-## Offen
-- Die Einwilligungstexte (`src/newsletter/doi.mjs`) und der Fußtext im Newsletter sind nicht rechtlich geprüft.
-- Das Anmeldeformular auf der Website ist noch nicht an `/api/newsletter/subscribe` angebunden.
+## Anmeldeformulare
+Die Server-Action `subscribeToNewsletterAction` (Footer, Hero/Funnel, Shop, Shop-Seite) nutzt bei `NEWSLETTER_STORE_ENABLED=1` den Double-Opt-in-Weg. Bei ausgeschaltetem Flag bleibt der bisherige Weg unverändert. Mit Flag an entfallen der alte MailerSend-Kontakt, die Day-0-Mail und die `funnel_queue`-Einträge: vor der Bestätigung geht keine weitere Mail raus. Die Funnel-Mails (Checkliste) laufen damit nicht mehr automatisch. Das ist eine Entscheidung für Philipp, falls der Funnel sie braucht.
+
+## Offen (konkret)
+- Einwilligungstext: Als Nachweis wird der Satz der Bestätigungsseite gespeichert (`CONSENT_TEXT` in `src/newsletter/doi.mjs`, identisch mit `/nl/confirm`). Die Formulare zeigen je Quelle andere Texte: Footer "Ich akzeptiere die Datenschutzerklärung und die AGB", Newsletter-Block "...stimme dem Erhalt des Newsletters zu. Einmal wöchentlich, jederzeit abbestellbar", Shop-Seite nur "Datenschutzerklärung gelesen". Der Satz "Einmal wöchentlich" steht nur dort. Der Fußtext des Newsletters ("weil du dich für den Newsletter angemeldet hast") ist ungeprüft. Keine juristische Zusicherung.
+- Honeypot-Feld `website` ist in den Formularen nicht eingebaut. Die Route akzeptiert es, ohne dass es Pflicht ist.
 - Zustellbarkeit ist nicht gemessen. Keine Aussage zu einzelnen Mailclients.
