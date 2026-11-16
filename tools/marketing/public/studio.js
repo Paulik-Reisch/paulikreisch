@@ -80,7 +80,7 @@ function renderFiles(){
     if(f.status==='published'&&f.publicUrl&&f.type.startsWith('image/')){const thumb=el('img',null,'thumb');thumb.src=f.publicUrl;thumb.alt='';thumb.loading='lazy';info.append(thumb);}
     info.append(el('strong',f.name),el('small',`${f.type} · ${Math.ceil(f.size/1024)} KB`));
     if(f.status==='published'&&f.publicUrl){const link=el('small',f.publicUrl);link.className='public-url';info.append(link);}
-    const actions=el('div','row-actions');
+    const actions=el('div',null,'row-actions');
     if(gone.has(f.id)){
       const retry=el('button','Löschung erneut versuchen');retry.onclick=()=>fileRetry(f.id);actions.append(retry);
       row.append(info,el('span','Löschung ausstehend','badge'),actions);list.append(row);continue;
@@ -141,7 +141,7 @@ function renderLinks(){
   for(const l of linkList){
     const row=el('article',null,'document'),info=el('div');
     info.append(el('strong',l.label),el('small',`${l.url} → ${l.target}`),el('small',`${l.campaign||'Ohne Kampagne'} · ${l.clicks} Aufruf${l.clicks===1?'':'e'}`));
-    const actions=el('div','row-actions');
+    const actions=el('div',null,'row-actions');
     const copy=el('button','Link kopieren');copy.onclick=()=>copyText(l.url);
     const edit=el('button','Bearbeiten');edit.onclick=()=>editLink(l,row);
     const toggle=el('button',l.active?'Deaktivieren':'Aktivieren');
@@ -159,14 +159,14 @@ function renderLinks(){
 }
 function editLink(l,row){
   row.replaceChildren();
-  const form=el('form','link-edit');
+  const form=el('form',null,'link-edit');
   const label=el('input');label.value=l.label;label.maxLength=100;label.required=true;
   const target=el('input');target.type='url';target.value=l.target;target.required=true;
   const campaign=el('input');campaign.value=l.campaign??'';campaign.maxLength=100;campaign.setAttribute('list','campaign-options');
   const save=el('button','Speichern','primary');save.type='submit';
   const cancel=el('button','Abbrechen');cancel.type='button';cancel.onclick=()=>renderLinks();
   for(const [node,text]of [[label,'Name'],[target,'Zieladresse (HTTPS)'],[campaign,'Kampagne (optional)']]){const l2=el('label',text);l2.append(node);form.append(l2);}
-  const buttons=el('div','row-actions');buttons.append(save,cancel);form.append(buttons);
+  const buttons=el('div',null,'row-actions');buttons.append(save,cancel);form.append(buttons);
   form.onsubmit=async event=>{event.preventDefault();try{await api('/links/'+encodeURIComponent(l.code),{method:'PUT',body:JSON.stringify({revision:l.revision,label:label.value,target:target.value,campaign:campaign.value})});await loadLinks(true);status('Kurzlink aktualisiert. Die Kurz-URL bleibt unverändert.');}catch(e){status(e.message,true);}};
   row.append(form);
 }
