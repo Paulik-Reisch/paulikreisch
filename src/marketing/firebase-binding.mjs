@@ -7,7 +7,7 @@ import {assets} from './generated-assets.mjs';
  * allowlist, public web API key and SESSION_SECRET are supplied by the host.
  * Dormant until explicitly wired into a deployment approved for this feature.
  */
-export function createFirebaseMarketing({bucket,firebaseAuth,apiKey,secret,allowedEmail,fetcher=fetch}) {
+export function createFirebaseMarketing({bucket,firebaseAuth,apiKey,secret,allowedEmail,files,links,fetcher=fetch}) {
   const auth=new MarketingAuth({secret,allowedEmail,limit:bucketLoginLimiter(bucket,secret),currentUser:email=>firebaseAuth.getUserByEmail(email),verifyPassword:async(email,password,host)=>{
     const response=await fetcher('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='+encodeURIComponent(apiKey),{method:'POST',headers:{'content-type':'application/json','Referer':'https://'+host+'/'},body:JSON.stringify({email,password,returnSecureToken:true}),signal:AbortSignal.timeout(15000)});
     if(!response.ok)throw Error('Sign in failed.');
@@ -16,5 +16,5 @@ export function createFirebaseMarketing({bucket,firebaseAuth,apiKey,secret,allow
     if(decoded.email?.toLowerCase()!==email||decoded.email_verified!==true||typeof decoded.auth_time!=='number'||Math.abs(Date.now()/1000-decoded.auth_time)>300)throw Error('Invalid identity.');
     return firebaseAuth.getUserByEmail(email);
   }});
-  return createMarketingHandler({service:new MarketingService(new PrivateBucketStorage(bucket,secret)),auth,assets});
+  return createMarketingHandler({service:new MarketingService(new PrivateBucketStorage(bucket,secret)),auth,assets,files,links});
 }

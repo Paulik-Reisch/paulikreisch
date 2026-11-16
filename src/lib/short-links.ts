@@ -8,13 +8,13 @@ export function validateCustomShortLinkCode(input:unknown):string {
   if(typeof input!=='string'||!/^[A-Za-z0-9][A-Za-z0-9_-]{3,31}$/.test(input)||RESERVED_CODES.has(input.toLowerCase()))throw new Error('Bitte 4 bis 32 Zeichen verwenden: Buchstaben, Ziffern, Bindestrich oder Unterstrich; Beginn mit Buchstabe oder Ziffer. Systemnamen sind reserviert.');
   return input;
 }
-export type ShortLink = {code:string; label:string; target:string; active:boolean; clicks:number; createdAt:string; revision?:string};
+export type ShortLink = {code:string; label:string; target:string; active:boolean; clicks:number; createdAt:string; campaign?:string; revision?:string};
 export interface ShortLinkRepository {
   create(record:ShortLink):Promise<void>;
   get(code:string):Promise<ShortLink|null>;
   list(cursor?:string):Promise<{records:ShortLink[];nextCursor?:string}>;
   setActive(code:string,revision:string,active:boolean):Promise<void>;
-  update(code:string,revision:string,fields:{label:string;target:string}):Promise<void>;
+  update(code:string,revision:string,fields:{label:string;target:string;campaign?:string}):Promise<void>;
   delete(code:string,revision:string):Promise<void>;
   increment(record:ShortLink):Promise<void>;
 }
@@ -29,11 +29,17 @@ export function validateShortLinkLabel(input:unknown):string {
   if(typeof input!=='string'||!input.trim()||input.trim().length>100||/[\u0000-\u001f\u007f]/.test(input))throw new Error('Bitte einen Namen mit höchstens 100 Zeichen angeben.');
   return input.trim();
 }
+/** Optional campaign grouping for a short link. Empty means no campaign. */
+export function validateShortLinkCampaign(input:unknown):string {
+  if(input===undefined||input===null||input==='')return '';
+  if(typeof input!=='string'||input.trim().length>100||/[\u0000-\u001f\u007f]/.test(input))throw new Error('Bitte einen Kampagnennamen mit höchstens 100 Zeichen angeben.');
+  return input.trim();
+}
 export function isShortLink(value:unknown,code:string):value is ShortLink {
   if(!value||typeof value!=='object')return false;
   const r=value as ShortLink;
-  if(Object.keys(r).some(key=>!['code','label','target','active','clicks','createdAt','revision'].includes(key)))return false;
-  try{return SHORT_LINK_CODE.test(code)&&r.code===code&&validateShortLinkLabel(r.label)===r.label&&validateShortLinkTarget(r.target)===r.target&&typeof r.active==='boolean'&&Number.isSafeInteger(r.clicks)&&r.clicks>=0&&r.clicks<=Number.MAX_SAFE_INTEGER&&typeof r.createdAt==='string'&&!Number.isNaN(Date.parse(r.createdAt));}catch{return false;}
+  if(Object.keys(r).some(key=>!['code','label','target','active','clicks','createdAt','campaign','revision'].includes(key)))return false;
+  try{return SHORT_LINK_CODE.test(code)&&r.code===code&&validateShortLinkLabel(r.label)===r.label&&validateShortLinkTarget(r.target)===r.target&&typeof r.active==='boolean'&&Number.isSafeInteger(r.clicks)&&r.clicks>=0&&r.clicks<=Number.MAX_SAFE_INTEGER&&typeof r.createdAt==='string'&&!Number.isNaN(Date.parse(r.createdAt))&&(r.campaign===undefined||(typeof r.campaign==='string'&&r.campaign.length>0&&validateShortLinkCampaign(r.campaign)===r.campaign));}catch{return false;}
 }
 /** GET navigations count requests, never people. HEAD and prefetches are not clicks. */
 export function shouldCountShortLink(method:string,headers:{get(name:string):string|null}):boolean {

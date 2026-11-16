@@ -70,6 +70,33 @@ existing shared `https://static.paulikreisch.de/f/<uuid>` assets. The file manag
 link opens the existing static manager. No files are copied or uploaded, no
 private asset is silently shared, and computed paths are not supported.
 
+
+### Files and campaign short links on the manager host
+
+The manager host `m.paulikreisch.de` additionally exposes the existing private
+file library and the existing short links inside the studio (`Dateien` and
+`Kurzlinks` sections). Both reuse the audited modules and records; nothing is
+copied, migrated or duplicated:
+
+- `src/lib/studio-integrations.ts` adapts `PrivateAssetService`
+  (private-asset-*) and `shortLinkRepository`/`createManagedShortLink`
+  (short-links-*) for the studio handler, with HTTP-status-carrying errors.
+- `/api/marketing/files*` serves list/upload/publish/withdraw/delete/retry and
+  pending deletions. Uploads are raw bytes with a hard streaming cap at the
+  policy limit; validation, content re-encoding, private-first storage,
+  confirmed publication and tombstone deletion stay in the shared service.
+- `/api/marketing/links*` serves list/create/edit/activate/delete. Short links
+  gained an optional `campaign` field; records without it stay valid and the
+  analytics panel is unchanged. Click reporting stays aggregate request counts
+  grouped by campaign - no IP, referrer, user-agent or per-click records.
+- Both sections are manager-host only (404 on lp.*/ads.*), use the studio
+  session plus CSRF, and are constructed only when the accepted
+  `PRIVATE_ASSET_RELEASE`/`SHORT_LINK_RELEASE` gates are set. The file admin
+  allowlist still applies on top of the studio login.
+- The studio asset CSP now allows images from `https://static.paulikreisch.de`
+  so published library images render as thumbnails. Private files have no
+  preview endpoint.
+
 ### Formats and boundaries
 
 Structured LPs contain at most 12 funnel steps and own-static images. Google

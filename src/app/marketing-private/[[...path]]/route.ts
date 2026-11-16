@@ -3,6 +3,7 @@ import { requestHost } from '@/lib/admin-host-policy';
 import { getAdminAuth, getAdminStorage } from '@/lib/firebase-admin';
 import { isAdminEmail } from '@/lib/admin-allowlist';
 import { createFirebaseMarketing } from '@/marketing/firebase-binding.mjs';
+import { createStudioFiles, createStudioLinks } from '@/lib/studio-integrations';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -18,9 +19,14 @@ async function route(request: Request, context: { params: Promise<{ path?: strin
   if (!secret || secret.length < 32) return new Response('Not ready', { status: 503 });
   const apiKey = process.env.MARKETING_FIREBASE_API_KEY;
   if (!apiKey) return new Response('Not ready', { status: 503 });
+  const bucket = getAdminStorage().bucket('hallo-welt-paulik-reisch.firebasestorage.app');
   handler ??= createFirebaseMarketing({
-    bucket: getAdminStorage().bucket('hallo-welt-paulik-reisch.firebasestorage.app'),
+    bucket,
     firebaseAuth: getAdminAuth(), apiKey, secret, allowedEmail: isAdminEmail,
+    // Reuse the accepted private-asset and short-link releases on their shared
+    // private bucket prefix. Without those gates the studio sections stay 404.
+    files: process.env.PRIVATE_ASSET_RELEASE === 'private-prefix-v1-accepted' ? createStudioFiles(bucket) : undefined,
+    links: process.env.SHORT_LINK_RELEASE === 'private-prefix-v1-accepted' ? createStudioLinks(bucket) : undefined,
   });
   const { path = [] } = await context.params;
   const url = new URL(request.url);
