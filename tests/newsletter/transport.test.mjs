@@ -69,3 +69,10 @@ test('omitted feedback configuration fails closed even when SEND is enabled',asy
  const sender=createNewsletterSender({enabled:true,from:'a@example.invalid',getSubscribers:()=>{throw Error('must not read recipients');}});
  await assert.rejects(()=>sender.send(doc,approval),/Rückkanal/);
 });
+
+test('fixed transport probe HTML is escaped without changing approval identity or content',async()=>{
+ const f=probeFixture();await f.transport.send(approval);
+ assert.equal(f.messages[0].m.html,'<p>Das ist der einmalige technische Versandtest von Paulik &amp; Reisch. Es wurde kein Newsletter-Abo angelegt und niemand sonst angeschrieben. Antworten gehen an philipp.l.paulik@gmail.com.</p>');
+ assert.equal(f.messages[0].m.text,TRANSPORT_PROBE.text);
+ assert.equal(f.messages[0].opts.idempotencyKey,'newsletter-transport-v1:'+PROBE_DIGEST);
+});

@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { initializeFirebase } from '@/firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { loadAdminFeedback } from './actions';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableHead, TableHeader, TableRow, TableCell } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
@@ -15,7 +14,6 @@ interface FeedbackEntry {
   vote: 'up' | 'down' | null;
   reasons: string[];
   date: string;
-  createdAt: any;
 }
 
 interface FeedbackStats {
@@ -40,15 +38,7 @@ export default function AdminFeedbackDashboard() {
     // Load feedback data from Firestore
     const loadFeedback = async () => {
       try {
-        const { firestore } = initializeFirebase();
-        const feedbackRef = collection(firestore, 'worthaft-feedback');
-        
-        // Get all feedback documents, ordered by date descending
-        const feedbackSnapshot = await getDocs(feedbackRef);
-        const feedbackList = feedbackSnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-        } as FeedbackEntry));
+        const feedbackList = await loadAdminFeedback();
 
         setFeedbacks(feedbackList.sort((a, b) => 
           new Date(b.date).getTime() - new Date(a.date).getTime()
