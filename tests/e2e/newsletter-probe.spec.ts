@@ -1,15 +1,13 @@
 import {test,expect,type Page,type Route} from '@playwright/test';
-import fs from 'node:fs/promises';
-import path from 'node:path';
-const root=path.resolve(process.cwd());
+import {assets} from '../../src/marketing/generated-assets.mjs';
 const phrase='EINMALIGEN VERSANDTEST AN PHILIPP SENDEN';
 const probe={enabled:true,configured:true,digest:'fixture-digest',phrase,to:'philipp.l.paulik@gmail.com',from:'Paulik & Reisch <newsletter@news.paulikreisch.de>',replyTo:'philipp.l.paulik@gmail.com',subject:'Paulik & Reisch: Versandtest',text:'Fixture only. No email is sent.',warning:'Exactly one fixture.'};
 async function studio(page:Page,{enabled=true,fail=false}={}){
  const posts:unknown[]=[];
  await page.route('**/*',async(route:Route)=>{
   const u=new URL(route.request().url()),p=u.pathname;
-  if(p==='/assets/studio.js'||p==='/assets/studio.css')return route.fulfill({path:path.join(root,'tools/marketing/public',p.split('/').pop()!),contentType:p.endsWith('.js')?'text/javascript':'text/css'});
-  if(p==='/')return route.fulfill({body:await fs.readFile(path.join(root,'tools/marketing/public/studio.html'),'utf8'),contentType:'text/html'});
+  if(p==='/assets/studio.js'||p==='/assets/studio.css')return route.fulfill({body:assets[p].body,contentType:assets[p].type});
+  if(p==='/')return route.fulfill({body:assets['/'].body,contentType:'text/html'});
   if(p==='/api/marketing/session')return route.fulfill({json:{csrf:'fixture',role:'manager'}});
   if(p==='/api/marketing/documents')return route.fulfill({json:[]});
   if(p==='/api/marketing/newsletter/transport-test'){
