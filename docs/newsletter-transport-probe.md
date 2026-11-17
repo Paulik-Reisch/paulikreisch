@@ -13,3 +13,13 @@ npx playwright test --config playwright.newsletter.config.ts
 ```
 
 For a locally installed Chrome, set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` to its binary. The suite covers exact confirmation, no native dialog, cancellation, disabled runtime, double-click protection, uncertain results and five viewport widths. Screenshots are written to the test output directory. Existing server transport tests remain in `tests/newsletter/transport.test.mjs`.
+
+
+## Closed live test, 17 November 2026
+
+The approved single test was delivered to Gmail at 12:03:25 CET. Its durable
+claim remains in private Storage. The temporary runtime flag was removed again;
+the authenticated endpoint reported disabled at 12:08 CET. Do not reactivate or
+reset the claim to repeat this completed test. No reader, newsletter or public
+registration was created. See `newsletter-verification-2026-11-17.md` for the
+separate route, feedback, rendering and rollout boundaries.

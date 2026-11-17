@@ -96,13 +96,26 @@ function showNewsletterPreflight(p){
 
   panel.scrollIntoView({block:'start'});
 }
-$('#send-check').onclick=async()=>{if(!current||current.draft.kind!=='newsletter')return;try{
-  const p=await api('/documents/'+current.id+'/send-preview',{method:'POST',body:'{}'});showNewsletterPreflight(p);
-  if(!p.ready){status('Private Prüfung abgeschlossen. Nichts wurde versendet.');return;}
-  const typed=prompt(`Betreff: ${p.subject}\nAbsender: ${p.from}\nBestätigte Empfänger: ${p.count}\n\nZum Senden exakt eintippen: ${p.phrase}`);
-  if(typed===null)return;
-  const r=await api('/documents/'+current.id+'/send',{method:'POST',body:JSON.stringify({digest:p.digest,phrase:typed})});status(`Gesendet: ${r.sent}, fehlgeschlagen: ${r.failed}, nicht versucht: ${r.notAttempted}.`);
-}catch(e){status(e.message,true);}};
+const campaignAttempts=new Set();
+$('#send-check').onclick=async()=>{
+  const button=$('#send-check');
+  if(!current||current.draft.kind!=='newsletter'||button.disabled)return;
+  const selected=current;button.disabled=true;
+  try{
+    const p=await api('/documents/'+selected.id+'/send-preview',{method:'POST',body:'{}'});
+    if(current!==selected||$('#editor').hidden)return;
+    showNewsletterPreflight(p);
+    if(!p.ready){status('Private Prüfung abgeschlossen. Nichts wurde versendet.');return;}
+    const key=selected.id+':'+p.digest;
+    if(campaignAttempts.has(key)){status('Dieser Versand wurde bereits versucht. Ergebnis prüfen, nicht erneut senden.',true);return;}
+    const question=`Betreff: ${p.subject}\nAbsender: ${p.from}\nBestätigte Empfänger: ${p.count}`;
+    if(!await confirmAction(question,'Newsletter senden',$('#newsletter-preflight'),p.phrase)||current!==selected||$('#editor').hidden)return;
+    campaignAttempts.add(key);
+    const r=await api('/documents/'+selected.id+'/send',{method:'POST',body:JSON.stringify({digest:p.digest,phrase:p.phrase})});
+    status(`Gesendet: ${r.sent}, fehlgeschlagen: ${r.failed}, nicht versucht: ${r.notAttempted}.`);
+  }catch(e){status(e.message+' Bei unklarem Ergebnis nicht erneut senden.',true);}
+  finally{button.disabled=false;}
+};
 $('#export').onclick=async()=>{if(!current)return;try{const data=await api('/documents/'+current.id+'/export');if(current.draft.kind==='newsletter'){download(current.draft.slug+'.html','text/html;charset=utf-8',data.html);download(current.draft.slug+'.txt','text/plain;charset=utf-8',data.text);download(current.draft.slug+'-requirements.json','application/json',JSON.stringify({subject:data.subject,preheader:data.preheader,sendReady:data.sendReady,requirements:data.requirements},null,2));}else download(current.draft.slug+'.json','application/json',JSON.stringify(data,null,2));status('Export erstellt. Nichts wurde versendet oder als Kampagne geschaltet.');}catch(e){status(e.message,true);}};
 for(const action of ['publish','unpublish','delete'])$('#'+action).onclick=async()=>{if(!current)return;const question=action==='publish'?'Diesen gespeicherten Inhalt öffentlich freigeben? Alle Texte, Ziele und Bilder geprüft?':action==='unpublish'?'Veröffentlichung zurückziehen? Die öffentliche URL ist danach nicht mehr verfügbar.':'Diesen unveröffentlichten Entwurf endgültig löschen?';const selected=current;if(!await confirmAction(question,action==='delete'?'Endgültig löschen':action==='publish'?'Öffentlich freigeben':'Zurückziehen'))return;if(current!==selected)return;try{const result=await api('/documents/'+current.id+(action==='delete'?'':'/'+action),{method:action==='delete'?'DELETE':'POST',body:JSON.stringify({revision:current.revision})});await refresh();if(action==='delete')view('workspace');else edit(result);status(action==='publish'?'Gespeicherter Stand veröffentlicht.':action==='unpublish'?'Veröffentlichung zurückgezogen.':'Entwurf gelöscht.');}catch(e){status(e.message,true);}};
 const logout=async()=>{try{await api('/logout',{method:'POST',body:'{}'});csrf='';documents=[];current=null;view('login');status('Abgemeldet.');}catch(e){status(e.message,true);}};
