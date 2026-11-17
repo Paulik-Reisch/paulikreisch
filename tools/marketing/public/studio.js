@@ -1,16 +1,18 @@
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 let documents=[],current=null,filter='all',csrf='',role='manager',codeState={html:'',css:'',js:''},codeEditor=null,activeLanguage='html';
 let pendingConfirmation=null;
-function confirmAction(question,label,mount){
+function confirmAction(question,label,mount,phrase){
   pendingConfirmation?.(false);
   return new Promise(resolve=>{
     const panel=el('section',null,'action-confirmation');panel.setAttribute('role','group');panel.setAttribute('aria-labelledby','confirmation-question');
-    const text=el('p',question);text.id='confirmation-question';
+    const text=el('p',question);text.id='confirmation-question';text.style.whiteSpace='pre-line';
     const buttons=el('div'),cancel=el('button','Abbrechen'),accept=el('button',label,'primary');cancel.type=accept.type='button';
     let settled=false;const finish=value=>{if(settled)return;settled=true;panel.remove();pendingConfirmation=null;resolve(value);};
     pendingConfirmation=finish;cancel.onclick=()=>finish(false);accept.onclick=()=>finish(true);
     panel.onkeydown=event=>{if(event.key==='Escape'){event.preventDefault();finish(false);}};
-    buttons.append(cancel,accept);panel.append(text,buttons);(mount??$('.editor-actions')).after(panel);cancel.focus();
+    panel.append(text);
+    if(phrase){const label=el('label','Zum einmaligen Senden exakt eintippen: '+phrase),input=el('input');input.autocomplete='off';input.spellcheck=false;accept.disabled=true;input.oninput=()=>{accept.disabled=input.value!==phrase;};accept.onclick=()=>{if(input.value===phrase)finish(true);};label.append(input);panel.append(label);}
+    buttons.append(cancel,accept);panel.append(buttons);(mount??$('.editor-actions')).after(panel);cancel.focus();
   });
 }
 const kindNames={lp:'Landingpage',google:'Google',meta:'Meta',other:'Anzeige',newsletter:'Newsletter'};
@@ -80,15 +82,16 @@ function showNewsletterPreflight(p){
   panel.append(el('p','Geplante Browseradresse: '+p.browserUrl));
   panel.append(el('p','Nur private Prüfung. Keine Mail, kein persönlicher Link und kein Abruf beim Versandanbieter.'));
   const probe=el('button','Technischen Einzeltest prüfen');probe.type='button';
-  probe.onclick=async()=>{try{
+  let probeAttempted=false;
+  probe.onclick=async()=>{if(probe.disabled||probeAttempted)return;probe.disabled=true;try{
     const p=await api('/newsletter/transport-test');
     const text=`An: ${p.to}\nVon: ${p.from}\nAntworten: ${p.replyTo}\nBetreff: ${p.subject}\n\n${p.text}\n\n${p.warning}`;
-    if(!p.enabled||!p.configured){alert(text+'\n\nTest ist gesperrt. Nichts wurde versendet.');return;}
-    const phrase=prompt(text+'\n\nZum einmaligen Senden exakt eintippen: '+p.phrase);
-    if(phrase===null)return;
-    const result=await api('/newsletter/transport-test',{method:'POST',body:JSON.stringify({digest:p.digest,phrase})});
+    if(!p.enabled||!p.configured){status(text+'\n\nTest ist gesperrt. Nichts wurde versendet.',true);return;}
+    if(!await confirmAction(text,'Einzelne Testmail senden',probe,p.phrase))return;
+    probeAttempted=true;
+    const result=await api('/newsletter/transport-test',{method:'POST',body:JSON.stringify({digest:p.digest,phrase:p.phrase})});
     status(result.accepted?'Technische Einzelmail vom Anbieter angenommen. Posteingang prüfen; dies ist kein Zustellnachweis.':'Keine Annahme bestätigt.',!result.accepted);
-  }catch(e){status(e.message+' Bei unklarem Versuch nicht erneut senden.',true);}};
+  }catch(e){status(e.message+' Bei unklarem Versuch nicht erneut senden.',true);}finally{probe.disabled=probeAttempted;}};
   panel.append(probe);
 
   panel.scrollIntoView({block:'start'});
