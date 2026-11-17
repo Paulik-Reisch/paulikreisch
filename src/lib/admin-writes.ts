@@ -1,4 +1,5 @@
 import 'server-only';
+import { getSession } from './session';
 
 import { Timestamp, type DocumentData } from 'firebase-admin/firestore';
 import { getAdminDb } from '@/lib/firebase-admin';
@@ -146,7 +147,8 @@ export async function deleteLandingPage(slug: string, user: string) {
 }
 
 // --- NEWSLETTER ---
-async function getNewsletterAdmin(id: string): Promise<Newsletter | null> {
+export async function getNewsletterAdmin(id: string): Promise<Newsletter | null> {
+    if (!await getSession()) throw new Error('Nicht authentifiziert');
     const docRef = getAdminDb().collection('newsletters').doc(id);
     const docSnap = await docRef.get();
     if (!docSnap.exists) return null;
