@@ -1,6 +1,8 @@
 # Newsletter über Resend (news.paulikreisch.de)
 
-Status: Resend-Einbau vorhanden, neue öffentliche Newsletter-Schreibpfade und Resend-Versand gesperrt. Die private Studio-Prüfung liest Status und bestätigte Empfängerzahl ohne diese Gates zu öffnen. Der alte MailerSend-Dispatcher und der Anmelde-Fallback sind stillgelegt. Nur signierte Abmeldung ist live. Das nächste Bundle bindet den separat schaltbaren Feedback-Rückkanal ein.
+Stand 2026-11-17, 12:10 CET: Resend ist eingebunden. Genau eine freigegebene technische Einzelmail wurde um 12:03:25 CET in Philipps Gmail-Posteingang (Kategorie Werbung) nachgewiesen; Resend meldet Delivered. Das feste Test-Gate wurde anschließend wieder ausgeschaltet, sein dauerhafter Claim bleibt bestehen. Das belegt weder die Newsletter-Gestaltung in Mailclients noch reale Bounce-/Complaint-Zustellung.
+
+Die neue öffentliche Anmeldung, allgemeiner Kampagnenversand und Funnel bleiben gesperrt. Signierte Abmeldung und der separat abgesicherte Feedback-Rückkanal sind konfiguriert. Der Sommer-Newsletter bleibt privat (Revision 5, kein veröffentlichter Stand). Null bestätigte Empfänger ist ein erwarteter Zustand, kein Grund, künstliche Anmeldungen anzulegen.
 
 ## Bausteine
 - Absender-Domain `news.paulikreisch.de` bei Resend (Free-Plan, Limits gelten pro Produkt). DNS bei Netcup: DKIM-TXT und zwei CNAMEs (`send.news`, `rsend.news`). Kein MX, kein Apex-DMARC.
@@ -12,7 +14,7 @@ Status: Resend-Einbau vorhanden, neue öffentliche Newsletter-Schreibpfade und R
 - Studio (m.*): Newsletter-Entwurf → "Versand prüfen" zeigt Anzahl, Absender, Betreff. Senden braucht den Digest dieser Vorschau und die getippte Phrase `SENDEN <Anzahl>`.
 
 ## Voraussetzungen vor dem Einschalten (Reihenfolge)
-1. **Firestore-Rules**: am 2026-11-16 16:11 in der Konsole veröffentlicht (Stand in `firestore.rules`): `subscribers` und `newsletter_recipients` nur für Admins lesbar, alles andere unverändert. Per REST-Abruf eines nicht existierenden Dokuments geprüft: 403 für beide, 404 für `articles` und `users`. Rollback: vorherige Version im Regelverlauf der Konsole. `users` ist bewusst nicht angefasst.
+1. **Firestore-Rules**: Empfängerlisten dürfen nicht öffentlich lesbar sein. Die frühere pauschale Regelbeschreibung vom 16.11. ist historisch; die Regelarbeit wurde separat übernommen und wird hier nicht verändert. Vor einer späteren Freischaltung gilt der dann geprüfte Live-Regelstand, nicht diese Dokumentation.
 2. Secrets (Secret Manager / App Hosting): `NEWSLETTER_TOKEN_SECRET` (≥32 Zeichen), `NEWSLETTER_ID_KEY` (≥32 Zeichen, nie rotieren ohne Migration, Backup im Vault), `NEWSLETTER_RESEND_API_KEY` (Sending-only, auf die Domain beschränkt; bewusst nicht `RESEND_API_KEY`, den Namen belegt schon ein vorhandenes, ungenutztes Secret, das unberührt bleibt), `NEWSLETTER_RESEND_WEBHOOK_SECRET`.
    Die Einträge in `apphosting.yaml` kommen erst, wenn die Secrets existieren, sonst scheitert der Rollout.
 3. Umgebung: `NEWSLETTER_FROM`, optional `NEWSLETTER_REPLY_TO`, `NEWSLETTER_BASE_URL` (Standard https://paulikreisch.de), `NEWSLETTER_DAILY_LIMIT` (Standard 100).
@@ -36,7 +38,7 @@ Die Server-Action `subscribeToNewsletterAction` (Footer, Hero/Funnel, Shop, Shop
 ## Offen (konkret)
 - Einwilligungstext: Als Nachweis wird der Satz der Bestätigungsseite gespeichert (`CONSENT_TEXT` in `src/newsletter/doi.mjs`, identisch mit `/nl/confirm`). Die Formulare zeigen je Quelle andere Texte: Footer "Ich akzeptiere die Datenschutzerklärung und die AGB", Newsletter-Block "...stimme dem Erhalt des Newsletters zu. Einmal wöchentlich, jederzeit abbestellbar", Shop-Seite nur "Datenschutzerklärung gelesen". Der Satz "Einmal wöchentlich" steht nur dort. Der Fußtext des Newsletters ("weil du dich für den Newsletter angemeldet hast") ist ungeprüft. Keine juristische Zusicherung.
 - Honeypot-Feld `website` ist in den Formularen nicht eingebaut. Die Route akzeptiert es, ohne dass es Pflicht ist.
-- Zustellbarkeit ist nicht gemessen. Keine Aussage zu einzelnen Mailclients.
+- Eine technische Klartext-Testmail kam am 17.11. bei Gmail an. Das ist keine allgemeine Zustellbarkeitsmessung und kein Gmail-/Outlook-Renderingtest des Sommer-Newsletters.
 
 ## Private Status- und Versandprüfung
 - `m.*` stellt die Prüfung auch bei `NEWSLETTER_STORE_ENABLED` aus bereit. Die bestehende verifizierte Studio-Sitzung und CSRF-Prüfung gelten weiter.
@@ -78,8 +80,9 @@ approval is implied by deploying this code.
 
 ## Scoped provider feedback
 The isolated Resend webhook subscribes only to `email.bounced`,
-`email.complained`, `email.suppressed`. It remains disabled until the signature
-secret is safely bound and the endpoint is verified. The route uses
+`email.complained`, `email.suppressed`. It was enabled on 2026-11-16 after the
+signature secret was bound; real provider suppression-event delivery remains
+unproven. The route uses
 `NEWSLETTER_RESEND_WEBHOOK_SECRET` and the separate default-off
 `NEWSLETTER_FEEDBACK_ENABLED`. It verifies the raw signed body and timestamp
 before constructing any DB adapter. Only the exact configured From is accepted:
@@ -97,7 +100,18 @@ Provider payload references checked 2026-11-16:
 Runtime binding prepared 2026-11-16: signature secret version 1 exists Enabled;
 the actual App Hosting compute service account has Secret Accessor on this secret
 only. This bundle pins `NEWSLETTER_RESEND_WEBHOOK_SECRET@1` and sets only
-`NEWSLETTER_FEEDBACK_ENABLED=1`. The provider webhook remains disabled until live
-endpoint acceptance. STORE/SEND/FUNNEL and the transport probe remain unset/off.
+`NEWSLETTER_FEEDBACK_ENABLED=1`. The provider webhook was enabled after endpoint checks. STORE/SEND/FUNNEL
+and the fixed transport probe are now unset/off.
 A configured callback and synthetic fixture acceptance do not prove real provider
-event delivery or inbox delivery. No actual or test email has been sent.
+event delivery. The one approved technical email was delivered to Gmail on
+2026-11-17. It did not generate a bounce, complaint or suppression event.
+
+
+## Verification scope after the technical probe
+
+See `newsletter-verification-2026-11-17.md` for the distinction between live
+results, isolated route tests and work that is deliberately still gated. The
+fixed probe has a permanent create-only claim. Ordinary campaigns currently rely
+on stable provider idempotency keys, not that probe claim. A same-session UI
+attempt guard is not durable campaign send history and must not be described as
+one.
