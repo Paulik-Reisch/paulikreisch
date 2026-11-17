@@ -11,7 +11,7 @@ import {
   updateExcerpt,
   addAdminLog as addLog,
 } from "@/lib/admin-writes";
-import { getNewsletter } from "@/lib/firestore";
+import { getNewsletterAdmin } from "@/lib/admin-writes";
 import { revalidatePath, updateTag } from "next/cache";
 import { LEGAL_PAGES_CACHE_TAG } from "@/lib/legal-pages-cache";
 import { getSession } from "@/lib/session";
@@ -193,7 +193,7 @@ export async function sendNewsletterAction(
   
   try {
     // 1. Get newsletter
-    const newsletter = await getNewsletter(newsletterId);
+    const newsletter = await getNewsletterAdmin(newsletterId);
     if (!newsletter || !newsletter.content) {
       return { success: false, message: "Newsletter nicht gefunden oder hat keinen Inhalt." };
     }
