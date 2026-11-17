@@ -103,9 +103,3 @@ env:
     value: "1"
     availability:
       - RUNTIME
-
-  # Temporary fixed transport probe; remove after the single verified attempt.
-  - variable: NEWSLETTER_TRANSPORT_TEST_ENABLED
-    value: "1"
-    availability:
-      - RUNTIME
