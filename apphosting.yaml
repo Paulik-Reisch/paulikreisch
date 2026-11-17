@@ -103,9 +103,3 @@ env:
     value: "1"
     availability:
       - RUNTIME
-
-  # Approved fixed single-recipient technical probe only. Durable claim forbids retries.
-  - variable: NEWSLETTER_TRANSPORT_TEST_ENABLED
-    value: "1"
-    availability:
-      - RUNTIME
