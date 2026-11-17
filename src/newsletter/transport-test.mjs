@@ -1,3 +1,4 @@
+import sanitizeHtml from 'sanitize-html';
 import {createHash} from 'node:crypto';
 import {SendRefused} from './campaign.mjs';
 /** Fixed non-promotional probe. No recipient input, newsletter store or links. */
@@ -22,7 +23,7 @@ export function createTransportTest({enabled,getProvider,claim,configured}){
       // timeout/crash, including after the provider idempotency window expires.
       if(!await claim(PROBE_ID))throw new SendRefused('Einzeltest wurde bereits beansprucht. Keine Wiederholung.');
       const {to,...message}=TRANSPORT_PROBE;
-      const result=await getProvider().send({...message,to:[to],html:'<p>'+message.text.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')+'</p>'},{idempotencyKey:PROBE_ID+':'+PROBE_DIGEST});
+      const result=await getProvider().send({...message,to:[to],html:'<p>'+sanitizeHtml(message.text,{allowedTags:[],allowedAttributes:{}})+'</p>'},{idempotencyKey:PROBE_ID+':'+PROBE_DIGEST});
       return {accepted:true,providerId:result.id,recipient:to};
     },
   };
