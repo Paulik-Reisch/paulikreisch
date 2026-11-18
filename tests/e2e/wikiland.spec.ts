@@ -2,18 +2,32 @@ import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { dailyArticle, getGuessHits, isCommonWord, normalizeWord, tokenize } from '../../src/lib/wikiland-engine';
 import { WIKI_COOKIE } from '../../src/lib/wikiland-storage';
+import { WIKI_ARTICLES } from '../../src/lib/wikiland-data';
+
+const fixtureParagraphs = ['Eine Himmelsblume wächst am Himmel. Die Himmelsblume ist sichtbar.', 'Andere Pflanzen wachsen an einem fernen Ort.'];
+
+// Deterministic MediaWiki responses: no network and no dependence on the live site.
+test.beforeEach(async ({ page }) => {
+  await page.route('https://de.wikipedia.org/w/api.php?*', async route => {
+    const revision = Number(new URL(route.request().url()).searchParams.get('oldid'));
+    const article = WIKI_ARTICLES.find(item => item.revisionId === revision);
+    if (!article) return route.fulfill({ status: 404 });
+    const html = `<div class="mw-parser-output">${fixtureParagraphs.map(text => `<p>${text}</p>`).join('')}<h2>Weitere Abschnitte</h2><ul><li>Wolkenpferd erscheint später.</li></ul>${'<p>Zusatztext zum langen Artikel.</p>'.repeat(35)}<p>Wolkenpferd am Ende.</p><script>window.wikilandInjected = true</script><img src="https://invalid.example/tracker" onerror="alert(1)"></div>`;
+    await route.fulfill({ json: { parse: { title: article.title, revid: revision, text: html } }, headers: { 'access-control-allow-origin': '*' } });
+  });
+});
 
 async function openGame(page: Page) {
   await page.goto('/game-labs/wikiland');
   await expect(page.getByLabel('Dein Wort', { exact: true })).toBeEnabled();
   const date = await page.evaluate(() => new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()));
-  return dailyArticle(date);
+  return { ...dailyArticle(date), paragraphs: fixtureParagraphs };
 }
 const attemptCount = (page: Page) => page.getByText('Versuche', { exact: true }).locator('..').locator('strong');
 
 test('guesses reveal all matches, reject duplicates, resume in cookies and use no account or other storage', async ({ page, context }) => {
   const requests: string[] = [], errors: string[] = [];
-  page.on('request', request => { if (/identitytoolkit|firestore.googleapis.com|securetoken|\/api\/|wikipedia\.org/.test(request.url())) requests.push(request.url()); });
+  page.on('request', request => { if (/identitytoolkit|firestore.googleapis.com|securetoken/.test(request.url())) requests.push(request.url()); });
   page.on('pageerror', error => errors.push(error.message));
   const article = await openGame(page);
   const body = page.getByRole('article', { name: 'Verborgener Wikipedia-Artikel' });
@@ -82,7 +96,7 @@ test('hints, mode replacement confirmations and give-up remain distinct from win
   await expect(page.getByRole('heading', { name: 'Artikel aufgedeckt', exact: true })).toBeVisible();
 });
 
-for (const width of [320, 390, 1440]) {
+for (const width of [320, 375, 414, 768, 1440]) {
   test(`layout and accessible redactions work at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await openGame(page);
@@ -90,7 +104,7 @@ for (const width of [320, 390, 1440]) {
     const inputBox = await page.getByLabel('Dein Wort', { exact: true }).boundingBox();
     expect(inputBox?.x).toBeGreaterThanOrEqual(0);
     expect((inputBox?.x ?? 0) + (inputBox?.width ?? 0)).toBeLessThanOrEqual(width);
-    if (width === 390) {
+    if (width === 375) {
       const result = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
       expect(result.violations).toEqual([]);
     }
@@ -140,4 +154,43 @@ test('Wikiland is linked from Game Labs and navigates back without provider erro
   await expect(page.getByLabel('Dein Wort', { exact: true })).toBeEnabled();
   await page.getByRole('link', { name: 'Zu Game Labs', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Was spielen wir heute?' })).toBeVisible();
+});
+
+
+test('full article structure, later matches and unsafe markup are handled safely', async ({ page }) => {
+  await openGame(page);
+  const body = page.getByRole('article', { name: 'Verborgener Wikipedia-Artikel' });
+  await page.getByLabel('Dein Wort', { exact: true }).fill('Wolkenpferd');
+  await page.getByLabel('Dein Wort', { exact: true }).press('Enter');
+  await expect(page.getByRole('status').filter({ hasText: '2 Treffer' })).toBeVisible();
+  await page.getByRole('button', { name: 'Weitere Abschnitte anzeigen' }).click();
+  await expect(body.getByText('Wolkenpferd', { exact: true })).toHaveCount(2);
+  await expect(body.locator('ul li')).toHaveCount(1);
+  await expect(body.locator('script, img')).toHaveCount(0);
+  expect(await page.evaluate(() => (window as unknown as { wikilandInjected?: boolean }).wikilandInjected)).toBeUndefined();
+  await page.reload();
+  await expect(page.getByLabel('Dein Wort', { exact: true })).toBeEnabled();
+  await page.getByRole('button', { name: 'Weitere Abschnitte anzeigen' }).click();
+  await expect(body.getByText('Wolkenpferd', { exact: true })).toHaveCount(2);
+});
+
+test('an unavailable Wikipedia API keeps the saved game and offers retry', async ({ page }) => {
+  await openGame(page);
+  await page.getByLabel('Dein Wort', { exact: true }).fill('Wolkenpferd');
+  await page.getByLabel('Dein Wort', { exact: true }).press('Enter');
+  await expect(attemptCount(page)).toHaveText('1');
+  await page.route('https://de.wikipedia.org/w/api.php?*', route => route.fulfill({ status: 503, headers: { 'access-control-allow-origin': '*' } }));
+  await page.reload();
+  await expect(page.getByRole('alert')).toContainText('Spielstand bleibt erhalten');
+  await page.unroute('https://de.wikipedia.org/w/api.php?*');
+  // Install the deterministic API fixture again for retry.
+  await page.route('https://de.wikipedia.org/w/api.php?*', async route => {
+    const revision = Number(new URL(route.request().url()).searchParams.get('oldid'));
+    const article = WIKI_ARTICLES.find(item => item.revisionId === revision)!;
+    await route.fulfill({ json: { parse: { title: article.title, revid: revision, text: `<p>${fixtureParagraphs[0]}</p><p>Wolkenpferd</p>` } }, headers: { 'access-control-allow-origin': '*' } });
+  });
+  await page.getByRole('button', { name: 'Erneut versuchen' }).click();
+  await expect(page.getByLabel('Dein Wort', { exact: true })).toBeEnabled();
+  await expect(attemptCount(page)).toHaveText('1');
+  await expect(page.getByRole('article')).toContainText('Wolkenpferd');
 });

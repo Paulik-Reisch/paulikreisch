@@ -1,14 +1,15 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import { createElement, memo, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ArrowUpRight, CircleHelp, Flag, Lightbulb, RotateCw, Share2 } from 'lucide-react';
 import { WikipediaIcon } from '@/components/ui/icons/wikipedia-icon';
 import { Logo } from '@/components/ui/logo';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { applyHint, countLetters, createGame, getArticle, getGuessHits, isRevealed, isWon, normalizeWord, submitGuess, tokenize, type WikiGame, type WikiToken } from '@/lib/wikiland-engine';
+import { applyHint, countLetters, createGame, getArticle, getGuessHits, hasValidHints, isRevealed, isWon, normalizeWord, submitGuess, tokenize, upgradeLegacyGame, type WikiGame, type WikiToken } from '@/lib/wikiland-engine';
 import { loadWikiGame, saveWikiGame } from '@/lib/wikiland-storage';
+import { fetchWikipediaRevision, prepareWikipediaArticle, type ArticleNode, type FullWikiArticle } from '@/lib/wikiland-wikipedia';
 import styles from './wikiland.module.css';
 
 function today() {
@@ -19,9 +20,36 @@ function clock(seconds: number) {
   return `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`;
 }
 
+function renderTokens(tokens: WikiToken[], game: WikiGame, article: FullWikiArticle['article'], highlight: string, inTitle = false) {
+  return tokens.map((token, index) => {
+    if (!token.word || isRevealed(token, game, inTitle, article)) {
+      const highlighted = token.word && highlight && token.key === highlight;
+      return <span key={index} className={highlighted ? styles.highlight : undefined}>{token.text}</span>;
+    }
+    const length = countLetters(token.text);
+    return <span key={index} className={styles.redacted} style={{ width: `${length}ch` }} role="img" aria-label={`Verborgenes Wort, ${length} Buchstaben`}><span aria-hidden="true">{length}</span></span>;
+  });
+}
+
+function renderNode(node: ArticleNode, index: number, game: WikiGame, article: FullWikiArticle['article'], highlight: string): React.ReactNode {
+  if (node.type === 'text') return <span key={index}>{renderTokens(node.tokens, game, article, highlight)}</span>;
+  if (node.tag === 'br' || node.tag === 'hr') return createElement(node.tag, { key: index });
+  return createElement(node.tag, { key: index }, node.children.map((child, childIndex) => renderNode(child, childIndex, game, article, highlight)));
+}
+
+// Timer updates must not rebuild the potentially enormous article DOM every second.
+const ArticleBody = memo(function ArticleBody({ full, game, highlight, limit, onMore }: { full: FullWikiArticle; game: WikiGame; highlight: string; limit: number; onMore: () => void }) {
+  const article = full.article;
+  return <><h2 className={styles.articleTitle}>{renderTokens(tokenize(article.title), game, article, highlight, true)}</h2><div className={styles.wikiContent}>{full.nodes.slice(0, limit).map((node, index) => renderNode(node, index, game, article, highlight))}</div>{limit < full.nodes.length && <button className={styles.secondary} type="button" onClick={onMore}>Weitere Abschnitte anzeigen</button>}{(isWon(game, article) || game.givenUp) && <a href={article.sourceUrl} target="_blank" rel="noreferrer" className={styles.original}>Wikipedia-Artikel öffnen <ArrowUpRight size={16} aria-hidden="true" /></a>}</>;
+}, (a, b) => a.full === b.full && a.game.guesses === b.game.guesses && a.game.hints === b.game.hints && a.game.givenUp === b.game.givenUp && a.highlight === b.highlight && a.limit === b.limit);
+
 export default function WikilandPage() {
   const [game, setGame] = useState<WikiGame | null>(null);
   const [input, setInput] = useState('');
+  const [loaded, setLoaded] = useState<{ id: string; full: FullWikiArticle } | null>(null);
+  const [loadError, setLoadError] = useState<'network' | 'invalid' | null>(null);
+  const [retry, setRetry] = useState(0);
+  const [limit, setLimit] = useState(30);
   const [message, setMessage] = useState('');
   const [storageFailed, setStorageFailed] = useState(false);
   const [visible, setVisible] = useState(true);
@@ -34,8 +62,10 @@ export default function WikilandPage() {
   const helpButton = useRef<HTMLButtonElement>(null);
   const sourceButton = useRef<HTMLButtonElement>(null);
   const articleRef = useRef<HTMLElement>(null);
-  const article = game ? getArticle(game.puzzleId) : undefined;
-  const won = game ? isWon(game) : false;
+  const full = game && loaded?.id === game.puzzleId ? loaded.full : null;
+  const article = full?.article;
+  const ready = !!article;
+  const won = game && article ? isWon(game, article) : false;
   const finished = won || !!game?.givenUp;
   const gameId = game ? `${game.mode}:${game.date}:${game.puzzleId}` : '';
   const titleTokens = useMemo(() => article ? tokenize(article.title) : [], [article]);
@@ -58,14 +88,35 @@ export default function WikilandPage() {
   }, []);
 
   useEffect(() => {
-    if (!gameId || finished || !visible || rulesOpen || sourceOpen || pending) return;
-    const timer = window.setInterval(() => setGame(current => current ? { ...current, elapsed: current.elapsed + 1 } : current), 1000);
-    return () => window.clearInterval(timer);
-  }, [gameId, finished, visible, rulesOpen, sourceOpen, pending]);
+    if (!game?.puzzleId) return;
+    const base = getArticle(game.puzzleId);
+    if (!base) return;
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 20000);
+    let active = true;
+    setLoaded(null);
+    setLoadError(null);
+    setLimit(30);
+    fetchWikipediaRevision(base.revisionId, controller.signal).then(({ title, html }) => {
+      const full = prepareWikipediaArticle(base, title, html, document);
+      if (!hasValidHints(game, full.article, base)) throw new Error('invalid-save');
+      if (active) {
+        if (!game.revisionAware) setGame(upgradeLegacyGame(game));
+        setLoaded({ id: base.id, full });
+      }
+    }).catch((error: unknown) => { if (active) setLoadError(error instanceof Error && error.message === 'invalid-save' ? 'invalid' : 'network'); }).finally(() => window.clearTimeout(timeout));
+    return () => { active = false; controller.abort(); window.clearTimeout(timeout); };
+  }, [game?.puzzleId, retry]);
 
   useEffect(() => {
-    if (game) setStorageFailed(!saveWikiGame(game));
-  }, [game]);
+    if (!gameId || !ready || finished || !visible || rulesOpen || sourceOpen || pending) return;
+    const timer = window.setInterval(() => setGame(current => current ? { ...current, elapsed: current.elapsed + 1 } : current), 1000);
+    return () => window.clearInterval(timer);
+  }, [gameId, ready, finished, visible, rulesOpen, sourceOpen, pending]);
+
+  useEffect(() => {
+    if (game && ready) setStorageFailed(!saveWikiGame(game));
+  }, [game, ready]);
 
   function start(mode: 'daily' | 'free') {
     setGame(createGame(mode, today(), game?.puzzleId));
@@ -85,8 +136,8 @@ export default function WikilandPage() {
 
   function guess(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!game || finished) return;
-    const result = submitGuess(game, input);
+    if (!game || !article || finished) return;
+    const result = submitGuess(game, input, article);
     if (result.outcome === 'invalid') {
       setMessage('Gib ein einzelnes Wort oder den vollständigen Titel ein.');
       inputRef.current?.select();
@@ -101,18 +152,18 @@ export default function WikilandPage() {
     setGame(result.game);
     setHighlight(normalizeWord(input));
     setInput('');
-    setMessage(isWon(result.game) ? 'Titel gefunden! Der Artikel ist aufgedeckt.' : result.hits ? `${result.hits} Treffer. Die passenden Wörter sind aufgedeckt.` : 'Kein Treffer. Versuch ein anderes Wort.');
+    setMessage(isWon(result.game, article) ? 'Titel gefunden! Der Artikel ist aufgedeckt.' : result.hits ? `${result.hits} Treffer. Die passenden Wörter sind aufgedeckt.` : 'Kein Treffer. Versuch ein anderes Wort.');
     inputRef.current?.focus();
   }
 
   function hint() {
-    if (!game || finished) return;
-    const next = applyHint(game);
+    if (!game || !article || finished) return;
+    const next = applyHint(game, article);
     setGame(next);
     const key = next.hints.length > game.hints.length ? next.hints[next.hints.length - 1] : '';
     const revealed = [...titleTokens, ...paragraphs.flat()].find(token => token.key === key)?.text;
     setHighlight(key);
-    setMessage(isWon(next) ? 'Titel gefunden! Der Artikel ist aufgedeckt.' : revealed ? `Hinweis: „${revealed}“ wurde im Artikel aufgedeckt.` : 'Es gibt kein weiteres verborgenes Wort.');
+    setMessage(isWon(next, article) ? 'Titel gefunden! Der Artikel ist aufgedeckt.' : revealed ? `Hinweis: „${revealed}“ wurde im Artikel aufgedeckt.` : 'Es gibt kein weiteres verborgenes Wort.');
   }
 
   async function share() {
@@ -126,17 +177,6 @@ export default function WikilandPage() {
     }
   }
 
-  function renderTokens(tokens: WikiToken[], inTitle = false) {
-    if (!game) return null;
-    return tokens.map((token, index) => {
-      if (!token.word || finished || isRevealed(token, game, inTitle)) {
-        const highlighted = token.word && highlight && token.key === highlight;
-        return <span key={index} className={highlighted ? styles.highlight : undefined}>{token.text}</span>;
-      }
-      const length = countLetters(token.text);
-      return <span key={index} className={styles.redacted} style={{ width: `${length}ch` }} role="img" aria-label={`Verborgenes Wort, ${length} Buchstaben`}><span aria-hidden="true">{length}</span></span>;
-    });
-  }
 
   return (
     <div className={styles.page}>
@@ -150,7 +190,7 @@ export default function WikilandPage() {
 
       <main className={styles.main}>
         <div className={styles.gameBar}>
-          <div className={styles.modes} role="group" aria-label="Spielmodus"><button type="button" aria-pressed={game?.mode === 'daily'} disabled={!game} onClick={() => requestGame('daily')}>Tagesrätsel</button><button type="button" aria-pressed={game?.mode === 'free'} disabled={!game} onClick={() => requestGame('free')}>Freie Runde</button></div>
+          <div className={styles.modes} role="group" aria-label="Spielmodus"><button type="button" aria-pressed={game?.mode === 'daily'} disabled={!game || !ready} onClick={() => requestGame('daily')}>Tagesrätsel</button><button type="button" aria-pressed={game?.mode === 'free'} disabled={!game || !ready} onClick={() => requestGame('free')}>Freie Runde</button></div>
           <span className={styles.date}>{game?.mode === 'daily' ? game.date.split('-').reverse().join('.') : 'Freies Spiel'}</span>
         </div>
 
@@ -164,9 +204,9 @@ export default function WikilandPage() {
             </div> : <>
               <form onSubmit={guess} className={styles.form}>
                 <label htmlFor="wiki-guess">Dein Wort</label>
-                <div className={styles.inputRow}><input ref={inputRef} id="wiki-guess" type="text" maxLength={100} value={input} onChange={event => setInput(event.target.value)} placeholder="Wort oder vollständiger Titel" autoComplete="off" autoCapitalize="none" spellCheck={false} disabled={!game} /><button type="submit" disabled={!game || !input.trim()}>Raten</button></div>
+                <div className={styles.inputRow}><input ref={inputRef} id="wiki-guess" type="text" maxLength={100} value={input} onChange={event => setInput(event.target.value)} placeholder="Wort oder vollständiger Titel" autoComplete="off" autoCapitalize="none" spellCheck={false} disabled={!game || !ready} /><button type="submit" disabled={!game || !ready || !input.trim()}>Raten</button></div>
               </form>
-              <div className={styles.tools}><button type="button" onClick={hint} disabled={!game}><Lightbulb size={17} aria-hidden="true" /> Hinweis</button><button type="button" onClick={() => setPending('giveup')} disabled={!game}><Flag size={16} aria-hidden="true" /> Aufdecken</button><button type="button" onClick={() => requestGame('free')} disabled={!game} aria-label="Neuen Artikel starten"><RotateCw size={17} aria-hidden="true" /></button></div>
+              <div className={styles.tools}><button type="button" onClick={hint} disabled={!game || !ready}><Lightbulb size={17} aria-hidden="true" /> Hinweis</button><button type="button" onClick={() => setPending('giveup')} disabled={!game || !ready}><Flag size={16} aria-hidden="true" /> Aufdecken</button><button type="button" onClick={() => requestGame('free')} disabled={!game || !ready} aria-label="Neuen Artikel starten"><RotateCw size={17} aria-hidden="true" /></button></div>
             </>}
             <div className={styles.message} role="status" aria-live="polite" aria-atomic="true">{message}</div>
             {storageFailed && <p className={styles.storageNotice} role="status">Dein Fortschritt lässt sich gerade nicht speichern. Du kannst weiterspielen; nach dem Schließen fehlen die letzten Züge.</p>}
@@ -180,7 +220,7 @@ export default function WikilandPage() {
           </section>
 
           <article ref={articleRef} className={styles.article} aria-label="Verborgener Wikipedia-Artikel">
-            {article ? <><h2 className={styles.articleTitle}>{renderTokens(titleTokens, true)}</h2>{paragraphs.map((tokens, index) => <p key={index}>{renderTokens(tokens)}</p>)}{finished && <a href={article.sourceUrl} target="_blank" rel="noreferrer" className={styles.original}>Wikipedia-Artikel öffnen <ArrowUpRight size={16} aria-hidden="true" /></a>}</> : <p className={styles.loading}>Der Artikel wird vorbereitet …</p>}
+            {full && game ? <ArticleBody full={full} game={game} highlight={highlight} limit={limit} onMore={() => setLimit(value => value + 30)} /> : loadError ? <div role="alert">{loadError === 'invalid' ? <><p>Der gespeicherte Hinweis passt nicht zur Artikelversion. Der Spielstand wurde nicht überschrieben.</p><button type="button" className={styles.secondary} onClick={() => start('free')}>Neue freie Runde starten</button></> : <><p>Der Wikipedia-Artikel konnte nicht geladen werden. Dein Spielstand bleibt erhalten.</p><button type="button" className={styles.secondary} onClick={() => setRetry(value => value + 1)}>Erneut versuchen</button></>}</div> : <p className={styles.loading}>Der Wikipedia-Artikel wird geladen …</p>}
           </article>
         </div>
 
@@ -189,7 +229,7 @@ export default function WikilandPage() {
 
       <Dialog open={rulesOpen} onOpenChange={setRulesOpen}><DialogContent className={styles.dialog} onCloseAutoFocus={event => { event.preventDefault(); helpButton.current?.focus(); }}><DialogHeader><DialogTitle className={styles.dialogTitle}>So spielst du Wikiland</DialogTitle><DialogDescription>Finde den Titel des verborgenen Wikipedia-Artikels.</DialogDescription></DialogHeader><ol className={styles.rules}><li><strong>Wörter aufdecken.</strong><p>Gib ein Wort ein. Alle passenden Stellen im Artikel werden sichtbar, und du siehst die Anzahl der Treffer. Häufige Wörter, Zahlen und Satzzeichen sind schon offen.</p></li><li><strong>Den Titel finden.</strong><p>Decke alle verborgenen Wörter im Titel auf oder rate den vollständigen Titel auf einmal. Dann ist das Rätsel gelöst.</p></li><li><strong>Schreibweise zählt.</strong><p>Groß- und Kleinschreibung spielen keine Rolle. Ä/ae, ö/oe, ü/ue und ß/ss zählen gleich. Andere Wortformen musst du einzeln versuchen. Doppelte Versuche zählen nicht erneut.</p></li></ol><p className={styles.ruleNote}>Ein Hinweis deckt ein Wort auf und wird mitgezählt. „Aufdecken“ beendet die Runde und zeigt die Lösung. Das Tagesrätsel wechselt um Mitternacht deutscher Zeit.</p></DialogContent></Dialog>
 
-      <Dialog open={sourceOpen} onOpenChange={setSourceOpen}><DialogContent className={styles.dialog} onCloseAutoFocus={event => { event.preventDefault(); sourceButton.current?.focus(); }}><DialogHeader><DialogTitle className={styles.dialogTitle}>Quelle &amp; Lizenz</DialogTitle><DialogDescription>Text: Wikipedia-Mitwirkende. Der Auszug wurde gekürzt und für das Rätsel geschwärzt.</DialogDescription></DialogHeader><div className={styles.sourceLinks}><a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noreferrer">Creative Commons BY-SA 4.0</a>{article && <><a href={article.sourceUrl} target="_blank" rel="noreferrer">Wikipedia-Original öffnen (verrät die Lösung)</a><a href={`https://de.wikipedia.org/w/index.php?oldid=${article.revisionId}&action=history`} target="_blank" rel="noreferrer">Bearbeitungsgeschichte und Mitwirkende</a></>}<p>Wikipedia-Logo: Wikimedia / Nohat, Konzept Paullusmagnus. Unveränderte Grafik mit animiertem Lichtreflex.</p><a href="https://commons.wikimedia.org/wiki/File:Wikipedia-logo-v2.svg" target="_blank" rel="noreferrer">Logo-Quelle · CC BY-SA 3.0</a><p>Wikiland ist ein unabhängiges Spiel von Paulik &amp; Reisch, kein Angebot der Wikimedia Foundation.</p></div></DialogContent></Dialog>
+      <Dialog open={sourceOpen} onOpenChange={setSourceOpen}><DialogContent className={styles.dialog} onCloseAutoFocus={event => { event.preventDefault(); sourceButton.current?.focus(); }}><DialogHeader><DialogTitle className={styles.dialogTitle}>Quelle &amp; Lizenz</DialogTitle><DialogDescription>Text: Wikipedia-Mitwirkende. Die feste Artikelversion wird für das Rätsel geschwärzt und vereinfacht dargestellt.</DialogDescription></DialogHeader><div className={styles.sourceLinks}><a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noreferrer">Creative Commons BY-SA 4.0</a>{article && <><a href={article.sourceUrl} target="_blank" rel="noreferrer">Wikipedia-Original öffnen (verrät die Lösung)</a><a href={`https://de.wikipedia.org/w/index.php?oldid=${article.revisionId}&action=history`} target="_blank" rel="noreferrer">Bearbeitungsgeschichte und Mitwirkende</a></>}<p>Wikipedia-Logo: Wikimedia / Nohat, Konzept Paullusmagnus. Unveränderte Grafik mit animiertem Lichtreflex.</p><a href="https://commons.wikimedia.org/wiki/File:Wikipedia-logo-v2.svg" target="_blank" rel="noreferrer">Logo-Quelle · CC BY-SA 3.0</a><p>Wikiland ist ein unabhängiges Spiel von Paulik &amp; Reisch, kein Angebot der Wikimedia Foundation.</p></div></DialogContent></Dialog>
 
       <AlertDialog open={pending !== null} onOpenChange={open => { if (!open) setPending(null); }}><AlertDialogContent className={styles.dialog}><AlertDialogHeader><AlertDialogTitle>{pending === 'giveup' ? 'Den Artikel aufdecken?' : 'Den Artikel wechseln?'}</AlertDialogTitle><AlertDialogDescription>{pending === 'giveup' ? 'Die Runde wird beendet und der vollständige Artikel sichtbar. Sie zählt als aufgedeckt, nicht als gelöst.' : 'Dein aktueller Spielstand wird durch die neue Runde ersetzt. Dieser Schritt lässt sich nicht rückgängig machen.'}</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Weiterraten</AlertDialogCancel><AlertDialogAction onClick={() => { if (!game || !pending) return; if (pending === 'giveup') { setGame({ ...game, givenUp: true }); setMessage('Der Artikel ist aufgedeckt.'); } else start(pending); setPending(null); }}>{pending === 'giveup' ? 'Artikel aufdecken' : 'Neue Runde starten'}</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
     </div>

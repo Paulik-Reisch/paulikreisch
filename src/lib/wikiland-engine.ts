@@ -1,7 +1,7 @@
 import { WIKI_ARTICLES } from './wikiland-data';
 
 export type WikiArticle = { id: string; title: string; paragraphs: string[]; sourceUrl: string; revisionId: number; category: string };
-export type WikiGame = { version: 1; puzzleId: string; mode: 'daily' | 'free'; date: string; guesses: string[]; hints: string[]; elapsed: number; givenUp: boolean };
+export type WikiGame = { version: 1; puzzleId: string; mode: 'daily' | 'free'; date: string; guesses: string[]; hints: string[]; elapsed: number; givenUp: boolean; revisionAware?: boolean; legacyWon?: boolean };
 export type WikiToken = { text: string; word: boolean; key: string };
 export type GuessOutcome = 'hit' | 'miss' | 'duplicate' | 'invalid' | 'finished';
 
@@ -45,7 +45,7 @@ export function createGame(mode: 'daily' | 'free', date = berlinDate(), excludeI
   const pool = WIKI_ARTICLES.filter(article => article.id !== excludeId);
   const article = mode === 'daily' ? dailyArticle(date) : (pool[Math.floor(Math.random() * pool.length)] ?? WIKI_ARTICLES[0]);
   if (!article) throw new Error('Wikiland needs at least one article.');
-  return { version: 1, puzzleId: article.id, mode, date, guesses: [], hints: [], elapsed: 0, givenUp: false };
+  return { version: 1, puzzleId: article.id, mode, date, guesses: [], hints: [], elapsed: 0, givenUp: false, revisionAware: true };
 }
 
 function titleKey(article: WikiArticle): string {
@@ -66,36 +66,69 @@ type GameFacts = { article: WikiArticle | undefined; found: Set<string>; won: bo
 // Engine transitions return new states. Share derived sets across thousands of tokens
 // during a render instead of rebuilding the complete guess history for each token.
 const factsCache = new WeakMap<WikiGame, GameFacts>();
-function gameFacts(game: WikiGame): GameFacts {
+function gameFacts(game: WikiGame, override?: WikiArticle): GameFacts {
   const cached = factsCache.get(game);
-  if (cached) return cached;
-  const article = getArticle(game.puzzleId);
+  const article = override ?? getArticle(game.puzzleId);
+  if (cached && cached.article === article) return cached;
   const found = article ? alreadyFound(game, article) : new Set<string>();
   const required = article ? titleWords(article) : [];
-  const facts = { article, found, won: !game.givenUp && required.length > 0 && required.every(token => found.has(token.key)) };
+  const facts = { article, found, won: !game.givenUp && (game.legacyWon === true || (required.length > 0 && required.every(token => found.has(token.key)))) };
   factsCache.set(game, facts);
   return facts;
 }
 
-export const isWon = (game: WikiGame): boolean => gameFacts(game).won;
+export const isWon = (game: WikiGame, article?: WikiArticle): boolean => gameFacts(game, article).won;
 
-export function isRevealed(token: WikiToken, game: WikiGame, _inTitle = false): boolean {
+/** Preserve a solved v1 round when the full Wikipedia title has a suffix. */
+export function upgradeLegacyGame(game: WikiGame): WikiGame {
+  if (game.revisionAware) return game;
+  return { ...game, revisionAware: true, ...(isWon(game) ? { legacyWon: true } : {}) };
+}
+
+export function isRevealed(token: WikiToken, game: WikiGame, _inTitle = false, article?: WikiArticle): boolean {
   if (!token.word || isCommonWord(token.key) || game.givenUp) return true;
-  const facts = gameFacts(game);
+  const facts = gameFacts(game, article);
   return facts.won || facts.found.has(token.key);
 }
 
-const allTokens = (article: WikiArticle) => [article.title, ...article.paragraphs].flatMap(tokenize);
+const tokenCache = new WeakMap<WikiArticle, WikiToken[]>();
+const allTokens = (article: WikiArticle) => {
+  const cached = tokenCache.get(article);
+  if (cached) return cached;
+  const tokens = [article.title, ...article.paragraphs].flatMap(tokenize);
+  tokenCache.set(article, tokens);
+  return tokens;
+};
+
+const frequencyCache = new WeakMap<WikiArticle, Map<string, number>>();
+function frequencies(article: WikiArticle): Map<string, number> {
+  const cached = frequencyCache.get(article);
+  if (cached) return cached;
+  const counts = new Map<string, number>();
+  allTokens(article).forEach(token => {
+    if (token.word) counts.set(token.key, (counts.get(token.key) ?? 0) + 1);
+  });
+  frequencyCache.set(article, counts);
+  return counts;
+}
+
+/** Validate hints only once the complete pinned article has been loaded. */
+export function hasValidHints(game: WikiGame, article: WikiArticle, legacyArticle?: WikiArticle): boolean {
+  const counts = frequencies(article);
+  const title = titleKey(article);
+  return game.hints.every(hint => counts.has(hint)) && game.guesses.every(guess => !guess.includes(' ') || guess === title || (!game.revisionAware && !!legacyArticle && guess === titleKey(legacyArticle)));
+}
 
 export function getGuessHits(article: WikiArticle, guess: string): number {
   const key = normalizeWord(guess);
   const matching = new Set(key === titleKey(article) ? titleWords(article).map(token => token.key) : [key]);
-  return allTokens(article).filter(token => token.word && matching.has(token.key)).length;
+  const counts = frequencies(article);
+  return [...matching].reduce((total, word) => total + (counts.get(word) ?? 0), 0);
 }
 
-export function submitGuess(game: WikiGame, input: string): { game: WikiGame; outcome: GuessOutcome; hits: number } {
-  const article = getArticle(game.puzzleId);
-  if (!article || game.givenUp || isWon(game)) return { game, outcome: 'finished', hits: 0 };
+export function submitGuess(game: WikiGame, input: string, override?: WikiArticle): { game: WikiGame; outcome: GuessOutcome; hits: number } {
+  const article = override ?? getArticle(game.puzzleId);
+  if (!article || game.givenUp || isWon(game, article)) return { game, outcome: 'finished', hits: 0 };
   const key = normalizeWord(input);
   const phrase = key.replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
   const fullTitle = phrase === titleKey(article);
@@ -104,17 +137,18 @@ export function submitGuess(game: WikiGame, input: string): { game: WikiGame; ou
   const found = alreadyFound(game, article);
   if (game.guesses.includes(canonical) || found.has(canonical) || isCommonWord(canonical)) return { game, outcome: 'duplicate', hits: 0 };
   const matches = new Set(fullTitle ? titleWords(article).map(token => token.key) : [canonical]);
-  const hits = allTokens(article).filter(token => token.word && !isCommonWord(token.key) && matches.has(token.key) && !found.has(token.key)).length;
+  const counts = frequencies(article);
+  const hits = [...matches].reduce((total, word) => total + (!isCommonWord(word) && !found.has(word) ? counts.get(word) ?? 0 : 0), 0);
   return { game: { ...game, guesses: [...game.guesses, canonical] }, outcome: hits ? 'hit' : 'miss', hits };
 }
 
-export function applyHint(game: WikiGame): WikiGame {
-  const article = getArticle(game.puzzleId);
-  if (!article || game.givenUp || isWon(game)) return game;
+export function applyHint(game: WikiGame, override?: WikiArticle): WikiGame {
+  const article = override ?? getArticle(game.puzzleId);
+  if (!article || game.givenUp || isWon(game, article)) return game;
   const found = alreadyFound(game, article);
   const title = new Set(titleWords(article).map(token => token.key));
   const frequency = new Map<string, number>();
-  article.paragraphs.flatMap(tokenize).forEach(token => {
+  allTokens(article).forEach(token => {
     if (token.word && !isCommonWord(token.key) && !found.has(token.key) && !title.has(token.key)) frequency.set(token.key, (frequency.get(token.key) ?? 0) + 1);
   });
   const key = [...frequency].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'de'))[0]?.[0] ?? titleWords(article).find(token => !found.has(token.key))?.key;

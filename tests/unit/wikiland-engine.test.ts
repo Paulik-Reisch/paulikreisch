@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { WIKI_ARTICLES } from '../../src/lib/wikiland-data';
-import { applyHint, berlinDate, createGame, dailyArticle, getGuessHits, isCommonWord, isRevealed, isWikiDate, isWon, normalizeWord, submitGuess, tokenize, type WikiArticle, type WikiGame } from '../../src/lib/wikiland-engine';
+import { applyHint, berlinDate, createGame, dailyArticle, getGuessHits, hasValidHints, isCommonWord, isRevealed, isWikiDate, isWon, normalizeWord, submitGuess, tokenize, upgradeLegacyGame, type WikiArticle, type WikiGame } from '../../src/lib/wikiland-engine';
 
 const fixture: WikiArticle = { id: 'wikiland-engine-fixture', title: 'Die blaue Brücke', paragraphs: ['Die blaue Brücke ist eine Brücke über einen Fluss. Der Fluss ist 42 Kilometer lang.', 'Brücken verbinden Orte. Am Fluss wachsen Bäume. Ein Café liegt am Fluss.'], sourceUrl: 'https://de.wikipedia.org/wiki/Br%C3%BCcke', revisionId: 1, category: 'Test' };
 WIKI_ARTICLES.push(fixture);
@@ -103,4 +103,35 @@ test('letter counts ignore decomposed accents and punctuation', () => {
   assert.equal(countLetters('A\u0308pfel'), 5);
   assert.equal(countLetters('Straße'), 6);
   assert.equal(countLetters('é-2'), 1);
+});
+
+
+test('full revision drives guesses, repeated words, hints and title matching', () => {
+  const full = { ...fixture, title: 'Die blaue Brücke (Bauwerk)', paragraphs: ['Quarz Quarz an einem Fluss.', 'Ein Abschnitt mit Quarz und einer Brücke.'] };
+  const result = submitGuess(game(), 'Quarz', full);
+  assert.equal(result.hits, 3);
+  assert.equal(isRevealed(tokenize('Quarz')[0], result.game, false, full), true);
+  const hinted = applyHint(game(), full);
+  assert.deepEqual(hinted.hints, ['quarz']);
+  assert.equal(hasValidHints(hinted, full), true);
+  assert.equal(hasValidHints({ ...hinted, hints: ['fehlt'] }, full), false);
+  const solved = submitGuess(game(), 'Die blaue Brücke Bauwerk', full);
+  assert.equal(isWon(solved.game, full), true);
+});
+
+
+test('legacy solved games stay solved with a newly restored title suffix', () => {
+  const legacy = { ...game(), guesses: ['die blaue bruecke'] };
+  const full = { ...fixture, title: 'Die blaue Brücke (Bauwerk)' };
+  assert.equal(isWon(legacy, full), false);
+  const migrated = upgradeLegacyGame(legacy);
+  assert.equal(isWon(migrated, full), true);
+  assert.deepEqual(migrated.guesses, legacy.guesses);
+  assert.deepEqual(migrated.hints, legacy.hints);
+});
+
+test('new games do not acquire legacy win status on reload', () => {
+  const current = { ...game(), revisionAware: true, guesses: ['blaue', 'bruecke'] };
+  const full = { ...fixture, title: 'Die blaue Brücke (Bauwerk)' };
+  assert.equal(isWon(upgradeLegacyGame(current), full), false);
 });

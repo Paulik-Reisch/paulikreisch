@@ -130,3 +130,13 @@
 :global(.dark) .ruleNote { border-top-color: #3a352d; }
 :global(.dark) .sourceLinks a { color: #7aa8ff; }
 @media (max-width: 780px) { :global(.dark) .controls { box-shadow: 0 3px 16px rgba(0, 0, 0, .4); } }
+
+/* Preserve article structure while containing wide Wikipedia tables on mobile. */
+.wikiContent { overflow-wrap: anywhere; content-visibility: auto; contain-intrinsic-size: auto 1200px; }
+.wikiContent table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
+.wikiContent th, .wikiContent td { border: 1px solid #a1a1aa; padding: .35em; vertical-align: top; }
+.wikiContent h2, .wikiContent h3, .wikiContent h4 { margin: 1.3em 0 .5em; font-weight: 700; }
+.wikiContent ul, .wikiContent ol { padding-inline-start: 1.5em; margin-block: 1em; }
+.wikiContent ul { list-style: disc; }
+.wikiContent ol { list-style: decimal; }
+.wikiContent pre { white-space: pre-wrap; overflow-wrap: anywhere; }
