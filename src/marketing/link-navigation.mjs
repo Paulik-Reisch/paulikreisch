@@ -1,6 +1,8 @@
 // This runs before campaign scripts, so legacy iframe-based preview handlers
 // cannot intercept real links on published pages. The sandbox remains opaque.
 function installLinkNavigation(preview) {
+  // srcdoc inherits its embedding page's base URL, even in an opaque sandbox.
+  const parentOrigin = new URL(document.baseURI).origin;
   let dialog;
   window.addEventListener('click', event => {
     const anchor = event.target?.closest?.('a[href]');
@@ -42,7 +44,7 @@ function installLinkNavigation(preview) {
     dialog.showModal();
     // Long custom pages scroll in the parent, not inside this iframe. Use the
     // existing scroll bridge so the whole dialog is visible after a deep CTA.
-    parent.postMessage({__prCustomFrame:'height',value:Math.max(document.documentElement.scrollHeight,dialog.offsetTop+dialog.offsetHeight+24)},'*');
+    if (parentOrigin !== 'null') parent.postMessage({__prCustomFrame:'height',value:Math.max(document.documentElement.scrollHeight,dialog.offsetTop+dialog.offsetHeight+24)},parentOrigin);
     requestAnimationFrame(() => requestAnimationFrame(() => dialog.scrollIntoView({block:'start'})));
   }, true);
 }

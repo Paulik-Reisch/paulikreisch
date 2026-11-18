@@ -37,3 +37,23 @@ test('the link bridge loads before HTML and campaign scripts on both live and pr
     assert.doesNotMatch(html,/allow-same-origin|allow-popups|allow-forms/);
   }
 });
+
+test('preview height messages target the embedding page origin instead of a wildcard',()=>{
+  let click;
+  const sent=[];
+  const address={textContent:''};
+  const node=(tag)=>({tag,style:{},setAttribute(){},addEventListener(){},append(){},showModal(){},scrollIntoView(){},querySelector(){return address;},offsetTop:500,offsetHeight:180});
+  const context={URL,window:{addEventListener:(type,callback)=>{if(type==='click')click=callback;}},document:{baseURI:'https://ads.paulikreisch.de/preview/123',documentElement:{scrollHeight:1000},body:{append(){}},createElement:node},parent:{postMessage:(value,origin)=>sent.push({value,origin})},requestAnimationFrame:fn=>fn()};
+  vm.runInNewContext(customLinkBridge({preview:true}).replace(/^<script>|<\/script>$/g,''),context);
+  click({target:{closest:()=>({getAttribute:()=> 'https://paulikreisch.de/shop'})},clientY:600,stopImmediatePropagation(){},preventDefault(){}});
+  assert.equal(sent.length,1);
+  assert.equal(sent[0].origin,'https://ads.paulikreisch.de');
+  assert.equal(sent[0].value.__prCustomFrame,'height');
+  assert.equal(sent[0].value.value,1000);
+});
+
+test('frame resize and scroll messages do not use a wildcard target',()=>{
+  const html=customFrame({files:[],code:{html:'<p>Text</p>',css:'',js:''}},{preview:true});
+  assert.equal(html.includes(',&quot;*&quot;'),false);
+  assert.equal(html.includes(',&#39;*&#39;'),false);
+});

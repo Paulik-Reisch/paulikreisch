@@ -60,7 +60,7 @@
 .article { grid-area: article; min-width: 0; scroll-margin-top: 20px; }
 .articleTitle { margin: 0 0 25px; padding-bottom: 22px; border-bottom: 1px solid #e4e4e7; font-family: var(--font-poppins), sans-serif; font-size: clamp(25px, 3.4vw, 34px); font-weight: 700; line-height: 1.6; overflow-wrap: anywhere; }
 .article p { margin: 0 0 21px; font-size: 16px; line-height: 1.95; overflow-wrap: anywhere; }
-.redacted { display: inline-block; max-width: 100%; height: 1.02em; border-radius: 3px; background: #27272a; vertical-align: -.13em; user-select: none; }
+.redacted { display: inline-block; max-width: 100%; height: 1.15em; min-width: 1.4em; border-radius: 3px; background: #27272a; color: #fff; text-align: center; font-size: .75em; line-height: 1.15em; font-weight: 600; vertical-align: -.13em; user-select: none; }
 .articleTitle .redacted { background: #0067d9; }
 .highlight { border-radius: 3px; background: #f9e7a9; color: #18181b; box-shadow: 0 0 0 2px #f9e7a9; }
 .loading { color: #52525b; }
@@ -117,8 +117,8 @@
 :global(.dark) .hasHits { color: #18181b; background: #f9e7a9; }
 :global(.dark) .emptyHistory { color: #a89f8f; }
 :global(.dark) .articleTitle { border-bottom-color: #3a352d; }
-:global(.dark) .redacted { background: #d9d3c6; }
-:global(.dark) .articleTitle .redacted { background: #7aa8ff; }
+:global(.dark) .redacted { background: #d9d3c6; color: #191715; }
+:global(.dark) .articleTitle .redacted { background: #7aa8ff; color: #101828; }
 :global(.dark) .loading { color: #b6ad9c; }
 :global(.dark) .original { color: #7aa8ff; }
 :global(.dark) .result h2 { color: #7aa8ff; }
@@ -130,3 +130,13 @@
 :global(.dark) .ruleNote { border-top-color: #3a352d; }
 :global(.dark) .sourceLinks a { color: #7aa8ff; }
 @media (max-width: 780px) { :global(.dark) .controls { box-shadow: 0 3px 16px rgba(0, 0, 0, .4); } }
+
+/* Preserve article structure while containing wide Wikipedia tables on mobile. */
+.wikiContent { overflow-wrap: anywhere; content-visibility: auto; contain-intrinsic-size: auto 1200px; }
+.wikiContent table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
+.wikiContent th, .wikiContent td { border: 1px solid #a1a1aa; padding: .35em; vertical-align: top; }
+.wikiContent h2, .wikiContent h3, .wikiContent h4 { margin: 1.3em 0 .5em; font-weight: 700; }
+.wikiContent ul, .wikiContent ol { padding-inline-start: 1.5em; margin-block: 1em; }
+.wikiContent ul { list-style: disc; }
+.wikiContent ol { list-style: decimal; }
+.wikiContent pre { white-space: pre-wrap; overflow-wrap: anywhere; }

@@ -1,16 +1,12 @@
 # Wikiland: Textquellen und Lizenz
 
-Stand der gebündelten Texte: 2026-11-01. 32 ausgewählte Artikel der deutschsprachigen Wikipedia.
+Stand der kuratierten Revisionsliste: 2026-11-01. 32 ausgewählte Artikel der deutschsprachigen Wikipedia.
 
 ## Namensnennung und Lizenz
 
-Die Textauszüge stammen von den jeweiligen **Wikipedia-Autorinnen und -Autoren**. Die nachfolgende Tabelle verlinkt jede verwendete Artikelversion und ihre Versionsgeschichte mit der vollständigen Autorenliste.
+Der im Spiel angezeigte Text stammt von den **Wikipedia-Autorinnen und -Autoren** der jeweiligen unten verlinkten Artikelversion. Die Versionsgeschichte enthält die Mitwirkenden. Der Text steht unter **[Creative Commons Namensnennung – Weitergabe unter gleichen Bedingungen 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/deed.de)**. Die Lizenz gilt für Wikipedia-Texte und deren Bearbeitungen, nicht pauschal für den unabhängigen Spielcode. Details: [Wikipedia:Weiternutzung](https://de.wikipedia.org/wiki/Wikipedia:Weiternutzung).
 
-Die Auszüge und ihre Bearbeitungen stehen unter **[Creative Commons Namensnennung – Weitergabe unter gleichen Bedingungen 4.0 International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/deed.de)**. Diese Lizenzangabe bezieht sich auf die Wikipedia-Texte und deren Bearbeitungen, nicht pauschal auf den unabhängig entwickelten Spielcode. Das Projekt ist kein Angebot der Wikipedia oder Wikimedia Foundation.
-
-Änderungen: Auswahl von vier bis acht vollständigen Absätzen pro Artikel; Entfernung von Zitiermarkierungen und Aussprachetranskriptionen; Vereinheitlichung von Leerraum; Auslassung von Überschriften, Formeln und nicht geeignetem Layout. Klammerzusätze zur Begriffsklärung im Artikeltitel werden für die Rätsellösung weggelassen. Im Spiel werden Wörter vorübergehend verdeckt und durch Rateversuche sichtbar. Die Inhalte werden weder neu formuliert noch inhaltlich ergänzt. Zahlen, Schreibweisen und Aussagen entsprechen dem Abrufstand und können veralten.
-
-Hinweise zur Weiternutzung: [Wikipedia:Weiternutzung](https://de.wikipedia.org/wiki/Wikipedia:Weiternutzung). Die stabile Versions-ID in `sourceUrl` erlaubt die Überprüfung des Ausgangstextes.
+Wikiland verändert die Darstellung: Wörter werden verdeckt und nach Rateversuchen aufgedeckt; HTML wird zur sicheren Darstellung auf unterstützte Strukturelemente reduziert. Verknüpfungen, Bilder, interaktive Elemente und Formatierungen werden nicht originalgetreu übernommen; alternative Bild- und Formeltexte können als Text erscheinen. Die verlinkte Originalversion ist maßgeblich. Wikipedia-Vorlagen können bei einem späteren Abruf neu expandiert werden.
 
 ## Quellenregister
 
@@ -49,12 +45,10 @@ Hinweise zur Weiternutzung: [Wikipedia:Weiternutzung](https://de.wikipedia.org/w
 | Fußball | Sport | [271738935](https://de.wikipedia.org/w/index.php?oldid=271738935) | [Autoren/Versionsgeschichte](https://de.wikipedia.org/w/index.php?title=Fu%C3%9Fball&action=history) |
 | Seide | Alltag | [270957137](https://de.wikipedia.org/w/index.php?oldid=270957137) | [Autoren/Versionsgeschichte](https://de.wikipedia.org/w/index.php?title=Seide&action=history) |
 
-## Aktualisierung
+## Katalogprüfung
 
 ```sh
-python scripts/update-wikiland-data.py
+python3 scripts/update-wikiland-data.py
 ```
 
-Das Skript verwendet ausschließlich die öffentliche, lesende MediaWiki-API (`prop=extracts|revisions`) mit eigenem User-Agent. Es lädt die kuratierte Themenliste, validiert IDs und Mindestlänge und erzeugt `src/lib/wikiland-data.ts` und dieses Quellenregister. Für das Spielen selbst ist kein Wikipedia-Aufruf erforderlich. Keine Bilder, Logos, Dateien oder Texte von Redactle werden übernommen.
-
-Eine Aktualisierung kann Inhalte und Rätsellösungen verändern; bestehende Spielstände müssen daher mit den jeweiligen Artikel-IDs und ggf. einer neuen Datenversion abgestimmt werden. Tagesrätsel werden aus dem lokalen, endlichen Artikelpool gewählt.
+Das Skript prüft den Katalog, ändert aber keine Revisionen. Ein Revisionswechsel kann laufende Rätsel und gespeicherte Hinweise verändern und benötigt eine gesonderte Migrationsstrategie. Der vollständige Wikipedia-Text wird zur Laufzeit über die MediaWiki-API geladen und nicht als Auszug gebündelt.

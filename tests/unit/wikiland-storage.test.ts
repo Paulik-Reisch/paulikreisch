@@ -89,10 +89,22 @@ test('malformed state and invalid dates, identities and duplicate guesses are re
   for (const patch of [
     { version: 2 }, { puzzleId: 'missing' }, { date: '2026-02-30' }, { elapsed: -1 },
     { elapsed: 0.5 }, { givenUp: 'false' }, { guesses: ['Duplikat', 'duplikat'] },
-    { guesses: ['unbekannt', 'unbekannt'] }, { guesses: ['die'] }, { hints: ['unbekannteswort'] },
+    { guesses: ['unbekannt', 'unbekannt'] }, { guesses: ['die'] },
     { guesses: ['<script>'] }, { guesses: ['a'.repeat(81)] },
   ]) {
     assert.equal(parseWikiGame(serializeWikiGame({ ...state, ...patch } as WikiGame)), null, JSON.stringify(patch));
   }
   assert.equal(normalizeWord('Äpfel'), 'aepfel');
+});
+
+// Membership cannot be checked until the full API revision is loaded.
+test('cookie parser retains hints outside the legacy excerpt', () => {
+  const state = { ...saved(), hints: ['unbekannteswort'] };
+  assert.deepEqual(parseWikiGame(serializeWikiGame(state)), state);
+});
+
+
+test('revision-aware title phrases and migrated completed games survive cookie serialization', () => {
+  const state = { ...saved(), guesses: ['pyramide bauwerk'], revisionAware: true, legacyWon: true };
+  assert.deepEqual(parseWikiGame(serializeWikiGame(state)), state);
 });

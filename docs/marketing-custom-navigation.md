@@ -21,9 +21,16 @@ APIs or new asset origins are enabled. Newsletter rendering is unchanged.
 No persisted campaign draft or published snapshot is rewritten by this fix.
 Unpublished campaign changes remain private.
 
+The sandboxed `srcdoc` document inherits its embedding page’s base URL. The
+child sends height and scroll messages only to that URL’s exact origin, never
+to a wildcard; an opaque or missing origin sends no message. The parent accepts
+messages only from its own iframe window. The CSP continues to forbid `<base>`
+changes and the iframe retains its opaque origin.
+
 ## Regression checks
 
 - `node --test tests/marketing/link-navigation.test.mjs`
+- `npx playwright test tests/e2e/marketing-frame-origin.spec.ts`
 - `node tools/marketing/scripts/test-custom-navigation.mjs`
 
 The browser check uses a local interception fixture with the original faulty

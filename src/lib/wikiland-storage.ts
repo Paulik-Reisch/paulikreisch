@@ -1,4 +1,4 @@
-import { dailyArticle, getArticle, isCommonWord, isWikiDate, normalizeWord, tokenize, type WikiGame } from './wikiland-engine';
+import { dailyArticle, getArticle, isCommonWord, isWikiDate, normalizeWord, type WikiGame } from './wikiland-engine';
 
 export const WIKI_COOKIE = 'pr_wikiland_v1';
 export const WIKI_COOKIE_PATH = '/game-labs/wikiland';
@@ -7,7 +7,7 @@ const MAX_CHUNKS = 4;
 const MAX_RAW = CHUNK_SIZE * MAX_CHUNKS;
 
 export function serializeWikiGame(game: WikiGame): string {
-  const json = JSON.stringify({ v: game.version, i: game.puzzleId, m: game.mode, d: game.date, g: game.guesses, h: game.hints, t: game.elapsed, x: game.givenUp });
+  const json = JSON.stringify({ v: game.version, i: game.puzzleId, m: game.mode, d: game.date, g: game.guesses, h: game.hints, t: game.elapsed, x: game.givenUp, r: game.revisionAware || undefined, w: game.legacyWon || undefined });
   const bytes = new TextEncoder().encode(json);
   let binary = '';
   bytes.forEach(byte => { binary += String.fromCharCode(byte); });
@@ -22,14 +22,14 @@ export function parseWikiGame(raw: string): WikiGame | null {
     if (!data || data.v !== 1 || typeof data.i !== 'string' || !['daily', 'free'].includes(data.m) || typeof data.d !== 'string' || !isWikiDate(data.d)) return null;
     const article = getArticle(data.i);
     if (!article || (data.m === 'daily' && dailyArticle(data.d).id !== article.id)) return null;
+    if ((data.r !== undefined && data.r !== true) || (data.w !== undefined && (data.w !== true || data.r !== true))) return null;
     if (!Number.isSafeInteger(data.t) || data.t < 0 || data.t > 31536000 || typeof data.x !== 'boolean') return null;
     if (!Array.isArray(data.g) || !Array.isArray(data.h) || data.g.length > 2000 || data.h.length > 2000) return null;
-    const fullTitle = normalizeWord(article.title).replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
-    const validGuess = (value: unknown): value is string => typeof value === 'string' && value.length > 0 && value.length <= 160 && normalizeWord(value) === value && (value === fullTitle || (/^[\p{L}]+$/u.test(value) && value.length <= 80)) && !isCommonWord(value);
+    const validGuess = (value: unknown): value is string => typeof value === 'string' && value.length > 0 && value.length <= 160 && normalizeWord(value) === value && ((/^[\p{L}\p{N}]+(?: [\p{L}\p{N}]+)*$/u.test(value) && value.includes(' ')) || (/^[\p{L}]+$/u.test(value) && value.length <= 80)) && !isCommonWord(value);
     if (!data.g.every(validGuess) || new Set(data.g).size !== data.g.length) return null;
-    const articleWords = new Set([article.title, ...article.paragraphs].flatMap(tokenize).filter(token => token.word).map(token => token.key));
-    if (!data.h.every((value: unknown) => validGuess(value) && articleWords.has(value) && !data.g.includes(value)) || new Set(data.h).size !== data.h.length) return null;
-    return { version: 1, puzzleId: data.i, mode: data.m, date: data.d, guesses: data.g, hints: data.h, elapsed: data.t, givenUp: data.x };
+    // Full revision text is loaded asynchronously and is not available to this parser.
+    if (!data.h.every((value: unknown) => validGuess(value) && !data.g.includes(value)) || new Set(data.h).size !== data.h.length) return null;
+    return { version: 1, puzzleId: data.i, mode: data.m, date: data.d, guesses: data.g, hints: data.h, elapsed: data.t, givenUp: data.x, ...(data.r ? { revisionAware: true } : {}), ...(data.w ? { legacyWon: true } : {}) };
   } catch { return null; }
 }
 

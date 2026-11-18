@@ -1,36 +1,30 @@
 # Wikiland
 
-`/game-labs/wikiland` is an original German article-guessing game inspired by the Redactle rules: guess a word to reveal all matching occurrences, and uncover the meaningful title words to solve the article. It uses the same blue/yellow palette, Inter/Poppins fonts and 10px corners as Bits and Worthaft.
+`/game-labs/wikiland` is a German Wikipedia word-guessing game: guess words to reveal every matching occurrence and find the meaningful title words.
 
-## Content and modes
+## Content, structure and modes
 
-The game bundles 32 curated German Wikipedia excerpts, 334–474 words each at initial import. No runtime Wikipedia/API request is needed. Daily selection uses the calendar date in Europe/Berlin, rotating through this fixed corpus; the corpus therefore repeats after 32 days. Free rounds randomly select another article. An active round remains the current round across midnight until reload or a new round; reloading an older daily starts the new day's article. Switching modes confirms replacement of any unfinished progress. Only the current round is persisted; there is no account, cross-device history or multiplayer.
+The catalogue contains 32 curated article IDs and pinned Wikipedia revision IDs, not text excerpts. On opening or resuming a game the browser requests the complete parsed revision from the German Wikipedia MediaWiki API (`action=parse`, `oldid`, `prop=text|revid`, `origin=*`). The displayed title comes from the API, including disambiguation. The daily puzzle rotates through the fixed catalogue using the Berlin calendar date; free play selects a different article. Pinned IDs keep the chosen article revision stable, but MediaWiki may re-expand transcluded templates with newer template content. Changing revision IDs may change puzzles and invalidate hints; do not refresh them without a save-migration plan.
 
-Sources, stable revisions, contributors, license and the repeatable update script are documented in [wikiland-sources.md](wikiland-sources.md). Excerpts and their shortened/redacted adaptations are CC BY-SA 4.0. Source/license information is accessible during play with a spoiler warning; the source link is also shown on completion. The independent game code does not copy Redactle code or assets.
+The complete returned text is indexed for guesses and hints even when not yet displayed. To keep large pages usable, the UI initially renders 30 top-level blocks and offers additional blocks on demand. It retains headings, paragraphs, lists, tables and other supported semantic structures. Remote markup is parsed in an inert template and rebuilt with an allowlist of element names: remote attributes, links, scripts and executable elements are never rendered. Images are not loaded; their text alternatives and mathematical alternatives are shown as text when available. Consequently the presentation is an adaptation and does not reproduce Wikipedia's styling, interactive features, images, or every non-text detail.
 
-## Behavior
+If Wikipedia cannot be reached, the game pauses and offers retry. It does not silently substitute a shortened excerpt or overwrite the saved game. Wikipedia receives the browser request and the user's IP address under its own privacy policy. There is no guarantee of offline play.
 
-- Word matching ignores case and equates ä/ae, ö/oe, ü/ue and ß/ss. Accents normalize. Other inflections require separate guesses; there is no speculative stemming or substring matching.
-- Common German function words, punctuation and numbers start visible. Hidden words retain their lengths and are not present as text, title, data attributes or accessible labels in the rendered article. Accessibility labels describe only the number of hidden letters. This is a client-side puzzle, not an anti-cheat boundary: the bundled source text is necessarily available to someone inspecting the JavaScript.
-- The full title can be entered in one attempt, or its meaningful words individually. Every successful word attempt reveals all matching words. Duplicates/already visible common words cost no attempt. Misses are retained. Hints reveal useful recurring non-title words first, then remaining title words, and count separately.
-- Finding the title wins and reveals the whole article. Confirmed give-up reveals it without marking it solved. Results can be copied without spoiling the title; clipboard failure is handled visibly.
-- The timer pauses while hidden, in dialogs or after completion. The rules and source dialogs restore focus to their buttons on close. Article/history layouts adapt to mobile; motion respects reduced-motion settings.
+See [wikiland-sources.md](wikiland-sources.md) for attribution, license, version history and the limitations of the adaptation. Source and license are available during play with a spoiler warning.
 
-## Persistence
+## Behavior and persistence
 
-The current round is compactly serialized into at most four first-party cookies, each under 3,500 value characters, named `pr_wikiland_v1_0` … `_3`. They are scoped to `/game-labs/wikiland`, use `SameSite=Lax`, `Secure` on HTTPS and a one-year rolling expiry. Matching checksums, part counts and schema validation reject incomplete or corrupted state. Tests cover at least 500 ordinary guesses, and oversized writes fail without replacing the previous save. The UI reports save failure and remains playable in memory. Cookies are readable by client JavaScript because the game operates entirely in the browser; no identifiers or credentials are stored.
+Matching ignores case and equates ä/ae, ö/oe, ü/ue and ß/ss. Other word forms are separate. Common German words, numbers and punctuation start visible. Each hidden word visibly shows its letter count and exposes an accessible label without the word. The full title can be guessed at once, or its meaningful words individually; hits reveal every matching occurrence in the entire article. Hints, misses, give-up and solved states retain their previous rules. The article text is available to anyone inspecting the API response; this is not an anti-cheat boundary.
 
-`SiteProviders` bypasses Firebase anonymous authentication, global tracking, theme storage and the consent banner on both cookie-only game routes. Other site routes keep their existing providers.
+Progress remains in up to four first-party cookies scoped to the game route, with checksums and size limits. The article itself is not stored in cookies. Existing v1 cookies are read, and a completed legacy game remains completed if a newly displayed disambiguation suffix changes its title. Hints are checked against the fetched revision before accepting the saved state; if they no longer match, the UI reports this rather than overwriting it. The timer pauses while loading, in dialogs, when hidden and after completion. Failed or oversized cookie saves are reported.
 
 ## Verification
 
 ```sh
+python3 scripts/update-wikiland-data.py
 npm run check
-npm audit --omit=dev --audit-level=high
 npm run build
-npx playwright test tests/e2e/wikiland.spec.ts tests/e2e/bits.spec.ts
+npx playwright test tests/e2e/wikiland.spec.ts
 ```
 
-Pure engine/storage tests exercise matching, multiword titles, daily dates/DST, win/hint/give-up rules, corpus solvability, chunk budgets, blocked cookies and corruption. Browser checks cover guesses, duplicates, hints, restore, win/give-up/new-round confirmations, source/rules dialogs, hidden-word markup, isolated storage/networking, mobile/desktop layouts and automated accessibility.
-
-No new packages are needed for Wikiland. The preceding Bits branch updates existing transitive `re2js` and `qs` versions; the production-only audit is clean. Development tooling still has moderate findings.
+Unit tests cover parsing of API responses, revision mismatches, word matching, letter counts and cookie compatibility. Playwright mocks Wikipedia for repeatability and covers full-article indexing, later sections, markup safety, API failure/retry, restored state, mobile layout and accessibility. Run a separate live API smoke test when network access is available: mocks cannot validate Wikipedia's current response or availability.
