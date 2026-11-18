@@ -53,7 +53,7 @@ export function ShopNewsletterForm() {
           Ich habe die{' '}
           <Link href="/datenschutz" className="underline hover:text-white font-bold" target="_blank" rel="noopener noreferrer">
             Datenschutzerklärung
-          </Link> gelesen.
+          </Link> gelesen und möchte den Newsletter per E-Mail erhalten (ca. einmal pro Woche, jederzeit abbestellbar).
         </Label>
       </div>
     </>

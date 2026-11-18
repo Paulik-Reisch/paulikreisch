@@ -165,11 +165,10 @@ export function Footer() {
               <input type="hidden" name="source" value="main-footer" />
               <label className={`grid w-full grid-cols-[14px_minmax(0,1fr)] items-start gap-2 text-[11px] text-[#6b6256] leading-snug cursor-pointer ${tMuted2}`}>
                 <input type="checkbox" name="consent" value="true" required className={`mt-0.5 h-3.5 w-3.5 shrink-0 rounded-sm border-[#e8ddd0] accent-[#1d1a15] ${tLine} dark:accent-[#ffe14d]`} />
-                <span className="block w-full min-w-0 sm:whitespace-nowrap">
-                  Ich akzeptiere die{' '}
+                <span className="block w-full min-w-0">
+                  Ich habe die{' '}
                   <Link href="/datenschutz" className={`underline decoration-[#e8ddd0] hover:text-[#1d1a15] ${tDeco} dark:hover:text-[#f2ede3]`}>Datenschutzerklärung</Link>
-                  {' '}und die{' '}
-                  <Link href="/agb" className={`underline decoration-[#e8ddd0] hover:text-[#1d1a15] ${tDeco} dark:hover:text-[#f2ede3]`}>AGB</Link>.
+                  {' '}gelesen und möchte den Newsletter per E-Mail erhalten (ca. einmal pro Woche, jederzeit abbestellbar).
                 </span>
               </label>
               <SubmitButton />

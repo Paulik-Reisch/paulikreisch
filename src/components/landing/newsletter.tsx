@@ -58,7 +58,7 @@ function NewsletterFormContent() {
           <Link href="/datenschutz" className="underline decoration-[#1d1a15]/30 underline-offset-4 hover:decoration-[#1d1a15] font-semibold text-[#1d1a15]" target="_blank" rel="noopener noreferrer">
             Datenschutzerklärung
           </Link>{" "}
-          gelesen und stimme dem Erhalt des Newsletters zu. Einmal wöchentlich, jederzeit abbestellbar.
+          gelesen und möchte den Newsletter per E-Mail erhalten (ca. einmal pro Woche, jederzeit abbestellbar).
         </span>
       </label>
     </div>
