@@ -181,7 +181,7 @@ test('an unavailable Wikipedia API keeps the saved game and offers retry', async
   await expect(attemptCount(page)).toHaveText('1');
   await page.route('https://de.wikipedia.org/w/api.php?*', route => route.fulfill({ status: 503, headers: { 'access-control-allow-origin': '*' } }));
   await page.reload();
-  await expect(page.getByRole('alert')).toContainText('Spielstand bleibt erhalten');
+  await expect(page.getByRole('article', { name: 'Verborgener Wikipedia-Artikel' }).getByRole('alert')).toContainText('Spielstand bleibt erhalten');
   await page.unroute('https://de.wikipedia.org/w/api.php?*');
   // Install the deterministic API fixture again for retry.
   await page.route('https://de.wikipedia.org/w/api.php?*', async route => {
