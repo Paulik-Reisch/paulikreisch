@@ -57,9 +57,10 @@ env:
     availability:
       - RUNTIME
 
-  # Newsletter (Resend). Values stay in Secret Manager. All newsletter flags
-  # (NEWSLETTER_STORE_ENABLED, NEWSLETTER_SEND_ENABLED, NEWSLETTER_FUNNEL_DAY0)
-  # are deliberately NOT set: unset means off and the routes fail closed.
+  # Newsletter (Resend). Values stay in Secret Manager. Public double opt-in
+  # signup (NEWSLETTER_STORE_ENABLED) was approved by Philipp on 2026-11-18.
+  # NEWSLETTER_SEND_ENABLED and NEWSLETTER_FUNNEL_DAY0 are deliberately NOT set:
+  # unset means off and sending/Day-0 fail closed.
   # Feedback is removal-only and independent of public signup/sending.
   - variable: NEWSLETTER_TOKEN_SECRET
     secret: NEWSLETTER_TOKEN_SECRET@1
@@ -100,6 +101,13 @@ env:
     availability:
       - RUNTIME
   - variable: NEWSLETTER_FEEDBACK_ENABLED
+    value: "1"
+    availability:
+      - RUNTIME
+
+  # Public double opt-in signup with confirmation mail. Legacy subscribers are
+  # not migrated. No campaign is sent by this flag.
+  - variable: NEWSLETTER_STORE_ENABLED
     value: "1"
     availability:
       - RUNTIME
