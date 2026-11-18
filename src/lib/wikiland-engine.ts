@@ -10,6 +10,11 @@ export function normalizeWord(text: string): string {
   return text.trim().toLocaleLowerCase('de').replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss').normalize('NFKD').replace(/\p{M}/gu, '').replace(/\s+/g, ' ');
 }
 
+/** Count letters, not combining accents, punctuation, or UTF-16 code units. */
+export function countLetters(text: string): number {
+  return (text.normalize('NFC').match(/\p{L}/gu) ?? []).length;
+}
+
 export function tokenize(text: string): WikiToken[] {
   return (text.match(/[\p{L}\p{M}]+|[^\p{L}\p{M}]+/gu) ?? []).map(text => ({ text, word: /^[\p{L}\p{M}]+$/u.test(text), key: /^[\p{L}\p{M}]+$/u.test(text) ? normalizeWord(text) : '' }));
 }

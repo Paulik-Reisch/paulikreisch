@@ -96,3 +96,11 @@ test('every bundled article can be solved by entering its complete title', () =>
     assert.equal(isWon(result.game), true, article.title);
   }
 });
+
+import { countLetters } from '../../src/lib/wikiland-engine';
+
+test('letter counts ignore decomposed accents and punctuation', () => {
+  assert.equal(countLetters('A\u0308pfel'), 5);
+  assert.equal(countLetters('Straße'), 6);
+  assert.equal(countLetters('é-2'), 1);
+});

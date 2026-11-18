@@ -21,7 +21,7 @@ test('guesses reveal all matches, reject duplicates, resume in cookies and use n
   const titleWords = new Set(tokenize(article.title).filter(token => token.word).map(token => token.key));
   const candidate = article.paragraphs.flatMap(tokenize).find(token => token.word && !isCommonWord(token.key) && !titleWords.has(token.key) && token.text.length >= 5)!;
   const masksBefore = await body.getByRole('img').count();
-  expect(await body.getByRole('img').evaluateAll(nodes => nodes.every(node => node.textContent === '' && !node.hasAttribute('title') && !node.hasAttribute('data-word')))).toBe(true);
+  expect(await body.getByRole('img').evaluateAll(nodes => nodes.every(node => node.textContent === node.getAttribute('aria-label')?.match(/\d+/)?.[0] && !node.hasAttribute('title') && !node.hasAttribute('data-word')))).toBe(true);
   await page.getByLabel('Dein Wort', { exact: true }).fill(candidate.text.toLocaleUpperCase('de'));
   await page.getByRole('button', { name: 'Raten', exact: true }).click();
   await expect(attemptCount(page)).toHaveText('1');

@@ -7,7 +7,7 @@ import { WikipediaIcon } from '@/components/ui/icons/wikipedia-icon';
 import { Logo } from '@/components/ui/logo';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { applyHint, createGame, getArticle, getGuessHits, isRevealed, isWon, normalizeWord, submitGuess, tokenize, type WikiGame, type WikiToken } from '@/lib/wikiland-engine';
+import { applyHint, countLetters, createGame, getArticle, getGuessHits, isRevealed, isWon, normalizeWord, submitGuess, tokenize, type WikiGame, type WikiToken } from '@/lib/wikiland-engine';
 import { loadWikiGame, saveWikiGame } from '@/lib/wikiland-storage';
 import styles from './wikiland.module.css';
 
@@ -133,7 +133,8 @@ export default function WikilandPage() {
         const highlighted = token.word && highlight && token.key === highlight;
         return <span key={index} className={highlighted ? styles.highlight : undefined}>{token.text}</span>;
       }
-      return <span key={index} className={styles.redacted} style={{ width: `${[...token.text].length}ch` }} role="img" aria-label={`Verborgenes Wort, ${[...token.text].length} Buchstaben`} />;
+      const length = countLetters(token.text);
+      return <span key={index} className={styles.redacted} style={{ width: `${length}ch` }} role="img" aria-label={`Verborgenes Wort, ${length} Buchstaben`}><span aria-hidden="true">{length}</span></span>;
     });
   }
 
