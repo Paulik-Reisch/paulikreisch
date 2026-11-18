@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createTransportTest,TRANSPORT_PROBE,PROBE_DIGEST,PROBE_PHRASE} from '../../src/newsletter/transport-test.mjs';
 import {createNewsletterSender} from '../../src/newsletter/studio-api.mjs';
+import {createMemoryControl} from '../../src/newsletter/send-control.mjs';
 import {NewsletterSubscribers,MemorySubscriberStore} from '../../src/newsletter/subscribers.mjs';
 import {createMarketingHandler} from '../../src/marketing/http.mjs';
 const approval={digest:PROBE_DIGEST,phrase:PROBE_PHRASE};
@@ -29,12 +30,12 @@ test('ambiguous provider failure consumes probe permanently, never automatically
 });
 const doc={id:'newsletter-fixture',revision:1,draft:{kind:'newsletter',mode:'custom',slug:'s',subject:'S',code:{html:'{{abmeldelink}}',text:'{{abmeldelink}}'}}};
 function senderFixture({feedback=true}={}){
- const sent=[];const sender=createNewsletterSender({getStatus:()=>({storeEnabled:false,webhookConfigured:feedback}),enabled:true,from:'N <n@news.example.invalid>',baseUrl:'https://example.invalid',dailyLimit:10,
+ const sent=[];const sender=createNewsletterSender({getStatus:()=>({storeEnabled:false,webhookConfigured:feedback}),enabled:true,from:'N <n@news.example.invalid>',baseUrl:'https://example.invalid',dailyLimit:10,control:createMemoryControl(),
  getReadModel:()=>({snapshot:async()=>({counts:{active:1,pending:0,unsubscribed:0,suppressed:0},recipients:[{id:'fixture'}]})}),
  getSubscribers:()=>Object.freeze({mailable:async()=>[{id:'fixture',email:'only@example.invalid',unsubscribeToken:'fixture-token'}]}),getResend:()=>({send:async m=>{sent.push(m);return {id:'fixture'};}})});return {sender,sent};
 }
 test('campaign can send through narrow mailing capability while public registration remains off',async()=>{
- const f=senderFixture();const p=await f.sender.preview(doc);assert.equal(p.ready,true);
+ const f=senderFixture();let p=await f.sender.preview(doc);assert.equal(p.ready,false);assert.equal(p.approvable,true);p=await f.sender.approve(doc,{digest:p.digest,phrase:p.approvalPhrase,actor:'t'});assert.equal(p.ready,true);
  assert.equal((await f.sender.send(doc,{digest:p.digest,phrase:p.phrase})).sent,1);assert.equal(f.sent.length,1);
 });
 test('missing active feedback blocks preview and direct campaign send',async()=>{

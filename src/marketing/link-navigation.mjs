@@ -40,6 +40,10 @@ function installLinkNavigation(preview) {
     dialog.querySelector('[data-preview-destination]').textContent = target.href;
     dialog.style.top = Math.max(16, event.clientY - 100) + 'px';
     dialog.showModal();
+    // Long custom pages scroll in the parent, not inside this iframe. Use the
+    // existing scroll bridge so the whole dialog is visible after a deep CTA.
+    parent.postMessage({__prCustomFrame:'height',value:Math.max(document.documentElement.scrollHeight,dialog.offsetTop+dialog.offsetHeight+24)},'*');
+    requestAnimationFrame(() => requestAnimationFrame(() => dialog.scrollIntoView({block:'start'})));
   }, true);
 }
 

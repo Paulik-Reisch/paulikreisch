@@ -30,7 +30,7 @@ export function previewSend({from,replyTo,subject,content,recipients,dailyLimit}
   return {digest,count,dailyLimit,overDailyLimit:count>dailyLimit,phrase:`SENDEN ${count}`,from,replyTo:replyTo??null,subject,sample:count?buildMessage({from,replyTo,subject,content,recipient:{...recipients[0],email:'beispiel@example.invalid'},baseUrl:'https://paulikreisch.de'}).headers:null};
 }
 /** sleep is injectable for pacing and tests. */
-export async function sendCampaign({enabled,confirmation,from,replyTo,subject,content,recipients,dailyLimit,resend,baseUrl,campaignId,sleep=ms=>new Promise(r=>setTimeout(r,ms)),paceMs=600}){
+export async function sendCampaign({enabled,confirmation,from,replyTo,subject,content,recipients,dailyLimit,resend,baseUrl,campaignId,beforeSend,sleep=ms=>new Promise(r=>setTimeout(r,ms)),paceMs=600}){
   if(!enabled)throw new SendRefused('Versand ist nicht freigeschaltet.');
   if(!recipients.length)throw new SendRefused('Keine bestätigten Empfänger.');
   if(recipients.length>dailyLimit)throw new SendRefused(`Mehr Empfänger (${recipients.length}) als Tageslimit (${dailyLimit}).`);
@@ -40,6 +40,9 @@ export async function sendCampaign({enabled,confirmation,from,replyTo,subject,co
   if(!/^[A-Za-z0-9_-]{4,64}$/.test(campaignId))throw new SendRefused('Ungültige Kampagnen-ID.');
   // Build every message first so a content error aborts before the first send.
   const messages=recipients.map(recipient=>({recipient,message:buildMessage({from,replyTo,subject,content,recipient,baseUrl})}));
+  // Last step before the first provider call. The caller writes its durable claim here,
+  // so a claim exists exactly when a provider call may have happened.
+  await beforeSend?.();
   const results=[];
   for(const [index,{recipient,message}] of messages.entries()){
     if(index)await sleep(paceMs);

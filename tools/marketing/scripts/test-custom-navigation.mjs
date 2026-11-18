@@ -71,5 +71,24 @@ for(const snapshot of snapshots){
   await link.click();await page.getByRole('heading',{name:'Verified destination'}).waitFor({timeout:3000});
   assert.equal(destination,expected);checked++;await context.close();
 }
+// Long-page previews must scroll the parent to show the entire destination modal.
+{
+ const context=await browser.newContext({viewport:{width:390,height:844}});
+ const page=await context.newPage();
+ const longDoc=structuredClone(doc);
+ longDoc.code.html='<div style="height:2500px">Long campaign</div>'+longDoc.code.html;
+ await page.route('**/*',route=>route.fulfill({headers:PUBLIC_HEADERS,body:renderPage(longDoc,{preview:true})}));
+ await page.goto('https://ads.paulikreisch.de/long-preview');
+ const frame=page.frameLocator('iframe');
+ await frame.locator('body[data-ready="yes"]').waitFor();
+ await frame.getByRole('link',{name:'Zum Buch',exact:true}).click();
+ const modal=frame.getByRole('dialog',{name:'Linkziel in der privaten Vorschau'});
+ await modal.waitFor();
+ await page.waitForTimeout(700);
+ const bounds=await modal.boundingBox();
+ assert.ok(bounds.y>=-1 && bounds.y+bounds.height<=844,JSON.stringify(bounds));
+ await page.screenshot({path:'/downloads/custom-long-preview-link-390.png'});
+ checked++;await context.close();
+}
 console.log(`${checked} browser regressions passed: live top navigation, preview-only destination dialog, hash navigation, ordinary controls, all captured published custom pages.`);
 } finally {await browser.close();}

@@ -153,10 +153,11 @@ test('rotation: old tokens still verify, record ids survive a token secret chang
 });
 
 import {createNewsletterSender} from '../../src/newsletter/studio-api.mjs';
+import {createMemoryControl} from '../../src/newsletter/send-control.mjs';
 test('studio sender: preview is read-only, send needs digest and phrase and the enabled flag',async()=>{
   const draft={kind:'newsletter',slug:'sommer',mode:'custom',subject:'S',code:{html:'<p>x {{abmeldelink}}</p>',text:'x {{abmeldelink}}'}};const rec={id:'abc',draft,published:null,revision:3};
   const sent=[];
-  const make=enabled=>createNewsletterSender({getStatus:()=>({webhookConfigured:true}),getSubscribers:()=>({mailable:async()=>[{id:'a',email:'a@example.invalid',unsubscribeToken:'t.t'}]}),getResend:()=>({send:async m=>{sent.push(m);return {id:'p1'};}}),from:'N <n@news.example.invalid>',baseUrl:'https://example.invalid',dailyLimit:5,enabled});
+  const make=enabled=>createNewsletterSender({getStatus:()=>({webhookConfigured:true}),getSubscribers:()=>({mailable:async()=>[{id:'a',email:'a@example.invalid',unsubscribeToken:'t.t'}]}),getResend:()=>({send:async m=>{sent.push(m);return {id:'p1'};}}),from:'N <n@news.example.invalid>',baseUrl:'https://example.invalid',dailyLimit:5,enabled,control:createMemoryControl()});
   const off=make(false),p=await off.preview(rec);
   assert.equal(p.count,1);assert.equal(sent.length,0);
   await assert.rejects(()=>off.send(rec,{digest:p.digest,phrase:p.phrase}),/nicht freigeschaltet/);
@@ -187,11 +188,12 @@ test('double opt-in: mail only for a fresh pending request, neutral otherwise, h
 test('browser-view placeholder is only filled for the exactly published revision',async()=>{
   const draft={kind:'newsletter',slug:'sommer',mode:'custom',subject:'S',code:{html:'<a href="{{webansicht}}">Browser</a> {{abmeldelink}}',text:'{{webansicht}} {{abmeldelink}}'}};
   const sent=[];
-  const nl=createNewsletterSender({getStatus:()=>({webhookConfigured:true}),getSubscribers:()=>({mailable:async()=>[{id:'a',email:'a@example.invalid',unsubscribeToken:'t.t'}]}),getResend:()=>({send:async m=>{sent.push(m);return {id:'p'};}}),from:'N <n@news.example.invalid>',baseUrl:'https://example.invalid',dailyLimit:5,enabled:true});
+  const nl=createNewsletterSender({getStatus:()=>({webhookConfigured:true}),getSubscribers:()=>({mailable:async()=>[{id:'a',email:'a@example.invalid',unsubscribeToken:'t.t'}]}),getResend:()=>({send:async m=>{sent.push(m);return {id:'p'};}}),from:'N <n@news.example.invalid>',baseUrl:'https://example.invalid',dailyLimit:5,enabled:true,control:createMemoryControl()});
   assert.match((await nl.preview({id:'abc',draft,published:null,revision:2})).blockers.join('|'),/nicht veröffentlicht/);
   await assert.rejects(()=>nl.send({id:'abc',draft,published:null,revision:2},{}),/nicht veröffentlicht/);
   assert.match((await nl.preview({id:'abc',draft,published:{revision:1},revision:2})).blockers.join('|'),/nicht veröffentlicht oder nicht auf dem aktuellen Stand/);
   const rec={id:'abc',draft,published:{revision:2},revision:2},p=await nl.preview(rec);
+  await nl.approve(rec,{digest:p.digest,phrase:p.approvalPhrase,actor:'t'});
   const r=await nl.send(rec,{digest:p.digest,phrase:p.phrase});
   assert.equal(r.sent,1);assert.match(sent[0].html,/href="https:\/\/paulikreisch\.de\/nl\/view\/sommer"/);
   assert.match(sent[0].html,/nl\/unsubscribe\?t=/);assert.doesNotMatch(sent[0].html+sent[0].text,/\{\{/);

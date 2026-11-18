@@ -2,7 +2,7 @@ import {test,expect,type Page,type Route} from '@playwright/test';
 import {assets} from '../../src/marketing/generated-assets.mjs';
 const phrase='EINMALIGEN VERSANDTEST AN PHILIPP SENDEN';
 const probe={enabled:true,configured:true,digest:'fixture-digest',phrase,to:'philipp.l.paulik@gmail.com',from:'Paulik & Reisch <newsletter@news.paulikreisch.de>',replyTo:'philipp.l.paulik@gmail.com',subject:'Paulik & Reisch: Versandtest',text:'Fixture only. No email is sent.',warning:'Exactly one fixture.'};
-async function studio(page:Page,{enabled=true,fail=false,campaignReady=false}={}){
+async function studio(page:Page,{enabled=true,fail=false,campaignReady=false,approvable=false}={}){
  const posts:unknown[]=[];
  await page.route('**/*',async(route:Route)=>{
   const u=new URL(route.request().url()),p=u.pathname;
@@ -10,7 +10,8 @@ async function studio(page:Page,{enabled=true,fail=false,campaignReady=false}={}
   if(p==='/')return route.fulfill({body:assets['/'].body,contentType:'text/html'});
   if(p==='/api/marketing/session')return route.fulfill({json:{csrf:'fixture',role:'manager'}});
   if(p==='/api/marketing/documents')return route.fulfill({json:[]});
-  if(p==='/api/marketing/documents/campaign-fixture/send-preview')return route.fulfill({json:{revision:5,ready:campaignReady,enabled:campaignReady,count:campaignReady?1:0,dailyLimit:100,blockers:campaignReady?[]:['No recipients'],warnings:[],browserUrl:'https://example.invalid/private',subject:'Fixture campaign',from:'Fixture <fixture@example.invalid>',digest:'campaign-fixture-digest',phrase:'SENDEN 1'}});
+  if(p==='/api/marketing/documents/campaign-fixture/send-preview')return route.fulfill({json:{revision:5,ready:campaignReady,approvable:approvable,approval:campaignReady?{state:'approved',approvedBy:'philipp@example.invalid',expiresAt:'2026-12-01T12:00:00Z'}:{state:'none'},approvalPhrase:'FREIGEBEN 1',approvalHours:24,sendState:{state:'none'},publishedCurrent:campaignReady,enabled:campaignReady,count:campaignReady?1:0,dailyLimit:100,blockers:campaignReady?[]:['No recipients'],warnings:[],browserUrl:'https://example.invalid/private',subject:'Fixture campaign',from:'Fixture <fixture@example.invalid>',digest:'campaign-fixture-digest',phrase:'SENDEN 1'}});
+  if(p==='/api/marketing/documents/campaign-fixture/approve'){posts.push({approve:route.request().postDataJSON()});return route.fulfill({json:{revision:5,ready:true,approvable:true,approval:{state:'approved',approvedBy:'philipp@example.invalid',expiresAt:'2026-12-01T12:00:00Z'},approvalPhrase:'FREIGEBEN 1',approvalHours:24,sendState:{state:'none'},publishedCurrent:true,enabled:true,count:1,dailyLimit:100,blockers:[],warnings:[],browserUrl:'https://example.invalid/private',subject:'Fixture campaign',from:'Fixture <fixture@example.invalid>',digest:'campaign-fixture-digest',phrase:'SENDEN 1'}});}
   if(p==='/api/marketing/documents/campaign-fixture/send'){posts.push(route.request().postDataJSON());return route.fulfill({status:fail?503:200,json:fail?{error:'Fixture uncertain result'}:{sent:1,failed:0,notAttempted:0}});}
   if(p==='/api/marketing/newsletter/transport-test'){
    if(route.request().method()==='POST'){posts.push(route.request().postDataJSON());return route.fulfill({status:fail?503:200,json:fail?{error:'Fixture timeout'}:{accepted:true,providerId:'fixture'}});}
@@ -51,37 +52,60 @@ async function campaign(page:Page){
 }
 test('campaign confirmation uses exact inline phrase and submits once despite double clicks',async({page})=>{
  const posts=await studio(page,{campaignReady:true});await campaign(page);page.on('dialog',()=>{throw Error('No native campaign dialog');});
- await page.getByRole('button',{name:'Versand prüfen',exact:true}).dblclick();
+ await page.getByRole('button',{name:'Versand prüfen',exact:true}).dblclick();await page.getByRole('button',{name:/^Jetzt an 1 Empfänger senden/}).click();
  const send=page.getByRole('button',{name:'Newsletter senden',exact:true}),input=page.getByRole('textbox',{name:'Zum einmaligen Senden exakt eintippen: SENDEN 1',exact:true});
  await expect(send).toBeDisabled();await input.fill('SENDEN 2');await expect(send).toBeDisabled();expect(posts).toHaveLength(0);
  await input.fill('SENDEN 1');await send.click();await expect(page.locator('#status')).toContainText('Gesendet: 1');expect(posts).toEqual([{digest:'campaign-fixture-digest',phrase:'SENDEN 1'}]);
- await page.getByRole('button',{name:'Versand prüfen',exact:true}).click();await expect(page.locator('#status')).toContainText('bereits versucht');await expect(send).toHaveCount(0);expect(posts).toHaveLength(1);
+ await page.getByRole('button',{name:'Versand prüfen',exact:true}).click();await page.getByRole('button',{name:/^Jetzt an 1 Empfänger senden/}).click();await expect(page.locator('#status')).toContainText('bereits versucht');await expect(send).toHaveCount(0);expect(posts).toHaveLength(1);
 });
 test('campaign cancellation cannot submit',async({page})=>{
- const posts=await studio(page,{campaignReady:true});await campaign(page);await page.getByRole('button',{name:'Versand prüfen',exact:true}).click();await page.getByRole('button',{name:'Abbrechen',exact:true}).click();expect(posts).toHaveLength(0);
+ const posts=await studio(page,{campaignReady:true});await campaign(page);await page.getByRole('button',{name:'Versand prüfen',exact:true}).click();await page.getByRole('button',{name:/^Jetzt an 1 Empfänger senden/}).click();await page.getByRole('button',{name:'Abbrechen',exact:true}).click();expect(posts).toHaveLength(0);
 });
 test('campaign without confirmed recipients stays in private preview',async({page})=>{
  const posts=await studio(page);await campaign(page);await page.getByRole('button',{name:'Versand prüfen',exact:true}).click();await expect(page.locator('#status')).toContainText('Nichts wurde versendet');await expect(page.getByRole('button',{name:'Newsletter senden',exact:true})).toHaveCount(0);expect(posts).toHaveLength(0);
 });
 test('uncertain campaign result is not resubmitted on a new preview in the same session',async({page})=>{
- const posts=await studio(page,{campaignReady:true,fail:true});await campaign(page);await page.getByRole('button',{name:'Versand prüfen',exact:true}).click();await page.getByRole('textbox',{name:'Zum einmaligen Senden exakt eintippen: SENDEN 1',exact:true}).fill('SENDEN 1');await page.getByRole('button',{name:'Newsletter senden',exact:true}).click();await expect(page.locator('#status')).toContainText('nicht erneut senden');await page.getByRole('button',{name:'Versand prüfen',exact:true}).click();await expect(page.locator('#status')).toContainText('bereits versucht');expect(posts).toHaveLength(1);
+ const posts=await studio(page,{campaignReady:true,fail:true});await campaign(page);await page.getByRole('button',{name:'Versand prüfen',exact:true}).click();await page.getByRole('button',{name:/^Jetzt an 1 Empfänger senden/}).click();await page.getByRole('textbox',{name:'Zum einmaligen Senden exakt eintippen: SENDEN 1',exact:true}).fill('SENDEN 1');await page.getByRole('button',{name:'Newsletter senden',exact:true}).click();await expect(page.locator('#status')).toContainText('nicht erneut senden');await page.getByRole('button',{name:'Versand prüfen',exact:true}).click();await page.getByRole('button',{name:/^Jetzt an 1 Empfänger senden/}).click();await expect(page.locator('#status')).toContainText('bereits versucht');expect(posts).toHaveLength(1);
 });
 
 test('campaign inline review stays readable at five viewport widths',async({page},testInfo)=>{
- await studio(page,{campaignReady:true});await campaign(page);await page.getByRole('button',{name:'Versand prüfen',exact:true}).click();
+ await studio(page,{campaignReady:true});await campaign(page);await page.getByRole('button',{name:'Versand prüfen',exact:true}).click();await page.getByRole('button',{name:/^Jetzt an 1 Empfänger senden/}).click();
  for(const width of [320,375,414,768,1440]){await page.setViewportSize({width,height:1000});await page.locator('.action-confirmation').scrollIntoViewIfNeeded();await expect(page.getByRole('button',{name:'Newsletter senden',exact:true})).toBeVisible();expect(await page.locator('.editor-actions .action-confirmation').count()).toBe(0);expect(await page.getByRole('button',{name:'Entwurf speichern',exact:true}).evaluate(el=>el.getBoundingClientRect().height)).toBeLessThan(60);await page.screenshot({path:testInfo.outputPath(`campaign-inline-${width}.png`)});}
 });
 
 
 test('navigation cancels the campaign confirmation without a POST',async({page})=>{
- const posts=await studio(page,{campaignReady:true});await campaign(page);await page.getByRole('button',{name:'Versand prüfen',exact:true}).click();await expect(page.locator('.action-confirmation')).toHaveCount(1);
+ const posts=await studio(page,{campaignReady:true});await campaign(page);await page.getByRole('button',{name:'Versand prüfen',exact:true}).click();await page.getByRole('button',{name:/^Jetzt an 1 Empfänger senden/}).click();await expect(page.locator('.action-confirmation')).toHaveCount(1);
  await page.locator('#back').click();await expect(page.locator('.action-confirmation')).toHaveCount(0);expect(posts).toHaveLength(0);
 });
 
 test('leaving during a pending campaign preflight does not create a stale confirmation',async({page})=>{
  const posts=await studio(page,{campaignReady:true});await campaign(page);
  let release!:()=>void;const wait=new Promise<void>(resolve=>{release=resolve;});let entered!:()=>void;const pending=new Promise<void>(resolve=>{entered=resolve;});
- await page.route('**/api/marketing/documents/campaign-fixture/send-preview',async route=>{entered();await wait;await route.fulfill({json:{revision:5,ready:true,enabled:true,count:1,dailyLimit:100,blockers:[],warnings:[],browserUrl:'https://example.invalid/private',subject:'Fixture campaign',from:'Fixture <fixture@example.invalid>',digest:'campaign-fixture-digest',phrase:'SENDEN 1'}});});
+ await page.route('**/api/marketing/documents/campaign-fixture/send-preview',async route=>{entered();await wait;await route.fulfill({json:{revision:5,ready:true,enabled:true,count:1,dailyLimit:100,blockers:[],warnings:[],publishedCurrent:true,approvable:true,approval:{state:'approved'},approvalPhrase:'FREIGEBEN 1',sendState:{state:'none'},browserUrl:'https://example.invalid/private',subject:'Fixture campaign',from:'Fixture <fixture@example.invalid>',digest:'campaign-fixture-digest',phrase:'SENDEN 1'}});});
  await page.getByRole('button',{name:'Versand prüfen',exact:true}).click();await pending;await page.locator('#back').click();release();
  await expect(page.locator('#send-check')).toBeEnabled();await expect(page.locator('.action-confirmation')).toHaveCount(0);expect(posts).toHaveLength(0);
+});
+
+test('check alone never prompts a send; approval is its own exact-phrase step and sends nothing',async({page},testInfo)=>{
+ const posts=await studio(page,{approvable:true});await campaign(page);page.on('dialog',()=>{throw Error('No native dialog');});
+ await page.getByRole('button',{name:'Versand prüfen',exact:true}).click();
+ await expect(page.locator('.action-confirmation')).toHaveCount(0);await expect(page.getByRole('button',{name:/^Jetzt an/})).toHaveCount(0);
+ await expect(page.getByText('keine Freigabe')).toBeVisible();expect(posts).toHaveLength(0);
+ await page.getByRole('button',{name:'Versandfreigabe erteilen …'}).click();
+ const ok=page.getByRole('button',{name:'Freigabe erteilen',exact:true}),input=page.getByRole('textbox',{name:'Zum einmaligen Senden exakt eintippen: FREIGEBEN 1',exact:true});
+ await expect(ok).toBeDisabled();await input.fill('SENDEN 1');await expect(ok).toBeDisabled();expect(posts).toHaveLength(0);
+ await input.fill('FREIGEBEN 1');await ok.click();
+ await expect(page.locator('#status')).toContainText('Es wurde nichts versendet');
+ expect(posts).toEqual([{approve:{digest:'campaign-fixture-digest',phrase:'FREIGEBEN 1'}}]);
+ await expect(page.getByRole('button',{name:'Freigabe widerrufen'})).toBeVisible();await expect(page.getByRole('button',{name:/^Jetzt an 1 Empfänger senden/})).toBeVisible();
+ for(const [width,height] of [[390,844],[1440,1000]]){await page.setViewportSize({width,height});await page.locator('#newsletter-preflight').scrollIntoViewIfNeeded();await page.locator('#newsletter-preflight').screenshot({path:testInfo.outputPath(`approval-panel-${width}.png`)});}
+});
+
+test('approved but unpublished or outdated browser view shows the lock and no send button',async({page})=>{
+ const posts=await studio(page);await campaign(page);
+ await page.route('**/api/marketing/documents/campaign-fixture/send-preview',route=>route.fulfill({json:{revision:5,ready:false,approvable:false,approval:{state:'approved',approvedBy:'philipp@example.invalid',expiresAt:'2026-12-01T12:00:00Z'},approvalPhrase:'FREIGEBEN 1',approvalHours:24,sendState:{state:'none'},publishedCurrent:false,enabled:true,count:1,dailyLimit:100,blockers:['Browseransicht ist nicht veröffentlicht oder nicht auf dem aktuellen Stand.'],warnings:[],browserUrl:'https://example.invalid/private',subject:'Fixture campaign',from:'Fixture <fixture@example.invalid>',digest:'campaign-fixture-digest',phrase:'SENDEN 1'}}));
+ await page.getByRole('button',{name:'Versand prüfen',exact:true}).click();
+ await expect(page.getByText('Versand gesperrt')).toBeVisible();await expect(page.getByText('Browseransicht ist nicht veröffentlicht')).toBeVisible();
+ await expect(page.getByRole('button',{name:/^Jetzt an/})).toHaveCount(0);await expect(page.getByRole('button',{name:'Versandfreigabe erteilen …'})).toBeHidden();expect(posts).toHaveLength(0);
 });

@@ -28,7 +28,7 @@ async function route(request: Request, context: { params: Promise<{ path?: strin
     // Reuse the accepted private-asset and short-link releases on their shared
     // private bucket prefix. Without those gates the studio sections stay 404.
     files: process.env.PRIVATE_ASSET_RELEASE === 'private-prefix-v1-accepted' ? createStudioFiles(bucket) : undefined,
-    newsletter: createStudioNewsletter(),
+    newsletter: createStudioNewsletter(bucket),
     transportTest: createStudioTransportTest(bucket),
     links: process.env.SHORT_LINK_RELEASE === 'private-prefix-v1-accepted' ? createStudioLinks(bucket) : undefined,
   });

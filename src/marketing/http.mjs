@@ -80,17 +80,19 @@ export function createMarketingHandler({service,auth,assets,files,links,newslett
     }
     const preview=path.match(/^\/preview\/([a-f0-9-]{36})$/);
     if(preview&&safe){const record=await owned(preview[1]);const headers={...PUBLIC_HEADERS,...PRIVATE};return new Response(method==='HEAD'?null:renderPage(record.draft,{preview:true,previewId:record.id,stepSlug:url.searchParams.get('step')}),{headers});}
-    const match=path.match(/^\/api\/marketing\/documents\/([a-f0-9-]{36})(?:\/(publish|unpublish|export|send-preview|send))?$/);
+    const match=path.match(/^\/api\/marketing\/documents\/([a-f0-9-]{36})(?:\/(publish|unpublish|export|send-preview|send|approve|revoke-approval))?$/);
     if(!match)throw new MarketingError(404,'Nicht gefunden.');
     const[,id,action]=match,record=await owned(id);
     if(!action&&method==='GET')return json(record);
     if(action==='export'&&method==='GET')return json(record.draft.kind==='newsletter'?newsletterExport(record.draft):adExport(record.draft));
     const body=await readBody(request);
-    if((action==='send-preview'||action==='send')&&method==='POST'){
+    if((action==='send-preview'||action==='send'||action==='approve'||action==='revoke-approval')&&method==='POST'){
       if(role!=='manager'||record.draft.kind!=='newsletter')throw new MarketingError(404,'Nicht gefunden.');
       if(!newsletter)throw new MarketingError(404,'Versand ist nicht eingerichtet.');
       try{
         if(action==='send-preview')return json(await newsletter.preview(record));
+        if(action==='approve')return json(await newsletter.approve(record,{digest:body.digest,phrase:body.phrase,actor:session.email}));
+        if(action==='revoke-approval')return json(await newsletter.revokeApproval(record,{actor:session.email}));
         return json(await newsletter.send(record,{digest:body.digest,phrase:body.phrase}));
       }catch(error){if(error instanceof MarketingError||error?.status===409)throw error;throw new MarketingError(503,'Versand derzeit nicht verfügbar.');}
     }

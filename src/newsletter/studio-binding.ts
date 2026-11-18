@@ -5,11 +5,14 @@ import { createNewsletterSender } from './studio-api.mjs';
 import { createResend } from './resend.mjs';
 import { getNewsletterMailingRecipients, newsletterStoreEnabled } from './server';
 import { getNewsletterReadModel } from './read-model';
+import type { Bucket } from '@google-cloud/storage';
+import { createBucketControl } from './control-binding';
 
 /** Private campaign recipient reads are independent from public signup writes.
  * Sending still needs SEND, active signed feedback, and explicit confirmation. */
-export function createStudioNewsletter() {
+export function createStudioNewsletter(bucket: Bucket) {
   return createNewsletterSender({
+    control: createBucketControl(bucket),
     getSubscribers: getNewsletterMailingRecipients,
     getReadModel: getNewsletterReadModel,
     getStatus: () => ({

@@ -115,3 +115,10 @@ fixed probe has a permanent create-only claim. Ordinary campaigns currently rely
 on stable provider idempotency keys, not that probe claim. A same-session UI
 attempt guard is not durable campaign send history and must not be described as
 one.
+
+## Versandfreigabe im Studio (zwei Schritte, getrennt vom Versand)
+- Schritt 1, "Versandfreigabe erteilen": nur Manager, nur wenn alle Blocker bis auf Freigabe und globalen Schalter erledigt sind (aktuelle Revision veröffentlicht, Empfänger > 0, im Limit, Rückkanal aktiv). Digest + getippte Phrase `FREIGEBEN <Anzahl>`. Speichert einen Datensatz `newsletter-control/approval-<doc>-r<revision>.json` im privaten Bucket. Versendet nichts.
+- Die Freigabe gilt für genau diese gespeicherte Revision und genau diesen Empfängerkreis (Digest). Änderung an Inhalt, Betreff, Absender oder Empfängern macht sie ungültig. Sie läuft nach 24 Stunden ab und ist bis zum Versandbeginn widerrufbar.
+- Schritt 2, "Jetzt senden": braucht gültige Freigabe, `NEWSLETTER_SEND_ENABLED=1` (bleibt globale Notbremse, standardmäßig aus), Digest und Phrase `SENDEN <Anzahl>`.
+- Vor dem ersten Providerruf wird ein create-only Claim `send-<doc>-r<revision>.json` geschrieben. Eine Revision wird nie zweimal versendet, auch nicht nach Timeout oder Absturz. Ergebnis (gesendet/fehlgeschlagen/nicht versucht) wird danach in den Claim geschrieben. Es gibt keinen automatischen Wiederholversuch für Teilfehler.
+- Offen: Neuversand unversendeter Reste nach Teilfehler (braucht eigene Entscheidung), Anbieterkontingent, Mailclient-Rendertest.
