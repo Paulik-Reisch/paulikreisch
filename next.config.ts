@@ -63,6 +63,9 @@ const nextConfig: NextConfig = {
       }
     ],
   },
+  async rewrites() {
+    return [{ source: '/wikiland', destination: '/game-labs/wikiland' }];
+  },
   async redirects() {
     return [
        {

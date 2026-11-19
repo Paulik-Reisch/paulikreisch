@@ -1,6 +1,6 @@
 # Wikiland
 
-`/game-labs/wikiland` is a German Wikipedia word-guessing game: guess words to reveal every matching occurrence and find the meaningful title words.
+`/wikiland` is a German Wikipedia word-guessing game: guess words to reveal every matching occurrence and find the meaningful title words. The original URL `/game-labs/wikiland` also serves the game.
 
 ## Content, structure and modes
 
@@ -16,7 +16,9 @@ See [wikiland-sources.md](wikiland-sources.md) for attribution, license, version
 
 Matching ignores case and equates ä/ae, ö/oe, ü/ue and ß/ss. Other word forms are separate. Common German words, numbers and punctuation start visible. Each hidden word visibly shows its letter count and exposes an accessible label without the word. The full title can be guessed at once, or its meaningful words individually; hits reveal every matching occurrence in the entire article. Hints, misses, give-up and solved states retain their previous rules. The article text is available to anyone inspecting the API response; this is not an anti-cheat boundary.
 
-Progress remains in up to four first-party cookies scoped to the game route, with checksums and size limits. The article itself is not stored in cookies. Existing v1 cookies are read, and a completed legacy game remains completed if a newly displayed disambiguation suffix changes its title. Hints are checked against the fetched revision before accepting the saved state; if they no longer match, the UI reports this rather than overwriting it. The timer pauses while loading, in dialogs, when hidden and after completion. Failed or oversized cookie saves are reported.
+Select a word in the guess history to jump to its first occurrence. Selecting it again cycles through its matches in article order, expanding any blocks needed to reach the next match.
+
+Progress is saved to up to four first-party cookies per game URL, with checksums and size limits. Each cookie is scoped to its game URL. On the short URL, the first visit can recover an existing save through the same-origin endpoint under the original cookie path. The article itself is not stored in cookies. A completed legacy game remains completed if a newly displayed disambiguation suffix changes its title. Hints are checked against the fetched revision before accepting the saved state; if they no longer match, the UI reports this rather than overwriting it. The timer pauses while loading, in dialogs, when hidden and after completion. Failed or oversized cookie saves are reported.
 
 ## Verification
 

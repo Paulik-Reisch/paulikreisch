@@ -46,7 +46,7 @@ test('chunked cookies preserve 500 normal guesses within four bounded scoped coo
     assert.deepEqual(loadWikiGame(), state);
     assert.ok(jar.size <= 4 && jar.size > 1);
     for (const value of jar.values()) assert.ok(value.length <= 3500);
-    for (const value of writes) assert.match(value, /Path=\/game-labs\/wikiland; Max-Age=\d+; SameSite=Lax; Secure/);
+    assert.deepEqual(new Set(writes.map(value => value.match(/Path=([^;]+); Max-Age=\d+; SameSite=Lax; Secure/)?.[1])), new Set(['/game-labs/wikiland', '/wikiland']));
     clearWikiGame();
     assert.equal(jar.size, 0);
     assert.equal(loadWikiGame(), null);

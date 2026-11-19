@@ -230,21 +230,20 @@ test('mobile navigation opens and closes with Escape', async ({ page }) => {
   await expect(page.getByRole('dialog', { name: 'Navigation' })).toBeHidden();
 });
 
-test('mobile navigation keeps the same three actions as desktop, ordered Buch kaufen, Worthaft, Schreibstube', async ({ page }) => {
+test('desktop and mobile navigation show Worthaft and the shop without Schreibstube', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('/');
   await expect(page.locator('header nav a').nth(0)).toHaveAttribute('href', '/worthaft');
-  await expect(page.locator('header nav a').nth(1)).toHaveAttribute('href', '/gpt');
-  await expect(page.locator('header nav a').nth(2)).toHaveAttribute('href', '/shop');
+  await expect(page.locator('header nav a').nth(1)).toHaveAttribute('href', '/shop');
+  await expect(page.locator('header nav a[href="/gpt"]')).toHaveCount(0);
 
   await page.setViewportSize({ width: 375, height: 812 });
   await page.getByRole('button', { name: 'Menü öffnen' }).click();
   const mobileDialog = page.getByRole('dialog', { name: 'Navigation' });
   const mobileNav = mobileDialog.getByRole('navigation', { name: 'Hauptnavigation' }).locator('a');
-  await expect(mobileNav).toHaveCount(3);
+  await expect(mobileNav).toHaveCount(2);
   await expect(mobileNav.nth(0)).toHaveAttribute('href', '/shop');
   await expect(mobileNav.nth(1)).toHaveAttribute('href', '/worthaft');
-  await expect(mobileNav.nth(2)).toHaveAttribute('href', '/gpt');
   await expect(mobileNav.nth(1).locator('.worthaft-icon-shimmer')).toBeVisible();
   await expect(mobileDialog).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
   const actionWidths = await mobileNav.evaluateAll((links) => links.map((link) => link.getBoundingClientRect().width));
@@ -254,7 +253,7 @@ test('mobile navigation keeps the same three actions as desktop, ordered Buch ka
   expect(drawerBounds.width).toBeLessThan(330);
   expect(drawerBounds.x).toBeGreaterThan(0);
   expect(drawerBounds.y).toBe(12);
-  // The theme row is part of the drawer, below the three navigation actions.
+  // The theme row is part of the drawer, below the navigation actions.
   // Check its structure and containment instead of the old pre-theme pixel height.
   const themeSwitch = mobileDialog.getByRole('switch', { name: 'Dunkelmodus' });
   await expect(mobileDialog.getByText('Dunkelmodus', { exact: true })).toBeVisible();

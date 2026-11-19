@@ -457,20 +457,6 @@
     35% { box-shadow: 0 0 18px 4px rgba(34, 104, 255, 0.65); }
   }
 
-  /* Heißer-Tipp-Flamme: fade-in + grow + Erdbeben-Wackeln, dann nach oben raus (~3s) */
-  @keyframes flame-reveal {
-    0%   { opacity: 0; transform: scale(0.3) translateY(0) rotate(0deg); }
-    15%  { opacity: 1; transform: scale(0.9) translateY(0) rotate(0deg); }
-    30%  { transform: scale(1.1) translateY(0) rotate(-5deg); }
-    45%  { transform: scale(1.1) translateY(0) rotate(5deg); }
-    60%  { transform: scale(1.1) translateY(0) rotate(-4deg); }
-    75%  { transform: scale(1.15) translateY(-10px) rotate(2deg); }
-    100% { opacity: 0; transform: scale(1.3) translateY(-72px) rotate(0deg); }
-  }
-  .flame-reveal {
-    animation: flame-reveal 3s ease-out 0.08s 1 both;
-  }
-
   @keyframes marquee {
     from { transform: translateX(0); }
     to { transform: translateX(calc(-100% - var(--gap))); }
@@ -485,6 +471,38 @@
   .animate-marquee-vertical {
     animation: marquee-vertical var(--duration) linear infinite;
   }
+}
+
+@property --worthaft-tip-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.worthaft-tip-key {
+  position: relative;
+  box-shadow: inset 0 0 0 2px #ea580c;
+}
+
+.worthaft-tip-key-animated::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 3px;
+  pointer-events: none;
+  background: conic-gradient(from var(--worthaft-tip-angle), transparent 72%, #f59e0b, #fef3c7 98%, transparent);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: worthaft-tip-orbit 1.8s linear infinite;
+}
+
+@keyframes worthaft-tip-orbit {
+  to { --worthaft-tip-angle: 360deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .worthaft-tip-key-animated::after { animation: none; }
 }
 
 /* Homepage anchors: sticky navigation remains visible. */

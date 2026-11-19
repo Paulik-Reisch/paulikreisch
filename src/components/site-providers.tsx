@@ -18,7 +18,7 @@ export function SiteProviders({ children }: { children: ReactNode }) {
   useEffect(() => { setIsolated(isIsolatedManagementHost(window.location.hostname)); }, []);
   if (isolated) return <ManagementProviders>{children}</ManagementProviders>;
   const administration = isPrivilegedPath(pathname);
-  const cookieOnlyGame = ['/game-labs/bits', '/game-labs/wikiland'].some(path => pathname === path || pathname.startsWith(`${path}/`));
+  const cookieOnlyGame = ['/game-labs/bits', '/game-labs/wikiland', '/wikiland'].some(path => pathname === path || pathname.startsWith(`${path}/`));
   if (cookieOnlyGame) {
     return <ThemeProvider attribute="class" defaultTheme="light">{children}</ThemeProvider>;
   }

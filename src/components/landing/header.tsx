@@ -6,7 +6,6 @@ import Link from "next/link";
 import { Logo } from "../ui/logo";
 import { cn } from '@/lib/utils';
 import { WorthaftIcon } from '../ui/icons/worthaft-icon';
-import { WritingRoomIcon } from '../ui/icons/writing-room-icon';
 import { Menu, X } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 
@@ -90,11 +89,9 @@ export function Header() {
   const tLine80 = isWorthaftPage ? 'dark:border-[hsl(240_4%_25%_/_0.8)]' : 'dark:border-[#3a352d]/80';
   const tEdgeWorthaft = isWorthaftPage ? 'dark:border-[hsl(240_5%_45%)]' : 'dark:border-[#6b6353]';
   const darkTonalYellow = 'dark:border-[#bfa100] dark:shadow-[0_3px_0_#6b5700] dark:hover:shadow-[0_4px_0_#6b5700] dark:active:shadow-[0_1px_0_#6b5700]';
-  const darkTonalBlue = 'dark:border-[#174bc2] dark:shadow-[0_3px_0_#0e3563] dark:hover:shadow-[0_4px_0_#0e3563] dark:active:shadow-[0_1px_0_#0e3563]';
   const tInk = isWorthaftPage ? 'dark:text-[hsl(0_0%_98%)]' : 'dark:text-[#f2ede3]';
   const showWorthaftLink = !isWorthaftPage;
   const showShopLink = pathname !== '/shop';
-  const showWritingRoomLink = pathname !== '/gpt';
   // Z-flow on the index: the primary CTA closes the desktop bar on the far right.
   const shopCtaLast = pathname === '/';
   const desktopShopLink = showShopLink ? (
@@ -144,15 +141,6 @@ export function Header() {
                 </Link>
               )}
               {!shopCtaLast && desktopShopLink}
-              {showWritingRoomLink && (
-                <Link
-                  href="/gpt"
-                  className={`inline-flex items-center gap-2 rounded-[10px] border-2 border-[#174bc2] bg-[#2268ff] px-4 py-2 text-[0.9rem] font-bold text-white shadow-[0_3px_0_#174bc2] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#1d5ce5] hover:shadow-[0_4px_0_#174bc2] active:translate-y-px active:shadow-[0_1px_0_#174bc2] ${darkTonalBlue}`}
-                >
-                  <WritingRoomIcon className="h-5 w-5 shrink-0" />
-                  Schreibstube
-                </Link>
-              )}
               {shopCtaLast && desktopShopLink}
             </nav>
 
@@ -234,16 +222,6 @@ export function Header() {
                     <WorthaftIcon className="h-4 w-4" />
                   </span>
                   Worthaft
-                </Link>
-              )}
-              {showWritingRoomLink && (
-                <Link
-                  href="/gpt"
-                  onClick={() => setOpen(false)}
-                  className={`inline-flex min-h-12 w-full items-center justify-center self-start rounded-[10px] border-2 border-[#174bc2] bg-[#2268ff] px-4 py-2 text-[0.9rem] font-bold text-white shadow-[0_3px_0_#174bc2] transition-[transform,box-shadow,background-color] hover:-translate-y-px hover:bg-[#1d5ce5] hover:shadow-[0_4px_0_#174bc2] active:translate-y-px active:shadow-[0_1px_0_#174bc2] ${darkTonalBlue}`}
-                >
-                  <WritingRoomIcon className="h-5 w-5 shrink-0" />
-                  Schreibstube
                 </Link>
               )}
             </div>

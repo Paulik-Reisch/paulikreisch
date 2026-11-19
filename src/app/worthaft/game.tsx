@@ -23,6 +23,7 @@ import { useRouter } from 'next/navigation';
 import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import FeedbackDrawer from './FeedbackDrawer';
 import WordDefinitionDialog from './WordDefinitionDialog';
 import { initializeFirebase } from '@/firebase';
@@ -99,24 +100,27 @@ const MAX_GUESSES = 6;
 
 type LetterStatus = 'correct' | 'present' | 'absent' | 'empty' | 'tbd';
 
+type HotTip = { letter: string | null; attempt: number | null };
+
 type DailyGameState = {
   date: string;
   guesses: { guess: string; statuses: LetterStatus[] }[];
   status: 'won' | 'lost' | 'playing';
   letterStatuses: { [key: string]: LetterStatus };
+  hotTip?: HotTip;
   hotTipUsed?: boolean;
   jokerPosition?: { guessIndex: number; letterIndex: number };
   rowTimes?: number[];
 };
 
-const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenSettings, hotTipUsed, gameState, settings, boardWidth }: {
+const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenSettings, hotTip, gameState, settings, boardWidth }: {
   onChar: (value: string) => void;
   onEnter: () => void;
   onDelete: () => void;
   letterStatuses: { [key: string]: LetterStatus };
   onHotTip: () => void;
   onOpenSettings: () => void;
-  hotTipUsed: boolean;
+  hotTip: HotTip | null;
   gameState: 'playing' | 'won' | 'lost';
   settings: WorthaftSettings;
   boardWidth: number;
@@ -128,7 +132,18 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
     ['SEND', 'Ü', 'Ö', 'Ä', 'ẞ', 'DELETE'],
   ];
 
-  const getStatusClass = (key: string) => getWorthaftStatusClass(letterStatuses[key], settings.palette) || 'bg-muted hover:bg-accent';
+  const getKeyClass = (key: string) => cn(
+    'h-auto p-0 font-bold uppercase flex items-center justify-center transition-colors duration-300',
+    getWorthaftStatusClass(letterStatuses[key], settings.palette) || 'bg-muted hover:bg-accent',
+    letterStatuses[key] === 'absent' && 'opacity-20',
+    gameState === 'playing' && key === hotTip?.letter && (
+      settings.animationsEnabled ? 'worthaft-tip-key worthaft-tip-key-animated' : 'worthaft-tip-key'
+    ),
+  );
+  const getKeyDescription = (key: string) => {
+    if (gameState === 'playing' && key === hotTip?.letter) return 'Heißer Tipp: Dieser Buchstabe kommt im Lösungswort vor.';
+    if (letterStatuses[key] === 'absent') return 'Kommt im Lösungswort nicht vor.';
+  };
 
   const handleKeyClick = (key: string) => {
     if (key === 'SEND') onEnter();
@@ -163,7 +178,7 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
     borderRadius: `${radiusPx}px`,
   });
 
-  const isHotTipActive = !hotTipUsed && gameState === 'playing' && settings.hotTipEnabled;
+  const isHotTipActive = !hotTip && gameState === 'playing' && settings.hotTipEnabled;
   const letterRows = rows.slice(0, 3);
 
   return (
@@ -181,10 +196,8 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
                 onClick={() => handleKeyClick(key)}
                 variant="outline"
                 style={keyStyle()}
-                className={cn(
-                  'h-auto p-0 font-bold uppercase flex items-center justify-center transition-colors duration-300 rounded-[5px] md:rounded-[10px]',
-                  getStatusClass(key)
-                )}
+                className={getKeyClass(key)}
+                aria-description={getKeyDescription(key)}
               >
                 {key === 'DELETE' ? <Delete className="h-5 w-5" /> : key === 'SEND' ? <ArrowRight className="h-5 w-5" /> : <span>{key}</span>}
               </Button>
@@ -204,10 +217,8 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
               aria-label={isSend ? 'Wort prüfen' : key === 'DELETE' ? 'Rücktaste' : undefined}
               variant="outline"
               style={keyStyle(isSend || key === 'DELETE')}
-              className={cn(
-                'h-auto p-0 font-bold uppercase flex items-center justify-center transition-colors duration-300 rounded-[5px] md:rounded-[10px]',
-                getStatusClass(key)
-              )}
+              className={getKeyClass(key)}
+              aria-description={getKeyDescription(key)}
             >
               {key === 'DELETE' ? <Delete className="h-5 w-5" /> : isSend ? <ArrowRight className="h-5 w-5" /> : <span>{key}</span>}
             </Button>
@@ -215,12 +226,12 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
         })}
 
         {/* 🔥 Heißer Tipp — reine Icon-Taste mit innerem Glow; verschwindet komplett nach einmaliger Nutzung */}
-        {settings.hotTipEnabled && !hotTipUsed && (
+        {settings.hotTipEnabled && !hotTip && (
           <Button
             onClick={onHotTip}
-            disabled={hotTipUsed || gameState !== 'playing'}
+            disabled={gameState !== 'playing'}
             variant="outline"
-            aria-label="Heißer Tipp – einen Buchstaben aufdecken"
+            aria-label="Heißer Tipp – einen Buchstaben markieren"
             style={keyStyle()}
             className={cn(
               "h-auto p-0 text-orange-500 border-orange-500/60 dark:text-orange-200/70 dark:border-orange-200/25 flex items-center justify-center transition-colors rounded-[5px] md:rounded-[10px] relative overflow-hidden",
@@ -246,15 +257,13 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
   );
 };
 
-const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, onCellClick, jokerReveal, jokerPosition, gameState, settings }: {
+const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, onCellClick, gameState, settings }: {
     guesses: { guess: string; statuses: LetterStatus[] }[];
     currentGuess: string[];
     isShaking: boolean;
     currentRowIndex: number;
     activeIndex: number;
     onCellClick: (index: number) => void;
-    jokerReveal: { index: number; key: number } | null;
-    jokerPosition: { guessIndex: number; letterIndex: number } | null;
     gameState: 'playing' | 'won' | 'lost';
     settings: WorthaftSettings;
 }) => {
@@ -289,11 +298,8 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
             }
 
             const hasLetter = !!letter;
-            const jokerPositionInFile = jokerReveal;
-            const isJokerCell = jokerPositionInFile && jokerPositionInFile.index === colIndex && isCurrentRow;
             const status: LetterStatus = guessInfo?.statuses[colIndex] || 'empty';
-            const isJokerProtected = isCurrentRow && jokerPosition && jokerPosition.guessIndex === guesses.length && colIndex === jokerPosition.letterIndex;
-            const isCellEditable = canInteractWithWorthaftGame(gameState) && isCurrentRow && !isJokerProtected;
+            const isCellEditable = canInteractWithWorthaftGame(gameState) && isCurrentRow;
 
             const anims = settings.animationsEnabled;
             const isSubmittedRow = !!guessInfo;
@@ -330,7 +336,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
                         'min-w-0 border-2 flex items-center justify-center text-3xl sm:text-4xl font-bold',
                         getStatusClass(status),
                         isCellEditable && 'cursor-pointer',
-                        isCurrentRow && hasLetter && !isJokerProtected && 'border-muted-foreground',
+                        isCurrentRow && hasLetter && 'border-muted-foreground',
                         isCellEditable && activeIndex === colIndex && 'border-primary ring-2 ring-primary scale-105',
                         anims && isSubmittedRow && 'flip-in'
                     )}
@@ -341,22 +347,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
                       ...(cellAnimation ? { animation: cellAnimation } : {}),
                     }}
                 >
-                    {isJokerCell ? (
-                        <span className="relative flex w-full h-full items-center justify-center">
-                            {letter}
-                            {anims && (
-                                <span
-                                    key={jokerPositionInFile.key}
-                                    aria-hidden
-                                    className="flame-reveal pointer-events-none absolute inset-0 flex items-center justify-center text-4xl leading-none"
-                                >
-                                    🔥
-                                </span>
-                            )}
-                        </span>
-                    ) : (
-                        letter
-                    )}
+                    {letter}
                 </motion.div>
             );
           })}
@@ -508,11 +499,11 @@ const HotTipDisplay = ({ isOpen, onOpenChange, onAccept }: {
                     Heißer Tipp! 🔥
                 </DialogTitle>
                 <DialogDescription className="pt-2 text-balance">
-                    Du kannst diesen Joker einmal pro Tag nutzen. Wähle den Zeitpunkt weise.
+                    Der Joker markiert einen Buchstaben auf der Tastatur, der im Lösungswort vorkommt. Finde selbst heraus, an welche Stelle er gehört. Du kannst den Tipp einmal pro Tag nutzen.
                 </DialogDescription>
             </DialogHeader>
             <DialogFooter className="mt-6 flex-col-reverse sm:flex-row gap-2">
-                <Button onClick={onAccept} className="w-full">Verstanden!</Button>
+                <Button onClick={onAccept} className="w-full">Tipp verwenden</Button>
             </DialogFooter>
         </div>
     );
@@ -536,7 +527,7 @@ const HotTipDisplay = ({ isOpen, onOpenChange, onAccept }: {
     );
 }
 
-const WorthaftSettingsDrawer = ({
+const WorthaftSettingsDialog = ({
   isOpen,
   onOpenChange,
   settings,
@@ -554,144 +545,156 @@ const WorthaftSettingsDrawer = ({
   const isMobile = useIsMobile();
 
   const content = (
-    <div className="min-w-0 w-full p-6 pt-4">
-      <SheetHeader className="text-left mb-5">
+    <div className="min-w-0 w-full">
+      <SheetHeader className="border-b px-4 py-4 pr-12 text-left md:pl-6">
         <SheetTitle className="text-2xl font-bold font-headline flex items-center gap-2">
           <Gear className="h-6 w-6" /> Einstellungen
         </SheetTitle>
+        <SheetDescription>Änderungen gelten sofort und werden auf diesem Gerät gespeichert.</SheetDescription>
       </SheetHeader>
 
-      <div className="space-y-6">
-        <section className="space-y-4" aria-label="Aussehen">
-          <div>
-            <h3 className="font-semibold">Dein Worthaft, Dein Stil</h3>
-            <p className="text-sm text-muted-foreground mt-1">Alles wird direkt übernommen und auf diesem Gerät gespeichert.</p>
-          </div>
-          <div className="grid grid-cols-2 gap-2" role="group" aria-label="Farbschema">
-            {(['original', 'classic'] as const).map(palette => (
-              <Button key={palette} variant="outline" aria-pressed={settings.palette === palette}
-                onClick={() => setSettings({ palette })}
-                className={cn('h-auto min-w-0 flex-col gap-2 py-3', settings.palette === palette && 'border-primary ring-1 ring-primary')}>
-                <span className="flex gap-1" aria-hidden="true">
-                  {['correct', 'present', 'absent'].map(status => <span key={status} className={cn('h-4 w-4 rounded-sm', getWorthaftStatusClass(status, palette))} />)}
-                </span>
-                <span>{palette === 'original' ? 'Worthaft' : 'Klassisch'}</span>
-                <span className="text-[11px] font-normal text-muted-foreground">{palette === 'original' ? 'Blau · Gelb · Grau' : 'Grün · Gelb · Grau'}</span>
-              </Button>
-            ))}
-          </div>
-          <div data-testid="appearance-preview" className="rounded-xl border bg-muted/30 p-4 space-y-3 overflow-hidden">
-            <p className="text-xs text-muted-foreground">Live-Vorschau · Richtig / enthalten / fehlt</p>
-            <div className="flex justify-center gap-1.5">
-              {['W', 'O', 'R', 'T', 'E'].map((letter, index) => {
-                const dimensions = getWorthaftTileDimensions(settings.tileWidth, settings.tileHeight);
-                return <span key={letter} className={cn('flex min-w-0 shrink items-center justify-center border-2 text-3xl sm:text-4xl font-bold', getWorthaftStatusClass(['correct', 'present', 'absent'][index % 3], settings.palette))}
-                  style={{ width: dimensions.width, aspectRatio: dimensions.width / dimensions.height, borderRadius: settings.tileRadius * 6 }}>{letter}</span>;
-              })}
-            </div>
-            <div className="flex justify-center gap-1.5" aria-hidden="true">
-              {['A', 'B', 'C'].map((letter, index) => {
-                const keyDimensions = getWorthaftKeyDimensions(settings.keyWidth, settings.keyHeight);
-                const defaultKeyWidth = getWorthaftKeyDimensions(2, settings.keyHeight).width;
-                const tileWidth = getWorthaftTileDimensions(settings.tileWidth, settings.tileHeight).width;
-                const boardWidth = 5 * tileWidth + 4 * 6;
-                const keyboardWidth = Math.max(boardWidth, Math.round(boardWidth * keyDimensions.width / defaultKeyWidth));
-                const slotWidth = (keyboardWidth - 9 * 4) / 10;
-                const keyWidthPx = Math.min(keyDimensions.width, Math.max(slotWidth, 18));
-                return <span key={letter} className={cn('flex items-center justify-center font-bold', getWorthaftStatusClass(['correct', 'present', 'absent'][index], settings.palette))}
-                  style={{ width: keyWidthPx, height: keyDimensions.height, borderRadius: settings.keyRadius * 6, fontSize: 12 + settings.keySize * 2.5 }}>{letter}</span>;
-              })}
-            </div>
-          </div>
-          {([
-            ['Tastatur', [
-              ['keyWidth', 'Tastenbreite', 'Schmal', 'Breit'],
-              ['keyHeight', 'Tastenhöhe', 'Flach', 'Hoch'],
-              ['keySize', 'Schriftgröße', 'Klein', 'Groß'],
-              ['keyRadius', 'Tastenrundung', 'Eckig', 'Rund'],
-            ]],
-            ['Kacheln', [
-              ['tileWidth', 'Kachelbreite', 'Schmal', 'Breit'],
-              ['tileHeight', 'Kachelhöhe', 'Flach', 'Hoch'],
-              ['tileRadius', 'Kachelrundung', 'Eckig', 'Rund'],
-            ]],
-          ] as const).map(([title, controls]) => (
-            <fieldset key={title} className="min-w-0 space-y-4 rounded-xl border p-4">
-              <legend className="px-1 text-sm font-semibold">{title}</legend>
-              {controls.map(([key, label, low, high]) => (
-                <div key={key}>
-                  <div className="flex justify-between gap-2 mb-3 text-sm">
-                    <span id={`setting-${key}`}>{label}</span><span className="text-muted-foreground tabular-nums">{settings[key]}</span>
-                  </div>
-                  <input type="range" aria-labelledby={`setting-${key}`} aria-valuetext={`Stufe ${settings[key]}`} value={settings[key]} onChange={event => setSettings({ [key]: Number(event.target.value) })} min={0} max={4} step={1} className="h-6 w-full cursor-pointer accent-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" />
-                  <div className="flex justify-between mt-2 text-xs text-muted-foreground"><span>{low}</span><span>{high}</span></div>
-                </div>
+      <Tabs defaultValue="appearance" orientation={isMobile ? 'horizontal' : 'vertical'} className="grid md:grid-cols-[10rem_minmax(0,1fr)] md:bg-muted">
+        <TabsList aria-label="Einstellungskategorien" className="sticky top-0 z-10 flex justify-start gap-1 rounded-none border-b p-2 md:flex-col md:items-stretch md:self-start md:border-b-0 md:p-3">
+          <TabsTrigger className="justify-start" value="appearance">Aussehen</TabsTrigger>
+          <TabsTrigger className="justify-start" value="game">Spiel</TabsTrigger>
+          <TabsTrigger className="justify-start" value="sound">Ton</TabsTrigger>
+        </TabsList>
+        <TabsContent value="appearance" className="min-w-0 bg-background px-4 py-4 md:border-l md:px-6">
+          <section className="space-y-4" aria-label="Aussehen">
+            <div className="grid grid-cols-2 gap-2" role="group" aria-label="Farbschema">
+              {(['original', 'classic'] as const).map(palette => (
+                <Button key={palette} variant="outline" aria-pressed={settings.palette === palette}
+                  onClick={() => setSettings({ palette })}
+                  className={cn('h-auto min-w-0 flex-col gap-2 py-3', settings.palette === palette && 'border-primary ring-1 ring-primary')}>
+                  <span className="flex gap-1" aria-hidden="true">
+                    {['correct', 'present', 'absent'].map(status => <span key={status} className={cn('h-4 w-4 rounded-sm', getWorthaftStatusClass(status, palette))} />)}
+                  </span>
+                  <span>{palette === 'original' ? 'Worthaft' : 'Klassisch'}</span>
+                  <span className="text-[11px] font-normal text-muted-foreground">{palette === 'original' ? 'Blau · Gelb · Grau' : 'Grün · Gelb · Grau'}</span>
+                </Button>
               ))}
-            </fieldset>
-          ))}
-          <p className="text-xs text-muted-foreground">Breite Tasten und Kacheln passen sich auf kleinen Bildschirmen automatisch an den verfügbaren Platz an.</p>
-          <Button variant="outline" className="w-full" onClick={() => setSettings({
-            keyWidth: DEFAULT_SETTINGS.keyWidth, keyHeight: DEFAULT_SETTINGS.keyHeight,
-            keySize: DEFAULT_SETTINGS.keySize, keyRadius: DEFAULT_SETTINGS.keyRadius,
-            tileWidth: DEFAULT_SETTINGS.tileWidth, tileHeight: DEFAULT_SETTINGS.tileHeight,
-            tileRadius: DEFAULT_SETTINGS.tileRadius, palette: DEFAULT_SETTINGS.palette,
-          })}>Aussehen zurücksetzen</Button>
-        </section>
-
-        <div className="flex items-center justify-between rounded-md border p-3">
-          <div className="flex items-center gap-2">
-            <Flame className="h-5 w-5 text-orange-500" />
-            <Label className="text-sm font-medium">Heißer Tipp aktiv</Label>
-          </div>
-          <Checkbox
-            checked={settings.hotTipEnabled}
-            onCheckedChange={(c) => setSettings({ hotTipEnabled: !!c })}
-          />
-        </div>
-
-        <div className="flex items-center justify-between rounded-md border p-3">
-          <div className="flex items-center gap-2">
-            <Music className="h-5 w-5" />
-            <div>
-              <Label className="text-sm font-medium">Hintergrundmusik</Label>
-              <p className="text-xs text-muted-foreground">{settings.musicEnabled ? 'An' : 'Aus'}{isMuted && settings.musicEnabled ? ' (stumm)' : ''}</p>
             </div>
+            <div data-testid="appearance-preview" className="rounded-xl border bg-muted/30 p-4 space-y-3 overflow-hidden">
+              <p className="text-xs text-muted-foreground">Live-Vorschau · Richtig / enthalten / fehlt</p>
+              <div className="flex justify-center gap-1.5">
+                {['W', 'O', 'R', 'T', 'E'].map((letter, index) => {
+                  const dimensions = getWorthaftTileDimensions(settings.tileWidth, settings.tileHeight);
+                  return <span key={letter} className={cn('flex min-w-0 shrink items-center justify-center border-2 text-3xl sm:text-4xl font-bold', getWorthaftStatusClass(['correct', 'present', 'absent'][index % 3], settings.palette))}
+                    style={{ width: dimensions.width, aspectRatio: dimensions.width / dimensions.height, borderRadius: settings.tileRadius * 6 }}>{letter}</span>;
+                })}
+              </div>
+              <div className="flex justify-center gap-1.5" aria-hidden="true">
+                {['A', 'B', 'C'].map((letter, index) => {
+                  const keyDimensions = getWorthaftKeyDimensions(settings.keyWidth, settings.keyHeight);
+                  const defaultKeyWidth = getWorthaftKeyDimensions(2, settings.keyHeight).width;
+                  const tileWidth = getWorthaftTileDimensions(settings.tileWidth, settings.tileHeight).width;
+                  const boardWidth = 5 * tileWidth + 4 * 6;
+                  const keyboardWidth = Math.max(boardWidth, Math.round(boardWidth * keyDimensions.width / defaultKeyWidth));
+                  const slotWidth = (keyboardWidth - 9 * 4) / 10;
+                  const keyWidthPx = Math.min(keyDimensions.width, Math.max(slotWidth, 18));
+                  return <span key={letter} className={cn('flex items-center justify-center font-bold', getWorthaftStatusClass(['correct', 'present', 'absent'][index], settings.palette), index === 2 && 'opacity-20')}
+                    style={{ width: keyWidthPx, height: keyDimensions.height, borderRadius: settings.keyRadius * 6, fontSize: 12 + settings.keySize * 2.5 }}>{letter}</span>;
+                })}
+              </div>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              {([
+              ['Tastatur', [
+                ['keyWidth', 'Tastenbreite', 'Schmal', 'Breit'],
+                ['keyHeight', 'Tastenhöhe', 'Flach', 'Hoch'],
+                ['keySize', 'Schriftgröße', 'Klein', 'Groß'],
+                ['keyRadius', 'Tastenrundung', 'Eckig', 'Rund'],
+              ]],
+              ['Kacheln', [
+                ['tileWidth', 'Kachelbreite', 'Schmal', 'Breit'],
+                ['tileHeight', 'Kachelhöhe', 'Flach', 'Hoch'],
+                ['tileRadius', 'Kachelrundung', 'Eckig', 'Rund'],
+              ]],
+            ] as const).map(([title, controls]) => (
+              <fieldset key={title} className="min-w-0 space-y-3 rounded-xl border p-4">
+                <legend className="px-1 text-sm font-semibold">{title}</legend>
+                {controls.map(([key, label, low, high]) => (
+                  <div key={key}>
+                    <div className="flex justify-between gap-2 text-sm">
+                      <span id={`setting-${key}`}>{label}</span><span className="text-muted-foreground tabular-nums">{settings[key]}</span>
+                    </div>
+                    <input type="range" aria-labelledby={`setting-${key}`} aria-valuetext={`Stufe ${settings[key]}`} value={settings[key]} onChange={event => setSettings({ [key]: Number(event.target.value) })} min={0} max={4} step={1} className="h-6 w-full cursor-pointer accent-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" />
+                    <div className="flex justify-between text-xs text-muted-foreground"><span>{low}</span><span>{high}</span></div>
+                  </div>
+                ))}
+              </fieldset>
+              ))}
+            </div>
+            <p className="text-xs text-muted-foreground">Breite Tasten und Kacheln passen sich auf kleinen Bildschirmen automatisch an den verfügbaren Platz an.</p>
+            <Button variant="outline" className="w-full" onClick={() => setSettings({
+              keyWidth: DEFAULT_SETTINGS.keyWidth, keyHeight: DEFAULT_SETTINGS.keyHeight,
+              keySize: DEFAULT_SETTINGS.keySize, keyRadius: DEFAULT_SETTINGS.keyRadius,
+              tileWidth: DEFAULT_SETTINGS.tileWidth, tileHeight: DEFAULT_SETTINGS.tileHeight,
+              tileRadius: DEFAULT_SETTINGS.tileRadius, palette: DEFAULT_SETTINGS.palette,
+            })}>Aussehen zurücksetzen</Button>
+          </section>
+        </TabsContent>
+
+        <TabsContent value="game" className="space-y-4 bg-background px-4 py-4 md:border-l md:px-6">
+          <div className="flex items-center justify-between rounded-md border p-3">
+            <div className="flex items-center gap-2">
+              <Flame className="h-5 w-5 text-orange-500" />
+              <Label htmlFor="worthaft-setting-tip" className="text-sm font-medium">Heißer Tipp aktiv</Label>
+            </div>
+            <Checkbox
+              id="worthaft-setting-tip"
+              checked={settings.hotTipEnabled}
+              onCheckedChange={(c) => setSettings({ hotTipEnabled: !!c })}
+            />
           </div>
-          <Checkbox
-            checked={settings.musicEnabled}
-            onCheckedChange={(c) => {
-              const next = !!c;
-              setSettings({ musicEnabled: next });
-              // Musik = nicht stumm. Wenn an -> entstummen, wenn aus -> stummschalten.
-              if (next && isMuted) onToggleMute();
-              if (!next && !isMuted) onToggleMute();
+
+          <div className="flex items-center justify-between rounded-md border p-3">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-primary" />
+              <Label htmlFor="worthaft-setting-animations" className="text-sm font-medium">Animationen &amp; Effekte</Label>
+            </div>
+            <Checkbox
+              id="worthaft-setting-animations"
+              checked={settings.animationsEnabled}
+              onCheckedChange={(c) => setSettings({ animationsEnabled: !!c })}
+            />
+          </div>
+
+          <Button
+            variant="outline"
+            className="w-full justify-start gap-2"
+            onClick={() => {
+              onOpenChange(false);
+              if (typeof window !== 'undefined') window.location.href = '/worthaft/ueber';
             }}
-          />
-        </div>
-
-        <div className="flex items-center justify-between rounded-md border p-3">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-primary" />
-            <Label className="text-sm font-medium">Animationen &amp; Effekte</Label>
+          >
+            <Info className="h-4 w-4" />
+            Anleitung
+          </Button>
+        </TabsContent>
+        <TabsContent value="sound" className="bg-background px-4 py-4 md:border-l md:px-6">
+          <div className="flex items-center justify-between rounded-md border p-3">
+            <div className="flex items-center gap-2">
+              <Music className="h-5 w-5" />
+              <div>
+                <Label htmlFor="worthaft-setting-music" className="text-sm font-medium">Hintergrundmusik</Label>
+                <p className="text-xs text-muted-foreground">{settings.musicEnabled ? 'An' : 'Aus'}{isMuted && settings.musicEnabled ? ' (stumm)' : ''}</p>
+              </div>
+            </div>
+            <Checkbox
+              id="worthaft-setting-music"
+              checked={settings.musicEnabled}
+              onCheckedChange={(c) => {
+                const next = !!c;
+                setSettings({ musicEnabled: next });
+                // Musik = nicht stumm. Wenn an -> entstummen, wenn aus -> stummschalten.
+                if (next && isMuted) onToggleMute();
+                if (!next && !isMuted) onToggleMute();
+              }}
+            />
           </div>
-          <Checkbox
-            checked={settings.animationsEnabled}
-            onCheckedChange={(c) => setSettings({ animationsEnabled: !!c })}
-          />
-        </div>
-
-        <Button
-          variant="outline"
-          className="w-full justify-start gap-2"
-          onClick={() => {
-            onOpenChange(false);
-            if (typeof window !== 'undefined') window.location.href = '/worthaft/ueber';
-          }}
-        >
-          <Info className="h-4 w-4" />
-          Anleitung
-        </Button>
-      </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 
@@ -707,7 +710,7 @@ const WorthaftSettingsDrawer = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 max-w-sm rounded-lg max-h-[90dvh] overflow-y-auto">
+      <DialogContent className="w-[calc(100%-2rem)] max-w-4xl p-0 rounded-lg max-h-[90dvh] overflow-y-auto">
         {content}
       </DialogContent>
     </Dialog>
@@ -883,13 +886,9 @@ export default function WorthaftGame({
 
     // Joker "Hot Tip" state
     const [showHotTipDialog, setShowHotTipDialog] = useState(false);
-    const [hotTipUsed, setHotTipUsed] = useState(false);
+    const [hotTip, setHotTip] = useState<HotTip | null>(null);
     const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
     const [isHotTipPopupDisabled, setIsHotTipPopupDisabled] = useState(false);
-    const [jokerReveal, setJokerReveal] = useState<{ index: number; key: number } | null>(null);
-    const [jokerPosition, setJokerPosition] = useState<{ guessIndex: number; letterIndex: number } | null>(null);
-
-
     const getTodayString = () => dailyDate;
 
     // Format a duration in ms as M:SS (or M:SS for tens of minutes).
@@ -900,14 +899,13 @@ export default function WorthaftGame({
         return `${minutes}:${seconds.toString().padStart(2, '0')}`;
     };
 
-    const saveState = useCallback((newGuesses: { guess: string; statuses: LetterStatus[] }[], newStatus: 'won' | 'lost' | 'playing', newLetterStatuses: { [key: string]: LetterStatus }, newHotTipUsed: boolean, newJokerPosition: { guessIndex: number; letterIndex: number } | null, newRowTimes: number[]) => {
+    const saveState = useCallback((newGuesses: { guess: string; statuses: LetterStatus[] }[], newStatus: 'won' | 'lost' | 'playing', newLetterStatuses: { [key: string]: LetterStatus }, newHotTip: HotTip | null, newRowTimes: number[]) => {
         const dailyState: DailyGameState = {
             date: dailyDate,
             guesses: newGuesses,
             status: newStatus,
             letterStatuses: newLetterStatuses,
-            hotTipUsed: newHotTipUsed,
-            jokerPosition: newJokerPosition || undefined,
+            hotTip: newHotTip ?? undefined,
             rowTimes: newRowTimes,
         };
         localStorage.setItem('worthaft-daily-game', JSON.stringify(dailyState));
@@ -972,19 +970,12 @@ export default function WorthaftGame({
                         setGuesses(dailyState.guesses);
                         setGameState(dailyState.status);
                         setLetterStatuses(dailyState.letterStatuses || {});
-                        setHotTipUsed(dailyState.hotTipUsed || false);
+                        const legacyTip = dailyState.jokerPosition;
+                        setHotTip(dailyState.hotTip ?? (legacyTip ? {
+                            letter: wordOfTheDay[legacyTip.letterIndex] ?? null,
+                            attempt: legacyTip.guessIndex + 1,
+                        } : dailyState.hotTipUsed ? { letter: null, attempt: null } : null));
                         setRowTimes(dailyState.rowTimes || []);
-                        if (dailyState.jokerPosition) {
-                            setJokerPosition(dailyState.jokerPosition);
-                            const newCurrentGuess = Array(WORD_LENGTH).fill('');
-                            if (dailyState.guesses.length === dailyState.jokerPosition.guessIndex) {
-                                newCurrentGuess[dailyState.jokerPosition.letterIndex] = wordOfTheDay[dailyState.jokerPosition.letterIndex];
-                            }
-                            setCurrentGuess(newCurrentGuess);
-
-                            const firstEmptyIndex = newCurrentGuess.findIndex(l => l === '');
-                            setActiveIndex(firstEmptyIndex !== -1 ? firstEmptyIndex : 0);
-                        }
 
                         if (dailyState.status === 'won' || dailyState.status === 'lost') {
                             completedToday = true;
@@ -1082,13 +1073,13 @@ export default function WorthaftGame({
         if (inactivityTimerRef.current) {
             clearTimeout(inactivityTimerRef.current);
         }
-        if (gameState !== 'playing' || hotTipUsed || isDialogOpen || showHotTipDialog || isHotTipPopupDisabled) {
+        if (gameState !== 'playing' || hotTip || !settings.hotTipEnabled || isSettingsOpen || isDialogOpen || showHotTipDialog || isHotTipPopupDisabled) {
             return;
         }
         inactivityTimerRef.current = setTimeout(() => {
             setShowHotTipDialog(true);
         }, 180000); // 3 minutes
-    }, [gameState, hotTipUsed, isDialogOpen, showHotTipDialog, isHotTipPopupDisabled]);
+    }, [gameState, hotTip, settings.hotTipEnabled, isSettingsOpen, isDialogOpen, showHotTipDialog, isHotTipPopupDisabled]);
 
     // Inactivity timer for "Hot Tip"
     useEffect(() => {
@@ -1116,13 +1107,6 @@ export default function WorthaftGame({
         const char = getWorthaftKeyboardLetter(key);
         if (char === null) return;
         const newGuess = [...currentGuess];
-        const isJokerHere = jokerPosition && jokerPosition.guessIndex === guesses.length;
-
-        // Do not allow overwriting the joker letter
-        if (isJokerHere && activeIndex === jokerPosition.letterIndex) {
-            return;
-        }
-
         newGuess[activeIndex] = char;
         setCurrentGuess(newGuess);
 
@@ -1132,16 +1116,7 @@ export default function WorthaftGame({
             writeWorthaftRowTimer(localStorage, getTodayString(), 0);
         }
 
-        // Advance cursor, skipping joker if necessary
-        let nextIndex = activeIndex + 1;
-        if (nextIndex < WORD_LENGTH) {
-             if (isJokerHere && nextIndex === jokerPosition.letterIndex) {
-                nextIndex++;
-            }
-            if (nextIndex < WORD_LENGTH) {
-                setActiveIndex(nextIndex);
-            }
-        }
+        setActiveIndex(Math.min(WORD_LENGTH - 1, activeIndex + 1));
     };
 
     const handleEnter = useCallback(() => {
@@ -1194,7 +1169,7 @@ export default function WorthaftGame({
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
             rowTimerRef.current = null;
             clearWorthaftRowStart(localStorage);
-            saveState(newGuesses, 'won', newLetterStatuses, hotTipUsed, jokerPosition, newRowTimes);
+            saveState(newGuesses, 'won', newLetterStatuses, hotTip, newRowTimes);
             setIsCompletedToday(true);
             setTimeout(() => {
                 if (hasWorthaftFeedbackDecision(localStorage, getTodayString())) {
@@ -1268,7 +1243,7 @@ export default function WorthaftGame({
             localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
             rowTimerRef.current = null;
             clearWorthaftRowStart(localStorage);
-            saveState(newGuesses, 'lost', newLetterStatuses, hotTipUsed, jokerPosition, newRowTimes);
+            saveState(newGuesses, 'lost', newLetterStatuses, hotTip, newRowTimes);
             setIsCompletedToday(true);
             setTimeout(() => {
                 if (hasWorthaftFeedbackDecision(localStorage, getTodayString())) {
@@ -1286,33 +1261,17 @@ export default function WorthaftGame({
             // and closed-page time is excluded by the lifecycle effect below.
             rowTimerRef.current = createWorthaftRowTimer(Date.now());
             writeWorthaftRowTimer(localStorage, getTodayString(), 0);
-            saveState(newGuesses, 'playing', newLetterStatuses, hotTipUsed, jokerPosition, newRowTimes);
+            saveState(newGuesses, 'playing', newLetterStatuses, hotTip, newRowTimes);
         }
-    }, [currentGuess, dailyDate, gameState, guesses, letterStatuses, solution, stats, toast, saveState, hotTipUsed, jokerPosition, rowTimes, isWordListReady, antiWords, words]);
+    }, [currentGuess, dailyDate, gameState, guesses, letterStatuses, solution, stats, toast, saveState, hotTip, rowTimes, isWordListReady, antiWords, words]);
 
     const handleDelete = () => {
         if (gameState !== 'playing') return;
         const newGuess = [...currentGuess];
-        const isJokerHere = jokerPosition && jokerPosition.guessIndex === guesses.length;
-
-        // If the current cell has a letter (and is not a joker), clear it.
-        if (newGuess[activeIndex] !== '' && !(isJokerHere && activeIndex === jokerPosition.letterIndex)) {
-            newGuess[activeIndex] = '';
-            setCurrentGuess(newGuess);
-            return;
-        }
-
-        // If the current cell is empty or a joker, move to the previous settable cell and clear it.
-        let prevIndex = activeIndex - 1;
-        while (prevIndex >= 0) {
-            if (!(isJokerHere && prevIndex === jokerPosition.letterIndex)) {
-                newGuess[prevIndex] = '';
-                setCurrentGuess(newGuess);
-                setActiveIndex(prevIndex);
-                return;
-            }
-            prevIndex--;
-        }
+        const index = newGuess[activeIndex] ? activeIndex : Math.max(0, activeIndex - 1);
+        newGuess[index] = '';
+        setCurrentGuess(newGuess);
+        setActiveIndex(index);
     };
 
 
@@ -1325,44 +1284,36 @@ export default function WorthaftGame({
         } else if (event.key === 'Backspace') {
             handleDelete();
         } else if (event.key === 'ArrowLeft') {
-            let nextIndex = activeIndex - 1;
-             if (jokerPosition && jokerPosition.guessIndex === guesses.length && nextIndex === jokerPosition.letterIndex) {
-                nextIndex--;
-            }
-            setActiveIndex(Math.max(0, nextIndex));
+            setActiveIndex(Math.max(0, activeIndex - 1));
         } else if (event.key === 'ArrowRight') {
-            let nextIndex = activeIndex + 1;
-            if (jokerPosition && jokerPosition.guessIndex === guesses.length && nextIndex === jokerPosition.letterIndex) {
-                nextIndex++;
-            }
-            setActiveIndex(Math.min(WORD_LENGTH - 1, nextIndex));
+            setActiveIndex(Math.min(WORD_LENGTH - 1, activeIndex + 1));
         } else {
             handleChar(event.key);
         }
-    }, [isWordListReady, gameState, isDialogOpen, isSettingsOpen, showHotTipDialog, isFeedbackOpen, invalidWord, handleEnter, handleDelete, handleChar, activeIndex, jokerPosition, guesses.length]);
+    }, [isWordListReady, gameState, isDialogOpen, isSettingsOpen, showHotTipDialog, isFeedbackOpen, invalidWord, handleEnter, handleDelete, handleChar, activeIndex]);
 
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [handleKeyDown]);
 
+    const resultGrid = guesses.map(({ statuses }, guessIndex) => {
+        const squares = statuses.map(status => {
+            if (status === 'correct') return settings.palette === 'classic' ? '🟩' : '🟦';
+            if (status === 'present') return '🟨';
+            return '⬛';
+        }).join('');
+        const time = rowTimes[guessIndex];
+        return time === undefined ? squares : `${squares} (${formatDuration(time)})`;
+    }).join('\n');
+    const tipUsedLine = hotTip
+        ? (hotTip.attempt ? `\n🔥 Heißer Tipp in Versuch ${hotTip.attempt} verwendet.` : '\n🔥 Heißer Tipp verwendet.')
+        : '';
+    const totalTime = rowTimes.reduce((sum, time) => sum + time, 0);
+    const sharedResult = `Mein Ergebnis: ${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} innerhalb von ${formatDuration(totalTime)} Minuten${tipUsedLine}`;
+
     const shareResults = async () => {
-        const resultGrid = guesses.map((g, guessIndex) =>
-            g.statuses.map((s, letterIndex) => {
-                if (jokerPosition && jokerPosition.guessIndex === guessIndex && jokerPosition.letterIndex === letterIndex) {
-                    return '🔥';
-                }
-                if (s === 'correct') return settings.palette === 'classic' ? '🟩' : '🟦';
-                if (s === 'present') return '🟨';
-                return '⬛';
-            }).join('') +
-            (rowTimes[guessIndex] !== undefined ? ` (${formatDuration(rowTimes[guessIndex])})` : '')
-        ).join('\n');
-
-        const totalTime = rowTimes.reduce((sum, t) => sum + t, 0);
-        const tipUsedLine = hotTipUsed ? `(1 Heißer Tipp verwendet 🔥)` : "";
-
-        const text = `Mein Ergebnis: ${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} innerhalb von ${formatDuration(totalTime)} Minuten ${tipUsedLine}
+        const text = `${sharedResult}
 
 ${resultGrid}
 
@@ -1384,109 +1335,54 @@ https://paulikreisch.de/worthaft`;
                 toast({ title: 'Kopiert!', description: 'Ergebnis in die Zwischenablage kopiert.', duration: 2000 });
             });
         }
+    };
+
+    const shareSolution = async () => {
+        const text = `Worthaft – Das Paulik & Reisch Spiel (LÖSUNG GELEAKT 🤫)
+
+${sharedResult}
+
+Lösung: ${solution.toUpperCase()}
+
+${resultGrid}
+
+Jetzt selber spielen:`;
+
+        const shareData = {
+            title: 'Worthaft – Das Paulik & Reisch Spiel (Lösung)',
+            text,
+            url: 'https://paulikreisch.de/worthaft',
+        };
+
+        if (navigator.share) {
+            try {
+                await navigator.share(shareData);
+            } catch (error) {
+                console.log('Teilen abgebrochen', error);
             }
-
-            const shareSolution = async () => {
-                // Same grid but with solution revealed - all green since we know the answer
-                const resultGrid = guesses.map((g, guessIndex) =>
-                    g.statuses.map((s, letterIndex) => {
-                        if (jokerPosition && jokerPosition.guessIndex === guessIndex && jokerPosition.letterIndex === letterIndex) {
-                            return '🔥';
-                        }
-                        if (s === 'correct') return settings.palette === 'classic' ? '🟩' : '🟦';
-                        if (s === 'present') return '🟨';
-                        return '⬛';
-                    }).join('') +
-                    (rowTimes[guessIndex] !== undefined ? ` (${formatDuration(rowTimes[guessIndex])})` : '')
-                ).join('\n');
-
-                const totalTime = rowTimes.reduce((sum, t) => sum + t, 0);
-
-                const text = `Worthaft – Das Paulik & Reisch Spiel (LÖSUNG GELEAKT 🤫)
-
-        Mein Ergebnis: ${gameState === 'won' ? guesses.length : 'X'} / ${MAX_GUESSES} innerhalb von ${formatDuration(totalTime)} Minuten
-
-        Lösung: ${solution.toUpperCase()}
-
-        ${resultGrid}
-
-        Jetzt selber spielen:`;
-
-                const shareData = {
-                    title: 'Worthaft – Das Paulik & Reisch Spiel (Lösung)',
-                    text: text,
-                    url: 'https://paulikreisch.de/worthaft',
-                };
-
-                if (navigator.share) {
-                    try {
-                        await navigator.share(shareData);
-                    } catch (error) {
-                        console.log('Teilen abgebrochen', error);
-                    }
-                } else {
-                    navigator.clipboard.writeText(`${text}\n\nhttps://paulikreisch.de/worthaft`).then(() => {
-                        toast({ title: 'Kopiert!', description: 'Lösung in die Zwischenablage kopiert.', duration: 2000 });
-                    });
-                }
-            }
-
-            const handleAcceptHotTip = () => {
-        if (hotTipUsed || gameState !== 'playing' || !settings.hotTipEnabled) return;
-
-        const correctlyGuessedIndices = new Set<number>();
-        guesses.forEach(g => {
-            g.statuses.forEach((status, index) => {
-                if (status === 'correct') {
-                    correctlyGuessedIndices.add(index);
-                }
-            });
-        });
-
-        currentGuess.forEach((letter, index) => {
-            if (letter === solution[index]) {
-                correctlyGuessedIndices.add(index);
-            }
-        });
-
-
-        const revealableIndices = [];
-        for (let i = 0; i < WORD_LENGTH; i++) {
-            if (!correctlyGuessedIndices.has(i)) {
-                revealableIndices.push(i);
-            }
-        }
-
-        if (revealableIndices.length > 0) {
-            const jokerIndex = revealableIndices[Math.floor(Math.random() * revealableIndices.length)];
-            const jokerLetter = solution[jokerIndex];
-
-            const newGuess = [...currentGuess];
-            newGuess[jokerIndex] = jokerLetter;
-            setCurrentGuess(newGuess);
-
-            setJokerReveal({ index: jokerIndex, key: Date.now() });
-
-            const newJokerPosition = { guessIndex: guesses.length, letterIndex: jokerIndex };
-            setJokerPosition(newJokerPosition);
-
-            setHotTipUsed(true);
-            saveState(guesses, 'playing', letterStatuses, true, newJokerPosition, rowTimes);
-            toast({
-                title: 'Heißer Tipp!',
-                description: `Ein Buchstabe wurde für Dich aufgedeckt.`,
-                duration: 3000
-            });
         } else {
-            toast({
-                variant: 'destructive',
-                title: 'Kein Tipp verfügbar',
-                description: 'Du hast bereits alle Buchstaben korrekt erraten!',
-                duration: 3000
+            navigator.clipboard.writeText(`${text}\n\nhttps://paulikreisch.de/worthaft`).then(() => {
+                toast({ title: 'Kopiert!', description: 'Lösung in die Zwischenablage kopiert.', duration: 2000 });
             });
         }
+    };
 
+    const handleAcceptHotTip = () => {
+        if (hotTip || !solution || gameState !== 'playing' || !settings.hotTipEnabled) return;
+
+        const letters = [...new Set(solution)];
+        const unknown = letters.filter(letter => !letterStatuses[letter] || letterStatuses[letter] === 'absent');
+        const candidates = unknown.length ? unknown : letters;
+        const letter = candidates[Math.floor(Math.random() * candidates.length)];
+        const tip = { letter, attempt: guesses.length + 1 };
+        setHotTip(tip);
+        saveState(guesses, 'playing', letterStatuses, tip, rowTimes);
         setShowHotTipDialog(false);
+        toast({
+            title: 'Heißer Tipp!',
+            description: `„${letter}“ kommt im Lösungswort vor.`,
+            duration: 3000,
+        });
     };
 
     const jsonLd = {
@@ -1528,8 +1424,6 @@ https://paulikreisch.de/worthaft`;
                             currentRowIndex={guesses.length}
                             activeIndex={activeIndex}
                             onCellClick={setActiveIndex}
-                            jokerReveal={jokerReveal}
-                            jokerPosition={jokerPosition}
                             gameState={gameState}
                             settings={settings}
                         />
@@ -1540,7 +1434,7 @@ https://paulikreisch.de/worthaft`;
                             letterStatuses={letterStatuses}
                             onHotTip={() => setShowHotTipDialog(true)}
                             onOpenSettings={() => setIsSettingsOpen(true)}
-                            hotTipUsed={hotTipUsed}
+                            hotTip={hotTip}
                             gameState={gameState}
                             settings={settings}
                             boardWidth={boardWidth}
@@ -1611,7 +1505,7 @@ https://paulikreisch.de/worthaft`;
                  }}
                 solution={solution}
             />
-            <WorthaftSettingsDrawer
+            <WorthaftSettingsDialog
                 isOpen={isSettingsOpen}
                 onOpenChange={setIsSettingsOpen}
                 settings={settings}

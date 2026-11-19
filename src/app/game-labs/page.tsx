@@ -21,7 +21,7 @@ const games: Game[] = [
     title: 'Wikiland',
     description: 'Ein verborgener Wikipedia-Artikel. Deine Wörter bringen ihn ans Licht. Findest Du den Titel?',
     status: 'live',
-    href: '/game-labs/wikiland',
+    href: '/wikiland',
     icon: 'Wi',
   },
   {

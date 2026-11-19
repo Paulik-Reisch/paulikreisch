@@ -151,9 +151,55 @@ test('Wikiland is linked from Game Labs and navigates back without provider erro
   await page.addInitScript(() => localStorage.setItem('hallowelt_cookie_consent', '{}'));
   await page.goto('/game-labs');
   await page.getByRole('article').filter({ has: page.getByRole('heading', { name: 'Wikiland', exact: true }) }).getByRole('link').click();
+  await expect(page).toHaveURL(/\/wikiland$/);
+  expect(new URL(page.url()).pathname).toBe('/wikiland');
   await expect(page.getByLabel('Dein Wort', { exact: true })).toBeEnabled();
   await page.getByRole('link', { name: 'Zu Game Labs', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Was spielen wir heute?' })).toBeVisible();
+});
+
+test('history jumps to each highlighted occurrence after more sections are shown', async ({ page }) => {
+  await openGame(page);
+  const article = page.getByRole('article', { name: 'Verborgener Wikipedia-Artikel' });
+  const matches = article.getByText('Wolkenpferd', { exact: true });
+  await page.getByLabel('Dein Wort', { exact: true }).fill('Wolkenpferd');
+  await page.getByLabel('Dein Wort', { exact: true }).press('Enter');
+  await expect(matches).toHaveCount(1);
+  await page.getByText(/^Wortverlauf/).click();
+  const history = page.getByRole('button', { name: 'wolkenpferd', exact: true });
+  await history.click();
+  await expect(matches.first()).toBeInViewport();
+  await history.click();
+  await expect(matches).toHaveCount(2);
+  await expect(matches.last()).toBeInViewport();
+  await page.reload();
+  await expect(page.getByLabel('Dein Wort', { exact: true })).toBeEnabled();
+  await article.getByRole('button', { name: 'Weitere Abschnitte anzeigen' }).click();
+  await page.getByText(/^Wortverlauf/).click();
+  await history.click();
+  await expect(matches.first()).toBeInViewport();
+  await expect(matches.last()).not.toBeInViewport();
+  await history.click();
+  await expect(matches.last()).toBeInViewport();
+});
+
+test('the short URL imports a legacy save and keeps both game addresses in sync', async ({ page, context }) => {
+  await openGame(page);
+  await page.getByLabel('Dein Wort', { exact: true }).fill('Wolkenpferd');
+  await page.getByLabel('Dein Wort', { exact: true }).press('Enter');
+  await expect(attemptCount(page)).toHaveText('1');
+  await context.clearCookies({ name: new RegExp(`^${WIKI_COOKIE}_`), path: '/wikiland' });
+  await page.goto('/wikiland');
+  expect(new URL(page.url()).pathname).toBe('/wikiland');
+  await expect(attemptCount(page)).toHaveText('1');
+  await page.getByLabel('Dein Wort', { exact: true }).fill('Himmelsblume');
+  await page.getByLabel('Dein Wort', { exact: true }).press('Enter');
+  await expect(attemptCount(page)).toHaveText('2');
+  await page.reload();
+  expect(new URL(page.url()).pathname).toBe('/wikiland');
+  await expect(attemptCount(page)).toHaveText('2');
+  await openGame(page);
+  await expect(attemptCount(page)).toHaveText('2');
 });
 
 

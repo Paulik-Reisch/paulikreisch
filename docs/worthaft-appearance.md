@@ -1,8 +1,10 @@
 # Worthaft: Aussehen anpassen
 
-Über das Zahnrad auf der Spieltastatur lassen sich Tastatur und Kacheln unabhängig einstellen. Alle sieben Regler zeigen Pixelwerte; die Vorschau und das Spiel reagieren sofort. Auf kleinen Bildschirmen werden breite Elemente an den verfügbaren Platz angepasst. Die angezeigten Maße sind die Wunschgröße vor dieser Anpassung.
+Über das Zahnrad auf der Spieltastatur öffnet sich das Menü mit den Kategorien Aussehen, Spiel und Ton. Auf dem Desktop stehen sie links im Dialog, auf dem Smartphone oberhalb der Einstellungen. Unter Aussehen lassen sich Tastatur und Kacheln unabhängig einstellen. Alle sieben Regler zeigen Stufen von 0 bis 4. Die Vorschau und das Spiel reagieren sofort. Auf kleinen Bildschirmen werden breite Elemente an den verfügbaren Platz angepasst.
 
 Worthaft verwendet Blau, Gelb und Grau. Klassisch verwendet Grün, Gelb und Grau. Die Farbauswahl gilt für Spielfeld, Tastatur und die Ergebnis-Emojis beim Teilen. Die Bedeutung bleibt gleich: richtig, enthalten, fehlt.
+
+Auf der Tastatur werden ausgeschlossene Buchstaben ausgeblendet dargestellt. Der einmalige heiße Tipp markiert eine Taste mit einem Lösungsbuchstaben. Er verändert den aktuellen Versuch nicht und verrät keine Position. Beim Teilen wird der Versuch genannt, in dem der Tipp eingesetzt wurde.
 
 Aussehen zurücksetzen stellt nur die visuellen Einstellungen zurück. Musik, heißer Tipp und Animationen bleiben erhalten. Gespeichert wird ausschließlich auf dem jeweiligen Gerät unter worthaft-settings. Bestehende Reglerwerte (0–4 oder ältere 0–100-Werte) werden übernommen; neue Kacheloptionen starten mit den Standardwerten. Unbekannte Felder und ungültige Typen werden verworfen, Zahlen begrenzt. Während der Einstellungen beeinflusst die Tastatur das Rätsel nicht.
 

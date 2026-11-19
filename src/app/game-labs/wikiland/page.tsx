@@ -7,10 +7,12 @@ import { WikipediaIcon } from '@/components/ui/icons/wikipedia-icon';
 import { Logo } from '@/components/ui/logo';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { applyHint, countLetters, createGame, getArticle, getGuessHits, hasValidHints, isRevealed, isWon, normalizeWord, submitGuess, tokenize, upgradeLegacyGame, type WikiGame, type WikiToken } from '@/lib/wikiland-engine';
-import { loadWikiGame, saveWikiGame } from '@/lib/wikiland-storage';
+import { applyHint, countLetters, createGame, getArticle, getGuessHits, getGuessMatchKeys, hasValidHints, isRevealed, isWon, normalizeWord, submitGuess, tokenize, upgradeLegacyGame, type WikiGame, type WikiToken } from '@/lib/wikiland-engine';
+import { loadWikiGame, parseWikiGame, saveWikiGame } from '@/lib/wikiland-storage';
 import { fetchWikipediaRevision, prepareWikipediaArticle, type ArticleNode, type FullWikiArticle } from '@/lib/wikiland-wikipedia';
 import styles from './wikiland.module.css';
+
+const SECTION_BATCH = 30;
 
 function today() {
   return new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
@@ -20,27 +22,45 @@ function clock(seconds: number) {
   return `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`;
 }
 
-function renderTokens(tokens: WikiToken[], game: WikiGame, article: FullWikiArticle['article'], highlight: string, inTitle = false) {
+function renderTokens(tokens: WikiToken[], game: WikiGame, article: FullWikiArticle['article'], highlight: Set<string>, inTitle = false) {
   return tokens.map((token, index) => {
     if (!token.word || isRevealed(token, game, inTitle, article)) {
-      const highlighted = token.word && highlight && token.key === highlight;
-      return <span key={index} className={highlighted ? styles.highlight : undefined}>{token.text}</span>;
+      const highlighted = token.word && highlight.has(token.key);
+      return <span key={index} data-wiki-hit={highlighted || undefined} className={highlighted ? styles.highlight : undefined}>{token.text}</span>;
     }
     const length = countLetters(token.text);
     return <span key={index} className={styles.redacted} style={{ width: `${length}ch` }} role="img" aria-label={`Verborgenes Wort, ${length} Buchstaben`}><span aria-hidden="true">{length}</span></span>;
   });
 }
 
-function renderNode(node: ArticleNode, index: number, game: WikiGame, article: FullWikiArticle['article'], highlight: string): React.ReactNode {
+function renderNode(node: ArticleNode, index: number, game: WikiGame, article: FullWikiArticle['article'], highlight: Set<string>): React.ReactNode {
   if (node.type === 'text') return <span key={index}>{renderTokens(node.tokens, game, article, highlight)}</span>;
   if (node.tag === 'br' || node.tag === 'hr') return createElement(node.tag, { key: index });
   return createElement(node.tag, { key: index }, node.children.map((child, childIndex) => renderNode(child, childIndex, game, article, highlight)));
 }
 
+function matchingSections(full: FullWikiArticle, title: WikiToken[], word: string) {
+  const keys = getGuessMatchKeys(full.article, word);
+  const sections: number[] = [];
+  function addMatches(tokens: WikiToken[], section: number) {
+    for (const token of tokens) {
+      if (token.word && keys.has(token.key)) sections.push(section);
+    }
+  }
+  function visit(node: ArticleNode, section: number) {
+    if (node.type === 'text') addMatches(node.tokens, section);
+    else node.children.forEach(child => visit(child, section));
+  }
+  addMatches(title, -1);
+  full.nodes.forEach(visit);
+  return sections;
+}
+
 // Timer updates must not rebuild the potentially enormous article DOM every second.
 const ArticleBody = memo(function ArticleBody({ full, game, highlight, limit, onMore }: { full: FullWikiArticle; game: WikiGame; highlight: string; limit: number; onMore: () => void }) {
   const article = full.article;
-  return <><h2 className={styles.articleTitle}>{renderTokens(tokenize(article.title), game, article, highlight, true)}</h2><div className={styles.wikiContent}>{full.nodes.slice(0, limit).map((node, index) => renderNode(node, index, game, article, highlight))}</div>{limit < full.nodes.length && <button className={styles.secondary} type="button" onClick={onMore}>Weitere Abschnitte anzeigen</button>}{(isWon(game, article) || game.givenUp) && <a href={article.sourceUrl} target="_blank" rel="noreferrer" className={styles.original}>Wikipedia-Artikel öffnen <ArrowUpRight size={16} aria-hidden="true" /></a>}</>;
+  const keys = highlight ? getGuessMatchKeys(article, highlight) : new Set<string>();
+  return <><h2 className={styles.articleTitle}>{renderTokens(tokenize(article.title), game, article, keys, true)}</h2><div className={styles.wikiContent}>{full.nodes.slice(0, limit).map((node, index) => renderNode(node, index, game, article, keys))}</div>{limit < full.nodes.length && <button className={styles.secondary} type="button" onClick={onMore}>Weitere Abschnitte anzeigen</button>}{(isWon(game, article) || game.givenUp) && <a href={article.sourceUrl} target="_blank" rel="noreferrer" className={styles.original}>Wikipedia-Artikel öffnen <ArrowUpRight size={16} aria-hidden="true" /></a>}</>;
 }, (a, b) => a.full === b.full && a.game.guesses === b.game.guesses && a.game.hints === b.game.hints && a.game.givenUp === b.game.givenUp && a.highlight === b.highlight && a.limit === b.limit);
 
 export default function WikilandPage() {
@@ -49,15 +69,17 @@ export default function WikilandPage() {
   const [loaded, setLoaded] = useState<{ id: string; full: FullWikiArticle } | null>(null);
   const [loadError, setLoadError] = useState<'network' | 'invalid' | null>(null);
   const [retry, setRetry] = useState(0);
-  const [limit, setLimit] = useState(30);
+  const [limit, setLimit] = useState(SECTION_BATCH);
   const [message, setMessage] = useState('');
   const [storageFailed, setStorageFailed] = useState(false);
+  const [canSave, setCanSave] = useState(true);
   const [visible, setVisible] = useState(true);
   const [rulesOpen, setRulesOpen] = useState(false);
   const [sourceOpen, setSourceOpen] = useState(false);
   const [pending, setPending] = useState<'daily' | 'free' | 'giveup' | null>(null);
   const [sort, setSort] = useState<'recent' | 'hits'>('recent');
   const [highlight, setHighlight] = useState('');
+  const [jump, setJump] = useState<{ word: string; occurrence: number } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const helpButton = useRef<HTMLButtonElement>(null);
   const sourceButton = useRef<HTMLButtonElement>(null);
@@ -78,13 +100,36 @@ export default function WikilandPage() {
   }, [article, guessedWords, sort]);
 
   useEffect(() => {
-    const saved = loadWikiGame();
-    const date = today();
-    setGame(saved && (saved.mode === 'free' || saved.date === date) ? saved : createGame('daily', date));
+    const controller = new AbortController();
+    async function restore() {
+      let saved = loadWikiGame();
+      if (!saved && location.pathname === '/wikiland') {
+        // The old cookie is only sent to URLs under /game-labs/wikiland.
+        try {
+          const response = await fetch('/game-labs/wikiland/saved-game', { signal: controller.signal });
+          if (response.status !== 204) {
+            saved = response.ok ? parseWikiGame(await response.text()) : null;
+            if (!saved) throw new Error('Save lookup failed');
+          }
+        } catch {
+          if (controller.signal.aborted) return;
+          // Keep the old save intact if we could not check it.
+          setCanSave(false);
+          setStorageFailed(true);
+        }
+      }
+      if (controller.signal.aborted) return;
+      const date = today();
+      setGame(saved && (saved.mode === 'free' || saved.date === date) ? saved : createGame('daily', date));
+    }
+    void restore();
     const onVisibility = () => setVisible(!document.hidden);
     onVisibility();
     document.addEventListener('visibilitychange', onVisibility);
-    return () => document.removeEventListener('visibilitychange', onVisibility);
+    return () => {
+      controller.abort();
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
   }, []);
 
   useEffect(() => {
@@ -96,7 +141,7 @@ export default function WikilandPage() {
     let active = true;
     setLoaded(null);
     setLoadError(null);
-    setLimit(30);
+    setLimit(SECTION_BATCH);
     fetchWikipediaRevision(base.revisionId, controller.signal).then(({ title, html }) => {
       const full = prepareWikipediaArticle(base, title, html, document);
       if (!hasValidHints(game, full.article, base)) throw new Error('invalid-save');
@@ -115,14 +160,35 @@ export default function WikilandPage() {
   }, [gameId, ready, finished, visible, rulesOpen, sourceOpen, pending]);
 
   useEffect(() => {
-    if (game && ready) setStorageFailed(!saveWikiGame(game));
-  }, [game, ready]);
+    if (game && ready && canSave) setStorageFailed(!saveWikiGame(game));
+  }, [game, ready, canSave]);
+
+  useEffect(() => {
+    if (!jump) return;
+    // The matching section may have been mounted by the same click.
+    articleRef.current?.querySelectorAll('[data-wiki-hit]')[jump.occurrence]?.scrollIntoView({ block: 'center', behavior: 'instant' });
+  }, [jump]);
+
+  function jumpToGuess(word: string, hits: number) {
+    setHighlight(word);
+    if (!full || !hits) {
+      setJump(null);
+      return;
+    }
+    const sections = matchingSections(full, titleTokens, word);
+    if (!sections.length) return;
+    const occurrence = jump?.word === word ? (jump.occurrence + 1) % sections.length : 0;
+    const requiredLimit = Math.ceil((sections[occurrence] + 1) / SECTION_BATCH) * SECTION_BATCH;
+    setLimit(value => Math.max(value, requiredLimit));
+    setJump({ word, occurrence });
+  }
 
   function start(mode: 'daily' | 'free') {
     setGame(createGame(mode, today(), game?.puzzleId));
     setInput('');
     setMessage('');
     setHighlight('');
+    setJump(null);
     inputRef.current?.focus();
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
@@ -151,6 +217,7 @@ export default function WikilandPage() {
     if (result.outcome === 'finished') return;
     setGame(result.game);
     setHighlight(normalizeWord(input));
+    setJump(null);
     setInput('');
     setMessage(isWon(result.game, article) ? 'Titel gefunden! Der Artikel ist aufgedeckt.' : result.hits ? `${result.hits} Treffer. Die passenden Wörter sind aufgedeckt.` : 'Kein Treffer. Versuch ein anderes Wort.');
     inputRef.current?.focus();
@@ -163,12 +230,13 @@ export default function WikilandPage() {
     const key = next.hints.length > game.hints.length ? next.hints[next.hints.length - 1] : '';
     const revealed = [...titleTokens, ...paragraphs.flat()].find(token => token.key === key)?.text;
     setHighlight(key);
+    setJump(null);
     setMessage(isWon(next, article) ? 'Titel gefunden! Der Artikel ist aufgedeckt.' : revealed ? `Hinweis: „${revealed}“ wurde im Artikel aufgedeckt.` : 'Es gibt kein weiteres verborgenes Wort.');
   }
 
   async function share() {
     if (!game) return;
-    const text = `Wikiland · ${game.mode === 'daily' ? game.date : 'Freie Runde'}\n${won ? 'Titel gefunden' : 'Artikel aufgedeckt'} · ${game.guesses.length} Versuche · ${game.hints.length} Hinweise · ${clock(game.elapsed)}\nhttps://paulikreisch.de/game-labs/wikiland`;
+    const text = `Wikiland · ${game.mode === 'daily' ? game.date : 'Freie Runde'}\n${won ? 'Titel gefunden' : 'Artikel aufgedeckt'} · ${game.guesses.length} Versuche · ${game.hints.length} Hinweise · ${clock(game.elapsed)}\nhttps://paulikreisch.de/wikiland`;
     try {
       await navigator.clipboard.writeText(text);
       setMessage('Dein Ergebnis ist kopiert – ohne die Lösung zu verraten.');
@@ -214,13 +282,13 @@ export default function WikilandPage() {
               <summary>Wortverlauf <span>{guesses.length}</span></summary>
               <div className={styles.historyBody}>
                 <label className={styles.sort}>Sortieren<select value={sort} onChange={event => setSort(event.target.value as 'recent' | 'hits')}><option value="recent">Neueste zuerst</option><option value="hits">Meiste Treffer</option></select></label>
-                {guesses.length ? <ol className={styles.guessList}>{guesses.map(entry => <li key={entry.number}><span className={styles.guessNumber}>{entry.number}</span><button type="button" className={entry.hits ? styles.hitWord : styles.missWord} onClick={() => { setHighlight(normalizeWord(entry.word)); articleRef.current?.scrollIntoView({ block: 'start', behavior: 'instant' }); }}>{entry.word}</button><span className={`${styles.hitCount} ${entry.hits ? styles.hasHits : ''}`} aria-label={`${entry.hits} Treffer`}>{entry.hits}</span></li>)}</ol> : <p className={styles.emptyHistory}>Noch keine Versuche.</p>}
+                {guesses.length ? <ol className={styles.guessList}>{guesses.map(entry => <li key={entry.number}><span className={styles.guessNumber}>{entry.number}</span><button type="button" className={entry.hits ? styles.hitWord : styles.missWord} onClick={() => jumpToGuess(entry.word, entry.hits)}>{entry.word}</button><span className={`${styles.hitCount} ${entry.hits ? styles.hasHits : ''}`} aria-label={`${entry.hits} Treffer`}>{entry.hits}</span></li>)}</ol> : <p className={styles.emptyHistory}>Noch keine Versuche.</p>}
               </div>
             </details>
           </section>
 
           <article ref={articleRef} className={styles.article} aria-label="Verborgener Wikipedia-Artikel">
-            {full && game ? <ArticleBody full={full} game={game} highlight={highlight} limit={limit} onMore={() => setLimit(value => value + 30)} /> : loadError ? <div role="alert">{loadError === 'invalid' ? <><p>Der gespeicherte Hinweis passt nicht zur Artikelversion. Der Spielstand wurde nicht überschrieben.</p><button type="button" className={styles.secondary} onClick={() => start('free')}>Neue freie Runde starten</button></> : <><p>Der Wikipedia-Artikel konnte nicht geladen werden. Dein Spielstand bleibt erhalten.</p><button type="button" className={styles.secondary} onClick={() => setRetry(value => value + 1)}>Erneut versuchen</button></>}</div> : <p className={styles.loading}>Der Wikipedia-Artikel wird geladen …</p>}
+            {full && game ? <ArticleBody full={full} game={game} highlight={highlight} limit={limit} onMore={() => setLimit(value => value + SECTION_BATCH)} /> : loadError ? <div role="alert">{loadError === 'invalid' ? <><p>Der gespeicherte Hinweis passt nicht zur Artikelversion. Der Spielstand wurde nicht überschrieben.</p><button type="button" className={styles.secondary} onClick={() => start('free')}>Neue freie Runde starten</button></> : <><p>Der Wikipedia-Artikel konnte nicht geladen werden. Dein Spielstand bleibt erhalten.</p><button type="button" className={styles.secondary} onClick={() => setRetry(value => value + 1)}>Erneut versuchen</button></>}</div> : <p className={styles.loading}>Der Wikipedia-Artikel wird geladen …</p>}
           </article>
         </div>
 

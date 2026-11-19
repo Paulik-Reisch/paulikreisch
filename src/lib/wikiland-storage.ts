@@ -1,7 +1,8 @@
 import { dailyArticle, getArticle, isCommonWord, isWikiDate, normalizeWord, type WikiGame } from './wikiland-engine';
 
 export const WIKI_COOKIE = 'pr_wikiland_v1';
-export const WIKI_COOKIE_PATH = '/game-labs/wikiland';
+const LEGACY_PATH = '/game-labs/wikiland';
+const SHORT_PATH = '/wikiland';
 const CHUNK_SIZE = 3450;
 const MAX_CHUNKS = 4;
 const MAX_RAW = CHUNK_SIZE * MAX_CHUNKS;
@@ -46,27 +47,32 @@ function cookieJar(): Map<string, string> {
   }));
 }
 
-export function loadWikiGame(): WikiGame | null {
-  try {
-    const cookies = cookieJar();
-    const first = cookies.get(`${WIKI_COOKIE}_0`);
-    const header = first?.match(/^([a-f0-9]{8})\.([1-4])\.0\.([A-Za-z0-9_-]+)$/);
-    if (!header) return null;
-    const count = Number(header[2]), hash = header[1];
-    let raw = '';
-    for (let index = 0; index < count; index++) {
-      const value = cookies.get(`${WIKI_COOKIE}_${index}`);
-      const prefix = `${hash}.${count}.${index}.`;
-      if (!value?.startsWith(prefix) || value.length > 3500) return null;
-      raw += value.slice(prefix.length);
-    }
-    if (checksum(raw) !== hash) return null;
-    return parseWikiGame(raw);
-  } catch { return null; }
+export function readWikiGameCookies(cookies: Map<string, string>): WikiGame | null {
+  const first = cookies.get(`${WIKI_COOKIE}_0`);
+  const header = first?.match(/^([a-f0-9]{8})\.([1-4])\.0\.([A-Za-z0-9_-]+)$/);
+  if (!header) return null;
+  const count = Number(header[2]), hash = header[1];
+  let raw = '';
+  for (let index = 0; index < count; index++) {
+    const value = cookies.get(`${WIKI_COOKIE}_${index}`);
+    const prefix = `${hash}.${count}.${index}.`;
+    if (!value?.startsWith(prefix) || value.length > 3500) return null;
+    raw += value.slice(prefix.length);
+  }
+  if (checksum(raw) !== hash) return null;
+  return parseWikiGame(raw);
 }
 
-function attributes(maxAge: number): string {
-  return `; Path=${WIKI_COOKIE_PATH}; Max-Age=${maxAge}; SameSite=Lax${location.protocol === 'https:' ? '; Secure' : ''}`;
+export function loadWikiGame(): WikiGame | null {
+  try { return readWikiGameCookies(cookieJar()); } catch { return null; }
+}
+
+// Each address gets the same save, scoped to the game so other pages never receive it.
+function writeCookie(index: number, value: string, maxAge: number): void {
+  const secure = location.protocol === 'https:' ? '; Secure' : '';
+  for (const path of [LEGACY_PATH, SHORT_PATH]) {
+    document.cookie = `${WIKI_COOKIE}_${index}=${value}; Path=${path}; Max-Age=${maxAge}; SameSite=Lax${secure}`;
+  }
 }
 
 export function saveWikiGame(game: WikiGame): boolean {
@@ -75,9 +81,8 @@ export function saveWikiGame(game: WikiGame): boolean {
     if (raw.length > MAX_RAW || !parseWikiGame(raw)) return false;
     const count = Math.ceil(raw.length / CHUNK_SIZE), hash = checksum(raw);
     for (let index = 0; index < MAX_CHUNKS; index++) {
-      document.cookie = index < count
-        ? `${WIKI_COOKIE}_${index}=${hash}.${count}.${index}.${raw.slice(index * CHUNK_SIZE, (index + 1) * CHUNK_SIZE)}${attributes(31536000)}`
-        : `${WIKI_COOKIE}_${index}=${attributes(0)}`;
+      if (index < count) writeCookie(index, `${hash}.${count}.${index}.${raw.slice(index * CHUNK_SIZE, (index + 1) * CHUNK_SIZE)}`, 31536000);
+      else writeCookie(index, '', 0);
     }
     const restored = loadWikiGame();
     return restored !== null && serializeWikiGame(restored) === raw;
@@ -86,6 +91,6 @@ export function saveWikiGame(game: WikiGame): boolean {
 
 export function clearWikiGame(): void {
   try {
-    for (let index = 0; index < MAX_CHUNKS; index++) document.cookie = `${WIKI_COOKIE}_${index}=${attributes(0)}`;
+    for (let index = 0; index < MAX_CHUNKS; index++) writeCookie(index, '', 0);
   } catch { /* Game still works in memory when cookies are unavailable. */ }
 }
