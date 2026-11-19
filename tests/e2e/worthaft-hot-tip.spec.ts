@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test('the hot tip marks a solution key without writing in the grid and shares its attempt', async ({ page }) => {
   await page.addInitScript(() => {
-    localStorage.setItem('hallowelt_cookie_consent', '{}');
+    localStorage.setItem('hallowelt_cookie_consent', JSON.stringify({ necessary: true, analytics: false, marketing: false }));
     const date = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
     if (!localStorage.getItem('worthaft-daily-game')) {
       localStorage.setItem('worthaft-daily-game', JSON.stringify({
@@ -31,7 +31,7 @@ test('the hot tip marks a solution key without writing in the grid and shares it
   await expect(grid).toHaveText(typed!);
   await expect(tip).toHaveCount(0);
   expect(await markedKey.evaluate(button => getComputedStyle(button, '::after').animationName)).toBe('worthaft-tip-orbit');
-  await page.screenshot({ path: 'test-results/worthaft-hot-tip.png' });
+  await keyboard.screenshot({ path: 'test-results/worthaft-hot-tip.png' });
 
   await page.reload();
   await expect(markedKey).toHaveText(letter);
@@ -43,5 +43,5 @@ test('the hot tip marks a solution key without writing in the grid and shares it
   await page.getByRole('button', { name: 'Teilen', exact: true }).click();
   const shared = await page.evaluate(() => sessionStorage.getItem('shared-result'));
   expect(shared).toContain('Heißer Tipp in Versuch 6 verwendet.');
-  expect(shared).toMatch(/^[🟩🟦🟨⬛]{5}(?: \(\d+:\d{2}\))?$/mu);
+  expect(shared?.split('\n').filter(line => /^[🟩🟦🟨⬛]{5}(?: \(\d+:\d{2}\))?$/u.test(line))).toHaveLength(6);
 });

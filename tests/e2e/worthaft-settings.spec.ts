@@ -3,7 +3,9 @@ import { test, expect } from '@playwright/test';
 for (const width of [320, 375, 414, 768, 1440]) {
   test(`settings categories keep their controls reachable at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
-    await page.addInitScript(() => localStorage.setItem('hallowelt_cookie_consent', '{}'));
+    await page.addInitScript(() => {
+      localStorage.setItem('hallowelt_cookie_consent', JSON.stringify({ necessary: true, analytics: false, marketing: false }));
+    });
     await page.goto('/worthaft');
     await page.getByRole('button', { name: 'Einstellungen öffnen' }).click();
     const dialog = page.getByRole('dialog', { name: 'Einstellungen' });
