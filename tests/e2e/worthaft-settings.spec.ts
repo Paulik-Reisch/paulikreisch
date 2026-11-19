@@ -1,5 +1,27 @@
 import { test, expect } from '@playwright/test';
 
+for (const width of [320, 375, 414, 768, 1440]) {
+  test(`settings categories keep their controls reachable at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.addInitScript(() => localStorage.setItem('hallowelt_cookie_consent', '{}'));
+    await page.goto('/worthaft');
+    await page.getByRole('button', { name: 'Einstellungen öffnen' }).click();
+    const dialog = page.getByRole('dialog', { name: 'Einstellungen' });
+    const categories = dialog.getByRole('tablist', { name: 'Einstellungskategorien' });
+    await expect(categories).toHaveAttribute('aria-orientation', width < 768 ? 'horizontal' : 'vertical');
+    await expect(dialog.getByRole('slider', { name: 'Tastenbreite' })).toBeVisible();
+    const bounds = await dialog.boundingBox();
+    expect(bounds!.width).toBeLessThanOrEqual(width);
+    if (width >= 768) expect(bounds!.width).toBeGreaterThan(600);
+    await dialog.screenshot({ path: `test-results/worthaft-settings-${width}.png`, animations: 'disabled' });
+    await categories.getByRole('tab', { name: 'Spiel' }).click();
+    await expect(dialog.getByRole('checkbox', { name: 'Heißer Tipp aktiv' })).toBeChecked();
+    await expect(dialog.getByRole('checkbox', { name: 'Animationen & Effekte' })).toBeVisible();
+    await categories.getByRole('tab', { name: 'Ton' }).click();
+    await expect(dialog.getByRole('checkbox', { name: 'Hintergrundmusik' })).toBeVisible();
+  });
+}
+
 test('game appearance preferences persist and can be reset', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.route(/identitytoolkit|firestore.googleapis.com|securetoken/, route => route.abort());

@@ -498,7 +498,7 @@
         "title": "Gültiges Wort und Lösungskandidat auseinanderhalten",
         "paragraphs": [
           "Ein Wort kann als Versuch akzeptiert werden, ohne die Lösung zu sein. Worthaft prüft Eingaben gegen eine Wortliste; Eigennamen, Abkürzungen, Beugungsformen und seltene Begriffe können je nach Wörterbuch fehlen. Wenn ein Wort abgelehnt wird, heißt das nicht automatisch, dass die Logik deiner Vermutung falsch war. Wähle einen gültigen Ersatz, der möglichst dieselben Buchstaben testet.",
-          "Der Joker „Heißer Tipp“ kann im Spiel einen Buchstaben aufdecken, kostet aber die eigene Entscheidung über den Einsatz. Setze ihn ein, wenn du festhängst oder heute lieber eine Hilfestellung möchtest. Die Schwierigkeit soll Spaß machen, kein Beweis für Sprachwissen sein. Nach der Auflösung kannst du das Lösungswort im Spiel antippen, um die angebotene Worterklärung zu lesen."
+          "Der Joker „Heißer Tipp“ markiert auf der Tastatur einen Buchstaben, der im Lösungswort vorkommt. Seine Position musst du selbst herausfinden. Setze den Tipp ein, wenn du festhängst oder heute lieber eine Hilfestellung möchtest. Nach der Auflösung kannst du das Lösungswort im Spiel antippen, um die angebotene Worterklärung zu lesen."
         ]
       },
       {
