@@ -42,6 +42,7 @@ import {
   writeWorthaftRowTimer,
   type WorthaftRowTimer,
 } from '@/lib/worthaft-game-state';
+import { getWorthaftKeyboardLetter } from '@/lib/worthaft-letters';
 import { hasWorthaftFeedbackDecision } from '@/lib/worthaft-feedback';
 import { isWorthaftAntiWord } from '@/lib/worthaft-anti-words';
 import { getWorthaftMillisecondsUntilNextDay } from '@/lib/worthaft-daily-word';
@@ -1110,8 +1111,10 @@ export default function WorthaftGame({
     }, [resetInactivityTimer]);
 
 
-    const handleChar = (char: string) => {
+    const handleChar = (key: string) => {
         if (!isWordListReady || gameState !== 'playing') return;
+        const char = getWorthaftKeyboardLetter(key);
+        if (char === null) return;
         const newGuess = [...currentGuess];
         const isJokerHere = jokerPosition && jokerPosition.guessIndex === guesses.length;
 
@@ -1333,8 +1336,8 @@ export default function WorthaftGame({
                 nextIndex++;
             }
             setActiveIndex(Math.min(WORD_LENGTH - 1, nextIndex));
-        } else if (/^[a-zA-ZäöüÄÖÜß]$/.test(event.key)) {
-            handleChar(event.key.toUpperCase());
+        } else {
+            handleChar(event.key);
         }
     }, [isWordListReady, gameState, isDialogOpen, isSettingsOpen, showHotTipDialog, isFeedbackOpen, invalidWord, handleEnter, handleDelete, handleChar, activeIndex, jokerPosition, guesses.length]);
 

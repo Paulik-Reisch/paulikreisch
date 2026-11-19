@@ -34,3 +34,7 @@ test('selects one deterministic word for a Berlin calendar date', () => {
   assert.equal(getWorthaftWordOfTheDay(words, '2024-01-02'), 'FÄHRE');
   assert.equal(getWorthaftWordOfTheDay(words, '2024-01-02'), 'FÄHRE');
 });
+
+test('sharp s stays one letter so daily feedback passes five-letter rules', () => {
+  assert.equal(getWorthaftWordOfTheDay(['büßer'], '2026-11-19'), 'BÜẞER');
+});
