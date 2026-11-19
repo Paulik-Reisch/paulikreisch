@@ -46,8 +46,9 @@ export default function CookieRichtliniePage() {
             <h3>Wikiland: Spielstand auf Deinem Gerät</h3>
             <p>
               Wikiland speichert die aktuelle Runde, Rateversuche, aufgedeckte Hinweise und die Spielzeit
-              in bis zu vier eigenen Cookies „pr_wikiland_v1_0“ bis „pr_wikiland_v1_3“.
-              Sie gelten nur für /game-labs/wikiland und laufen spätestens ein Jahr nach der letzten Speicherung ab.
+              in bis zu vier Cookies je Spieladresse („pr_wikiland_v1_0“ bis „pr_wikiland_v1_3“).
+              Beide Adressen (/wikiland und /game-labs/wikiland) verwenden denselben Spielstand.
+              Die Cookies laufen spätestens ein Jahr nach der letzten Speicherung ab.
               Das Spiel benötigt kein Konto und verwendet keine Analyse- oder Marketingdienste.
               Du kannst die Cookies über Deine Browser-Einstellungen entfernen. Bei blockierten Cookies
               bleibt die Runde spielbar; der Fortschritt kann dann beim Schließen verloren gehen.

@@ -119,11 +119,14 @@ export function hasValidHints(game: WikiGame, article: WikiArticle, legacyArticl
   return game.hints.every(hint => counts.has(hint)) && game.guesses.every(guess => !guess.includes(' ') || guess === title || (!game.revisionAware && !!legacyArticle && guess === titleKey(legacyArticle)));
 }
 
-export function getGuessHits(article: WikiArticle, guess: string): number {
+export function getGuessMatchKeys(article: WikiArticle, guess: string): Set<string> {
   const key = normalizeWord(guess);
-  const matching = new Set(key === titleKey(article) ? titleWords(article).map(token => token.key) : [key]);
+  return new Set(key === titleKey(article) ? titleWords(article).map(token => token.key) : [key]);
+}
+
+export function getGuessHits(article: WikiArticle, guess: string): number {
   const counts = frequencies(article);
-  return [...matching].reduce((total, word) => total + (counts.get(word) ?? 0), 0);
+  return [...getGuessMatchKeys(article, guess)].reduce((total, word) => total + (counts.get(word) ?? 0), 0);
 }
 
 export function submitGuess(game: WikiGame, input: string, override?: WikiArticle): { game: WikiGame; outcome: GuessOutcome; hits: number } {
