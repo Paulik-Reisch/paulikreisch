@@ -135,7 +135,6 @@ const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenS
   const getKeyClass = (key: string) => cn(
     'h-auto p-0 font-bold uppercase flex items-center justify-center transition-colors duration-300',
     getWorthaftStatusClass(letterStatuses[key], settings.palette) || 'bg-muted hover:bg-accent',
-    letterStatuses[key] === 'absent' && 'opacity-20',
     gameState === 'playing' && key === hotTip?.letter && (
       settings.animationsEnabled ? 'worthaft-tip-key worthaft-tip-key-animated' : 'worthaft-tip-key'
     ),
@@ -1521,4 +1520,4 @@ Jetzt selber spielen:`;
             )}
         </div>
     );
-}
+        }
