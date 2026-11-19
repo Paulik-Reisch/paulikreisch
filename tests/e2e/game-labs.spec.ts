@@ -7,7 +7,7 @@ for (const width of [320, 390, 1440]) {
     await page.addInitScript(() => localStorage.setItem('hallowelt_cookie_consent', '{}'));
     await page.route(/identitytoolkit|firestore.googleapis.com|securetoken/, route => route.abort());
     await page.goto('/game-labs');
-    for (const [title, href] of [['Wikiland', '/game-labs/wikiland'], ['Bits', '/game-labs/bits'], ['Worthaft', '/worthaft']]) {
+    for (const [title, href] of [['Wikiland', '/wikiland'], ['Bits', '/game-labs/bits'], ['Worthaft', '/worthaft']]) {
       const card = page.getByRole('article').filter({ has: page.getByRole('heading', { name: title, exact: true }) });
       await expect(card.getByRole('link', { name: 'Jetzt spielen' })).toHaveAttribute('href', href);
     }
