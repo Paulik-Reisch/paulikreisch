@@ -21,7 +21,7 @@ test('the hot tip marks a solution key without writing in the grid and shares it
   const tip = keyboard.getByRole('button', { name: /Heißer Tipp/ });
   const markedKey = keyboard.locator('.worthaft-tip-key');
 
-  await expect(keyboard.getByRole('button', { name: 'Q', exact: true })).toHaveCSS('opacity', '0.2');
+  await expect(keyboard.getByRole('button', { name: 'Q', exact: true })).toHaveCSS('opacity', '1');
   await page.keyboard.type('st');
   const typed = await grid.textContent();
   await tip.click();
