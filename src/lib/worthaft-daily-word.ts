@@ -1,3 +1,5 @@
+import { uppercaseWorthaftWord } from './worthaft-letters';
+
 const WORTHAFT_TIME_ZONE = 'Europe/Berlin';
 const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
 const BERLIN_DATE_FORMATTER = new Intl.DateTimeFormat('en-CA', {
@@ -72,5 +74,5 @@ export function getWorthaftWordOfTheDay(words: readonly string[], date: string):
   );
   const wordIndex = ((daysSinceStart % words.length) + words.length) % words.length;
 
-  return words[wordIndex].toUpperCase();
+  return uppercaseWorthaftWord(words[wordIndex]);
 }
