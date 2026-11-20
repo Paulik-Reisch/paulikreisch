@@ -76,12 +76,10 @@ const sitemapData: SitemapNode[] = [
   },
   {
     label: 'Landingpages & Kampagnen',
-    href: '/lp-palabrotas',
+    href: '/vibecoding/anleitung',
     icon: ExternalLink,
     description: 'Marketing-Landingpages',
     children: [
-      { label: 'Palabrotas Haupt', href: '/lp-palabrotas', description: 'Kampagnen-Landingpage' },
-      { label: 'Palabrotas Mehr Erfahren', href: '/lp-palabrotas/mehr-erfahren', description: 'Detail-Seite' },
       { label: 'Vibecoding Anleitung', href: '/vibecoding/anleitung', description: 'Developer-Guide' },
     ],
   },

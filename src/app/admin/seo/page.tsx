@@ -27,7 +27,6 @@ export default async function SeoAdminPage() {
         { href: '/lp2', title: 'LP2 - Countdown', slug: 'lp2' },
         { href: '/lp3', title: 'LP3 - Buch Live', slug: 'lp3' },
         { href: '/lp-series', title: 'LP - Buchserie', slug: 'lp-series' },
-        { href: '/lp-pfeifer', title: 'LP - Pfeifer', slug: 'lp-pfeifer' },
         { href: '/lp-risitas', title: 'LP - Risitas', slug: 'lp-risitas' },
         { href: '/lp-luin', title: 'LP - Luin', slug: 'lp-luin' },
         { href: '/exzerpte', title: 'Leseproben Übersicht', slug: 'exzerpte' },
