@@ -434,11 +434,11 @@ test('reduced motion disables homepage parallax', async ({ page }) => {
   await expect(page.locator('[data-home-parallax]')).not.toHaveAttribute('style', /translate3d/);
 });
 
-test('old homepage remains available but cannot be indexed', async ({ page }) => {
-  await page.goto('/index-old');
-  await expect(page.locator('meta[name=robots]')).toHaveAttribute('content', /noindex/);
-  await expect(page.locator('header').first()).toBeVisible();
-  await expect(page.locator('footer')).toHaveCount(1);
+test('removed old pages are no longer available', async ({ page }) => {
+  for (const path of ['/index-old', '/lp-palabrotas']) {
+    const response = await page.goto(path);
+    expect(response?.status(), path).toBe(404);
+  }
 });
 
 test('core homepage content remains usable without JavaScript', async ({ browser }) => {
