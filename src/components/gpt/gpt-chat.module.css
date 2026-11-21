@@ -144,13 +144,13 @@
 .composer textarea:focus-visible { outline: 0; }
 .composer textarea::placeholder { color: #928879; opacity: 1; }
 .composerBottom { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 8px; }
-.composerBottom > span { color: #968c7d; font-size: 10px; }
+.composerBottom > span { color: #675d50; font-size: 12px; }
 .sendButton { display: grid; width: 34px; height: 34px; flex: 0 0 auto; place-items: center; border: 0; border-radius: 4px; color: var(--paper-white); background: var(--ink); cursor: pointer; transition: background 150ms ease, transform 150ms ease; }
 .sendButton:hover:not(:disabled) { background: var(--rust); transform: translateY(-1px); }
 .sendButton:disabled { color: #a99f91; background: #e6e0d5; cursor: not-allowed; }
 .sendSpinner { width: 15px; height: 15px; border: 2px solid rgb(255 255 255 / 45%); border-top-color: white; border-radius: 50%; animation: spin 700ms linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.disclaimer { margin: 10px 8px 0; color: #948a7b; text-align: center; font-size: 10px; line-height: 1.5; }
+.disclaimer { margin: 10px 8px 0; color: #675d50; text-align: center; font-size: 12px; line-height: 1.5; }
 .retryHint { display: flex; align-items: center; gap: 6px; margin: 0 8px 8px; color: var(--rust); font-size: 11px; }
 .srOnly { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; clip-path: inset(50%); }
 .backdrop { display: none; }
@@ -196,8 +196,8 @@
   .composerWrap { width: calc(100% - 24px); padding-top: 7px; }
   .composer { padding: 11px 10px 8px 13px; }
   .composer textarea { font-size: 16px; }
-  .composerBottom > span { max-width: 220px; font-size: 9px; }
-  .disclaimer { margin-inline: 4px; font-size: 9px; }
+  .composerBottom > span { max-width: 220px; font-size: 12px; }
+  .disclaimer { margin-inline: 4px; font-size: 12px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -237,7 +237,7 @@
 :global(.dark) .shell .composer textarea::placeholder { color: #9a907f; }
 :global(.dark) .shell .composerBottom > span { color: var(--muted); }
 :global(.dark) .shell .sendButton:disabled { color: #6f6759; background: #2a2620; }
-:global(.dark) .shell .disclaimer { color: #9a907f; }
+:global(.dark) .shell .disclaimer { color: #c8c1b2; }
 
 :global(.dark) .shell .topbar { background: rgb(39 35 29 / 94%); border-bottom-color: rgb(79 73 61 / 75%); }
 :global(.dark) .shell .starters button { background: rgb(56 51 43 / 65%); }
