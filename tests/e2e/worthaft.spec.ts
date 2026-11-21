@@ -1,5 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 
+// Saved guesses use uppercase, matching handleChar/saveState in the real game.
 // Auth responses are mocked, so these tests never create real Firebase accounts.
 async function mockOnDemandAnonymousAuth(page: Page) {
   let requests = 0;
@@ -58,7 +59,7 @@ for (const width of [320, 375, 414, 768, 1440]) {
       const now = new Date();
       const date = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
       localStorage.setItem('hallowelt_cookie_consent', JSON.stringify({ necessary: true, analytics: false, marketing: false }));
-      localStorage.setItem('worthaft-daily-game', JSON.stringify({ date, status: 'won', guesses: [{ guess: 'bruch', statuses: Array(5).fill('correct') }], letterStatuses: {}, rowTimes: [1000] }));
+      localStorage.setItem('worthaft-daily-game', JSON.stringify({ date, status: 'won', guesses: [{ guess: 'BRUCH', statuses: Array(5).fill('correct') }], letterStatuses: {}, rowTimes: [1000] }));
     });
     await page.goto('/worthaft');
     const skip = page.getByRole('button', { name: 'Überspringen', exact: true });
@@ -88,7 +89,7 @@ test('feedback can also be skipped after selecting a negative vote without submi
     const now = new Date();
     const date = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
     localStorage.setItem('hallowelt_cookie_consent', JSON.stringify({ necessary: true, analytics: false, marketing: false }));
-    localStorage.setItem('worthaft-daily-game', JSON.stringify({ date, status: 'lost', guesses: [{ guess: 'bruch', statuses: Array(5).fill('absent') }], letterStatuses: {}, rowTimes: [1000] }));
+    localStorage.setItem('worthaft-daily-game', JSON.stringify({ date, status: 'lost', guesses: [{ guess: 'BRUCH', statuses: Array(5).fill('absent') }], letterStatuses: {}, rowTimes: [1000] }));
   });
   await page.goto('/worthaft');
   await page.getByRole('button', { name: 'Nein, das Wort war nicht gut' }).click();
@@ -109,7 +110,7 @@ test('positive Worthaft feedback is local: no Auth or Firestore requests', async
     const now = new Date();
     const date = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
     localStorage.setItem('hallowelt_cookie_consent', JSON.stringify({ necessary: true, analytics: false, marketing: false }));
-    localStorage.setItem('worthaft-daily-game', JSON.stringify({ date, status: 'won', guesses: [{ guess: 'bruch', statuses: Array(5).fill('correct') }], letterStatuses: {}, rowTimes: [1000] }));
+    localStorage.setItem('worthaft-daily-game', JSON.stringify({ date, status: 'won', guesses: [{ guess: 'BRUCH', statuses: Array(5).fill('correct') }], letterStatuses: {}, rowTimes: [1000] }));
     localStorage.removeItem(`worthaft-feedback-${date}`);
   });
   await page.goto('/worthaft');
@@ -133,7 +134,7 @@ test('negative Worthaft feedback attempts a Firestore write', async ({ page }) =
     const now = new Date();
     const date = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
     localStorage.setItem('hallowelt_cookie_consent', JSON.stringify({ necessary: true, analytics: false, marketing: false }));
-    localStorage.setItem('worthaft-daily-game', JSON.stringify({ date, status: 'won', guesses: [{ guess: 'bruch', statuses: Array(5).fill('correct') }], letterStatuses: {}, rowTimes: [1000] }));
+    localStorage.setItem('worthaft-daily-game', JSON.stringify({ date, status: 'won', guesses: [{ guess: 'BRUCH', statuses: Array(5).fill('correct') }], letterStatuses: {}, rowTimes: [1000] }));
   });
   await page.goto('/worthaft');
   await page.getByRole('button', { name: 'Nein, das Wort war nicht gut' }).click();
@@ -177,7 +178,7 @@ test('word explanation offers retry after a failed request and returns focus on 
     const date = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
     localStorage.setItem('hallowelt_cookie_consent', JSON.stringify({ necessary: true, analytics: false, marketing: false }));
     localStorage.setItem(`worthaft-feedback-${date}`, 'true');
-    localStorage.setItem('worthaft-daily-game', JSON.stringify({ date, status: 'won', guesses: [{ guess: 'birne', statuses: Array(5).fill('correct') }], letterStatuses: {}, rowTimes: [1000] }));
+    localStorage.setItem('worthaft-daily-game', JSON.stringify({ date, status: 'won', guesses: [{ guess: 'BIRNE', statuses: Array(5).fill('correct') }], letterStatuses: {}, rowTimes: [1000] }));
   });
   await page.goto('/worthaft');
   const trigger = page.getByRole('button', { name: /Was ist das/ });

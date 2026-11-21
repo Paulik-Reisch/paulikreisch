@@ -1,9 +1,13 @@
+import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/page-metadata';
 import "../../../../tokens.css";
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { WorthaftColorExplanation } from "./instruction-colors";
+
+export const metadata: Metadata = pageMetadata({title:'Worthaft: Spielanleitung', description:'Die Regeln von Worthaft: sechs Versuche, fünf Buchstaben und farbige Hinweise. So funktioniert das tägliche Worträtsel.', path:'/worthaft/ueber'});
 
 export default function AboutWorthaftPage() {
   const jsonLd = {
@@ -16,19 +20,19 @@ export default function AboutWorthaftPage() {
         '@type': 'HowToStep',
         name: 'Raten',
         text: 'Du hast sechs Versuche, das geheime deutsche Wort mit fünf Buchstaben zu erraten.',
-        url: 'https://paulik-reisch.de/worthaft/ueber#regeln',
+        url: 'https://paulikreisch.de/worthaft/ueber#regeln',
       },
       {
         '@type': 'HowToStep',
         name: 'Hinweise erhalten',
         text: 'Nach jedem Versuch geben Dir die Farben einen Hinweis: Blau für korrekte Position, Gelb für korrekten Buchstaben an falscher Position, und Grau, wenn der Buchstabe nicht im Wort enthalten ist.',
-        url: 'https://paulik-reisch.de/worthaft/ueber#regeln',
+        url: 'https://paulikreisch.de/worthaft/ueber#regeln',
       },
       {
         '@type': 'HowToStep',
         name: 'Gewinnen',
         text: 'Löse das Rätsel innerhalb von sechs Versuchen, um zu gewinnen.',
-        url: 'https://paulik-reisch.de/worthaft/ueber#regeln',
+        url: 'https://paulikreisch.de/worthaft/ueber#regeln',
       },
     ],
   };

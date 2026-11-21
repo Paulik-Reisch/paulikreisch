@@ -12,70 +12,21 @@ export default function WiderrufPage() {
   return (
     <>
       <LegalPage title={"Widerrufs\u00ADbelehrung"} description="Informationen zum Widerrufsrecht beim Erwerb unserer Bücher über Drittanbieter.">
-          <p>
-            Der Vertrieb der Buchprodukte &bdquo;Hallo Welt&ldquo; und verwandter Publikationen erfolgt
-            ausschließlich über die Distributionsplattformen Amazon (Kindle Direct Publishing / Amazon Media
-            EU S.à r.l.) sowie Google Play Books. Einzelhändler im Sinne dieser Hinweise ist mithin der
-            jeweilige Plattformbetreiber, nicht der Anbieter dieser Webpräsenz. Die nachfolgende
-            Widerrufsinformation dient der transparenzfördernden Aufklärung und verweist hinsichtlich der
-            vertraglichen Abwicklung auf die jeweilige Plattform.
-          </p>
+          <p>Unsere Shopseite verlinkt auf externe Angebote. Welcher Händler Dein Vertragspartner ist, ergibt sich aus dem jeweiligen Angebot und Deiner Bestellbestätigung. Bitte beachte die dort bereitgestellte Widerrufsbelehrung. Die folgenden Hinweise erläutern allgemeine gesetzliche Regeln und ersetzen die Widerrufsbelehrung Deines Vertragspartners nicht.</p>
 
           <h2>1. Widerrufsrecht</h2>
-          <p>
-            Dir steht grundsätzlich ein Widerrufsrecht gemäß § 355 BGB zu. Die Widerrufsfrist beträgt
-            vierzehn Tage ab dem Tag des Vertragsschlusses. Im Falle von digitalen Inhalten, die nicht auf
-            einem körperlichen Datenträger geliefert werden, beginnt die Frist mit dem Tag des Vertragsschlusses,
-            sofern Du zuvor ausdrücklich zugestimmt hast, dass mit der Ausführung vor Ablauf der
-            Widerrufsfrist begonnen wird, und Deine Kenntnis davon bestätigt hast, dass Du durch die
-            Zustimmung mit dem Beginn der Ausführung Dein Widerrufsrecht verlierst (§ 356 Abs. 3, § 357 Abs. 6 BGB).
-          </p>
+          <p>Die gesetzliche Widerrufsfrist beträgt grundsätzlich vierzehn Tage. Bei gedruckten Büchern beginnt sie im Regelfall mit dem Erhalt der Ware durch Dich oder einen von Dir benannten Dritten, der nicht Frachtführer ist. Bei nicht auf einem körperlichen Datenträger gelieferten digitalen Inhalten beginnt sie grundsätzlich mit Vertragsschluss. Der Fristbeginn setzt außerdem die gesetzlich vorgeschriebene Unterrichtung voraus (§§ 355, 356 Abs. 2 und 3 BGB).</p>
 
           <h2>2. Vorzeitiger Verlust des Widerrufsrechts</h2>
-          <p>
-            Bei der Lieferung von digitalen Inhalten, die nicht auf einem körperlichen Datenträger
-            bereitgestellt werden, erlischt Dein Widerrufsrecht vorzeitig, sobald der Anbieter mit der
-            Ausführung des Vertrages begonnen hat, nachdem Du hierzu ausdrücklich Deine Zustimmung erteilt
-            und gleichzeitig Deine Kenntnisnahme davon bestätigt hast, dass Du mit der Ausführung den
-            Verlust des Widerrufsrechts bewirkst (§ 356 Abs. 3 Nr. 3 BGB). Dies betrifft insbesondere den
-            unmittelbaren Download oder das Streaming der digitalen Ausgabe.
-          </p>
+          <p>Bei kostenpflichtigen digitalen Inhalten, die nicht auf einem körperlichen Datenträger bereitgestellt werden, kann das Widerrufsrecht nach § 356 Abs. 6 Nr. 2 BGB vorzeitig erlöschen. Dafür muss der Unternehmer mit der Vertragserfüllung begonnen haben, Du musst dem Beginn vor Ablauf der Widerrufsfrist ausdrücklich zugestimmt und Deine Kenntnis vom dadurch eintretenden Verlust des Widerrufsrechts bestätigt haben. Außerdem muss der Unternehmer Dir eine Bestätigung nach § 312f BGB zur Verfügung gestellt haben.</p>
 
           <h2>3. Widerrufsfolgen</h2>
-          <p>
-            Im Falle eines wirksamen Widerrufs sind die empfangenen Leistungen unverzüglich, spätestens
-            binnen vierzehn Tagen, zurückzugewähren. Etwaige Zahlungen werden nach Maßgabe der jeweiligen
-            Plattformbedingungen zurückerstattet. Die Rücksendekosten trägt bei wirksamem Widerruf grundsätzlich
-            der Unternehmer, sofern nicht über die gesetzliche Informationspflicht hinausgehend anders
-            vereinbart.
-          </p>
+          <p>Nach einem wirksamen Widerruf sind die empfangenen Leistungen grundsätzlich unverzüglich, spätestens nach vierzehn Tagen zurückzugewähren. Bei Waren kann der Unternehmer die Rückzahlung unter den Voraussetzungen des § 357 Abs. 4 BGB bis zum Erhalt der Ware oder eines Versandnachweises verweigern. Die unmittelbaren Rücksendekosten trägst Du, wenn der Unternehmer Dich gesetzeskonform darüber informiert hat und nicht selbst ihre Übernahme zugesagt hat (§ 357 Abs. 5 BGB).</p>
 
-          <h2>4. Zuständige Stelle für Rücksendungen &amp; Erklärungen</h2>
-          <p>
-            Widerrufserklärungen und Rücksendungen richtest Du bitte an den jeweiligen Plattformbetreiber,
-            über dessen Intermediär Du die Bestellung aufgegeben hast:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Amazon Media EU S.à r.l. (Kindle Direct Publishing) – über Dein Amazon-Kundenkonto</li>
-            <li>Google Play Books (Google Commerce Limited) – über Dein Google-Konto</li>
-          </ul>
-          <p>
-            Eine Muster-Widerrufsformular stellt die jeweilige Plattform in ihrem Bestellbereich zur Verfügung.
-            Der Anbieter dieser Webpräsenz nimmt selbst keine Bestellungen entgegen und ist folglich nicht
-            Vertragspartner im Sinne des § 312g BGB.
-          </p>
+          <h2>4. Zuständige Stelle für Rücksendungen und Erklärungen</h2>
+          <p>Richte Widerrufserklärungen und Rücksendungen an den in Deinem Angebot bzw. Deiner Bestellbestätigung genannten Vertragspartner. Nutze die dort angegebenen Kontakt- und Rücksendewege. Die genaue Anschrift und ein gegebenenfalls bereitgestelltes Musterformular findest Du in dessen Widerrufsbelehrung.</p>
 
-          <h2>5. Ausschluss des Widerrufsrechts</h2>
-          <p>
-            Das Widerrufsrecht ist ausgeschlossen bei Verträgen zur Lieferung von nicht auf einem körperlichen
-            Datenträger befindlichen digitalen Inhalten, die zum sofortigen Download oder zur sofortigen
-            Ausführung bereitgestellt werden, sofern Du zuvor ausdrücklich zugestimmt und bestätigt
-            hast, dass Du hierdurch Dein Widerrufsrecht verlierst (§ 356 Abs. 3 Nr. 3 BGB).
-          </p>
-
-          <p className="text-sm text-muted-foreground mt-8">
-            Verantwortlich für diese Information: Philipp Paulik (siehe Impressum).
-          </p>
+          <p className="text-sm text-muted-foreground mt-8">Verantwortlich für diese Information: Philipp Paulik (siehe Impressum).</p>
       </LegalPage>
     </>
   );

@@ -49,24 +49,8 @@ export default function ShopPage() {
             "numberOfPages": "106"
         }],
         "image": "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw1%2Fcover-hw1_900px.png?alt=media&token=42ce90a3-ed34-49d2-8e09-5258d0dfc484",
-        "description": "Zwischen Euphorie und Überforderung: Fragmente des Schülerdaseins. Eine Sammlung von Episoden, die das jugendliche Dasein beleuchten.",
-        "offers": {
-            "@type": "Offer",
-            "price": "10.99",
-            "priceCurrency": "EUR",
-            "availability": "https://schema.org/InStock",
-            "seller": {
-                "@type": "Organization",
-                "name": "Amazon"
-            },
-            "url": "https://amzn.eu/d/02nS59t2"
-        },
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "5",
-            "bestRating": "5",
-            "ratingCount": "5"
-        }
+        "description": "Zwischen Euphorie und Überforderung: Fragmente des Schülerdaseins. Eine Sammlung von Episoden, die das jugendliche Dasein beleuchten."
+
     };
     
     const jsonLdBook2 = {
@@ -78,13 +62,8 @@ export default function ShopPage() {
             { "@type": "Person", "name": "Maximilian Reisch" }
         ],
         "image": "https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw2%2Fcover-hw2-900px.png?alt=media&token=9479f94f-e21d-4fe8-82d5-b668781bd724",
-        "description": "Wie das Leben funktioniert (Platzhalter). Die Fortsetzung der satirischen Reise.",
-        "offers": {
-            "@type": "Offer",
-            "price": "12.99",
-            "priceCurrency": "EUR",
-            "availability": "https://schema.org/PreOrder"
-        }
+        "description": "Die Fortsetzung ist in Arbeit."
+
     };
 
 
@@ -145,12 +124,16 @@ export default function ShopPage() {
                                     <Image src="https://firebasestorage.googleapis.com/v0/b/hallo-welt-paulik-reisch.firebasestorage.app/o/buecher-cover%2Fhw2%2Fcover-hw2-900px.png?alt=media&amp;token=9479f94f-e21d-4fe8-82d5-b668781bd724" alt="Band 2 Cover" fill />
                                 </div>
                                 
-                                <span className="series-tag">02 · In Arbeit</span>
+                                <span className="series-tag">02 · Die Fortsetzung</span>
                                 <h2 className="book-title">Hallo Welt 2</h2>
-                                <p className="book-desc">Wie das Leben funktioniert (Platzhalter)</p>
+                                <p className="book-desc">Ein neuer Band von Paulik &amp; Reisch.</p>
 
                                 <div className="action-area">
-                                    <p className="book-unavailable">in Arbeit – bald verfügbar</p>
+                                    <div className="book-progress" aria-label="Status: In Arbeit">
+                                      <span className="book-progress-dot" aria-hidden="true" />
+                                      <span>In Arbeit</span>
+                                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="m16 3 5 5M4 20l4-1L21 6a2 2 0 0 0-3-3L5 16l-1 4Z" /></svg>
+                                    </div>
                                 </div>
                             </article>
                         </div>
@@ -187,7 +170,7 @@ export default function ShopPage() {
                         <div className="features-grid">
                             <div className="feature">
                                 <h3>Zwei Bücher, ein Universum</h3>
-                                <p>Lies beide Bände. Nur eines ist wie nur einen Schuh anzuziehen – geht, aber sieht dämlich aus.</p>
+                                <p>Entdecke Hallo Welt. An der Fortsetzung arbeiten wir.</p>
                             </div>
                             <div className="feature">
                                 <h3>Doppelte Dosis Sarkasmus</h3>
@@ -229,12 +212,6 @@ export default function ShopPage() {
                                 <h3 style={{marginBottom:'20px'}}>Produktinformationen</h3>
 
                                 <div className="specs-grid">
-                                    <div className="spec-item">
-                                        <span className="spec-label">Bewertung</span>
-                                        <div className="spec-value">
-                                            5,0 von 5 <span className="rating-stars">★★★★★</span>
-                                        </div>
-                                    </div>
                                     <div className="spec-item">
                                         <span className="spec-label">Herausgeber</span>
                                         <span className="spec-value">Paulik &amp; Reisch</span>

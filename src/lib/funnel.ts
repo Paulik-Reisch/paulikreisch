@@ -4,7 +4,6 @@ export const FUNNEL = {
   storageKeys: {
     wallUnlocked: 'pr_funnel_unlocked',
     wallDismissed: 'pr_funnel_dismissed',
-    checklistDownloaded: 'pr_checklist_downloaded',
   },
   // 7 days snooze for dismissals
   snoozeDays: 7,
@@ -14,7 +13,6 @@ export const FUNNEL = {
     wallConvert: 'funnel_wall_convert',
     wallDismiss: 'funnel_wall_dismiss',
     bookClick: 'funnel_book_click',
-    checklistDownload: 'funnel_checklist_download',
   },
 } as const;
 

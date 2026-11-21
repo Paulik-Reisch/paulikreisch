@@ -7,6 +7,7 @@ import { Logo } from "../ui/logo";
 import { cn } from '@/lib/utils';
 import { WorthaftIcon } from '../ui/icons/worthaft-icon';
 import { Menu, X } from 'lucide-react';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { ThemeToggle } from '@/components/theme-toggle';
 
 export function Header() {
@@ -14,6 +15,7 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const panelRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -21,16 +23,12 @@ export function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // A hidden mobile dialog must not leave the desktop page inert after resize.
   useEffect(() => {
-    if (open) document.body.style.overflow = 'hidden';
-    else document.body.style.overflow = '';
-    return () => { document.body.style.overflow = ''; };
-  }, [open]);
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    const media = window.matchMedia('(min-width: 768px)');
+    const closeOnDesktop = () => { if (media.matches) setOpen(false); };
+    media.addEventListener('change', closeOnDesktop);
+    return () => media.removeEventListener('change', closeOnDesktop);
   }, []);
 
   useEffect(() => {
@@ -104,7 +102,7 @@ export function Header() {
   ) : null;
 
   return (
-    <>
+    <DialogPrimitive.Root open={open} onOpenChange={setOpen}>
       <header className={cn(
         `px-4 lg:px-6 h-[64px] flex items-center sticky top-0 z-40 w-full bg-white/95 backdrop-blur-sm transition-all duration-300 ${tBar90}`,
         scrolled ? `border-b border-[#e8ddd0] shadow-[0_2px_16px_rgba(0,0,0,0.06)] ${tLine}` : "border-b border-transparent"
@@ -146,36 +144,39 @@ export function Header() {
 
             {/* Mobile burger */}
             <div className="md:hidden">
-              <button
+              <DialogPrimitive.Trigger asChild><button
                 aria-label={open ? "Menü schließen" : "Menü öffnen"}
                 aria-expanded={open}
-                onClick={() => setOpen(v => !v)}
                 className={`inline-flex h-10 w-10 items-center justify-center rounded-[10px] border border-[#e8ddd0] bg-white shadow-sm transition-colors hover:bg-[#f7f2e7] ${tLine} ${tPanel} ${tPanelHover}`}
               >
                 {open ? <X className={`h-5 w-5 text-[#1d1a15] ${tInk}`} /> : <Menu className={`h-5 w-5 text-[#1d1a15] ${tInk}`} />}
-              </button>
+              </button></DialogPrimitive.Trigger>
             </div>
           </div>
         </div>
       </header>
 
       {/* Mobile drawer */}
-      <div
+      <DialogPrimitive.Portal><div
         aria-hidden={!open}
         className={cn(
           "fixed inset-0 z-50 md:hidden",
           open ? "pointer-events-auto visible" : "pointer-events-none invisible"
         )}
       >
-        <button
+        <DialogPrimitive.Overlay asChild><button
+          tabIndex={-1}
           aria-label="Menü schließen"
           onClick={() => setOpen(false)}
           className={cn(
             "absolute inset-0 bg-[#1a1815]/40 backdrop-blur-[2px] transition-opacity duration-300",
             open ? "opacity-100" : "opacity-0"
           )}
-        />
-        <div
+        /></DialogPrimitive.Overlay>
+        <DialogPrimitive.Content asChild aria-describedby={undefined} onOpenAutoFocus={event => {
+          event.preventDefault();
+          closeRef.current?.focus();
+        }}><div
           ref={panelRef}
           role="dialog"
           aria-modal="true"
@@ -186,6 +187,7 @@ export function Header() {
           )}
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
+          <DialogPrimitive.Title className="sr-only">Navigation</DialogPrimitive.Title>
           <div className="absolute left-0 top-0 h-full w-[18px] -translate-x-full touch-manipulation" aria-hidden="true" />
           <div className={`flex items-center justify-between px-6 pt-6 pb-4 border-b border-[#e8ddd0]/80 ${tLine80}`}>
             <Link href="/" onClick={() => setOpen(false)} className="flex items-center gap-2">
@@ -193,6 +195,7 @@ export function Header() {
               <span className={`font-headline font-semibold text-[1.05rem] text-[#1d1a15] ${tInk}`}>Paulik &amp; Reisch</span>
             </Link>
             <button
+              ref={closeRef}
               aria-label="Menü schließen"
               onClick={() => setOpen(false)}
               className={`inline-flex h-9 w-9 items-center justify-center rounded-full bg-white border border-[#e8ddd0] shadow-sm ${tPanel} ${tLine}`}
@@ -231,8 +234,8 @@ export function Header() {
             <span className={`text-[0.9rem] font-semibold text-[#1d1a15] ${tInk}`}>Dunkelmodus</span>
             <ThemeToggle />
           </div>
-        </div>
-      </div>
-    </>
+        </div></DialogPrimitive.Content>
+      </div></DialogPrimitive.Portal>
+    </DialogPrimitive.Root>
   );
 }

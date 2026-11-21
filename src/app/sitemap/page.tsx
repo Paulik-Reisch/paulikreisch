@@ -75,15 +75,6 @@ const sitemapData: SitemapNode[] = [
     ],
   },
   {
-    label: 'Landingpages & Kampagnen',
-    href: '/vibecoding/anleitung',
-    icon: ExternalLink,
-    description: 'Marketing-Landingpages',
-    children: [
-      { label: 'Vibecoding Anleitung', href: '/vibecoding/anleitung', description: 'Developer-Guide' },
-    ],
-  },
-  {
     label: 'Rechtliches & Info',
     href: '/impressum',
     icon: Scale,
