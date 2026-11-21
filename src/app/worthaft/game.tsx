@@ -46,7 +46,8 @@ import {
 import { getWorthaftKeyboardLetter } from '@/lib/worthaft-letters';
 import { hasWorthaftFeedbackDecision } from '@/lib/worthaft-feedback';
 import { isWorthaftAntiWord } from '@/lib/worthaft-anti-words';
-import { getWorthaftMillisecondsUntilNextDay } from '@/lib/worthaft-daily-word';
+import { worthaftStorage, parseWorthaftDailyGame, parseWorthaftStats, type SavedDailyGame } from '@/lib/worthaft-saved-state';
+import { getWorthaftDateString, getWorthaftMillisecondsUntilNextDay } from '@/lib/worthaft-daily-word';
 import {
   createInvalidWorthaftWord,
   getInvalidWordVoteAction,
@@ -69,7 +70,7 @@ const fireWorthaftFireworks = () => {
 
 const loadSettings = (): WorthaftSettings => {
   try {
-    const raw = localStorage.getItem('worthaft-settings');
+    const raw = worthaftStorage.getItem('worthaft-settings');
     if (!raw) return DEFAULT_SETTINGS;
     return normalizeWorthaftSettings(JSON.parse(raw));
   } catch {
@@ -87,7 +88,7 @@ const useSettings = () => {
   const setSettings = useCallback((patch: Partial<WorthaftSettings>) => {
     setSettingsState(prev => {
       const next = normalizeWorthaftSettings({ ...prev, ...patch });
-      try { localStorage.setItem('worthaft-settings', JSON.stringify(next)); } catch {}
+      try { worthaftStorage.setItem('worthaft-settings', JSON.stringify(next)); } catch {}
       return next;
     });
   }, []);
@@ -102,16 +103,7 @@ type LetterStatus = 'correct' | 'present' | 'absent' | 'empty' | 'tbd';
 
 type HotTip = { letter: string | null; attempt: number | null };
 
-type DailyGameState = {
-  date: string;
-  guesses: { guess: string; statuses: LetterStatus[] }[];
-  status: 'won' | 'lost' | 'playing';
-  letterStatuses: { [key: string]: LetterStatus };
-  hotTip?: HotTip;
-  hotTipUsed?: boolean;
-  jokerPosition?: { guessIndex: number; letterIndex: number };
-  rowTimes?: number[];
-};
+type DailyGameState = SavedDailyGame;
 
 const Keyboard = ({ onChar, onEnter, onDelete, letterStatuses, onHotTip, onOpenSettings, hotTip, gameState, settings, boardWidth }: {
   onChar: (value: string) => void;
@@ -739,7 +731,7 @@ const InvalidWordModal = ({
       await addDoc(collection(firestore, 'worthaft-word-suggestions'), {
         word,
         shouldExist,
-        date: new Date().toISOString().split('T')[0],
+        date: getWorthaftDateString(),
         createdAt: serverTimestamp(),
       });
       onOpenChange(false);
@@ -907,7 +899,7 @@ export default function WorthaftGame({
             hotTip: newHotTip ?? undefined,
             rowTimes: newRowTimes,
         };
-        localStorage.setItem('worthaft-daily-game', JSON.stringify(dailyState));
+        worthaftStorage.setItem('worthaft-daily-game', JSON.stringify(dailyState));
     }, [dailyDate]);
 
     useEffect(() => {
@@ -944,28 +936,28 @@ export default function WorthaftGame({
     }, [settings.musicEnabled, isMuted]);
 
     useEffect(() => {
+        let completionTimeout: ReturnType<typeof setTimeout> | undefined;
         const initializeGame = () => {
             setIsWordListReady(true);
 
-            const disabled = localStorage.getItem('worthaft-hottip-disabled') === 'true';
+            const disabled = worthaftStorage.getItem('worthaft-hottip-disabled') === 'true';
             setIsHotTipPopupDisabled(disabled);
 
             const todayStr = getTodayString();
             const wordOfTheDay = dailyWord;
             setSolution(wordOfTheDay);
 
-            const savedStats = localStorage.getItem('worthaft-stats');
-            if (savedStats) {
-                const parsedStats = JSON.parse(savedStats);
-                setStats({ games: 0, wins: 0, streak: 0, maxStreak: 0, ...parsedStats });
-            }
+            const parsedStats = parseWorthaftStats(worthaftStorage.getItem('worthaft-stats'));
+            if (parsedStats) setStats(parsedStats);
 
-            const savedGame = localStorage.getItem('worthaft-daily-game');
+            const savedGame = worthaftStorage.getItem('worthaft-daily-game');
             let completedToday = false;
             if (savedGame) {
                 try {
-                    const dailyState: DailyGameState = JSON.parse(savedGame);
-                    if (dailyState.date === todayStr) {
+                    const dailyState = parseWorthaftDailyGame(savedGame);
+                    // Invalid data is ignored, not erased. Valid statistics,
+                    // settings, feedback decisions and unrelated keys survive.
+                    if (dailyState && dailyState.date === todayStr) {
                         setGuesses(dailyState.guesses);
                         setGameState(dailyState.status);
                         setLetterStatuses(dailyState.letterStatuses || {});
@@ -979,8 +971,8 @@ export default function WorthaftGame({
                         if (dailyState.status === 'won' || dailyState.status === 'lost') {
                             completedToday = true;
                             setIsCompletedToday(true);
-                            setTimeout(() => {
-                                if (hasWorthaftFeedbackDecision(localStorage, getTodayString())) {
+                            completionTimeout = setTimeout(() => {
+                                if (hasWorthaftFeedbackDecision(worthaftStorage, getTodayString())) {
                                     setIsDialogOpen(true);
                                 } else {
                                     setIsFeedbackOpen(true);
@@ -990,31 +982,34 @@ export default function WorthaftGame({
                     }
                 } catch (e) {
                     console.error('Failed to parse saved game state:', e);
-                    localStorage.removeItem('worthaft-daily-game');
+                    // Keep the original value available for recovery.
                 }
             }
 
             if (completedToday) {
                 rowTimerRef.current = null;
-                clearWorthaftRowStart(localStorage);
+                clearWorthaftRowStart(worthaftStorage);
             } else {
-                const persistedElapsed = readWorthaftRowTimer(localStorage, todayStr) ?? 0;
+                const persistedElapsed = readWorthaftRowTimer(worthaftStorage, todayStr) ?? 0;
                 rowTimerRef.current = createWorthaftRowTimer(Date.now(), persistedElapsed);
-                writeWorthaftRowTimer(localStorage, todayStr, persistedElapsed);
+                writeWorthaftRowTimer(worthaftStorage, todayStr, persistedElapsed);
             }
         };
 
         initializeGame();
+        return () => clearTimeout(completionTimeout);
     }, [dailyDate, dailyWord]);
 
     useEffect(() => {
         if (!isWordListReady || gameState !== 'playing') return;
+        // Do not submit or edit yesterday's board while fresh server data loads.
+        if (getWorthaftDateString() !== dailyDate) { router.refresh(); return; }
 
         const pauseTimer = () => {
             if (!rowTimerRef.current) return;
             const paused = pauseWorthaftRowTimer(rowTimerRef.current, Date.now());
             rowTimerRef.current = paused;
-            writeWorthaftRowTimer(localStorage, dailyDate, paused.elapsedMs);
+            writeWorthaftRowTimer(worthaftStorage, dailyDate, paused.elapsedMs);
         };
         const resumeTimer = () => {
             if (document.hidden || !rowTimerRef.current) return;
@@ -1047,11 +1042,38 @@ export default function WorthaftGame({
         });
     }, [toast, usedBundledFallback]);
 
+    useEffect(() => {
+        let lastRefresh = 0;
+        const checkDate = () => {
+            if (getWorthaftDateString() === dailyDate) return;
+            setTimeToNextGame('00:00:00');
+            // Failed/offline refreshes can retry, without a rapid request loop.
+            if (Date.now() - lastRefresh >= 30_000) {
+                lastRefresh = Date.now();
+                router.refresh();
+            }
+        };
+        const boundary = window.setTimeout(checkDate, Math.max(0, getWorthaftMillisecondsUntilNextDay()) + 50);
+        const retry = window.setInterval(checkDate, 30_000);
+        const onVisible = () => { if (!document.hidden) checkDate(); };
+        window.addEventListener('focus', checkDate);
+        window.addEventListener('pageshow', checkDate);
+        document.addEventListener('visibilitychange', onVisible);
+        checkDate();
+        return () => {
+            window.clearTimeout(boundary);
+            window.clearInterval(retry);
+            window.removeEventListener('focus', checkDate);
+            window.removeEventListener('pageshow', checkDate);
+            document.removeEventListener('visibilitychange', onVisible);
+        };
+    }, [dailyDate, router]);
+
      useEffect(() => {
         if (!isCompletedToday) return;
         const timer = setInterval(() => {
             const now = new Date();
-            const diff = getWorthaftMillisecondsUntilNextDay(now);
+            const diff = getWorthaftDateString(now) === dailyDate ? getWorthaftMillisecondsUntilNextDay(now) : 0;
             if (diff <= 0) {
                 setTimeToNextGame('00:00:00');
                 return;
@@ -1066,7 +1088,7 @@ export default function WorthaftGame({
             );
         }, 1000);
         return () => clearInterval(timer);
-    }, [isCompletedToday]);
+    }, [isCompletedToday, dailyDate]);
 
     const resetInactivityTimer = useCallback(() => {
         if (inactivityTimerRef.current) {
@@ -1103,6 +1125,8 @@ export default function WorthaftGame({
 
     const handleChar = (key: string) => {
         if (!isWordListReady || gameState !== 'playing') return;
+        // Do not submit or edit yesterday's board while fresh server data loads.
+        if (getWorthaftDateString() !== dailyDate) { router.refresh(); return; }
         const char = getWorthaftKeyboardLetter(key);
         if (char === null) return;
         const newGuess = [...currentGuess];
@@ -1112,7 +1136,7 @@ export default function WorthaftGame({
         // Fallback if initialization has not supplied a timer yet.
         if (currentGuess.every((c) => c === '') && rowTimerRef.current === null) {
             rowTimerRef.current = createWorthaftRowTimer(Date.now());
-            writeWorthaftRowTimer(localStorage, getTodayString(), 0);
+            writeWorthaftRowTimer(worthaftStorage, getTodayString(), 0);
         }
 
         setActiveIndex(Math.min(WORD_LENGTH - 1, activeIndex + 1));
@@ -1120,6 +1144,8 @@ export default function WorthaftGame({
 
     const handleEnter = useCallback(() => {
         if (!isWordListReady || gameState !== 'playing') return;
+        // Do not submit or edit yesterday's board while fresh server data loads.
+        if (getWorthaftDateString() !== dailyDate) { router.refresh(); return; }
 
         const guessWord = currentGuess.join('');
 
@@ -1149,7 +1175,7 @@ export default function WorthaftGame({
             setGameState('won');
             // 🎆 Fireworks — respektiert Animationen-Einstellung
             try {
-              const raw = localStorage.getItem('worthaft-settings');
+              const raw = worthaftStorage.getItem('worthaft-settings');
               const parsed = raw ? JSON.parse(raw) : {};
               const animOn = parsed.animationsEnabled !== false;
               if (animOn) fireWorthaftFireworks();
@@ -1165,13 +1191,13 @@ export default function WorthaftGame({
                 maxStreak: Math.max(stats.maxStreak || 0, newStreak)
             };
             setStats(newStats);
-            localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
+            worthaftStorage.setItem('worthaft-stats', JSON.stringify(newStats));
             rowTimerRef.current = null;
-            clearWorthaftRowStart(localStorage);
+            clearWorthaftRowStart(worthaftStorage);
             saveState(newGuesses, 'won', newLetterStatuses, hotTip, newRowTimes);
             setIsCompletedToday(true);
             setTimeout(() => {
-                if (hasWorthaftFeedbackDecision(localStorage, getTodayString())) {
+                if (hasWorthaftFeedbackDecision(worthaftStorage, getTodayString())) {
                     setIsDialogOpen(true);
                 } else {
                     setIsFeedbackOpen(true);
@@ -1239,13 +1265,13 @@ export default function WorthaftGame({
                 maxStreak: stats.maxStreak || 0
             };
             setStats(newStats);
-            localStorage.setItem('worthaft-stats', JSON.stringify(newStats));
+            worthaftStorage.setItem('worthaft-stats', JSON.stringify(newStats));
             rowTimerRef.current = null;
-            clearWorthaftRowStart(localStorage);
+            clearWorthaftRowStart(worthaftStorage);
             saveState(newGuesses, 'lost', newLetterStatuses, hotTip, newRowTimes);
             setIsCompletedToday(true);
             setTimeout(() => {
-                if (hasWorthaftFeedbackDecision(localStorage, getTodayString())) {
+                if (hasWorthaftFeedbackDecision(worthaftStorage, getTodayString())) {
                     setIsDialogOpen(true);
                 } else {
                     setIsFeedbackOpen(true);
@@ -1259,10 +1285,10 @@ export default function WorthaftGame({
             // Start the next row now. Visible thinking time counts; hidden
             // and closed-page time is excluded by the lifecycle effect below.
             rowTimerRef.current = createWorthaftRowTimer(Date.now());
-            writeWorthaftRowTimer(localStorage, getTodayString(), 0);
+            writeWorthaftRowTimer(worthaftStorage, getTodayString(), 0);
             saveState(newGuesses, 'playing', newLetterStatuses, hotTip, newRowTimes);
         }
-    }, [currentGuess, dailyDate, gameState, guesses, letterStatuses, solution, stats, toast, saveState, hotTip, rowTimes, isWordListReady, antiWords, words]);
+    }, [currentGuess, dailyDate, gameState, guesses, letterStatuses, solution, stats, toast, saveState, hotTip, rowTimes, isWordListReady, antiWords, words, router]);
 
     const handleDelete = () => {
         if (gameState !== 'playing') return;
@@ -1520,4 +1546,4 @@ Jetzt selber spielen:`;
             )}
         </div>
     );
-        }
+}
