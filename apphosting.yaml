@@ -28,6 +28,11 @@ env:
     value: "private-prefix-v1-accepted"
     availability:
       - RUNTIME
+  # Keep today and yesterday; bounded cleanup on successful game visits.
+  - variable: WORTHAFT_DAILY_CLEANUP_RELEASE
+    value: "calendar-two-days-accepted"
+    availability:
+      - RUNTIME
   - variable: WORTHAFT_DAILY_RELEASE
     value: "persistent-v1-accepted"
     availability:
