@@ -17,6 +17,6 @@ export const getInvalidWordVoteAction = (
   isKnownInvalid: boolean,
   shouldExist: boolean,
 ): InvalidWordVoteAction => {
-  if (!isKnownInvalid) return 'submit';
-  return shouldExist ? 'show-reviewed-message' : 'dismiss';
+  if (!shouldExist) return 'dismiss';
+  return isKnownInvalid ? 'show-reviewed-message' : 'submit';
 };
