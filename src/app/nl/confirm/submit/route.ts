@@ -4,7 +4,7 @@ import { getNewsletterSubscribers } from '@/newsletter/server';
 export const dynamic = 'force-dynamic';
 
 /** Called by the confirm page after the person pressed the button. A GET never confirms.
- * Funnel signups get their promised lead-magnet mail once, only after this confirmation. */
+ * The retired checklist mail remains a no-op; confirmation and subscriber history are preserved. */
 export async function POST(req: Request) {
   const body = await req.json().catch(() => null) as { token?: unknown } | null;
   const token = typeof body?.token === 'string' ? body.token : '';
