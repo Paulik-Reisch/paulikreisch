@@ -36,13 +36,8 @@ export default function ImpressumPage() {
               Deutschland
             </p>
 
-            <h2>EU-Streitbeilegung</h2>
-            <p>
-              Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:
-              <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer"> https://ec.europa.eu/consumers/odr/</a>.
-              Wir sind nicht verpflichtet und nicht bereit, an Streitbeilegungsverfahren vor einer
-              Verbraucherschlichtungsstelle teilzunehmen.
-            </p>
+            <h2>Verbraucherstreitbeilegung</h2>
+            <p>Wir sind nicht verpflichtet und nicht bereit, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
 
             <h2>Haftungshinweis</h2>
             <p>
