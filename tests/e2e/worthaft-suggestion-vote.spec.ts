@@ -45,6 +45,7 @@ for (const width of [375, 1440]) {
     await openSuggestionPopup(page, width);
     await page.getByRole('button', { name: 'Nein', exact: true }).click();
     await expect(page.getByText('„XXXXX“ ist ein ungültiges Wort', { exact: true })).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Wir prüfen dein Feedback.', exact: true })).toHaveCount(0);
     await page.waitForTimeout(500);
     expect(backendRequests).toBe(0);
   });
@@ -63,4 +64,19 @@ test('accepting a word suggestion signs in and attempts the save at 375px', asyn
   await page.getByRole('button', { name: 'Ja', exact: true }).click();
   await expect.poll(() => firestoreRequests, { timeout: 15000 }).toBeGreaterThan(0);
   expect(getAuthRequests()).toBe(1);
+  await expect(page.getByRole('heading', { name: 'Wir prüfen dein Feedback.', exact: true })).toHaveCount(0);
 });
+
+for (const width of [375, 1440]) {
+  test(`failed suggestion sign-in never shows a success acknowledgement at ${width}px`, async ({ page }) => {
+    await page.route(/identitytoolkit|securetoken/, route => route.fulfill({
+      status: 400, contentType: 'application/json', body: JSON.stringify({ error: { code: 400, message: 'OPERATION_NOT_ALLOWED' } }),
+    }));
+    await page.route(/firestore.googleapis.com/, route => route.abort());
+    await openSuggestionPopup(page, width);
+    await page.getByRole('button', { name: 'Ja', exact: true }).click();
+    await expect(page.getByRole('alert')).toContainText('Dein Vorschlag konnte nicht gespeichert werden.');
+    await expect(page.getByRole('heading', { name: 'Wir prüfen dein Feedback.', exact: true })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Ja', exact: true })).toBeEnabled();
+  });
+}
