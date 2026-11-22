@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Share2, ArrowRight, Delete, HelpCircle, Volume2, VolumeX, Flame, Settings as Gear, Music, Info, Sparkles } from 'lucide-react';
+import { Share2, ArrowRight, Delete, HelpCircle, Volume2, VolumeX, Flame, Settings as Gear, Music, Info, Sparkles, Check } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ImageWithLoader as Image } from '@/components/ui/image-with-loader';
@@ -719,6 +719,7 @@ const InvalidWordModal = ({
   const isMobile = useIsMobile();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showReviewedMessage, setShowReviewedMessage] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const handleSubmit = async (shouldExist: boolean) => {
@@ -734,7 +735,7 @@ const InvalidWordModal = ({
         date: getWorthaftDateString(),
         createdAt: serverTimestamp(),
       });
-      onOpenChange(false);
+      setIsSubmitted(true);
     } catch (err) {
       console.error('Failed to save word suggestion:', err);
       setSubmitError(formatWorthaftSubmissionError(err, 'Dein Vorschlag konnte nicht gespeichert werden.'));
@@ -754,11 +755,28 @@ const InvalidWordModal = ({
     }
   };
 
-  const dialogDescription = showReviewedMessage
-    ? 'Wir haben das Wort bereits überprüft und erachten es als ungültig.'
-    : 'Sollte dieses Wort existieren?';
+  const dialogDescription = isSubmitted
+    ? 'Wir prüfen dein Feedback.'
+    : showReviewedMessage
+      ? 'Wir haben das Wort bereits überprüft und erachten es als ungültig.'
+      : 'Sollte dieses Wort existieren?';
 
-  const content = (
+  const content = isSubmitted ? (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.96 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.25 }}
+      className="flex flex-col items-center py-4 text-center"
+    >
+      <span className="relative -top-3 mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground animate-in zoom-in-95 duration-300">
+        <Check className="h-8 w-8" />
+      </span>
+      <h2 className="font-headline relative -top-3 mb-1.5 text-xl font-extrabold">Wir prüfen dein Feedback.</h2>
+      <Button variant="outline" onClick={() => onOpenChange(false)} className="rounded-full px-6">
+        Schließen
+      </Button>
+    </motion.div>
+  ) : (
     <>
       <div className="mb-2 flex items-center gap-2 pr-6">
         <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-foreground text-background">
@@ -812,7 +830,7 @@ const InvalidWordModal = ({
         <SheetContent side="bottom" className="p-0 pt-0 max-h-[90vh] overflow-y-auto rounded-t-lg">
           <div className="p-6">
             <SheetHeader className="text-left sr-only">
-              <SheetTitle>Ungültiges Wort</SheetTitle>
+              <SheetTitle>{isSubmitted ? 'Feedback gesendet' : 'Ungültiges Wort'}</SheetTitle>
               <SheetDescription>{dialogDescription}</SheetDescription>
             </SheetHeader>
             {content}
@@ -827,7 +845,7 @@ const InvalidWordModal = ({
       <DialogContent className="p-0 max-w-sm rounded-t-lg overflow-hidden">
         <div className="p-6">
           <DialogHeader className="sr-only">
-            <DialogTitle>Ungültiges Wort</DialogTitle>
+            <DialogTitle>{isSubmitted ? 'Feedback gesendet' : 'Ungültiges Wort'}</DialogTitle>
             <DialogDescription>{dialogDescription}</DialogDescription>
           </DialogHeader>
           {content}
@@ -1546,4 +1564,4 @@ Jetzt selber spielen:`;
             )}
         </div>
     );
-}
+      }
