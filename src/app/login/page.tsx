@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   alternates: { canonical: null },
 };
 
+import '../admin/admin.css';
 import { Logo } from '@/components/ui/logo';
 import { LoginForm } from './login-form';
 import { getSession, getStaticSession } from '@/lib/session';
@@ -19,13 +20,13 @@ export default async function AdminLoginPage() {
   const staticHost = requestHost(await headers()) === STATIC_HOST;
   const session = staticHost ? await getStaticSession() : await getSession();
   if (session) {
-    redirect(staticHost ? "/" : "/authors");
+    redirect(staticHost ? "/" : "/worthaft");
   }
 
   return (
-    <div className="internal-dashboard">
+    <div className={staticHost ? "internal-dashboard" : "admin-shell"}>
       <div className="flex min-h-screen flex-col items-center justify-center bg-muted/20 p-4">
-        <div className="w-full max-w-md flex flex-col items-center text-center">
+        <div className={staticHost ? "w-full max-w-md flex flex-col items-center text-center" : "w-full max-w-md rounded-3xl border bg-card px-6 py-8 shadow-sm sm:px-8 sm:py-10 flex flex-col items-center text-center"}>
           <div className="flex flex-col items-center justify-center text-center mb-12">
               <Logo className="h-16 w-auto text-foreground" />
               <h1 className="font-semibold text-2xl mt-4">Paulik &amp; Reisch</h1>
