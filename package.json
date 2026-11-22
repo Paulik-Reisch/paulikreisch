@@ -76,7 +76,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
-    "@playwright/test": "^1.65.0",
+    "@playwright/test": "^1.65.1",
     "@tailwindcss/typography": "^0.5.13",
     "@types/canvas-confetti": "^1.9.0",
     "@types/matter-js": "^0.20.2",
