@@ -55,7 +55,7 @@ export function AuthorEditorClient({ author }: { author?: Author }) {
   }
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form action={formAction} className="admin-panel space-y-6">
       {!isNew && <input type="hidden" name="originalSlug" value={author.slug} />}
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -88,7 +88,7 @@ export function AuthorEditorClient({ author }: { author?: Author }) {
         <Textarea id="bio" name="bio" defaultValue={author?.bio || ''} required rows={5}/>
       </div>
 
-      <div className="flex justify-end gap-4">
+      <div className="admin-actions sm:justify-end">
         <Link href="/authors">
             <Button type="button" variant="outline">Abbrechen</Button>
         </Link>
