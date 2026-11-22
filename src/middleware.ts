@@ -90,7 +90,7 @@ export function middleware(request: NextRequest) {
     // A fixed route allowlist keeps public game/content paths off the admin surface.
     const roots = ['authors','lp','worthaft','upload','seo','database','chistes','excerpts','storage','feedback','nle','genkit','logs','marketing','exzerpt'];
     const first = path.split('/')[1];
-    const clean = path === '/' ? '/admin/authors' : roots.includes(first) ? '/admin' + path : null;
+    const clean = path === '/' ? '/admin/worthaft' : roots.includes(first) ? '/admin' + path : null;
     if (clean) {
       if (!safe && !isSameOrigin(request.headers.get('origin'), ADMIN_HOST, true)) return reject();
       const url = request.nextUrl.clone(); url.pathname = clean;
