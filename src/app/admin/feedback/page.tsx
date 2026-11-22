@@ -87,7 +87,7 @@ export default function AdminFeedbackDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen p-8">
+      <div className="min-w-0 space-y-6">
         <div className="animate-spin rounded-full border-b-2 border-primary"></div>
         <p className="mt-4 text-center">Lade Feedback-Statistiken...</p>
       </div>
@@ -96,7 +96,7 @@ export default function AdminFeedbackDashboard() {
 
   if (error) {
     return (
-      <div className="min-h-screen p-8 bg-red-100 text-red-800 rounded-lg">
+      <div className="p-5 bg-red-100 text-red-800 rounded-lg">
         <h1 className="text-2xl font-bold mb-2">Fehler</h1>
         <p className="mb-4">{error}</p>
         <Button onClick={() => window.location.reload()} className="mt-2">Neu laden</Button>
@@ -105,7 +105,8 @@ export default function AdminFeedbackDashboard() {
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-w-0 space-y-6">
+      <header><p className="mb-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">Rückmeldungen</p><h1 className="font-headline text-3xl font-bold">Feedback-Übersicht</h1></header>
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <div className="bg-muted rounded-lg p-6">
@@ -127,7 +128,7 @@ export default function AdminFeedbackDashboard() {
       </div>
 
       {/* Most Critiqued Words Table */}
-      <div className="bg-muted rounded-lg p-6 mb-8">
+      <div className="admin-panel mb-8">
         <h2 className="text-xl font-bold font-headline mb-4">Am häufigsten kritisierte Wörter</h2>
         <Table>
           <TableHeader>
