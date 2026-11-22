@@ -86,7 +86,7 @@ export function WorthaftEditor({ initial, date, saveLists, reloadLists, loadMode
       </div>
       <span className="rounded-full border px-3 py-1 text-xs">{fixture ? 'Lokale Demo · keine Datenbank' : `Berlin · ${date}`}</span>
     </header>
-    {fixture && <p className="rounded-lg border border-blue-300 bg-blue-50 p-3 text-sm text-blue-950">Synthetische Testdaten. Speichern verändert nur diese lokale Vorschau, keine echten Wörter oder Rückmeldungen.</p>}
+    {fixture && <p className="rounded-lg border bg-muted p-3 text-sm text-foreground">Synthetische Testdaten. Speichern verändert nur diese lokale Vorschau, keine echten Wörter oder Rückmeldungen.</p>}
     <Tabs value={tab} onValueChange={setTab}>
       <TabsList aria-label="Worthaft-Bereiche" className="grid w-full grid-cols-2 gap-1 sm:grid-cols-4">
         <TabsTrigger className="text-muted-foreground data-[state=active]:text-foreground" value="words">Wörter <span className="ml-1 text-xs opacity-70">{candidate.words.length}</span></TabsTrigger>
@@ -94,7 +94,7 @@ export function WorthaftEditor({ initial, date, saveLists, reloadLists, loadMode
         <TabsTrigger className="text-muted-foreground data-[state=active]:text-foreground" value="feedback">Feedback</TabsTrigger><TabsTrigger className="text-muted-foreground data-[state=active]:text-foreground" value="suggestions">Vorschläge</TabsTrigger>
       </TabsList>
       <TabsContent value="words" className="mt-5">
-        <section className={panel}><div className="mb-4 flex items-center justify-between gap-3"><h2 className="text-lg font-semibold">Lösungs- und Wörterliste</h2><span className="text-xs text-muted-foreground">Reihenfolge bleibt erhalten</span></div>
+        <section className={panel}><div className="mb-4 flex flex-wrap items-center justify-between gap-3"><h2 className="text-lg font-semibold">Lösungs- und Wörterliste</h2><span className="text-xs text-muted-foreground">Reihenfolge bleibt erhalten</span></div>
           <label htmlFor="worthaft-words" className="mb-2 block text-sm font-medium">Ein Wort pro Zeile</label>
           <textarea id="worthaft-words" spellCheck={false} value={words} onChange={e => change(setWords, e.target.value)} disabled={busy} className="min-h-64 w-full rounded-lg border bg-background p-3 font-mono text-sm leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary" />
           <p className="mt-2 text-xs text-muted-foreground">Fünf deutsche Buchstaben. Keine automatische Sortierung oder Entfernung von Duplikaten. Leerzeilen werden ignoriert.</p>
@@ -113,7 +113,7 @@ export function WorthaftEditor({ initial, date, saveLists, reloadLists, loadMode
     </Tabs>
     {(tab === 'words' || tab === 'blocked') && <section className={panel} aria-label="Listenänderungen">
       <div className="flex flex-wrap items-center justify-between gap-3"><p className="text-sm text-muted-foreground">{dirty ? 'Ungespeicherter Entwurf' : 'Keine ungespeicherten Änderungen'}</p>
-        <div className="flex flex-wrap gap-2"><Button variant="outline" className="text-foreground" onClick={reload} disabled={busy}>{confirmReload ? 'Entwurf verwerfen und laden' : 'Aktuellen Stand laden'}</Button>
+        <div className="admin-actions w-full sm:w-auto"><Button variant="outline" className="text-foreground" onClick={reload} disabled={busy}>{confirmReload ? 'Entwurf verwerfen und laden' : 'Aktuellen Stand laden'}</Button>
           <Button onClick={() => { setPreviewOpen(true); setMessage(''); }} disabled={busy || !dirty}>Änderungen prüfen</Button></div>
       </div>
       {confirmReload && <p role="alert" className="mt-3 text-sm text-amber-800 dark:text-amber-200">Erneuter Klick verwirft deinen ungespeicherten Entwurf. Es wird nichts gespeichert.</p>}
@@ -195,7 +195,7 @@ function ModerationPanel({ kind, load, review, draftBlock }: { kind: ModerationK
           <div className="mt-4 flex flex-wrap gap-2"><Button size="sm" variant="outline" className="text-foreground" disabled={busy} onClick={() => mark(entry.id, entry.revision)}>Löschen</Button><Button size="sm" variant="ghost" className="text-foreground" disabled={busy} onClick={() => draftBlock(entry.word)}>Sperren vormerken</Button></div>
         </article>)}
       </div>
-      <div className="mt-5 flex flex-wrap items-center justify-between gap-3"><p className="text-xs text-muted-foreground">{page.entries.length} geladen · {entries.length} angezeigt</p><div className="flex gap-2"><Button variant="outline" className="text-foreground" disabled={busy || !history.length} onClick={() => fetchPage(history[history.length - 1], 'back')}>Zurück</Button><Button variant="outline" className="text-foreground" disabled={busy || !page.nextCursor} onClick={() => fetchPage(page.nextCursor, 'next')}>Nächste Seite</Button></div></div>
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-3"><p className="text-xs text-muted-foreground">{page.entries.length} geladen · {entries.length} angezeigt</p><div className="flex flex-wrap gap-2"><Button variant="outline" className="text-foreground" disabled={busy || !history.length} onClick={() => fetchPage(history[history.length - 1], 'back')}>Zurück</Button><Button variant="outline" className="text-foreground" disabled={busy || !page.nextCursor} onClick={() => fetchPage(page.nextCursor, 'next')}>Nächste Seite</Button></div></div>
     </>}
     {message && <p role="status" className="mt-4 rounded-lg bg-muted p-3 text-sm">{message}</p>}
     <p className="mt-5 text-xs text-muted-foreground">„Löschen“ löscht nur den ausgewählten Eintrag endgültig. Die Wortlisten bleiben unverändert. „Sperren vormerken“ ändert nur deinen Listenentwurf und braucht danach eine getrennte Speicherung.</p>

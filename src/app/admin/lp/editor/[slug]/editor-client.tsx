@@ -95,32 +95,32 @@ export function LpEditorClient({ page }: { page?: LandingPage }) {
             </div>
 
             <Tabs defaultValue="html" className="w-full">
-                <TabsList className="grid w-full grid-cols-4">
+                <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
                     <TabsTrigger value="html"><Code className="mr-2 h-4 w-4" />HTML</TabsTrigger>
                     <TabsTrigger value="css"><Code className="mr-2 h-4 w-4" />CSS</TabsTrigger>
                     <TabsTrigger value="js"><Code className="mr-2 h-4 w-4" />JavaScript</TabsTrigger>
                     <TabsTrigger value="preview"><Eye className="mr-2 h-4 w-4"/>Vorschau</TabsTrigger>
                 </TabsList>
                 <TabsContent value="html" className="mt-4">
-                    <div className="h-[500px]">
-                        <CodeEditor value={htmlContent} onChange={setHtmlContent} />
+                    <div className="h-[55dvh] min-h-[280px] max-h-[500px] overflow-hidden rounded-xl border">
+                        <CodeEditor warmTheme value={htmlContent} onChange={setHtmlContent} />
                         <input type="hidden" name="htmlContent" value={htmlContent} />
                     </div>
                 </TabsContent>
                 <TabsContent value="css" className="mt-4">
-                    <div className="h-[500px]">
-                        <CodeEditor value={cssContent} onChange={setCssContent} />
+                    <div className="h-[55dvh] min-h-[280px] max-h-[500px] overflow-hidden rounded-xl border">
+                        <CodeEditor warmTheme value={cssContent} onChange={setCssContent} />
                         <input type="hidden" name="cssContent" value={cssContent} />
                     </div>
                 </TabsContent>
                 <TabsContent value="js" className="mt-4">
-                    <div className="h-[500px]">
-                        <CodeEditor value={jsContent} onChange={setJsContent} />
+                    <div className="h-[55dvh] min-h-[280px] max-h-[500px] overflow-hidden rounded-xl border">
+                        <CodeEditor warmTheme value={jsContent} onChange={setJsContent} />
                         <input type="hidden" name="jsContent" value={jsContent} />
                     </div>
                 </TabsContent>
                  <TabsContent value="preview" className="mt-4">
-                    <div className="aspect-video bg-white border rounded-md h-[500px]">
+                    <div className="h-[55dvh] min-h-[280px] max-h-[500px] overflow-hidden rounded-xl border bg-white">
                         <iframe
                             srcDoc={previewSrcDoc}
                             title="Landing Page Preview"
@@ -131,7 +131,7 @@ export function LpEditorClient({ page }: { page?: LandingPage }) {
                 </TabsContent>
             </Tabs>
 
-            <div className="flex justify-end gap-4 mt-6">
+            <div className="admin-actions mt-6 sm:justify-end">
                 <Link href="/lp">
                     <Button type="button" variant="outline">Abbrechen</Button>
                 </Link>

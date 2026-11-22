@@ -44,7 +44,7 @@ const deviceChartConfig = {
   },
   mobile: {
     label: "Mobile",
-    color: "hsl(var(--secondary))",
+    color: "hsl(var(--admin-chart-secondary, var(--secondary)))",
   },
 } satisfies ChartConfig;
 

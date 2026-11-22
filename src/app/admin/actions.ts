@@ -64,8 +64,8 @@ export async function loginAction(
     (await cookies()).set(staticHost ? STATIC_SESSION_COOKIE : ADMIN_SESSION_COOKIE, session, { expires, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', path: '/' });
 
     await addAdminLog(email, 'Login erfolgreich', `Benutzer '${email}' hat sich angemeldet.`);
-    revalidatePath("/admin/authors");
-    redirect(staticHost ? '/' : '/authors');
+    revalidatePath("/admin/worthaft");
+    redirect(staticHost ? '/' : '/worthaft');
 }
 
 export async function logoutAction() {

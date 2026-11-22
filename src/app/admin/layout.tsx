@@ -6,8 +6,7 @@ export const dynamic = "force-dynamic";
 
 import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
-import { AdminHeader } from "./header";
-import { AdminFooter } from "./footer";
+import { AdminShell } from "./shell";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -26,10 +25,6 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <AdminHeader showUploads={process.env.PRIVATE_ASSET_RELEASE==='private-prefix-v1-accepted'} />
-      <main className="flex-1 min-w-0 w-full container py-8 md:py-12">{children}</main>
-      <AdminFooter />
-    </div>
+    <AdminShell showUploads={process.env.PRIVATE_ASSET_RELEASE==='private-prefix-v1-accepted'}>{children}</AdminShell>
   );
 }
