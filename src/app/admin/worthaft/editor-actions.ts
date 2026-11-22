@@ -4,8 +4,8 @@ import { revalidateTag } from 'next/cache';
 import { getSession } from '@/lib/session';
 import { assertAdminMutationOrigin } from '@/lib/admin-request';
 import { WORTHAFT_WORD_LISTS_CACHE_TAG } from '@/lib/worthaft-cache-policy';
-import { saveWorthaftLists, reviewWorthaftEntry, type SaveListsRequest, type ModerationKind } from '@/lib/worthaft-editor-service';
-import { commitWorthaftLists, markWorthaftEntryReviewed, loadWorthaftEditorLists, loadWorthaftModeration } from '@/lib/worthaft-editor-repository';
+import { saveWorthaftLists, dismissWorthaftEntry, type SaveListsRequest, type ModerationKind } from '@/lib/worthaft-editor-service';
+import { commitWorthaftLists, deleteWorthaftModerationEntry, loadWorthaftEditorLists, loadWorthaftModeration } from '@/lib/worthaft-editor-repository';
 
 const dependencies = {
   authorize: async () => {
@@ -14,14 +14,14 @@ const dependencies = {
   },
   commitLists: commitWorthaftLists,
   expireLists: () => revalidateTag(WORTHAFT_WORD_LISTS_CACHE_TAG, { expire: 0 }),
-  markReviewed: markWorthaftEntryReviewed,
+  deleteEntry: deleteWorthaftModerationEntry,
 };
 
 export async function saveListsAction(request: SaveListsRequest) {
   return saveWorthaftLists(request, dependencies);
 }
-export async function reviewEntryAction(kind: unknown, id: unknown, revision: unknown) {
-  return reviewWorthaftEntry(kind, id, revision, dependencies);
+export async function dismissEntryAction(kind: unknown, id: unknown, revision: unknown) {
+  return dismissWorthaftEntry(kind, id, revision, dependencies);
 }
 export async function reloadListsAction() {
   await assertAdminMutationOrigin();
