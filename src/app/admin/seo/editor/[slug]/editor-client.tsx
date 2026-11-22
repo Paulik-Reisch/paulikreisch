@@ -151,7 +151,7 @@ export function SeoEditorClient({ slug, metadata }: { slug: string; metadata: Se
         </TabsContent>
       </Tabs>
       
-      <div className="flex justify-between gap-4 mt-8">
+      <div className="admin-actions mt-8 sm:justify-between">
         <Link href="/seo">
             <Button type="button" variant="outline">
                 <ArrowLeft className="mr-2 h-4 w-4" />
