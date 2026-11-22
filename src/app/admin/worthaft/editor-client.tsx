@@ -13,13 +13,13 @@ type Props = {
   saveLists: (request: SaveListsRequest) => Promise<EditorResult>;
   reloadLists: () => Promise<WorthaftListSnapshot>;
   loadModeration: (kind: ModerationKind, cursor: string | null) => Promise<ModerationPage>;
-  reviewEntry: (kind: ModerationKind, id: string, revision: string) => Promise<EditorResult>;
+  dismissEntry: (kind: ModerationKind, id: string, revision: string) => Promise<EditorResult>;
   fixture?: boolean;
 };
 const parseText = (text: string) => text.split(/\r?\n/).map(word => word.trim()).filter(Boolean);
 const panel = 'rounded-xl border bg-card p-4 sm:p-6';
 
-export function WorthaftEditor({ initial, date, saveLists, reloadLists, loadModeration, reviewEntry, fixture = false,readOnly=false }: Props) {
+export function WorthaftEditor({ initial, date, saveLists, reloadLists, loadModeration, dismissEntry, fixture = false,readOnly=false }: Props) {
   const [snapshot, setSnapshot] = useState(initial);
   const [words, setWords] = useState(initial.words.join('\n'));
   const [blocked, setBlocked] = useState(initial.antiWords.join('\n'));
@@ -87,10 +87,6 @@ export function WorthaftEditor({ initial, date, saveLists, reloadLists, loadMode
       <span className="rounded-full border px-3 py-1 text-xs">{fixture ? 'Lokale Demo · keine Datenbank' : `Berlin · ${date}`}</span>
     </header>
     {fixture && <p className="rounded-lg border border-blue-300 bg-blue-50 p-3 text-sm text-blue-950">Synthetische Testdaten. Speichern verändert nur diese lokale Vorschau, keine echten Wörter oder Rückmeldungen.</p>}
-    <section aria-label="Hinweis zur Tageswortfolge" className="rounded-xl border border-amber-400/60 bg-amber-50 p-4 text-amber-950 dark:bg-amber-950/30 dark:text-amber-100">
-      <h2 className="font-semibold">Listenänderungen können die Tageswortfolge verschieben</h2>
-      <p className="mt-1 text-sm leading-relaxed">Anzahl und Reihenfolge bestimmen künftige Lösungen. Auch Anhängen kann die Folge ändern. {readOnly ? 'Speichern bleibt gesperrt, bis die dauerhafte Tageswort-Absicherung aktiviert ist.' : 'Das heutige dauerhaft gespeicherte Tageswort bleibt unverändert und weiter erratbar.'} Bereits geöffnete Spiele übernehmen neue Listen nicht automatisch.</p>
-    </section>
     <Tabs value={tab} onValueChange={setTab}>
       <TabsList aria-label="Worthaft-Bereiche" className="grid w-full grid-cols-2 gap-1 sm:grid-cols-4">
         <TabsTrigger className="text-muted-foreground data-[state=active]:text-foreground" value="words">Wörter <span className="ml-1 text-xs opacity-70">{candidate.words.length}</span></TabsTrigger>
@@ -112,8 +108,8 @@ export function WorthaftEditor({ initial, date, saveLists, reloadLists, loadMode
           <p className="mt-2 text-xs text-muted-foreground">Die aktuelle Datenstruktur verlangt auch hier mindestens ein Wort.</p>
         </section>
       </TabsContent>
-      <TabsContent value="feedback" className="mt-5"><ModerationPanel kind="feedback" load={loadModeration} review={reviewEntry} draftBlock={draftBlock} /></TabsContent>
-      <TabsContent value="suggestions" className="mt-5"><ModerationPanel kind="suggestions" load={loadModeration} review={reviewEntry} draftBlock={draftBlock} /></TabsContent>
+      <TabsContent value="feedback" className="mt-5"><ModerationPanel kind="feedback" load={loadModeration} review={dismissEntry} draftBlock={draftBlock} /></TabsContent>
+      <TabsContent value="suggestions" className="mt-5"><ModerationPanel kind="suggestions" load={loadModeration} review={dismissEntry} draftBlock={draftBlock} /></TabsContent>
     </Tabs>
     {(tab === 'words' || tab === 'blocked') && <section className={panel} aria-label="Listenänderungen">
       <div className="flex flex-wrap items-center justify-between gap-3"><p className="text-sm text-muted-foreground">{dirty ? 'Ungespeicherter Entwurf' : 'Keine ungespeicherten Änderungen'}</p>
@@ -147,53 +143,61 @@ function ChangeCard({ title, changes }: { title: string; changes: ReturnType<typ
   </div>;
 }
 
-function ModerationPanel({ kind, load, review, draftBlock }: { kind: ModerationKind; load: Props['loadModeration']; review: Props['reviewEntry']; draftBlock: (word: string) => void }) {
+function ModerationPanel({ kind, load, review, draftBlock }: { kind: ModerationKind; load: Props['loadModeration']; review: Props['dismissEntry']; draftBlock: (word: string) => void }) {
   const [page, setPage] = useState<ModerationPage | null>(null);
   const [cursor, setCursor] = useState<string | null>(null);
   const [history, setHistory] = useState<(string | null)[]>([]);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
-  const [filter, setFilter] = useState('');
-  const [status, setStatus] = useState('all');
+  const [loadFailed, setLoadFailed] = useState(false);
+  useEffect(() => {
+    let active = true;
+    setBusy(true);
+    setLoadFailed(false);
+    void load(kind, null).then(result => {
+      if (active) { setPage(result); setCursor(null); setHistory([]); }
+    }).catch(() => {
+      if (active) { setLoadFailed(true); setMessage('Laden fehlgeschlagen. Bitte erneut versuchen.'); }
+    }).finally(() => { if (active) setBusy(false); });
+    return () => { active = false; };
+  }, [kind, load]);
   const fetchPage = async (next: string | null, mode: 'next' | 'back' | 'reload') => {
     setBusy(true); setMessage('');
     try {
       const result = await load(kind, next);
       setPage(result);
+      setLoadFailed(false);
       if (mode === 'next') setHistory([...history, cursor]);
       if (mode === 'back') setHistory(history.slice(0, -1));
       setCursor(next);
-    } catch { setMessage('Laden fehlgeschlagen. Die vorhandenen Einträge bleiben sichtbar.'); }
+    } catch { setLoadFailed(true); setMessage('Laden fehlgeschlagen. Die vorhandenen Einträge bleiben sichtbar.'); }
     finally { setBusy(false); }
   };
   const mark = async (id: string, revision: string) => {
     setBusy(true);
     try {
       const result = await review(kind, id, revision); setMessage(result.message);
-      if (result.success) setPage(current => current ? { ...current, entries: current.entries.map(entry => entry.id === id ? { ...entry, reviewed: true } : entry) } : current);
+      if (result.success) setPage(current => current ? { ...current, entries: current.entries.filter(entry => entry.id !== id) } : current);
     } catch { setMessage('Markieren nicht bestätigt. Bitte die Seite neu laden.'); }
     finally { setBusy(false); }
   };
-  const entries = page?.entries.filter(entry => `${entry.word} ${entry.date} ${entry.detail}`.toLocaleLowerCase('de').includes(filter.toLocaleLowerCase('de')) && (status !== 'open' || !entry.reviewed)) ?? [];
+  const entries = page?.entries ?? [];
   return <section className={panel}>
-    <div className="flex flex-wrap items-start justify-between gap-3"><div><h2 className="text-lg font-semibold">{kind === 'feedback' ? 'Rückmeldungen prüfen' : 'Wortvorschläge prüfen'}</h2>
-      <p className="mt-1 max-w-xl text-sm text-muted-foreground">Maximal 25 Einträge pro Seite, sortiert nach Dokumentkennung. Keine zeitliche Rangfolge und kein automatisches Nachladen.</p></div>
-      <Button variant="outline" className="text-foreground" disabled={busy} onClick={() => fetchPage(cursor, 'reload')}>{busy ? 'Wird geladen …' : page ? 'Seite neu laden' : 'Einträge laden'}</Button>
-    </div>
+    <h2 className="mb-5 text-lg font-semibold">{kind === 'feedback' ? 'Rückmeldungen prüfen' : 'Wortvorschläge prüfen'}</h2>
+    {busy && !page && <p role="status" className="text-sm text-muted-foreground">Einträge werden geladen …</p>}
+    {loadFailed && <Button variant="outline" disabled={busy} onClick={() => fetchPage(cursor, 'reload')}>Erneut versuchen</Button>}
     {kind === 'feedback' && <p className="mt-4 rounded-lg bg-muted p-3 text-sm">Positive Rückmeldungen werden aktuell nur im Spielgerät bestätigt. Diese Ansicht ist keine vollständige Abstimmungsstatistik.</p>}
     {page && <>
-      <div className="my-5 grid gap-3 sm:grid-cols-2"><label className="text-sm font-medium">Auf dieser Seite suchen<input value={filter} onChange={e => setFilter(e.target.value)} placeholder="Wort, Datum oder Grund" className="mt-1 block w-full rounded-md border bg-background p-2 font-normal" /></label>
-        <label className="text-sm font-medium">Status auf dieser Seite<select value={status} onChange={e => setStatus(e.target.value)} className="mt-1 block w-full rounded-md border bg-background p-2 font-normal"><option value="all">Alle</option><option value="open">Noch offen</option></select></label></div>
       <div className="space-y-3">{!entries.length && <p className="rounded-lg border border-dashed p-6 text-sm text-muted-foreground">{page.entries.length ? 'Keine passenden Einträge auf dieser Seite.' : 'Auf dieser Seite sind keine Einträge vorhanden.'}</p>}
         {entries.map(entry => <article key={entry.id} className="rounded-lg border p-4">
-          <div className="flex flex-wrap items-center justify-between gap-2"><h3 className="font-mono font-semibold uppercase">{entry.word}</h3><span className={`rounded-full px-2 py-1 text-xs ${entry.reviewed ? 'bg-muted' : 'bg-amber-100 text-amber-950'}`}>{entry.reviewed ? 'Geprüft' : 'Offen'}</span></div>
+          <div className="flex flex-wrap items-center justify-between gap-2"><h3 className="font-mono font-semibold uppercase">{entry.word}</h3></div>
           <p className="mt-2 break-words text-sm">{entry.detail}</p><p className="mt-1 text-xs text-muted-foreground">Spieltag: {entry.date || 'nicht angegeben'}</p>
-          <div className="mt-4 flex flex-wrap gap-2"><Button size="sm" variant="outline" className="text-foreground" disabled={busy || entry.reviewed} onClick={() => mark(entry.id, entry.revision)}>Als geprüft markieren</Button><Button size="sm" variant="ghost" className="text-foreground" disabled={busy} onClick={() => draftBlock(entry.word)}>Sperren vormerken</Button></div>
+          <div className="mt-4 flex flex-wrap gap-2"><Button size="sm" variant="outline" className="text-foreground" disabled={busy} onClick={() => mark(entry.id, entry.revision)}>Löschen</Button><Button size="sm" variant="ghost" className="text-foreground" disabled={busy} onClick={() => draftBlock(entry.word)}>Sperren vormerken</Button></div>
         </article>)}
       </div>
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3"><p className="text-xs text-muted-foreground">{page.entries.length} geladen · {entries.length} angezeigt</p><div className="flex gap-2"><Button variant="outline" className="text-foreground" disabled={busy || !history.length} onClick={() => fetchPage(history[history.length - 1], 'back')}>Zurück</Button><Button variant="outline" className="text-foreground" disabled={busy || !page.nextCursor} onClick={() => fetchPage(page.nextCursor, 'next')}>Nächste Seite</Button></div></div>
     </>}
     {message && <p role="status" className="mt-4 rounded-lg bg-muted p-3 text-sm">{message}</p>}
-    <p className="mt-5 text-xs text-muted-foreground">Prüfen löscht keine Rückmeldung. „Sperren vormerken“ ändert nur deinen Listenentwurf und braucht danach eine getrennte Speicherung.</p>
+    <p className="mt-5 text-xs text-muted-foreground">„Löschen“ löscht nur den ausgewählten Eintrag endgültig. Die Wortlisten bleiben unverändert. „Sperren vormerken“ ändert nur deinen Listenentwurf und braucht danach eine getrennte Speicherung.</p>
   </section>;
 }

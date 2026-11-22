@@ -85,7 +85,7 @@ export async function commitWorthaftLists(request: SaveListsRequest, actor: stri
   return loadWorthaftEditorLists();
 }
 
-export async function markWorthaftEntryReviewed(kind: ModerationKind, id: string, expected: string, actor: string): Promise<void> {
+export async function deleteWorthaftModerationEntry(kind: ModerationKind, id: string, expected: string, _actor: string): Promise<void> {
   await requireSession();
   assertModerationKind(kind); assertDocumentId(id); assertRevision(expected);
   const db = getAdminDb();
@@ -93,8 +93,8 @@ export async function markWorthaftEntryReviewed(kind: ModerationKind, id: string
   await db.runTransaction(async transaction => {
     const entry = await transaction.get(ref);
     if (revision(entry) !== expected) throw new WorthaftEditorError('Der Eintrag wurde inzwischen geändert. Bitte neu laden.');
-    if (entry.data()?.adminReview?.status === 'reviewed') return;
-    // Preserve original word, vote, reasons, date and createdAt.
-    transaction.update(ref, { adminReview: { status: 'reviewed', by: actor, at: FieldValue.serverTimestamp() } });
+    // Explicit moderation action only. Never sweep existing reviewed records here.
+    // Delete exactly the version the admin saw, without touching either word list.
+    transaction.delete(ref);
   });
 }

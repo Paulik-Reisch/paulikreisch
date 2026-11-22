@@ -58,7 +58,7 @@ export type EditorDependencies = {
   authorize: () => Promise<{ id: string } | null>;
   commitLists: (request: SaveListsRequest, actor: string) => Promise<WorthaftListSnapshot>;
   expireLists: () => void;
-  markReviewed: (kind: ModerationKind, id: string, revision: string, actor: string) => Promise<void>;
+  deleteEntry: (kind: ModerationKind, id: string, revision: string, actor: string) => Promise<void>;
 };
 
 /** Authorize before any repository access, including malformed requests. */
@@ -78,16 +78,16 @@ export async function saveWorthaftLists(request: SaveListsRequest, dependencies:
   }
 }
 
-export async function reviewWorthaftEntry(kind: unknown, id: unknown, revision: unknown, dependencies: EditorDependencies): Promise<EditorResult> {
+export async function dismissWorthaftEntry(kind: unknown, id: unknown, revision: unknown, dependencies: EditorDependencies): Promise<EditorResult> {
   const actor = await dependencies.authorize();
   if (!actor) return { success: false, message: 'Bitte erneut anmelden.' };
   try {
     assertModerationKind(kind);
     assertDocumentId(id);
     assertRevision(revision);
-    await dependencies.markReviewed(kind, id, revision, actor.id);
-    return { success: true, message: 'Als geprüft markiert. Originalfeedback und Wortlisten wurden nicht geändert.' };
+    await dependencies.deleteEntry(kind, id, revision, actor.id);
+    return { success: true, message: 'Eintrag gelöscht. Die Wortlisten wurden nicht geändert.' };
   } catch (error) {
-    return { success: false, message: error instanceof WorthaftEditorError ? error.message : 'Markieren fehlgeschlagen. Bitte den aktuellen Stand neu laden.' };
+    return { success: false, message: error instanceof WorthaftEditorError ? error.message : 'Löschen fehlgeschlagen. Bitte den aktuellen Stand neu laden.' };
   }
 }
