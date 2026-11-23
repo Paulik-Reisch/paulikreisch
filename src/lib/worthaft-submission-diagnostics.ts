@@ -2,21 +2,6 @@ export type WorthaftPhase = 'restore' | 'refresh' | 'signout' | 'signin' | 'save
 export type WorthaftCause = 'fetch' | 'timeout' | 'response' | 'storage' | 'unknown';
 export type WorthaftDiagnostic = { phase: WorthaftPhase; code?: string; cause: WorthaftCause };
 
-const phaseLabels: Record<WorthaftPhase, string> = {
-  restore: 'Anmeldung laden',
-  refresh: 'Anmeldung erneuern',
-  signout: 'Alte Anmeldung entfernen',
-  signin: 'Neu anmelden',
-  save: 'Speichern',
-};
-const causeLabels: Record<WorthaftCause, string> = {
-  fetch: 'Browser-Anfrage fehlgeschlagen',
-  timeout: 'Zeitlimit erreicht',
-  response: 'Antwort nicht lesbar',
-  storage: 'Browser-Speicher nicht verfügbar',
-  unknown: 'Ursache noch unklar',
-};
-
 const allowedCodes = new Set([
   'auth/network-request-failed', 'auth/internal-error', 'auth/user-token-expired',
   'auth/user-not-found', 'auth/invalid-user-token', 'auth/user-disabled',
@@ -58,12 +43,4 @@ export class WorthaftDiagnosticError extends Error {
 
 export function asWorthaftDiagnosticError(error: unknown, phase: WorthaftPhase, previous: readonly WorthaftDiagnostic[] = []) {
   return new WorthaftDiagnosticError(getWorthaftDiagnostic(error, phase), previous);
-}
-
-export function formatWorthaftSubmissionError(error: unknown, prefix: string): string {
-  const diagnostics = error instanceof WorthaftDiagnosticError
-    ? error.diagnostics : [getWorthaftDiagnostic(error, 'save')];
-  return `${prefix} Bitte versuche es erneut.\nDiagnose: ${diagnostics.map(diagnostic =>
-    `${phaseLabels[diagnostic.phase]}${diagnostic.code ? ` (${diagnostic.code})` : ''}: ${causeLabels[diagnostic.cause]}`,
-  ).join(' → ')}`;
 }

@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { initializeFirebase } from '@/firebase';
 import { ensureWorthaftAuth } from '@/firebase/on-demand-auth';
-import { formatWorthaftSubmissionError } from '@/lib/worthaft-submission-diagnostics';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { ThumbsUp, ThumbsDown, Check, MessageSquare, ShieldCheck } from 'lucide-react';
 import { getWorthaftVoteDescription, type WorthaftVote } from '@/lib/worthaft-feedback';
@@ -119,7 +118,7 @@ export default function FeedbackDrawer({
       onSubmitted?.();
     } catch (err) {
       console.error('Feedback could not be saved:', err);
-      setSubmitError(formatWorthaftSubmissionError(err, 'Feedback konnte nicht gespeichert werden.'));
+      setSubmitError('Feedback konnte nicht gespeichert werden');
     } finally {
       setIsSending(false);
     }
@@ -269,7 +268,7 @@ export default function FeedbackDrawer({
             >
               {isSending ? 'Wird gesendet ...' : 'Feedback senden'}
             </Button>
-            {submitError && <p role="alert" className="whitespace-pre-line mt-3 text-sm text-destructive">{submitError}</p>}
+            {submitError && <p role="alert" className="whitespace-pre-line mt-3 text-center text-sm text-destructive">{submitError}</p>}
           </motion.div>
         )}
 

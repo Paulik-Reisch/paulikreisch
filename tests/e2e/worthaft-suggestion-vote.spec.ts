@@ -75,7 +75,9 @@ for (const width of [375, 1440]) {
     await page.route(/firestore.googleapis.com/, route => route.abort());
     await openSuggestionPopup(page, width);
     await page.getByRole('button', { name: 'Ja', exact: true }).click();
-    await expect(page.getByRole('alert')).toContainText('Dein Vorschlag konnte nicht gespeichert werden.');
+    // The temporary diagnosis must never return to either viewport.
+    await expect(page.getByRole('alert')).toHaveText('Feedback konnte nicht gespeichert werden');
+    await expect(page.getByRole('alert')).toHaveCSS('text-align', 'center');
     await expect(page.getByRole('heading', { name: 'Wir prüfen dein Feedback.', exact: true })).toHaveCount(0);
     await expect(page.getByRole('button', { name: 'Ja', exact: true })).toBeEnabled();
   });
