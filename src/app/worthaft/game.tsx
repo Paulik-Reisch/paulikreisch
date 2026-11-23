@@ -28,7 +28,6 @@ import FeedbackDrawer from './FeedbackDrawer';
 import WordDefinitionDialog from './WordDefinitionDialog';
 import { initializeFirebase } from '@/firebase';
 import { ensureWorthaftAuth } from '@/firebase/on-demand-auth';
-import { formatWorthaftSubmissionError } from '@/lib/worthaft-submission-diagnostics';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import confetti from 'canvas-confetti';
 import { getWorthaftKeyDimensions, getWorthaftTileDimensions, getWorthaftStatusClass, normalizeWorthaftSettings, DEFAULT_WORTHAFT_SETTINGS as DEFAULT_SETTINGS, type WorthaftSettings } from '@/lib/worthaft-settings';
@@ -738,7 +737,7 @@ const InvalidWordModal = ({
       setIsSubmitted(true);
     } catch (err) {
       console.error('Failed to save word suggestion:', err);
-      setSubmitError(formatWorthaftSubmissionError(err, 'Dein Vorschlag konnte nicht gespeichert werden.'));
+      setSubmitError('Feedback konnte nicht gespeichert werden');
     } finally {
       setIsSubmitting(false);
     }
@@ -800,7 +799,7 @@ const InvalidWordModal = ({
             Sollte dieses Wort existieren?
           </p>
 
-          {submitError && <p role="alert" className="whitespace-pre-line mb-3 text-sm text-destructive">{submitError}</p>}
+          {submitError && <p role="alert" className="whitespace-pre-line mb-3 text-center text-sm text-destructive">{submitError}</p>}
 
           <div className="flex flex-col gap-2">
             <Button
@@ -1564,4 +1563,4 @@ Jetzt selber spielen:`;
             )}
         </div>
     );
-      }
+}
