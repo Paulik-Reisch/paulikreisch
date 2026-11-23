@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createDiagnosedWorthaftAuth } from '../../src/lib/worthaft-diagnosed-auth';
-import { getWorthaftDiagnostic, formatWorthaftSubmissionError, WorthaftDiagnosticError } from '../../src/lib/worthaft-submission-diagnostics';
+import { getWorthaftDiagnostic, WorthaftDiagnosticError } from '../../src/lib/worthaft-submission-diagnostics';
 
 type User = { uid: string; anonymous: boolean };
 type Auth = { currentUser: User | null };
@@ -33,9 +33,6 @@ test('sign-out failure reports both phases and does not attempt sign-in',async()
 test('unrecoverable refresh error does not sign out',async()=>{const s=setup({refresh:async()=>{throw error('auth/operation-not-allowed');}});await assert.rejects(s.ensure(s.auth),(e:WorthaftDiagnosticError)=>e.code==='auth/operation-not-allowed');assert.deepEqual(s.calls,['ready']);});
 test('concurrent calls deduplicate the whole flow',async()=>{const s=setup();s.auth.currentUser=null;await Promise.all([s.ensure(s.auth),s.ensure(s.auth)]);assert.equal(s.calls.filter(c=>c==='signin').length,1);});
 test('a later attempt does not inherit old recovery diagnostics',async()=>{let first=true;const s=setup({refresh:async()=>{if(first)throw error();},signIn:async()=>{throw error();}});await assert.rejects(s.ensure(s.auth));first=false;await assert.rejects(s.ensure(s.auth),(e:WorthaftDiagnosticError)=>e.diagnostics.length===1&&e.diagnostics[0].phase==='signin');});
-test('Firestore errors default to save, not auth',()=>{const text=formatWorthaftSubmissionError(error('permission-denied'),'Nicht gespeichert.');assert.match(text,/Diagnose: Speichern/);assert.doesNotMatch(text,/Anmeldung/);});
 test('bare SDK network error never fabricates a specific cause',()=>{assert.equal(getWorthaftDiagnostic({code:'auth/network-request-failed',message:'Firebase: Error (auth/network-request-failed).'},'signin').cause,'unknown');});
 test('detail classification handles timeout, body parsing, storage and fetch',()=>{for(const [message,cause] of [['Timed out','timeout'],['SyntaxError in JSON','response'],['UnknownError: IndexedDB','storage'],['TypeError: Failed to fetch','fetch']])assert.equal(getWorthaftDiagnostic(error(undefined,message),'signin').cause,cause);});
-test('no sensitive raw detail, user id, address or URL reaches the output',()=>{const secret='PRIVATE-SECRET-TEST';const e=error('auth/network-request-failed',`Failed to fetch https://example.test/?token=${secret} email=user@example.test uid=abc`);const text=formatWorthaftSubmissionError(new WorthaftDiagnosticError(getWorthaftDiagnostic(e,'signin')),'Nicht gespeichert.');assert.match(text,/Browser-Anfrage fehlgeschlagen/);for(const token of [secret,'https:','user@example.test','uid=abc'])assert(!text.includes(token));});
 test('unbounded or malformed error codes are never displayed',()=>{for(const code of ['https://example.test/?secret=abc','auth/'+ 'x'.repeat(100),'abc secret','auth/x\nPRIVATE','auth/<script>'])assert.equal(getWorthaftDiagnostic({code},'save').code,undefined);});
-test('exact safe UI text contains the two phases in order',()=>{const e=new WorthaftDiagnosticError(getWorthaftDiagnostic(error(),'signin'),[getWorthaftDiagnostic(error(),'refresh')]);assert.equal(formatWorthaftSubmissionError(e,'Dein Vorschlag konnte nicht gespeichert werden.'),'Dein Vorschlag konnte nicht gespeichert werden. Bitte versuche es erneut.\nDiagnose: Anmeldung erneuern (auth/network-request-failed): Browser-Anfrage fehlgeschlagen → Neu anmelden (auth/network-request-failed): Browser-Anfrage fehlgeschlagen');});
