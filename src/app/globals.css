@@ -417,33 +417,6 @@
     backface-visibility: hidden;
   }
 
-  /* Shimmer über die ganze gewinnende Reihe: einmal L->R, dann R->L, dann weg */
-  @keyframes win-shimmer {
-    0%   { transform: translateX(-110%); opacity: 0; }
-    15%  { opacity: 1; }
-    50%  { transform: translateX(110%); opacity: 1; }
-    51%  { transform: translateX(110%); opacity: 1; }
-    85%  { transform: translateX(-110%); opacity: 1; }
-    100% { transform: translateX(-110%); opacity: 0; }
-  }
-  .win-shimmer::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 60%;
-    border-radius: inherit;
-    background: linear-gradient(
-      100deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.65) 50%,
-      transparent 100%
-    );
-    animation: win-shimmer 1.8s ease-in-out 0.15s 1 both;
-    pointer-events: none;
-  }
-
   /* Einzelne Kachel hüpft in die Luft und landet wieder */
   @keyframes bounce-up {
     0% { transform: translateY(0); }
@@ -452,11 +425,6 @@
     75% { transform: translateY(-8px); }
     100% { transform: translateY(0); }
   }
-  @keyframes bounce-up-glow {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(34, 104, 255, 0); }
-    35% { box-shadow: 0 0 18px 4px rgba(34, 104, 255, 0.65); }
-  }
-
   @keyframes marquee {
     from { transform: translateX(0); }
     to { transform: translateX(calc(-100% - var(--gap))); }
