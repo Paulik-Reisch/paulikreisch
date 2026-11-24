@@ -4,6 +4,7 @@ import { ArrowDown, ArrowRight, ArrowUpRight } from 'lucide-react';
 import { Header } from '@/components/landing/header';
 import { Footer } from '@/components/landing/footer';
 import { HomeMotion } from './home-motion';
+import { HomeImagePreload } from './home-image-preload';
 import { homeBook, homeFaqs, homePeople } from '@/lib/home-content';
 import styles from './home.module.css';
 import '../../../tokens.css';
@@ -91,6 +92,7 @@ export function HomePage() {
       </main>
       <Footer />
       <HomeMotion />
+      <HomeImagePreload />
     </div>
   );
 }
