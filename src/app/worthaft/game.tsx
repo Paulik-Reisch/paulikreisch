@@ -275,7 +275,6 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
         <div key={rowIndex} className={cn(
           "grid grid-cols-5 gap-1.5 relative",
           isShaking && rowIndex === currentRowIndex && "animate-shake",
-          isWonRow && settings.animationsEnabled && "win-shimmer"
         )}>
           {Array.from({ length: WORD_LENGTH }).map((_, colIndex) => {
             const isCurrentRow = rowIndex === guesses.length;
@@ -298,7 +297,8 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
             const flipDelay = `${colIndex * 0.25}s`;
 
             // Win-Bounce: nur auf der gewinnenden Reihe, nacheinander.
-            const bounceDelay = isWonRow ? `${colIndex * 0.18}s` : undefined;
+            // Jede Kachel hüpft direkt nach ihrem eigenen Flip.
+            const bounceDelay = isWonRow ? `${(colIndex * 0.25 + 0.4).toFixed(2)}s` : undefined;
             const isWonCorrect = isWonRow && status === 'correct';
             // Gelbe Kachel: wie die anderen flippen, danach kurz hüpfen (erst NACH dem Flip ~0.5s).
             const isPresent = status === 'present' && isSubmittedRow;
@@ -308,7 +308,7 @@ const Grid = ({ guesses, currentGuess, isShaking, currentRowIndex, activeIndex, 
             let cellAnimation: string | undefined;
             if (anims && isSubmittedRow) {
               if (isWonCorrect) {
-                cellAnimation = `flip-in 0.5s ease ${flipDelay} both, bounce-up 0.6s ease ${bounceDelay} both, bounce-up-glow 0.6s ease ${bounceDelay} both`;
+                cellAnimation = `flip-in 0.5s ease ${flipDelay} both, bounce-up 0.6s ease ${bounceDelay} both`;
               } else if (isPresent) {
                 cellAnimation = `flip-in 0.5s ease ${flipDelay} both, bounce-up 0.4s ease ${presentBounceDelay} both`;
               } else {
@@ -1219,7 +1219,7 @@ export default function WorthaftGame({
                 } else {
                     setIsFeedbackOpen(true);
                 }
-            }, 2000);
+            }, 2600);
             return;
         }
 
