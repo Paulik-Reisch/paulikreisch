@@ -99,7 +99,7 @@ export default function BitsPage() {
       updateCell(next.index, next.value, next.reason);
       setFocused(next.index);
       cells.current[next.index]?.focus();
-    } else setMessage('Im Moment gibt es keinen weiteren Hinweis. Prüfe deine Einträge.');
+    } else setMessage('Im Moment gibt es keinen weiteren Hinweis. Prüfe Deine Einträge.');
   }
 
   function check() {
@@ -194,7 +194,7 @@ export default function BitsPage() {
 
       <Dialog open={rulesOpen} onOpenChange={setRulesOpen}>
         <DialogContent className={styles.rulesDialog} onCloseAutoFocus={event => { event.preventDefault(); helpButton.current?.focus(); }}>
-          <DialogHeader><DialogTitle className={styles.rulesTitle}>So spielst du Bits</DialogTitle><DialogDescription>Zwei Zeichen, drei Regeln. Bring Nullen und Einsen ins Gleichgewicht.</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle className={styles.rulesTitle}>So spielst Du Bits</DialogTitle><DialogDescription>Zwei Zeichen, drei Regeln. Bring Nullen und Einsen ins Gleichgewicht.</DialogDescription></DialogHeader>
             <ol className={styles.rules}>
               <li><span className={styles.ruleNumber}>01</span><div><h3>Halbe, halbe.</h3><p>Jede Zeile und jede Spalte enthält gleich viele Nullen und Einsen.</p><div className={styles.example} aria-hidden="true"><i>0</i><b>1</b><b>1</b><i>0</i></div></div></li>
               <li><span className={styles.ruleNumber}>02</span><div><h3>Aller guten Dinge sind zwei.</h3><p>Drei gleiche Zeichen direkt nebeneinander oder untereinander sind tabu.</p><div className={`${styles.example} ${styles.badExample}`} aria-hidden="true"><i>0</i><i>0</i><i>0</i><span>×</span></div></div></li>

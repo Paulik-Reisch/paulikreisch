@@ -6,7 +6,7 @@ export const funnelEmails = {
         <p style="font-size:12px;letter-spacing:0.12em;color:#2275d3;font-weight:800;text-transform:uppercase;margin:0">Tag 1 • Die Story</p>
         <h2 style="font-size:22px;margin:8px 0">Zwei Typen, eine Spülmaschine, ein Buch.</h2>
         <p>Wir haben Hallo Welt nicht im Elfenbeinturm geschrieben. Sondern zwischen Spülmaschine ausräumen, Klausurpanik und dem Moment, in dem Pfeffer sagte: „Wer das System ernst nimmt, hat schon verloren.“</p>
-        <p>Das Buch ist unsere Abrechnung — nicht gegen Lehrer, sondern gegen das System, das aus Neugier Noten macht. 106 Seiten Episoden: mal absurd, mal ehrlich, immer mit dem Wunsch, dass du dich weniger allein fühlst.</p>
+        <p>Das Buch ist unsere Abrechnung — nicht gegen Lehrer, sondern gegen das System, das aus Neugier Noten macht. 106 Seiten Episoden: mal absurd, mal ehrlich, immer mit dem Wunsch, dass Du Dich weniger allein fühlst.</p>
         <p><strong>Ein Leser schrieb:</strong> „Ich habe im Zug meinen Halt verpasst, weil ich nicht aufhören konnte.“ — Genau dafür haben wir es gemacht.</p>
         <p><a href="${opts.shopUrl}" style="display:inline-block;background:#fecb2e;color:#111;padding:12px 20px;border-radius:10px;text-decoration:none;font-weight:800">Leseprobe + Shop ansehen →</a></p>
         <p style="font-size:12px;color:#9ca3af">Morgen: Was echte Leser sagen — ungeschönt.</p>
@@ -25,7 +25,7 @@ export const funnelEmails = {
           <li><strong>Seelenverwandter:</strong> „Endlich ein Buch, das so denkt wie ich.“</li>
           <li><strong>Amazon:</strong> 4.8 von 5 — und ja, das sind echte Menschen, keine Bots.</li>
         </ul>
-        <p>Wir machen keine Hochglanz-Werbung. Wir machen Satire, die weh tut und heilt. Wenn du bis hier gelesen hast, bist du unsere Zielgruppe.</p>
+        <p>Wir machen keine Hochglanz-Werbung. Wir machen Satire, die weh tut und heilt. Wenn Du bis hier gelesen hast, bist Du unsere Zielgruppe.</p>
         <p><a href="${opts.shopUrl}" style="display:inline-block;background:#2275d3;color:#fff;padding:12px 20px;border-radius:10px;text-decoration:none;font-weight:800">Reviews + Buch ansehen →</a></p>
       </div>
     `,
@@ -37,7 +37,7 @@ export const funnelEmails = {
         <p style="font-size:12px;letter-spacing:0.12em;color:#2275d3;font-weight:800;text-transform:uppercase;margin:0">Tag 5 • Exzerpt</p>
         <h2 style="font-size:22px;margin:8px 0">Pfeffer betritt den Raum. Alle halten die Luft an.</h2>
         <p><em>„Sie sprang mit heuchlerischem Enthusiasmus vor die Tafel“, erinnert sich einer der Autoren, „und lehrte uns die ersten wirklich nützlichen Wörter.“ Nicht hola, nicht gracias. Sondern das, was man braucht, wenn der Bus zu spät kommt oder das Mensaessen nach Kernschmelze schmeckt.</em></p>
-        <p>Dieses Kapitel ist der Grund, warum Leser das Buch ihren Freunden geben. Es ist kurz, böse, und du erkennst deine eigene Schule wieder.</p>
+        <p>Dieses Kapitel ist der Grund, warum Leser das Buch ihren Freunden geben. Es ist kurz, böse, und Du erkennst Deine eigene Schule wieder.</p>
         <p><a href="${opts.shopUrl}" style="display:inline-block;background:# fecb2e;color:#111;padding:12px 20px;border-radius:10px;text-decoration:none;font-weight:800">Weiterlesen im Buch →</a></p>
         <p style="font-size:13px;color:#6b7280">Tipp: Das Buch ist ideal zum Verschenken — an alle, die Schule überlebt haben.</p>
       </div>
@@ -49,10 +49,10 @@ export const funnelEmails = {
       <div style="font-family:Inter,system-ui,sans-serif;max-width:600px;margin:0 auto;color:#111;line-height:1.6">
         <p style="font-size:12px;letter-spacing:0.12em;color:#d97706;font-weight:800;text-transform:uppercase;margin:0">Tag 7 • Letzter Call — ehrlich & knapp</p>
         <h2 style="font-size:22px;margin:8px 0">20,99 € → 10,99 €. Danach wieder normal.</h2>
-        <p>Wir machen kein künstliches Drama. Aber: Unser Kurzzeit-Angebot (10,99 €) ist genau für Leute wie dich gedacht — die erst lesen, dann entscheiden. Du hast gelesen. Du hast gelacht. Jetzt fehlt nur noch das Buch im Regal.</p>
+        <p>Wir machen kein künstliches Drama. Aber: Unser Kurzzeit-Angebot (10,99 €) ist genau für Leute wie Dich gedacht — die erst lesen, dann entscheiden. Du hast gelesen. Du hast gelacht. Jetzt fehlt nur noch das Buch im Regal.</p>
         <p><strong>106 Seiten, 1. Auflage, 4.8★. Für weniger als zwei Döner.</strong></p>
         <p><a href="${opts.shopUrl}" style="display:inline-block;background:#2275d3;color:#fff;padding:14px 22px;border-radius:10px;text-decoration:none;font-weight:800">Ja, ich will das Buch — 10,99 € →</a></p>
-        <p style="font-size:13px;color:#6b7280">Kein Kaufzwang. Aber wenn du es nicht holst, verpasst du den besten Pfeffer-Moment. Und der ist es wert.</p>
+        <p style="font-size:13px;color:#6b7280">Kein Kaufzwang. Aber wenn Du es nicht holst, verpasst Du den besten Pfeffer-Moment. Und der ist es wert.</p>
         <p style="font-size:12px;color:#9ca3af">Du willst keine Mails mehr? <a href="{{unsubscribe_url}}">Hier abmelden</a> — wir nehmen's sportlich.</p>
       </div>
     `,

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import { Button } from "@/components/ui/button";
+import styles from "@/components/landing/utility-pages.module.css";
 
 type Step = "confirm" | "done" | "failed";
 
@@ -32,46 +33,47 @@ function ConfirmInner() {
   }
 
   return (
-    <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
+    <div className={styles.page}>
       <Header />
-      <main className="flex-1 flex items-center justify-center px-4 py-10">
-        <div className="w-full max-w-[520px] text-center">
+      <main className={styles.newsletterMain}>
+        <section className={styles.newsletterPanel}>
+          <p className={styles.eyebrow}>Paulik &amp; Reisch / Newsletter</p>
           {step === "confirm" && token && (
             <>
-              <h1 className="font-headline text-3xl font-bold">Anmeldung bestätigen</h1>
-              <p className="mt-3 text-muted-foreground text-balance">
-                Mit einem Klick bestätigst du, dass du den Newsletter von Paulik &amp; Reisch per E-Mail erhalten möchtest (ca. einmal pro Woche). Abmelden geht jederzeit.
+              <h1 className={styles.newsletterTitle}>Anmeldung bestätigen</h1>
+              <p className={styles.newsletterText}>
+                Mit einem Klick bestätigst Du, dass Du den Newsletter von Paulik &amp; Reisch per E-Mail erhalten möchtest. Abmelden geht jederzeit.
               </p>
-              <Button className="mt-6 w-full" onClick={confirmSignup} disabled={loading}>
+              <Button className={styles.primaryButton} onClick={confirmSignup} disabled={loading}>
                 {loading ? "Wird verarbeitet…" : "Ja, Newsletter senden"}
               </Button>
             </>
           )}
           {step === "confirm" && !token && (
             <>
-              <h1 className="font-headline text-3xl font-bold">Bestätigungs-Link fehlt</h1>
-              <p className="mt-3 text-muted-foreground text-balance">
+              <h1 className={styles.newsletterTitle}>Bestätigungs-Link fehlt</h1>
+              <p className={styles.newsletterText}>
                 Bitte nutze den Link aus der Bestätigungs-Mail.
               </p>
             </>
           )}
           {step === "done" && (
             <>
-              <h1 className="font-headline text-3xl font-bold">Anmeldung bestätigt</h1>
-              <p className="mt-3 text-muted-foreground text-balance">Danke. Ab jetzt bekommst du unseren Newsletter.</p>
-              <Link href="/"><Button variant="secondary" className="mt-6">Zur Startseite</Button></Link>
+              <h1 className={styles.newsletterTitle}>Anmeldung bestätigt</h1>
+              <p className={styles.newsletterText}>Danke. Ab jetzt bekommst Du unseren Newsletter.</p>
+              <Button asChild variant="secondary" className={styles.secondaryButton}><Link href="/">Zur Startseite</Link></Button>
             </>
           )}
           {step === "failed" && (
             <>
-              <h1 className="font-headline text-3xl font-bold">Bestätigung nicht möglich</h1>
-              <p className="mt-3 text-muted-foreground text-balance">
+              <h1 className={styles.newsletterTitle}>Bestätigung nicht möglich</h1>
+              <p className={styles.newsletterText}>
                 Der Link ist ungültig oder abgelaufen, oder der Dienst ist gerade nicht erreichbar. Bitte fordere auf der Website eine neue Bestätigungs-Mail an.
               </p>
-              <Button className="mt-6" variant="outline" onClick={() => setStep("confirm")}>Erneut versuchen</Button>
+              <Button className={styles.secondaryButton} variant="outline" onClick={() => setStep("confirm")}>Erneut versuchen</Button>
             </>
           )}
-        </div>
+        </section>
       </main>
       <Footer />
     </div>

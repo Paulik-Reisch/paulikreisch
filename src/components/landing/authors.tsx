@@ -39,6 +39,7 @@ const AUTHORS: Author[] = [
 
 export function Authors({ variant = "classic" }: { variant?: "classic" | "editorial" }) {
   const isEditorial = variant === "editorial";
+  const Heading = isEditorial ? "h1" : "h2";
 
   return (
     <section
@@ -61,12 +62,12 @@ export function Authors({ variant = "classic" }: { variant?: "classic" | "editor
           <p className={isEditorial ? styles.editorialEyebrow : "text-[0.78rem] font-bold tracking-[0.14em] uppercase text-[#f3d9a8] mb-3"}>
             Die Köpfe dahinter
           </p>
-          <h2
+          <Heading
             id="authors-heading"
             className={isEditorial ? styles.editorialTitle : "font-[Georgia,_Iowan_Old_Style,_Times_New_Roman,_serif] text-[clamp(1.9rem,4vw,2.7rem)] font-bold leading-[1.08] tracking-[-0.015em] text-balance text-white"}
           >
             {isEditorial ? "Die Menschen hinter dem Wahnsinn." : "Triff die verdrehten Köpfe"}
-          </h2>
+          </Heading>
           <p className={isEditorial ? styles.editorialIntro : "mx-auto mt-3 max-w-[600px] text-[clamp(1rem,1.6vw,1.12rem)] leading-relaxed text-[#dbe7ff]/85 text-balance"}>
             Drei Individuen, eine Mission: den alltäglichen Wahnsinn dokumentieren.
           </p>
