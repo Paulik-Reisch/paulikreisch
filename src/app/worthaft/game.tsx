@@ -755,7 +755,7 @@ const InvalidWordModal = ({
   };
 
   const dialogDescription = isSubmitted
-    ? 'Wir prüfen dein Feedback.'
+    ? 'Wir prüfen Dein Feedback.'
     : showReviewedMessage
       ? 'Wir haben das Wort bereits überprüft und erachten es als ungültig.'
       : 'Sollte dieses Wort existieren?';
@@ -770,7 +770,7 @@ const InvalidWordModal = ({
       <span className="relative -top-3 mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground animate-in zoom-in-95 duration-300">
         <Check className="h-8 w-8" />
       </span>
-      <h2 className="font-headline relative -top-3 mb-1.5 text-xl font-extrabold">Wir prüfen dein Feedback.</h2>
+      <h2 className="font-headline relative -top-3 mb-1.5 text-xl font-extrabold">Wir prüfen Dein Feedback.</h2>
       <Button variant="outline" onClick={() => onOpenChange(false)} className="rounded-full px-6">
         Schließen
       </Button>
@@ -1273,6 +1273,7 @@ export default function WorthaftGame({
         setLetterStatuses(newLetterStatuses);
 
         if (newGuesses.length === MAX_GUESSES) {
+            setRowTimes(newRowTimes);
             setGameState('lost');
             setCurrentGuess(Array(WORD_LENGTH).fill('')); // Clear current guess
             const newStats = {
@@ -1318,6 +1319,10 @@ export default function WorthaftGame({
 
 
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
+        const target = event.target;
+        // Typing into another control must not edit or submit the game board.
+        if (target instanceof HTMLElement && (target.closest('input, textarea, select') || target.isContentEditable)) return;
+        if (event.defaultPrevented || event.isComposing || event.ctrlKey || event.metaKey || event.altKey) return;
         if (!isWordListReady || !canInteractWithWorthaftGame(gameState) || isDialogOpen || isSettingsOpen || showHotTipDialog || isFeedbackOpen || invalidWord !== null) return;
 
         if (event.key === 'Enter') {

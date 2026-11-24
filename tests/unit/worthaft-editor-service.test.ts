@@ -96,7 +96,7 @@ test('suggestion success is acknowledged only after the awaited database save', 
   assert.ok(submit.indexOf('await addDoc(') < submit.indexOf('setIsSubmitted(true)'));
   assert.ok(submit.indexOf('setIsSubmitted(true)') < submit.indexOf('} catch'));
   assert.equal(submit.includes('onOpenChange(false)'), false);
-  assert.match(game, /Wir prüfen dein Feedback\./);
+  assert.match(game, /Wir prüfen Dein Feedback\./);
   assert.match(game, /isSubmitted \? 'Feedback gesendet' : 'Ungültiges Wort'/);
 });
 

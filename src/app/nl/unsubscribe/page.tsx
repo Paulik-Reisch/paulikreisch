@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Header } from "@/components/landing/header";
 import { Footer } from "@/components/landing/footer";
 import { Button } from "@/components/ui/button";
+import styles from "@/components/landing/utility-pages.module.css";
 
 type Step = "confirm" | "done" | "failed";
 
@@ -34,49 +35,50 @@ function UnsubscribeInner() {
   }
 
   return (
-    <div className="flex flex-col min-h-[100dvh] bg-background text-foreground">
+    <div className={styles.page}>
       <Header />
-      <main className="flex-1 flex items-center justify-center px-4 py-10">
-        <div className="w-full max-w-[520px] text-center">
+      <main className={styles.newsletterMain}>
+        <section className={styles.newsletterPanel}>
+          <p className={styles.eyebrow}>Paulik &amp; Reisch / Newsletter</p>
           {step === "confirm" && token && (
             <>
-              <h1 className="font-headline text-3xl font-bold">Newsletter abbestellen</h1>
-              <p className="mt-3 text-muted-foreground text-balance">
-                Wenn du auf den Button klickst, bekommst du keine Newsletter-Mails mehr von uns.
+              <h1 className={styles.newsletterTitle}>Newsletter abbestellen</h1>
+              <p className={styles.newsletterText}>
+                Wenn Du auf den Button klickst, bekommst Du keine Newsletter-Mails mehr von uns.
               </p>
-              <Button className="mt-6 w-full" onClick={unsubscribe} disabled={loading}>
+              <Button className={styles.primaryButton} onClick={unsubscribe} disabled={loading}>
                 {loading ? "Wird verarbeitet…" : "Jetzt abmelden"}
               </Button>
             </>
           )}
           {step === "confirm" && !token && (
             <>
-              <h1 className="font-headline text-3xl font-bold">{legacyLink ? "Alter Abmelde-Link" : "Abmelde-Link fehlt"}</h1>
-              <p className="mt-3 text-muted-foreground text-balance">
+              <h1 className={styles.newsletterTitle}>{legacyLink ? "Alter Abmelde-Link" : "Abmelde-Link fehlt"}</h1>
+              <p className={styles.newsletterText}>
                 {legacyLink
                   ? "Dieser ältere Link enthält keinen sicheren persönlichen Schlüssel. Hier wurde noch keine Abmeldung vorgenommen."
-                  : "Bitte nutze den persönlichen Abmelde-Link am Ende einer Newsletter-Mail. Ohne ihn können wir dich nicht sicher abmelden."}
-                {" "}Bitte schreib uns über das <Link href="/impressum" className="underline">Impressum</Link>, wenn dein Link nicht funktioniert.
+                  : "Bitte nutze den persönlichen Abmelde-Link am Ende einer Newsletter-Mail. Ohne ihn können wir Dich nicht sicher abmelden."}
+                {" "}Bitte schreib uns über das <Link href="/impressum" className="underline">Impressum</Link>, wenn Dein Link nicht funktioniert.
               </p>
             </>
           )}
           {step === "done" && (
             <>
-              <h1 className="font-headline text-3xl font-bold">Du bist abgemeldet</h1>
-              <p className="mt-3 text-muted-foreground text-balance">Du bekommst keine Newsletter-Mails mehr von uns.</p>
-              <Link href="/"><Button variant="secondary" className="mt-6">Zur Startseite</Button></Link>
+              <h1 className={styles.newsletterTitle}>Du bist abgemeldet</h1>
+              <p className={styles.newsletterText}>Du bekommst keine Newsletter-Mails mehr von uns.</p>
+              <Button asChild variant="secondary" className={styles.secondaryButton}><Link href="/">Zur Startseite</Link></Button>
             </>
           )}
           {step === "failed" && (
             <>
-              <h1 className="font-headline text-3xl font-bold">Abmeldung nicht möglich</h1>
-              <p className="mt-3 text-muted-foreground text-balance">
+              <h1 className={styles.newsletterTitle}>Abmeldung nicht möglich</h1>
+              <p className={styles.newsletterText}>
                 Der Link ist ungültig oder abgelaufen, oder der Dienst ist gerade nicht erreichbar. Bitte versuche es mit dem Link aus der neuesten Mail noch einmal.
               </p>
-              <Button className="mt-6" variant="outline" onClick={() => setStep("confirm")}>Erneut versuchen</Button>
+              <Button className={styles.secondaryButton} variant="outline" onClick={() => setStep("confirm")}>Erneut versuchen</Button>
             </>
           )}
-        </div>
+        </section>
       </main>
       <Footer />
     </div>

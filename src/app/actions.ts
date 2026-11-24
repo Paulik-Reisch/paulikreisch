@@ -54,7 +54,7 @@ export async function subscribeToNewsletterAction(
     const { subscribeWithDoubleOptIn } = await import("@/newsletter/signup");
     const r = await subscribeWithDoubleOptIn({ email, source, hp: String(formData.get("website") || "") });
     if (!r.ok) return { error: "Bitte gib eine gültige E-Mail-Adresse ein." };
-    return { success: true, message: "Fast geschafft: Wenn die Adresse stimmt, bekommst du gleich eine Mail mit einem Bestätigungslink." };
+    return { success: true, message: "Fast geschafft: Wenn die Adresse stimmt, bekommst Du gleich eine Mail mit einem Bestätigungslink." };
   } catch {
     console.error("Newsletter double opt-in failed");
     return { error: "Die Anmeldung ist gerade nicht möglich. Bitte versuche es später noch einmal." };

@@ -42,6 +42,8 @@ export async function GET() {
     { path: '/ratgeber/deutsche-sprache', priority: 0.8, changefreq: 'monthly' },
     { path: '/ratgeber/typisch-deutsch', priority: 0.75, changefreq: 'monthly' },
     { path: '/ratgeber/etikette', priority: 0.75, changefreq: 'monthly' },
+    { path: '/gpt', priority: 0.4, changefreq: 'monthly' },
+    { path: '/buchhandlung-paulik-reisch', priority: 0.5, changefreq: 'monthly' },
     { path: '/sitemap', priority: 0.3, changefreq: 'monthly' },
     // legal pages (static fallback if Firestore empty)
     { path: '/impressum', priority: 0.3, changefreq: 'yearly' },
@@ -69,7 +71,7 @@ export async function GET() {
   }
 
   for (const page of legalPages as Array<{ id: string; lastUpdated: string | Date }>) {
-    if (/^(index-old|admin|internal|login)(\/|$)/.test(page.id)) continue;
+    if (/^(index-old|admin|internal|login|autoren)(\/|$)/.test(page.id)) continue;
     urls.push({
       loc: `${baseUrl}/${escapeXml(page.id)}`,
       lastmod: toW3C(new Date(page.lastUpdated)),

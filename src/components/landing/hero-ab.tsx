@@ -38,7 +38,7 @@ const HEROS: HeroVariant[] = [
     id: "hero-papier",
     eyebrow: "Hallo Welt · Satirischer Roman · Band 1",
     head: "Ein Buch gegen den Schulstress.",
-    sub: "106 Seiten Ventil gegen Klausuren, Zeugnissprache und Heftführung. Satire, die den Schulwahnsinn ernst nimmt — damit du es nicht mehr musst.",
+    sub: "106 Seiten Ventil gegen Klausuren, Zeugnissprache und Heftführung. Satire, die den Schulwahnsinn ernst nimmt — damit Du es nicht mehr musst.",
     img: "/hero-ab/hero-01-papier.jpg",
     imgMobile: "/hero-mobile/45-buchstaben.jpg",
     alt: "Das Buch „Hallo Welt\" steht vor einem großen gelben Marker-Schwung auf Papier",

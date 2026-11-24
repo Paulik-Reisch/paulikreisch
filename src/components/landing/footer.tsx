@@ -168,7 +168,7 @@ export function Footer() {
                 <span className="block w-full min-w-0">
                   Ich habe die{' '}
                   <Link href="/datenschutz" className={`underline decoration-[#e8ddd0] hover:text-[#1d1a15] ${tDeco} dark:hover:text-[#f2ede3]`}>Datenschutzerklärung</Link>
-                  {' '}gelesen und möchte den Newsletter per E-Mail erhalten (ca. einmal pro Woche, jederzeit abbestellbar).
+                  {' '}gelesen und möchte den Newsletter erhalten.
                 </span>
               </label>
               <SubmitButton />

@@ -129,17 +129,17 @@ async function readBoundedBody(body: ReadableStream<Uint8Array> | null, limit: n
 
 function parseMessages(value: unknown): ChatMessage[] {
   if (!Array.isArray(value) || value.length === 0 || value.length > MAX_MESSAGES) {
-    throw new ChatError(400, 'Bitte prüfe deine Nachricht und versuche es erneut.');
+    throw new ChatError(400, 'Bitte prüfe Deine Nachricht und versuche es erneut.');
   }
 
   let totalCharacters = 0;
   const messages = value.map((message): ChatMessage => {
     if (!message || typeof message !== 'object' || !('role' in message) || !('content' in message)) {
-      throw new ChatError(400, 'Bitte prüfe deine Nachricht und versuche es erneut.');
+      throw new ChatError(400, 'Bitte prüfe Deine Nachricht und versuche es erneut.');
     }
     const { role, content } = message as { role: unknown; content: unknown };
     if ((role !== 'user' && role !== 'assistant') || typeof content !== 'string' || !content.trim() || content.length > MAX_MESSAGE_LENGTH) {
-      throw new ChatError(400, 'Bitte prüfe deine Nachricht und versuche es erneut.');
+      throw new ChatError(400, 'Bitte prüfe Deine Nachricht und versuche es erneut.');
     }
     totalCharacters += content.length;
     if (totalCharacters > MAX_TOTAL_CHARACTERS) {

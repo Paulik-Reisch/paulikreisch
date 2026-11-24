@@ -44,7 +44,7 @@ export function Features() {
         {/* Header — Hero-Aesthetic */}
         <div className="mx-auto max-w-[720px] text-center">
           <p className="text-[0.78rem] font-bold tracking-[0.14em] uppercase text-[#9c2d22] mb-3">
-            Warum du es lieben wirst
+            Warum Du es lieben wirst
           </p>
           <h2
             id="features-heading"
