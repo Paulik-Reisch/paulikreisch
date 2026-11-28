@@ -16,12 +16,14 @@ export type WorthaftSettings = {
   tileWidth: number; tileHeight: number; tileRadius: number;
   palette: 'original' | 'classic';
   hotTipEnabled: boolean; musicEnabled: boolean; animationsEnabled: boolean;
+  repeatConfirmedLetters: boolean;
 };
 
 export const DEFAULT_WORTHAFT_SETTINGS: WorthaftSettings = {
   keyWidth: 4, keyHeight: 2, keySize: 2, keyRadius: 1,
   tileWidth: 1, tileHeight: 1, tileRadius: 1, palette: 'original',
   hotTipEnabled: true, musicEnabled: false, animationsEnabled: true,
+  repeatConfirmedLetters: false,
 };
 
 export const normalizeWorthaftSettings = (value: unknown): WorthaftSettings => {
@@ -31,7 +33,7 @@ export const normalizeWorthaftSettings = (value: unknown): WorthaftSettings => {
   for (const key of ['keyWidth', 'keyHeight', 'keySize', 'keyRadius', 'tileWidth', 'tileHeight', 'tileRadius'] as const) {
     if (saved[key] !== undefined) settings[key] = normalizeWorthaftSliderValue(saved[key]);
   }
-  for (const key of ['hotTipEnabled', 'musicEnabled', 'animationsEnabled'] as const) {
+  for (const key of ['hotTipEnabled', 'musicEnabled', 'animationsEnabled', 'repeatConfirmedLetters'] as const) {
     if (typeof saved[key] === 'boolean') settings[key] = saved[key];
   }
   if (saved.palette === 'classic') settings.palette = 'classic';

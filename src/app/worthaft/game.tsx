@@ -35,6 +35,9 @@ import {
   canInteractWithWorthaftGame,
   clearWorthaftRowStart,
   createWorthaftRowTimer,
+  getConfirmedWorthaftLetters,
+  getFirstEmptyWorthaftIndex,
+  mergeConfirmedWorthaftLetters,
   getWorthaftRowElapsed,
   pauseWorthaftRowTimer,
   readWorthaftRowTimer,
@@ -647,6 +650,18 @@ const WorthaftSettingsDialog = ({
               id="worthaft-setting-animations"
               checked={settings.animationsEnabled}
               onCheckedChange={(c) => setSettings({ animationsEnabled: !!c })}
+            />
+          </div>
+
+          <div className="flex items-center justify-between gap-3 rounded-md border p-3">
+            <div className="flex flex-col">
+              <Label htmlFor="worthaft-setting-repeat" className="text-sm font-medium">Blaue Buchstaben wiederholen</Label>
+              <span className="text-xs text-muted-foreground">Neue Zeilen starten mit den bereits erkannten blauen Buchstaben.</span>
+            </div>
+            <Checkbox
+              id="worthaft-setting-repeat"
+              checked={settings.repeatConfirmedLetters}
+              onCheckedChange={(c) => setSettings({ repeatConfirmedLetters: !!c })}
             />
           </div>
 
@@ -1318,6 +1333,20 @@ export default function WorthaftGame({
     };
 
 
+    const handleRepeatConfirmed = useCallback(() => {
+        const merged = mergeConfirmedWorthaftLetters(currentGuess, getConfirmedWorthaftLetters(guesses, WORD_LENGTH));
+        setCurrentGuess(merged);
+        setActiveIndex(getFirstEmptyWorthaftIndex(merged));
+    }, [currentGuess, guesses]);
+
+    // Opt-in: every fresh row (also after a reload) starts with the confirmed letters.
+    useEffect(() => {
+        if (!settings.repeatConfirmedLetters || gameState !== 'playing' || guesses.length === 0) return;
+        const confirmed = getConfirmedWorthaftLetters(guesses, WORD_LENGTH);
+        setCurrentGuess(prev => (prev.every(letter => letter === '') ? confirmed : prev));
+        setActiveIndex(prev => (confirmed.some(Boolean) ? getFirstEmptyWorthaftIndex(confirmed) : prev));
+    }, [settings.repeatConfirmedLetters, gameState, guesses]);
+
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
         const target = event.target;
         // Typing into another control must not edit or submit the game board.
@@ -1330,6 +1359,9 @@ export default function WorthaftGame({
             handleEnter();
         } else if (event.key === 'Backspace') {
             handleDelete();
+        } else if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            handleRepeatConfirmed();
         } else if (event.key === 'ArrowLeft') {
             setActiveIndex(Math.max(0, activeIndex - 1));
         } else if (event.key === 'ArrowRight') {
@@ -1337,7 +1369,7 @@ export default function WorthaftGame({
         } else {
             handleChar(event.key);
         }
-    }, [isWordListReady, gameState, isDialogOpen, isSettingsOpen, showHotTipDialog, isFeedbackOpen, invalidWord, handleEnter, handleDelete, handleChar, activeIndex]);
+    }, [isWordListReady, gameState, isDialogOpen, isSettingsOpen, showHotTipDialog, isFeedbackOpen, invalidWord, handleEnter, handleDelete, handleChar, handleRepeatConfirmed, activeIndex]);
 
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
