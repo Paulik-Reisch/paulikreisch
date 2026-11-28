@@ -81,3 +81,28 @@ export const clearWorthaftRowStart = (storage: Pick<StorageLike, 'removeItem'>):
     // Ignore - clearing is best-effort.
   }
 };
+
+// Letters already confirmed (blue/green "correct" tiles) by earlier guesses,
+// placed at their positions. Unknown positions stay empty.
+export const getConfirmedWorthaftLetters = (
+  guesses: readonly { guess: string; statuses: readonly string[] }[],
+  length: number,
+): string[] => {
+  const confirmed: string[] = Array(length).fill('');
+  for (const { guess, statuses } of guesses) {
+    const letters = Array.from(guess);
+    for (let i = 0; i < length; i++) {
+      if (statuses[i] === 'correct' && letters[i]) confirmed[i] = letters[i];
+    }
+  }
+  return confirmed;
+};
+
+// Fills only empty cells so letters the player already typed are kept.
+export const mergeConfirmedWorthaftLetters = (current: readonly string[], confirmed: readonly string[]): string[] =>
+  current.map((letter, i) => letter || confirmed[i] || '');
+
+export const getFirstEmptyWorthaftIndex = (letters: readonly string[]): number => {
+  const index = letters.findIndex(letter => !letter);
+  return index === -1 ? Math.max(0, letters.length - 1) : index;
+};
